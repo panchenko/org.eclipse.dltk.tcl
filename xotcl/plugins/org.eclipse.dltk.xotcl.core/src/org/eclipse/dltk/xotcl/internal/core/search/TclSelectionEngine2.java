@@ -55,15 +55,15 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnAST;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnKeywordOrFunction;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnNode;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnVariable;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclInstanceVariable;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclMethodCallStatement;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclMethodDeclaration;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclProcCallStatement;
 import org.eclipse.dltk.xotcl.internal.core.XOTclResolver;
-import org.eclipse.dltk.xotcl.internal.core.search.mixin.TclMixinModel;
-import org.eclipse.dltk.xotcl.internal.core.search.mixin.model.TclField;
-import org.eclipse.dltk.xotcl.internal.core.search.mixin.model.TclProc;
 import org.eclipse.dltk.xotcl.internal.core.search.mixin.model.XOTclInstProc;
 
 public class TclSelectionEngine2 extends ScriptSelectionEngine {

@@ -219,7 +219,7 @@ public class XOTclSourceElementRequestVisitor extends
 				needEnterLeave++;
 				if (!this.fRequestor.enterTypeAppend(split[i], "::")) {
 					ISourceElementRequestor.TypeInfo ti = new ISourceElementRequestor.TypeInfo();
-					ti.modifiers = this.getModifiers(decl);
+					ti.modifiers = this.getModifiers(decl) | Modifiers.AccNameSpace;
 
 					ti.name = split[i];
 					ti.nameSourceStart = decl.getNameStart();
