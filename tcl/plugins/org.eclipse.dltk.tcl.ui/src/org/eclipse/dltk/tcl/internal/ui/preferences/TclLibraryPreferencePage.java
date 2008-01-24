@@ -168,8 +168,9 @@ public class TclLibraryPreferencePage extends UserLibraryPreferencePage {
 	}
 
 	protected boolean isDetectionSupported() {
-		IInterpreterInstall install = ScriptRuntime
-				.getDefaultInterpreterInstall(TclNature.NATURE_ID);
-		return install != null;
+//		IInterpreterInstall install = ScriptRuntime
+//				.getDefaultInterpreterInstall(TclNature.NATURE_ID);
+//		return install != null;
+		return false;
 	}
 }
