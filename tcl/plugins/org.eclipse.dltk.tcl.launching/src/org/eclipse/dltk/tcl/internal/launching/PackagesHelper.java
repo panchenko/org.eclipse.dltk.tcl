@@ -105,15 +105,15 @@ public class PackagesHelper {
 		}
 	}
 
-	public static class Location {
+	public static class PackageLocation {
 		private Set packages = new HashSet();
 		private String path;
 
-		public Location() {
+		public PackageLocation() {
 
 		}
 
-		public Location(String path) {
+		public PackageLocation(String path) {
 			this.path = path;
 		}
 
@@ -152,7 +152,7 @@ public class PackagesHelper {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			Location other = (Location) obj;
+			PackageLocation other = (PackageLocation) obj;
 			if (path == null) {
 				if (other.path != null)
 					return false;
@@ -184,7 +184,7 @@ public class PackagesHelper {
 		}
 	}
 
-	public static Location[] getLocations(IPath installLocation,
+	public static PackageLocation[] getLocations(IPath installLocation,
 			EnvironmentVariable[] environmentVariables,
 			LibraryLocation[] libraryLocations) {
 		File script;
@@ -283,9 +283,9 @@ public class PackagesHelper {
 								.toArray(new String[this.paths.size()]);
 
 						for (int i = 0; i < paths.length; i++) {
-							Location loc = findLocation(locations, paths[i]);
+							PackageLocation loc = findLocation(locations, paths[i]);
 							if (loc == null) {
-								loc = new Location();
+								loc = new PackageLocation();
 								loc.setPath(paths[i]);
 								locations.add(loc);
 							}
@@ -300,9 +300,9 @@ public class PackagesHelper {
 					}
 				}
 
-				private Location findLocation(List locations, String mainPath) {
+				private PackageLocation findLocation(List locations, String mainPath) {
 					for (int i = 0; i < locations.size(); i++) {
-						Location loc = (Location) locations.get(i);
+						PackageLocation loc = (PackageLocation) locations.get(i);
 						if (loc.getPath().equals(mainPath)) {
 							return loc;
 						}
@@ -312,16 +312,16 @@ public class PackagesHelper {
 			});
 			Collections.sort(locations, new Comparator(){
 				public int compare(Object arg0, Object arg1) {
-					if( arg0 instanceof Location && arg1 instanceof Location ) {
-						Location l1 = (Location) arg0;
-						Location l2 = (Location) arg1;
+					if( arg0 instanceof PackageLocation && arg1 instanceof PackageLocation ) {
+						PackageLocation l1 = (PackageLocation) arg0;
+						PackageLocation l2 = (PackageLocation) arg1;
 						return l1.getPath().compareTo(l2.getPath());
 					}
 					return 0;
 				}
 			});
-			return (Location[]) locations
-					.toArray(new Location[locations.size()]);
+			return (PackageLocation[]) locations
+					.toArray(new PackageLocation[locations.size()]);
 		} catch (IOException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
