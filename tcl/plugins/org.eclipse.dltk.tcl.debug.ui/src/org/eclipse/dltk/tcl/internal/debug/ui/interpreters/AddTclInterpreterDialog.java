@@ -38,6 +38,6 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		return false;
 	}
 	protected boolean isRediscoverSupported() {
-		return true;
+		return false;
 	}
 }
