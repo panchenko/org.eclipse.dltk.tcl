@@ -13,7 +13,7 @@ import org.eclipse.dltk.internal.debug.ui.interpreters.LibraryStandin;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.LibraryLocation;
 import org.eclipse.dltk.tcl.internal.launching.PackagesHelper;
-import org.eclipse.dltk.tcl.internal.launching.PackagesHelper.Location;
+import org.eclipse.dltk.tcl.internal.launching.PackagesHelper.PackageLocation;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -22,11 +22,11 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
 public class TclLibraryContentProvider extends LibraryContentProvider {
-	Location[] packageLocations;
+	PackageLocation[] packageLocations;
 
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof Location) {
-			return ((Location) parentElement).getPackages();
+		if (parentElement instanceof PackageLocation) {
+			return ((PackageLocation) parentElement).getPackages();
 		}
 		return new Object[0];
 	}
@@ -36,8 +36,8 @@ public class TclLibraryContentProvider extends LibraryContentProvider {
 	}
 
 	public boolean hasChildren(Object element) {
-		if (element instanceof Location) {
-			return ((Location) element).getPackages().length > 0;
+		if (element instanceof PackageLocation) {
+			return ((PackageLocation) element).getPackages().length > 0;
 		}
 		return false;
 	}
@@ -59,12 +59,30 @@ public class TclLibraryContentProvider extends LibraryContentProvider {
 				packageLocations = PackagesHelper.getLocations(new Path(file
 						.getAbsolutePath()), environmentVariables, null);
 			}
+			// Failsafe.
+			if (packageLocations.length == 0) {
+				packageLocations = createPackageLocationsFrom(this
+						.getLibraries());
+			}
 
 			updateLibrariesFromPackages();
 
 			this.fViewer.refresh();
 			updateColors();
 		}
+	}
+
+	private PackageLocation[] createPackageLocationsFrom(
+			LibraryLocation[] libraries) {
+		if (libraries == null) {
+			return new PackageLocation[0];
+		}
+		PackageLocation[] locs = new PackageLocation[libraries.length];
+		for (int i = 0; i < locs.length; i++) {
+			locs[i] = new PackageLocation(libraries[i].getLibraryPath()
+					.toOSString());
+		}
+		return locs;
 	}
 
 	private void updateLibrariesFromPackages() {
@@ -78,7 +96,7 @@ public class TclLibraryContentProvider extends LibraryContentProvider {
 		Set result = new HashSet();
 		for (int i = 0; i < libraries.length; i++) {
 			IPath lPath = libraries[i].getLibraryPath();
-			Location l = new Location(lPath.toOSString());
+			PackageLocation l = new PackageLocation(lPath.toOSString());
 			if (set.contains(l)) {
 				result.add(libraries[i]);
 			} // We need to add all libs from packages with this
@@ -106,7 +124,7 @@ public class TclLibraryContentProvider extends LibraryContentProvider {
 			items[i].setBackground(color);
 		}
 		for (int j = 0; j < packageLocations.length; j++) {
-			Location loc = packageLocations[j];
+			PackageLocation loc = packageLocations[j];
 			boolean exist = find(loc.getPath(), this.fLibraries);
 
 			for (int i = 0; i < items.length; i++) {
@@ -151,12 +169,21 @@ public class TclLibraryContentProvider extends LibraryContentProvider {
 
 	public boolean canEnable(IStructuredSelection selection) {
 		return selection.size() == 1
-				&& selection.getFirstElement() instanceof Location;
+				&& selection.getFirstElement() instanceof PackageLocation;
+	}
+	
+
+	public boolean canDown(IStructuredSelection selection) {
+		return false;
+	}
+
+	public boolean canUp(IStructuredSelection selection) {
+		return false;
 	}
 
 	public boolean isEnabled(Object lib) {
-		if (lib instanceof Location) {
-			Location loc = (Location) lib;
+		if (lib instanceof PackageLocation) {
+			PackageLocation loc = (PackageLocation) lib;
 			return find(loc.getPath(), this.fLibraries);
 		}
 		return false;
@@ -168,12 +195,12 @@ public class TclLibraryContentProvider extends LibraryContentProvider {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
 				Object object = iterator.next();
-				if (object instanceof Location) {
+				if (object instanceof PackageLocation) {
 					boolean oldState = isEnabled(object);
 					boolean newState = !oldState;
 					Set set = new HashSet();
 					set.addAll(Arrays.asList(getLibraries()));
-					IPath path = new Path(((Location) object).getPath());
+					IPath path = new Path(((PackageLocation) object).getPath());
 					if (newState) {
 						set.add(new LibraryLocation(path));
 					} else {
