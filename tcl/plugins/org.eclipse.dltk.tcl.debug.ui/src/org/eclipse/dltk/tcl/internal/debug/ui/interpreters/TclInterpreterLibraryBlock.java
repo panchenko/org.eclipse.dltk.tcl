@@ -12,7 +12,6 @@ package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibraryBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialog;
 import org.eclipse.dltk.internal.debug.ui.interpreters.LibraryContentProvider;
-import org.eclipse.dltk.launching.LibraryLocation;
 import org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPlugin;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -44,14 +43,6 @@ public class TclInterpreterLibraryBlock extends AbstractInterpreterLibraryBlock 
 		return new TreeViewer(comp);
 	}
 
-	// TODO: We need to filter and set only basic libraries.
-	public void restoreDefaultLibraries() {
-		LibraryLocation[] libs = getLibrariesWithEnvironment(fDialog
-				.getEnvironmentVariables());
-		if (libs != null)
-			fLibraryContentProvider.setLibraries(libs);
-		update();
-	}
 	protected boolean isEnableButtonSupported() {
 		return true;
 	}
