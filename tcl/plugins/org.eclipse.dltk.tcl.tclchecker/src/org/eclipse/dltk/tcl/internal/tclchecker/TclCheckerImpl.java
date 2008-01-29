@@ -55,34 +55,45 @@ public class TclCheckerImpl extends AbstractValidator {
 		super.storeTo(doc, element);
 	}
 
-	public IStatus validate(IResource resource, OutputStream console) {
-		return Status.OK_STATUS;
+	public IStatus validate(IResource resource[], OutputStream console) {
+		return Status.CANCEL_STATUS;
 	}
 
-	public IStatus validate(ISourceModule module, OutputStream console) {
-		IResource resource = module.getResource();
-		if (resource == null) {
-			return Status.CANCEL_STATUS;
-		}
-		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
-				.getPreferenceStore());
-
-		if (!checker.canCheck()) {
-			try {
-				TclCheckerMarker.clearMarkers(resource);
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+	public IStatus validate(ISourceModule[] module, OutputStream console) {
+		try {
+			List els = new ArrayList();
+			// els.add(module);
+			for (int i = 0; i < module.length; i++) {
+				IResource res = module[i].getResource();
+				if (res != null) {
+					els.add(module[i]);
+					try {
+						TclCheckerMarker.clearMarkers(res);
+					} catch (CoreException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
+					}
 				}
 			}
-			return Status.CANCEL_STATUS;
-		}
+			if (els.size() == 0) {
+				return Status.OK_STATUS;
+			}
+			if (getProgressMonitor() != null) {
+				getProgressMonitor().beginTask("Checking with tclchecker",
+						els.size());
+			}
+			TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
+					.getPreferenceStore());
 
-		List els = new ArrayList();
-		els.add(module);
-		IProgressMonitor progressMonitor = getProgressMonitor();
-		checker.check(els, progressMonitor, console);
-		return Status.OK_STATUS;
+			IProgressMonitor progressMonitor = getProgressMonitor();
+			checker.check(els, progressMonitor, console);
+			return Status.OK_STATUS;
+		} finally {
+			if (getProgressMonitor() != null) {
+				getProgressMonitor().done();
+			}
+		}
 	}
 
 	public boolean isValidatorValid() {
@@ -92,9 +103,18 @@ public class TclCheckerImpl extends AbstractValidator {
 		return checker.canCheck();
 	}
 
-	public void clean(ISourceModule module) {
-		IResource res = module.getResource();
-		clean(res);
+	public void clean(ISourceModule[] module) {
+		for (int i = 0; i < module.length; i++) {
+			clean(module[i].getResource());
+		}
+	}
+
+	public void clean(IResource[] resources) {
+		for (int i = 0; i < resources.length; i++) {
+			if (resources[i] != null) {
+				clean(resources[i]);
+			}
+		}
 	}
 
 	public void clean(IResource resource) {

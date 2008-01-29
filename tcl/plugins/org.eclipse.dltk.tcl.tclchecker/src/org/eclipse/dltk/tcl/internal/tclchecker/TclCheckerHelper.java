@@ -28,7 +28,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class TclCheckerHelper {
-	private static final String REGEX = "(\\w+):(\\d+)\\s+\\((\\w+)\\)\\s+(.*)";
+	private static final String REGEX = "((?:\\w:)?[^:]+):(\\d+)\\s+\\((\\w+)\\)\\s+(.*)";
 
 	private static final String QUIET_OPTION = "-quiet";
 
@@ -57,7 +57,7 @@ public final class TclCheckerHelper {
 		return (String[]) cmdLine.toArray(new String[cmdLine.size()]);
 	}
 
-	private static String[] makeTclCheckerCmdLine(IPreferenceStore store,
+	public static String[] makeTclCheckerCmdLine(IPreferenceStore store,
 			String path) {
 		List cmdLine = new ArrayList();
 
@@ -68,11 +68,11 @@ public final class TclCheckerHelper {
 		return (String[]) cmdLine.toArray(new String[cmdLine.size()]);
 	}
 
-	private static void passOriginalArguments(IPreferenceStore store,
+	public static void passOriginalArguments(IPreferenceStore store,
 			List cmdLine) {
 		cmdLine.add(store.getString(TclCheckerConstants.PREF_PATH));
 
-		cmdLine.add(QUIET_OPTION);
+//		cmdLine.add(QUIET_OPTION);
 
 		int mode = store.getInt(TclCheckerConstants.PREF_MODE);
 

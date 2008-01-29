@@ -9,22 +9,29 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -103,17 +110,10 @@ public class TclChecker {
 		}
 	}
 
-	private boolean processImpl(ISourceModule module, IProgressMonitor monitor, OutputStream console)
-			throws CoreException {
+	private boolean processImpl(ISourceModule module, IProgressMonitor monitor,
+			OutputStream console) throws CoreException {
 
-		IPath path = module.getPath();
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(
-				path);
-
-		// For example, resource from library
-		if (res == null) {
-			return false;
-		}
+		IResource res = module.getResource();
 
 		String code = module.getSource();
 
@@ -121,7 +121,8 @@ public class TclChecker {
 		String mpath = res.getLocation().toOSString();
 
 		try {
-			String[] output = TclCheckerHelper.execTclCheckerPath(mpath, store, console);
+			String[] output = TclCheckerHelper.execTclCheckerPath(mpath, store,
+					console);
 			parseProblems(res, code, output, filter);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR,
@@ -145,49 +146,165 @@ public class TclChecker {
 		return TclCheckerHelper.canExecuteTclChecker(store);
 	}
 
-	public void check(final List sourceModules, IProgressMonitor monitor, OutputStream console) {
+	public void check(final List sourceModules, IProgressMonitor monitor,
+			OutputStream console) {
 		if (!canCheck()) {
 			throw new IllegalStateException("TclChecker cannot be executed");
 		}
+
+		List arguments = new ArrayList();
+		Map pathToSource = new HashMap();
+		for (Iterator iterator = sourceModules.iterator(); iterator.hasNext();) {
+			ISourceModule module = (ISourceModule) iterator.next();
+			String loc = module.getResource().getLocation().toOSString();
+			pathToSource.put(loc, module);
+			arguments.add(loc);
+		}
+
+		List cmdLine = new ArrayList();
+		TclCheckerHelper.passOriginalArguments(store, cmdLine);
+		IPath stateLocation = TclCheckerPlugin.getDefault().getStateLocation();
+		IPath patternFile = stateLocation.append("pattern.txt");
+		try {
+			BufferedOutputStream locs = new BufferedOutputStream(
+					new FileOutputStream(patternFile.toFile(), false));
+			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
+				String path = (String) arg.next();
+				locs.write((path + "\n").getBytes());
+			}
+			locs.close();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cmdLine.add("-@");
+		cmdLine.add(patternFile.toOSString());
+		Process process;
+		BufferedReader input = null;
+		String checkingFile = null;
+
+		TclCheckerCodeModel model = null;
 		try {
 			if (monitor != null) {
-				monitor.beginTask("Checking with tclchecker", sourceModules
-						.size());
+				monitor.subTask("Launching tclchecker...");
 			}
+			process = DebugPlugin.exec((String[]) cmdLine
+					.toArray(new String[cmdLine.size()]), null);
 
-			Iterator it = sourceModules.iterator();
+			if (monitor != null) {
+				monitor.subTask("Checking...");
+			}
+			// Reading TclChecker output
+			// Set lines = new HashSet();
 
-			while (it.hasNext()) {
-				if (monitor != null) {
-					if (monitor.isCanceled()) {
-						return;
+			try {
+				input = new BufferedReader(new InputStreamReader(process
+						.getInputStream()));
+
+				String line = null;
+				while ((line = input.readLine()) != null) {
+					// lines.add(line);
+					if (console != null) {
+						console.write((line + "\n").getBytes());
 					}
-				}
+					TclCheckerProblem problem = TclCheckerHelper.parseProblem(
+							line, filter);
+					if (problem != null) {
+						String file = problem.getFile();
+						ISourceModule module = (ISourceModule) pathToSource
+								.get(file);
+						if (module != null) {
+							if (checkingFile == null
+									|| !file.equals(checkingFile)) {
+								if (monitor != null) {
+									monitor.subTask("Checking with tclchecker:"
+											+ Path.fromOSString(file)
+													.lastSegment());
+								}
+								checkingFile = file;
+								model = new TclCheckerCodeModel(module
+										.getSource());
+								if (monitor != null) {
+									monitor.worked(1);
+								}
+							}
+							if (model != null) {
+								TclCheckerProblemDescription desc = problem
+										.getDescription();
 
-				ISourceModule module = (ISourceModule) it.next();
-				IProjectFragment fragment = (IProjectFragment) module
-						.getAncestor(IModelElement.PROJECT_FRAGMENT);
-				if (!fragment.isExternal()) {
-					if (monitor != null) {
-						monitor.subTask("Checking with tclchecker:"
-								+ module.getElementName());
-					}
-					try {
-						processImpl(module, monitor, console);
-					} catch (CoreException e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
+								int[] bounds = model.getBounds(problem
+										.getLineNumber() - 1);
+
+								IResource res = module.getResource();
+								if (TclCheckerProblemDescription.isError(desc
+										.getCategory())) {
+									reportErrorProblem(res, problem, bounds[0],
+											bounds[1]);
+								} else if (TclCheckerProblemDescription
+										.isWarning(desc.getCategory()))
+									reportWarningProblem(res, problem,
+											bounds[0], bounds[1]);
+							}
 						}
 					}
 				}
-				if (monitor != null) {
-					monitor.worked(1);
+				StringBuffer errorMessage = new StringBuffer();
+				// We need also read errors.
+				input = new BufferedReader(new InputStreamReader(process
+						.getErrorStream()));
+
+				line = null;
+				while ((line = input.readLine()) != null) {
+					// lines.add(line);
+					if (console != null) {
+						console.write((line + "\n").getBytes());
+					}
+					errorMessage.append(line).append("\n");
+				}
+				String error = errorMessage.toString();
+				if (error.length() > 0) {
+					TclCheckerPlugin.getDefault().getLog().log(
+							new Status(IStatus.ERROR,
+									TclCheckerPlugin.PLUGIN_ID,
+									"Error during tcl_checker execution:\n"
+											+ error));
+				}
+			} catch (IOException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			} finally {
+				if (input != null) {
+					try {
+						input.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		} finally {
-			if (monitor != null) {
-				monitor.done();
+		} catch (CoreException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
 			}
 		}
+		// For last
+		if (sourceModules.size() > 0) {
+			if (monitor != null) {
+				monitor.worked(1);
+			}
+		}
+
+		// try {
+		// String[] output = TclCheckerHelper.execTclCheckerPath(mpath, store,
+		// console);
+		// // parseProblems(res, code, output, filter);
+		// } catch (IOException e) {
+		// throw new CoreException(new Status(IStatus.ERROR,
+		// TclCheckerPlugin.PLUGIN_ID, 0,
+		// "I/O problem with TclChecker", e));
+		// }
 	}
 }

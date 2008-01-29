@@ -20,7 +20,7 @@ public class TclCheckerCheckSelectionWithConsoleAction extends
 		AbstractValidateSelectionWithConsole {
 	protected void invoceValidationFor(final OutputStream out,
 			final List elements, final List resources, IProgressMonitor monitor) {
-		ValidatorRuntime.executeValidatorWithConsole(
+		ValidatorRuntime.executeValidator(
 				"org.eclipse.dltk.tclchecker", out, elements, resources,
 				monitor);
 	}
