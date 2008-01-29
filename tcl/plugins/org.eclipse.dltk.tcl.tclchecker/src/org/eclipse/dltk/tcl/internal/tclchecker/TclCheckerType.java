@@ -40,7 +40,7 @@ public class TclCheckerType extends AbstractValidatorType {
 	}
 
 	public String getName() {
-		return "Tcl Checker Type";
+		return "Tcl Checker";
 	}
 
 	public String getNature() {

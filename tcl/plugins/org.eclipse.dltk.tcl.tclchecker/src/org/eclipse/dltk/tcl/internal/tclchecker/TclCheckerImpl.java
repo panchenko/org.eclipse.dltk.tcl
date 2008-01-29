@@ -27,8 +27,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class TclCheckerImpl extends AbstractValidator {
-	private static final String JOB_NAME = "Checking with TclChecker";
 	boolean initialized = false;
+
 	protected TclCheckerImpl(String id, IValidatorType type) {
 		super(id, null, type);
 	}
@@ -42,10 +42,9 @@ public class TclCheckerImpl extends AbstractValidator {
 		super(id, null, type);
 		loadFrom(element);
 	}
-	
 
 	protected void loadFrom(Element element) {
-		if( initialized ) {
+		if (initialized) {
 			return;
 		}
 		initialized = true;
@@ -59,30 +58,37 @@ public class TclCheckerImpl extends AbstractValidator {
 	public IStatus validate(IResource resource, OutputStream console) {
 		return Status.OK_STATUS;
 	}
+
 	public IStatus validate(ISourceModule module, OutputStream console) {
 		IResource resource = module.getResource();
+		if (resource == null) {
+			return Status.CANCEL_STATUS;
+		}
 		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
 				.getPreferenceStore());
-		
-		if (!checker.canCheck()){
+
+		if (!checker.canCheck()) {
 			try {
 				TclCheckerMarker.clearMarkers(resource);
 			} catch (CoreException e) {
-				e.printStackTrace();
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 			return Status.CANCEL_STATUS;
 		}
-	
+
 		List els = new ArrayList();
-		els.add( module );
-		checker.check(els, JOB_NAME, false);
+		els.add(module);
+		IProgressMonitor progressMonitor = getProgressMonitor();
+		checker.check(els, progressMonitor, console);
 		return Status.OK_STATUS;
 	}
 
 	public boolean isValidatorValid() {
 		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
 				.getPreferenceStore());
-		
+
 		return checker.canCheck();
 	}
 
@@ -95,14 +101,9 @@ public class TclCheckerImpl extends AbstractValidator {
 		try {
 			TclCheckerMarker.clearMarkers(resource);
 		} catch (CoreException e) {
-			if( DLTKCore.DEBUG ) {
+			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public void setProgressMonitor(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-		
 	}
 }

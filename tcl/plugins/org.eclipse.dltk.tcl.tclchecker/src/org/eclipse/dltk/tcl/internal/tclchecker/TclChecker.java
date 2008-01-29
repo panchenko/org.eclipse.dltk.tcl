@@ -10,6 +10,7 @@
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,13 +18,15 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 
 public class TclChecker {
 	private static class TclCheckerCodeModel {
@@ -100,10 +103,12 @@ public class TclChecker {
 		}
 	}
 
-	private boolean processImpl(ISourceModule module) throws CoreException {
+	private boolean processImpl(ISourceModule module, IProgressMonitor monitor, OutputStream console)
+			throws CoreException {
 
+		IPath path = module.getPath();
 		IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(
-				module.getPath());
+				path);
 
 		// For example, resource from library
 		if (res == null) {
@@ -113,9 +118,10 @@ public class TclChecker {
 		String code = module.getSource();
 
 		TclCheckerMarker.clearMarkers(res);
+		String mpath = res.getLocation().toOSString();
 
 		try {
-			String[] output = TclCheckerHelper.execTclChecker(code, store);
+			String[] output = TclCheckerHelper.execTclCheckerPath(mpath, store, console);
 			parseProblems(res, code, output, filter);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR,
@@ -139,46 +145,49 @@ public class TclChecker {
 		return TclCheckerHelper.canExecuteTclChecker(store);
 	}
 
-	public void check(final List sourceModules, final String workName,
-			boolean userJob) {
-
+	public void check(final List sourceModules, IProgressMonitor monitor, OutputStream console) {
 		if (!canCheck()) {
 			throw new IllegalStateException("TclChecker cannot be executed");
 		}
+		try {
+			if (monitor != null) {
+				monitor.beginTask("Checking with tclchecker", sourceModules
+						.size());
+			}
 
-		Job job = new Job(workName) {
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					monitor.beginTask(workName, sourceModules.size());
+			Iterator it = sourceModules.iterator();
 
-					Iterator it = sourceModules.iterator();
-
-					while (it.hasNext()) {
-						if (monitor.isCanceled())
-							return Status.CANCEL_STATUS;
-
-						ISourceModule module = (ISourceModule) it.next();
-
-						if (!module.exists()) {
-							continue;
-						}
-
-						processImpl(module);
-
-						monitor.worked(1);
+			while (it.hasNext()) {
+				if (monitor != null) {
+					if (monitor.isCanceled()) {
+						return;
 					}
-				} catch (CoreException e) {
-					return e.getStatus();
-				} finally {
-					monitor.done();
 				}
 
-				return Status.OK_STATUS;
+				ISourceModule module = (ISourceModule) it.next();
+				IProjectFragment fragment = (IProjectFragment) module
+						.getAncestor(IModelElement.PROJECT_FRAGMENT);
+				if (!fragment.isExternal()) {
+					if (monitor != null) {
+						monitor.subTask("Checking with tclchecker:"
+								+ module.getElementName());
+					}
+					try {
+						processImpl(module, monitor, console);
+					} catch (CoreException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
+					}
+				}
+				if (monitor != null) {
+					monitor.worked(1);
+				}
 			}
-		};
-
-		job.setPriority(Job.SHORT);
-		job.setUser(userJob);
-		job.schedule();
+		} finally {
+			if (monitor != null) {
+				monitor.done();
+			}
+		}
 	}
 }

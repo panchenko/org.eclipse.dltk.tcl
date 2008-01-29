@@ -10,7 +10,7 @@
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.TclCheckerPreferences;
-import org.eclipse.dltk.validators.ValidatorConfigurationPage;
+import org.eclipse.dltk.validators.ui.ValidatorConfigurationPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -25,7 +25,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	public void createControl(Composite parent, int columns) {
 		Composite c = new Composite(parent, SWT.NONE);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = columns;
 		c.setLayoutData(gd);
 		c.setLayout(new FillLayout());
