@@ -64,6 +64,7 @@ proc process-pkg-info {args} {
 	global pkg_list pkg_loaded
 	
 	# load all pkgs
+	puts "DLTK-BEGIN:[array size pkg_list]"
 	foreach elm [array names pkg_list] {
 		set name [lindex $elm 0]
 		set vers [lindex $elm 1]
@@ -72,8 +73,9 @@ proc process-pkg-info {args} {
 		#puts $::auto_path
 		# Load the package
 		if {![catch {package require $name} res]} {
-                    set pkg_loaded([list $name $res]) $path
-                }
+			set pkg_loaded([list $name $res]) $path
+		}
+		puts "###"
 	}
 }
 proc pkg-add-path {path} {
@@ -87,8 +89,6 @@ proc pkg-add-path {path} {
 }
 proc print-pkg-info {args} {
 	global pkg_loaded pkg_files pkg_paths
-	
-	puts "DLTK-BEGIN"
 	#puts "+++++++++ Begin Pkg Info +++++++++++++++++++"
 	foreach elm [array names pkg_loaded] {
 		set name [lindex $elm 0]
