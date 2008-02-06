@@ -31,7 +31,7 @@ public class TclCheckerType extends AbstractValidatorType {
 	public IValidator createValidatorFrom(String id, Element validatorElement)
 			throws IOException {
 //		return new ScriptChecker(id, validatorElement, this);
-//		checker.loadInfo(validatorElement);
+		checker.loadInfo(validatorElement);
 		return checker;
 	}
 
