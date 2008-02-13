@@ -24,17 +24,20 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclKeywordsManager;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
+import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclGlobalVariableDeclaration;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.ast.TclUpvarVariableDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ISourceElementRequestVisitorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
+import org.eclipse.dltk.tcl.internal.core.packages.TclCheckBuilder;
 
 public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor {
 
@@ -44,6 +47,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 
 	protected ISourceElementRequestVisitorExtension[] extensions = TclExtensionManager
 			.getDefault().getSourceElementRequestoVisitorExtensions();
+	private IScriptProject scriptProject;
+	private CodeModel codeModel;
 
 	public TclSourceElementRequestVisitor(ISourceElementRequestor requestor,
 			IProblemReporter reporter) {
@@ -250,14 +255,12 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		}
 		if ((s.getModifiers() & Modifiers.AccPublic) != 0) {
 			flags |= Modifiers.AccPublic;
-		}
-		else if((s.getModifiers() & Modifiers.AccPrivate) != 0) {
+		} else if ((s.getModifiers() & Modifiers.AccPrivate) != 0) {
 			flags |= Modifiers.AccPrivate;
-		}
-		else if((s.getModifiers() & Modifiers.AccProtected) != 0) {
+		} else if ((s.getModifiers() & Modifiers.AccProtected) != 0) {
 			flags |= Modifiers.AccProtected;
 		}
-		
+
 		for (int i = 0; i < this.extensions.length; i++) {
 			flags |= this.extensions[i].getModifiers(s);
 		}
@@ -296,7 +299,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		} else if (statement instanceof FieldDeclaration) {
 			this.processField(statement);
 			return false;
-		}
+		} 
 
 		for (int i = 0; i < extensions.length; i++) {
 			if (extensions[i].visit(statement, this)) {
@@ -304,6 +307,11 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			}
 		}
 		return true;
+	}
+
+	private void checkPackage(Statement statement) {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void processReferences(TclStatement statement) {
@@ -384,6 +392,10 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 						.getNameEnd(), (pack.getName() + "*").toCharArray());
 			}
 		}
+		if (this.scriptProject != null) {
+			TclPackageDeclaration pkg = (TclPackageDeclaration) statement;
+			TclCheckBuilder.check(pkg, this.fReporter, this.scriptProject, this.codeModel);
+		}
 	}
 
 	protected boolean processField(Statement statement) {
@@ -418,7 +430,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		ExitFromType exit = null;// this.resolveType(decl, fullName, false);
 
 		for (int i = 0; i < extensions.length; i++) {
-			if ((exit = extensions[i].processField(decl,this)) != null) {
+			if ((exit = extensions[i].processField(decl, this)) != null) {
 				continue;
 			}
 		}
@@ -563,5 +575,13 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 
 	public ISourceElementRequestor getRequestor() {
 		return this.fRequestor;
+	}
+
+	public void setScriptProject(IScriptProject scriptProject) {
+		this.scriptProject = scriptProject;
+	}
+
+	public void setCodeModel(CodeModel model) {
+		this.codeModel = model;
 	}
 }
