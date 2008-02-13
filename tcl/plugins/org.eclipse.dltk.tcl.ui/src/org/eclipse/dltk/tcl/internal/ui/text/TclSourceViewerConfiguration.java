@@ -32,6 +32,7 @@ import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -236,5 +237,10 @@ public class TclSourceViewerConfiguration extends
 		presenter.setInformationProvider(provider, TclPartitions.TCL_COMMENT);
 		presenter.setInformationProvider(provider, TclPartitions.TCL_INNER_CODE);
 		presenter.setInformationProvider(provider, TclPartitions.TCL_STRING);
+	}
+	public IQuickAssistAssistant getQuickAssistAssistant(ISourceViewer sourceViewer) {
+		if (getEditor() != null)
+			return new TclCorrectionAssistant(getEditor());
+		return null;
 	}
 }

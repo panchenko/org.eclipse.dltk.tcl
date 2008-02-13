@@ -480,4 +480,11 @@
             id="org.eclipse.dltk.USER_LIBRARY">
       </buildpathContainerPath>
    </extension>
+<extension
+      point="org.eclipse.ui.ide.markerResolution">
+   <markerResolutionGenerator
+         class="org.eclipse.dltk.tcl.internal.ui.text.TclRequireMarkerResolutionGenerator"
+         markerType="org.eclipse.dltk.core.problem">
+   </markerResolutionGenerator>
+</extension>
 </plugin>
