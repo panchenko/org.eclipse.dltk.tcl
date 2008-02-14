@@ -299,7 +299,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		} else if (statement instanceof FieldDeclaration) {
 			this.processField(statement);
 			return false;
-		} 
+		}
 
 		for (int i = 0; i < extensions.length; i++) {
 			if (extensions[i].visit(statement, this)) {
@@ -307,11 +307,6 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			}
 		}
 		return true;
-	}
-
-	private void checkPackage(Statement statement) {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void processReferences(TclStatement statement) {
@@ -340,6 +335,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				for (int i = 0; i < exprs.size(); ++i) {
 					if (exprs.get(i) instanceof TclStatement) {
 						this.processReferences((TclStatement) exprs.get(i));
+					} else if (exprs.get(i) instanceof TclPackageDeclaration) {
+						processPackage((Statement) exprs.get(i));
 					}
 				}
 			} else if (st instanceof StringLiteral) {
@@ -394,7 +391,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		}
 		if (this.scriptProject != null) {
 			TclPackageDeclaration pkg = (TclPackageDeclaration) statement;
-			TclCheckBuilder.check(pkg, this.fReporter, this.scriptProject, this.codeModel);
+			TclCheckBuilder.check(pkg, this.fReporter, this.scriptProject,
+					this.codeModel);
 		}
 	}
 

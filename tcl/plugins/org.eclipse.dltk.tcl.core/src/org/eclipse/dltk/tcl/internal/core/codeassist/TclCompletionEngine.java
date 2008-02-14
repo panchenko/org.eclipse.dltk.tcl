@@ -195,7 +195,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 			setSourceRange(pkg.getNameStart(), pkg.getNameEnd());
 			packageNamesCompletion(token.toCharArray(), new HashSet());
-			
+
 		} else if (astNode instanceof CompletionOnKeywordArgumentOrFunctionArgument) {
 			CompletionOnKeywordArgumentOrFunctionArgument compl = (CompletionOnKeywordArgumentOrFunctionArgument) astNode;
 			Set methodNames = new HashSet();
@@ -226,6 +226,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					String sat1 = ((SimpleReference) at1).getName();
 					if ("package".equals(sat0) && "require".equals(sat1)) {
 						packageNamesCompletion(compl.getToken(), methodNames);
+						return true;
 					}
 				}
 			}
@@ -455,6 +456,15 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						ns = "::" + ns;
 					}
 					namespaceNames.add(ns);
+					// Also add all subnamespaces
+					String ns2 = ns;
+					while (true) {
+						ns2 = getElementNamespace(ns2);
+						if( ns2 == null || ( ns2 != null && ns2.equals("::") )) {
+							break;
+						}
+						namespaceNames.add(ns2);
+					}
 					return super.visit(s);
 				}
 			});
@@ -473,11 +483,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					boolean nsHere = false;
 					String elemName = TclParseUtil.getFQNFromModelElement(m,
 							"::");
-					for (Iterator ns = namespaceNames.iterator(); ns.hasNext();) {
-						String nsName = (String) ns.next();
-						if (elemName.startsWith(nsName)) {
-							nsHere = true;
-						}
+					String elemNSName = getElementNamespace(elemName);
+					if (elemNSName != null) {
+						nsHere = namespaceNames.contains(elemNSName);
 					}
 					if (!nsHere && Flags.isPrivate(m.getFlags())) {
 						privateSet.add(method);
@@ -493,6 +501,18 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			Object object = (Object) iterator.next();
 			methods.remove(object);
 		}
+	}
+
+	private String getElementNamespace(String elemName) {
+		int pos = elemName.lastIndexOf("::");
+		if (pos != -1) {
+			String rs = elemName.substring(0, pos);
+			if( rs.length() == 0 ) {
+				return null;
+			}
+			return rs;
+		}
+		return null;
 	}
 
 	protected void findMethods(char[] token, boolean canCompleteEmptyToken,
