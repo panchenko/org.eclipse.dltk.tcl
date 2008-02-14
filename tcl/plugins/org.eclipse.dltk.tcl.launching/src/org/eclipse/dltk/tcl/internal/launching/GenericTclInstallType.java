@@ -30,7 +30,9 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 	private static final String INSTALL_TYPE_NAME = "Generic Tcl";
 
 	private static final String[] INTERPRETER_NAMES = { "tclsh", "tclsh84",
-			"wish", "wish84", "vtk", "expect" };
+			"wish", "wish84", "vtk", "expect", "base-tcl-linux",
+			"base-tk-linux", "base-tcl-thread-win32-ix86",
+			"base-tk-thread-win32-ix86" };
 
 	public String getNatureId() {
 		return TclNature.NATURE_ID;
@@ -73,8 +75,8 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 				// String result = retrivePaths(installLocation, locations,
 				// monitor, createPathFile(), variables);
 				// This is safe retrieval
-				String[] autoPath = DLTKTclHelper.getDefaultPath(installLocation,
-						variables);
+				String[] autoPath = DLTKTclHelper.getDefaultPath(
+						installLocation, variables);
 				if (autoPath != null) {
 					for (int i = 0; i < autoPath.length; i++) {
 						Path libraryPath = new Path(autoPath[i]);
