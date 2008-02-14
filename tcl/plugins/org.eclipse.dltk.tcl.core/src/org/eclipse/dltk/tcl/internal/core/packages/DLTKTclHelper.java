@@ -286,7 +286,7 @@ public class DLTKTclHelper {
 	}
 
 	private static String getXMLContent(List content) {
-		StringBuilder newList = new StringBuilder();
+		StringBuffer newList = new StringBuffer();
 		for (Iterator iterator = content.iterator(); iterator.hasNext();) {
 			String line = (String) iterator.next();
 			if (!(line.startsWith("NOTICE") || line.startsWith("WARN")
