@@ -72,4 +72,17 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 		}
 		return false;
 	}
+
+	public static boolean hasCorrections(Annotation annotation) {
+		if (annotation instanceof MarkerAnnotation) {
+			MarkerAnnotation mAnnot = (MarkerAnnotation) annotation;
+			IMarker marker = mAnnot.getMarker();
+			String pkgName = marker.getAttribute("tcl.problem.require",
+					null);
+			if( pkgName != null ) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

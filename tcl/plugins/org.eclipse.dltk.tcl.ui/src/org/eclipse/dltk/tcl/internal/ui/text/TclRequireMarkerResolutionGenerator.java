@@ -20,6 +20,6 @@ public class TclRequireMarkerResolutionGenerator implements
 						pkgName, scriptProject) };
 			}
 		}
-		return null;
+		return new IMarkerResolution[0];
 	}
 }

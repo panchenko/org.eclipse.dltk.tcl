@@ -487,4 +487,17 @@
          markerType="org.eclipse.dltk.core.problem">
    </markerResolutionGenerator>
 </extension>
+<extension
+         point="org.eclipse.ui.editorActions">
+          <editorContribution
+            targetID="org.eclipse.dltk.tcl.ui.editor.TclEditor"
+            id="org.eclipse.dltk.tcl.internal.ui.TclEditor.ruler.actions">
+         <action
+               label="Tcl Selection Ruler action"
+               class="org.eclipse.dltk.tcl.internal.ui.actions.TclSelectRulerAction"
+               actionID="RulerClick"
+               id="org.eclipse.dltk.tcl.internal.ui.tcleditor.TclSelectRulerAction">
+         </action>
+      </editorContribution>
+</extension>
 </plugin>

@@ -50,7 +50,7 @@ public class TclCorrectionAssistant extends QuickAssistAssistant {
 	private Position fPosition;
 	private Annotation[] fCurrentAnnotations;
 
-	// private QuickAssistLightBulbUpdater fLightBulbUpdater;
+//	 private TclQuickAssistLightBulbUpdater fLightBulbUpdater;
 
 	/**
 	 * Constructor for JavaCorrectionAssistant.
@@ -111,9 +111,9 @@ public class TclCorrectionAssistant extends QuickAssistAssistant {
 		super.install(sourceViewer);
 		fViewer = sourceViewer;
 
-		// fLightBulbUpdater= new QuickAssistLightBulbUpdater(fEditor,
-		// sourceViewer);
-		// fLightBulbUpdater.install();
+//		 fLightBulbUpdater = new TclQuickAssistLightBulbUpdater(fEditor,
+//				sourceViewer);
+//		fLightBulbUpdater.install();
 	}
 
 	/*
@@ -122,10 +122,10 @@ public class TclCorrectionAssistant extends QuickAssistAssistant {
 	 * @see org.eclipse.jface.text.contentassist.ContentAssistant#uninstall()
 	 */
 	public void uninstall() {
-		// if (fLightBulbUpdater != null) {
-		// fLightBulbUpdater.uninstall();
-		// fLightBulbUpdater= null;
-		// }
+//		 if (fLightBulbUpdater != null) {
+//			fLightBulbUpdater.uninstall();
+//			fLightBulbUpdater = null;
+//		}
 		super.uninstall();
 	}
 

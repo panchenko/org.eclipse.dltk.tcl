@@ -10,15 +10,9 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
@@ -58,8 +52,8 @@ final class RequirePackageMarkerResulution implements
 			return;
 		}
 		if (install != null) {
-			Job j = new Job("Add package dependencies") {
-				protected IStatus run(IProgressMonitor monitor) {
+//			Ru = new Job("Add package dependencies") {
+//				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						marker.delete();
 					} catch (CoreException e) {
@@ -92,12 +86,12 @@ final class RequirePackageMarkerResulution implements
 						final IBuildpathEntry[] newBP = (IBuildpathEntry[]) newBuildPath
 								.toArray(new IBuildpathEntry[newBuildPath
 										.size()]);
-						monitor.beginTask("", 100);
+//						monitor.beginTask("", 100);
 						SetBuildpathOperation op = new SetBuildpathOperation(
 								(ScriptProject) project, buildpath, newBP,
 								true, true, true);
 						try {
-							op.run(new SubProgressMonitor(monitor, 50));
+							op.run(new NullProgressMonitor()/*new SubProgressMonitor(monitor, 50)*/);
 							// We need to rebuild all resources
 							IProject prj = project.getProject();
 							State builtState = (State) ModelManager
@@ -107,8 +101,6 @@ final class RequirePackageMarkerResulution implements
 							if (builtState != null) {
 								builtState.setNoCleanExternalFolders();
 							}
-							prj.build(IncrementalProjectBuilder.FULL_BUILD,
-									new SubProgressMonitor(monitor, 50));
 						} catch (CoreException e) {
 							if (DLTKCore.DEBUG) {
 								e.printStackTrace();
@@ -119,12 +111,12 @@ final class RequirePackageMarkerResulution implements
 							e1.printStackTrace();
 						}
 					}
-					monitor.done();
-					return Status.OK_STATUS;
-				}
-			};
-			j.setUser(true);
-			j.schedule();
+//					monitor.done();
+//					return Status.OK_STATUS;
+//				}
+//			};
+//			j.setUser(true);
+//			j.schedule();
 		}
 	}
 }
