@@ -48,7 +48,6 @@ public class PackagesManager {
 	private static final String PACKAGES_TAG = "packages";
 	private static final String PACKAGE_TAG = "package";
 
-	private static final String PATH_ATTR = "path";
 	private static final String INTERPRETER_ATTR = INTERPRETER_TAG;
 	private static final String NAME_ATTR = "name";
 	private static final String PATH_TAG = "path";
@@ -228,7 +227,7 @@ public class PackagesManager {
 		}
 	}
 
-	private void save(Document doc) {
+	private synchronized void save(Document doc) {
 		Element packages = doc.createElement(PACKAGES_TAG); //$NON-NLS-1$
 		doc.appendChild(packages);
 		for (Iterator iterator = this.packages.keySet().iterator(); iterator
@@ -275,7 +274,7 @@ public class PackagesManager {
 		}
 	}
 
-	private void populate(Element documentElement) {
+	private synchronized void populate(Element documentElement) {
 		NodeList childNodes = documentElement.getChildNodes();
 		int length = childNodes.getLength();
 		for (int i = 0; i < length; i++) {
@@ -337,7 +336,7 @@ public class PackagesManager {
 	/**
 	 * Return paths specific only for selected package.
 	 */
-	public IPath[] getPathsForPackage(IInterpreterInstall install,
+	public synchronized IPath[] getPathsForPackage(IInterpreterInstall install,
 			String packageName) {
 		PackageKey key = makeKey(packageName, install.getInstallLocation()
 				.getAbsolutePath());
@@ -382,7 +381,8 @@ public class PackagesManager {
 		return (IPath[]) resultPaths.toArray(new IPath[resultPaths.size()]);
 	}
 
-	public Map getDependencies(String pkgName, IInterpreterInstall install) {
+	public synchronized Map getDependencies(String pkgName,
+			IInterpreterInstall install) {
 		Set checkedPackages = new HashSet();
 		Map packages = new HashMap();
 		PackageKey key = makeKey(pkgName, install);
@@ -397,8 +397,9 @@ public class PackagesManager {
 		return makeKey(pkgName, install.getInstallLocation().getAbsolutePath());
 	}
 
-	private void traverseDependencies(Map packages, Set checkedPackages,
-			PackageInformation resultInfo, IInterpreterInstall install) {
+	private synchronized void traverseDependencies(Map packages,
+			Set checkedPackages, PackageInformation resultInfo,
+			IInterpreterInstall install) {
 		Set dependencies = resultInfo.getDependencies();
 		for (Iterator iterator = dependencies.iterator(); iterator.hasNext();) {
 			String pkgName = (String) iterator.next();
@@ -417,7 +418,7 @@ public class PackagesManager {
 		}
 	}
 
-	public Set getPackageNames(IInterpreterInstall install) {
+	public synchronized Set getPackageNames(IInterpreterInstall install) {
 		String key = install.getInstallLocation().getAbsolutePath();
 		if (this.interpreterToPackages.containsKey(key)) {
 			Set set = (Set) this.interpreterToPackages.get(key);
@@ -429,12 +430,27 @@ public class PackagesManager {
 		save();
 		return packages;
 	}
+	public synchronized Set getInternalPackageNames(IInterpreterInstall install) {
+		String key = "internal|||" + install.getInstallLocation().getAbsolutePath();
+		if (this.interpreterToPackages.containsKey(key)) {
+			Set set = (Set) this.interpreterToPackages.get(key);
+			return set;
+		}
+		return new HashSet();
+	}
+	public synchronized void setInternalPackageNames(IInterpreterInstall install, Set names) {
+		String key = "internal|||" + install.getInstallLocation().getAbsolutePath();
+		Set values = new HashSet();
+		values.addAll(names);
+		this.interpreterToPackages.put(key, values);
+		save();
+	}
 
 	/**
 	 * Return all packages paths in one call.
 	 */
-	public IPath[] getPathsForPackages(IInterpreterInstall install,
-			Set packagesInBuild) {
+	public synchronized IPath[] getPathsForPackages(
+			IInterpreterInstall install, Set packagesInBuild) {
 
 		StringBuffer buf = new StringBuffer();
 		String[] pkgs = (String[]) packagesInBuild
@@ -489,9 +505,9 @@ public class PackagesManager {
 
 	public IPath[] getAllPaths(String pkgName, IInterpreterInstall install) {
 		Set result = new HashSet();
-		IPath[] paths = manager.getPathsForPackage(install, pkgName);
+		IPath[] paths = this.getPathsForPackage(install, pkgName);
 		result.addAll(Arrays.asList(paths));
-		Map dependencies = manager.getDependencies(pkgName, install);
+		Map dependencies = this.getDependencies(pkgName, install);
 		for (Iterator iterator = dependencies.keySet().iterator(); iterator
 				.hasNext();) {
 			String packageName = (String) iterator.next();
@@ -500,5 +516,26 @@ public class PackagesManager {
 			result.addAll(info.getPaths());
 		}
 		return (IPath[]) result.toArray(new IPath[result.size()]);
+	}
+
+	/**
+	 * This method removes all information about specified interpreter.
+	 * 
+	 * @param install
+	 */
+	public synchronized void removeInterprterInfo(IInterpreterInstall install) {
+		// Remove interpreter to packages set
+		String interpreterPath = install.getInstallLocation().getAbsolutePath();
+		this.interpreterToPackages.remove(interpreterPath);
+		// Remove all values stored for interpreter packages
+		for (Iterator iterator = this.packages.keySet().iterator(); iterator
+				.hasNext();) {
+			PackageKey key = (PackageKey) iterator.next();
+			String path = key.getInterpreterPath();
+			if (path.equals(interpreterPath)) {
+				iterator.remove();
+			}
+		}
+		save();
 	}
 }

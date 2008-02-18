@@ -35,12 +35,24 @@ proc package {subcmd args} {
             set pkg_stack [lrange $pkg_stack 1 end]
             if {$retCode} {
                 # Unsuccessful pkg load
-                add-pkg-info $name ""
+                add-pkg-srcs-info $name ""
             } else {
                 # Successful pkg load
-                add-pkg-info $name $vers
+                add-pkg-srcs-info $name $vers
             }
             return -code $retCode $vers
+        }
+        "ifneeded" {
+            set name [lindex $args 0]
+            set vers [lindex $args 1]
+            #set body [lindex $args 2]
+            upvar 1 use_path lcl_use_path
+            upvar 1 dir lcl_dir
+            if {[info exists lcl_use_path]} {
+                set path [lindex $lcl_use_path end]
+                add-pkg-info $name $vers $path $lcl_dir
+            }
+            return [uplevel 1 "::package-org $subcmd $args"]
         }
         default {}
     }
@@ -157,6 +169,8 @@ proc get-canonical-path {path} {
     # [file normalize] cmd was introduced in tcl8.4 version
     if {$tcl_version >= 8.4} {
         set retVal [file normalize $path]
+    } elseif {[string equal [file pathtype $path] "relative"]} {
+        set retVal [file join [pwd] $path]
     } ;# End of if stmt
 
     return $retVal
@@ -181,7 +195,6 @@ proc trace-auto_index {var idx op} {
 } ;# End of proc trace-auto_index
 
 proc process-pkg-info {find_level find_pkgs} {
-    global pkg_names_path
     global auto_index
 
     # Do not go any further it find level is negative
@@ -206,52 +219,48 @@ proc process-pkg-info {find_level find_pkgs} {
     } ;# End of if stmt
     foreach name $pkgs {
         log::notice "%DLTK-PROCESS-PKG% $name"
-        if {![info exists pkg_names_path($name)]} {
+        if {![get-pkg-info exists $name]} {
             # This package does not exist, so skip
             continue
         } ;# End of if stmt
 
         # Load the package
         if {$find_level && ![catch {package require $name} vers]} {
-            # If the package was loaded successfully, include the
-            # version number in $elm
-            #set elm [list $name $vers]
-            #add-pkg-info $name $vers
+            # If the package was loaded successfully, do nothing
+            # since its info will be added by package require
         } else {
-            add-pkg-info $name ""
+            # If the package could not be loaded, register all
+            # known versions of the pkg
+            foreach nvers [get-pkg-info vers $name] {
+                add-pkg-srcs-info $name $nvers
+            } ;# End of foreach loop
         } ;# End of if catch stmt
     } ;# End of foreach name loop
 
     return
 } ;# End of proc process-pkg-info
 
-proc add-pkg-info {name vers} {
-    global pkg_names_path pkg_path_names
+proc add-pkg-srcs-info {name vers} {
+    global pkg_path_names
+    global pkg_dir_names
     global pkg_reqs pkg_srcs pkg_load
     global pkg_reqs_tmp pkg_srcs_tmp pkg_load_tmp
     global pkg_names_tmp
 
-    if {[info exists pkg_names_path($name)]} {
-        set path $pkg_names_path($name)
-    } else {
+    set path [get-pkg-info path $name $vers]
+    if {[string equal $path ""]} {
         # If the package is not known to the interpreter,
         # its shouldn't be recorded, so return immediately.
         return
     } ;# End of if stmt
 
+    set elm [list $name $vers]
+    set dir  [get-pkg-info dir $name $vers]
     # Skip if pkg name has been previously recorded
-    if {[info exists pkg_names_tmp($name)]} {
+    if {[info exists pkg_names_tmp($elm)]} {
         return
-    }
-    # In tcl you can load only one package version in an
-    # interpreter, so there is no need to track by $vers
-    # in pkg_names_tmp($name) array
-    set pkg_names_tmp($name) $vers
-    if {[string equal $vers ""]} {
-        set elm $name
-    } else {
-        set elm [list $name $vers]
-    }
+    } ;# End of if stmt
+    set pkg_names_tmp($elm) $vers
 
     # Store the files sourced and its package require
     # dependencies in a global variable.
@@ -271,47 +280,116 @@ proc add-pkg-info {name vers} {
         unset pkg_reqs_tmp($name)
     } ;# End of if stmt
     lappend  pkg_path_names($path) $elm
+    lappend  pkg_dir_names($dir) $elm
+    log::debug "PKG-PATH $elm $path"
 
+    return
+} ;# End of proc add-pkg-srcs-info
+
+proc add-pkg-info {name vers path {dir ""}} {
+    global pkg_names_vers
+    global pkg_names_path
+    global pkg_names_dir
+
+    # Don't go any further if:
+    #    1. the specified pkg vers has been recorded previously, or
+    #    2. the vers is null and any pkg vers has been previously recorded
+    set elm [list $name $vers]
+    if {[info exists pkg_names_path($elm)] ||
+        ([string equal $vers ""] && [info exists pkg_names_vers($name)])} {
+        return
+    } ;# End of if stmt
+
+    if {![info exists pkg_names_vers($name)]} {
+        set pkg_names_vers($name) [list]
+    } ;# End of if stmt
+    if {![string equal $vers ""]} {
+        lappend pkg_names_vers($name) $vers
+    } ;# End of if stmt
+
+    # Save path and dir for pkg version.
+    set pkg_names_path($elm) $path
+    set pkg_names_dir($elm)  $dir
+
+    log::debug "PATH-PKG $name $vers $path $dir"
     return
 } ;# End of proc add-pkg-info
 
-proc pkg-names-path {path} {
-    global pkg_names_path pkg_path_names
+proc get-pkg-info {what name {vers ""}} {
+    global pkg_names_vers
+    global pkg_names_path
+    global pkg_names_dir
 
-    # Initialize pkg_path_names to null string
-    set pkg_path_names($path) [list]
+    # Parse $what 
+    set retVal {}
+    set elm [list $name $vers]
+    switch -exact -- $what {
+        "path" {
+            if {[info exists pkg_names_path($elm)]} {
+                set retVal $pkg_names_path($elm)
+            } ;# End of if stmt
+        }
+        "dir"  {
+            if {[info exists pkg_names_dir($elm)]} {
+                set retVal $pkg_names_dir($elm)
+            } ;# End of if stmt
+        }
+        "vers" {
+            # Returns list of known pkg versions
+            if {[info exists pkg_names_vers($name)]} {
+                set retVal $pkg_names_vers($name)
+            } ;# End of if stmt
+        }
+        "exists" {
+            # Returns 1 if the pkg version is known
+            # otherwise it returns 0
+            set retVal 0
+            if {[info exists pkg_names_vers($name)]} {
+                if {[string equal $vers ""] ||
+                    [lsearch $pkg_names_vers($name) $vers] != "-1"} {
+                    set retVal 1
+                } ;# End of if stmt
+            } ;# End of if stmt
+        }
+        default {
+            # should never reach here
+            return
+        }
+    } ;# End of switch stmt
 
-    # We create a child interpreter to find the list of packages
-    # that are available for loading one auto_path, at a time.
-    set i pkg-names
-    if {![interp exists $i]} {
-        interp create -- $i
-        $i eval [list unset ::auto_path]
-    }
-    $i eval [list lappend ::auto_path $path]
-    $i eval [list catch {package require unknown-random-[clock seconds]}]
-    foreach name [$i eval {package names}] {
-        if {![info exists pkg_names_path($name)]} {
-            set pkg_names_path($name) $path
-        } ;# End of if stmt
-    } ;# End of foreach name loop
+    return $retVal
+} ;# End of proc get-pkg-info
 
-#    interp delete $i
-    return
-} ;# End of proc pkg-names-path
+proc get-path-info {what {path ""}} {
+    global pkg_path_names
+
+    # Parse $what 
+    set retVal {}
+    switch -exact -- $what {
+        "list" {
+             set retVal [array names pkg_path_names]
+        }
+        "pkgs" {
+            # Returns list of known pkgs for the given path
+            if {[info exists pkg_path_names($path)]} {
+                set retVal $pkg_path_names($path)
+            } ;# End of if stmt
+        }
+        default {
+            # should never reach here
+            return
+        }
+    } ;# End of switch stmt
+
+    return $retVal
+} ;# End of proc get-path-info
 
 proc process-pkg-paths {find_paths} {
     global env auto_path
     global pkg_path_type
+    global pkg_path_names
 
-    # Initialize empty path for default packages
-    set pkg_path_type() "builtin"
-    pkg-names-path ""
-
-    # Initialize unknown path for default packages
-#    set pkg_path_type(unknown) "unknown"
-#    pkg-names-path ""
-
+    #set pkg_path_type() unknown
     # First save paths found in auto_path variable
     # and set the flag to 0
     set paths $find_paths
@@ -320,17 +398,16 @@ proc process-pkg-paths {find_paths} {
     } ;# End of if stmt
     foreach path $paths {
         set path [get-canonical-path $path]
+        set pkg_path_names($path) [list]
         set pkg_path_type($path) "auto_path"
-        pkg-names-path $path
     } ;# End of foreach elm loop
 
     # Next look for paths found in TCLLIBPATH variable
     # and set the flag to 1
     if {[info exists env(TCLLIBPATH)]} {
         foreach path $::env(TCLLIBPATH) {
-            # No need to call pkg-names-path since TCLLIBPATH
-            # shoujld be part of $auto_path anyway.
             set path [get-canonical-path $path]
+            set pkg_path_names($path) [list]
             set pkg_path_type($path) "tcllibpath"
         } ;# End of foreach elm loop
     } ;# End of if TCLLIBPATH exists sttm
@@ -339,7 +416,7 @@ proc process-pkg-paths {find_paths} {
 } ;# End of proc process-pkg-paths
 
 proc print-pkg-info {output} {
-    global pkg_path_names pkg_srcs pkg_load pkg_reqs pkg_path_type
+    global pkg_srcs pkg_load pkg_reqs pkg_path_type
     
     set tabspc "    "
     set path_count 0
@@ -350,7 +427,12 @@ proc print-pkg-info {output} {
 
     set dltk_size  0
     set path_data {}
-    foreach path [lsort [array names pkg_path_names]] {
+    foreach path [lsort [get-path-info list]] {
+        # Skip null paths
+        if {[string equal $path ""]} {
+            continue
+        } ;# End of if stmt
+
         # Indentation
         set indent "$tabspc"
         incr path_count
@@ -359,7 +441,7 @@ proc print-pkg-info {output} {
         set pkg_data {}
         log::info "path: $path"
 
-        foreach elm [lsort $pkg_path_names($path)] {
+        foreach elm [lsort [get-path-info pkgs $path]] {
             # Double indentation
             set indent "$tabspc$tabspc"
             incr pkgs_count
@@ -381,13 +463,13 @@ proc print-pkg-info {output} {
                 set rattr name=\"$rname\"
                 if {![string equal $rvers ""]} {
                     append rattr " " version=\"$rvers\"
-                }
+                } ;# End of if stmt
                 if {$rexact} {
                     append rattr " " exact=\"1\"
-                }
+                } ;# End of if stmt
                 log::info "    require: $rname $rvers"
                 append data $indent $tabspc "<require $rattr/>" \n
-            }
+            } ;# End of foreach rname loop
 
             foreach sname $srcs {
                 incr srcs_count
@@ -397,13 +479,13 @@ proc print-pkg-info {output} {
                     if {$ssize} {
                         append sattr " " size=\"$ssize\"
                         incr pkg_size $ssize
-                    }
+                    } ;# End of if stmt
                 } else {
                     log::warn "Source file not found: $sname"
-                }
+                } ;# End of ifelse stmt
                 log::info "    source: $sname"
                 append data $indent $tabspc "<source $sattr/>" \n
-            }
+            } ;# End of foreach sname loop
 
             foreach lname $load {
                 incr load_count
@@ -413,22 +495,27 @@ proc print-pkg-info {output} {
                     if {$lsize} {
                         append lattr " " size=\"$lsize\"
                         incr pkg_size $lsize
-                    }
+                    } ;# End of if stmt
                 } else {
                     log::warn "Load file not found: $lname"
-                }
+                } ;# End of ifelse stmt
                 log::info "    load: $lname"
                 append data $indent $tabspc "<load $lattr/>" \n
-            }
+            } ;# End of foreach lname loop
 
             # Create the pkg xml structure
             set pattr name=\"$name\"
             if {![string equal $vers ""]} {
                 append pattr " " version=\"$vers\"
-            }
+            } ;# End of if stmt
+# Disable printing of directory name for the pkg for now
+#            set pkg_dir [get-pkg-info dir $name $vers]
+#            if {![string equal $pkg_dir ""]} {
+#                append pattr " " dir=\"$pkg_dir\"
+#            } ;# End of if stmt
             if {$pkg_size} {
                 append pattr " " size=\"$pkg_size\"
-            }
+            } ;# End of if stmt
             append pkg_data $indent "<package $pattr>" \n
             append pkg_data $data
             append pkg_data $indent  "</package>" \n
@@ -469,8 +556,7 @@ proc print-pkg-info {output} {
 
     log::notice "Output file:                 $fname"
     log::notice "Number of pkg paths found:   $path_count"
-    log::notice "Number of pkgs found/total:  $pkgs_count"
-    #log::notice "Number of pkgs found/total:  $pkgs_count/[llength [package names]]"
+    log::notice "Number of pkgs found:        $pkgs_count"
     log::notice "Number of files sourced:     $srcs_count"
     log::notice "Number of libs loaded:       $load_count"
     log::notice "Number of pkg dependencies:  $reqs_count"
@@ -570,7 +656,7 @@ proc main {argv} {
                 set pkgs [lindex $argv $idx]
             }
             "-output" {
-                set output [lindex $argv $idx]
+                set output [get-canonical-path [lindex $argv $idx]]
             }
             "-loglevel" {
                 ::log::setlevel [lindex $argv $idx]

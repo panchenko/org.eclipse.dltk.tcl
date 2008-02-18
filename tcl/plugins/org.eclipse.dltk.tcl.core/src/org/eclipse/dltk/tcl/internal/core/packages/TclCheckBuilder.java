@@ -42,9 +42,11 @@ import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 public class TclCheckBuilder implements IScriptBuilder {
 
 	private static final String TCL_PROBLEM_REQUIRE = "tcl.problem.require";
+	IScriptProject project;
 
-	public IStatus[] buildModelElements(IScriptProject project, List elements,
+	public IStatus buildModelElements(IScriptProject project, List elements,
 			IProgressMonitor monitor, int status) {
+		this.project = project;
 		int est = estimateElementsToBuild(elements);
 		if (est == 0) {
 			if (monitor != null) {
@@ -75,7 +77,9 @@ public class TclCheckBuilder implements IScriptBuilder {
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 		} catch (CoreException e1) {
-			e1.printStackTrace();
+			if (DLTKCore.DEBUG) {
+				e1.printStackTrace();
+			}
 		}
 		if (install == null) {
 			return null;
@@ -85,11 +89,22 @@ public class TclCheckBuilder implements IScriptBuilder {
 		Set packageNames = manager.getPackageNames(install);
 		Set buildpath = getBuildpath(project);
 
+		Set packageNamesInProject = new HashSet();
+		if (status != IScriptBuilder.FULL_BUILD) {
+			Set names = manager.getInternalPackageNames(install);
+			if (names != null) {
+				packageNamesInProject.addAll(names);
+			}
+		}
 		processSources(elements, monitor, resourceToPackagesList,
-				packagesInBuild);
+				packagesInBuild, packageNamesInProject);
+
+		if (status == IScriptBuilder.FULL_BUILD) {
+			manager.setInternalPackageNames(install, packageNamesInProject);
+		}
 
 		// This method will populate all required paths.
-		IPath[] paths = manager.getPathsForPackages(install, packagesInBuild);
+		manager.getPathsForPackages(install, packagesInBuild);
 
 		Set keySet = resourceToPackagesList.keySet();
 		IProblemFactory factory;
@@ -104,6 +119,13 @@ public class TclCheckBuilder implements IScriptBuilder {
 		}
 		for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
 			ISourceModule module = (ISourceModule) iterator.next();
+			try {
+				cleanMarkers(module.getResource());
+			} catch (CoreException e1) {
+				if (DLTKCore.DEBUG) {
+					e1.printStackTrace();
+				}
+			}
 			List pkgs = (List) resourceToPackagesList.get(module);
 			CodeModel model = null;
 			try {
@@ -150,7 +172,8 @@ public class TclCheckBuilder implements IScriptBuilder {
 	}
 
 	private void processSources(List elements, IProgressMonitor monitor,
-			Map resourceToPackagesList, Set packagesInBuild) {
+			Map resourceToPackagesList, Set packagesInBuild,
+			Set packageNamesInProject) {
 		for (int i = 0; i < elements.size(); i++) {
 			IModelElement element = (IModelElement) elements.get(i);
 			if (element.getElementType() == IModelElement.SOURCE_MODULE) {
@@ -159,8 +182,11 @@ public class TclCheckBuilder implements IScriptBuilder {
 				if (!projectFragment.isExternal()) {
 					try {
 						if (monitor != null) {
-							monitor.subTask("Checking file:"
-									+ element.getElementName());
+							String taskTitle = "Performing code checks for "
+									+ project.getElementName() + " ("
+									+ (elements.size() - i) + "):"
+									+ element.getElementName();
+							monitor.subTask(taskTitle);
 						}
 						IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 								.getLanguageToolkit(element);
@@ -172,8 +198,8 @@ public class TclCheckBuilder implements IScriptBuilder {
 						}
 
 						ISourceModule module = (ISourceModule) element;
-						IResource resource = module.getResource();
-						cleanMarkers(resource);
+						// IResource resource = module.getResource();
+						// cleanMarkers(resource);
 
 						ModuleDeclaration declaration = SourceParserUtil
 								.getModuleDeclaration(module, null,
@@ -182,7 +208,7 @@ public class TclCheckBuilder implements IScriptBuilder {
 						final ArrayList list = new ArrayList();
 						resourceToPackagesList.put(module, list);
 						fillPackagesDeclarations(declaration, list,
-								packagesInBuild);
+								packagesInBuild, packageNamesInProject);
 
 						if (monitor != null) {
 							monitor.worked(1);
@@ -206,14 +232,15 @@ public class TclCheckBuilder implements IScriptBuilder {
 				DefaultProblem.MARKER_TYPE_PROBLEM, true,
 				IResource.DEPTH_INFINITE);
 		for (int j = 0; j < findMarkers.length; j++) {
-			if( findMarkers[j].getAttribute(TCL_PROBLEM_REQUIRE, null) != null ) {
+			if (findMarkers[j].getAttribute(TCL_PROBLEM_REQUIRE, null) != null) {
 				findMarkers[j].delete();
 			}
 		}
 	}
 
 	private void fillPackagesDeclarations(ModuleDeclaration declaration,
-			final ArrayList list, final Set packagesInBuild) throws Exception {
+			final ArrayList list, final Set packagesInBuild,
+			final Set packageNamesInProject) throws Exception {
 		declaration.traverse(new ASTVisitor() {
 			public boolean visit(Statement s) throws Exception {
 				if (s instanceof TclPackageDeclaration) {
@@ -223,6 +250,9 @@ public class TclCheckBuilder implements IScriptBuilder {
 								pkg);
 						list.add(copy);
 						packagesInBuild.add(copy.getName());
+					} else if (pkg.getStyle() == TclPackageDeclaration.STYLE_IFNEEDED
+							|| pkg.getStyle() == TclPackageDeclaration.STYLE_PROVIDE) {
+						packageNamesInProject.add(pkg.getName());
 					}
 					return false;
 				}
@@ -253,12 +283,27 @@ public class TclCheckBuilder implements IScriptBuilder {
 		if (pkg.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
 			String packageName = pkg.getName();
 
-			// This package is unknown for specified interpreter
-//			if (!packageNames.contains(packageName)) {
-//				reportProblem(pkg, reporter, model,
-//						"Required library not pressent in interprter",
-//						packageName);
-//			}
+			Set internalNames = manager.getInternalPackageNames(install);
+			if( internalNames.contains(packageName )) {
+				return;
+			}
+			// Report unknown projects
+			if (!packageNames.contains(packageName)
+					&& !internalNames.contains(packageName)) {
+				try {
+					reporter.reportProblem(new DefaultProblem("",
+							"Unknown package:" + packageName, 777, null,
+							ProblemSeverities.Error, pkg.sourceStart(), pkg
+									.sourceEnd(), model.getLineNumber(pkg
+									.sourceStart(), pkg.sourceEnd())));
+				} catch (CoreException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
+				return;
+			}
+
 			// Receive main package and it paths.
 			boolean error = check(pkg, reporter, model, manager, install,
 					buildpath, packageName);
@@ -284,6 +329,14 @@ public class TclCheckBuilder implements IScriptBuilder {
 			IProblemReporter reporter, CodeModel model,
 			PackagesManager manager, IInterpreterInstall install,
 			Set buildpath, String packageName) {
+
+		Set names = manager.getInternalPackageNames(install);
+		if (names != null) { // Internal package check
+			if (names.contains(packageName)) {
+				return false;
+			}
+		}
+
 		IPath[] paths = manager.getPathsForPackage(install, packageName);
 		// Check what package path are in project buildpath.
 		return checkPaths(pkg, reporter, model, buildpath, paths, packageName);
@@ -316,7 +369,7 @@ public class TclCheckBuilder implements IScriptBuilder {
 		return error;
 	}
 
-	public IStatus[] buildResources(IScriptProject project, List resources,
+	public IStatus buildResources(IScriptProject project, List resources,
 			IProgressMonitor monitor, int status) {
 		return null;
 	}
@@ -335,14 +388,9 @@ public class TclCheckBuilder implements IScriptBuilder {
 		return estimation;
 	}
 
-	public List getDependencies(IScriptProject project, List resources) {
-		return null;
-	}
-
 	public static void check(TclPackageDeclaration pkg,
 			IProblemReporter reporter, IScriptProject scriptProject,
 			CodeModel model) {
-		long time = System.currentTimeMillis();
 		IInterpreterInstall install = null;
 		try {
 			install = ScriptRuntime.getInterpreterInstall(scriptProject);
@@ -356,6 +404,20 @@ public class TclCheckBuilder implements IScriptBuilder {
 		PackagesManager manager = PackagesManager.getInstance();
 		Set packageNames = manager.getPackageNames(install);
 		check(pkg, packageNames, reporter, model, manager, install, buildpath);
-		System.out.println(Long.toString(System.currentTimeMillis() - time));
+	}
+
+	public Set getDependencies(IScriptProject project, Set resources,
+			Set allResources, Set oldExternalFolders, Set externalFolders) {
+		if (oldExternalFolders.size() != externalFolders.size()) {
+			// We need to rebuild all elements in this builder.
+			return allResources;
+		}
+		Set min = new HashSet();
+		min.addAll(oldExternalFolders);
+		min.removeAll(externalFolders);
+		if (min.size() != 0) {
+			return allResources;
+		}
+		return null;
 	}
 }
