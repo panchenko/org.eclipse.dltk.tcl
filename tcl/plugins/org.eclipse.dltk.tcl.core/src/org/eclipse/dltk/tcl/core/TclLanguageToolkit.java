@@ -92,10 +92,6 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 		return sInstance;
 	}
 
-	public String getDelimeterReplacerString() {
-		return "::";
-	}
-
 	public String getLanguageName() {
 		return "Tcl";
 	}
