@@ -313,6 +313,14 @@
             toolbarPath="org.eclipse.search.searchActionSet/Search"
             tooltip="%OpenTypeAction.tooltip">
          </action>
+          <action
+               definitionId="org.eclipse.dltk.tcl.ui.navigate.open.type.in.hierarchy"
+               label="%OpenTypeInHierarchyAction.label"
+               tooltip="%OpenTypeInHierarchyAction.tooltip"
+               class="org.eclipse.dltk.tcl.internal.ui.actions.TclOpenTypeInHierarchyAction"
+               menubarPath="navigate/open.ext2"
+               id="openTypeInHierarchy">
+         </action>
       </actionSet>
   </extension>
   
