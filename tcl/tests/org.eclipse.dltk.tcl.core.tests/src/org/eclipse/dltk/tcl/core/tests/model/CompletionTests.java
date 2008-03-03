@@ -181,8 +181,8 @@ public class CompletionTests extends AbstractModelCompletionTests {
 				"completion003.tcl");
 
 		String str = cu.getSource();
-		String s = "puts";
-		int cursorLocation = str.indexOf(s) + s.length() + 1;
+		String s = "puts $";
+		int cursorLocation = str.indexOf(s) + s.length();
 		cu.codeComplete(cursorLocation, requestor);
 
 		assertEquals(makeResult(new String[] { "$::x", "$x" }, new int[] { 18,
