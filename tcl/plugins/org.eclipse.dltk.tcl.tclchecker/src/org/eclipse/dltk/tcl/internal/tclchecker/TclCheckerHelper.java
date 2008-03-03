@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -201,5 +202,14 @@ public final class TclCheckerHelper {
 		}
 
 		return (String[]) lines.toArray(new String[lines.size()]);
+	}
+
+	public static void passEnvironment(Map map, IPreferenceStore store) {
+		File file = new File(store.getString(TclCheckerConstants.PREF_PCX_PATH));
+		file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(file);
+		if (file.exists() && file.isDirectory()) {
+			map.put(TclCheckerConstants.TCL_DEVKIT_LOCAL_VARIABLE, file
+					.getAbsolutePath());
+		}
 	}
 }
