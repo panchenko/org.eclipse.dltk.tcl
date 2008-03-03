@@ -15,11 +15,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public final class TclActiveStateDebuggerConstants {
 
 	public static final String DEBUGGING_ENGINE_PATH_KEY = "debugging_engine_path";
+	public static final String DEBUGGING_ENGINE_PDX_PATH_KEY = "debugging_engine_pdx_path";
 
 	public static void initalizeDefaults(IPreferenceStore store) {
 		store.setDefault(DEBUGGING_ENGINE_PATH_KEY, "");
+		store.setDefault(DEBUGGING_ENGINE_PDX_PATH_KEY, "");
 	}
-	
+
 	private TclActiveStateDebuggerConstants() {
 		// private constructor
 	}

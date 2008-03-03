@@ -11,6 +11,7 @@ package org.eclipse.dltk.tcl.activestatedebugger;
 import java.io.File;
 import java.util.List;
 
+import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -28,7 +29,7 @@ import org.eclipse.dltk.utils.PlatformFileUtils;
  * </p>
  */
 public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner {
-	public static final String ENGINE_ID = "org.eclipse.dltk.tcl.avtivestatedebugger";
+	public static final String ENGINE_ID = "org.eclipse.dltk.tcl.activestatedebugger";
 
 	private static final String HOST_KEY = "-host-ide";
 	private static final String PORT_KEY = "-port-ide";
@@ -48,7 +49,11 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	 *      java.lang.String)
 	 */
 	protected InterpreterConfig alterConfig(InterpreterConfig config,
-			String debuggingEnginePath) {
+			PreferencesLookupDelegate delegate) {
+
+		File file = PlatformFileUtils
+				.findAbsoluteOrEclipseRelativeFile(getDebuggingEnginePath(delegate));
+
 		final String exe = getInstall().getInstallLocation().getAbsolutePath();
 		final String host = (String) config
 				.getProperty(DbgpConstants.HOST_PROP);
@@ -57,13 +62,17 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		final String sessionId = (String) config
 				.getProperty(DbgpConstants.SESSION_ID_PROP);
 
+		File pdxFiles = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(new File( getDebuggingPreference(delegate,
+				TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PDX_PATH_KEY)));
+
 		InterpreterConfig newConfig = (InterpreterConfig) config.clone();
 
+		if (pdxFiles.exists()) {
+			newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles.getAbsolutePath());
+		}
+
 		// Additional property
-		File dEngine = PlatformFileUtils
-				.findAbsoluteOrEclipseRelativeFile(new File(debuggingEnginePath));
-		newConfig.setProperty(OVERRIDE_EXE, dEngine.getAbsoluteFile()
-				.toString());
+		newConfig.setProperty(OVERRIDE_EXE, file.getAbsoluteFile().toString());
 
 		// Interpreter arguments
 		newConfig.addInterpreterArg(HOST_KEY);
