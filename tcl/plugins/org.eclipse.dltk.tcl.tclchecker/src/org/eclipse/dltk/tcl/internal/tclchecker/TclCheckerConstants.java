@@ -18,6 +18,7 @@ public final class TclCheckerConstants {
 	public static final String PREF_MODE = "tclchecker.mode";
 
 	public static final String PREF_PCX_PATH = "tclchecker.pcx.path";
+	public static final String PREF_NO_PCX = "tclchecker.no_pcx";
 
 	public static final int MODE_ERRORS = 0;
 
@@ -28,4 +29,5 @@ public final class TclCheckerConstants {
 	public static final int MODE_DEFAULT = MODE_ALL;
 
 	public static final String TCL_DEVKIT_LOCAL_VARIABLE = "TCLDEVKIT_LOCAL";
+
 }

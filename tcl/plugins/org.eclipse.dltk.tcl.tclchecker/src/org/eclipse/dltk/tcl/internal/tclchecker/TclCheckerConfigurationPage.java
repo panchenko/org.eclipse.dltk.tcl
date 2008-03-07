@@ -24,6 +24,14 @@ import org.eclipse.dltk.validators.ui.ValidatorConfigurationPage;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -50,7 +58,9 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	private static final String PREFERENCES_ID = "org.eclipse.dltk.tcl.tclchecker.ui.preferences.TclCheckerPreferences";
 
 	private Text path;
-	private Text pcxPath;
+	// private Text pcxPath;
+
+	List pcxPaths;
 
 	private Button errorsMode;
 
@@ -62,6 +72,11 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	private String message = "";
 	private int messageType = IStatus.OK;
+
+	private ListViewer lview;
+	private Button noPCX;
+
+	private SelectionAdapter noPCXSelectionListener;
 
 	public void createControl(Composite parent, int columns) {
 		Composite c = new Composite(parent, SWT.NONE);
@@ -165,33 +180,33 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		this.messageType = type;
 	}
 
-	public void validatePCXTclCheckerPath() {
-		String txtPath = pcxPath.getText().trim();
-
-		if ("".equals(txtPath)) {
-			setMessage(null);
-			updateStatus();
-			return;
-		}
-
-		IPath path = Path.fromOSString(txtPath);
-		File file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(path
-				.toFile());
-
-		if (!path.isValidPath(path.toOSString())) {
-			setMessage(PreferencesMessages.TclChecker_path_isinvalid,
-					IStatus.WARNING);
-		} else if (!file.isDirectory()) {
-			setMessage(PreferencesMessages.TclChecker_path_notexists,
-					IStatus.WARNING);
-		} else if (!file.exists()) {
-			setMessage(PreferencesMessages.TclChecker_path_notexists,
-					IStatus.WARNING);
-		} else {
-			setMessage(null);
-		}
-		updateStatus();
-	}
+	// public void validatePCXTclCheckerPath() {
+	// String txtPath = pcxPath.getText().trim();
+	//
+	// if ("".equals(txtPath)) {
+	// setMessage(null);
+	// updateStatus();
+	// return;
+	// }
+	//
+	// IPath path = Path.fromOSString(txtPath);
+	// File file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(path
+	// .toFile());
+	//
+	// if (!path.isValidPath(path.toOSString())) {
+	// setMessage(PreferencesMessages.TclChecker_path_isinvalid,
+	// IStatus.WARNING);
+	// } else if (!file.isDirectory()) {
+	// setMessage(PreferencesMessages.TclChecker_path_notexists,
+	// IStatus.WARNING);
+	// } else if (!file.exists()) {
+	// setMessage(PreferencesMessages.TclChecker_path_notexists,
+	// IStatus.WARNING);
+	// } else {
+	// setMessage(null);
+	// }
+	// updateStatus();
+	// }
 
 	protected void createModeGroup(Composite parent, Object data) {
 		Group radioGroup = new Group(parent, SWT.NONE);
@@ -221,6 +236,9 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		group.setLayout(layout);
+		GridData dt = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
+		dt.horizontalSpan = 2;
+		group.setLayoutData(dt);
 
 		// Path
 		path = new Text(group, SWT.BORDER);
@@ -259,33 +277,87 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		layout.numColumns = 2;
 		group.setLayout(layout);
 
-		// Path
-		pcxPath = new Text(group, SWT.BORDER);
-		GridData pathData = new GridData();
-		pathData.grabExcessHorizontalSpace = true;
-		pathData.horizontalAlignment = GridData.FILL;
-		pcxPath.setLayoutData(pathData);
+		noPCX = new Button(group, SWT.CHECK);
+		noPCX.setText("Disable Using of PCX files");
+		GridData noPCXDG = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
+		noPCXDG.horizontalSpan = 2;
+		noPCX.setLayoutData(noPCXDG);
 
-		pcxPath.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				validatePCXTclCheckerPath();
+		final org.eclipse.swt.widgets.List list = new org.eclipse.swt.widgets.List(
+				group, SWT.BORDER);
+		lview = new ListViewer(list);
+		list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		lview.setContentProvider(new IStructuredContentProvider() {
+			public Object[] getElements(Object inputElement) {
+				if (inputElement instanceof List) {
+					return pcxPaths.toArray();
+				}
+				return new Object[0];
+			}
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput,
+					Object newInput) {
 			}
 		});
 
-		// Browse
-		Button browse = new Button(group, SWT.PUSH);
-		browse.setText(PreferencesMessages.TclChecker_browse);
+		lview.setLabelProvider(new LabelProvider());
 
-		browse.addSelectionListener(new SelectionAdapter() {
+		Composite buttons = new Composite(group, SWT.NONE);
+		RowLayout row = new RowLayout(SWT.VERTICAL);
+		row.fill = true;
+		buttons.setLayout(row);
+		final Button add = new Button(buttons, SWT.PUSH);
+		add.setText("Add");
+		add.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				DirectoryDialog dialog = new DirectoryDialog(parent.getShell(),
-						SWT.OPEN);
-				String file = dialog.open();
-				if (file != null) {
-					pcxPath.setText(file);
+				DirectoryDialog dialog = new DirectoryDialog(lview.getControl()
+						.getShell());
+				dialog.setMessage("Add PCX files directory");
+				String path = dialog.open();
+				if (path != null) {
+					pcxPaths.add(path);
+				}
+				lview.refresh();
+			}
+		});
+		final Button remove = new Button(buttons, SWT.PUSH);
+		remove.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ISelection selection = lview.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection ssel = (IStructuredSelection) selection;
+					for (Iterator i = ssel.iterator(); i.hasNext();) {
+						String s = (String) i.next();
+						pcxPaths.remove(s);
+					}
+				}
+				lview.refresh();
+			}
+		});
+		remove.setText("Remove");
+
+		lview.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = lview.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection ssel = (IStructuredSelection) selection;
+					boolean empty = ssel.isEmpty();
+					remove.setEnabled(!empty);
 				}
 			}
 		});
+		noPCXSelectionListener = new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				boolean selection = noPCX.getSelection();
+				list.setEnabled(!selection);
+				add.setEnabled(!selection);
+				remove.setEnabled(!selection);
+			}
+		};
+		noPCX.addSelectionListener(noPCXSelectionListener);
 	}
 
 	protected void setSelection(boolean value) {
@@ -400,11 +472,18 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		top.setLayout(layout);
 
 		createPathGroup(top, new GridData(GridData.FILL, SWT.NONE, true, false));
+		Composite ctrl = new Composite(top, SWT.NONE);
+		ctrl.setLayoutData(new GridData(GridData.FILL, SWT.NONE, true, false));
+		GridLayout gl = new GridLayout();
+		gl.numColumns = 2;
+		gl.marginLeft = -5;
+		gl.marginTop = -5;
+		gl.marginRight = -5;
+		ctrl.setLayout(gl);
 
-		createPCXPathGroup(top, new GridData(GridData.FILL, SWT.NONE, true,
-				false));
-
-		createModeGroup(top, new GridData(GridData.FILL, SWT.NONE, true, false));
+		createModeGroup(ctrl, new GridData(SWT.DEFAULT, SWT.FILL, false, false));
+		createPCXPathGroup(ctrl, new GridData(GridData.FILL, SWT.FILL, true,
+				true));
 		createSuppressProblemsGroup(top, new GridData(GridData.FILL,
 				GridData.FILL, true, true));
 
@@ -429,7 +508,13 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		// Path
 		path.setText(store.getString(TclCheckerConstants.PREF_PATH));
 
-		pcxPath.setText(store.getString(TclCheckerConstants.PREF_PCX_PATH));
+		this.pcxPaths = TclCheckerHelper.getPcxPaths(store);
+		this.noPCX.setSelection(store.getBoolean(TclCheckerConstants.PREF_NO_PCX));
+		noPCXSelectionListener.widgetSelected(null);
+		// pcxPath.setText(pcxPathsValue);
+
+		lview.setInput(this.pcxPaths);
+		lview.refresh();
 
 		// Mode
 		setModeSelection(store.getInt(TclCheckerConstants.PREF_MODE));
@@ -452,7 +537,10 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 		// Path
 		store.setValue(TclCheckerConstants.PREF_PATH, path.getText());
-		store.setValue(TclCheckerConstants.PREF_PCX_PATH, pcxPath.getText());
+		// store.setValue(TclCheckerConstants.PREF_PCX_PATH, pcxPath.getText());
+		TclCheckerHelper.setPcxPaths(store, pcxPaths);
+		
+		store.setValue(TclCheckerConstants.PREF_NO_PCX, this.noPCX.getSelection());
 
 		// Mode
 		store.setValue(TclCheckerConstants.PREF_MODE, getModeSelection());
