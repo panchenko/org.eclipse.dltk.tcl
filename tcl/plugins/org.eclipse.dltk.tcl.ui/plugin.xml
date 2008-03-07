@@ -179,6 +179,10 @@
           id="tclUniversalTemplateContextType"
           name="%TclTemplateContext.name">
     </contextType>    
+    <include
+          file="templates/templates.xml"
+          translations="templates/templates.properties">
+    </include> 
  </extension>
  <extension
        point="org.eclipse.ui.preferencePages">
