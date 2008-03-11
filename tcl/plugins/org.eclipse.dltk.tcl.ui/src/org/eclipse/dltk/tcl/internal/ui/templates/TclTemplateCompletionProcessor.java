@@ -17,7 +17,7 @@ import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 public class TclTemplateCompletionProcessor extends
 		ScriptTemplateCompletionProcessor {
 	
-	private static String[] IGNORE = new String[] { "." };
+	private static char[] IGNORE = new char[] { '.' };
 
 	public TclTemplateCompletionProcessor(
 			ScriptContentAssistInvocationContext context) {
@@ -34,7 +34,7 @@ public class TclTemplateCompletionProcessor extends
 	/*
 	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore()
 	 */
-	protected String[] getIgnore() {
+	protected char[] getIgnore() {
 		return IGNORE;
 	}
 
