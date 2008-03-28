@@ -1,13 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.io.File;
@@ -25,37 +15,36 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IAccessRule;
 import org.eclipse.dltk.core.IBuildpathAttribute;
-import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IBuiltinModuleProvider;
+import org.eclipse.dltk.core.IInterpreterContainerExtension;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.launching.IInterpreterInstall;
-import org.eclipse.dltk.launching.LibraryLocation;
+import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 
-/**
- * 
- */
-public class TclPackagesBuildpathContainer implements IBuildpathContainer {
+public class TclPackagesInterpreterContainerExtension implements
+		IInterpreterContainerExtension {
 
-	private IPath containerPath;
-	private IScriptProject project;
-	private static IAccessRule[] EMPTY_RULES = new IAccessRule[0];
+	private static final IAccessRule[] EMPTY_RULES = new IAccessRule[0];
 
-	public TclPackagesBuildpathContainer(IPath containerPath,
-			IScriptProject project) {
-		this.containerPath = containerPath;
-		this.project = project;
+	public TclPackagesInterpreterContainerExtension() {
 	}
 
-	public IBuildpathEntry[] getBuildpathEntries() {
+	public void processEntres(IScriptProject project, List buildpathEntries) {
+		IPath[] locations = null;
 		IInterpreterInstall install = null;
-		LibraryLocation[] locations = null;
 		try {
-			install = ScriptRuntime.getInterpreterInstall(this.project);
-			if (install != null) {
-				locations = ScriptRuntime.getLibraryLocations(install);
+			install = ScriptRuntime.getInterpreterInstall(project);
+			List locs = new ArrayList();
+			for (Iterator iterator = buildpathEntries.iterator(); iterator
+					.hasNext();) {
+				IBuildpathEntry entry = (IBuildpathEntry) iterator.next();
+				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
+						&& entry.isExternal()) {
+					locs.add(entry.getPath());
+				}
+				locations = (IPath[]) locs.toArray(new IPath[locs.size()]);
 			}
 		} catch (CoreException e) {
 			if (DLTKCore.DEBUG) {
@@ -63,8 +52,8 @@ public class TclPackagesBuildpathContainer implements IBuildpathContainer {
 			}
 		}
 		if (install != null) {
-			Set packages = PackagesContainerHelper
-					.getPackageContainerPackageNames(this.project);
+			Set packages = InterpreterContainerHelper
+					.getPackageContainerPackageNames(project);
 
 			Set allPaths = new HashSet();
 			for (Iterator iterator = packages.iterator(); iterator.hasNext();) {
@@ -76,7 +65,6 @@ public class TclPackagesBuildpathContainer implements IBuildpathContainer {
 				}
 			}
 
-			List entries = new ArrayList(allPaths.size());
 			Set rawEntries = new HashSet(allPaths.size());
 			for (Iterator iterator = allPaths.iterator(); iterator.hasNext();) {
 				IPath entryPath = (IPath) iterator.next();
@@ -130,7 +118,7 @@ public class TclPackagesBuildpathContainer implements IBuildpathContainer {
 					boolean inInterpreter = false;
 					if (locations != null) {
 						for (int i = 0; i < locations.length; i++) {
-							IPath path = locations[i].getLibraryPath();
+							IPath path = locations[i];
 							if (path.isPrefixOf(entryPath)) {
 								inInterpreter = true;
 								break;
@@ -139,7 +127,7 @@ public class TclPackagesBuildpathContainer implements IBuildpathContainer {
 					}
 					if (!inInterpreter) {
 						// Check for interpreter container libraries.
-						entries.add(DLTKCore.newLibraryEntry(entryPath,
+						buildpathEntries.add(DLTKCore.newLibraryEntry(entryPath,
 								EMPTY_RULES, attributes,
 								BuildpathEntry.INCLUDE_ALL, (IPath[]) excluded
 										.toArray(new IPath[excluded.size()]),
@@ -148,25 +136,6 @@ public class TclPackagesBuildpathContainer implements IBuildpathContainer {
 					}
 				}
 			}
-			return (IBuildpathEntry[]) entries
-					.toArray(new IBuildpathEntry[entries.size()]);
 		}
-		return new IBuildpathEntry[0];
-	}
-
-	public String getDescription() {
-		return "Libraries";
-	}
-
-	public int getKind() {
-		return K_SYSTEM;
-	}
-
-	public IPath getPath() {
-		return containerPath;
-	}
-
-	public IBuiltinModuleProvider getBuiltinProvider() {
-		return null;
 	}
 }
