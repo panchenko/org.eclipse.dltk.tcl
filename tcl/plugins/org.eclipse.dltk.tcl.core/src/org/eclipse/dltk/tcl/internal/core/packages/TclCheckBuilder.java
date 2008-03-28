@@ -102,6 +102,9 @@ public class TclCheckBuilder implements IScriptBuilder {
 		factory = DLTKLanguageManager.getProblemFactory(toolkit
 				.getNatureId());
 		for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
+			if( monitor != null && monitor.isCanceled()) {
+				return null;
+			}
 			ISourceModule module = (ISourceModule) iterator.next();
 			try {
 				cleanMarkers(module.getResource());
