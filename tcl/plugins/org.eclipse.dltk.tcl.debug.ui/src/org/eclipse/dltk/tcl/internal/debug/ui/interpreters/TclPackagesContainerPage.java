@@ -256,7 +256,7 @@ public class TclPackagesContainerPage extends NewElementWizardPage implements
 			IBuildpathEntry[] currentEntries) {
 		this.scriptProject = project;
 		Set set = InterpreterContainerHelper
-				.getPackageContainerPackageNames(project);
+				.getInterpreterContainerDependencies(project);
 		this.packages.addAll(set);
 	}
 }

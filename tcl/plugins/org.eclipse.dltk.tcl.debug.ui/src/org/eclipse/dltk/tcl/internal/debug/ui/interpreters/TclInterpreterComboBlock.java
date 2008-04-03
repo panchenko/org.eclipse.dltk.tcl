@@ -264,7 +264,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			IBuildpathEntry[] currentEntries) {
 		this.scriptProject = project;
 		Set set = InterpreterContainerHelper
-				.getPackageContainerPackageNames(project);
+				.getInterpreterContainerDependencies(project);
 		this.packages.addAll(set);
 	}
 
