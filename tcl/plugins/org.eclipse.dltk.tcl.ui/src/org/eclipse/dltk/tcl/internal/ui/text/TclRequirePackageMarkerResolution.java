@@ -61,9 +61,9 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution {
 					e.printStackTrace();
 				}
 			}
-			Set names = InterpreterContainerHelper.getPackageContainerPackageNames(project);
+			Set names = InterpreterContainerHelper.getInterpreterContainerDependencies(project);
 			names.add(pkgName);
-			InterpreterContainerHelper.setPackageContainerPackagesNames(project, names);
+			InterpreterContainerHelper.setInterpreterContainerDependencies(project, names);
 		}
 	}
 }

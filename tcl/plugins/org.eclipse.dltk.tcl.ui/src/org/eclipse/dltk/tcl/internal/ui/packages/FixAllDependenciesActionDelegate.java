@@ -210,7 +210,7 @@ public class FixAllDependenciesActionDelegate implements
 						.hasNext();) {
 					final ISourceModule module = (ISourceModule) iterator
 							.next();
-					IResource res = module.getResource();
+//					IResource res = module.getResource();
 					ModuleDeclaration declaration = SourceParserUtil
 							.getModuleDeclaration(module, null,
 									ISourceParserConstants.RUNTIME_MODEL);
@@ -222,11 +222,11 @@ public class FixAllDependenciesActionDelegate implements
 					IScriptProject project = (IScriptProject) iterator2.next();
 					Set values = (Set) projectToPackages.get(project);
 					Set names = InterpreterContainerHelper
-							.getPackageContainerPackageNames(project);
+							.getInterpreterContainerDependencies(project);
 					names.addAll(values);
 					if (project != null) {
 						InterpreterContainerHelper
-								.setPackageContainerPackagesNames(project,
+								.setInterpreterContainerDependencies(project,
 										names);
 					}
 				}
