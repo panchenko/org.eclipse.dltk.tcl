@@ -53,7 +53,7 @@ public class TclPackagesInterpreterContainerExtension implements
 		}
 		if (install != null) {
 			Set packages = InterpreterContainerHelper
-					.getPackageContainerPackageNames(project);
+					.getInterpreterContainerDependencies(project);
 
 			Set allPaths = new HashSet();
 			for (Iterator iterator = packages.iterator(); iterator.hasNext();) {
