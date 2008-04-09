@@ -53,10 +53,6 @@ public class IncrTclClassCommandProcessor extends AbstractTclCommandProcessor {
 								.getName();
 						if ("inherit".equals(commandNameStr)) {
 							handleInherit(st, type, parser);
-						} else if ("constructor".equals(commandNameStr)) {
-							handleConstructor(st, type, parser);
-						} else if ("destructor".equals(commandNameStr)) {
-							handleDestructor(st, type, parser);
 						} else if ("public".equals(commandNameStr)) {
 							handleWithModifierSub(st, type,
 									Modifiers.AccPublic, parser);
@@ -66,9 +62,10 @@ public class IncrTclClassCommandProcessor extends AbstractTclCommandProcessor {
 						} else if ("private".equals(commandNameStr)) {
 							handleWithModifierSub(st, type,
 									Modifiers.AccPrivate, parser);
+						} else {
+							handleWithModifier(commandNameStr, st, type,
+									Modifiers.AccPrivate, parser);
 						}
-						handleWithModifier(commandNameStr, st, type,
-								Modifiers.AccPrivate, parser);
 					}
 				}
 			}
@@ -171,6 +168,10 @@ public class IncrTclClassCommandProcessor extends AbstractTclCommandProcessor {
 			handleSet(statement, type, modifier, parser);
 		} else if ("array".equals(commandNameStr)) {
 			handleArray(statement, type, modifier);
+		} else if ("constructor".equals(commandNameStr)) {
+			handleConstructor(statement, type, parser);
+		} else if ("destructor".equals(commandNameStr)) {
+			handleDestructor(statement, type, parser);
 		}
 	}
 
