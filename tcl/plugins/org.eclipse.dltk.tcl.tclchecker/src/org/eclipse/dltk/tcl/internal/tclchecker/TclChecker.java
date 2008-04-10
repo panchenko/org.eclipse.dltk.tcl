@@ -9,13 +9,14 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,9 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.environment.IDeployment;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclChecker {
@@ -93,48 +97,21 @@ public class TclChecker {
 	private ISourceModule checkingModule;
 	private IPreferenceStore store;
 
-	private TclCheckerMessageFilter filter;
-
-	private static void parseProblems(IResource res, String code,
-			String[] output, TclCheckerMessageFilter filter)
-			throws CoreException {
-		TclCheckerCodeModel model = new TclCheckerCodeModel(code);
-
-		for (int i = 0; i < output.length; ++i) {
-			TclCheckerProblem problem = TclCheckerHelper.parseProblem(
-					output[i], filter);
-
-			if (problem == null) {
-				continue;
-			}
-
-			TclCheckerProblemDescription desc = problem.getDescription();
-
-			int[] bounds = model.getBounds(problem.getLineNumber() - 1);
-
-			if (TclCheckerProblemDescription.isError(desc.getCategory()))
-				reportErrorProblem(res, problem, bounds[0], bounds[1]);
-			else if (TclCheckerProblemDescription.isWarning(desc.getCategory()))
-				reportWarningProblem(res, problem, bounds[0], bounds[1]);
-		}
-	}
-
 	public TclChecker(IPreferenceStore store) {
 		if (store == null) {
 			throw new NullPointerException("store cannot be null");
 		}
 
 		this.store = store;
-		this.filter = new StaticTclCheckerMessageFilter();
 	}
 
-	public boolean canCheck() {
-		return TclCheckerHelper.canExecuteTclChecker(store);
+	public boolean canCheck(IEnvironment environment) {
+		return TclCheckerHelper.canExecuteTclChecker(store, environment);
 	}
 
 	public void check(final List sourceModules, IProgressMonitor monitor,
-			OutputStream console) {
-		if (!canCheck()) {
+			OutputStream console, IEnvironment environment) {
+		if (!canCheck(environment)) {
 			throw new IllegalStateException("TclChecker cannot be executed");
 		}
 
@@ -152,7 +129,14 @@ public class TclChecker {
 					e.printStackTrace();
 				}
 			}
-			String loc = module.getResource().getLocation().toOSString();
+			IPath location = module.getResource().getLocation();
+			String loc = null; 
+			if (location == null) {
+				URI locationURI = module.getResource().getLocationURI();
+				loc = environment.getFile(locationURI).getAbsolutePath();
+			} else {
+				loc = location.toOSString();
+			}
 			pathToSource.put(loc, module);
 			arguments.add(loc);
 		}
@@ -163,17 +147,19 @@ public class TclChecker {
 			return;
 		}
 		List cmdLine = new ArrayList();
-		TclCheckerHelper.passOriginalArguments(store, cmdLine);
-		IPath stateLocation = TclCheckerPlugin.getDefault().getStateLocation();
-		IPath patternFile = stateLocation.append("pattern.txt");
+		TclCheckerHelper.passOriginalArguments(store, cmdLine, environment);
+		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
+				.getAdapter(IExecutionEnvironment.class);
+		IDeployment deployment = execEnvironment.createDeployment();
+//		IPath stateLocation = TclCheckerPlugin.getDefault().getStateLocation();
+//		IPath patternFile = stateLocation.append("pattern.txt");
+		ByteArrayOutputStream baros = new ByteArrayOutputStream();
 		try {
-			BufferedOutputStream locs = new BufferedOutputStream(
-					new FileOutputStream(patternFile.toFile(), false));
 			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
 				String path = (String) arg.next();
-				locs.write((path + "\n").getBytes());
+				baros.write((path + "\n").getBytes());
 			}
-			locs.close();
+			baros.close();
 		} catch (FileNotFoundException e1) {
 			if (DLTKCore.DEBUG) {
 				e1.printStackTrace();
@@ -183,8 +169,21 @@ public class TclChecker {
 				e.printStackTrace();
 			}
 		}
+		IPath pattern;
+		try {
+			pattern = deployment.add(new ByteArrayInputStream(baros
+					.toByteArray()), new Path("pattern.txt"));
+		} catch (IOException e1) {
+			if (DLTKCore.DEBUG) {
+				TclCheckerPlugin.getDefault().getLog().log(
+						new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID,
+								"Failed to deploy file list", e1));
+				e1.printStackTrace();
+			}
+			return;
+		}
 		cmdLine.add("-@");
-		cmdLine.add(patternFile.toOSString());
+		cmdLine.add(deployment.getFile(pattern).getAbsolutePath());
 		Process process;
 		BufferedReader input = null;
 		String checkingFile = null;
@@ -201,7 +200,6 @@ public class TclChecker {
 		Map map = DebugPlugin.getDefault().getLaunchManager()
 				.getNativeEnvironmentCasePreserved();
 
-		TclCheckerHelper.passEnvironment(map, store);
 		String[] env = new String[map.size()];
 		int i = 0;
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
@@ -212,8 +210,11 @@ public class TclChecker {
 		}
 		try {
 			monitor.subTask("Launching TclChecker...");
-			process = DebugPlugin.exec((String[]) cmdLine
+			process = execEnvironment.exec((String[]) cmdLine
 					.toArray(new String[cmdLine.size()]), null, env);
+
+			// process = DebugPlugin.exec((String[]) cmdLine
+			// .toArray(new String[cmdLine.size()]), null, env);
 
 			monitor.worked(1);
 
@@ -226,8 +227,7 @@ public class TclChecker {
 				if (console != null) {
 					console.write((line + "\n").getBytes());
 				}
-				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line,
-						filter);
+				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line);
 				if (monitor.isCanceled()) {
 					process.destroy();
 					return;

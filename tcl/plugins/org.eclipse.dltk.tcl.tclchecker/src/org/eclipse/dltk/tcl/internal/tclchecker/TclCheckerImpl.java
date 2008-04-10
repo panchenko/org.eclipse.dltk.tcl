@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.validators.core.AbstractValidator;
 import org.eclipse.dltk.validators.core.IValidatorType;
 import org.w3c.dom.Document;
@@ -73,16 +76,26 @@ public class TclCheckerImpl extends AbstractValidator {
 		}
 		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
 				.getPreferenceStore());
-
-		checker.check(els, monitor, console);
+		//TODO: Add environment detection for each file separately.
+		IScriptProject project = ((ISourceModule)module[0]).getScriptProject();
+		IEnvironment environment = EnvironmentManager.getEnvironment(project);
+		checker.check(els, monitor, console, environment);
 		return Status.OK_STATUS;
 	}
 
+	/**
+	 * TclChecker is valid, if it is valid for at least one environment.
+	 */
 	public boolean isValidatorValid() {
 		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
 				.getPreferenceStore());
-
-		return checker.canCheck();
+		IEnvironment[] environments = EnvironmentManager.getEnvironments();
+		for (int i = 0; i < environments.length; i++) {
+			if( checker.canCheck(environments[i])) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void clean(ISourceModule[] module) {

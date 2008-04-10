@@ -7,12 +7,15 @@
  *
  
  *******************************************************************************/
-package org.eclipse.dltk.tcl.internal.tclchecker;
+package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclCheckerPreferenceInitializer extends

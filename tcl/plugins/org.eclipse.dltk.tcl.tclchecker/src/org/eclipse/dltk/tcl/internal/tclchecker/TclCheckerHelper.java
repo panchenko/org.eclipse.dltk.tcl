@@ -9,30 +9,26 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class TclCheckerHelper {
 	private static final String REGEX = "((?:\\w:)?[^:]+):(\\d+)\\s+\\((\\w+)\\)\\s+(.*)";
 
-	private static final String QUIET_OPTION = "-quiet";
+	// private static final String QUIET_OPTION = "-quiet";
 
 	private static final String W1_OPTION = "-W1";
 
@@ -51,22 +47,11 @@ public final class TclCheckerHelper {
 		pattern = Pattern.compile(REGEX);
 	}
 
-	private TclCheckerHelper() {
-	}
-
-	private static String[] makeTclCheckerCmdLine(IPreferenceStore store) {
-		List cmdLine = new ArrayList();
-
-		passOriginalArguments(store, cmdLine);
-
-		return (String[]) cmdLine.toArray(new String[cmdLine.size()]);
-	}
-
 	public static String[] makeTclCheckerCmdLine(IPreferenceStore store,
-			String path) {
+			String path, IEnvironment environment) {
 		List cmdLine = new ArrayList();
 
-		passOriginalArguments(store, cmdLine);
+		passOriginalArguments(store, cmdLine, environment);
 
 		cmdLine.add(path);
 
@@ -74,11 +59,12 @@ public final class TclCheckerHelper {
 	}
 
 	public static void passOriginalArguments(IPreferenceStore store,
-			List cmdLine) {
-		File validatorFile = PlatformFileUtils
-				.findAbsoluteOrEclipseRelativeFile(new File(store
-						.getString(TclCheckerConstants.PREF_PATH)));
-		cmdLine.add(validatorFile.getAbsoluteFile().toString());
+			List cmdLine, IEnvironment environment) {
+		Map paths = getPaths(store);
+		String path = (String) paths.get(environment);
+		IFileHandle validatorFile = PlatformFileUtils
+				.findAbsoluteOrEclipseRelativeFile(environment, new Path(path));
+		cmdLine.add(validatorFile.getAbsolutePath());
 
 		// cmdLine.add(QUIET_OPTION);
 
@@ -108,29 +94,19 @@ public final class TclCheckerHelper {
 			cmdLine.add(NO_PCX_OPTION);
 		} else {
 			// pcx paths
-			List paths = getPcxPaths(store);
-			for (Iterator iterator = paths.iterator(); iterator.hasNext();) {
-				String path = (String) iterator.next();
-				cmdLine.add(PCX_OPTION);
-				cmdLine.add(path);
+			Map pcxPaths = getPcxPaths(store);
+			if (pcxPaths.containsKey(environment)) {
+				List pcxPath = (List) pcxPaths.get(environment);
+				for (Iterator iterator = pcxPath.iterator(); iterator.hasNext();) {
+					String pcx = (String) iterator.next();
+					cmdLine.add(PCX_OPTION);
+					cmdLine.add(pcx);
+				}
 			}
 		}
 	}
 
-	public static boolean canExecuteTclChecker(IPreferenceStore store) {
-		File file = PlatformFileUtils
-				.findAbsoluteOrEclipseRelativeFile(new File(store
-						.getString(TclCheckerConstants.PREF_PATH)));
-
-		if (!file.exists()) {
-			return false;
-		}
-
-		return true;
-	}
-
-	public static TclCheckerProblem parseProblem(String problem,
-			TclCheckerMessageFilter filter) {
+	public static TclCheckerProblem parseProblem(String problem) {
 		Matcher matcher = pattern.matcher(problem);
 
 		if (!matcher.find())
@@ -141,98 +117,22 @@ public final class TclCheckerHelper {
 		String messageID = matcher.group(3);
 		String message = matcher.group(4);
 
-		if (filter != null && !filter.accept(messageID)) {
-			return null;
-		}
-
 		return new TclCheckerProblem(file, lineNumber, messageID, message);
 	}
 
-	public static String[] execTclChecker(String code, IPreferenceStore store,
-			OutputStream console) throws IOException, CoreException {
-		Process process = DebugPlugin.exec(makeTclCheckerCmdLine(store), null);
-
-		// Writing tcl code to TclChecker
-		OutputStreamWriter output = null;
-
-		try {
-			output = new OutputStreamWriter(process.getOutputStream());
-			output.write(code);
-		} finally {
-			if (output != null) {
-				output.close();
-			}
+	public static Map getPcxPaths(IPreferenceStore store) {
+		Map results = new HashMap();
+		IEnvironment[] environments = EnvironmentManager.getEnvironments();
+		for (int i = 0; i < environments.length; i++) {
+			results.put(environments[i], getPcxPathsFrom(store,
+					TclCheckerConstants.PREF_PCX_PATH + "/"
+							+ environments[i].getId()));
 		}
-
-		// Reading TclChecker output
-		Set lines = new HashSet();
-
-		BufferedReader input = null;
-
-		try {
-			input = new BufferedReader(new InputStreamReader(process
-					.getInputStream()));
-
-			String line = null;
-			while ((line = input.readLine()) != null) {
-				lines.add(line);
-				if (console != null) {
-					console.write((line + "\n").getBytes());
-				}
-			}
-		} finally {
-			if (input != null) {
-				input.close();
-			}
-		}
-
-		return (String[]) lines.toArray(new String[lines.size()]);
+		return results;
 	}
 
-	public static String[] execTclCheckerPath(String path,
-			IPreferenceStore store, OutputStream console) throws IOException,
-			CoreException {
-		Process process = DebugPlugin.exec(makeTclCheckerCmdLine(store, path),
-				null);
-
-		// Reading TclChecker output
-		Set lines = new HashSet();
-
-		BufferedReader input = null;
-
-		try {
-			input = new BufferedReader(new InputStreamReader(process
-					.getInputStream()));
-
-			String line = null;
-			while ((line = input.readLine()) != null) {
-				lines.add(line);
-				if (console != null) {
-					console.write((line + "\n").getBytes());
-				}
-			}
-		} finally {
-			if (input != null) {
-				input.close();
-			}
-		}
-
-		return (String[]) lines.toArray(new String[lines.size()]);
-	}
-
-	public static void passEnvironment(Map map, IPreferenceStore store) {
-		// File file = new
-		// File(store.getString(TclCheckerConstants.PREF_PCX_PATH));
-		// file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(file);
-		// if (file.exists() && file.isDirectory()) {
-		// map.put(TclCheckerConstants.TCL_DEVKIT_LOCAL_VARIABLE, file
-		// .getAbsolutePath());
-		// }
-	}
-
-	public static List getPcxPaths(IPreferenceStore store) {
-		String pcxPathsValue = store
-				.getString(TclCheckerConstants.PREF_PCX_PATH);
+	private static List getPcxPathsFrom(IPreferenceStore store, String key) {
+		String pcxPathsValue = store.getString(key);
 		List values = new ArrayList();
 		int start = 0;
 		for (int i = 0; i < pcxPathsValue.length(); i++) {
@@ -254,7 +154,16 @@ public final class TclCheckerHelper {
 		return values;
 	}
 
-	public static void setPcxPaths(IPreferenceStore store, List paths) {
+	public static void setPcxPaths(IPreferenceStore store, Map paths) {
+		for (Iterator iterator = paths.keySet().iterator(); iterator.hasNext();) {
+			IEnvironment environment = (IEnvironment) iterator.next();
+			setPcxPathsTo(store, TclCheckerConstants.PREF_PCX_PATH + "/"
+					+ environment.getId(), (List) paths.get(environment));
+		}
+	}
+
+	private static void setPcxPathsTo(IPreferenceStore store, String key,
+			List paths) {
 		StringBuffer buffer = new StringBuffer();
 		boolean first = true;
 		for (Iterator iterator = paths.iterator(); iterator.hasNext();) {
@@ -266,6 +175,60 @@ public final class TclCheckerHelper {
 			}
 			buffer.append(path);
 		}
-		store.setValue(TclCheckerConstants.PREF_PCX_PATH, buffer.toString());
+		store.setValue(key, buffer.toString());
+	}
+
+	public static Map getPaths(IPreferenceStore store) {
+		String prefix = TclCheckerConstants.PREF_PATH;
+		Map results = getEnvironmentValues(store, prefix);
+		return results;
+	}
+
+	public static void setPaths(IPreferenceStore store, Map paths) {
+		String prefix = TclCheckerConstants.PREF_PATH;
+		setEnvironmentValues(store, paths, prefix);
+	}
+
+	public static boolean canExecuteTclChecker(IPreferenceStore store,
+			IEnvironment environment) {
+		Map paths = getPaths(store);
+		if (paths.containsKey(environment)) {
+			String path = (String) paths.get(environment);
+			if (path.length() != 0) {
+				IFileHandle file = environment.getFile(new Path(path));
+				if (file.exists()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static Map getNoPCX(IPreferenceStore store) {
+		return getEnvironmentValues(store, TclCheckerConstants.PREF_NO_PCX);
+	}
+	public static void setNoPCX(IPreferenceStore store, Map paths) {
+		setEnvironmentValues(store, paths, TclCheckerConstants.PREF_NO_PCX);
+	}
+
+	private static Map getEnvironmentValues(IPreferenceStore store,
+			String prefix) {
+		Map results = new HashMap();
+		IEnvironment[] environments = EnvironmentManager.getEnvironments();
+		for (int i = 0; i < environments.length; i++) {
+			results.put(environments[i], store
+					.getString(prefix + "/"
+							+ environments[i].getId()));
+		}
+		return results;
+	}
+
+	private static void setEnvironmentValues(IPreferenceStore store, Map paths,
+			String prefix) {
+		for (Iterator iterator = paths.keySet().iterator(); iterator.hasNext();) {
+			IEnvironment environment = (IEnvironment) iterator.next();
+			store.setValue(prefix + "/"
+					+ environment.getId(), (String) paths.get(environment));
+		}
 	}
 }
