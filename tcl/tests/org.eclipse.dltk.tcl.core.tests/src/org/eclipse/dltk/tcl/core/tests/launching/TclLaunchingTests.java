@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.tests.launching.IFileVisitor;
 import org.eclipse.dltk.core.tests.launching.PathFilesContainer;
 import org.eclipse.dltk.core.tests.launching.ScriptLaunchingTests;
@@ -32,7 +34,7 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 	class Searcher implements IFileVisitor {
 		private String debuggingEnginePath = null;
 
-		public boolean visit(File file) {
+		public boolean visit(IFileHandle file) {
 			if (file.isFile() && file.getName().startsWith("dbgp_tcldebug")) {
 				debuggingEnginePath = file.getAbsolutePath();
 			}
@@ -78,7 +80,8 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 				"src/test.tcl", arguments);
 	}
 
-	protected void startLaunch(ILaunch launch, final IInterpreterInstall install) throws CoreException {
+	protected void startLaunch(ILaunch launch, final IInterpreterInstall install)
+			throws CoreException {
 		final AbstractScriptLaunchConfigurationDelegate delegate = new TclLaunchConfigurationDelegate() {
 
 			public IInterpreterInstall getInterpreterInstall(
@@ -153,7 +156,8 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 		// Lets search if we could not found in default location.
 		boolean inDefault = true;
 		if (!file.exists()) {
-			PathFilesContainer container = new PathFilesContainer();
+			PathFilesContainer container = new PathFilesContainer(
+					EnvironmentManager.getLocalEnvironment());
 			Searcher searcher = new Searcher();
 			container.accept(searcher);
 			path = searcher.getPath();
