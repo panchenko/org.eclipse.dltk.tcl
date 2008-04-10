@@ -23,11 +23,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.corext.buildpath.AddSelectedLibraryOperation;
 import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
 import org.eclipse.dltk.internal.corext.buildpath.ExcludeOperation;
@@ -827,7 +828,7 @@ public class NewProjectWizardOperationTest extends TestCase implements IBuildpat
                 return null;
             }
             
-            public IAddArchivesQuery getExternalArchivesQuery() throws ModelException {
+            public IAddArchivesQuery getExternalArchivesQuery(IEnvironment environment) throws ModelException {
                 return null;
             }
 
@@ -921,7 +922,7 @@ public class NewProjectWizardOperationTest extends TestCase implements IBuildpat
                 return null;
             }
             
-            public IAddArchivesQuery getExternalArchivesQuery() throws ModelException {
+            public IAddArchivesQuery getExternalArchivesQuery(IEnvironment environment) throws ModelException {
                 return null;
             }
 
@@ -970,7 +971,7 @@ public class NewProjectWizardOperationTest extends TestCase implements IBuildpat
                 return null;
             }
             
-            public IAddArchivesQuery getExternalArchivesQuery() throws ModelException {
+            public IAddArchivesQuery getExternalArchivesQuery(IEnvironment environment) throws ModelException {
                 return null;
             }
 
@@ -1088,7 +1089,7 @@ public class NewProjectWizardOperationTest extends TestCase implements IBuildpat
         return null;
     }
     
-    public IAddArchivesQuery getExternalArchivesQuery() throws ModelException {
+    public IAddArchivesQuery getExternalArchivesQuery(IEnvironment environment) throws ModelException {
         return null;
     }
 
