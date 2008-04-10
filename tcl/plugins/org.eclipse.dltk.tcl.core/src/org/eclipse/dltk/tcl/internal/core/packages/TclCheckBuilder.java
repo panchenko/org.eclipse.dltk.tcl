@@ -33,6 +33,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -46,8 +47,8 @@ public class TclCheckBuilder implements IScriptBuilder {
 
 	public IStatus buildModelElements(IScriptProject project, List elements,
 			IProgressMonitor monitor, int status) {
-		this.project = project;
 		int est = estimateElementsToBuild(elements);
+		this.project = project;
 		if (est == 0) {
 			if (monitor != null) {
 				monitor.done();
@@ -154,7 +155,8 @@ public class TclCheckBuilder implements IScriptBuilder {
 		for (int i = 0; i < resolvedBuildpath.length; i++) {
 			if (resolvedBuildpath[i].getEntryKind() == IBuildpathEntry.BPE_LIBRARY
 					&& resolvedBuildpath[i].isExternal()) {
-				buildpath.add(resolvedBuildpath[i].getPath());
+				buildpath.add(EnvironmentPathUtils
+						.getLocalPath(resolvedBuildpath[i].getPath()));
 			}
 		}
 		return buildpath;

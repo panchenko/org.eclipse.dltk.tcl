@@ -2,7 +2,6 @@ package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -21,12 +20,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.environment.IDeployment;
+import org.eclipse.dltk.core.environment.IExecutionEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
 import org.eclipse.dltk.tcl.core.TclPlugin;
-import org.eclipse.dltk.utils.DeployHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,19 +37,31 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class DLTKTclHelper {
 	public static List getScriptOutput(Process process) {
-		List elements = new ArrayList();
-		try {
-			final BufferedReader input = new BufferedReader(
-					new InputStreamReader(process.getInputStream()));
-			while (true) {
-				String line = input.readLine();
-				if (line == null) {
-					break;
+		final List elements = new ArrayList();
+		final BufferedReader input = new BufferedReader(new InputStreamReader(
+				process.getInputStream()));
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					while (true) {
+						String line;
+						line = input.readLine();
+						if (line == null) {
+							break;
+						}
+						elements.add(line);
+					}
+				} catch (IOException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
-				elements.add(line);
 			}
-			return elements;
-		} catch (IOException e) {
+		});
+		t.start();
+		try {
+			t.join(5000);// No more then 5 seconds
+		} catch (InterruptedException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
@@ -56,16 +69,18 @@ public class DLTKTclHelper {
 		return elements;
 	}
 
-	private static Process deployExecute(String installLocation,
-			String[] arguments, EnvironmentVariable[] env) {
-		File script = deploy();
+	private static Process deployExecute(IExecutionEnvironment exeEnv,
+			String installLocation, String[] arguments,
+			EnvironmentVariable[] env) {
+		IDeployment deployment = exeEnv.createDeployment();
+		IFileHandle script = deploy(deployment);
 		if (script == null) {
 			return null;
 		}
 
-		File workingDir = script.getParentFile();
+		IFileHandle workingDir = script.getParent();
 		InterpreterConfig config = ScriptLaunchUtil.createInterpreterConfig(
-				script, workingDir, env);
+				exeEnv, script, workingDir, env);
 
 		if (arguments != null) {
 			config.addScriptArgs(arguments);
@@ -73,7 +88,7 @@ public class DLTKTclHelper {
 
 		Process process = null;
 		try {
-			process = ScriptLaunchUtil.runScriptWithInterpreter(
+			process = ScriptLaunchUtil.runScriptWithInterpreter(exeEnv,
 					installLocation, config);
 		} catch (CoreException e) {
 			if (DLTKCore.DEBUG) {
@@ -83,11 +98,12 @@ public class DLTKTclHelper {
 		return process;
 	}
 
-	private static File deploy() {
-		File script;
+	private static IFileHandle deploy(IDeployment deployment) {
+		IFileHandle script;
 		try {
-			script = DeployHelper.deploy(TclPlugin.getDefault(), "scripts/")
-					.append("dltk.tcl").toFile();
+			IPath path = deployment.add(TclPlugin.getDefault().getBundle(),
+					"scripts/dltk.tcl");
+			script = deployment.getFile(path);
 		} catch (IOException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
@@ -97,27 +113,29 @@ public class DLTKTclHelper {
 		return script;
 	}
 
-	public static String[] getDefaultPath(File installLocation,
+	public static String[] getDefaultPath(IFileHandle installLocation,
 			EnvironmentVariable[] environment) {
-//		Process process = deployExecute(installLocation.getAbsolutePath(),
-//				new String[] { "get-paths" }, environment);
-//		List content = getScriptOutput(process);
-//		String[] autoPath = getAutoPath(content);
-//		for (int i = 0; i < autoPath.length; i++) {
-//			Path p = new Path(autoPath[i]);
-//			if (p.lastSegment().startsWith("tcl8.")) {
-//				return new String[] { autoPath[i] };
-//			}
-//		}
-//		process.destroy();
+		// Process process = deployExecute(installLocation.getAbsolutePath(),
+		// new String[] { "get-paths" }, environment);
+		// List content = getScriptOutput(process);
+		// String[] autoPath = getAutoPath(content);
+		// for (int i = 0; i < autoPath.length; i++) {
+		// Path p = new Path(autoPath[i]);
+		// if (p.lastSegment().startsWith("tcl8.")) {
+		// return new String[] { autoPath[i] };
+		// }
+		// }
+		// process.destroy();
 		return new String[0];
-//		return autoPath;
+		// return autoPath;
 	}
 
-	public static TclPackage[] getSrcs(File installLocation,
-			EnvironmentVariable[] environment, String packageName) {
-		Process process = deployExecute(installLocation.getAbsolutePath(),
-				new String[] { "get-srcs", "-pkgs", packageName }, environment);
+	public static TclPackage[] getSrcs(IExecutionEnvironment exeEnv,
+			IFileHandle installLocation, EnvironmentVariable[] environment,
+			String packageName) {
+		Process process = deployExecute(exeEnv, installLocation
+				.getAbsolutePath(), new String[] { "get-srcs", "-pkgs",
+				packageName }, environment);
 		List content = getScriptOutput(process);
 		process.destroy();
 		return getPackagePath(content);
@@ -292,9 +310,7 @@ public class DLTKTclHelper {
 		StringBuffer newList = new StringBuffer();
 		for (Iterator iterator = content.iterator(); iterator.hasNext();) {
 			String line = (String) iterator.next();
-			if (!(line.startsWith("NOTICE") || line.startsWith("WARN")
-					|| line.startsWith("ERROR") || line.startsWith("INFO") || line
-					.startsWith("DEBUG"))) {
+			if (line.trim().startsWith("<")) {
 				newList.append(line).append("\n");
 			}
 		}
@@ -302,7 +318,8 @@ public class DLTKTclHelper {
 	}
 
 	public static Set getPackages(IInterpreterInstall install) {
-		Process process = deployExecute(install.getInstallLocation()
+		IExecutionEnvironment exeEnv = install.getExecEnvironment();
+		Process process = deployExecute(exeEnv, install.getInstallLocation()
 				.getAbsolutePath(), new String[] { "get-pkgs" }, install
 				.getEnvironmentVariables());
 		List content = getScriptOutput(process);

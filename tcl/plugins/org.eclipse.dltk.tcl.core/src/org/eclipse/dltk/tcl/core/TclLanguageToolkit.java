@@ -9,38 +9,31 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.core;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.AbstractLanguageToolkit;
 import org.eclipse.dltk.core.DLTKContentTypeManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 
 public class TclLanguageToolkit extends AbstractLanguageToolkit {
-	private final class Visitor implements FilenameFilter {
-		public boolean accept(File dir, String name) {
-			File f = new File(dir.getPath() + File.separator + name);
-			if (f.isDirectory()) {
-				File[] listFiles = f.listFiles();
-				if (listFiles != null) {
-					for (int i = 0; i < listFiles.length; i++) {
-						if (listFiles[i].isFile()
-								&& DLTKContentTypeManager
-										.isValidFileNameForContentType(
-												TclLanguageToolkit.getDefault(),
-												listFiles[i].getName())) {
-							return true;
-						}
+
+	private boolean acceptDir(IFileHandle f, IEnvironment environment) {
+		if (f.isDirectory()) {
+			IFileHandle[] listFiles = f.getChildren();
+			if (listFiles != null) {
+				for (int i = 0; i < listFiles.length; i++) {
+					if (listFiles[i].isFile()
+							&& DLTKContentTypeManager
+									.isValidFileNameForContentType(
+											TclLanguageToolkit.getDefault(),
+											listFiles[i].getName())) {
+						return true;
 					}
 				}
 			}
-			if (name.toLowerCase().equals("pkgindex.tcl")
-					|| name.toLowerCase().equals("tclindex")) {
-				return true;
-			}
-			return false;
 		}
+		return false;
 	}
 
 	private static final String TCL_CONTENT_TYPE = "org.eclipse.dltk.tclContentType";
@@ -49,12 +42,19 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 	public TclLanguageToolkit() {
 	}
 
-	public boolean validateSourcePackage(IPath path) {
-		File file = new File(path.toOSString());
+	public boolean validateSourcePackage(IPath path, IEnvironment environment) {
+		IFileHandle file = environment.getFile(path);
 		if (file.isDirectory()) {
-			String members[] = file.list(new Visitor());
-			if (members != null && members.length > 0) {
-				return true;
+			IFileHandle members[] = file.getChildren();
+			for (int i = 0; i < members.length; i++) {
+				String name = members[i].getName();
+				if (name.toLowerCase().equals("pkgindex.tcl")
+						|| name.toLowerCase().equals("tclindex")) {
+					return true;
+				}
+				if( acceptDir(members[i], environment)) {
+					return true;
+				}
 			}
 		}
 		return false;
