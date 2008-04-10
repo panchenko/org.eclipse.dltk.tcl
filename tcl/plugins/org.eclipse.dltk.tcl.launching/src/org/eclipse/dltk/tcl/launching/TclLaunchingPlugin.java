@@ -15,7 +15,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.utils.DeployHelper;
+import org.eclipse.dltk.core.environment.IDeployment;
+import org.eclipse.dltk.core.environment.IExecutionEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -73,7 +75,9 @@ public class TclLaunchingPlugin extends Plugin {
 	}
 
 	// Deploying of sources
-	public IPath getConsoleProxy() throws IOException {
-		return DeployHelper.deploy(this, "console/ConsoleProxy.tcl");
+	public IFileHandle getConsoleProxy(IExecutionEnvironment exeEnv) throws IOException {
+		IDeployment deployment = exeEnv.createDeployment();
+		IPath path = deployment.add(this.getBundle(), "console/ConsoleProxy.tcl");
+		return deployment.getFile(path);
 	}
 }

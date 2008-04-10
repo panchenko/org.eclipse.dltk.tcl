@@ -9,15 +9,18 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.launching;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.environment.IDeployment;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.launching.AbstractInterpreterInstallType;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -70,7 +73,7 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 		environment.remove("DISPLAY");
 	}
 
-	protected ILookupRunnable createLookupRunnable(final File installLocation,
+	protected ILookupRunnable createLookupRunnable(final IFileHandle installLocation,
 			final List locations, final EnvironmentVariable[] variables) {
 		return new ILookupRunnable() {
 			public void run(IProgressMonitor monitor) {
@@ -80,10 +83,11 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 				// This is safe retrieval
 				String[] autoPath = DLTKTclHelper.getDefaultPath(
 						installLocation, variables);
+				IEnvironment env = installLocation.getEnvironment();
 				if (autoPath != null) {
 					for (int i = 0; i < autoPath.length; i++) {
 						Path libraryPath = new Path(autoPath[i]);
-						File file = libraryPath.toFile();
+						IFileHandle file = env.getFile(libraryPath);
 						if (file.exists()) {
 							locations.add(new LibraryLocation(libraryPath));
 						}
@@ -134,7 +138,7 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 		return TclLaunchingPlugin.getDefault().getLog();
 	}
 
-	protected File createPathFile() throws IOException {
+	protected IPath createPathFile(IDeployment deployment) throws IOException {
 		return null;
 	}
 }

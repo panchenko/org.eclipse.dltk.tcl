@@ -9,15 +9,14 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.launching;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.console.ScriptConsoleServer;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.AbstractInterpreterRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -54,8 +53,8 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 				String port = Integer.toString(server.getPort());
 
 				try {
-					File scriptFile = TclLaunchingPlugin.getDefault()
-							.getConsoleProxy().toFile();
+					IFileHandle scriptFile = TclLaunchingPlugin.getDefault()
+							.getConsoleProxy(config.getExecutionEnvironment());
 					String id = configuration
 							.getAttribute(
 									ScriptLaunchConfigurationConstants.ATTR_DLTK_CONSOLE_ID,
