@@ -20,12 +20,12 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.testing.ITclTestingEngine;
 import org.eclipse.dltk.testing.ITestingProcessor;
-import org.eclipse.dltk.utils.DeployHelper;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclMethodDeclaration;
 
@@ -65,9 +65,11 @@ public class XOUnitTestingEngine implements ITclTestingEngine {
 						if (node instanceof TypeDeclaration
 								&& (((TypeDeclaration) node).getModifiers() & IXOTclModifiers.AccXOTcl) != 0) {
 							TypeDeclaration typeDeclaration = (TypeDeclaration) node;
-							
-							String fqn = TclParseUtil.getElementFQN(node, "::", decl);
-							if( !fqn.endsWith("::test::" + typeDeclaration.getName())) {
+
+							String fqn = TclParseUtil.getElementFQN(node, "::",
+									decl);
+							if (!fqn.endsWith("::test::"
+									+ typeDeclaration.getName())) {
 								return true;
 							}
 							List superClassNames = typeDeclaration
@@ -121,7 +123,9 @@ public class XOUnitTestingEngine implements ITclTestingEngine {
 			ILaunchConfiguration configuration) {
 		// We need to extract tcl source module and correct config.
 		try {
-			IPath runner = DeployHelper.deploy(Activator.getDefault(),
+			IDeployment deployment = config.getExecutionEnvironment()
+					.createDeployment();
+			IPath runner = deployment.add(Activator.getDefault().getBundle(),
 					"scripts/xounitTestingEngine.tcl");
 			IPath scriptFilePath = config.getScriptFilePath();
 			config.setScriptFile(runner);
