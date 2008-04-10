@@ -19,21 +19,18 @@ public class TclInterpreterContainerWizardPage extends
 		AbstractInterpreterContainerWizardPage implements
 		IBuildpathContainerPageExtension {
 	private TclInterpreterComboBlock block;
-	private IScriptProject project;
-	private IBuildpathEntry[] currentEntries;
 
 	protected AbstractInterpreterComboBlock getInterpreterBlock() {
 		if (block == null) {
 			block = new TclInterpreterComboBlock();
 		}
-		block.initialize(project, currentEntries);
+		block.initialize(getScriptProject(), getCurrentEntries());
 		return block;
 	}
 
 	public void initialize(IScriptProject project,
 			IBuildpathEntry[] currentEntries) {
-		this.project = project;
-		this.currentEntries = currentEntries;
+		super.initialize(project, currentEntries);
 		if (block != null) {
 			block.initialize(project, currentEntries);
 		}

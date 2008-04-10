@@ -15,10 +15,12 @@ import java.util.Set;
 
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterComboBlock;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.ui.DLTKPluginImages;
@@ -56,12 +58,14 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 				IInterpreterInstall install = getInterpreter();
 				if (install == null) {
 					install = ScriptRuntime
-							.getDefaultInterpreterInstall(TclNature.NATURE_ID);
+							.getDefaultInterpreterInstall(new DefaultInterpreterEntry(
+									TclNature.NATURE_ID,
+									LocalEnvironment.ENVIRONMENT_ID));
 				}
 				if (install != null) {
-					final Set names = PackagesManager.getInstance().getPackageNames(
-							install);
-					if( !names.contains(packageName)) {
+					final Set names = PackagesManager.getInstance()
+							.getPackageNames(install);
+					if (!names.contains(packageName)) {
 						return DLTKPluginImages.DESC_OBJS_ERROR.createImage();
 					}
 				}
@@ -179,11 +183,11 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 					}
 				});
 		remove.setEnabled(false);
-		
-		this.addPropertyChangeListener(new IPropertyChangeListener(){
+
+		this.addPropertyChangeListener(new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
-				if( event.getProperty().equals(PROPERTY_INTERPRETER)) {
+				if (event.getProperty().equals(PROPERTY_INTERPRETER)) {
 					refreshView();
 				}
 			}
@@ -221,7 +225,9 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		install = this.getInterpreter();
 		if (install == null) {
 			install = ScriptRuntime
-					.getDefaultInterpreterInstall(TclNature.NATURE_ID);
+					.getDefaultInterpreterInstall(new DefaultInterpreterEntry(
+							TclNature.NATURE_ID,
+							LocalEnvironment.ENVIRONMENT_ID));
 		}
 		if (install != null) {
 			final Set names = PackagesManager.getInstance().getPackageNames(

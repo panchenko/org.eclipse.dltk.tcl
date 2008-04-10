@@ -43,7 +43,11 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.ILaunchGroup;
 import org.eclipse.debug.ui.StringVariableSelectionDialog;
-import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IExecutionEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
 import org.eclipse.dltk.internal.ui.util.SWTUtil;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
@@ -929,16 +933,16 @@ public class TclCommonTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(
 					ScriptLaunchConfigurationConstants.ATTR_DLTK_CONSOLE_ID,
 					Long.toString(System.currentTimeMillis()));
-
 			try {
-				String proxyPath = TclLaunchingPlugin.getDefault()
-						.getConsoleProxy().toOSString();
-				configuration.setAttribute("proxy_path", proxyPath);
+				IFileHandle proxyFile = TclLaunchingPlugin.getDefault()
+						.getConsoleProxy(getExecEnvironment());
+				configuration.setAttribute("environmentId", proxyFile
+						.getEnvironment().getId());
+				configuration.setAttribute("proxy_path", proxyFile
+						.getAbsolutePath());
 			} catch (IOException e) {
-				e.printStackTrace();
-				// TODO: handle this situation
+				DLTKDebugPlugin.log(e);
 			}
-
 			captureOutput = false;
 			useDltk = true;
 		}
@@ -954,6 +958,13 @@ public class TclCommonTab extends AbstractLaunchConfigurationTab {
 		} else {
 			configuration.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, false);
 		}
+	}
+
+	private IExecutionEnvironment getExecEnvironment() {
+		// TODO: Add environments support
+		IEnvironment env = EnvironmentManager.getLocalEnvironment();
+		return (IExecutionEnvironment) env
+				.getAdapter(IExecutionEnvironment.class);
 	}
 
 	/*

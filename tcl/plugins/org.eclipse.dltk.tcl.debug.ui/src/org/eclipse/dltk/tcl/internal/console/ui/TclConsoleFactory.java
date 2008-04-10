@@ -14,9 +14,11 @@ import org.eclipse.dltk.console.ScriptConsolePrompt;
 import org.eclipse.dltk.console.ui.IScriptConsoleFactory;
 import org.eclipse.dltk.console.ui.ScriptConsole;
 import org.eclipse.dltk.console.ui.ScriptConsoleFactoryBase;
+import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
 import org.eclipse.dltk.launching.LaunchingMessages;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
 import org.eclipse.dltk.tcl.console.TclConsoleConstants;
 import org.eclipse.dltk.tcl.console.TclConsoleUtil;
 import org.eclipse.dltk.tcl.console.TclInterpreter;
@@ -28,7 +30,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-
 
 public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 		IScriptConsoleFactory {
@@ -48,11 +49,12 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 		console.setPrompt(makeInvitation());
 		return console;
 	}
+
 	protected void showInterpreterPreferencePage(String natureId) {
 		String preferencePageId = null;
 		IDLTKUILanguageToolkit languageToolkit = null;
 		languageToolkit = DLTKUILanguageManager.getLanguageToolkit(natureId);
-		if( languageToolkit == null ) {
+		if (languageToolkit == null) {
 			return;
 		}
 		preferencePageId = languageToolkit.getInterpreterPreferencePage();
@@ -63,6 +65,7 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 			dialog.open();
 		}
 	}
+
 	private void showQuestion() {
 		final boolean result[] = new boolean[] { false };
 		DLTKDebugUIPlugin.getStandardDisplay().syncExec(new Runnable() {
@@ -77,15 +80,23 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 			}
 		});
 	}
-	private TclConsole createConsoleInstance(IScriptInterpreter interpreter, String id) {
+
+	private TclConsole createConsoleInstance(IScriptInterpreter interpreter,
+			String id) {
 		if (interpreter == null) {
 			try {
 				id = "default";
 				interpreter = new TclInterpreter();
-				
-				if( ScriptRuntime.getDefaultInterpreterInstall(TclNature.NATURE_ID) == null ) {
+
+				if (ScriptRuntime
+						.getDefaultInterpreterInstall(new DefaultInterpreterEntry(
+								TclNature.NATURE_ID,
+								LocalEnvironment.ENVIRONMENT_ID)) == null) {
 					showQuestion();
-					if( ScriptRuntime.getDefaultInterpreterInstall(TclNature.NATURE_ID) == null ) {
+					if (ScriptRuntime
+							.getDefaultInterpreterInstall(new DefaultInterpreterEntry(
+									TclNature.NATURE_ID,
+									LocalEnvironment.ENVIRONMENT_ID)) == null) {
 						return null;
 					}
 				}
