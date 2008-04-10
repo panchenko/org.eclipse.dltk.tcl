@@ -16,11 +16,11 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.testing.ITclTestingEngine;
 import org.eclipse.dltk.testing.ITestingProcessor;
-import org.eclipse.dltk.utils.DeployHelper;
 
 public class TclTestTestingEngine implements ITclTestingEngine {
 	public TclTestTestingEngine() {
@@ -95,7 +95,9 @@ public class TclTestTestingEngine implements ITclTestingEngine {
 			ILaunchConfiguration configuration) {
 		// We need to extract tcl source module and correct config.
 		try {
-			IPath runner = DeployHelper.deploy(Activator.getDefault(),
+			IDeployment deployment = config.getExecutionEnvironment()
+					.createDeployment();
+			IPath runner = deployment.add(Activator.getDefault().getBundle(),
 					"scripts/tcltestEngine.tcl");
 			IPath scriptFilePath = config.getScriptFilePath();
 			config.setScriptFile(runner);
