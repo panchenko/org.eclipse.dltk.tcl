@@ -8,10 +8,13 @@
 
 package org.eclipse.dltk.tcl.activestatedebugger;
 
-import java.io.File;
 import java.util.List;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -51,8 +54,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	protected InterpreterConfig alterConfig(InterpreterConfig config,
 			PreferencesLookupDelegate delegate) {
 
-		File file = PlatformFileUtils
-				.findAbsoluteOrEclipseRelativeFile(getDebuggingEnginePath(delegate));
+		IFileHandle file = getDebuggingEnginePath(delegate);
 
 		final String exe = getInstall().getInstallLocation().getAbsolutePath();
 		final String host = (String) config
@@ -62,11 +64,16 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		final String sessionId = (String) config
 				.getProperty(DbgpConstants.SESSION_ID_PROP);
 
-		File pdxFiles = PlatformFileUtils
-				.findAbsoluteOrEclipseRelativeFile(new File(
-						getDebuggingPreference(
-								delegate,
-								TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PDX_PATH_KEY)));
+		IEnvironment env = getInstall().getEnvironment();
+
+		String pathKeyValue = getDebuggingPreference(delegate,
+				TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PDX_PATH_KEY);
+
+		String path = (String) EnvironmentPathUtils.decodePaths(pathKeyValue)
+				.get(env);
+
+		IFileHandle pdxFiles = PlatformFileUtils
+				.findAbsoluteOrEclipseRelativeFile(env, new Path(path));
 
 		InterpreterConfig newConfig = (InterpreterConfig) config.clone();
 
@@ -75,7 +82,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		}
 
 		// Additional property
-		newConfig.setProperty(OVERRIDE_EXE, file.getAbsoluteFile().toString());
+		newConfig.setProperty(OVERRIDE_EXE, file.toString());
 
 		// Interpreter arguments
 		newConfig.addInterpreterArg(HOST_KEY);
@@ -94,8 +101,8 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 			newConfig.addInterpreterArg(LOG_KEY);
 			newConfig.addInterpreterArg(LOG_FILE_KEY);
 
-			File logFileName = getLogFileName(delegate, sessionId);
-			newConfig.addInterpreterArg(logFileName.getAbsolutePath());
+			String logFileName = getLogFileName(delegate, sessionId);
+			newConfig.addInterpreterArg(logFileName);
 		}
 
 		newConfig.addInterpreterArg(SCRIPT_KEY);

@@ -10,26 +10,22 @@
 
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
+import java.util.Map;
+
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
-import org.eclipse.dltk.debug.ui.preferences.ScriptDebugPreferencesMessages;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
+import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
-import org.eclipse.dltk.ui.preferences.FieldValidators;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.util.SWTFactory;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -74,7 +70,7 @@ public class TclActiveStateDebuggerPreferencePage extends
 				newStatusChangedListener, project, new PreferenceKey[] {
 						ENGINE_PATH, PDX_PATH, ENABLE_LOGGING, LOG_FILE_PATH,
 						LOG_FILE_NAME }, container) {
-			private Text pdxPath;
+			private EnvironmentPathBlock pdxPath;
 
 			protected void createEngineBlock(Composite parent) {
 				super.createEngineBlock(parent);
@@ -92,29 +88,17 @@ public class TclActiveStateDebuggerPreferencePage extends
 				final Group group = SWTFactory.createGroup(parent,
 						PreferenceMessages.DebuggingEnginePDXGroup, 3, 1,
 						GridData.FILL_HORIZONTAL);
-
-				// Engine path
-				SWTFactory.createLabel(group,
-						ScriptDebugPreferencesMessages.PathLabel, 1);
-
-				pdxPath = SWTFactory.createText(group, SWT.BORDER, 1, "");
-				bindControl(pdxPath, PDX_PATH,
-						FieldValidators.DIR_PATH_VALIDATOR);
-
-				// Browse
-				final Button button = SWTFactory.createPushButton(group,
-						ScriptDebugPreferencesMessages.BrowseButton, null);
-				button.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						DirectoryDialog dialog = new DirectoryDialog(parent
-								.getShell(), SWT.OPEN);
-						String file = dialog.open();
-						if (file != null) {
-							pdxPath.setText(file);
-						}
-					}
-				});
-
+				pdxPath = new EnvironmentPathBlock();
+				pdxPath.createControl(group);
+				Map paths = EnvironmentPathUtils.decodePaths(getString(PDX_PATH));
+				pdxPath.setPaths(paths);
+			}
+			
+			protected boolean processChanges(
+					IWorkbenchPreferenceContainer container) {
+				String pdxPathKeyValue = EnvironmentPathUtils.encodePaths(pdxPath.getPaths());
+				setString(PDX_PATH, pdxPathKeyValue);
+				return super.processChanges(container);
 			}
 
 			protected PreferenceKey getDebuggingEnginePathKey() {
