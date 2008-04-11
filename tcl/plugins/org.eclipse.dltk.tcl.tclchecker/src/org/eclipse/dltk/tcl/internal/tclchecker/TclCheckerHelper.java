@@ -62,7 +62,7 @@ public final class TclCheckerHelper {
 			List cmdLine, IEnvironment environment) {
 		Map paths = getPaths(store);
 		String path = (String) paths.get(environment);
-		if( path == null || path.isEmpty()) {
+		if (path == null || path.length() == 0) {
 			return false;
 		}
 		IFileHandle validatorFile = PlatformFileUtils
@@ -211,6 +211,7 @@ public final class TclCheckerHelper {
 	public static Map getNoPCX(IPreferenceStore store) {
 		return getEnvironmentValues(store, TclCheckerConstants.PREF_NO_PCX);
 	}
+
 	public static void setNoPCX(IPreferenceStore store, Map paths) {
 		setEnvironmentValues(store, paths, TclCheckerConstants.PREF_NO_PCX);
 	}
@@ -220,9 +221,8 @@ public final class TclCheckerHelper {
 		Map results = new HashMap();
 		IEnvironment[] environments = EnvironmentManager.getEnvironments();
 		for (int i = 0; i < environments.length; i++) {
-			results.put(environments[i], store
-					.getString(prefix + "/"
-							+ environments[i].getId()));
+			results.put(environments[i], store.getString(prefix + "/"
+					+ environments[i].getId()));
 		}
 		return results;
 	}
@@ -231,8 +231,8 @@ public final class TclCheckerHelper {
 			String prefix) {
 		for (Iterator iterator = paths.keySet().iterator(); iterator.hasNext();) {
 			IEnvironment environment = (IEnvironment) iterator.next();
-			store.setValue(prefix + "/"
-					+ environment.getId(), (String) paths.get(environment));
+			store.setValue(prefix + "/" + environment.getId(), (String) paths
+					.get(environment));
 		}
 	}
 }
