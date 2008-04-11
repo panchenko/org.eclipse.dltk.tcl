@@ -58,10 +58,13 @@ public final class TclCheckerHelper {
 		return (String[]) cmdLine.toArray(new String[cmdLine.size()]);
 	}
 
-	public static void passOriginalArguments(IPreferenceStore store,
+	public static boolean passOriginalArguments(IPreferenceStore store,
 			List cmdLine, IEnvironment environment) {
 		Map paths = getPaths(store);
 		String path = (String) paths.get(environment);
+		if( path == null || path.isEmpty()) {
+			return false;
+		}
 		IFileHandle validatorFile = PlatformFileUtils
 				.findAbsoluteOrEclipseRelativeFile(environment, new Path(path));
 		cmdLine.add(validatorFile.getAbsolutePath());
@@ -104,6 +107,7 @@ public final class TclCheckerHelper {
 				}
 			}
 		}
+		return true;
 	}
 
 	public static TclCheckerProblem parseProblem(String problem) {

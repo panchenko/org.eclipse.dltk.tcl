@@ -147,7 +147,17 @@ public class TclChecker {
 			return;
 		}
 		List cmdLine = new ArrayList();
-		TclCheckerHelper.passOriginalArguments(store, cmdLine, environment);
+		if( !TclCheckerHelper.passOriginalArguments(store, cmdLine, environment) ) {
+			if (console != null) {
+				try {
+					console.write("Path to TclChecker is not specified.".getBytes());
+				} catch (IOException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 				.getAdapter(IExecutionEnvironment.class);
 		IDeployment deployment = execEnvironment.createDeployment();
