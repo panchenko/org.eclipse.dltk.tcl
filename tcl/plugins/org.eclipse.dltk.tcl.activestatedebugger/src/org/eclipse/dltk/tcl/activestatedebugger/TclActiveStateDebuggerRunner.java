@@ -34,8 +34,7 @@ import org.eclipse.dltk.utils.PlatformFileUtils;
 public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner {
 	public static final String ENGINE_ID = "org.eclipse.dltk.tcl.activestatedebugger";
 
-	private static final String HOST_KEY = "-host-ide";
-	private static final String PORT_KEY = "-port-ide";
+	private static final String ADDRESS_KEY = "-dbgp";
 	private static final String SHELL_KEY = "-app-shell";
 	private static final String IDE_KEY = "-ide-key";
 	private static final String SCRIPT_KEY = "-app-file";
@@ -56,7 +55,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 
 		IFileHandle file = getDebuggingEnginePath(delegate);
 
-		final String exe = getInstall().getInstallLocation().getAbsolutePath();
+		final String exe = getInstall().getInstallLocation().toString();
 		final String host = (String) config
 				.getProperty(DbgpConstants.HOST_PROP);
 		final String port = (String) config
@@ -72,24 +71,24 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		String path = (String) EnvironmentPathUtils.decodePaths(pathKeyValue)
 				.get(env);
 
-		IFileHandle pdxFiles = PlatformFileUtils
-				.findAbsoluteOrEclipseRelativeFile(env, new Path(path));
-
 		InterpreterConfig newConfig = (InterpreterConfig) config.clone();
 
-		if (pdxFiles.exists()) {
-			newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles.getAbsolutePath());
+		if (path != null) {
+			IFileHandle pdxFiles = PlatformFileUtils
+					.findAbsoluteOrEclipseRelativeFile(env, new Path(path));
+
+			if (pdxFiles.exists()) {
+				newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles
+						.getAbsolutePath());
+			}
 		}
 
 		// Additional property
 		newConfig.setProperty(OVERRIDE_EXE, file.toString());
 
 		// Interpreter arguments
-		newConfig.addInterpreterArg(HOST_KEY);
-		newConfig.addInterpreterArg(host);
-
-		newConfig.addInterpreterArg(PORT_KEY);
-		newConfig.addInterpreterArg(port);
+		newConfig.addInterpreterArg(ADDRESS_KEY);
+		newConfig.addInterpreterArg(host + ':' + port);
 
 		newConfig.addInterpreterArg(SHELL_KEY);
 		newConfig.addInterpreterArg(exe);
@@ -97,11 +96,11 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		newConfig.addInterpreterArg(IDE_KEY);
 		newConfig.addInterpreterArg(sessionId);
 
-		if (isLoggingEnabled(delegate)) {
+
+		String logFileName = getLogFileName(delegate, sessionId);
+		if (logFileName != null) {
 			newConfig.addInterpreterArg(LOG_KEY);
 			newConfig.addInterpreterArg(LOG_FILE_KEY);
-
-			String logFileName = getLogFileName(delegate, sessionId);
 			newConfig.addInterpreterArg(logFileName);
 		}
 
