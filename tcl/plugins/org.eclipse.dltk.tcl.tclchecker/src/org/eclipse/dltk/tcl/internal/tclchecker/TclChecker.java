@@ -133,7 +133,7 @@ public class TclChecker {
 			String loc = null; 
 			if (location == null) {
 				URI locationURI = module.getResource().getLocationURI();
-				loc = environment.getFile(locationURI).getAbsolutePath();
+				loc = environment.getFile(locationURI).toOSString();
 			} else {
 				loc = location.toOSString();
 			}
@@ -193,7 +193,7 @@ public class TclChecker {
 			return;
 		}
 		cmdLine.add("-@");
-		cmdLine.add(deployment.getFile(pattern).getAbsolutePath());
+		cmdLine.add(deployment.getFile(pattern).toOSString());
 		Process process;
 		BufferedReader input = null;
 		String checkingFile = null;

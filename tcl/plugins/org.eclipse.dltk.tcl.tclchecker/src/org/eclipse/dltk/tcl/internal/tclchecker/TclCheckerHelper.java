@@ -67,7 +67,7 @@ public final class TclCheckerHelper {
 		}
 		IFileHandle validatorFile = PlatformFileUtils
 				.findAbsoluteOrEclipseRelativeFile(environment, new Path(path));
-		cmdLine.add(validatorFile.getAbsolutePath());
+		cmdLine.add(validatorFile.toOSString());
 
 		// cmdLine.add(QUIET_OPTION);
 
