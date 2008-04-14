@@ -2,6 +2,7 @@ package org.eclipse.dltk.tcl.core.tests.launching;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.core.tests.launching.IFileVisitor;
 import org.eclipse.dltk.core.tests.launching.PathFilesContainer;
 import org.eclipse.dltk.core.tests.launching.ScriptLaunchingTests;
@@ -166,11 +169,15 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 		if (!inDefault && path == null) {
 			assertNotNull("Couldn't find ActiveState debugger", path);
 		}
+		
+		Map map = new HashMap();
+		map.put(LocalEnvironment.getInstance(), path);
+		String keyValue = EnvironmentPathUtils.encodePaths(map);
 		plugin
 				.getPluginPreferences()
 				.setValue(
 						TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY,
-						path);
+						keyValue);
 		initialized = true;
 	}
 
