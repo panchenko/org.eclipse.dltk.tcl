@@ -939,7 +939,7 @@ public class TclCommonTab extends AbstractLaunchConfigurationTab {
 				configuration.setAttribute("environmentId", proxyFile
 						.getEnvironment().getId());
 				configuration.setAttribute("proxy_path", proxyFile
-						.getAbsolutePath());
+						.toOSString());
 			} catch (IOException e) {
 				DLTKDebugPlugin.log(e);
 			}
