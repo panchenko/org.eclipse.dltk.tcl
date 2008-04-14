@@ -86,16 +86,10 @@ public class TclCheckerImpl extends AbstractValidator {
 	/**
 	 * TclChecker is valid, if it is valid for at least one environment.
 	 */
-	public boolean isValidatorValid() {
+	public boolean isValidatorValid(IEnvironment environment) {
 		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
 				.getPreferenceStore());
-		IEnvironment[] environments = EnvironmentManager.getEnvironments();
-		for (int i = 0; i < environments.length; i++) {
-			if( checker.canCheck(environments[i])) {
-				return true;
-			}
-		}
-		return false;
+		return checker.canCheck(environment);
 	}
 
 	public void clean(ISourceModule[] module) {
