@@ -87,7 +87,7 @@ public class TclActiveStateDebuggerPreferencePage extends
 
 				final Group group = SWTFactory.createGroup(parent,
 						PreferenceMessages.DebuggingEnginePDXGroup, 3, 1,
-						GridData.FILL_HORIZONTAL);
+						GridData.FILL_BOTH);
 				pdxPath = new EnvironmentPathBlock();
 				pdxPath.createControl(group);
 				Map paths = EnvironmentPathUtils.decodePaths(getString(PDX_PATH));
