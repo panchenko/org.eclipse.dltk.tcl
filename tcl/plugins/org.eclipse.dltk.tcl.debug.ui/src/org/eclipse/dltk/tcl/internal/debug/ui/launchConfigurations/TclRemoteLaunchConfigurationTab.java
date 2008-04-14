@@ -14,6 +14,10 @@ import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 public class TclRemoteLaunchConfigurationTab extends
 		RemoteLaunchConfigurationTab {
 
+	public TclRemoteLaunchConfigurationTab(String mode) {
+		super(mode);
+	}
+
 	/*
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#breakOnFirstLinePrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate)
 	 */

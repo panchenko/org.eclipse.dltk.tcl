@@ -20,6 +20,10 @@ import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
  */
 public class TclMainLaunchConfigurationTab extends MainLaunchConfigurationTab {
 	
+	public TclMainLaunchConfigurationTab(String mode) {
+		super(mode);
+	}
+
 	/*
 	 * @see org.eclipse.dltk.debug.ui.launchConfigurations.ScriptLaunchConfigurationTab#breakOnFirstLinePrefEnabled(org.eclipse.dltk.core.PreferencesLookupDelegate)
 	 */

@@ -22,7 +22,7 @@ public class TclRemoteTabGroup extends AbstractLaunchConfigurationTabGroup {
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
-				new TclRemoteLaunchConfigurationTab(), new CommonTab() };
+				new TclRemoteLaunchConfigurationTab(mode), new CommonTab() };
 
 		setTabs(tabs);
 	}

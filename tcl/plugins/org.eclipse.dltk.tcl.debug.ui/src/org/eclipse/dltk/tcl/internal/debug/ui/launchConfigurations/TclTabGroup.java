@@ -19,7 +19,7 @@ import org.eclipse.dltk.tcl.internal.debug.ui.interpreters.TclInterpreterTab;
 public class TclTabGroup extends AbstractLaunchConfigurationTabGroup {
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
-				new TclMainLaunchConfigurationTab(),
+				new TclMainLaunchConfigurationTab(mode),
 				new TclScriptArgumentsTab(),
 				new TclInterpreterTab(),
 				new EnvironmentTab(),
