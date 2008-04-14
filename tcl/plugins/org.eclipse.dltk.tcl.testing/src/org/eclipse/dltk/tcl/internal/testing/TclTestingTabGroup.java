@@ -14,7 +14,7 @@ public class TclTestingTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
-				new TclTestingMainLaunchConfigurationTab(),
+				new TclTestingMainLaunchConfigurationTab(mode),
 				new ScriptArgumentsTab(), new TclInterpreterTab(),
 				new EnvironmentTab(), new ScriptCommonTab() {
 

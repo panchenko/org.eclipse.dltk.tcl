@@ -30,10 +30,15 @@ import org.eclipse.swt.widgets.Group;
 
 public class TclTestingMainLaunchConfigurationTab extends
 		TclMainLaunchConfigurationTab {
+
 	private Button detect;
 	private Combo engineType;
 	private Map nameToId = new HashMap();
 
+	public TclTestingMainLaunchConfigurationTab(String mode) {
+		super(mode);
+	}
+	
 	protected void doCreateControl(Composite composite) {
 		createMainModuleEditor(composite,
 				DLTKLaunchConfigurationsMessages.mainTab_mainModule);
