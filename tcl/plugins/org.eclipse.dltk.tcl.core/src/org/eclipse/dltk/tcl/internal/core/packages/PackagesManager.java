@@ -432,7 +432,7 @@ public class PackagesManager {
 	}
 
 	private String getInterpreterKey(IInterpreterInstall install) {
-		return install.getInstallLocation().getAbsolutePath() + ":"
+		return install.getInstallLocation().toOSString() + ":"
 				+ install.getEnvironment().getId();
 	}
 

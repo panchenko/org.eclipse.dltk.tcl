@@ -134,7 +134,7 @@ public class DLTKTclHelper {
 			IFileHandle installLocation, EnvironmentVariable[] environment,
 			String packageName) {
 		Process process = deployExecute(exeEnv, installLocation
-				.getAbsolutePath(), new String[] { "get-srcs", "-pkgs",
+				.toOSString(), new String[] { "get-srcs", "-pkgs",
 				packageName }, environment);
 		List content = getScriptOutput(process);
 		process.destroy();
@@ -320,7 +320,7 @@ public class DLTKTclHelper {
 	public static Set getPackages(IInterpreterInstall install) {
 		IExecutionEnvironment exeEnv = install.getExecEnvironment();
 		Process process = deployExecute(exeEnv, install.getInstallLocation()
-				.getAbsolutePath(), new String[] { "get-pkgs" }, install
+				.toOSString(), new String[] { "get-pkgs" }, install
 				.getEnvironmentVariables());
 		List content = getScriptOutput(process);
 		Set packages = new HashSet();
