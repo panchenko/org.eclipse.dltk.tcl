@@ -79,7 +79,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 
 			if (pdxFiles.exists()) {
 				newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles
-						.getAbsolutePath());
+						.toOSString());
 			}
 		}
 
