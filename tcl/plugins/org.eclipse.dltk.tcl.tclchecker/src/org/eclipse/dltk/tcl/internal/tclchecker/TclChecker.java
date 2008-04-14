@@ -182,7 +182,7 @@ public class TclChecker {
 		IPath pattern;
 		try {
 			pattern = deployment.add(new ByteArrayInputStream(baros
-					.toByteArray()), new Path("pattern.txt"));
+					.toByteArray()), "pattern.txt");
 		} catch (IOException e1) {
 			if (DLTKCore.DEBUG) {
 				TclCheckerPlugin.getDefault().getLog().log(
