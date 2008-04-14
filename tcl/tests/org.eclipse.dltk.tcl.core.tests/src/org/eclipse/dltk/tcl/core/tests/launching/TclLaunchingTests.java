@@ -39,7 +39,7 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 
 		public boolean visit(IFileHandle file) {
 			if (file.isFile() && file.getName().startsWith("dbgp_tcldebug")) {
-				debuggingEnginePath = file.getAbsolutePath();
+				debuggingEnginePath = file.toOSString();
 			}
 
 			if (file.isDirectory() && debuggingEnginePath == null) {
