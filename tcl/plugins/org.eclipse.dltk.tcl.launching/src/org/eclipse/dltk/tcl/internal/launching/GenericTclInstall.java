@@ -49,7 +49,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 			// config.addInterpreterArg("-KU"); //$NON-NLS-1$
 			final Process process = ScriptLaunchUtil.runScriptWithInterpreter(
 					exeEnv, GenericTclInstall.this.getInstallLocation()
-							.getAbsolutePath(), config);
+							.toOSString(), config);
 			Thread readerThread = new Thread(new Runnable() {
 				public void run() {
 					BufferedReader input = null;

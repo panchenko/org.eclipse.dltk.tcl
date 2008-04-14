@@ -59,7 +59,7 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 							.getAttribute(
 									ScriptLaunchConfigurationConstants.ATTR_DLTK_CONSOLE_ID,
 									(String) null);
-					config.addInterpreterArg(scriptFile.getAbsolutePath());
+					config.addInterpreterArg(scriptFile.toOSString());
 					config.addInterpreterArg("127.0.0.1");
 					config.addInterpreterArg(port);
 					config.addInterpreterArg(id);
