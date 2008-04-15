@@ -149,7 +149,7 @@ public class TclTestingMainLaunchConfigurationTab extends
 				e.printStackTrace();
 			}
 		}
-		if (id == null && id.length() == 0) {
+		if (id == null || id.length() == 0) {
 			handleDetectButtonSelected();
 		} else {
 			// this.engineType.select(0);
