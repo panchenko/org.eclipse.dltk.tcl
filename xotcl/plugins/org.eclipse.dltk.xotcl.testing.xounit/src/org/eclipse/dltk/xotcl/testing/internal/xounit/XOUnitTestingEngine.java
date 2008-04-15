@@ -129,7 +129,9 @@ public class XOUnitTestingEngine implements ITclTestingEngine {
 					"scripts/xounitTestingEngine.tcl");
 			IPath scriptFilePath = config.getScriptFilePath();
 			config.setScriptFile(runner);
-			config.addScriptArg(scriptFilePath.toOSString(), 0);
+			if (scriptFilePath != null) {
+				config.addScriptArg(scriptFilePath.toOSString(), 0);
+			}
 
 			String projectName = AbstractScriptLaunchConfigurationDelegate
 					.getScriptProjectName(configuration);
