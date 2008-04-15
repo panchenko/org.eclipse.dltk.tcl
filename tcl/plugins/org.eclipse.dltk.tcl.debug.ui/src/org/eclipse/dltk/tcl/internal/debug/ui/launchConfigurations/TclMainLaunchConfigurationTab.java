@@ -19,9 +19,9 @@ import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
  * Main launch configuration tab for tcl scripts
  */
 public class TclMainLaunchConfigurationTab extends MainLaunchConfigurationTab {
-	
 	public TclMainLaunchConfigurationTab(String mode) {
 		super(mode);
+		enableInteractiveConsoleGroup();
 	}
 
 	/*
