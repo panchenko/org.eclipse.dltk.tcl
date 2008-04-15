@@ -101,7 +101,9 @@ public class TclTestTestingEngine implements ITclTestingEngine {
 					"scripts/tcltestEngine.tcl");
 			IPath scriptFilePath = config.getScriptFilePath();
 			config.setScriptFile(runner);
-			config.addScriptArg(scriptFilePath.toOSString(), 0);
+			if (scriptFilePath != null) {
+				config.addScriptArg(scriptFilePath.toOSString(), 0);
+			}
 		} catch (IOException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
