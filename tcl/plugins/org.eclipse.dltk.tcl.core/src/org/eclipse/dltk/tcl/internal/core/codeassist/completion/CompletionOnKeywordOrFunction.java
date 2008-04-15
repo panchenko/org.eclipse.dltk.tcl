@@ -24,7 +24,11 @@ public class CompletionOnKeywordOrFunction extends SimpleReference implements IC
 	}
 	
 	public char[] getToken( ) {
-		return getName().toCharArray();
+		String name = getName();
+		if( name == null ) {
+			return new char[0];
+		}
+		return name.toCharArray();
 	}
 	public String[] getPossibleKeywords( ) {
 		return this.possibleKeywords;
