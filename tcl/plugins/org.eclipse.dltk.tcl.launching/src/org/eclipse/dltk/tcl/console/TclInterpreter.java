@@ -99,7 +99,8 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 		for (Iterator iterator = this.initialListeners.iterator(); iterator
 				.hasNext();) {
 			Runnable op = (Runnable) iterator.next();
-			op.run();
+			Thread t = new Thread( op);
+			t.run();
 		}
 	}
 
