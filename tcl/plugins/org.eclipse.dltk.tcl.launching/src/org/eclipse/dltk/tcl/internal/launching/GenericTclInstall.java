@@ -46,6 +46,8 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 			InterpreterConfig config = ScriptLaunchUtil
 					.createInterpreterConfig(exeEnv, builderFile, builderFile
 							.getParent());
+			// For wish
+			config.removeEnvVar("DISPLAY");
 			// config.addInterpreterArg("-KU"); //$NON-NLS-1$
 			final Process process = ScriptLaunchUtil.runScriptWithInterpreter(
 					exeEnv, GenericTclInstall.this.getInstallLocation()

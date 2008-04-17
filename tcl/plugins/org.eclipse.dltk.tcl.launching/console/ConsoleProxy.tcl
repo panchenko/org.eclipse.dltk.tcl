@@ -69,6 +69,58 @@ proc my_puts {args} {
 
 	append strStdout "wrong # args: should be \"puts ?-nonewline? ?channelId? string\"\n"
 }
+proc my_puts_direct {args} {
+	global in
+	global out
+
+	switch -exact -- [llength $args] {
+		#puts "data"
+		1 {
+			set arg0 [lindex $args 0]
+			puts "my_puts_direct:$arg0"
+			puts $out $arg0
+			flush $out
+			return
+		}
+
+		#puts -nonewline "data"
+		#puts stdout "data"
+		2 {
+			set arg0 [lindex $args 0]
+			set arg1 [lindex $args 1]
+			if {$arg0 eq "-nonewline"} {
+				puts "my_puts_direct:$arg1"
+				puts $out $arg1
+				flush $out
+			} elseif {$arg0 eq "stdout" } {
+				puts $out $arg1
+				puts "my_puts_direct:$arg1"
+				flush $out
+			} else {
+				return evaluate [list __dltk__puts__ $arg0 $arg1]
+			}
+			return
+		}
+
+		#puts stdout -nonewline "data"
+		3 {
+			set arg0 [lindex $args 0]
+			set arg1 [lindex $args 1]
+			set arg1 [lindex $args 2]
+
+			if {$arg1 eq "stdout"} {
+				puts -nonewline "my_puts_direct: $arg2"
+				puts $out -nonewline $arg2
+				flush $out
+			} else {
+				return evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]
+			}
+			return
+		}
+	}
+
+	append strStdout "wrong # args: should be \"puts ?-nonewline? ?channelId? string\"\n"
+}
 
 # Internal interpreter
 proc my_gets {args} {
@@ -583,15 +635,17 @@ if {[llength $argv] > 3} {
 		evaluate [list set argv $scriptArgs]
 	
 		#puts "Script: $script"
+		# Use direct put command
+		foo alias puts my_puts_direct
 		set res [evaluate [list source $script]]
-	
-		#set output [getOutput]
-	
-		#sendResponse $out [makeConsoleNode [makeInterpreterNode "new" $output]]
-		#sendResponse $out [makeConsoleNode [makeInterpreterNode "new" $res]]
+		foo alias puts my_puts
 	}
 }
-#sendResponse  $out [makeConsoleNode [makeInterpreterNode "new" "%%{{START_OF_SCRIPT}}&&"]]
+puts "before: $out"
+puts -nonewline $out "\0"
+flush $out
+puts "after: $out"
+
 # Handle commands and send responses
 proc localHandler {} {
 	global in
@@ -607,6 +661,11 @@ proc localHandler {} {
 		set body [interpreterHandler $in]
 		sendResponse $out [makeConsoleNode $body]
 	}
+	
+	if {[eof $in]} {
+        close $in
+        exit 0
+    }
 
 	if {$closeFlag} {
 		exit 0

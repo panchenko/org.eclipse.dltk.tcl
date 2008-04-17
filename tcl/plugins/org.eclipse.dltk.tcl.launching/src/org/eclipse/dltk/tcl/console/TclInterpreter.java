@@ -10,6 +10,7 @@
 package org.eclipse.dltk.tcl.console;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -110,10 +111,7 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 		this.initialListeners.add(runnable);
 	}
 
-	public String getInitialOuput() {
-		if (this.protocol == null) {
-			return null;
-		}
-		return this.protocol.getInitialResponse();
+	public InputStream getInitialOutputStream() {
+		return protocol.getInitialResponseStream();
 	}
 }
