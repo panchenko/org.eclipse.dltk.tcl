@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.launchConfigurations;
 
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.debug.core.DLTKDebugPreferenceConstants;
@@ -21,7 +22,9 @@ import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 public class TclMainLaunchConfigurationTab extends MainLaunchConfigurationTab {
 	public TclMainLaunchConfigurationTab(String mode) {
 		super(mode);
-		enableInteractiveConsoleGroup();
+		if (ILaunchManager.RUN_MODE.equals(mode)) {
+			enableInteractiveConsoleGroup();
+		}
 	}
 
 	/*
