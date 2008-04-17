@@ -89,7 +89,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 					e.printStackTrace();
 				}
 			}
-
+			deployment.dispose();
 		}
 	}
 
