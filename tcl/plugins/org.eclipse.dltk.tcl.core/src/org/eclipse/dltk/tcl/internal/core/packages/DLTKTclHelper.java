@@ -81,6 +81,8 @@ public class DLTKTclHelper {
 		IFileHandle workingDir = script.getParent();
 		InterpreterConfig config = ScriptLaunchUtil.createInterpreterConfig(
 				exeEnv, script, workingDir, env);
+		// For wish
+		config.removeEnvVar("DISPLAY");
 
 		if (arguments != null) {
 			config.addScriptArgs(arguments);
