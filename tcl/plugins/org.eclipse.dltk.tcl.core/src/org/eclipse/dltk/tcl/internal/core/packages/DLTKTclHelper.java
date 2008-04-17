@@ -69,7 +69,7 @@ public class DLTKTclHelper {
 		return elements;
 	}
 
-	private static Process deployExecute(IExecutionEnvironment exeEnv,
+	private static List deployExecute(IExecutionEnvironment exeEnv,
 			String installLocation, String[] arguments,
 			EnvironmentVariable[] env) {
 		IDeployment deployment = exeEnv.createDeployment();
@@ -97,7 +97,13 @@ public class DLTKTclHelper {
 				e.printStackTrace();
 			}
 		}
-		return process;
+		if (process == null) {
+			return new ArrayList();
+		}
+		List output = getScriptOutput(process);
+		process.destroy();
+		deployment.dispose();
+		return output;
 	}
 
 	private static IFileHandle deploy(IDeployment deployment) {
@@ -135,11 +141,8 @@ public class DLTKTclHelper {
 	public static TclPackage[] getSrcs(IExecutionEnvironment exeEnv,
 			IFileHandle installLocation, EnvironmentVariable[] environment,
 			String packageName) {
-		Process process = deployExecute(exeEnv, installLocation
-				.toOSString(), new String[] { "get-srcs", "-pkgs",
-				packageName }, environment);
-		List content = getScriptOutput(process);
-		process.destroy();
+		List content = deployExecute(exeEnv, installLocation.toOSString(),
+				new String[] { "get-srcs", "-pkgs", packageName }, environment);
 		return getPackagePath(content);
 	}
 
@@ -321,16 +324,14 @@ public class DLTKTclHelper {
 
 	public static Set getPackages(IInterpreterInstall install) {
 		IExecutionEnvironment exeEnv = install.getExecEnvironment();
-		Process process = deployExecute(exeEnv, install.getInstallLocation()
+		List content = deployExecute(exeEnv, install.getInstallLocation()
 				.toOSString(), new String[] { "get-pkgs" }, install
 				.getEnvironmentVariables());
-		List content = getScriptOutput(process);
 		Set packages = new HashSet();
 		TclPackage[] packagePath = getPackagePath(content);
 		for (int i = 0; i < packagePath.length; i++) {
 			packages.add(packagePath[i].getName());
 		}
-		process.destroy();
 		return packages;
 	}
 }
