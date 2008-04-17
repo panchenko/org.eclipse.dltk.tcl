@@ -358,6 +358,7 @@ public class TclChecker {
 			}
 		} finally {
 			monitor.done();
+			deployment.dispose();
 			if (input != null) {
 				try {
 					input.close();
