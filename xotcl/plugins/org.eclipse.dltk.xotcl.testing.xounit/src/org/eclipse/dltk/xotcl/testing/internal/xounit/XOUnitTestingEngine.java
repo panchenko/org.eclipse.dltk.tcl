@@ -120,7 +120,7 @@ public class XOUnitTestingEngine implements ITclTestingEngine {
 	}
 
 	public void correctLaunchConfiguration(InterpreterConfig config,
-			ILaunchConfiguration configuration) {
+			ILaunchConfiguration configuration, ILaunch launch) {
 		// We need to extract tcl source module and correct config.
 		try {
 			IDeployment deployment = config.getExecutionEnvironment()
