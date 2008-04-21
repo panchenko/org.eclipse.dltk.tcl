@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
+import org.eclipse.dltk.internal.launching.execution.DeploymentManager;
 import org.eclipse.dltk.launching.AbstractInterpreterRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -64,6 +65,7 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 							.getExecutionEnvironment();
 					IDeployment deployment = executionEnvironment
 							.createDeployment();
+					DeploymentManager.getInstance().addDeployment(launch, deployment);
 					IPath path = deployment.add(TclLaunchingPlugin.getDefault()
 							.getBundle(), TclLaunchingPlugin.getDefault()
 							.getConsoleProxy());

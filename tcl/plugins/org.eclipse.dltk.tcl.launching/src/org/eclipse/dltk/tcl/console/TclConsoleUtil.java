@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
+import org.eclipse.dltk.internal.launching.execution.DeploymentManager;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
@@ -49,6 +50,7 @@ public class TclConsoleUtil {
 		
 		final ILaunch launch = ScriptLaunchUtil.runScript(TclNature.NATURE_ID,
 				scriptFile, null, null, args, null);
+		DeploymentManager.getInstance().addDeployment(launch, deployment);
 		if (launch != null) {
 			interpreter.addCloseOperation(new Runnable() {
 				public void run() {
