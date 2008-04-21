@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.console.ui;
 
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.dltk.console.IScriptInterpreter;
 import org.eclipse.dltk.console.ScriptConsolePrompt;
 import org.eclipse.dltk.console.ui.IScriptConsoleFactory;
@@ -117,7 +118,9 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 	public TclConsoleFactory() {
 	}
 
-	public void openConsole(IScriptInterpreter interpreter, String id) {
-		registerAndOpenConsole(createConsoleInstance(interpreter, id));
+	public void openConsole(IScriptInterpreter interpreter, String id, ILaunch launch) {
+		TclConsole tclConsole = createConsoleInstance(interpreter, id);
+		tclConsole.setLaunch(launch);
+		registerAndOpenConsole(tclConsole);
 	}
 }
