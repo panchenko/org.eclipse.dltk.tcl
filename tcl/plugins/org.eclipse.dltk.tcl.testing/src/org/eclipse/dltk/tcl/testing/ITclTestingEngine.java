@@ -12,5 +12,5 @@ public interface ITclTestingEngine {
 	
 	boolean isValidModule(ISourceModule module);
 	ITestingProcessor getProcessor(ILaunch launch);
-	void correctLaunchConfiguration(InterpreterConfig config, ILaunchConfiguration configuration);
+	void correctLaunchConfiguration(InterpreterConfig config, ILaunchConfiguration configuration, ILaunch launch);
 }
