@@ -313,10 +313,12 @@ public class DLTKTclHelper {
 
 	private static String getXMLContent(List content) {
 		StringBuffer newList = new StringBuffer();
-		for (Iterator iterator = content.iterator(); iterator.hasNext();) {
-			String line = (String) iterator.next();
-			if (line.trim().startsWith("<")) {
-				newList.append(line).append("\n");
+		if (content != null) {
+			for (Iterator iterator = content.iterator(); iterator.hasNext();) {
+				String line = (String) iterator.next();
+				if (line.trim().startsWith("<")) {
+					newList.append(line).append("\n");
+				}
 			}
 		}
 		return newList.toString();
