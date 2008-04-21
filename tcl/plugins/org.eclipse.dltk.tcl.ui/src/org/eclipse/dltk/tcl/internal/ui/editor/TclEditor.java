@@ -66,7 +66,7 @@ public class TclEditor extends ScriptEditor {
 
 	protected void initializeEditor() {
 		super.initializeEditor();
-		
+
 		setEditorContextMenuId(EDITOR_CONTEXT);
 		setRulerContextMenuId(RULER_CONTEXT);
 	}
@@ -86,7 +86,8 @@ public class TclEditor extends ScriptEditor {
 		action = new TextOperationAction(DLTKEditorMessages
 				.getBundleForConstructedKeys(),
 				"Uncomment.", this, ITextOperationTarget.STRIP_PREFIX); //$NON-NLS-1$
-		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.UNCOMMENT);
+		action
+				.setActionDefinitionId(IScriptEditorActionDefinitionIds.UNCOMMENT);
 		setAction("Uncomment", action); //$NON-NLS-1$
 		markAsStateDependentAction("Uncomment", true); //$NON-NLS-1$
 
@@ -100,6 +101,13 @@ public class TclEditor extends ScriptEditor {
 		configureToggleCommentAction();
 	}
 
+	final static String[] properties = new String[] {
+			TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
+			TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
+			TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST,
+			TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST,
+			PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT };
+
 	protected void handlePreferenceStoreChanged(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		try {
@@ -107,20 +115,13 @@ public class TclEditor extends ScriptEditor {
 			if (sourceViewer == null) {
 				return;
 			}
-			if (TclPreferenceConstants.EDITOR_FOLDING_BLOCKS.equals(property)
-					|| TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES
-							.equals(property)
-					|| TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST
-							.equals(property)
-					|| TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST
-							.equals(property)
-					|| PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT
-							.equals(property)) {
-
-				if (sourceViewer instanceof ProjectionViewer) {
-					fProjectionModelUpdater.initialize();
+			for (int i = 0; i < properties.length; i++) {
+				if (properties[i].equals(property)) {
+					if (sourceViewer instanceof ProjectionViewer) {
+						fProjectionModelUpdater.initialize();
+					}
+					return;
 				}
-				return;
 			}
 		} finally {
 			super.handlePreferenceStoreChanged(event);
@@ -128,16 +129,15 @@ public class TclEditor extends ScriptEditor {
 	}
 
 	protected IPreferenceStore getScriptPreferenceStore() {
-		return TclUI.getDefault().getPreferenceStore(); 
+		return TclUI.getDefault().getPreferenceStore();
 	}
-	
+
 	public ScriptTextTools getTextTools() {
 		return TclUI.getDefault().getTextTools();
 	}
 
 	protected ScriptOutlinePage doCreateOutlinePage() {
-		return new TclOutlinePage(this, TclUI.getDefault()
-				.getPreferenceStore());		
+		return new TclOutlinePage(this, TclUI.getDefault().getPreferenceStore());
 	}
 
 	protected void connectPartitioningToElement(IEditorInput input,
@@ -155,7 +155,7 @@ public class TclEditor extends ScriptEditor {
 		if (foldingProvider == null) {
 			foldingProvider = new TclFoldingStructureProvider();
 		}
-		
+
 		return foldingProvider;
 	}
 
@@ -202,7 +202,7 @@ public class TclEditor extends ScriptEditor {
 		int sourceCaretOffset = selection.getOffset() + selection.getLength();
 		if (isSurroundedByBrackets(document, sourceCaretOffset))
 			sourceCaretOffset -= selection.getLength();
-		
+
 		IRegion region = bracketMatcher.match(document, sourceCaretOffset);
 		if (region == null) {
 			setStatusLineErrorMessage("No matching bracket found");
