@@ -38,7 +38,7 @@ public class TclCompletionProposalLabelProvider extends
 		// parameters
 		nameBuffer.append('(');
 		appendUnboundedParameterList(nameBuffer, methodProposal);
-		nameBuffer.append(")  "); //$NON-NLS-1$
+		nameBuffer.append(')'); //$NON-NLS-1$
 
 		return nameBuffer.toString();
 	}
