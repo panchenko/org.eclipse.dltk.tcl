@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.editor;
 
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.viewsupport.ImageImageDescriptor;
@@ -38,14 +39,17 @@ public class TclOutlineLabelDecorator extends LabelProvider implements
 				ImageDescriptor baseImage = new ImageImageDescriptor(image);
 				Rectangle bounds = image.getBounds();
 
-				ImageDescriptor dsc = new TclOutlineElementImageDescriptor(baseImage,
-						new Point(bounds.width, bounds.height), flags);
+				ImageDescriptor dsc = new TclOutlineElementImageDescriptor(
+						baseImage, new Point(bounds.width, bounds.height),
+						flags);
 
 				return dsc.createImage();
 			}
 
 		} catch (ModelException e) {
-			e.printStackTrace();
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 
 		return image;
