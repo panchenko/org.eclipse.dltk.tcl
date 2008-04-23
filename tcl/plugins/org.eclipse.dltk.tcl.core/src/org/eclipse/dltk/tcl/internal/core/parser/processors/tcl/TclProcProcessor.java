@@ -17,6 +17,7 @@ import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
+import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
 
@@ -91,6 +92,8 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 		parser.parse(content,
 				procCode.sourceStart() + 1 - parser.getStartPos(), block);
 		this.addToParent(parent, method);
+		ASTNode scopeParent = TclParseUtil.getPrevParent(getModuleDeclaration(), method);
+		method.setDeclaringTypeName(TclParseUtil.getElementFQN(scopeParent, "::", getModuleDeclaration()));
 		return method;
 	}
 }

@@ -74,7 +74,8 @@ public class TclCallProcessor implements ICallProcessor {
 
 		SearchPattern pattern = SearchPattern.createPattern(element
 				.getElementName(), IDLTKSearchConstants.METHOD,
-				IDLTKSearchConstants.REFERENCES, GENERICS_AGNOSTIC_MATCH_RULE);
+				IDLTKSearchConstants.REFERENCES, GENERICS_AGNOSTIC_MATCH_RULE,
+				scope.getLanguageToolkit());
 		try {
 			searchEngine
 					.search(pattern, new SearchParticipant[] { SearchEngine

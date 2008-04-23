@@ -11,6 +11,7 @@ package org.eclipse.dltk.tcl.internal.core.search;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IParent;
@@ -56,8 +57,9 @@ public class TclMatchLocator extends MatchLocator {
 				try {
 					type = findTypeFrom(module.getChildren(), "", cName, '$');
 				} catch (ModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 				if (type != null) {
 					methodHandle = type.getMethod(name);
@@ -101,46 +103,46 @@ public class TclMatchLocator extends MatchLocator {
 		}
 		return null;
 	}
+
 	protected IModelElement createTypeHandle(IType parent, String name) {
-		if( name.indexOf( "::") != -1 ) {
+		if (name.indexOf("::") != -1) {
 			String[] split = name.split("::");
 			IType e = parent;
 			for (int i = 0; i < split.length; i++) {
 				e = e.getType(split[i]);
-				if( e == null ) {
+				if (e == null) {
 					return null;
 				}
 			}
-			if( e != null) {
+			if (e != null) {
 				return e;
 			}
 		}
 		return super.createTypeHandle(parent, name);
 	}
+
 	protected IType createTypeHandle(String name) {
 		Openable openable = this.currentPossibleMatch.openable;
 		if (openable instanceof SourceModule
 				|| openable instanceof ExternalSourceModule
 				|| openable instanceof BuiltinSourceModule) {
 			IParent e = ((IParent) openable);
-			if( name.indexOf( "::") != -1 ) {
+			if (name.indexOf("::") != -1) {
 				String[] split = name.split("::");
 				for (int i = 0; i < split.length; i++) {
-					if( e instanceof ISourceModule) {
-						e = ((ISourceModule)e).getType(split[i]);	
-					}
-					else if( e instanceof IType ) {
-						e = ((IType)e).getType(split[i]);
-					}
-					else {
+					if (e instanceof ISourceModule) {
+						e = ((ISourceModule) e).getType(split[i]);
+					} else if (e instanceof IType) {
+						e = ((IType) e).getType(split[i]);
+					} else {
 						e = null;
 					}
-					if( e == null ) {
+					if (e == null) {
 						return null;
 					}
 				}
-				if( e != null && e instanceof IType ) {
-					return (IType)e;
+				if (e != null && e instanceof IType) {
+					return (IType) e;
 				}
 			}
 		}

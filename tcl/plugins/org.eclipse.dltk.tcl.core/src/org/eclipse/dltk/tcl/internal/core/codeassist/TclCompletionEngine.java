@@ -78,7 +78,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	private ICompletionExtension[] extensions;
 
 	public TclCompletionEngine() {
-		this.extensions = TclExtensionManager.getDefault().getCompletionExtensions();
+		this.extensions = TclExtensionManager.getDefault()
+				.getCompletionExtensions();
 		this.parser = new TclCompletionParser(this.extensions);
 	}
 
@@ -102,8 +103,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			this.fileName = sourceModule.getFileName();
 			this.actualCompletionPosition = completionPosition;
 			this.offset = pos;
-			ModuleDeclaration parsedUnit = this.parser
-					.parse(sourceModule);
+			ModuleDeclaration parsedUnit = this.parser.parse(sourceModule);
 
 			if (parsedUnit != null) {
 				if (DEBUG) {
@@ -186,8 +186,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 			for (int i = 0; i < this.extensions.length; i++) {
 				this.extensions[i].setRequestor(this.getRequestor());
-				this.extensions[i].completeOnKeywordOrFunction(key, astNodeParent,
-						this);
+				this.extensions[i].completeOnKeywordOrFunction(key,
+						astNodeParent, this);
 			}
 		} else if (astNode instanceof CompletionOnVariable) {
 			this.processCompletionOnVariables(astNode);
@@ -230,7 +230,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					String sat0 = ((SimpleReference) at0).getName();
 					String sat1 = ((SimpleReference) at1).getName();
 					if ("package".equals(sat0) && "require".equals(sat1)) {
-						this.packageNamesCompletion(compl.getToken(), methodNames);
+						this.packageNamesCompletion(compl.getToken(),
+								methodNames);
 						return true;
 					}
 				}
@@ -241,8 +242,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			if (compl.getToken().length > 0 && compl.getToken()[0] == '$') {
 				// varToken = compl.getToken();
 				provideDollar = true;
-				this.findVariables(compl.getToken(), astNodeParent, true, astNode
-						.sourceStart(), provideDollar, null);
+				this.findVariables(compl.getToken(), astNodeParent, true,
+						astNode.sourceStart(), provideDollar, null);
 			}
 		}
 		return true;
@@ -319,8 +320,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			CompletionOnKeywordOrFunction key) {
 		if (!this.requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
 			List methodNames = new ArrayList();
-			this.findLocalFunctions(key.getToken(), key.canCompleteEmptyToken(),
-					astNodeParent, methodNames);
+			this.findLocalFunctions(key.getToken(),
+					key.canCompleteEmptyToken(), astNodeParent, methodNames);
 			char[] token = key.getToken();
 			token = this.removeLastColonFromToken(token);
 			Set set = new HashSet();
@@ -416,7 +417,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		// filterAllPrivate(methodNames, methods, this.parser.getModule());
 		// findTypes(token, true, toList(types));
 		List list = this.toList(methods);
-		this.findMethods(token, true, list, this.removeNamespace(list, namespace));
+		this.findMethods(token, true, list, this.removeNamespace(list,
+				namespace));
 	}
 
 	private List removeNamespace(List methods, String namespace) {
@@ -441,7 +443,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	/**
 	 * Filters all private methods not in current module namespaces.
-	 *
+	 * 
 	 * @param methodNames
 	 * @param methods
 	 */
@@ -647,7 +649,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			matchRule |= SearchPattern.R_PATTERN_MATCH;
 		}
 		SearchPattern pattern = SearchPattern.createPattern(patternString,
-				searchFor, limitTo, matchRule);
+				searchFor, limitTo, matchRule, scope.getLanguageToolkit());
 		new SearchEngine().search(pattern,
 				new SearchParticipant[] { SearchEngine
 						.getDefaultSearchParticipant() }, scope, requestor,
@@ -690,7 +692,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	private void fillFunctionsByLevels(char[] token, ASTNode parent,
 			List methods, List gmethodNames) {
-		List levels = TclParseUtil.findLevelsTo(this.parser.getModule(), parent);
+		List levels = TclParseUtil
+				.findLevelsTo(this.parser.getModule(), parent);
 		int len = levels.size();
 		List visited = new ArrayList();
 		List methodNames = new ArrayList();
@@ -779,8 +782,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						prefix = "::" + prefix;
 					}
 					if (name.startsWith(namePrefix)) {
-						this.processMethods2(methods, methodNames, tStatements, "",
-								realParent);
+						this.processMethods2(methods, methodNames, tStatements,
+								"", realParent);
 					}
 				}
 				String nn = ((TypeDeclaration) nde).getName();
@@ -788,8 +791,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					nn = nn.substring(2);
 				}
 				String pr = namePrefix + nn;
-				this.processMethods(methods, methodNames, tStatements, pr + "::",
-						visited, realParent);
+				this.processMethods(methods, methodNames, tStatements, pr
+						+ "::", visited, realParent);
 
 			}
 			visited.add(nde);
@@ -798,7 +801,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	private boolean isTclMethod(MethodDeclaration nde) {
 		int modifiers = nde.getModifiers();
-		if (modifiers < ( 2 << Modifiers.USER_MODIFIER )) {
+		if (modifiers < (2 << Modifiers.USER_MODIFIER)) {
 			return true;
 		}
 		return false;
@@ -806,7 +809,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	private boolean isTclField(FieldDeclaration nde) {
 		int modifiers = nde.getModifiers();
-		if (modifiers < ( 2 << Modifiers.USER_MODIFIER )) {
+		if (modifiers < (2 << Modifiers.USER_MODIFIER)) {
 			return true;
 		}
 		return false;
@@ -833,8 +836,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				}
 			} else if (nde instanceof TypeDeclaration) {
 				List tStatements = ((TypeDeclaration) nde).getStatements();
-				this.processMethods2(methods, methodNames, tStatements, namePrefix
-						+ ((TypeDeclaration) nde).getName() + "::", realParent);
+				this.processMethods2(methods, methodNames, tStatements,
+						namePrefix + ((TypeDeclaration) nde).getName() + "::",
+						realParent);
 			}
 		}
 	}
@@ -871,23 +875,24 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				cc[i] = ((String) choices.get(i)).toCharArray();
 				gChoices.add(choices.get(i));
 			}
-			this.findLocalVariables(token, cc, canCompleteEmptyToken, provideDollar);
+			this.findLocalVariables(token, cc, canCompleteEmptyToken,
+					provideDollar);
 		} else if (parent instanceof ModuleDeclaration) {
 			ModuleDeclaration module = (ModuleDeclaration) parent;
-			this.checkVariables(token, canCompleteEmptyToken, beforePosition, module
-					.getStatements(), provideDollar, gChoices);
+			this.checkVariables(token, canCompleteEmptyToken, beforePosition,
+					module.getStatements(), provideDollar, gChoices);
 		} else if (parent instanceof TypeDeclaration) {
 			TypeDeclaration type = (TypeDeclaration) parent;
-			this.checkVariables(token, canCompleteEmptyToken, beforePosition, type
-					.getStatements(), provideDollar, gChoices);
+			this.checkVariables(token, canCompleteEmptyToken, beforePosition,
+					type.getStatements(), provideDollar, gChoices);
 			String prefix = "";
 			if (provideDollar) {
 				prefix = "$" + prefix;
 			}
 			List statements = type.getStatements();
 			for (int l = 0; l < statements.size(); ++l) {
-				this.findASTVariables((ASTNode) statements.get(l), prefix, token,
-						canCompleteEmptyToken, gChoices);
+				this.findASTVariables((ASTNode) statements.get(l), prefix,
+						token, canCompleteEmptyToken, gChoices);
 			}
 		}
 		String prefix = "";
@@ -926,8 +931,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		// Find one level up
 		if (!(this.checkValidParetNode(parent))) {
 			// Lets find scope parent
-			List findLevelsTo = TclParseUtil.findLevelsTo(this.parser.getModule(),
-					parent);
+			List findLevelsTo = TclParseUtil.findLevelsTo(this.parser
+					.getModule(), parent);
 			ASTNode realParent = null;
 			for (Iterator iterator = findLevelsTo.iterator(); iterator
 					.hasNext();) {
@@ -1015,8 +1020,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 		};
 		IDLTKLanguageToolkit toolkit = null;
-		toolkit = DLTKLanguageManager
-				.getLanguageToolkit(this.scriptProject);
+		toolkit = DLTKLanguageManager.getLanguageToolkit(this.scriptProject);
 		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
 		if (token.length >= 1 && token[0] == '$') {
 			char[] token2 = new char[token.length - 1];
@@ -1051,8 +1055,11 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 				if (nonNoneCount == 1 && tok.length() >= 2) {
-					this.search(new String(mtok) + "*", IDLTKSearchConstants.FIELD,
-							IDLTKSearchConstants.DECLARATIONS, scope, requestor);
+					this
+							.search(new String(mtok) + "*",
+									IDLTKSearchConstants.FIELD,
+									IDLTKSearchConstants.DECLARATIONS, scope,
+									requestor);
 				}
 			} catch (CoreException e) {
 				e.printStackTrace();
@@ -1076,8 +1083,10 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 				if (nonNoneCount == 1 && tok.length() >= 2) {
-					this.search(tok + "*", IDLTKSearchConstants.FIELD,
-							IDLTKSearchConstants.DECLARATIONS, scope, requestor);
+					this
+							.search(tok + "*", IDLTKSearchConstants.FIELD,
+									IDLTKSearchConstants.DECLARATIONS, scope,
+									requestor);
 				}
 			} catch (CoreException e) {
 				e.printStackTrace();
@@ -1150,7 +1159,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			cc[i] = ((String) choices.get(i)).toCharArray();
 			gChoices.add(choices.get(i));
 		}
-		this.findLocalVariables(token, cc, canCompleteEmptyToken, provideDollar);
+		this
+				.findLocalVariables(token, cc, canCompleteEmptyToken,
+						provideDollar);
 	}
 
 	protected void checkVariableStatements(int beforePosition,
@@ -1173,14 +1184,22 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						public boolean visit(Statement s) throws Exception {
 							if (s instanceof FieldDeclaration) {
 								String name = TclParseUtil.getElementFQN(s,
-										"::", TclCompletionEngine.this.parser.module);
-								if (TclCompletionEngine.this.isTclField((FieldDeclaration) s)) {
-									TclCompletionEngine.this.checkAddVariable(choices,
-									/* ((FieldDeclaration) s).getName() */name);
+										"::",
+										TclCompletionEngine.this.parser.module);
+								if (TclCompletionEngine.this
+										.isTclField((FieldDeclaration) s)) {
+									TclCompletionEngine.this
+											.checkAddVariable(
+													choices,
+													/*
+													 * ((FieldDeclaration)
+													 * s).getName()
+													 */name);
 								}
 							} else if (s instanceof TclStatement) {
-								TclCompletionEngine.this.checkTclStatementForVariables(choices,
-										(TclStatement) s);
+								TclCompletionEngine.this
+										.checkTclStatementForVariables(choices,
+												(TclStatement) s);
 							}
 							return super.visit(s);
 						}

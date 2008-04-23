@@ -200,7 +200,7 @@ public class TclCalleeProcessor implements ICalleeProcessor {
 			matchRule |= SearchPattern.R_PATTERN_MATCH;
 		}
 		SearchPattern pattern = SearchPattern.createPattern(patternString,
-				searchFor, limitTo, matchRule);
+				searchFor, limitTo, matchRule, scope.getLanguageToolkit());
 		new SearchEngine().search(pattern,
 				new SearchParticipant[] { SearchEngine
 						.getDefaultSearchParticipant() }, scope, requestor,

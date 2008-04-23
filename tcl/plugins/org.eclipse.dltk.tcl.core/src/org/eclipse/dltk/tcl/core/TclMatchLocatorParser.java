@@ -9,6 +9,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.expressions.MethodCallExpression;
 import org.eclipse.dltk.ast.expressions.StringLiteral;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -17,7 +18,6 @@ import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
-import org.eclipse.dltk.tcl.core.BasicTclMatchLocatorParser;
 import org.eclipse.dltk.tcl.core.extensions.IMatchLocatorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
@@ -102,9 +102,19 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 				for (int i = 0; i < ns.length; ++i) {
 					if (ns[i].length() > 0) {
 						if (i == ns.length - 1) {
-							locator.match(new CallExpression(commandId
+							String namespace = null;
+							int pos = name.lastIndexOf("::");
+							if( pos !=  -1 ) {
+								namespace = name.substring(0, pos);
+								if( namespace.startsWith("::")) {
+									namespace = namespace.substring(2);
+								}
+							}
+							MethodCallExpression node = new MethodCallExpression(commandId
 									.sourceStart(), commandId.sourceEnd(),
-									null, ns[i], null), this.getNodeSet());
+									null, ns[i], null);
+							node.setDeclaringTypeName(namespace);
+							locator.match(node, this.getNodeSet());
 						} else {
 							locator.match(new TypeReference(commandId
 									.sourceStart(), commandId.sourceEnd(),

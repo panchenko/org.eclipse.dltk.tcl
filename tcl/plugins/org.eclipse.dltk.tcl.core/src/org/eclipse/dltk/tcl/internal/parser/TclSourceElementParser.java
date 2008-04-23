@@ -30,6 +30,7 @@ public class TclSourceElementParser extends AbstractSourceElementParser
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(filename, contents, getNatureId(),
 						getProblemReporter(), astCache);
+		//
 
 		TclSourceElementRequestVisitor requestor = (TclSourceElementRequestVisitor) createVisitor();
 		requestor.setScriptProject(null);
