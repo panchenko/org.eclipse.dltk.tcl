@@ -92,8 +92,7 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 		parser.parse(content,
 				procCode.sourceStart() + 1 - parser.getStartPos(), block);
 		this.addToParent(parent, method);
-		ASTNode scopeParent = TclParseUtil.getPrevParent(getModuleDeclaration(), method);
-		method.setDeclaringTypeName(TclParseUtil.getElementFQN(scopeParent, "::", getModuleDeclaration()));
+		method.setDeclaringTypeName(TclParseUtil.getElementFQN(parent, "::", getModuleDeclaration()));
 		return method;
 	}
 }
