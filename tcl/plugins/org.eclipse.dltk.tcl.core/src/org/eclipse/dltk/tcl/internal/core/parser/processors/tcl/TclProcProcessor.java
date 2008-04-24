@@ -92,7 +92,13 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 		parser.parse(content,
 				procCode.sourceStart() + 1 - parser.getStartPos(), block);
 		this.addToParent(parent, method);
-		method.setDeclaringTypeName(TclParseUtil.getElementFQN(parent, "::", getModuleDeclaration()));
+		String methodFQN = TclParseUtil.getElementFQN(method, "::",
+				getModuleDeclaration());
+		int pos = methodFQN.lastIndexOf("::");
+		if (pos != -1) {
+			methodFQN = methodFQN.substring(0, pos); 
+			method.setDeclaringTypeName(methodFQN);
+		}
 		return method;
 	}
 }

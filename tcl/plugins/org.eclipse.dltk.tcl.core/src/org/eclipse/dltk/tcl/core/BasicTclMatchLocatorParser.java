@@ -28,10 +28,10 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 	}
 
 	public ModuleDeclaration parse(PossibleMatch possibleMatch) {
-		ModuleDeclaration module = super.parse(possibleMatch);		
+		ModuleDeclaration module = super.parse(possibleMatch);
 		module.rebuild();
 		module.rebuildMethods();
-		
+
 		return module;
 	}
 
@@ -50,8 +50,7 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 			PatternLocator locator = this.getPatternLocator();
 			for (int i = 0; i < methods.length; i++) {
 				MethodDeclaration method = methods[i];
-				locator.match(this.processMethod(method), this
-						.getNodeSet());
+				locator.match(this.processMethod(method), this.getNodeSet());
 				this.parseBodies(method);
 			}
 		}
@@ -65,29 +64,42 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 
 	protected MethodDeclaration processMethod(MethodDeclaration m) {
 		String name = m.getName();
+		MethodDeclaration method = new MethodDeclaration(m.sourceStart(), m.sourceEnd());
+		method.setName(name);
+		method.setNameStart(m.getNameStart());
+		method.setNameEnd(m.getNameEnd());
+		method.setModifiers(m.getModifiers());
 		if (name.startsWith("::")) {
 			name = name.substring(2);
 		}
+		name = getRealMethodName(method);
+		method.setDeclaringTypeName(m.getDeclaringTypeName());
+		method.setName(name);
+		return method;
+	}
+
+	public String getRealMethodName(MethodDeclaration method) {
+		String name = method.getName();
 		if (name.indexOf("::") != -1) {
 			int pos = name.lastIndexOf("::");
-			String declTypeName = name.substring(0, pos);
-			m.setDeclaringTypeName(declTypeName);
 			name = name.substring(pos + 2);
 		}
-		m.setName(name);
-		return m;
+		return name;
 	}
 
 	protected TypeDeclaration processType(TypeDeclaration t) {
 		String name = t.getName();
+		TypeDeclaration type = new TypeDeclaration(name, t.getNameStart(), t.getNameEnd(), t.sourceStart(), t.sourceEnd());
 		if (name.startsWith("::")) {
 			name = name.substring(2);
 		}
 		if (name.endsWith("::")) {
 			name = name.substring(0, name.length() - 2);
 		}
-		t.setName(name);
-		return t;
+		type.setName(name);
+		type.setEnclosingTypeName(t.getEnclosingTypeName());
+		type.setModifier(t.getModifiers());
+		return type;
 	}
 
 	protected void parseBodies(TypeDeclaration type) {

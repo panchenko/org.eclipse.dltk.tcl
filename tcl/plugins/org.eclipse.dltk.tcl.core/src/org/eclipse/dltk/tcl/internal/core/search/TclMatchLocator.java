@@ -27,6 +27,7 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceModule;
+import org.eclipse.dltk.tcl.core.TclMatchLocatorParser;
 
 public class TclMatchLocator extends MatchLocator {
 
@@ -90,12 +91,12 @@ public class TclMatchLocator extends MatchLocator {
 		// if (!(parent instanceof IType)) return parent;
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			return createMethodHandle(type, new String(method.getName()));
+			return createMethodHandle(type, ((TclMatchLocatorParser) parser).getRealMethodName(method));
 		} else if (parent instanceof ISourceModule) {
-			if (method.getDeclaringTypeName() != null) {
-				return createMethodHandle((ISourceModule) parent, method
-						.getDeclaringTypeName()
-						+ "::" + method.getName());
+			if (method.getName().indexOf("::") != -1) {
+				String methodName = method.getDeclaringTypeName() + "::"
+						+ ((TclMatchLocatorParser) parser).getRealMethodName(method);
+				return createMethodHandle((ISourceModule) parent, methodName);
 			} else {
 				return createMethodHandle((ISourceModule) parent, method
 						.getName());
@@ -123,6 +124,9 @@ public class TclMatchLocator extends MatchLocator {
 
 	protected IType createTypeHandle(String name) {
 		Openable openable = this.currentPossibleMatch.openable;
+		if (name.startsWith("::")) {
+			name = name.substring(2);
+		}
 		if (openable instanceof SourceModule
 				|| openable instanceof ExternalSourceModule
 				|| openable instanceof BuiltinSourceModule) {
