@@ -26,6 +26,7 @@ import org.eclipse.dltk.core.tests.model.AbstractDLTKSearchTests;
 public class SearchTests extends AbstractDLTKSearchTests implements
 		IDLTKSearchConstants {
 	private static final String TCLSEARCH = "PROJ_TCLSearch";
+	private static final String TCLSEARCH2 = "PROJ_TCLSearch2";
 
 	public SearchTests(String name) {
 		super(Activator.PLUGIN_ID, name);
@@ -38,20 +39,18 @@ public class SearchTests extends AbstractDLTKSearchTests implements
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
 		up();
-		// InternalDLTKLanguageManager.setPrefferedPriority(TclNature.NATURE_ID,
-		// 0);
 	}
 
 	public void tearDownSuite() throws Exception {
 		deleteProject(TCLSEARCH);
+		deleteProject(TCLSEARCH2);
 		super.tearDownSuite();
-		// InternalDLTKLanguageManager.setPrefferedPriority(TclNature.NATURE_ID,
-		// -1);
 	}
 
 	private void up() throws Exception {
 		if (SCRIPT_PROJECT == null) {
 			SCRIPT_PROJECT = setUpScriptProjectTo(TCLSEARCH, "TCLSearch");
+			setUpScriptProjectTo(TCLSEARCH2, "TCLSearch2");
 		}
 	}
 
@@ -150,7 +149,7 @@ public class SearchTests extends AbstractDLTKSearchTests implements
 						+ "src/p3/X.tcl  p3/Y$T2$T3$T4$src_p3_X_Y_T2_T3_T4_function(arg1, arg2, arg3)\n"
 						+ "src/p3/X.tcl  p3/Z$foo()\n"
 						+ "src/p3/X.tcl  $src_p3_X_function(arg1, arg2, arg3)\n"
-						+ "src/p3/X.tcl  $function(arg1, arg2, arg3)\n"
+						+ "src/p3/X.tcl  p3/global2$namespace2$function(arg1, arg2, arg3)\n"
 						+ "src/q5/AQ.tcl  q5/I$k(arg)\n"
 						+ "src/q5/AQ.tcl  q5/I2$k(arg)\n"
 						+ "src/q5/AQ.tcl  $m()", this.resultCollector);
@@ -270,5 +269,21 @@ public class SearchTests extends AbstractDLTKSearchTests implements
 			assertNotNull(element);
 			System.out.println(element.getElementName());
 		}
+	}
+
+	// Search2 project tests
+	public void testMethod001() throws Exception {
+		up();
+		search("a::*", METHOD, DECLARATIONS, getSearchScope(TCLSEARCH2));
+		assertSearchResults("src/X.tcl  a$alfa()\n" + "src/X.tcl  a$beta()",
+				this.resultCollector);
+	}
+
+	public void testMethod002() throws Exception {
+		up();
+		search("a*::alfa", METHOD, DECLARATIONS, getSearchScope(TCLSEARCH2));
+		assertSearchResults("src/X.tcl  a$b$alfa()\n"
+				+ "src/X.tcl  a$d$alfa()\n" + "src/X.tcl  a$alfa()",
+				this.resultCollector);
 	}
 }
