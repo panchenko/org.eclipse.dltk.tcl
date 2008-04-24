@@ -81,6 +81,7 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 					IPath scriptFilePath = config.getScriptFilePath();
 					if (scriptFilePath == null) {
 						config.setScriptFile(new Path("--noscript"));
+						config.setNoFile(true);
 					}
 					config.addInterpreterArg(port);
 					if (id != null) {
