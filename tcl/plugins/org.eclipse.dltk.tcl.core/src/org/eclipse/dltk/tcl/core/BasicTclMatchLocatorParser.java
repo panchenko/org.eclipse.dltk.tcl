@@ -62,9 +62,10 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 		}
 	}
 
-	protected MethodDeclaration processMethod(MethodDeclaration m) {
+	public MethodDeclaration processMethod(MethodDeclaration m) {
 		String name = m.getName();
-		MethodDeclaration method = new MethodDeclaration(m.sourceStart(), m.sourceEnd());
+		MethodDeclaration method = new MethodDeclaration(m.sourceStart(), m
+				.sourceEnd());
 		method.setName(name);
 		method.setNameStart(m.getNameStart());
 		method.setNameEnd(m.getNameEnd());
@@ -87,9 +88,10 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 		return name;
 	}
 
-	protected TypeDeclaration processType(TypeDeclaration t) {
+	public TypeDeclaration processType(TypeDeclaration t) {
 		String name = t.getName();
-		TypeDeclaration type = new TypeDeclaration(name, t.getNameStart(), t.getNameEnd(), t.sourceStart(), t.sourceEnd());
+		TypeDeclaration type = new TypeDeclaration(name, t.getNameStart(), t
+				.getNameEnd(), t.sourceStart(), t.sourceEnd());
 		if (name.startsWith("::")) {
 			name = name.substring(2);
 		}
@@ -110,12 +112,9 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 		if (methods != null) {
 			for (int i = 0; i < methods.length; i++) {
 				MethodDeclaration method = methods[i];
-				if (method instanceof MethodDeclaration) {
-					MethodDeclaration methodDeclaration = method;
-					locator.match(this.processMethod(methodDeclaration), this
-							.getNodeSet());
-					this.parseBodies(methodDeclaration);
-				}
+				locator.match(this.processMethod(method), this
+						.getNodeSet());
+				this.parseBodies(method);
 			}
 		}
 

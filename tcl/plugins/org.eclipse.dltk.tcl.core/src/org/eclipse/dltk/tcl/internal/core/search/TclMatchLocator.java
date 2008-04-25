@@ -127,6 +127,9 @@ public class TclMatchLocator extends MatchLocator {
 		if (name.startsWith("::")) {
 			name = name.substring(2);
 		}
+		if( name.endsWith("::")) {
+			name = name.substring(0, name.length()- 2);
+		}
 		if (openable instanceof SourceModule
 				|| openable instanceof ExternalSourceModule
 				|| openable instanceof BuiltinSourceModule) {
