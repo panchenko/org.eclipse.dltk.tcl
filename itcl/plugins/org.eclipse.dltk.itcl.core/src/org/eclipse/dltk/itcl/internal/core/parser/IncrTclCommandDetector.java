@@ -8,12 +8,17 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.mixin.IMixinElement;
+import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
+import org.eclipse.dltk.itcl.internal.core.classes.IncrTclClassesManager;
+import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclClass;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.ITclCommandDetector;
 import org.eclipse.dltk.tcl.core.ITclCommandDetectorExtension;
 import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 
 public class IncrTclCommandDetector implements ITclCommandDetector,
 		ITclCommandDetectorExtension {
@@ -31,6 +36,23 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 		}
 
 		public IModelElement resolveElement() {
+			IMixinElement[] find = TclMixinModel
+					.getInstance()
+					.find(
+							name.replaceAll("::",
+									IMixinRequestor.MIXIN_NAME_SEPARATOR), 1000);
+			if (find.length > 0) {
+				for (int i = 0; i < find.length; i++) {
+					Object[] allObjects = find[i].getAllObjects();
+					for (int j = 0; j < allObjects.length; j++) {
+						if (allObjects[j] != null
+								&& allObjects[j] instanceof IncrTclClass) {
+							IncrTclClass class_ = (IncrTclClass) allObjects[j];
+							return class_.getModelElement();
+						}
+					}
+				}
+			}
 			return null;
 		}
 
@@ -43,8 +65,13 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 	}
 
 	/**
-	 * 1) Detect of core itcl commands 2) Detect itcl class access 3) Detect
-	 * itcl object creations 4) Detect itcl instances method access, etc.
+	 * 1) Detect of core itcl commands
+	 * 
+	 * 2) Detect itcl class access
+	 * 
+	 * 3) Detect itcl object creations
+	 * 
+	 * 4) Detect itcl instances method access, etc.
 	 * 
 	 */
 	public CommandInfo detectCommand(TclStatement statement,
@@ -69,7 +96,7 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 
 	private CommandInfo checkInstanceOperations(ModuleDeclaration module,
 			ASTNode parent, TclStatement statement, ITclParser parser) {
-		if( runtimeModel ) {
+		if (runtimeModel) {
 			return null;
 		}
 		Expression commandName = statement.getAt(0);
@@ -100,6 +127,13 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 			return new CommandInfo("#itcl#$methodCall", variable);
 		}
 
+		// class list check operation.
+		if (IncrTclClassesManager.getDefault().isClass(commandNameValue)) {
+			IncrTclGlobalClassParameter param = new IncrTclGlobalClassParameter(
+					commandNameValue);
+			return new CommandInfo("#itcl#$newInstance", param);
+		}
+
 		return null;
 	}
 
@@ -121,6 +155,7 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 		// String value = ((SimpleReference) arg).getName();
 		return new CommandInfo("#itcl#$newInstance", type);
 	}
+
 	public void setBuildRuntimeModelFlag(boolean value) {
 		this.runtimeModel = value;
 	}

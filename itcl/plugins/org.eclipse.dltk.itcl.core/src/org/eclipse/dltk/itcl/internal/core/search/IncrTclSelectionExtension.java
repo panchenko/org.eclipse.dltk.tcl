@@ -170,7 +170,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 		return false;
 	}
 
-	private void processSelectXOTclMethodDeclaration(
+	private void processSelectIncrTclMethodDeclaration(
 			ExtendedTclMethodDeclaration node, int position,
 			TclSelectionEngine engine) {
 		ASTNode type = node.getDeclaringType();
@@ -194,7 +194,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 		}
 	}
 
-	private void processSelectXOTclMethod(IncrTclMethodCallStatement call,
+	private void processSelectIncrTclMethod(IncrTclMethodCallStatement call,
 			int position, TclSelectionEngine engine) {
 		FieldDeclaration instanceVar = call.getInstanceVariable();
 		SimpleReference callName = call.getCallName();
@@ -390,7 +390,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 
 	public void selectionOnAST(ASTNode node, TclSelectionEngine engine) {
 		if (node instanceof IncrTclMethodDeclaration) {
-			processSelectXOTclMethodDeclaration(
+			processSelectIncrTclMethodDeclaration(
 					(ExtendedTclMethodDeclaration) node, engine
 							.getActualSelectionStart(), engine);
 			if (engine.getSelectionElementsSize() > 0) {
@@ -402,10 +402,10 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 	public void selectionOnNode(ASTNode node, int position,
 			TclSelectionEngine engine) {
 		if (node instanceof IncrTclMethodCallStatement) {
-			processSelectXOTclMethod((IncrTclMethodCallStatement) node,
+			processSelectIncrTclMethod((IncrTclMethodCallStatement) node,
 					position, engine);
 		} else if (node instanceof IncrTclMethodDeclaration) {
-			processSelectXOTclMethodDeclaration(
+			processSelectIncrTclMethodDeclaration(
 					(ExtendedTclMethodDeclaration) node, engine
 							.getActualSelectionStart(), engine);
 		} else if (node instanceof TclStatement) {

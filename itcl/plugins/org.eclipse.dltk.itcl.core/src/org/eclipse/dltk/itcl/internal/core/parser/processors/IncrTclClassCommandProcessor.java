@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
+import org.eclipse.dltk.itcl.internal.core.classes.IncrTclClassesManager;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclFieldDeclaration;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodDeclaration;
 import org.eclipse.dltk.tcl.ast.TclStatement;
@@ -41,6 +42,8 @@ public class IncrTclClassCommandProcessor extends AbstractTclCommandProcessor {
 					statement.sourceStart(), statement.sourceEnd());
 			type.setModifiers(IIncrTclModifiers.AccIncrTcl);
 			this.addToParent(parent, type);
+			// Report type to list of types.
+			IncrTclClassesManager.getDefault().add(type.getName());
 
 			List commands = block.parseBlockSimple(false);
 			for (int i = 0; i < commands.size(); i++) {

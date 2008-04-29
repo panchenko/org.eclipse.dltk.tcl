@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.itcl.internal.core.parser.IncrTclParseUtil;
+import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclExInstanceVariable;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclInstanceVariable;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodCallStatement;
 import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclClass;
@@ -245,15 +246,16 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 				keyPrefix = keyPrefix.substring(1);
 			}
 
-		} /*
-			 * else if (var instanceof XOTclExInstanceVariable) {
-			 * XOTclExInstanceVariable ivar = (XOTclExInstanceVariable) var;
-			 * String className =
-			 * ivar.getDeclaringClassParameter().getClassName(); if
-			 * (className.startsWith("::")) { className =
-			 * className.substring(2); } keyPrefix = className.replaceAll("::",
-			 * IMixinRequestor.MIXIN_NAME_SEPARATOR); }
-			 */
+		} else if (var instanceof IncrTclExInstanceVariable) {
+			IncrTclExInstanceVariable ivar = (IncrTclExInstanceVariable) var;
+			String className = ivar.getDeclaringClassParameter().getClassName();
+			if (className.startsWith("::")) {
+				className = className.substring(2);
+			}
+			keyPrefix = className.replaceAll("::",
+					IMixinRequestor.MIXIN_NAME_SEPARATOR);
+		}
+
 		Set methods = new HashSet();
 		findClassesFromMixin(methods, keyPrefix, engine);
 		Set result = new HashSet();
@@ -265,8 +267,9 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 					IMethod[] ms = ((IType) e).getMethods();
 					for (int i = 0; i < ms.length; i++) {
 						if (!Flags.isPublic(ms[i].getFlags())) {
-							if (this.requestor != null && this.requestor
-									.isIgnored(ITclCompletionProposalTypes.FILTER_INTERNAL_API)) {
+							if (this.requestor != null
+									&& this.requestor
+											.isIgnored(ITclCompletionProposalTypes.FILTER_INTERNAL_API)) {
 								continue;
 							}
 						}
