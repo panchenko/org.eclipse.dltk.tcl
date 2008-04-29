@@ -48,7 +48,7 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 	public XOTclCommandDetector() {
 	}
 
-	public CommandInfo detectCommand(TclStatement statement, 
+	public CommandInfo detectCommand(TclStatement statement,
 			ModuleDeclaration module, ITclParser parser, ASTNode parent) {
 		if (statement.getCount() == 0) {
 			return null;
@@ -78,7 +78,6 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 		}
 		Expression commandName = statement.getAt(0);
 		if (!(commandName instanceof SimpleReference)) {
-			// TODO: Add handling of this.
 			return null;
 		}
 		String commandNameValue = ((SimpleReference) commandName).getName();
