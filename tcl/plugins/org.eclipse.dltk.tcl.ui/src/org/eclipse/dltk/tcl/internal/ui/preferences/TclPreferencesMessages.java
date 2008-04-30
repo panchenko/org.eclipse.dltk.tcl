@@ -24,4 +24,5 @@ public class TclPreferencesMessages extends NLS {
 	public static String TCLSmartTypingConfigurationBlock_closeBraces;
 	public static String TCLSmartTypingConfigurationBlock_closeStrings;
 	public static String TCLSmartTypingConfigurationBlock_typing_tabTitle;
+	public static String TodoTaskDescription;
 }

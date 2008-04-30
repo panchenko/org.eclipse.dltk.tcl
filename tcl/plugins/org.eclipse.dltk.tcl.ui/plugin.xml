@@ -239,6 +239,11 @@
            id="org.eclipse.dltk.tcl.ui.assistance"
            name="%TclEditorAssistancePreferencePage.name">
      </page>      
+      <page
+              category="org.eclipse.dltk.tcl.preferences"
+              class="org.eclipse.dltk.tcl.internal.ui.preferences.TclTodoTaskPreferencePage"
+              id="org.eclipse.dltk.tcl.preferences.todo"
+              name="%TclTaskTagsPreferencePage.name"/>
           
  </extension>
  <extension
