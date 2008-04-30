@@ -169,6 +169,12 @@
             priority="0">
       </interpreterContainerExtension>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.dltk.tcl.internal.core.TclTodoPreferenceInitializer">
+      </initializer>
+   </extension>
    <!--extension
          point="org.eclipse.dltk.core.buildpathContainerInitializer">
       <buildpathContainerInitializer

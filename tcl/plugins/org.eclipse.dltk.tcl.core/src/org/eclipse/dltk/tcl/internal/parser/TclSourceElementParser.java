@@ -1,7 +1,11 @@
 package org.eclipse.dltk.tcl.internal.parser;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.parser.ISourceParserConstants;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
+import org.eclipse.dltk.compiler.task.ITaskReporter;
+import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
+import org.eclipse.dltk.compiler.task.TodoTaskSimpleParser;
 import org.eclipse.dltk.core.AbstractSourceElementParser;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
@@ -9,6 +13,7 @@ import org.eclipse.dltk.core.ISourceElementParserExtension;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 
 public class TclSourceElementParser extends AbstractSourceElementParser
@@ -29,7 +34,8 @@ public class TclSourceElementParser extends AbstractSourceElementParser
 
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(filename, contents, getNatureId(),
-						getProblemReporter(), astCache);
+						getProblemReporter(), astCache,
+						ISourceParserConstants.DEFAULT);
 		//
 
 		TclSourceElementRequestVisitor requestor = (TclSourceElementRequestVisitor) createVisitor();
@@ -50,6 +56,26 @@ public class TclSourceElementParser extends AbstractSourceElementParser
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
+			}
+		}
+		if (getProblemReporter() != null) {
+			final ITaskReporter taskReporter = (ITaskReporter) getProblemReporter()
+					.getAdapter(ITaskReporter.class);
+			if (taskReporter != null) {
+				taskReporter.clearTasks();
+				parseTasks(taskReporter, contents);
+			}
+		}
+	}
+
+	protected void parseTasks(ITaskReporter taskReporter, char[] content) {
+		final TodoTaskPreferences preferences = new TodoTaskPreferences(
+				TclPlugin.getDefault().getPluginPreferences());
+		if (preferences.isEnabled()) {
+			final TodoTaskSimpleParser taskParser = new TodoTaskSimpleParser(
+					taskReporter, preferences);
+			if (taskParser.isValid()) {
+				taskParser.parse(content);
 			}
 		}
 	}
