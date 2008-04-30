@@ -1,33 +1,25 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
+ *     xored software, Inc. - TCL ManPageFolder management refactoring (Alex Panchenko <alex@xored.com>)
+ *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.documentation;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import java.util.Map;
 
 public class ManPageFolder {
 	private String path;
-	private HashMap pages = new HashMap();
+	private final Map pages = new HashMap();
 
 	public ManPageFolder(String path) {
-		super();
 		this.path = path;
 	}
 
@@ -36,91 +28,28 @@ public class ManPageFolder {
 	}
 
 	public boolean verify() {
-		if (path == null)
+		if (path == null || path.length() == 0)
 			return false;
-		File file = new File(path);
-		if (file.exists() && file.isDirectory())
-			return true;
-		return false;
+		final File file = new File(path);
+		return file.exists() && file.isDirectory();
 	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public HashMap getPages() {
+	public Map getPages() {
 		return pages;
 	}
-	
-	
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ManPageFolder))
 			return false;
 		if (obj == this)
 			return true;
-		ManPageFolder f = (ManPageFolder) obj;
-		if (!f.path.equals(this.path))
-			return false;
-		if (!f.pages.equals(this.pages))
-			return false;
-		return true;
-	}
-
-	public static List readXML(String data) throws IOException {
-		// Wrapper the stream for efficient parsing
-		InputStream stream = new ByteArrayInputStream(data.getBytes());
-
-		// Do the parsing and obtain the top-level node
-		Element config = null;
-		try {
-			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			parser.setErrorHandler(new DefaultHandler());
-			config = parser.parse(new InputSource(stream)).getDocumentElement();
-		} catch (SAXException e) {
-			throw new IOException("Bad XML format");
-		} catch (ParserConfigurationException e) {
-			stream.close();
-			throw new IOException("Bad XML format");
-		} finally {
-			stream.close();
-		}
-
-		if (!config.getNodeName().equalsIgnoreCase("manPages")) {
-			throw new RuntimeException("Bad top level node");
-		}
-
-		List folders = new ArrayList();
-
-		NodeList list = config.getChildNodes();
-		int length = list.getLength();
-		for (int i = 0; i < length; ++i) {
-			Node node = list.item(i);
-			short type = node.getNodeType();
-			if (type == Node.ELEMENT_NODE
-					&& node.getNodeName().equalsIgnoreCase("location")) {
-				Element location = (Element) node;
-				String path = location.getAttribute("path");
-				ManPageFolder folder = new ManPageFolder(path);
-				NodeList locationChilds = location.getChildNodes();
-				int pages = locationChilds.getLength();
-				for (int j = 0; j < pages; ++j) {
-					node = locationChilds.item(j);
-					type = node.getNodeType();
-					if (type == Node.ELEMENT_NODE
-							&& node.getNodeName().equalsIgnoreCase("page")) {
-						Element word = (Element) node;
-						String kw = word.getAttribute("keyword");
-						String file = word.getAttribute("file");
-						folder.addPage(kw, file);
-					}
-				}
-				folders.add(folder);
-			}
-		}
-
-		return folders;
+		final ManPageFolder other = (ManPageFolder) obj;
+		return (path != null ? path.equals(other.path) : other.path == null)
+				&& other.pages.equals(this.pages);
 	}
 
 }

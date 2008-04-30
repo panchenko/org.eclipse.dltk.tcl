@@ -5,34 +5,23 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
+ *     xored software, Inc. - TCL ManPageFolder management refactoring (Alex Panchenko <alex@xored.com>)
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.documentation;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,8 +55,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Control used to edit the libraries associated with a Interpreter install
@@ -130,71 +117,6 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	}
 
 	private List folders = null;
-
-	private String getFoldersAsXML() {
-		if (folders == null)
-			return null;
-
-		// Create the Document and the top-level node
-		DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder;
-		try {
-			docBuilder = dfactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-		Document doc = docBuilder.newDocument();
-
-		Element topElement = doc.createElement("manPages");		
-		doc.appendChild(topElement);
-
-		for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-			ManPageFolder f = (ManPageFolder) iterator.next();
-			Element location = doc.createElement("location");
-			topElement.appendChild(location);			
-			location.setAttribute("path", f.getPath());
-			for (Iterator iterator2 = f.getPages().keySet().iterator(); iterator2
-					.hasNext();) {
-				String name = (String) iterator2.next();
-				String file = (String) f.getPages().get(name);
-				Element page = doc.createElement("page");
-				location.appendChild(page);
-				page.setAttribute("keyword", name);
-				page.setAttribute("file", file);
-			}
-		}
-
-		
-		ByteArrayOutputStream s = new ByteArrayOutputStream();
-
-		try {
-			TransformerFactory factory = TransformerFactory.newInstance();
-			Transformer transformer;
-			transformer = factory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-
-			DOMSource source = new DOMSource(doc);
-			StreamResult outputTarget = new StreamResult(s);
-			transformer.transform(source, outputTarget);
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		}
-
-		String result = null;
-		try {
-			result = s.toString("UTF8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		return result; //$NON-NLS-1$
-	}
-
-	
 
 	private class ManLocationsContentProvider implements ITreeContentProvider {
 
@@ -364,11 +286,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	public void initialize() {
 		String value = fStore
 				.getString(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS);
-		try {
-			this.folders = ManPageFolder.readXML(value);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.folders = ManPageFolderXML.read(value);
 
 		update();
 	}
@@ -377,7 +295,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	 * Saves settings
 	 */
 	public void performApply() {
-		String xml = this.getFoldersAsXML();
+		String xml = ManPageFolderXML.write(folders);
 		if (xml != null)
 			fStore
 					.setValue(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS,
@@ -399,14 +317,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 			Object[] array = selection.toArray();
 			for (int i = 0; i < array.length; i++) {
 				if (array[i] instanceof ManPageFolder) {
-					for (Iterator iterator = folders.iterator(); iterator
-							.hasNext();) {
-						ManPageFolder f = (ManPageFolder) iterator.next();
-						if (f == array[i]) {
-							iterator.remove();
-							break;
-						}
-					}
+					folders.remove(array[i]);
 				}
 			}
 		} else if (source == fAddButton) {
@@ -436,8 +347,9 @@ public class ManPagesLocationsBlock implements SelectionListener,
 			final File file = new File(result);
 			if (this.folders == null)
 				this.folders = new ArrayList();
-			if (file != null && file.isDirectory()) {
-				ProgressMonitorDialog dialog2 = new TimeTriggeredProgressMonitorDialog(null, 500);
+			if (file.isDirectory()) {
+				ProgressMonitorDialog dialog2 = new TimeTriggeredProgressMonitorDialog(
+						null, 500);
 				try {
 					dialog2.run(true, true, new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) {
@@ -481,10 +393,10 @@ public class ManPagesLocationsBlock implements SelectionListener,
 			if (childs[i].isDirectory()) {
 				performSearch(childs[i]);
 			}
-			if (childs[i].getName().startsWith("contents.htm")) {				
+			if (childs[i].getName().startsWith("contents.htm")) {
 				ManPageFolder folder = new ManPageFolder(dir.getAbsolutePath());
 				parseContentsFile(childs[i], folder);
-				if (folder.getPages().size() > 0 && !folders.contains(folder)) {					
+				if (folder.getPages().size() > 0 && !folders.contains(folder)) {
 					this.folders.add(folder);
 				}
 			}
@@ -538,26 +450,26 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	 * Refresh the enable/disable state for the buttons.
 	 */
 	private void updateButtons() {
-		fClearButton.setEnabled(folders != null && folders.size() > 0);
+		fClearButton.setEnabled(folders != null && folders.isEmpty());
 		IStructuredSelection selection = (IStructuredSelection) fLocationsViewer
 				.getSelection();
-		
+
 		boolean canRemove = true;
 		if (folders == null)
 			canRemove = false;
 		else {
 			List list = selection.toList();
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				Object o = (Object) iterator.next();
+				Object o = iterator.next();
 				if (!folders.contains(o))
 					canRemove = false;
-				break;				
+				break;
 			}
 			if (selection.isEmpty())
 				canRemove = false;
 		}
-		
-		fRemoveButton.setEnabled(canRemove);		
+
+		fRemoveButton.setEnabled(canRemove);
 	}
 
 }
