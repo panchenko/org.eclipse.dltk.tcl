@@ -47,6 +47,10 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 		state = response.getState();
 	}
 
+	public boolean isValid() {
+		return protocol != null;
+	}
+
 	public String getOutput() {
 		return content;
 	}
@@ -99,9 +103,10 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 		for (Iterator iterator = this.initialListeners.iterator(); iterator
 				.hasNext();) {
 			Runnable op = (Runnable) iterator.next();
-			Thread t = new Thread( op);
+			Thread t = new Thread(op);
 			t.run();
 		}
+		this.initialListeners.clear();
 	}
 
 	public void addCloseOperation(Runnable runnable) {
@@ -109,7 +114,11 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 	}
 
 	public void addInitialListenerOperation(Runnable runnable) {
-		this.initialListeners.add(runnable);
+		if (this.protocol != null) {
+			new Thread(runnable).start();
+		} else {
+			this.initialListeners.add(runnable);
+		}
 	}
 
 	public InputStream getInitialOutputStream() {

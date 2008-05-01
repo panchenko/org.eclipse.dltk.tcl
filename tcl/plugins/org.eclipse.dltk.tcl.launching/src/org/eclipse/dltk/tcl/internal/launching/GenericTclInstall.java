@@ -15,6 +15,10 @@ import java.io.InputStreamReader;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.IDeployment;
@@ -32,64 +36,95 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 	public class BuiltinsHelper {
 		StringBuffer source = new StringBuffer();
 
-		void load() throws IOException, CoreException {
-			IExecutionEnvironment exeEnv = getExecEnvironment();
-			if (exeEnv == null)
-				return;
+		void load() {
+			Job loadTclBuiltin = new Job("Generate Tcl builtin file...") {
+				protected IStatus run(final IProgressMonitor monitor) {
+					monitor.beginTask("Generate Tcl builtin file",
+							IProgressMonitor.UNKNOWN);
+					IExecutionEnvironment exeEnv = getExecEnvironment();
+					if (exeEnv == null)
+						return Status.CANCEL_STATUS;
 
-			IDeployment deployment = exeEnv.createDeployment();
+					IDeployment deployment = exeEnv.createDeployment();
 
-			final IPath builder = deployment.add(TclLaunchingPlugin
-					.getDefault().getBundle(), "scripts/builtins.tcl"); //$NON-NLS-1$
-
-			IFileHandle builderFile = deployment.getFile(builder);
-			InterpreterConfig config = ScriptLaunchUtil
-					.createInterpreterConfig(exeEnv, builderFile, builderFile
-							.getParent());
-			// For wish
-			config.removeEnvVar("DISPLAY");
-			// config.addInterpreterArg("-KU"); //$NON-NLS-1$
-			final Process process = ScriptLaunchUtil.runScriptWithInterpreter(
-					exeEnv, GenericTclInstall.this.getInstallLocation()
-							.toOSString(), config);
-			Thread readerThread = new Thread(new Runnable() {
-				public void run() {
-					BufferedReader input = null;
+					IPath builder;
 					try {
-						input = new BufferedReader(new InputStreamReader(
-								process.getInputStream()));
+						builder = deployment.add(TclLaunchingPlugin
+								.getDefault().getBundle(),
+								"scripts/builtins.tcl");
 
-						String line = null;
-						while ((line = input.readLine()) != null) {
-							source.append(line);
-							source.append("\n");
+						IFileHandle builderFile = deployment.getFile(builder);
+						InterpreterConfig config = ScriptLaunchUtil
+								.createInterpreterConfig(exeEnv, builderFile,
+										builderFile.getParent());
+						// For wish
+						config.removeEnvVar("DISPLAY");
+						// config.addInterpreterArg("-KU"); //$NON-NLS-1$
+						final Process process = ScriptLaunchUtil
+								.runScriptWithInterpreter(exeEnv,
+										GenericTclInstall.this
+												.getInstallLocation()
+												.toOSString(), config);
+						Thread readerThread = new Thread(new Runnable() {
+							public void run() {
+								BufferedReader input = null;
+								try {
+									input = new BufferedReader(
+											new InputStreamReader(process
+													.getInputStream()));
+
+									String line = null;
+									while ((line = input.readLine()) != null) {
+										source.append(line);
+										source.append("\n");
+										monitor.worked(1);
+									}
+								} catch (IOException e) {
+									if (DLTKCore.DEBUG) {
+										e.printStackTrace();
+									}
+								} finally {
+									if (input != null) {
+										try {
+											input.close();
+										} catch (IOException e) {
+											if (DLTKCore.DEBUG) {
+												e.printStackTrace();
+											}
+										}
+									}
+								}
+							}
+						});
+						try {
+							readerThread.start();
+							readerThread.join(10000);
+						} catch (InterruptedException e) {
+							if (DLTKCore.DEBUG) {
+								e.printStackTrace();
+							}
 						}
-					} catch (IOException e) {
+						deployment.dispose();
+					} catch (IOException e1) {
+						if (DLTKCore.DEBUG) {
+							e1.printStackTrace();
+						}
+					} catch (CoreException e) {
 						if (DLTKCore.DEBUG) {
 							e.printStackTrace();
 						}
-					} finally {
-						if (input != null) {
-							try {
-								input.close();
-							} catch (IOException e) {
-								if (DLTKCore.DEBUG) {
-									e.printStackTrace();
-								}
-							}
-						}
 					}
+					return Status.OK_STATUS;
 				}
-			});
+			};
+			loadTclBuiltin.schedule();
 			try {
-				readerThread.start();
-				readerThread.join(10000);
+				loadTclBuiltin.join();
 			} catch (InterruptedException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
 				}
 			}
-			deployment.dispose();
 		}
 	}
 
@@ -119,21 +154,15 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 
 	// Builtins
 	public String getBuiltinModuleContent(String name) {
+		initialize();
+		return helper.source.toString();
+	}
+
+	private synchronized void initialize() {
 		if (helper == null) {
 			helper = new BuiltinsHelper();
-			try {
-				helper.load();
-			} catch (IOException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
+			helper.load();
 		}
-		return helper.source.toString();
 	}
 
 	public String[] getBuiltinModules() {
