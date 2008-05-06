@@ -24,6 +24,7 @@ import org.eclipse.dltk.tcl.internal.core.packages.TclCheckBuilder;
 public class TclBuildpathDetector extends BuildpathDetector {
 	private Set packagesInBuild;
 	private Set packageNamesInProject;
+	private boolean useAnalysis;
 
 	public TclBuildpathDetector(IProject project, IDLTKLanguageToolkit toolkit)
 			throws CoreException {
@@ -39,18 +40,24 @@ public class TclBuildpathDetector extends BuildpathDetector {
 								ScriptRuntime.INTERPRETER_CONTAINER)));
 	}
 
-	protected void processSources(List correctFiles, SubProgressMonitor sub) {
-		sub.beginTask("Analysing", correctFiles.size());
-		int count = 0;
-		for (Iterator iterator = correctFiles.iterator(); iterator.hasNext();) {
-			IFile object = (IFile) iterator.next();
-			sub.subTask("Analysing " + "("
-					+ String.valueOf(correctFiles.size() - count) + "):"
-					+ object.getName());
-			processModule(object);
-			count++;
+	protected void processSources(final List correctFiles,
+			final SubProgressMonitor sub) {
+		if (useAnalysis) {
+			sub.beginTask("Analysing", correctFiles.size());
+
+			int count = 0;
+			for (Iterator iterator = correctFiles.iterator(); iterator
+					.hasNext();) {
+				IFile object = (IFile) iterator.next();
+				sub.subTask("Analysing " + "("
+						+ String.valueOf(correctFiles.size() - count) + "):"
+						+ object.getName());
+				processModule(object);
+				count++;
+			}
+
+			sub.done();
 		}
-		sub.done();
 	}
 
 	protected boolean processModule(IFile file) {
@@ -71,5 +78,9 @@ public class TclBuildpathDetector extends BuildpathDetector {
 			return true;
 		}
 		return false;
+	}
+
+	public void setUseAnalysis(boolean useAnalysis) {
+		this.useAnalysis = useAnalysis;
 	}
 }

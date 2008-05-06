@@ -42,6 +42,10 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 			throws CoreException {
 		TclBuildpathDetector detector = new TclBuildpathDetector(
 				getCurrProject(), toolkit);
+
+		TclProjectWizardFirstPage page = (TclProjectWizardFirstPage) this
+				.getFirstPage();
+		detector.setUseAnalysis(page.useAnalysis());
 		detector.detectBuildpath(new SubProgressMonitor(monitor, 20));
 		return detector;
 	}
