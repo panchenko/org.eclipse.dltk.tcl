@@ -53,7 +53,9 @@ public class TclPackagesInterpreterContainerExtension implements
 		if (install != null) {
 			Set packages = InterpreterContainerHelper
 					.getInterpreterContainerDependencies(project);
-
+			if (packages.size() == 0) {
+				return;
+			}
 			IEnvironment env = EnvironmentManager.getEnvironment(project);
 			// This is very slow if no information is available.
 			Set allPaths = new HashSet();
