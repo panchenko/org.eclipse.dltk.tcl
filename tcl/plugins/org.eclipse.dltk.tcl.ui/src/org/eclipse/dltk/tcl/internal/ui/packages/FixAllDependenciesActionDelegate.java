@@ -35,7 +35,6 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
-import org.eclipse.dltk.tcl.internal.ui.text.TclCorrectionProcessor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -110,7 +109,7 @@ public class FixAllDependenciesActionDelegate implements
 		}
 	}
 
-//	private static HandleFactory factory = new HandleFactory();
+	// private static HandleFactory factory = new HandleFactory();
 
 	private static Object convertResourceToModelElement(Object o) {
 		if (o instanceof IModelElement) {
@@ -155,8 +154,7 @@ public class FixAllDependenciesActionDelegate implements
 						IDLTKLanguageToolkit tk = DLTKLanguageManager
 								.getLanguageToolkit((IModelElement) eo);
 						if (tk != null
-								&& tk.getNatureId().equals(
-										TclNature.NATURE_ID)) {
+								&& tk.getNatureId().equals(TclNature.NATURE_ID)) {
 							elements.add(eo);
 						}
 					} else if (eo instanceof IResource
@@ -210,7 +208,7 @@ public class FixAllDependenciesActionDelegate implements
 						.hasNext();) {
 					final ISourceModule module = (ISourceModule) iterator
 							.next();
-//					IResource res = module.getResource();
+					// IResource res = module.getResource();
 					ModuleDeclaration declaration = SourceParserUtil
 							.getModuleDeclaration(module, null,
 									ISourceParserConstants.RUNTIME_MODEL);
@@ -247,20 +245,18 @@ public class FixAllDependenciesActionDelegate implements
 									String pkgName = copy.getName();
 									IScriptProject project = module
 											.getScriptProject();
-									if (TclCorrectionProcessor.isFixable(
-											pkgName, project)) {
-										if (projectToPackages
-												.containsKey(project)) {
-											Set pkgs = (Set) projectToPackages
-													.get(project);
-											pkgs.add(pkgName);
-										} else {
-											Set pkgs = new HashSet();
-											pkgs.add(pkgName);
-											projectToPackages
-													.put(project, pkgs);
-										}
+									// if (TclCorrectionProcessor.isFixable(
+									// pkgName, project)) {
+									if (projectToPackages.containsKey(project)) {
+										Set pkgs = (Set) projectToPackages
+												.get(project);
+										pkgs.add(pkgName);
+									} else {
+										Set pkgs = new HashSet();
+										pkgs.add(pkgName);
+										projectToPackages.put(project, pkgs);
 									}
+									// }
 								}
 								return false;
 							}
