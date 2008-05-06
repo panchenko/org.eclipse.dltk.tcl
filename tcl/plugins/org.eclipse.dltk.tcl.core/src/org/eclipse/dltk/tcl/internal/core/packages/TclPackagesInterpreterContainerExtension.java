@@ -55,18 +55,18 @@ public class TclPackagesInterpreterContainerExtension implements
 					.getInterpreterContainerDependencies(project);
 
 			IEnvironment env = EnvironmentManager.getEnvironment(project);
-
+			// This is very slow if no information is available.
 			Set allPaths = new HashSet();
-			for (Iterator iterator = packages.iterator(); iterator.hasNext();) {
-				String pkgName = (String) iterator.next();
-				IPath[] libs = PackagesManager.getInstance()
-						.getPathsForPackageWithDeps(install, pkgName);
-				for (int i = 0; i < libs.length; i++) {
-					IPath fullPath = EnvironmentPathUtils.getFullPath(env,
-							libs[i]);
-					allPaths.add(fullPath);
-				}
+			// for (Iterator iterator = packages.iterator();
+			// iterator.hasNext();) {
+			// String pkgName = (String) iterator.next();
+			IPath[] libs = PackagesManager.getInstance()
+					.getPathsForPackagesWithDeps(install, packages);
+			for (int i = 0; i < libs.length; i++) {
+				IPath fullPath = EnvironmentPathUtils.getFullPath(env, libs[i]);
+				allPaths.add(fullPath);
 			}
+			// }
 
 			Set rawEntries = new HashSet(allPaths.size());
 			for (Iterator iterator = allPaths.iterator(); iterator.hasNext();) {

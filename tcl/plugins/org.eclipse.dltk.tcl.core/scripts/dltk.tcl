@@ -216,6 +216,7 @@ proc process-pkg-info {find_level find_pkgs} {
 
     # load all specified pkgs
     set pkgs $find_pkgs
+    puts $pkgs
     if {[string equal $pkgs ""]} {
         set pkgs [package names]
     } ;# End of if stmt
@@ -674,6 +675,13 @@ proc main {argv} {
             "-pkg"  -
             "-pkgs" {
                 set pkgs [lindex $argv $idx]
+            }
+            "-fpkgs" {
+            	set fname [lindex $argv $idx]
+            	set fp [open "$fname" r]
+     			set pkgs [read $fp]
+     			puts "Loaded: $pkgs"
+     			close $fp
             }
             "-output" {
                 set output [get-canonical-path [lindex $argv $idx]]

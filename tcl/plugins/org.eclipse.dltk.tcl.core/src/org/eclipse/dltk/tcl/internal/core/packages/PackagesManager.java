@@ -562,4 +562,23 @@ public class PackagesManager {
 		}
 		return (IPath[]) result.toArray(new IPath[result.size()]);
 	}
+
+	public IPath[] getPathsForPackagesWithDeps(IInterpreterInstall install,
+			Set packages) {
+		Set result = new HashSet();
+		IPath[] paths = this.getPathsForPackages(install, packages);
+		result.addAll(Arrays.asList(paths));
+
+		for (Iterator jiterator = packages.iterator(); jiterator.hasNext();) {
+			String name = (String) jiterator.next();
+			Map dependencies = manager.getDependencies(name, install);
+			for (Iterator iterator = dependencies.keySet().iterator(); iterator
+					.hasNext();) {
+				String pkgName = (String) iterator.next();
+				result.addAll(Arrays
+						.asList(getPathsForPackage(install, pkgName)));
+			}
+		}
+		return (IPath[]) result.toArray(new IPath[result.size()]);
+	}
 }

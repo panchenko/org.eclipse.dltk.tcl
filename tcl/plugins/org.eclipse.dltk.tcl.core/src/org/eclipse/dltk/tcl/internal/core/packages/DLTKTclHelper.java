@@ -3,6 +3,7 @@ package org.eclipse.dltk.tcl.internal.core.packages;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,10 +37,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class DLTKTclHelper {
-	public static List getScriptOutput(Process process) {
+	public static List getScriptOutput(InputStream stream) {
 		final List elements = new ArrayList();
 		final BufferedReader input = new BufferedReader(new InputStreamReader(
-				process.getInputStream()));
+				stream));
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -49,6 +50,7 @@ public class DLTKTclHelper {
 						if (line == null) {
 							break;
 						}
+						System.out.println(line);
 						elements.add(line);
 					}
 				} catch (IOException e) {
@@ -100,7 +102,8 @@ public class DLTKTclHelper {
 		if (process == null) {
 			return new ArrayList();
 		}
-		List output = getScriptOutput(process);
+		List output = getScriptOutput(process.getInputStream());
+		List error = getScriptOutput(process.getErrorStream());
 		process.destroy();
 		deployment.dispose();
 		return output;
@@ -141,9 +144,51 @@ public class DLTKTclHelper {
 	public static TclPackage[] getSrcs(IExecutionEnvironment exeEnv,
 			IFileHandle installLocation, EnvironmentVariable[] environment,
 			String packageName) {
-		List content = deployExecute(exeEnv, installLocation.toOSString(),
-				new String[] { "get-srcs", "-pkgs", packageName }, environment);
-		return getPackagePath(content);
+		IDeployment deployment = exeEnv.createDeployment();
+		IFileHandle script = deploy(deployment);
+		if (script == null) {
+			return null;
+		}
+
+		IFileHandle workingDir = script.getParent();
+		InterpreterConfig config = ScriptLaunchUtil.createInterpreterConfig(
+				exeEnv, script, workingDir, environment);
+		String names = packageName;
+		ByteArrayInputStream bais = new ByteArrayInputStream(names.getBytes());
+		IPath packagesPath = null;
+		try {
+			packagesPath = deployment.add(bais, "packages.txt");
+		} catch (IOException e1) {
+			if (DLTKCore.DEBUG) {
+				e1.printStackTrace();
+			}
+			return null;
+		}
+		IFileHandle file = deployment.getFile(packagesPath);
+		// For wish
+		config.removeEnvVar("DISPLAY");
+		String[] arguments = new String[] { "get-srcs", "-fpkgs",
+				file.toOSString() };
+
+		config.addScriptArgs(arguments);
+
+		Process process = null;
+		try {
+			process = ScriptLaunchUtil.runScriptWithInterpreter(exeEnv,
+					installLocation.toOSString(), config);
+		} catch (CoreException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		if (process == null) {
+			return null;
+		}
+		List output = getScriptOutput(process.getInputStream());
+		List error = getScriptOutput(process.getErrorStream());
+		process.destroy();
+		deployment.dispose();
+		return getPackagePath(output);
 	}
 
 	private static boolean isElementName(Node nde, String name) {
