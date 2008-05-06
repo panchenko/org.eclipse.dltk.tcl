@@ -50,7 +50,6 @@ public class DLTKTclHelper {
 						if (line == null) {
 							break;
 						}
-						System.out.println(line);
 						elements.add(line);
 					}
 				} catch (IOException e) {
