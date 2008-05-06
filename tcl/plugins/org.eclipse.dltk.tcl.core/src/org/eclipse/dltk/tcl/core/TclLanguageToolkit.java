@@ -52,7 +52,7 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 						|| name.toLowerCase().equals("tclindex")) {
 					return true;
 				}
-				if( acceptDir(members[i], environment)) {
+				if (acceptDir(members[i], environment)) {
 					return true;
 				}
 			}
@@ -75,4 +75,5 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 	public String getLanguageContentType() {
 		return TCL_CONTENT_TYPE;
 	}
+
 }
