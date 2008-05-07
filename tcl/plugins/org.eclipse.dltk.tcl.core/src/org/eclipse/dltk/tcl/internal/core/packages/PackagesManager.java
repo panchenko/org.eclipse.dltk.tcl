@@ -481,6 +481,9 @@ public class PackagesManager {
 				install.getInstallLocation(),
 				install.getEnvironmentVariables(), buf.toString());
 		Set result = new HashSet();
+		if (srcs == null) {
+			return new IPath[0];
+		}
 		for (int i = 0; i < srcs.length; i++) {
 			Set paths2 = srcs[i].getPaths();
 			PackageKey okey = makeKey(srcs[i].getName(),

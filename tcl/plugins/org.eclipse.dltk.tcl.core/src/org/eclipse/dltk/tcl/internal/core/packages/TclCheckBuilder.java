@@ -35,6 +35,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.SourceParserUtil.IContentAction;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -92,8 +93,10 @@ public class TclCheckBuilder implements IScriptBuilder {
 				packageNamesInProject.addAll(names);
 			}
 		}
+		Map codeModels = new HashMap();
 		processSources(elements, new SubProgressMonitor(monitor, 50),
-				resourceToPackagesList, packagesInBuild, packageNamesInProject);
+				resourceToPackagesList, packagesInBuild, packageNamesInProject,
+				codeModels);
 
 		manager.setInternalPackageNames(install, packageNamesInProject);
 
@@ -134,13 +137,17 @@ public class TclCheckBuilder implements IScriptBuilder {
 			}
 			List pkgs = (List) resourceToPackagesList.get(module);
 			CodeModel model = null;
-			try {
-				model = new CodeModel(module.getSource());
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+			// Obtain cached.
+			model = (CodeModel) codeModels.get(module);
+			if (model == null) {
+				try {
+					model = new CodeModel(module.getSource());
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+					continue;
 				}
-				continue;
 			}
 
 			IProblemReporter reporter = factory.createReporter(module
@@ -182,9 +189,12 @@ public class TclCheckBuilder implements IScriptBuilder {
 
 	private void processSources(List elements, IProgressMonitor monitor,
 			Map resourceToPackagesList, Set packagesInBuild,
-			Set packageNamesInProject) {
+			Set packageNamesInProject, final Map codeModels) {
 		monitor.beginTask("Performing code checks", FULL_BUILD);
 		for (int i = 0; i < elements.size(); i++) {
+			if (monitor.isCanceled()) {
+				return;
+			}
 			IModelElement element = (IModelElement) elements.get(i);
 			if (element.getElementType() == IModelElement.SOURCE_MODULE) {
 				IProjectFragment projectFragment = (IProjectFragment) element
@@ -208,9 +218,20 @@ public class TclCheckBuilder implements IScriptBuilder {
 						// IResource resource = module.getResource();
 						// cleanMarkers(resource);
 
+						IContentAction action = new IContentAction() {
+							public void run(ISourceModule cmodule,
+									char[] content) {
+								codeModels.put(cmodule, new CodeModel(
+										new String(content)));
+							}
+						};
 						ModuleDeclaration declaration = SourceParserUtil
 								.getModuleDeclaration(module, null,
-										ISourceParserConstants.RUNTIME_MODEL);
+										ISourceParserConstants.RUNTIME_MODEL,
+										action);
+						if (declaration == null) {
+							return;
+						}
 
 						final ArrayList list = new ArrayList();
 						resourceToPackagesList.put(module, list);
