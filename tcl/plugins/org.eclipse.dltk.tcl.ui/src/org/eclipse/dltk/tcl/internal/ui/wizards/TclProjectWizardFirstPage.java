@@ -15,6 +15,7 @@
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -30,6 +31,8 @@ import org.eclipse.swt.widgets.Label;
 final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 	TclInterpreterGroup fInterpreterGroup;
 	private Button useAnalysis;
+	private Group packagesGroup;
+	private Label labelElement;
 
 	final class TclInterpreterGroup extends AbstractInterpreterGroup {
 
@@ -74,18 +77,28 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 	protected void createCustomGroups(Composite composite) {
 		super.createCustomGroups(composite);
 
-		Group g = new Group(composite, SWT.NONE);
+		packagesGroup = new Group(composite, SWT.NONE);
 		GridData gridData = new GridData(GridData.FILL, SWT.FILL, true, false);
 		gridData.widthHint = convertWidthInCharsToPixels(50);
-		g.setLayoutData(gridData);
-		g.setLayout(new GridLayout(1, false));
-		g.setText("Packages detector");
-		this.useAnalysis = new Button(g, SWT.CHECK);
+		packagesGroup.setLayoutData(gridData);
+		packagesGroup.setLayout(new GridLayout(1, false));
+		packagesGroup.setText("Packages detector");
+		this.useAnalysis = new Button(packagesGroup, SWT.CHECK);
 		this.useAnalysis.setText("Detect packages from source code");
 		this.useAnalysis.setSelection(true);
-		Label l = new Label(g, SWT.NONE);
-		l
+		labelElement = new Label(packagesGroup, SWT.NONE);
+		labelElement
 				.setText("Enable package detection for Remote Projects could be realy slow...");
+		Observer o = new Observer() {
+			public void update(Observable o, Object arg) {
+				boolean inWorkspace = fLocationGroup.isInWorkspace();
+				packagesGroup.setEnabled(!inWorkspace);
+				useAnalysis.setEnabled(!inWorkspace);
+				labelElement.setEnabled(!inWorkspace);
+			}
+		};
+		fLocationGroup.addObserver(o);
+		fInterpreterGroup.addObserver(o);
 	}
 
 	public boolean useAnalysis() {
