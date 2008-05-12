@@ -60,24 +60,20 @@ public class TclBuildpathDetector extends BuildpathDetector {
 		}
 	}
 
-	protected boolean processModule(IFile file) {
-		if (super.visitSourceModule(file)) {
-			ISourceModule module = DLTKCore.createSourceModuleFrom(file);
-			if (module.exists()) {
-				ModuleDeclaration moduleDeclaration = SourceParserUtil
-						.getModuleDeclaration(module, null);
-				try {
-					TclCheckBuilder.fillPackagesDeclarations(moduleDeclaration,
-							null, packagesInBuild, packageNamesInProject);
-				} catch (Exception e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
+	private void processModule(IFile file) {
+		ISourceModule module = DLTKCore.createSourceModuleFrom(file);
+		if (module.exists()) {
+			ModuleDeclaration moduleDeclaration = SourceParserUtil
+					.getModuleDeclaration(module, null);
+			try {
+				TclCheckBuilder.fillPackagesDeclarations(moduleDeclaration,
+						null, packagesInBuild, packageNamesInProject);
+			} catch (Exception e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
 				}
 			}
-			return true;
 		}
-		return false;
 	}
 
 	public void setUseAnalysis(boolean useAnalysis) {
