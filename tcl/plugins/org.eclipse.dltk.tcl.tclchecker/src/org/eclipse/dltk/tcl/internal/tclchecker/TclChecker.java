@@ -38,6 +38,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
@@ -119,18 +120,20 @@ public class TclChecker {
 		Map pathToSource = new HashMap();
 		for (Iterator iterator = sourceModules.iterator(); iterator.hasNext();) {
 			ISourceModule module = (ISourceModule) iterator.next();
-			try {
-				char[] sourceAsCharArray = module.getSourceAsCharArray();
-				if (sourceAsCharArray.length == 0) {
-					continue;
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+			if (EnvironmentManager.isLocal(environment)) {
+				try {
+					char[] sourceAsCharArray = module.getSourceAsCharArray();
+					if (sourceAsCharArray.length == 0) {
+						continue;
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 			IPath location = module.getResource().getLocation();
-			String loc = null; 
+			String loc = null;
 			if (location == null) {
 				URI locationURI = module.getResource().getLocationURI();
 				loc = environment.getFile(locationURI).toOSString();
@@ -147,10 +150,12 @@ public class TclChecker {
 			return;
 		}
 		List cmdLine = new ArrayList();
-		if( !TclCheckerHelper.passOriginalArguments(store, cmdLine, environment) ) {
+		if (!TclCheckerHelper
+				.passOriginalArguments(store, cmdLine, environment)) {
 			if (console != null) {
 				try {
-					console.write("Path to TclChecker is not specified.".getBytes());
+					console.write("Path to TclChecker is not specified."
+							.getBytes());
 				} catch (IOException e) {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
@@ -161,8 +166,9 @@ public class TclChecker {
 		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 				.getAdapter(IExecutionEnvironment.class);
 		IDeployment deployment = execEnvironment.createDeployment();
-//		IPath stateLocation = TclCheckerPlugin.getDefault().getStateLocation();
-//		IPath patternFile = stateLocation.append("pattern.txt");
+		// IPath stateLocation = TclCheckerPlugin.getDefault().getStateLocation(
+		// );
+		// IPath patternFile = stateLocation.append("pattern.txt");
 		ByteArrayOutputStream baros = new ByteArrayOutputStream();
 		try {
 			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
@@ -188,7 +194,9 @@ public class TclChecker {
 				TclCheckerPlugin.getDefault().getLog().log(
 						new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID,
 								"Failed to deploy file list", e1));
-				e1.printStackTrace();
+				if (DLTKCore.DEBUG) {
+					e1.printStackTrace();
+				}
 			}
 			return;
 		}
