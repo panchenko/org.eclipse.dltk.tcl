@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.dltk.validators.core,
  org.eclipse.dltk.validators.ui,
- org.eclipse.dltk.ui
+ org.eclipse.dltk.ui,
+ org.eclipse.dltk.tcl.core;bundle-version="1.0.0"
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.dltk.tcl.internal.tclchecker,
  org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences

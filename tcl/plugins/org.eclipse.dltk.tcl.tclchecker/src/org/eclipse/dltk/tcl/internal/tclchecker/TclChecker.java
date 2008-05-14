@@ -38,46 +38,16 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
+import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclChecker {
 	private static final String CHECKING = "checking:";
 
 	private static final String SCANNING = "scanning:";
-
-	private static class TclCheckerCodeModel {
-		private String[] codeLines;
-
-		private int[] codeLineLengths;
-
-		public TclCheckerCodeModel(String code) {
-			this.codeLines = code.split("\n");
-			int count = this.codeLines.length;
-
-			this.codeLineLengths = new int[count];
-
-			int sum = 0;
-			for (int i = 0; i < count; ++i) {
-				this.codeLineLengths[i] = sum;
-				sum += this.codeLines[i].length() + 1;
-			}
-		}
-
-		public int[] getBounds(int lineNumber) {
-			String codeLine = codeLines[lineNumber];
-			String trimmedCodeLine = codeLine.trim();
-
-			int start = codeLineLengths[lineNumber]
-					+ codeLine.indexOf(trimmedCodeLine);
-			int end = start + trimmedCodeLine.length();
-
-			return new int[] { start, end };
-		}
-	}
 
 	protected static IMarker reportErrorProblem(IResource resource,
 			TclCheckerProblem problem, int start, int end) throws CoreException {
@@ -118,18 +88,19 @@ public class TclChecker {
 
 		List arguments = new ArrayList();
 		Map pathToSource = new HashMap();
+		Map moduleToCodeModel = new HashMap();
 		for (Iterator iterator = sourceModules.iterator(); iterator.hasNext();) {
 			ISourceModule module = (ISourceModule) iterator.next();
-			if (EnvironmentManager.isLocal(environment)) {
-				try {
-					char[] sourceAsCharArray = module.getSourceAsCharArray();
-					if (sourceAsCharArray.length == 0) {
-						continue;
-					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
+			try {
+				String source = module.getSource();
+				if (source.length() == 0) {
+					continue;
+				}
+				CodeModel codeModel = new CodeModel(source);
+				moduleToCodeModel.put(module, codeModel);
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
 				}
 			}
 			IPath location = module.getResource().getLocation();
@@ -208,7 +179,6 @@ public class TclChecker {
 		int scanned = 0;
 		int checked = 0;
 
-		TclCheckerCodeModel model = null;
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 
@@ -240,6 +210,7 @@ public class TclChecker {
 					.getInputStream()));
 
 			String line = null;
+			CodeModel model = null;
 			while ((line = input.readLine()) != null) {
 				// lines.add(line);
 				if (console != null) {
@@ -293,12 +264,7 @@ public class TclChecker {
 									.get(fullPath);
 						}
 					}
-					if (checkingModule != null) {
-						model = new TclCheckerCodeModel(checkingModule
-								.getSource());
-					} else {
-						model = null;
-					}
+					model = (CodeModel) moduleToCodeModel.get(checkingModule);
 
 					fileName = Path.fromOSString(fileName).lastSegment();
 					monitor
