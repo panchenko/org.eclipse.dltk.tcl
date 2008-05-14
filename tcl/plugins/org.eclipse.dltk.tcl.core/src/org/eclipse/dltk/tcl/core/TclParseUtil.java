@@ -54,22 +54,39 @@ public class TclParseUtil {
 	public static class CodeModel {
 
 		private int[] codeLineLengths;
+		private int[] codeStarts;
+		private int[] codeEnds;
 
 		public CodeModel(String code) {
 			String[] codeLines = code.split("\n");
 			int count = codeLines.length;
 
 			this.codeLineLengths = new int[count];
+			this.codeStarts = new int[count];
+			this.codeEnds = new int[count];
 
 			int sum = 0;
 			for (int i = 0; i < count; ++i) {
 				this.codeLineLengths[i] = sum;
+				String trim = codeLines[i].trim();
+				int off = codeLines[i].indexOf(trim);
+				this.codeStarts[i] = sum + off;
+				this.codeEnds[i] = trim.length();
 				sum += codeLines[i].length() + 1;
 			}
 		}
 
 		public int getLineNumber(TclElement command) {
 			return this.getLineNumber(command.getStart(), command.getEnd());
+		}
+
+		public int[] getBounds(int lineNumber) {
+			if (lineNumber < this.codeLineLengths.length) {
+				int start = this.codeStarts[lineNumber];
+				int end = this.codeEnds[lineNumber];
+				return new int[] { start, start + end };
+			}
+			return new int[] { 0, 0 };
 		}
 
 		public int getLineNumber(int start, int end) {
