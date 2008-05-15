@@ -13,9 +13,10 @@ import org.eclipse.dltk.tcl.internal.debug.ui.interpreters.TclInterpreterTab;
 public class TclTestingTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
+		TclTestingMainLaunchConfigurationTab main = new TclTestingMainLaunchConfigurationTab(mode);
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
-				new TclTestingMainLaunchConfigurationTab(mode),
-				new ScriptArgumentsTab(), new TclInterpreterTab(),
+				main,
+				new ScriptArgumentsTab(), new TclInterpreterTab(main),
 				new EnvironmentTab(), new CommonTab() {
 					public void performApply(
 							ILaunchConfigurationWorkingCopy configuration) {
