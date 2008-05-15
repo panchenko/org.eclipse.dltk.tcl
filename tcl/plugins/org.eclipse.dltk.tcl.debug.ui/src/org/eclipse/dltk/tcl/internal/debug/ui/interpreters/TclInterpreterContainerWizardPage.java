@@ -22,7 +22,7 @@ public class TclInterpreterContainerWizardPage extends
 
 	protected AbstractInterpreterComboBlock getInterpreterBlock() {
 		if (block == null) {
-			block = new TclInterpreterComboBlock();
+			block = new TclInterpreterComboBlock(null);
 		}
 		block.initialize(getScriptProject(), getCurrentEntries());
 		return block;

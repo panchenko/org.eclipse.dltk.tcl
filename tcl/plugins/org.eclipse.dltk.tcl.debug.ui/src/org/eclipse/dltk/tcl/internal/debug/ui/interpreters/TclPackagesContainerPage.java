@@ -102,7 +102,7 @@ public class TclPackagesContainerPage extends NewElementWizardPage implements
 	}
 
 	protected AbstractInterpreterComboBlock getInterpreterBlock() {
-		return new TclInterpreterComboBlock();
+		return new TclInterpreterComboBlock(null);
 	}
 
 	public boolean finish() {

@@ -9,18 +9,24 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
+import org.eclipse.dltk.debug.ui.launchConfigurations.IMainLaunchConfigurationTabListenerManager;
 import org.eclipse.dltk.debug.ui.launchConfigurations.InterpreterTab;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterComboBlock;
 import org.eclipse.dltk.tcl.core.TclNature;
 
 public class TclInterpreterTab extends InterpreterTab {
-	
+
+	public TclInterpreterTab(
+			IMainLaunchConfigurationTabListenerManager listenerManager) {
+		super(listenerManager);
+	}
+
 	protected AbstractInterpreterComboBlock getInterpreterBlock() {
-		return new TclInterpreterComboBlock();
+		return new TclInterpreterComboBlock(getMainTab());
 	}
 
 	protected String getNature() {
 		return TclNature.NATURE_ID;
 	}
-	
+
 }

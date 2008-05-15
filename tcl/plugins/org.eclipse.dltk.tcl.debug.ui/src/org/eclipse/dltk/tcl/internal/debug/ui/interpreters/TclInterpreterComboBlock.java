@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.dltk.debug.ui.launchConfigurations.IMainLaunchConfigurationTabListenerManager;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterComboBlock;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
@@ -48,6 +49,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
 public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
+	protected TclInterpreterComboBlock(IMainLaunchConfigurationTabListenerManager tab) {
+		super(tab);
+	}
+
 	private Set packages = new HashSet();
 
 	public class PackagesLabelProvider extends LabelProvider {
@@ -118,6 +123,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 	private TreeViewer fElements;
 	private IScriptProject scriptProject;
+	private Button addButton;
 
 	protected void showInterpreterPreferencePage() {
 		showPrefPage(TclInterpreterPreferencePage.PAGE_ID);
@@ -147,11 +153,11 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		GridLayout gridLayout2 = new GridLayout(1, true);
 		buttons.setLayout(gridLayout2);
 
-		Button add = new Button(buttons, SWT.PUSH);
+		addButton = new Button(buttons, SWT.PUSH);
 		data2 = new GridData(SWT.FILL, SWT.DEFAULT, false, false);
-		add.setLayoutData(data2);
-		add.setText("Add");
-		add.addSelectionListener(new SelectionAdapter() {
+		addButton.setLayoutData(data2);
+		addButton.setText("Add");
+		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				addPackage();
 			}
@@ -216,6 +222,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				fElements.refresh();
+				IInterpreterInstall install = getInterpreter();
+				addButton.setEnabled(install != null);
 			}
 		});
 	}
