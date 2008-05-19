@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2008 xored software, Inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation
+ *     xored software, Inc. - todo task parser added (Alex Panchenko)
+ *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.parser;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -5,7 +17,6 @@ import org.eclipse.dltk.ast.parser.ISourceParserConstants;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.task.ITaskReporter;
 import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
-import org.eclipse.dltk.compiler.task.TodoTaskSimpleParser;
 import org.eclipse.dltk.core.AbstractSourceElementParser;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
@@ -63,17 +74,18 @@ public class TclSourceElementParser extends AbstractSourceElementParser
 					.getAdapter(ITaskReporter.class);
 			if (taskReporter != null) {
 				taskReporter.clearTasks();
-				parseTasks(taskReporter, contents);
+				parseTasks(taskReporter, contents, moduleDeclaration);
 			}
 		}
 	}
 
-	protected void parseTasks(ITaskReporter taskReporter, char[] content) {
+	protected void parseTasks(ITaskReporter taskReporter, char[] content,
+			ModuleDeclaration moduleDeclaration) {
 		final TodoTaskPreferences preferences = new TodoTaskPreferences(
 				TclPlugin.getDefault().getPluginPreferences());
 		if (preferences.isEnabled()) {
-			final TodoTaskSimpleParser taskParser = new TodoTaskSimpleParser(
-					taskReporter, preferences);
+			final TclTodoTaskAstParser taskParser = new TclTodoTaskAstParser(
+					taskReporter, preferences, moduleDeclaration);
 			if (taskParser.isValid()) {
 				taskParser.parse(content);
 			}
