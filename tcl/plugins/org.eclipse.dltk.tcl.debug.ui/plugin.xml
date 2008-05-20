@@ -55,6 +55,10 @@
       id="org.eclipse.dltk.tcl.console.ui.objectContribution1"
       nameFilter="*"
       objectClass="org.eclipse.dltk.core.ISourceModule">
+      <filter
+        name="org.eclipse.dltk.ui.nature"
+        value="org.eclipse.dltk.tcl.core.nature">
+      </filter>
       <action
         class="org.eclipse.dltk.tcl.internal.console.ui.actions.PasteTclScriptToConsole"
         id="org.eclipse.dltk.tcl.console.ui.internal.actions.PasteTclTextToConsoleAction"
