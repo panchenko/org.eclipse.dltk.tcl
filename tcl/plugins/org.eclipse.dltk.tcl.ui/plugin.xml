@@ -523,6 +523,10 @@
          adaptable="false"
          id="org.eclipse.dltk.tcl.ui.fixdeps"
          objectClass="org.eclipse.dltk.core.IModelElement">
+         <filter
+               name="org.eclipse.dltk.ui.nature"
+               value="org.eclipse.dltk.tcl.core.nature">
+         </filter>
       <action
             class="org.eclipse.dltk.tcl.internal.ui.packages.FixAllDependenciesActionDelegate"
             icon="icons/etool16/newpack_wiz.gif"
