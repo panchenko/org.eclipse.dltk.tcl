@@ -116,10 +116,16 @@
                menubarPath="org.eclipse.dltk.validators.ui.menu/bottom">
          </action>
           <visibility>
+            <and>
+            <objectState
+               name="org.eclipse.dltk.ui.nature"
+               value="org.eclipse.dltk.tcl.core.nature">
+            </objectState>
             <objectState
                   name="org.eclipse.dltk.validators.ui.visibility"
                   value="true">
             </objectState>
+            </and>
          </visibility>
       </objectContribution>
    </extension>
