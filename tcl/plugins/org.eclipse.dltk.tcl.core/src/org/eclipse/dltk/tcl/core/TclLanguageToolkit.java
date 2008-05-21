@@ -48,6 +48,10 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 			IFileHandle members[] = file.getChildren();
 			for (int i = 0; i < members.length; i++) {
 				String name = members[i].getName();
+				if (DLTKContentTypeManager.isValidFileNameForContentType(this,
+						members[i].getPath())) {
+					return true;
+				}
 				if (name.toLowerCase().equals("pkgindex.tcl")
 						|| name.toLowerCase().equals("tclindex")) {
 					return true;
