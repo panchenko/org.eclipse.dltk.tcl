@@ -19,6 +19,9 @@ public interface ISourceElementRequestVisitorExtension {
 	ExitFromType getExitExtended(MethodDeclaration method,
 			TclSourceElementRequestVisitor tclSourceElementRequestVisitor);
 
-	ExitFromType processField(FieldDeclaration decl, TclSourceElementRequestVisitor tclSourceElementRequestVisitor);
+	ExitFromType processField(FieldDeclaration decl,
+			TclSourceElementRequestVisitor tclSourceElementRequestVisitor);
 
+	boolean skipMethod(MethodDeclaration method,
+			TclSourceElementRequestVisitor tclSourceElementRequestVisitor);
 }

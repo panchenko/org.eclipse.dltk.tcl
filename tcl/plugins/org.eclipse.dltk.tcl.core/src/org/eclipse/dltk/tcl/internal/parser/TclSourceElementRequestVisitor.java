@@ -193,8 +193,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 					ISourceElementRequestor.TypeInfo ti = new ISourceElementRequestor.TypeInfo();
 					if (decl instanceof TypeDeclaration) {
 						ti.modifiers = getModifiers(decl);
-					}
-					else {
+					} else {
 						ti.modifiers = Modifiers.AccNameSpace;
 					}
 
@@ -461,6 +460,11 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	}
 
 	public boolean visit(MethodDeclaration method) throws Exception {
+		for (int i = 0; i < extensions.length; i++) {
+			if (extensions[i].skipMethod(method, this)) {
+				return true;
+			}
+		}
 		this.fNodes.push(method);
 		String[] parameter = null;
 		String[] parameterInitializers = null;
