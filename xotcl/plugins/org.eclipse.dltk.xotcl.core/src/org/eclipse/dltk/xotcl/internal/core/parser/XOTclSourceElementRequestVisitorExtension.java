@@ -89,4 +89,9 @@ public class XOTclSourceElementRequestVisitorExtension implements
 		}
 		return null;
 	}
+
+	public boolean skipMethod(MethodDeclaration method,
+			TclSourceElementRequestVisitor tclSourceElementRequestVisitor) {
+		return false;
+	}
 }
