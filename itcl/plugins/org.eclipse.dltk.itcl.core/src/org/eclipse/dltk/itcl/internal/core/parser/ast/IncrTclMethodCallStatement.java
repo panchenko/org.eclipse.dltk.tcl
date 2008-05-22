@@ -7,6 +7,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 
 public class IncrTclMethodCallStatement extends CallExpression {
 	private FieldDeclaration instanceVariable;
+
 	public IncrTclMethodCallStatement(int start, int end, SimpleReference name,
 			FieldDeclaration var, CallArgumentsList args) {
 		super(start, end, var, name, args);
@@ -18,7 +19,7 @@ public class IncrTclMethodCallStatement extends CallExpression {
 	}
 
 	public FieldDeclaration getInstanceVariable() {
-		return (FieldDeclaration) instanceVariable;
+		return instanceVariable;
 	}
 
 	public void setInstNameRef(SimpleReference at) {
@@ -26,6 +27,6 @@ public class IncrTclMethodCallStatement extends CallExpression {
 	}
 
 	public SimpleReference getInstNameRef() {
-		return ((SimpleReference)this.getReceiver());
+		return ((SimpleReference) this.getReceiver());
 	}
 }

@@ -9,6 +9,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
+import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclBodyDeclaration;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodCallStatement;
 import org.eclipse.dltk.tcl.core.extensions.ISourceElementRequestVisitorExtension;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceElementRequestVisitor;
@@ -60,20 +61,29 @@ public class IncrTclSourceElementRequestVisitorExtension implements
 
 	public boolean extendedExitRequired(MethodDeclaration method,
 			TclSourceElementRequestVisitor original) {
-		return false;//(method.getModifiers() & IIncrTclModifiers.AccIncrTcl) != 0;
+		return false;// (method.getModifiers() & IIncrTclModifiers.AccIncrTcl)
+						// != 0;
 	}
 
 	public ExitFromType processField(FieldDeclaration decl,
 			TclSourceElementRequestVisitor original) {
-//		if ((decl.getModifiers() & IIncrTclModifiers.AccIncrTcl) != 0
-//				&& decl instanceof IncrTclFieldDeclaration) {
-//			IncrTclFieldDeclaration field = (IncrTclFieldDeclaration) decl;
-//			String tName = field.getDeclaringTypeName();
-//			if (tName == null) {
-//				tName = "";
-//			}
-//			return original.resolveType(field, tName + "::dummy", false);
-//		}
+		// if ((decl.getModifiers() & IIncrTclModifiers.AccIncrTcl) != 0
+		// && decl instanceof IncrTclFieldDeclaration) {
+		// IncrTclFieldDeclaration field = (IncrTclFieldDeclaration) decl;
+		// String tName = field.getDeclaringTypeName();
+		// if (tName == null) {
+		// tName = "";
+		// }
+		// return original.resolveType(field, tName + "::dummy", false);
+		// }
 		return null;
+	}
+
+	public boolean skipMethod(MethodDeclaration method,
+			TclSourceElementRequestVisitor tclSourceElementRequestVisitor) {
+		if (method instanceof IncrTclBodyDeclaration) {
+			return true;
+		}
+		return false;
 	}
 }

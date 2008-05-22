@@ -312,7 +312,8 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 			if (type != null
 					&& (instName.sourceStart() <= position && position <= instName
 							.sourceEnd())) {
-				engine.addSelectionElement(type);
+				// Selection to field declaration
+				engine.addElementFromASTNode(instanceVariable);
 			} else if (type != null && callName.sourceStart() <= position
 					&& position <= callName.sourceEnd()) {
 
