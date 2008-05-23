@@ -548,6 +548,11 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	}
 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
+		for (int i = 0; i < extensions.length; i++) {
+			if (extensions[i].skipMethod(method, this)) {
+				return true;
+			}
+		}
 		super.endvisit(method);
 		ExitFromType exit = (ExitFromType) this.exitStack.pop();
 		exit.go();
