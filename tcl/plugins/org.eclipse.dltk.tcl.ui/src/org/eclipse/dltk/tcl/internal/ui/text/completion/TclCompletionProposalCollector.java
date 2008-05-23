@@ -9,11 +9,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.text.completion;
 
-import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
-import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
@@ -72,16 +70,16 @@ public class TclCompletionProposalCollector extends
 				completionProposal);
 	}
 
-	protected IScriptCompletionProposal createKeywordProposal(
-			CompletionProposal proposal) {
-		String completion = String.valueOf(proposal.getCompletion());
-		int start = proposal.getReplaceStart();
-		int length = getLength(proposal);
-		String label = getLabelProvider().createSimpleLabel(proposal);
-		Image img = getImage(getLabelProvider().createMethodImageDescriptor(
-				proposal));
-		int relevance = computeRelevance(proposal);
-		return createScriptCompletionProposal(completion, start, length, img,
-				label, relevance);
-	}
+	// protected IScriptCompletionProposal createKeywordProposal(
+	// CompletionProposal proposal) {
+	// String completion = String.valueOf(proposal.getCompletion());
+	// int start = proposal.getReplaceStart();
+	// int length = getLength(proposal);
+	// String label = getLabelProvider().createSimpleLabel(proposal);
+	// Image img = getImage(getLabelProvider().createMethodImageDescriptor(
+	// proposal));
+	// int relevance = computeRelevance(proposal);
+	// return createScriptCompletionProposal(completion, start, length, img,
+	// label, relevance);
+	// }
 }

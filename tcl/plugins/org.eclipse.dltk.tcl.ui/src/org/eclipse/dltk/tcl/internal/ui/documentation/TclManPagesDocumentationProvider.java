@@ -47,6 +47,14 @@ public class TclManPagesDocumentationProvider implements
 				ManPageFolder f = (ManPageFolder) iterator.next();
 				Map pages = f.getPages();
 				String ans = (String) pages.get(content);
+				if (ans == null) {
+					// Try to use first word of multiline call
+					if (content.indexOf(' ') != -1) {
+						String subContent = content.substring(0, content
+								.indexOf(' '));
+						ans = (String) pages.get(subContent);
+					}
+				}
 				if (ans != null) {
 					IPath filePath = new Path(f.getPath()).append(ans);
 					File file = filePath.toFile();
