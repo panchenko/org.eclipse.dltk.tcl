@@ -787,11 +787,13 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 				String nn = ((TypeDeclaration) nde).getName();
+				final String nextPrefix;
 				if (nn.startsWith("::")) {
-					nn = nn.substring(2);
+					nextPrefix = nn;
+				} else {
+					nextPrefix = namePrefix + nn;
 				}
-				String pr = namePrefix + nn;
-				this.processMethods(methods, methodNames, tStatements, pr
+				this.processMethods(methods, methodNames, tStatements, nextPrefix
 						+ "::", visited, realParent);
 
 			}
