@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.core.tests.model;
 
+import java.util.Arrays;
+
 import junit.framework.Test;
 
 import org.eclipse.dltk.codeassist.RelevanceConstants;
@@ -76,6 +78,32 @@ public class CompletionTests extends AbstractModelCompletionTests {
 		return this.makeResult(elements, completions, relevance);
 	}
 
+	/**
+	 * Returns the location after the end of the line with the specified marker.
+	 * This function is needed to compensate platform difference in line
+	 * separators.
+	 * 
+	 * @param str
+	 * @param marker
+	 * @return
+	 */
+	private static int newLineAfter(String str, String marker) {
+		int location = str.indexOf(marker);
+		assertTrue(location >= 0);
+		location += marker.length();
+		while (location < str.length() && str.charAt(location) != '\r'
+				&& str.charAt(location) != '\n') {
+			++location;
+		}
+		if (location < str.length() && str.charAt(location) == '\r') {
+			++location;
+		}
+		if (location < str.length() && str.charAt(location) == '\n') {
+			++location;
+		}
+		return location;
+	}
+
 	public void testCompletion001() throws ModelException {
 		CompletionTestsRequestor requestor = new CompletionTestsRequestor();
 		ISourceModule cu = this.getSourceModule("Completion", "src",
@@ -106,22 +134,19 @@ public class CompletionTests extends AbstractModelCompletionTests {
 				+ completeBehind.length();
 		cu.codeComplete(cursorLocation, requestor);
 
-		assertEquals(this.makeResult(new String[] { "package", "package provide",
-				"package require", "part" }), requestor.getResults());
+		assertEquals(this.makeResult(new String[] { "package",
+				"package provide", "package require", "part" }), requestor
+				.getResults());
 
 	}
 
 	public void testCompletion003() throws ModelException {
-		this.process003(9);
-	}
-
-	private void process003(int add) throws ModelException {
 		CompletionTestsRequestor requestor = new CompletionTestsRequestor();
 		ISourceModule cu = this.getSourceModule("Completion", "src",
 				"Completion002.tcl");
 
 		String str = cu.getSource();
-		int cursorLocation = str.indexOf("#2") + 4 + add;
+		int cursorLocation = newLineAfter(str, "#2") + 10;
 		cu.codeComplete(cursorLocation, requestor);
 
 		assertEquals(this.makeResult(new String[] { "::a::c::fac()" },
@@ -129,13 +154,13 @@ public class CompletionTests extends AbstractModelCompletionTests {
 				.getResults());
 	}
 
-	public void REM_testCompletion004() throws ModelException {
+	public void testCompletion004() throws ModelException {
 		CompletionTestsRequestor requestor = new CompletionTestsRequestor();
 		ISourceModule cu = this.getSourceModule("Completion", "src",
 				"Completion002.tcl");
 
 		String str = cu.getSource();
-		int cursorLocation = str.indexOf("#1") + 4 + 8;
+		int cursorLocation = newLineAfter(str, "#1") + 9;
 		cu.codeComplete(cursorLocation, requestor);
 
 		assertEquals(this.makeResult(new String[] { "::a::c::fac()",
@@ -145,19 +170,26 @@ public class CompletionTests extends AbstractModelCompletionTests {
 
 	}
 
-	public void INVALID_testCompletion005() throws ModelException {
+	public void testCompletion005() throws ModelException {
 		CompletionTestsRequestor requestor = new CompletionTestsRequestor();
 		ISourceModule cu = this.getSourceModule("Completion", "src",
 				"Completion002.tcl");
 
 		String str = cu.getSource();
-		int cursorLocation = str.indexOf("#3") + 4 + 6;
+		int cursorLocation = newLineAfter(str, "#3") + 6;
 		cu.codeComplete(cursorLocation, requestor);
 
-		assertEquals(this.makeResult(new String[] { "::a::f::faf",
-				"::a::f::q::faf_q", "::a::f::q::fafq", "::a::f::q::t::fafqt",
-				"::a::fa" }), requestor.getResults());
-
+		String[] result1 = new String[] { "::a::f::faf", "::a::f::q::faf_q",
+				"::a::f::q::fafq", "::a::f::q::t::fafqt", "::a::fa" };
+		String[] result2 = new String[result1.length];
+		for (int i = 0; i < result1.length; ++i) {
+			result2[i] = result1[i];
+			result1[i] += "()";
+		}
+		int[] relevance = new int[result1.length];
+		Arrays.fill(relevance, RELEVANCE);
+		assertEquals(this.makeResult(result1, result2, relevance), requestor
+				.getResults());
 	}
 
 	public void testCompletion006() throws ModelException {
@@ -166,7 +198,7 @@ public class CompletionTests extends AbstractModelCompletionTests {
 				"Completion002.tcl");
 
 		String str = cu.getSource();
-		int cursorLocation = str.indexOf("#4") + 4 + 6;
+		int cursorLocation = newLineAfter(str, "#4") + 7;
 		cu.codeComplete(cursorLocation, requestor);
 
 		assertEquals(this.makeResult(new String[] { "::b::fb()" },
@@ -185,8 +217,8 @@ public class CompletionTests extends AbstractModelCompletionTests {
 		int cursorLocation = str.indexOf(s) + s.length();
 		cu.codeComplete(cursorLocation, requestor);
 
-		assertEquals(this.makeResult(new String[] { "$::x", "$x" }, new int[] { 18,
-				18 }), requestor.getResults());
+		assertEquals(this.makeResult(new String[] { "$::x", "$x" }, new int[] {
+				18, 18 }), requestor.getResults());
 
 	}
 
@@ -196,12 +228,11 @@ public class CompletionTests extends AbstractModelCompletionTests {
 				"completion004.tcl");
 
 		String str = cu.getSource();
-		String s = "puts \"";
-		int cursorLocation = str.indexOf(s) + s.length() + 2;
+		int cursorLocation = newLineAfter(str, "puts \"");
 		cu.codeComplete(cursorLocation, requestor);
 
-		assertEquals(this.makeResult(new String[] { "$::x", "$x" }, new int[] { 18,
-				18 }), requestor.getResults());
+		assertEquals(this.makeResult(new String[] { "$::x", "$x" }, new int[] {
+				18, 18 }), requestor.getResults());
 
 	}
 }
