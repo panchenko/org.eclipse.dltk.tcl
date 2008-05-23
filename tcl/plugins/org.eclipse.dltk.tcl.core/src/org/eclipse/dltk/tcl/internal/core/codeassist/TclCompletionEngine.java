@@ -203,6 +203,15 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 		} else if (astNode instanceof CompletionOnKeywordArgumentOrFunctionArgument) {
 			CompletionOnKeywordArgumentOrFunctionArgument compl = (CompletionOnKeywordArgumentOrFunctionArgument) astNode;
+			if (compl.getStatement().getCount() > 0) {
+				TclStatement st = compl.getStatement();
+				Expression at = st.getAt(0);
+				if (at instanceof SimpleReference) {
+					this.processCompletionOnFunctions(astNodeParent,
+							((SimpleReference) at).getName().toCharArray(),
+							false);
+				}
+			}
 			Set methodNames = new HashSet();
 			if (compl.argumentIndex() == 1) {
 				// Completion on two argument keywords
@@ -318,12 +327,17 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	protected void processCompletionOnFunctions(ASTNode astNodeParent,
 			CompletionOnKeywordOrFunction key) {
+		processCompletionOnFunctions(astNodeParent,
+				removeLastColonFromToken(key.getToken()), key
+						.canCompleteEmptyToken());
+	}
+
+	protected void processCompletionOnFunctions(ASTNode astNodeParent,
+			char[] token, boolean canCompleteEmptyToken) {
 		if (!this.requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
 			List methodNames = new ArrayList();
-			this.findLocalFunctions(key.getToken(),
-					key.canCompleteEmptyToken(), astNodeParent, methodNames);
-			char[] token = key.getToken();
-			token = this.removeLastColonFromToken(token);
+			this.findLocalFunctions(token, canCompleteEmptyToken,
+					astNodeParent, methodNames);
 			Set set = new HashSet();
 			set.addAll(methodNames);
 			this.findNamespaceFunctions(token, set);
@@ -364,13 +378,18 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		this.findKeywords(key.getToken(), choices, key.canCompleteEmptyToken());
 	}
 
+	/**
+	 * Removes ':' on the end.
+	 * 
+	 * @param token
+	 * @return
+	 */
 	public char[] removeLastColonFromToken(char[] token) {
-		// remove : on the end.
 		if (token.length > 2 && token[token.length - 1] == ':'
 				&& token[token.length - 2] != ':') {
 			char co2[] = new char[token.length - 1];
 			System.arraycopy(token, 0, co2, 0, co2.length);
-			token = co2;
+			return co2;
 		}
 		return token;
 	}
