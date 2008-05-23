@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
 import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -26,8 +27,8 @@ import org.eclipse.dltk.utils.PlatformFileUtils;
  * Debugging engine implementation for ActiveState's tcl debugging engine.
  * 
  * <p>
- * see: <a
- * href="http://aspn.activestate.com/ASPN/docs/Komodo/komodo-doc-debugtcl.html">
+ * see: <a href=
+ * "http://aspn.activestate.com/ASPN/docs/Komodo/komodo-doc-debugtcl.html">
  * http://aspn.activestate.com/ASPN/docs/Komodo/komodo-doc-debugtcl.html</a>
  * </p>
  */
@@ -47,8 +48,9 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.ExternalDebuggingEngineRunner#alterConfig(org.eclipse.dltk.launching.InterpreterConfig,
-	 *      java.lang.String)
+	 * @see
+	 * org.eclipse.dltk.launching.ExternalDebuggingEngineRunner#alterConfig(
+	 * org.eclipse.dltk.launching.InterpreterConfig, java.lang.String)
 	 */
 	protected InterpreterConfig alterConfig(InterpreterConfig config,
 			PreferencesLookupDelegate delegate) {
@@ -78,8 +80,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 					.findAbsoluteOrEclipseRelativeFile(env, new Path(path));
 
 			if (pdxFiles.exists()) {
-				newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles
-						.toOSString());
+				newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles.toOSString());
 			}
 		}
 
@@ -96,13 +97,15 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		newConfig.addInterpreterArg(IDE_KEY);
 		newConfig.addInterpreterArg(sessionId);
 
-
 		String logFileName = getLogFileName(delegate, sessionId);
 		if (logFileName != null) {
 			newConfig.addInterpreterArg(LOG_KEY);
 			newConfig.addInterpreterArg(LOG_FILE_KEY);
 			newConfig.addInterpreterArg(logFileName);
 		}
+
+		// newConfig.addInterpreterArg("-doinstrument");
+		// newConfig.addInterpreterArg("{itcl}");
 
 		newConfig.addInterpreterArg(SCRIPT_KEY);
 
@@ -116,51 +119,66 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.DebuggingEngineRunner#getDebuggingEngineId()
+	 * @see
+	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getDebuggingEngineId()
 	 */
 	protected String getDebuggingEngineId() {
 		return ENGINE_ID;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.ExternalDebuggingEngineRunner#getDebuggingEnginePreferenceKey()
+	 * @seeorg.eclipse.dltk.launching.ExternalDebuggingEngineRunner#
+	 * getDebuggingEnginePreferenceKey()
 	 */
 	protected String getDebuggingEnginePreferenceKey() {
 		return TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.DebuggingEngineRunner#getDebuggingEnginePreferenceQualifier()
+	 * @seeorg.eclipse.dltk.launching.DebuggingEngineRunner#
+	 * getDebuggingEnginePreferenceQualifier()
 	 */
 	protected String getDebuggingEnginePreferenceQualifier() {
 		return TclActiveStateDebuggerPlugin.PLUGIN_ID;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.DebuggingEngineRunner#getDebugPreferenceQualifier()
+	 * @see
+	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getDebugPreferenceQualifier
+	 * ()
 	 */
 	protected String getDebugPreferenceQualifier() {
 		return TclDebugPlugin.PLUGIN_ID;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.DebuggingEngineRunner#getLoggingEnabledPreferenceKey()
+	 * @seeorg.eclipse.dltk.launching.DebuggingEngineRunner#
+	 * getLoggingEnabledPreferenceKey()
 	 */
 	protected String getLoggingEnabledPreferenceKey() {
 		return TclActiveStateDebuggerConstants.ENABLE_LOGGING;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.DebuggingEngineRunner#getLogFileNamePreferenceKey()
+	 * @see
+	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getLogFileNamePreferenceKey
+	 * ()
 	 */
 	protected String getLogFileNamePreferenceKey() {
 		return TclActiveStateDebuggerConstants.LOG_FILE_NAME;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.launching.DebuggingEngineRunner#getLogFilePathPreferenceKey()
+	 * @see
+	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getLogFilePathPreferenceKey
+	 * ()
 	 */
 	protected String getLogFilePathPreferenceKey() {
 		return TclActiveStateDebuggerConstants.LOG_FILE_PATH;
 	}
+
+	protected IScriptDebugThreadConfigurator createThreadConfigurator() {
+		return new TclActiveStateDebugThreadConfigurator();
+	}
+
 }
