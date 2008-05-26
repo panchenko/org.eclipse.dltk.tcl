@@ -27,6 +27,7 @@ import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclKeywordsManager;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
+import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ICompletionExtension;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclAssistParser;
@@ -128,7 +129,10 @@ public class TclCompletionParser extends TclAssistParser {
 					ASTNode nde = new CompletionOnKeywordArgumentOrFunctionArgument(
 							"", (TclStatement) node, keywords, position);
 					this.assistNodeParent = inNode;
-					throw new CompletionNodeFound(nde, null/* ((TypeDeclaration)inNode).scope */);
+					throw new CompletionNodeFound(nde, null/*
+															 * ((TypeDeclaration)
+															 * inNode).scope
+															 */);
 
 				} else {
 					completionToken = "";
@@ -141,22 +145,20 @@ public class TclCompletionParser extends TclAssistParser {
 					completionToken = completionToken.substring(0, maxLen);
 				}
 			} /*
-				 * else if (completionNode instanceof TclBlockExpression) {
-				 * TclBlockExpression block = (TclBlockExpression)
-				 * completionNode;
-				 * 
-				 * List s = block.parseBlock(); if (s != null) { int slen =
-				 * s.size(); for (int u = 0; u < slen; ++u) { ASTNode n =
-				 * (ASTNode) s.get(u); n.setStart(n.sourceStart() -
-				 * block.sourceStart()); n.setEnd(n.sourceEnd() -
-				 * block.sourceStart()); TclASTUtil.extendStatement(n,
-				 * block.getBlock()); n.setStart(n.sourceStart() +
-				 * block.sourceStart()); n.setEnd(n.sourceEnd() +
-				 * block.sourceStart()); if (n != null && n.sourceStart() <=
-				 * position && n.sourceEnd() >= position) {
-				 * parseBlockStatements(n, inNode, position); } } }
-				 * handleNotInElement(inNode, position); }
-				 */
+			 * else if (completionNode instanceof TclBlockExpression) {
+			 * TclBlockExpression block = (TclBlockExpression) completionNode;
+			 * 
+			 * List s = block.parseBlock(); if (s != null) { int slen =
+			 * s.size(); for (int u = 0; u < slen; ++u) { ASTNode n = (ASTNode)
+			 * s.get(u); n.setStart(n.sourceStart() - block.sourceStart());
+			 * n.setEnd(n.sourceEnd() - block.sourceStart());
+			 * TclASTUtil.extendStatement(n, block.getBlock());
+			 * n.setStart(n.sourceStart() + block.sourceStart());
+			 * n.setEnd(n.sourceEnd() + block.sourceStart()); if (n != null &&
+			 * n.sourceStart() <= position && n.sourceEnd() >= position) {
+			 * parseBlockStatements(n, inNode, position); } } }
+			 * handleNotInElement(inNode, position); }
+			 */
 			if (completionNode instanceof StringLiteral) {
 				int maxLen = position - completionNode.sourceStart();
 				int pos = maxLen;
@@ -187,6 +189,17 @@ public class TclCompletionParser extends TclAssistParser {
 					}
 				}
 				handleNotInElement(expr, position);
+			}
+			if (completionNode instanceof TclAdvancedExecuteExpression) {
+				TclAdvancedExecuteExpression expr = (TclAdvancedExecuteExpression) completionNode;
+				List exprs = expr.getStatements();
+				for (int i = 0; i < exprs.size(); ++i) {
+					ASTNode n = (ASTNode) exprs.get(i);
+					if (n.sourceStart() <= position
+							&& n.sourceEnd() >= position) {
+						parseBlockStatements(n, expr, position);
+					}
+				}
 			}
 			if (completionToken != null && completionToken.startsWith("$")) {
 				// Argument name completion...
@@ -219,7 +232,10 @@ public class TclCompletionParser extends TclAssistParser {
 					ASTNode nde = new CompletionOnKeywordOrFunction(
 							completionToken, completionNode, node, keywords);
 					this.assistNodeParent = inNode;
-					throw new CompletionNodeFound(nde, null/* ((TypeDeclaration)inNode).scope */);
+					throw new CompletionNodeFound(nde, null/*
+															 * ((TypeDeclaration)
+															 * inNode).scope
+															 */);
 				} else if (inNode instanceof TclExecuteExpression
 						&& completionNode != null && first) {
 					String[] keywords = checkKeywords(completionToken,
@@ -227,7 +243,10 @@ public class TclCompletionParser extends TclAssistParser {
 					ASTNode nde = new CompletionOnKeywordOrFunction(
 							completionToken, completionNode, node, keywords);
 					this.assistNodeParent = inNode;
-					throw new CompletionNodeFound(nde, null/* ((TypeDeclaration)inNode).scope */);
+					throw new CompletionNodeFound(nde, null/*
+															 * ((TypeDeclaration)
+															 * inNode).scope
+															 */);
 				} else {
 					if (completionNode != null) {
 						String[] keywords = checkKeywords(completionToken,
@@ -237,7 +256,11 @@ public class TclCompletionParser extends TclAssistParser {
 								completionToken, completionNode,
 								(TclStatement) node, keywords);
 						this.assistNodeParent = inNode;
-						throw new CompletionNodeFound(nde, null/* ((TypeDeclaration)inNode).scope */);
+						throw new CompletionNodeFound(nde, null/*
+																 * ((TypeDeclaration
+																 * )
+																 * inNode).scope
+																 */);
 					} else {
 						String[] keywords = checkKeywords(completionToken,
 								MODULE);
@@ -248,7 +271,11 @@ public class TclCompletionParser extends TclAssistParser {
 								completionToken, (TclStatement) node, keywords,
 								position);
 						this.assistNodeParent = inNode;
-						throw new CompletionNodeFound(nde, null/* ((TypeDeclaration)inNode).scope */);
+						throw new CompletionNodeFound(nde, null/*
+																 * ((TypeDeclaration
+																 * )
+																 * inNode).scope
+																 */);
 					}
 				}
 			}
@@ -311,7 +338,11 @@ public class TclCompletionParser extends TclAssistParser {
 							&& position <= decl.getNameEnd()) {
 						ASTNode inNode = TclParseUtil.getScopeParent(module, s);
 						assistNodeParent = inNode;
-						throw new CompletionNodeFound(decl, null/* ((TypeDeclaration)inNode).scope */);
+						throw new CompletionNodeFound(decl, null/*
+																 * ((TypeDeclaration
+																 * )
+																 * inNode).scope
+																 */);
 					}
 				}
 			}
