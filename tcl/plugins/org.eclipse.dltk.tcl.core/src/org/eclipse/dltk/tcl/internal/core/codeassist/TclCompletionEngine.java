@@ -226,7 +226,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					final char[] token;
 					if (compl.argumentIndex() == 1) {
 						token = compl.getToken();
-					} else if (true || compl.argumentIndex() == 2) {
+					} else {
 						final Expression at1 = st.getAt(1);
 						if (at1 instanceof SimpleReference) {
 							token = ((SimpleReference) at1).getName()
@@ -234,8 +234,6 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						} else {
 							token = null;
 						}
-					} else {
-						token = null;
 					}
 					if (token != null) {
 						for (int i = 0; i < this.extensions.length; i++) {
