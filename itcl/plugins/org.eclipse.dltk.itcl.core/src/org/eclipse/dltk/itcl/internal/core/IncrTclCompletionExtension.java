@@ -92,13 +92,15 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 					token, completionNode, statement, keywords);
 			parser.setAssistNodeParent(TclParseUtil.getPrevParent(parser
 					.getModule(), s));
-			throw new CompletionNodeFound(nde, null/* ((TypeDeclaration)inNode).scope */);
+			throw new CompletionNodeFound(nde, null);
+			// ((TypeDeclaration)inNode).scope
 		} else {
 			ASTNode nde = new CompletionOnKeywordArgumentOrFunctionArgument(
 					token, statement, keywords, position);
 			parser.setAssistNodeParent(TclParseUtil.getPrevParent(parser
 					.getModule(), s));
-			throw new CompletionNodeFound(nde, null/* ((TypeDeclaration)inNode).scope */);
+			throw new CompletionNodeFound(nde, null);
+			// ((TypeDeclaration)inNode).scope
 		}
 	}
 
@@ -413,11 +415,11 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		return null;
 	}
 
-	public void completeOnKeywordArgumentsOne(String name,
+	public void completeOnKeywordArgumentsOne(String name, char[] token,
 			CompletionOnKeywordArgumentOrFunctionArgument compl,
 			Set methodNames, TclStatement st, TclCompletionEngine engine) {
 		// Check for class and its methods.
-		completeClassMethods(name, compl.getToken(), methodNames, engine);
+		completeClassMethods(name, token, methodNames, engine);
 
 		// Lets find instance with specified name.
 		FieldDeclaration var = IncrTclParseUtil
@@ -428,8 +430,8 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			var = searchFieldFromMixin(name, engine);
 		}
 		if (var != null) {
-			completionForInstanceVariableMethods(var, compl.getToken(),
-					methodNames, engine);
+			completionForInstanceVariableMethods(var, token, methodNames,
+					engine);
 		}
 	}
 
