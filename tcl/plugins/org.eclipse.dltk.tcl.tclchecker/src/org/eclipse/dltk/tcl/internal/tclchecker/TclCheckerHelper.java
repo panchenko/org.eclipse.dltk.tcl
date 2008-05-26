@@ -221,7 +221,7 @@ public final class TclCheckerHelper {
 		Map results = new HashMap();
 		IEnvironment[] environments = EnvironmentManager.getEnvironments();
 		for (int i = 0; i < environments.length; i++) {
-			results.put(environments[i], store.getString(prefix + "/"
+			results.put(environments[i], store.getString(prefix + "."
 					+ environments[i].getId()));
 		}
 		return results;
@@ -231,7 +231,7 @@ public final class TclCheckerHelper {
 			String prefix) {
 		for (Iterator iterator = paths.keySet().iterator(); iterator.hasNext();) {
 			IEnvironment environment = (IEnvironment) iterator.next();
-			store.setValue(prefix + "/" + environment.getId(), (String) paths
+			store.setValue(prefix + "." + environment.getId(), (String) paths
 					.get(environment));
 		}
 	}
