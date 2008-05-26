@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.dltk.tcl.activestatedebugger;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.95.0.qualifier
 Bundle-Activator: org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.dltk.debug.ui,
  org.eclipse.debug.core,
  org.eclipse.dltk.tcl.debug,
- org.eclipse.dltk.debug;bundle-version="1.0.0"
+ org.eclipse.dltk.debug
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.dltk.tcl.activestatedebugger,
  org.eclipse.dltk.tcl.activestatedebugger.preferences
