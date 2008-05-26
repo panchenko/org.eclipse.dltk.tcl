@@ -181,7 +181,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		}
 		if (astNode instanceof CompletionOnKeywordOrFunction) {
 			CompletionOnKeywordOrFunction key = (CompletionOnKeywordOrFunction) astNode;
-			this.processCompletionOnKeywords(key);
+			this.processCompletionOnKeywords(key, key.getToken());
 			this.processCompletionOnFunctions(astNodeParent, key);
 
 			for (int i = 0; i < this.extensions.length; i++) {
@@ -203,35 +203,50 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 		} else if (astNode instanceof CompletionOnKeywordArgumentOrFunctionArgument) {
 			CompletionOnKeywordArgumentOrFunctionArgument compl = (CompletionOnKeywordArgumentOrFunctionArgument) astNode;
-			if (compl.getStatement().getCount() > 0) {
-				TclStatement st = compl.getStatement();
-				Expression at = st.getAt(0);
-				if (at instanceof SimpleReference) {
-					this.processCompletionOnFunctions(astNodeParent,
-							((SimpleReference) at).getName().toCharArray(),
-							false);
-				}
-			}
+			TclStatement st = compl.getStatement();
 			Set methodNames = new HashSet();
-			if (compl.argumentIndex() == 1) {
-				// Completion on two argument keywords
-				TclStatement st = compl.getStatement();
-				Expression at = st.getAt(0);
+			if (st.getCount() > 0) {
+				final Expression at = st.getAt(0);
 				if (at instanceof SimpleReference) {
-					String name = ((SimpleReference) at).getName();
-					String prefix = ((SimpleReference) at).getName() + " "
-							+ new String(compl.getToken());
-					this.processPartOfKeywords(compl, prefix, methodNames);
-
-					for (int i = 0; i < this.extensions.length; i++) {
-						this.extensions[i].completeOnKeywordArgumentsOne(name,
-								compl, methodNames, st, this);
+					final String name = ((SimpleReference) at).getName();
+					this.processCompletionOnFunctions(astNodeParent, name
+							.toCharArray(), false);
+					if (compl.argumentIndex() == 1) {
+						final String prefix = name + " "
+								+ new String(compl.getToken());
+						this.processPartOfKeywords(compl, prefix, methodNames);
 					}
 				}
-			} else if (compl.argumentIndex() == 3
-					|| (compl.argumentIndex() == -1 && compl.getStatement()
-							.getCount() > 1)) {
-				TclStatement st = compl.getStatement();
+			}
+			if (st.getCount() >= 1) {
+				// Completion on two argument keywords
+				final Expression at = st.getAt(0);
+				if (at instanceof SimpleReference) {
+					final String name = ((SimpleReference) at).getName();
+					final char[] token;
+					if (compl.argumentIndex() == 1) {
+						token = compl.getToken();
+					} else if (true || compl.argumentIndex() == 2) {
+						final Expression at1 = st.getAt(1);
+						if (at1 instanceof SimpleReference) {
+							token = ((SimpleReference) at1).getName()
+									.toCharArray();
+						} else {
+							token = null;
+						}
+					} else {
+						token = null;
+					}
+					if (token != null) {
+						for (int i = 0; i < this.extensions.length; i++) {
+							this.extensions[i].completeOnKeywordArgumentsOne(
+									name, token, compl, methodNames, st, this);
+						}
+					}
+				}
+			}
+			if (compl.argumentIndex() == 3
+					|| (compl.argumentIndex() == -1 && st.getCount() > 1)) {
 				Expression at0 = st.getAt(0);
 				Expression at1 = st.getAt(1);
 				if (at1 instanceof SimpleReference
@@ -353,18 +368,19 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected void processCompletionOnKeywords(CompletionOnKeywordOrFunction key) {
+	protected void processCompletionOnKeywords(
+			CompletionOnKeywordOrFunction key, char[] token) {
 		if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
 			String[] kw = key.getPossibleKeywords();
-			this.completeForKeywordOrFunction(key, kw);
+			this.completeForKeywordOrFunction(token, key
+					.canCompleteEmptyToken(), kw);
 		}
 	}
 
-	protected void completeForKeywordOrFunction(
-			CompletionOnKeywordOrFunction key, String[] kw) {
+	protected void completeForKeywordOrFunction(char[] token,
+			boolean canCompleteEmptyToken, String[] kw) {
 		char[][] choices = new char[kw.length][];
 		boolean add = false;
-		char[] token = key.getToken();
 		if (token != null && token.length > 0 && token[0] == ':') {
 			add = true;
 		}
@@ -375,7 +391,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				choices[i] = kw[i].toCharArray();
 			}
 		}
-		this.findKeywords(key.getToken(), choices, key.canCompleteEmptyToken());
+		this.findKeywords(token, choices, canCompleteEmptyToken);
 	}
 
 	/**
@@ -771,10 +787,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 							if (p1.startsWith(p2)) {
 								// System.out.println("#");
 								String nn = prefix.substring(i2 + 2);
-								if (!methodNames.contains(nn) /*
-																 * &&
-																 * !methods.contains(nde)
-																 */) {
+								if (!methodNames.contains(nn)) {
+									/* && !methods.contains(nde) */
 									if (this.methodCanBeAdded(nde)) {
 										methods.add(nde);
 										methodNames.add(nn);
@@ -812,8 +826,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				} else {
 					nextPrefix = namePrefix + nn;
 				}
-				this.processMethods(methods, methodNames, tStatements, nextPrefix
-						+ "::", visited, realParent);
+				this.processMethods(methods, methodNames, tStatements,
+						nextPrefix + "::", visited, realParent);
 
 			}
 			visited.add(nde);
@@ -1051,11 +1065,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			token = token2;
 		}
 		String to = new String(token);
-		if (token != null && token.length >= 3 && token[0] == ':' /*
-																	 * &&
-																	 * token[1] ==
-																	 * ':'
-																	 */) {
+		if (token != null && token.length >= 3 && token[0] == ':') {
+			// && token[1] == ':'
 			provideDots = true;
 			String[] tokens = to.split("::");
 			if (tokens.length < 2) {
@@ -1209,13 +1220,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 										TclCompletionEngine.this.parser.module);
 								if (TclCompletionEngine.this
 										.isTclField((FieldDeclaration) s)) {
-									TclCompletionEngine.this
-											.checkAddVariable(
-													choices,
-													/*
-													 * ((FieldDeclaration)
-													 * s).getName()
-													 */name);
+									TclCompletionEngine.this.checkAddVariable(
+											choices, name);
+									// ((FieldDeclaration)s).getName()
 								}
 							} else if (s instanceof TclStatement) {
 								TclCompletionEngine.this

@@ -13,7 +13,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeyw
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
 
 public interface ICompletionExtension {
-	// This is compltion parser features extension
+	// This is completion parser features extension
 	boolean visit(Expression s, TclCompletionParser parser, int position);
 
 	boolean visit(Statement s, TclCompletionParser parser, int position);
@@ -22,7 +22,7 @@ public interface ICompletionExtension {
 	void completeOnKeywordOrFunction(CompletionOnKeywordOrFunction key,
 			ASTNode astNodeParent, TclCompletionEngine engine);
 
-	void completeOnKeywordArgumentsOne(String name,
+	void completeOnKeywordArgumentsOne(String name, char[] token,
 			CompletionOnKeywordArgumentOrFunctionArgument compl,
 			Set methodNames, TclStatement st,
 			TclCompletionEngine tclCompletionEngine);
