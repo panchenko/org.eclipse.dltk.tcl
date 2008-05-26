@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dltk.itcl.tests"
       label="Tests_feature Feature"
-      version="1.0.0.qualifier"
+      version="0.95.0.qualifier"
       provider-name="xored software, Inc.">
 
    <description url="http://www.example.com/description">
