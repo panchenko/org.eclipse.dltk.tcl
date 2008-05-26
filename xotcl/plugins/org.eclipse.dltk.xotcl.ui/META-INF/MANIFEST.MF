@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-Vendor: %pluginProvider
 Bundle-SymbolicName: org.eclipse.dltk.xotcl.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.95.0.qualifier
 Bundle-Activator: org.eclipse.dltk.xotcl.internal.ui.XOTclUI
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
