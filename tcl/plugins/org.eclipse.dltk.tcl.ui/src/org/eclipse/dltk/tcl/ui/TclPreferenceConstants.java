@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.ui;
 
+import org.eclipse.dltk.tcl.internal.ui.documentation.ManPageFolderXML;
 import org.eclipse.dltk.tcl.internal.ui.text.TclColorConstants;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
 import org.eclipse.dltk.ui.PreferenceConstants;
@@ -458,7 +459,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 				TclPreferenceConstants.EDITOR_VARIABLE_COLOR,
 				new RGB(200, 0, 0));
 
-		store.setDefault(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS, "<manPages></manPages>");
+		store.setDefault(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS, ManPageFolderXML.getDefault());
 
 		store.setDefault(
 				TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD, false);

@@ -37,6 +37,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class ManPageFolderXML {
 
+	public static String getDefault() {
+		return "<" + TOP_ELEMENT + "/>"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
 	public static List read(String data) {
 		if (data == null || data.length() == 0) {
 			return new ArrayList();
