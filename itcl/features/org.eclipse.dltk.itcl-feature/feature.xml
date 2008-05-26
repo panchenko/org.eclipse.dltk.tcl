@@ -16,7 +16,7 @@
 <feature
       id="org.eclipse.dltk.itcl"
       label="%featureName"
-      version="1.0.0.qualifier"
+      version="0.95.0.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
@@ -52,7 +52,7 @@ http://www.eclipse.org/legal/epl-v10.html
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.dltk.xotcl.core"/>
       <import plugin="org.eclipse.ui.editors"/>
-      <import feature="org.eclipse.dltk.tcl" version="1.0.0" match="compatible"/>
+      <import feature="org.eclipse.dltk.tcl" version="0.95.0" match="compatible"/>
    </requires>
 
    <plugin
