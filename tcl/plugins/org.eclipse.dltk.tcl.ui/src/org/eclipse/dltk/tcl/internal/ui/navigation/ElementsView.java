@@ -487,7 +487,9 @@ public abstract class ElementsView extends ViewPart {
 			try {
 				children = ((IParent) element).getChildren();
 			} catch (ModelException e) {
-				e.printStackTrace();
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 				return;
 			}
 			if (children != null) {
