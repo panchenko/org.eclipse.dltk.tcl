@@ -209,8 +209,11 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				final Expression at = st.getAt(0);
 				if (at instanceof SimpleReference) {
 					final String name = ((SimpleReference) at).getName();
-					this.processCompletionOnFunctions(astNodeParent, name
-							.toCharArray(), false);
+					if (compl.sourceStart() < at.sourceEnd()
+							|| requestor.isContextInformationMode()) {
+						this.processCompletionOnFunctions(astNodeParent, name
+								.toCharArray(), false);
+					}
 					if (compl.argumentIndex() == 1) {
 						final String prefix = name + " "
 								+ new String(compl.getToken());
@@ -223,16 +226,17 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				final Expression at = st.getAt(0);
 				if (at instanceof SimpleReference) {
 					final String name = ((SimpleReference) at).getName();
-					final char[] token;
+					char[] token = null;
 					if (compl.argumentIndex() == 1) {
 						token = compl.getToken();
 					} else {
 						final Expression at1 = st.getAt(1);
 						if (at1 instanceof SimpleReference) {
-							token = ((SimpleReference) at1).getName()
-									.toCharArray();
-						} else {
-							token = null;
+							if (compl.sourceStart() < at.sourceEnd()
+									|| requestor.isContextInformationMode()) {
+								token = ((SimpleReference) at1).getName()
+										.toCharArray();
+							}
 						}
 					}
 					if (token != null) {
