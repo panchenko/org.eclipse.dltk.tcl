@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
+import org.eclipse.dltk.itcl.internal.core.classes.IncrTclClassesManager;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclBodyDeclaration;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
@@ -85,11 +86,7 @@ public class IncrTclBodyCommandProcessor extends AbstractTclCommandProcessor {
 			MethodDeclaration[] methods = possiblyType.getMethods();
 			boolean found = false;
 			for (int i = 0; i < methods.length; i++) {
-				List args = methods[i].getArguments();
-				if (methods[i].getName().equals(methodName)
-						&& (args != null && args.size() == method
-								.getArguments().size())) {
-					// possiblyType.
+				if (methods[i].getName().equals(methodName)) {
 					method.setModifier(methods[i].getModifiers());
 					method.setDeclaringType(possiblyType);
 					this.addToParent(parent, method);
@@ -106,6 +103,11 @@ public class IncrTclBodyCommandProcessor extends AbstractTclCommandProcessor {
 						ProblemSeverities.Error);
 			}
 		} else {
+			if (!IncrTclClassesManager.getDefault().isClass(className)) {
+				this.report(parser, "Body declaration for unknown class",
+						statement.sourceStart(), statement.sourceEnd(),
+						ProblemSeverities.Error);
+			}
 			this.addToParent(parent, method);
 		}
 
