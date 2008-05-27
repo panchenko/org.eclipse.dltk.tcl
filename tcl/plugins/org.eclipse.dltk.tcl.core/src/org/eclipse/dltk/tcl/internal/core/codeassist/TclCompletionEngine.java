@@ -29,8 +29,10 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.codeassist.IAssistParser;
+import org.eclipse.dltk.codeassist.RelevanceConstants;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.core.CompletionContext;
@@ -39,6 +41,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.Flags;
+import org.eclipse.dltk.core.IAccessRule;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
@@ -87,7 +90,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			int pos) {
 		this.sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceModule
 				.getModelElement();
-		if (DEBUG) {
+		if (VERBOSE) {
 			System.out.print("COMPLETION IN "); //$NON-NLS-1$
 			System.out.print(sourceModule.getFileName());
 			System.out.print(" AT POSITION "); //$NON-NLS-1$
@@ -106,7 +109,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			ModuleDeclaration parsedUnit = this.parser.parse(sourceModule);
 
 			if (parsedUnit != null) {
-				if (DEBUG) {
+				if (VERBOSE) {
 					System.out.println("COMPLETION - Diet AST :"); //$NON-NLS-1$
 					System.out.println(parsedUnit.toString());
 				}
@@ -116,7 +119,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 							.toCharArray();
 					this.parseBlockStatements(parsedUnit,
 							this.actualCompletionPosition);
-					if (DEBUG) {
+					if (VERBOSE) {
 						System.out.println("COMPLETION - AST :"); //$NON-NLS-1$
 						System.out.println(parsedUnit.toString());
 					}
@@ -124,7 +127,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				} catch (CompletionNodeFound e) {
 					// completionNodeFound = true;
 					if (e.astNode != null) {
-						if (DEBUG) {
+						if (VERBOSE) {
 							System.out.print("COMPLETION - Completion node : "); //$NON-NLS-1$
 							System.out.println(e.astNode.toString());
 							if (this.parser.getAssistNodeParent() != null) {
@@ -205,7 +208,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			CompletionOnKeywordArgumentOrFunctionArgument compl = (CompletionOnKeywordArgumentOrFunctionArgument) astNode;
 			TclStatement st = compl.getStatement();
 			Set methodNames = new HashSet();
-			if (st.getCount() > 0) {
+			if (st.getCount() >= 1) {
+				// Completion on two argument keywords
 				final Expression at = st.getAt(0);
 				if (at instanceof SimpleReference) {
 					final String name = ((SimpleReference) at).getName();
@@ -214,32 +218,33 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						this.processCompletionOnFunctions(astNodeParent, name
 								.toCharArray(), false);
 					}
-					if (compl.argumentIndex() == 1) {
-						final String prefix = name + " "
-								+ new String(compl.getToken());
-						this.processPartOfKeywords(compl, prefix, methodNames);
-					}
-				}
-			}
-			if (st.getCount() >= 1) {
-				// Completion on two argument keywords
-				final Expression at = st.getAt(0);
-				if (at instanceof SimpleReference) {
-					final String name = ((SimpleReference) at).getName();
 					char[] token = null;
 					if (compl.argumentIndex() == 1) {
+						if (!requestor.isContextInformationMode()
+								|| (compl.getName() != null && compl.getName()
+										.length() != 0)) {
+						}
 						token = compl.getToken();
-					} else {
+					} else if (st.getCount() > 1) {
 						final Expression at1 = st.getAt(1);
 						if (at1 instanceof SimpleReference) {
-							if (compl.sourceStart() < at.sourceEnd()
-									|| requestor.isContextInformationMode()) {
-								token = ((SimpleReference) at1).getName()
-										.toCharArray();
-							}
+							token = ((SimpleReference) at1).getName()
+									.toCharArray();
 						}
 					}
+					if (DEBUG) {
+						System.out.println("compl.argumentIndex="
+								+ compl.argumentIndex());
+						System.out.println("name='" + name + "'");
+						System.out
+								.println("token='"
+										+ (token != null ? new String(token)
+												: "(null)") + "'");
+					}
 					if (token != null) {
+						this.processPartOfKeywords(st.sourceStart(), compl,
+								name + " " + new String(token), token,
+								methodNames);
 						for (int i = 0; i < this.extensions.length; i++) {
 							this.extensions[i].completeOnKeywordArgumentsOne(
 									name, token, compl, methodNames, st, this);
@@ -247,8 +252,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 			}
-			if (compl.argumentIndex() == 3
-					|| (compl.argumentIndex() == -1 && st.getCount() > 1)) {
+			if (!requestor.isContextInformationMode()
+					&& (compl.argumentIndex() == 3 || (compl.argumentIndex() == -1 && st
+							.getCount() > 1))) {
 				Expression at0 = st.getAt(0);
 				Expression at1 = st.getAt(1);
 				if (at1 instanceof SimpleReference
@@ -309,25 +315,69 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected void processPartOfKeywords(
+	protected void processPartOfKeywords(int sourceStart,
 			CompletionOnKeywordArgumentOrFunctionArgument compl, String prefix,
-			Set methodNames) {
+			char[] token, Set methodNames) {
 		String[] possibleKeywords = compl.getPossibleKeywords();
 		List k = new ArrayList();
+		selectKeywords(possibleKeywords, prefix, k);
+		if (k.isEmpty() && requestor.isContextInformationMode()) {
+			final int p = prefix.indexOf(' ');
+			if (p > 0) {
+				selectKeywords(possibleKeywords, prefix.substring(0, p), k);
+				token = CharOperation.NO_CHAR;
+			}
+		}
+		if (k.size() == 1 && prefix.equals(k.get(0))
+				&& !requestor.isContextInformationMode()) {
+			return;
+		}
+		final char[] keyword = prefix.toCharArray();
+		for (Iterator i = k.iterator(); i.hasNext();) {
+			final String kw = (String) i.next();
+			final char[] choice = kw.toCharArray();
+			int relevance = computeBaseRelevance();
+
+			relevance += computeRelevanceForInterestingProposal();
+			relevance += computeRelevanceForCaseMatching(keyword, choice);
+			relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no
+			this.noProposal = false;
+			if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+				CompletionProposal proposal = this.createProposal(
+						CompletionProposal.KEYWORD,
+						this.actualCompletionPosition);
+				proposal.setName(choice);
+				proposal.setCompletion(choice);
+				proposal.setReplaceRange(sourceStart - this.offset,
+						this.endPosition - this.offset);
+				proposal.setRelevance(relevance);
+				this.requestor.accept(proposal);
+				if (DEBUG) {
+					this.printDebug(proposal);
+				}
+			}
+		}
+		if (methodNames != null) {
+			methodNames.addAll(k);
+		}
+	}
+
+	// Relevance
+	private int computeBaseRelevance() {
+		return RelevanceConstants.R_DEFAULT;
+	}
+
+	private int computeRelevanceForInterestingProposal() {
+		return RelevanceConstants.R_INTERESTING;
+	}
+
+	private void selectKeywords(String[] possibleKeywords, String prefix,
+			List selection) {
 		for (int i = 0; i < possibleKeywords.length; i++) {
 			String kkw = possibleKeywords[i];
 			if (kkw.startsWith(prefix)) {
-				k.add(kkw.substring(kkw.indexOf(" ") + 1));
+				selection.add(kkw);
 			}
-		}
-		String kw[] = (String[]) k.toArray(new String[k.size()]);
-		char[][] choices = new char[kw.length][];
-		for (int i = 0; i < kw.length; ++i) {
-			choices[i] = kw[i].toCharArray();
-		}
-		this.findKeywords(compl.getToken(), choices, true);
-		if (methodNames != null) {
-			methodNames.addAll(k);
 		}
 	}
 
