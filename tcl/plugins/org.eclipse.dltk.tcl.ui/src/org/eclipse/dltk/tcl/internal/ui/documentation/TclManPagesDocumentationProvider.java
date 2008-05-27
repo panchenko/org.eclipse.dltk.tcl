@@ -56,9 +56,8 @@ public class TclManPagesDocumentationProvider implements
 					}
 				}
 				if (ans != null) {
-					IPath filePath = new Path(f.getPath()).append(ans);
-					File file = filePath.toFile();
-					if (file != null && file.isFile()) {
+					final File file = new File(f.getPath(), ans);
+					if (file.isFile()) {
 						try {
 							return new FileReader(file);
 						} catch (FileNotFoundException e) {
