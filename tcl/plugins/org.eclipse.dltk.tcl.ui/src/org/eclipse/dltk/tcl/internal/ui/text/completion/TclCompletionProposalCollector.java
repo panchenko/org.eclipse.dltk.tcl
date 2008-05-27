@@ -9,9 +9,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.text.completion;
 
+import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
+import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
@@ -68,6 +70,18 @@ public class TclCompletionProposalCollector extends
 		return new TclOverrideCompletionProposal(scriptProject,
 				compilationUnit, name, paramTypes, start, length, displayName,
 				completionProposal);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector#createKeywordProposal(org.eclipse.dltk.core.CompletionProposal)
+	 */
+	protected IScriptCompletionProposal createKeywordProposal(
+			CompletionProposal proposal) {
+		final ScriptCompletionProposal completionProposal = (ScriptCompletionProposal) super
+				.createKeywordProposal(proposal);
+		completionProposal.setContextInformation(new TclKeywordLazyContextInformation(
+				completionProposal));
+		return completionProposal;
 	}
 
 	// protected IScriptCompletionProposal createKeywordProposal(
