@@ -537,4 +537,33 @@
       </action>
    </objectContribution>
 </extension>
+
+<!-- =========================================================================== -->
+<!-- Tcl Compare                                                                -->
+<!-- =========================================================================== -->
+   <extension
+         point="org.eclipse.ui.themes">
+      <fontDefinition
+            label="%TclCompareFontDefiniton.label"
+            defaultsTo="org.eclipse.jface.textfont"
+            categoryId="org.eclipse.compare.contentmergeviewer.TextMergeViewer"
+            id="org.eclipse.dltk.tcl.internal.ui.compare.TclMergeViewer">
+         <description>
+            %TclCompareFontDefiniton.description
+         </description>
+      </fontDefinition>
+   </extension>
+
+   <extension point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            extensions="tcl,exp,test,xotcl,itcl"
+            class="org.eclipse.dltk.tcl.internal.ui.compare.TclMergeViewerCreator"
+            id="org.eclipse.dltk.tcl.internal.ui.compare.TclMergeViewer">
+      </viewer>
+      <contentTypeBinding
+			contentTypeId="org.eclipse.dltk.tclContentType"
+            contentMergeViewerId="org.eclipse.dltk.tcl.internal.ui.compare.TclMergeViewer">
+	  </contentTypeBinding>
+   </extension>
+
 </plugin>
