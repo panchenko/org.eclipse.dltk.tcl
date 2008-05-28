@@ -42,7 +42,9 @@ public class TclContentDescriber extends ScriptContentDescriber {
 	public int describe(Reader contents, IContentDescription description)
 			throws IOException {
 		if (checkPatterns(contents, header_patterns, null)) {
-			description.setProperty(DLTK_VALID, TRUE);
+			if (description != null) {
+				description.setProperty(DLTK_VALID, TRUE);
+			}
 			return VALID;
 		}
 		return INDETERMINATE;
