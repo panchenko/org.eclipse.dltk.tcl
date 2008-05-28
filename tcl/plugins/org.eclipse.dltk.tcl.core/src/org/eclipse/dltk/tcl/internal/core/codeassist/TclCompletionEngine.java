@@ -324,7 +324,17 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		if (k.isEmpty() && requestor.isContextInformationMode()) {
 			final int p = prefix.indexOf(' ');
 			if (p > 0) {
-				selectKeywords(possibleKeywords, prefix.substring(0, p), k);
+				final String shortPrefix = prefix.substring(0, p);
+				for (int i = 0; i < possibleKeywords.length; i++) {
+					final String kkw = possibleKeywords[i];
+					if (kkw.equals(shortPrefix)) {
+						k.add(kkw);
+						break;
+					}
+				}
+				if (k.isEmpty()) {
+					selectKeywords(possibleKeywords, shortPrefix, k);
+				}
 				token = CharOperation.NO_CHAR;
 			}
 		}
@@ -374,7 +384,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	private void selectKeywords(String[] possibleKeywords, String prefix,
 			List selection) {
 		for (int i = 0; i < possibleKeywords.length; i++) {
-			String kkw = possibleKeywords[i];
+			final String kkw = possibleKeywords[i];
 			if (kkw.startsWith(prefix)) {
 				selection.add(kkw);
 			}
