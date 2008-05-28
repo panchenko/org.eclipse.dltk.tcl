@@ -152,9 +152,9 @@ public class PackagesManager {
 	}
 
 	private void initialize() {
-		IPath packages = TclPlugin.getDefault().getStateLocation().append(
+		IPath packagesPath = TclPlugin.getDefault().getStateLocation().append(
 				PACKAGES_FILE);
-		File packagesFile = packages.toFile();
+		File packagesFile = packagesPath.toFile();
 		if (packagesFile.exists()) {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
@@ -185,9 +185,9 @@ public class PackagesManager {
 	}
 
 	private void save() {
-		IPath packages = TclPlugin.getDefault().getStateLocation().append(
+		IPath packagesPath = TclPlugin.getDefault().getStateLocation().append(
 				PACKAGES_FILE);
-		File packagesFile = packages.toFile();
+		File packagesFile = packagesPath.toFile();
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
 		try {
@@ -229,8 +229,8 @@ public class PackagesManager {
 	}
 
 	private synchronized void save(Document doc) {
-		Element packages = doc.createElement(PACKAGES_TAG); //$NON-NLS-1$
-		doc.appendChild(packages);
+		Element packagesElement = doc.createElement(PACKAGES_TAG); //$NON-NLS-1$
+		doc.appendChild(packagesElement);
 		for (Iterator iterator = this.packages.keySet().iterator(); iterator
 				.hasNext();) {
 			PackageKey key = (PackageKey) iterator.next();
@@ -256,7 +256,7 @@ public class PackagesManager {
 				pkgElement.setAttribute(NAME_ATTR, pkgName);
 				packageElement.appendChild(pkgElement);
 			}
-			packages.appendChild(packageElement);
+			packagesElement.appendChild(packageElement);
 		}
 		for (Iterator iterator = this.interpreterToPackages.keySet().iterator(); iterator
 				.hasNext();) {
@@ -271,7 +271,7 @@ public class PackagesManager {
 				pathElement.setAttribute(VALUE_ATTR, pkgName);
 				interpreterElement.appendChild(pathElement);
 			}
-			packages.appendChild(interpreterElement);
+			packagesElement.appendChild(interpreterElement);
 		}
 	}
 
@@ -309,7 +309,7 @@ public class PackagesManager {
 					Element e = (Element) child;
 					String interpreter = e.getAttribute(NAME_ATTR);
 					NodeList paths = e.getChildNodes();
-					Set packages = new HashSet();
+					Set packagesSet = new HashSet();
 					for (int j = 0; j < paths.getLength(); j++) {
 						Node packageNode = paths.item(j);
 						if (packageNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -317,11 +317,11 @@ public class PackagesManager {
 									PACKAGE_TAG)) {
 								String packageNameValue = ((Element) packageNode)
 										.getAttribute(VALUE_ATTR);
-								packages.add(packageNameValue);
+								packagesSet.add(packageNameValue);
 							}
 						}
 					}
-					this.interpreterToPackages.put(interpreter, packages);
+					this.interpreterToPackages.put(interpreter, packagesSet);
 				}
 			}
 		}
@@ -385,20 +385,20 @@ public class PackagesManager {
 	public synchronized Map getDependencies(String pkgName,
 			IInterpreterInstall install) {
 		Set checkedPackages = new HashSet();
-		Map packages = new HashMap();
+		Map packagesSet = new HashMap();
 		PackageKey key = makeKey(pkgName, install);
 		PackageInformation info = (PackageInformation) this.packages.get(key);
 		if (info != null) {
-			traverseDependencies(packages, checkedPackages, info, install);
+			traverseDependencies(packagesSet, checkedPackages, info, install);
 		}
-		return packages;
+		return packagesSet;
 	}
 
 	private PackageKey makeKey(String pkgName, IInterpreterInstall install) {
 		return makeKey(pkgName, getInterpreterKey(install));
 	}
 
-	private synchronized void traverseDependencies(Map packages,
+	private synchronized void traverseDependencies(Map packagesSet,
 			Set checkedPackages, PackageInformation resultInfo,
 			IInterpreterInstall install) {
 		Set dependencies = resultInfo.getDependencies();
@@ -410,8 +410,8 @@ public class PackagesManager {
 				if (this.packages.containsKey(pkgKey)) {
 					PackageInformation depInfo = (PackageInformation) this.packages
 							.get(pkgKey);
-					packages.put(pkgName, depInfo);
-					traverseDependencies(packages, checkedPackages, depInfo,
+					packagesSet.put(pkgName, depInfo);
+					traverseDependencies(packagesSet, checkedPackages, depInfo,
 							install);
 				}
 			}
@@ -425,10 +425,10 @@ public class PackagesManager {
 			return set;
 		}
 		// Evaluate
-		Set packages = DLTKTclHelper.getPackages(install);
-		this.interpreterToPackages.put(key, packages);
+		Set packs = DLTKTclHelper.getPackages(install);
+		this.interpreterToPackages.put(key, packs);
 		save();
-		return packages;
+		return packs;
 	}
 
 	private String getInterpreterKey(IInterpreterInstall install) {
@@ -551,6 +551,15 @@ public class PackagesManager {
 		save();
 	}
 
+	/**
+	 * Clears all cached information.
+	 */
+	public synchronized void clearCache() {
+		this.interpreterToPackages.clear();
+		this.packages.clear();
+		save();
+	}
+
 	public IPath[] getPathsForPackageWithDeps(IInterpreterInstall install,
 			String name) {
 		Set result = new HashSet();
@@ -567,12 +576,12 @@ public class PackagesManager {
 	}
 
 	public IPath[] getPathsForPackagesWithDeps(IInterpreterInstall install,
-			Set packages) {
+			Set packagesSet) {
 		Set result = new HashSet();
-		IPath[] paths = this.getPathsForPackages(install, packages);
+		IPath[] paths = this.getPathsForPackages(install, packagesSet);
 		result.addAll(Arrays.asList(paths));
 
-		for (Iterator jiterator = packages.iterator(); jiterator.hasNext();) {
+		for (Iterator jiterator = packagesSet.iterator(); jiterator.hasNext();) {
 			String name = (String) jiterator.next();
 			Map dependencies = manager.getDependencies(name, install);
 			for (Iterator iterator = dependencies.keySet().iterator(); iterator
