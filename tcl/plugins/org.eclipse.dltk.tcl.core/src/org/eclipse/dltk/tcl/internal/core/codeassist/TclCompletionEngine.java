@@ -32,7 +32,6 @@ import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.RelevanceConstants;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
-import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.core.CompletionContext;
@@ -184,7 +183,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		}
 		if (astNode instanceof CompletionOnKeywordOrFunction) {
 			CompletionOnKeywordOrFunction key = (CompletionOnKeywordOrFunction) astNode;
-			this.processCompletionOnKeywords(key, key.getToken());
+			this.processCompletionOnKeywords(key, key.getName());
 			this.processCompletionOnFunctions(astNodeParent, key);
 
 			for (int i = 0; i < this.extensions.length; i++) {
@@ -218,36 +217,28 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						this.processCompletionOnFunctions(astNodeParent, name
 								.toCharArray(), false);
 					}
-					char[] token = null;
+					String token = null;
 					if (compl.argumentIndex() == 1) {
-						if (!requestor.isContextInformationMode()
-								|| (compl.getName() != null && compl.getName()
-										.length() != 0)) {
-						}
-						token = compl.getToken();
+						token = compl.getName();
 					} else if (st.getCount() > 1) {
 						final Expression at1 = st.getAt(1);
 						if (at1 instanceof SimpleReference) {
-							token = ((SimpleReference) at1).getName()
-									.toCharArray();
+							token = ((SimpleReference) at1).getName();
 						}
 					}
 					if (DEBUG) {
 						System.out.println("compl.argumentIndex="
 								+ compl.argumentIndex());
 						System.out.println("name='" + name + "'");
-						System.out
-								.println("token='"
-										+ (token != null ? new String(token)
-												: "(null)") + "'");
+						System.out.println("token='" + token);
 					}
 					if (token != null) {
 						this.processPartOfKeywords(st.sourceStart(), compl,
-								name + " " + new String(token), token,
-								methodNames);
+								name + " " + token, methodNames);
 						for (int i = 0; i < this.extensions.length; i++) {
 							this.extensions[i].completeOnKeywordArgumentsOne(
-									name, token, compl, methodNames, st, this);
+									name, token.toCharArray(), compl,
+									methodNames, st, this);
 						}
 					}
 				}
@@ -317,33 +308,38 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	protected void processPartOfKeywords(int sourceStart,
 			CompletionOnKeywordArgumentOrFunctionArgument compl, String prefix,
-			char[] token, Set methodNames) {
-		String[] possibleKeywords = compl.getPossibleKeywords();
+			Set methodNames) {
+		String[] keywords = compl.getPossibleKeywords();
+		List k = processPartOfKeywords(keywords, prefix, sourceStart);
+		if (methodNames != null) {
+			methodNames.addAll(k);
+		}
+	}
+
+	protected List processPartOfKeywords(String[] keywords, String prefix,
+			int sourceStart) {
 		List k = new ArrayList();
-		selectKeywords(possibleKeywords, prefix, k);
-		if (k.isEmpty() && requestor.isContextInformationMode()) {
+		selectKeywords(keywords, prefix, k, requestor
+				.isContextInformationMode());
+		if (k.isEmpty() && requestor.isContextInformationMode()
+				&& prefix != null) {
 			final int p = prefix.indexOf(' ');
 			if (p > 0) {
-				final String shortPrefix = prefix.substring(0, p);
-				for (int i = 0; i < possibleKeywords.length; i++) {
-					final String kkw = possibleKeywords[i];
-					if (kkw.equals(shortPrefix)) {
-						k.add(kkw);
-						break;
-					}
-				}
-				if (k.isEmpty()) {
-					selectKeywords(possibleKeywords, shortPrefix, k);
-				}
-				token = CharOperation.NO_CHAR;
+				selectKeywords(keywords, prefix.substring(0, p), k, requestor
+						.isContextInformationMode());
 			}
 		}
-		if (k.size() == 1 && prefix.equals(k.get(0))
-				&& !requestor.isContextInformationMode()) {
-			return;
+		if (requestor.isContextInformationMode()
+				|| !(k.size() == 1 && prefix.equals(k.get(0)))) {
+			// do not report single exact match in completion mode.
+			reportKeywords(prefix, k, sourceStart);
 		}
+		return k;
+	}
+
+	private void reportKeywords(String prefix, List keywords, int sourceStart) {
 		final char[] keyword = prefix.toCharArray();
-		for (Iterator i = k.iterator(); i.hasNext();) {
+		for (Iterator i = keywords.iterator(); i.hasNext();) {
 			final String kw = (String) i.next();
 			final char[] choice = kw.toCharArray();
 			int relevance = computeBaseRelevance();
@@ -367,9 +363,6 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 		}
-		if (methodNames != null) {
-			methodNames.addAll(k);
-		}
 	}
 
 	// Relevance
@@ -382,7 +375,16 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void selectKeywords(String[] possibleKeywords, String prefix,
-			List selection) {
+			List selection, boolean preferExactMatch) {
+		if (preferExactMatch) {
+			for (int i = 0; i < possibleKeywords.length; i++) {
+				final String kkw = possibleKeywords[i];
+				if (kkw.equals(prefix)) {
+					selection.add(kkw);
+					return;
+				}
+			}
+		}
 		for (int i = 0; i < possibleKeywords.length; i++) {
 			final String kkw = possibleKeywords[i];
 			if (kkw.startsWith(prefix)) {
@@ -431,29 +433,23 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void processCompletionOnKeywords(
-			CompletionOnKeywordOrFunction key, char[] token) {
+			CompletionOnKeywordOrFunction key, String token) {
 		if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
 			String[] kw = key.getPossibleKeywords();
-			this.completeForKeywordOrFunction(token, key
-					.canCompleteEmptyToken(), kw);
+			processCompletionOnKeywords(token, key.canCompleteEmptyToken(), kw);
 		}
 	}
 
-	protected void completeForKeywordOrFunction(char[] token,
+	protected void processCompletionOnKeywords(String token,
 			boolean canCompleteEmptyToken, String[] kw) {
-		char[][] choices = new char[kw.length][];
-		boolean add = false;
-		if (token != null && token.length > 0 && token[0] == ':') {
-			add = true;
-		}
-		for (int i = 0; i < kw.length; ++i) {
-			if (add) {
-				choices[i] = ("::" + kw[i]).toCharArray();
-			} else {
-				choices[i] = kw[i].toCharArray();
+		if (token != null && token.length() != 0 && token.charAt(0) == ':') {
+			String[] doubleColonPrependedKeywords = new String[kw.length];
+			for (int i = 0; i < kw.length; ++i) {
+				doubleColonPrependedKeywords[i] = "::" + kw[i];
 			}
+			kw = doubleColonPrependedKeywords;
 		}
-		this.findKeywords(token, choices, canCompleteEmptyToken);
+		processPartOfKeywords(kw, token, this.startPosition);
 	}
 
 	/**
