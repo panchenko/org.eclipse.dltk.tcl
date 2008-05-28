@@ -129,7 +129,7 @@ public final class TclCheckerHelper {
 		IEnvironment[] environments = EnvironmentManager.getEnvironments();
 		for (int i = 0; i < environments.length; i++) {
 			results.put(environments[i], getPcxPathsFrom(store,
-					TclCheckerConstants.PREF_PCX_PATH + "/"
+					TclCheckerConstants.PREF_PCX_PATH + "."
 							+ environments[i].getId()));
 		}
 		return results;
@@ -161,7 +161,7 @@ public final class TclCheckerHelper {
 	public static void setPcxPaths(IPreferenceStore store, Map paths) {
 		for (Iterator iterator = paths.keySet().iterator(); iterator.hasNext();) {
 			IEnvironment environment = (IEnvironment) iterator.next();
-			setPcxPathsTo(store, TclCheckerConstants.PREF_PCX_PATH + "/"
+			setPcxPathsTo(store, TclCheckerConstants.PREF_PCX_PATH + "."
 					+ environment.getId(), (List) paths.get(environment));
 		}
 	}

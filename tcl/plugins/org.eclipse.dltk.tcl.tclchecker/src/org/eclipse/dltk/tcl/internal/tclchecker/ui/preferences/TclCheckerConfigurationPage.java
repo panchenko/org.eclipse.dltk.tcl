@@ -313,14 +313,15 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 				boolean selection = noPCX.getSelection();
 				noPCXValues.put(getEnvironment(), new Boolean(selection)
 						.toString());
-
+				//
 				IStructuredSelection pathSelection = (IStructuredSelection) environmentPathBlock
 						.getSelection();
 				boolean enabled = !pathSelection.isEmpty();
-
-				list.setEnabled(!selection && enabled);
-				pcxAdd.setEnabled(!selection && enabled);
+				//
+				// list.setEnabled(!selection && enabled);
+				// pcxAdd.setEnabled(!selection && enabled);
 				pcxRemove.setEnabled(!selection && enabled);
+				updatePCX();
 			}
 		};
 		noPCX.addSelectionListener(noPCXSelectionListener);
@@ -486,9 +487,15 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		this.pcxPaths = TclCheckerHelper.getPcxPaths(store);
 		this.noPCXValues = TclCheckerHelper.getNoPCX(store);
 
-		noPCXSelectionListener.widgetSelected(null);
+		// noPCXSelectionListener.widgetSelected(null);
 
 		lview.setInput(this.pcxPaths);
+		String value = (String) this.noPCXValues.get(getEnvironment());
+		if ("true".equals(value)) {
+			noPCX.setSelection(true);
+		} else {
+			noPCX.setSelection(false);
+		}
 		updatePCX();
 
 		// Mode
@@ -500,6 +507,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 			TableItem item = items[i];
 			item.setChecked(store.getBoolean((String) (item.getData())));
 		}
+		// selectionChanged(null);
 	}
 
 	protected void performDefaults() {
@@ -529,22 +537,21 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 	public void selectionChanged(SelectionChangedEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) environmentPathBlock
 				.getSelection();
-		boolean enabled = !selection.isEmpty();
-		pcxGroup.setEnabled(enabled);
-		lview.getControl().setEnabled(enabled);
-		noPCX.setEnabled(enabled);
-
 		updatePCX();
+		// boolean enabled = noPCX.getSelection();
+		// pcxGroup.setEnabled(enabled);
+		// lview.getControl().setEnabled(enabled);
 	}
 
 	private void updatePCX() {
 		String value = (String) this.noPCXValues.get(getEnvironment());
 		if ("true".equals(value)) {
-			noPCX.setSelection(true);
+			// noPCX.setSelection(true);
+			lview.getControl().setEnabled(false);
 		} else {
-			noPCX.setSelection(false);
+			// noPCX.setSelection(false);
+			lview.getControl().setEnabled(true);
 		}
 		lview.refresh();
-		noPCXSelectionListener.widgetSelected(null);
 	}
 }
