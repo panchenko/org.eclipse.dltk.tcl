@@ -101,7 +101,7 @@ public class TclKeywordLazyContextInformation implements IContextInformation {
 		int start = -1;
 		while (matcher.find()) {
 			if (start < 0) {
-				if (matcher.group(1).toUpperCase().contains(SYNOPSIS)) {
+				if (matcher.group(1).toUpperCase().indexOf(SYNOPSIS) >= 0) {
 					start = matcher.end();
 				}
 			} else {
