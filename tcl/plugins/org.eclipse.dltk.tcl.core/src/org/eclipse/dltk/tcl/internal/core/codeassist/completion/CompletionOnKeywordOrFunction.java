@@ -15,22 +15,28 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.codeassist.complete.ICompletionOnKeyword;
 import org.eclipse.dltk.utils.CorePrinter;
 
-public class CompletionOnKeywordOrFunction extends SimpleReference implements ICompletionOnKeyword {
-	
+public class CompletionOnKeywordOrFunction extends SimpleReference implements
+		ICompletionOnKeyword {
+
 	private String[] possibleKeywords;
-	public CompletionOnKeywordOrFunction(String token, ASTNode completionNode, ASTNode node, String[] possibleKeywords) {
+	private ASTNode parent;
+
+	public CompletionOnKeywordOrFunction(String token, ASTNode completionNode,
+			ASTNode node, String[] possibleKeywords) {
 		super(completionNode.sourceStart(), completionNode.sourceEnd(), token);
 		this.possibleKeywords = possibleKeywords;
+		this.parent = node;
 	}
-	
-	public char[] getToken( ) {
+
+	public char[] getToken() {
 		String name = getName();
-		if( name == null ) {
+		if (name == null) {
 			return new char[0];
 		}
 		return name.toCharArray();
 	}
-	public String[] getPossibleKeywords( ) {
+
+	public String[] getPossibleKeywords() {
 		return this.possibleKeywords;
 	}
 
@@ -42,5 +48,9 @@ public class CompletionOnKeywordOrFunction extends SimpleReference implements IC
 
 	public boolean canCompleteEmptyToken() {
 		return true;
+	}
+
+	public ASTNode getInParent() {
+		return this.parent;
 	}
 }

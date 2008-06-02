@@ -210,7 +210,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 			return localProcessor;
 		}
 
-		if (command.getCount() > 0) {
+		if (command != null && command.getCount() > 0) {
 			Expression expr = command.getAt(0);
 			if (!(expr instanceof SimpleReference)) {
 				return localProcessor;

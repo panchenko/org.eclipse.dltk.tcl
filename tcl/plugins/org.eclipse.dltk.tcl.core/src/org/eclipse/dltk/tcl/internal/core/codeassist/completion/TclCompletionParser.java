@@ -24,12 +24,14 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
 import org.eclipse.dltk.tcl.ast.TclStatement;
+import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclKeywordsManager;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ICompletionExtension;
+import org.eclipse.dltk.tcl.internal.core.codeassist.TclASTUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclAssistParser;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
 
@@ -144,21 +146,7 @@ public class TclCompletionParser extends TclAssistParser {
 				if (completionToken.length() > maxLen && maxLen > 0) {
 					completionToken = completionToken.substring(0, maxLen);
 				}
-			} /*
-			 * else if (completionNode instanceof TclBlockExpression) {
-			 * TclBlockExpression block = (TclBlockExpression) completionNode;
-			 * 
-			 * List s = block.parseBlock(); if (s != null) { int slen =
-			 * s.size(); for (int u = 0; u < slen; ++u) { ASTNode n = (ASTNode)
-			 * s.get(u); n.setStart(n.sourceStart() - block.sourceStart());
-			 * n.setEnd(n.sourceEnd() - block.sourceStart());
-			 * TclASTUtil.extendStatement(n, block.getBlock());
-			 * n.setStart(n.sourceStart() + block.sourceStart());
-			 * n.setEnd(n.sourceEnd() + block.sourceStart()); if (n != null &&
-			 * n.sourceStart() <= position && n.sourceEnd() >= position) {
-			 * parseBlockStatements(n, inNode, position); } } }
-			 * handleNotInElement(inNode, position); }
-			 */
+			}
 			if (completionNode instanceof StringLiteral) {
 				int maxLen = position - completionNode.sourceStart();
 				int pos = maxLen;
@@ -201,6 +189,28 @@ public class TclCompletionParser extends TclAssistParser {
 					}
 				}
 			}
+			if (completionNode instanceof TclBlockExpression) {
+				TclBlockExpression block = (TclBlockExpression) completionNode;
+
+				List s = block.parseBlockSimple();
+				if (s != null) {
+					int slen = s.size();
+					for (int u = 0; u < slen; ++u) {
+						ASTNode n = (ASTNode) s.get(u);
+						n.setStart(n.sourceStart() - block.sourceStart());
+						n.setEnd(n.sourceEnd() - block.sourceStart());
+						TclASTUtil.extendStatement(n, block.getBlock());
+						n.setStart(n.sourceStart() + block.sourceStart());
+						n.setEnd(n.sourceEnd() + block.sourceStart());
+						if (n.sourceStart() <= position
+								&& n.sourceEnd() >= position) {
+							parseBlockStatements(n, inNode, position);
+						}
+					}
+				}
+				handleNotInElement(inNode, position);
+			}
+
 			if (completionToken != null && completionToken.startsWith("$")) {
 				// Argument name completion...
 				this.assistNodeParent = inNode;
@@ -221,7 +231,9 @@ public class TclCompletionParser extends TclAssistParser {
 						&& completionNode != null && first) {
 					String[] keywords = checkKeywords(completionToken, FUNCTION);
 					ASTNode nde = new CompletionOnKeywordOrFunction(
-							completionToken, completionNode, node, keywords);
+							completionToken, completionNode, TclParseUtil
+									.getScopeParent(getModule(), node),
+							keywords);
 					this.assistNodeParent = inNode;
 					throw new CompletionNodeFound(nde,
 							((MethodDeclaration) inNode).scope);
