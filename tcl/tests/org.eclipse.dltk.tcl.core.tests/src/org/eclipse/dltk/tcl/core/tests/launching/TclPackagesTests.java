@@ -1,5 +1,8 @@
 package org.eclipse.dltk.tcl.core.tests.launching;
 
+import java.io.InputStream;
+import java.util.List;
+
 import junit.framework.Test;
 
 import org.eclipse.core.runtime.Path;
@@ -76,19 +79,7 @@ public class TclPackagesTests extends AbstractModelTests {
 		throw new Exception("Failed to create appropriate install");
 	}
 
-	// public void testPackages001() throws Exception {
-	// IEnvironment environment = EnvironmentManager.getLocalEnvironment();
-	// IExecutionEnvironment executionEnvironment = (IExecutionEnvironment)
-	// environment
-	// .getAdapter(IExecutionEnvironment.class);
-	// IInterpreterInstall install = createNewInterpreter();
-	// TclPackage[] packages = DLTKTclHelper.getSrcs(executionEnvironment,
-	// install.getInstallLocation(),
-	// install.getEnvironmentVariables(), "AtsAuto");
-	// System.out.println("A");
-	// }
-
-	public void testPackages002() throws Exception {
+	public void testPackages001() throws Exception {
 		IEnvironment environment = EnvironmentManager.getLocalEnvironment();
 		IExecutionEnvironment executionEnvironment = (IExecutionEnvironment) environment
 				.getAdapter(IExecutionEnvironment.class);
@@ -194,6 +185,16 @@ public class TclPackagesTests extends AbstractModelTests {
 		TclPackage[] packages = DLTKTclHelper.getSrcs(executionEnvironment,
 				install.getInstallLocation(),
 				install.getEnvironmentVariables(), b.toString());
-		System.out.println("A");
+		assertEquals(packages.length, 268);
+	}
+
+	public void testPackages002() throws Exception {
+		InputStream stream = this.getClass().getResourceAsStream(
+				"packages002.txt");
+		List output = DLTKTclHelper.getScriptOutput(stream);
+		TclPackage[] packagePath = DLTKTclHelper.getPackagePath(output);
+		assertEquals(packagePath.length, 31);
+		assertEquals(packagePath[5].getName(), "ha");
+		assertEquals(packagePath[30].getName(), "tdom");
 	}
 }

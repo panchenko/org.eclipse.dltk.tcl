@@ -1,0 +1,279 @@
+NOTICE - %DLTK-NUM-PATHS% 11
+NOTICE - %DLTK-NUM-PKGS% 537
+ha
+NOTICE - %DLTK-PROCESS-PKG% ha
+<DLTK size="4489290">
+    <path name="" type="builtin">
+        <package name="Tcl" version="8.4">
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib" type="auto_path" size="3925807">
+        <package name="Async" version="5.0.0" size="83177">
+            <require name="PatsCmd"/>
+            <require name="Tclx"/>
+            <require name="comm" version="4.1"/>
+            <require name="logger"/>
+            <require name="parse_dashed_args"/>
+            <require name="Atslog"/>
+            <require name="Cisco"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/async/lib/async.exp" size="83177"/>
+        </package>
+        <package name="Atslog" version="5.0.0" size="53464">
+            <require name="logger"/>
+            <require name="TclUtils"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/atslog/lib/atsLog.tcl" size="53464"/>
+        </package>
+        <package name="Cisco" version="5.0.0" size="383740">
+            <require name="Expect"/>
+            <require name="Tclx"/>
+            <require name="md5"/>
+            <require name="mime"/>
+            <require name="smtp"/>
+            <require name="Atslog"/>
+            <require name="Itcl"/>
+            <require name="pats"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/vanillaInit.tcl" size="15023"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/ciscoAutons.tcl" size="1076"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/ciscoTypes.tcl" size="825"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/ciscoDebugger.tcl" size="2183"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/ciscoHelp.tcl" size="31691"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/ciscoReadConfig.tcl" size="13248"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/ciscoAutotest.tcl" size="16973"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/dataPickle.tcl" size="9568"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/common.exp" size="53750"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/db.exp" size="15864"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/econ.exp" size="74132"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/database.exp" size="21800"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/screen.exp" size="26132"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/suite.exp" size="14161"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/ats_api.exp" size="29484"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/utilities.exp" size="47447"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/cisco/lib/tftpUtils.exp" size="10383"/>
+        </package>
+        <package name="Control" version="5.0.0" size="84419">
+            <require name="PatsCmd"/>
+            <require name="Expect"/>
+            <require name="Cisco"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/control/lib/control.exp" size="84419"/>
+        </package>
+        <package name="Csccon" version="5.0.0" size="354645">
+            <require name="PatsCmd"/>
+            <require name="Expect"/>
+            <require name="Tclx"/>
+            <require name="Cisco"/>
+            <require name="aereport"/>
+            <require name="Async"/>
+            <require name="parse_dashed_args"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_profile.exp" size="39862"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_core.exp" size="113046"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_login.exp" size="5743"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_basic.exp" size="55506"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_setup.exp" size="18453"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_pagent.exp" size="5167"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_misc.exp" size="58919"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_ng_wrap.exp" size="4383"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_ng_tclsh.exp" size="2471"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_callgen.exp" size="2640"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_ha.exp" size="1135"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_gdb.exp" size="9373"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_IOS_XR.exp" size="6371"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_ucon.exp" size="8465"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_td.exp" size="9811"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_crashinfo.exp" size="8940"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/csccon/lib/csccon_asa_wrap.exp" size="4360"/>
+        </package>
+        <package name="Expect" version="5.44.1.5" size="214710">
+            <load name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/expect5.44.1.5/libexpect5.44.1.5.so" size="214710"/>
+        </package>
+        <package name="Itcl" version="3.4" size="122168">
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/itcl3.4/itcl.tcl" size="7558"/>
+            <load name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/itcl3.4/libitcl3.4.so" size="114610"/>
+        </package>
+        <package name="PatsCmd" version="5.0.0" size="4801">
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/pats/lib/patsCmd.tcl" size="4801"/>
+        </package>
+        <package name="TclUtils" version="5.0.0" size="80604">
+            <require name="Tclx"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/tclUtils/lib/tclUtilsLib.tcl" size="80604"/>
+        </package>
+        <package name="Tclx" version="8.4" size="223043">
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/tclx.tcl" size="2096"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/edprocs.tcl" size="1997"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/fmath.tcl" size="2238"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/help.tcl" size="10608"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/pushd.tcl" size="1869"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/compat.tcl" size="10037"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/showproc.tcl" size="1492"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/convlib.tcl" size="3953"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/arrayprocs.tcl" size="1643"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/stringfile.tcl" size="1413"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/forfile.tcl" size="1433"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/setfuncs.tcl" size="2988"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/events.tcl" size="1054"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/globrecur.tcl" size="3183"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/profrep.tcl" size="5226"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/autoload.tcl" size="2272"/>
+            <load name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tclx8.4/libtclx8.4.so" size="169541"/>
+        </package>
+        <package name="Trf" version="2.1.2" size="165007">
+            <load name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/Trf2.1.2/libTrf2.1.2.so" size="165007"/>
+        </package>
+        <package name="aereport" version="1.0.0" size="449942">
+            <require name="tdom"/>
+            <require name="parse_dashed_args"/>
+            <require name="Atslog"/>
+            <require name="comm"/>
+            <require name="TclUtils"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport.tcl" size="86117"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_clean.tcl" size="33023"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_handler.tcl" size="39045"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_initinfo.tcl" size="29564"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_runinfo.tcl" size="25237"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_sections.tcl" size="40729"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_subtest.tcl" size="18985"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_testcase.tcl" size="51821"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_testscript.tcl" size="42332"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_jobexecution.tcl" size="4880"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_testsuite.tcl" size="44806"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_atsresults.tcl" size="20877"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/aereport/lib/aereport_dashboard.tcl" size="12526"/>
+        </package>
+        <package name="ha" version="2.2" size="767072">
+            <require name="PatsCmd"/>
+            <require name="TclUtils"/>
+            <require name="Csccon"/>
+            <require name="Control"/>
+            <require name="Async"/>
+            <require name="parse_dashed_args"/>
+            <require name="Atslog"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haCore.tcl" size="128062"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haConnection.tcl" size="15876"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haSupport.tcl" size="139789"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/ha12k.tcl" size="23401"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/ha10k.tcl" size="19061"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/ha7k.tcl" size="19413"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/ha7600.tcl" size="22576"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/ha7300.tcl" size="13342"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haIssu.tcl" size="36395"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haUBR10k.tcl" size="65773"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haCAT4500.tcl" size="26084"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/hadIOU.tcl" size="19188"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haOir.tcl" size="26456"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haUtils.tcl" size="8377"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haMCP.tcl" size="17376"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/ha6500.tcl" size="24775"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haViking.tcl" size="35064"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/cisco-shared/golden/pkg/halib/haClean.tcl" size="126064"/>
+        </package>
+        <package name="parse_dashed_args" version="5.0.0" size="117925">
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/pda/lib/parse_dashed_args.tcl" size="117925"/>
+        </package>
+        <package name="pats" version="5.0.0" size="15008">
+            <require name="Tclx"/>
+            <require name="Atslog"/>
+            <require name="profiler"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/pats/lib/patsLib.tcl" size="9404"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/ats_lib/pats/lib/patsMem.tcl" size="5604"/>
+        </package>
+        <package name="tcllibc" version="0.3.2" size="181613">
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib_critcl/Linux-x86/critcl.tcl" size="157"/>
+            <load name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib_critcl/Linux-x86/tcllibc.so" size="181456"/>
+        </package>
+        <package name="tdom" version="0.8.3" size="624469">
+            <require name="tdom"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tdom0.8.3/tdom.tcl" size="27996"/>
+            <load name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tdom0.8.3/libtdom0.8.3.so" size="596473"/>
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcl8.4" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10" type="auto_path" size="563483">
+        <package name="SASL" version="1.3.2" size="21815">
+            <require name="Tcl" version="8.2"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/sasl/sasl.tcl" size="21815"/>
+        </package>
+        <package name="SASL::NTLM" version="1.1.1" size="13610">
+            <require name="Tcl" version="8.2"/>
+            <require name="SASL" version="1.0"/>
+            <require name="des" version="1.0"/>
+            <require name="md4"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/sasl/ntlm.tcl" size="13610"/>
+        </package>
+        <package name="comm" version="4.5.7" size="45078">
+            <require name="Tcl" version="8.3"/>
+            <require name="snit"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/comm/comm.tcl" size="45078"/>
+        </package>
+        <package name="des" version="1.1.0" size="8106">
+            <require name="Tcl" version="8.2"/>
+            <require name="tclDES" version="1.0.0"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/des/des.tcl" size="8106"/>
+        </package>
+        <package name="logger" version="0.8" size="35497">
+            <require name="Tcl" version="8.2"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/log/logger.tcl" size="35497"/>
+        </package>
+        <package name="md4" version="1.0.4" size="18654">
+            <require name="Tcl" version="8.2"/>
+            <require name="md4c" version="1.0"/>
+            <require name="tcllibc"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/md4/md4.tcl" size="18654"/>
+        </package>
+        <package name="md5" version="2.0.5" size="24852">
+            <require name="Tcl" version="8.2"/>
+            <require name="tcllibc"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/md5/md5x.tcl" size="24852"/>
+        </package>
+        <package name="mime" version="1.5.3" size="109587">
+            <require name="Tcl" version="8.3"/>
+            <require name="Trf" version="2.0"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/mime/mime.tcl" size="109587"/>
+        </package>
+        <package name="profiler" version="0.3" size="16583">
+            <require name="Tcl" version="8.3"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/profiler/profiler.tcl" size="16583"/>
+        </package>
+        <package name="smtp" version="1.4.4" size="47535">
+            <require name="Tcl" version="8.3"/>
+            <require name="mime" version="1.4.1"/>
+            <require name="SASL" version="1.0"/>
+            <require name="SASL::NTLM" version="1.0"/>
+            <require name="Trf" version="2.0"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/mime/smtp.tcl" size="47535"/>
+        </package>
+        <package name="snit" version="1.3.1" size="146922">
+            <require name="Tcl" version="8.3"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/snit/snit.tcl" size="1082"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/snit/main1.tcl" size="127580"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/snit/validate.tcl" size="18260"/>
+        </package>
+        <package name="tclDES" version="1.0.0" size="46514">
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/des/tcldes.tcl" size="46514"/>
+        </package>
+        <package name="uri" version="1.2.1" size="28730">
+            <require name="Tcl" version="8.2"/>
+            <source name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10/uri/uri.tcl" size="28730"/>
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tklib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tklib0.4" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.0-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.1-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.2-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.3-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/tcl/lib" type="auto_path">
+    </path>
+</DLTK>
+NOTICE - Output file:                 
+NOTICE - Number of pkg paths found:   11
+NOTICE - Number of pkgs found:        31
+NOTICE - Number of files sourced:     107
+NOTICE - Number of libs loaded:       6
+NOTICE - Number of pkg dependencies:  69
+NOTICE - Run time = 5 secs

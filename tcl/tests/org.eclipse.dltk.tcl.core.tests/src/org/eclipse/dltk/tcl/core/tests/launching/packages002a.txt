@@ -1,0 +1,1655 @@
+NOTICE - %DLTK-NUM-PATHS% 11
+NOTICE - %DLTK-NUM-PKGS% 537
+
+NOTICE - %DLTK-PROCESS-PKG% counter
+NOTICE - %DLTK-PROCESS-PKG% rcs
+NOTICE - %DLTK-PROCESS-PKG% logger
+NOTICE - %DLTK-PROCESS-PKG% routing
+NOTICE - %DLTK-PROCESS-PKG% SOAP::Utils
+NOTICE - %DLTK-PROCESS-PKG% Plotchart
+NOTICE - %DLTK-PROCESS-PKG% fileutil::magic::mimetype
+NOTICE - %DLTK-PROCESS-PKG% math::rationalfunctions
+NOTICE - %DLTK-PROCESS-PKG% tie::std::dsource
+NOTICE - %DLTK-PROCESS-PKG% math::roman
+NOTICE - %DLTK-PROCESS-PKG% tclDESjr
+NOTICE - %DLTK-PROCESS-PKG% Shcon
+NOTICE - %DLTK-PROCESS-PKG% xmlswitch
+NOTICE - %DLTK-PROCESS-PKG% SOAP::smtp
+NOTICE - %DLTK-PROCESS-PKG% soapinterop::base
+NOTICE - %DLTK-PROCESS-PKG% img::ico
+NOTICE - %DLTK-PROCESS-PKG% patsgui
+NOTICE - %DLTK-PROCESS-PKG% interp::delegate::method
+NOTICE - %DLTK-PROCESS-PKG% soundex
+NOTICE - %DLTK-PROCESS-PKG% Rsrcm
+NOTICE - %DLTK-PROCESS-PKG% page::analysis::peg::reachable
+NOTICE - %DLTK-PROCESS-PKG% pngtcl
+NOTICE - %DLTK-PROCESS-PKG% tablelist::common
+NOTICE - %DLTK-PROCESS-PKG% fileutil::magic::filetype
+NOTICE - %DLTK-PROCESS-PKG% ldap
+NOTICE - %DLTK-PROCESS-PKG% uri::urn
+NOTICE - %DLTK-PROCESS-PKG% ha
+NOTICE - %DLTK-PROCESS-PKG% marsVoice
+NOTICE - %DLTK-PROCESS-PKG% page::reader::treeser
+NOTICE - %DLTK-PROCESS-PKG% SOAP::CGI
+NOTICE - %DLTK-PROCESS-PKG% tie::std::array
+NOTICE - %DLTK-PROCESS-PKG% xotcl::upvar-compat
+NOTICE - %DLTK-PROCESS-PKG% snackogg
+NOTICE - %DLTK-PROCESS-PKG% parseRadiusDebugs
+NOTICE - %DLTK-PROCESS-PKG% page::gen::peg::canon
+NOTICE - %DLTK-PROCESS-PKG% uevent
+NOTICE - %DLTK-PROCESS-PKG% SOAP::Service
+NOTICE - %DLTK-PROCESS-PKG% widget::statusbar
+NOTICE - %DLTK-PROCESS-PKG% textutil
+NOTICE - %DLTK-PROCESS-PKG% Autoeasy
+NOTICE - %DLTK-PROCESS-PKG% ident
+NOTICE - %DLTK-PROCESS-PKG% cmdline
+NOTICE - %DLTK-PROCESS-PKG% grammar::peg::interp
+NOTICE - %DLTK-PROCESS-PKG% term::ansi::code::attr
+NOTICE - %DLTK-PROCESS-PKG% Parallel
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::imap
+NOTICE - %DLTK-PROCESS-PKG% tcllibc
+NOTICE - %DLTK-PROCESS-PKG% xotcl::test
+NOTICE - %DLTK-PROCESS-PKG% vfs::zip
+NOTICE - %DLTK-PROCESS-PKG% AEtest
+NOTICE - %DLTK-PROCESS-PKG% getstring
+NOTICE - %DLTK-PROCESS-PKG% grammar::peg
+NOTICE - %DLTK-PROCESS-PKG% term::interact::menu
+NOTICE - %DLTK-PROCESS-PKG% vfs::template
+NOTICE - %DLTK-PROCESS-PKG% sys
+NOTICE - %DLTK-PROCESS-PKG% Tktable
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::ftp
+NOTICE - %DLTK-PROCESS-PKG% xml::c
+NOTICE - %DLTK-PROCESS-PKG% sgmlparser
+NOTICE - %DLTK-PROCESS-PKG% page::writer::tree
+NOTICE - %DLTK-PROCESS-PKG% xotcl::script
+NOTICE - %DLTK-PROCESS-PKG% grammar::me::tcl
+NOTICE - %DLTK-PROCESS-PKG% psb::ios
+NOTICE - %DLTK-PROCESS-PKG% img::base
+NOTICE - %DLTK-PROCESS-PKG% puretclparser
+NOTICE - %DLTK-PROCESS-PKG% fileutil::magic::rt
+NOTICE - %DLTK-PROCESS-PKG% html
+NOTICE - %DLTK-PROCESS-PKG% swaplist
+NOTICE - %DLTK-PROCESS-PKG% ActiveTcl
+NOTICE - %DLTK-PROCESS-PKG% base32
+NOTICE - %DLTK-PROCESS-PKG% style::as
+NOTICE - %DLTK-PROCESS-PKG% style
+NOTICE - %DLTK-PROCESS-PKG% page::gen::peg::ser
+NOTICE - %DLTK-PROCESS-PKG% ip
+NOTICE - %DLTK-PROCESS-PKG% Csccon
+NOTICE - %DLTK-PROCESS-PKG% textutil::adjust
+NOTICE - %DLTK-PROCESS-PKG% Ifs
+NOTICE - %DLTK-PROCESS-PKG% ntext
+NOTICE - %DLTK-PROCESS-PKG% ico
+NOTICE - %DLTK-PROCESS-PKG% SASL
+NOTICE - %DLTK-PROCESS-PKG% Awc
+NOTICE - %DLTK-PROCESS-PKG% page::transform::realizable
+NOTICE - %DLTK-PROCESS-PKG% xotcl::wafecompat
+NOTICE - %DLTK-PROCESS-PKG% vfs::ftp
+NOTICE - %DLTK-PROCESS-PKG% pop3d
+NOTICE - %DLTK-PROCESS-PKG% transfer::transmitter
+NOTICE - %DLTK-PROCESS-PKG% nameserv::auto
+NOTICE - %DLTK-PROCESS-PKG% crc16
+NOTICE - %DLTK-PROCESS-PKG% img::jpeg
+NOTICE - %DLTK-PROCESS-PKG% xotcl::serializer
+NOTICE - %DLTK-PROCESS-PKG% snack
+NOTICE - %DLTK-PROCESS-PKG% pats
+NOTICE - %DLTK-PROCESS-PKG% img::bmp
+NOTICE - %DLTK-PROCESS-PKG% jpegtcl
+NOTICE - %DLTK-PROCESS-PKG% asn
+NOTICE - %DLTK-PROCESS-PKG% Mad
+NOTICE - %DLTK-PROCESS-PKG% textutil::trim
+NOTICE - %DLTK-PROCESS-PKG% stringprep::data
+NOTICE - %DLTK-PROCESS-PKG% page::writer::hb
+NOTICE - %DLTK-PROCESS-PKG% tie::std::growfile
+NOTICE - %DLTK-PROCESS-PKG% routing::cli
+NOTICE - %DLTK-PROCESS-PKG% struct::list
+NOTICE - %DLTK-PROCESS-PKG% xotcl::staticMetadataAnalyzer
+NOTICE - %DLTK-PROCESS-PKG% Etest
+NOTICE - %DLTK-PROCESS-PKG% power
+NOTICE - %DLTK-PROCESS-PKG% routing::ospfv3
+NOTICE - %DLTK-PROCESS-PKG% vfs::template::version::delta
+NOTICE - %DLTK-PROCESS-PKG% fileutil::multi::op
+NOTICE - %DLTK-PROCESS-PKG% vfs::template::version
+NOTICE - %DLTK-PROCESS-PKG% pop3
+NOTICE - %DLTK-PROCESS-PKG% grammar::fa::dacceptor
+NOTICE - %DLTK-PROCESS-PKG% transfer::connect
+NOTICE - %DLTK-PROCESS-PKG% PatsCmd
+NOTICE - %DLTK-PROCESS-PKG% fileutil::multi
+NOTICE - %DLTK-PROCESS-PKG% md4
+NOTICE - %DLTK-PROCESS-PKG% crc32
+NOTICE - %DLTK-PROCESS-PKG% globfind
+NOTICE - %DLTK-PROCESS-PKG% page::parse::pegser
+NOTICE - %DLTK-PROCESS-PKG% md5
+NOTICE - %DLTK-PROCESS-PKG% xotcl::mixinStrategy
+NOTICE - %DLTK-PROCESS-PKG% img::xpm
+NOTICE - %DLTK-PROCESS-PKG% page::util::peg
+NOTICE - %DLTK-PROCESS-PKG% ctext
+NOTICE - %DLTK-PROCESS-PKG% md5crypt
+NOTICE - %DLTK-PROCESS-PKG% scale_utils
+NOTICE - %DLTK-PROCESS-PKG% grammar::me::cpu
+NOTICE - %DLTK-PROCESS-PKG% page::writer::tpc
+NOTICE - %DLTK-PROCESS-PKG% xml
+NOTICE - %DLTK-PROCESS-PKG% docstrip::util
+NOTICE - %DLTK-PROCESS-PKG% interp
+NOTICE - %DLTK-PROCESS-PKG% aereport
+NOTICE - %DLTK-PROCESS-PKG% math::constants
+NOTICE - %DLTK-PROCESS-PKG% xotcl::xodoc
+NOTICE - %DLTK-PROCESS-PKG% page::gen::peg::cpkg
+NOTICE - %DLTK-PROCESS-PKG% Mpexpr
+NOTICE - %DLTK-PROCESS-PKG% treeql
+NOTICE - %DLTK-PROCESS-PKG% base64
+NOTICE - %DLTK-PROCESS-PKG% bench::out::text
+NOTICE - %DLTK-PROCESS-PKG% page::writer::null
+NOTICE - %DLTK-PROCESS-PKG% sqlite3
+NOTICE - %DLTK-PROCESS-PKG% struct::matrix
+NOTICE - %DLTK-PROCESS-PKG% blowfish
+NOTICE - %DLTK-PROCESS-PKG% page::util::norm::lemon
+NOTICE - %DLTK-PROCESS-PKG% page::parse::peghb
+NOTICE - %DLTK-PROCESS-PKG% jpeg
+NOTICE - %DLTK-PROCESS-PKG% hm_plugin::cpu::ios
+NOTICE - %DLTK-PROCESS-PKG% term::receive
+NOTICE - %DLTK-PROCESS-PKG% uuencode
+NOTICE - %DLTK-PROCESS-PKG% term::ansi::ctrl::unix
+NOTICE - %DLTK-PROCESS-PKG% struct::tree
+NOTICE - %DLTK-PROCESS-PKG% math::statistics
+NOTICE - %DLTK-PROCESS-PKG% Control
+NOTICE - %DLTK-PROCESS-PKG% widget::ruler
+NOTICE - %DLTK-PROCESS-PKG% xotcl::package
+NOTICE - %DLTK-PROCESS-PKG% tcltest
+NOTICE - %DLTK-PROCESS-PKG% cflow
+NOTICE - %DLTK-PROCESS-PKG% img::pcx
+NOTICE - %DLTK-PROCESS-PKG% struct::set
+NOTICE - %DLTK-PROCESS-PKG% logger::utils
+NOTICE - %DLTK-PROCESS-PKG% tkpiechart
+NOTICE - %DLTK-PROCESS-PKG% uuid
+NOTICE - %DLTK-PROCESS-PKG% struct::pool
+NOTICE - %DLTK-PROCESS-PKG% autoproxy
+NOTICE - %DLTK-PROCESS-PKG% trsync
+NOTICE - %DLTK-PROCESS-PKG% ioufarm
+NOTICE - %DLTK-PROCESS-PKG% report
+NOTICE - %DLTK-PROCESS-PKG% comm
+NOTICE - %DLTK-PROCESS-PKG% pas
+NOTICE - %DLTK-PROCESS-PKG% routing::isis
+NOTICE - %DLTK-PROCESS-PKG% img::sgi
+NOTICE - %DLTK-PROCESS-PKG% tdom
+NOTICE - %DLTK-PROCESS-PKG% Diagcon
+NOTICE - %DLTK-PROCESS-PKG% xotcl::metadataAnalyzer
+NOTICE - %DLTK-PROCESS-PKG% cursor
+NOTICE - %DLTK-PROCESS-PKG% hm_plugin::memory::ios
+NOTICE - %DLTK-PROCESS-PKG% style::lobster
+NOTICE - %DLTK-PROCESS-PKG% htmlparse
+NOTICE - %DLTK-PROCESS-PKG% domtree
+NOTICE - %DLTK-PROCESS-PKG% page::gen::peg::mecpu
+NOTICE - %DLTK-PROCESS-PKG% math::complexnumbers
+NOTICE - %DLTK-PROCESS-PKG% hm_plugin::uptime
+NOTICE - %DLTK-PROCESS-PKG% sgml
+NOTICE - %DLTK-PROCESS-PKG% fileutil::magic::cgen
+NOTICE - %DLTK-PROCESS-PKG% ibns
+NOTICE - %DLTK-PROCESS-PKG% dom::tclgeneric
+NOTICE - %DLTK-PROCESS-PKG% SOAP::xpath
+NOTICE - %DLTK-PROCESS-PKG% base32::core
+NOTICE - %DLTK-PROCESS-PKG% math::interpolate
+NOTICE - %DLTK-PROCESS-PKG% pda
+NOTICE - %DLTK-PROCESS-PKG% Img
+NOTICE - %DLTK-PROCESS-PKG% nameserv::common
+NOTICE - %DLTK-PROCESS-PKG% Sscon
+NOTICE - %DLTK-PROCESS-PKG% page::util::norm::peg
+NOTICE - %DLTK-PROCESS-PKG% topomap
+NOTICE - %DLTK-PROCESS-PKG% crest
+NOTICE - %DLTK-PROCESS-PKG% math::geometry
+NOTICE - %DLTK-PROCESS-PKG% Atcios
+NOTICE - %DLTK-PROCESS-PKG% xslt
+NOTICE - %DLTK-PROCESS-PKG% page::writer::me
+NOTICE - %DLTK-PROCESS-PKG% nameserv::server
+NOTICE - %DLTK-PROCESS-PKG% stringprep
+NOTICE - %DLTK-PROCESS-PKG% Wincon
+NOTICE - %DLTK-PROCESS-PKG% widget::menuentry
+NOTICE - %DLTK-PROCESS-PKG% javascript
+NOTICE - %DLTK-PROCESS-PKG% tie::std::log
+NOTICE - %DLTK-PROCESS-PKG% vfs
+NOTICE - %DLTK-PROCESS-PKG% Tk
+NOTICE - %DLTK-PROCESS-PKG% xml::expat
+NOTICE - %DLTK-PROCESS-PKG% http
+NOTICE - %DLTK-PROCESS-PKG% inifile
+NOTICE - %DLTK-PROCESS-PKG% textutil::repeat
+NOTICE - %DLTK-PROCESS-PKG% control
+NOTICE - %DLTK-PROCESS-PKG% Memchan
+NOTICE - %DLTK-PROCESS-PKG% iou_sniffer
+NOTICE - %DLTK-PROCESS-PKG% SASL::NTLM
+NOTICE - %DLTK-PROCESS-PKG% routing::common
+NOTICE - %DLTK-PROCESS-PKG% treectrl
+NOTICE - %DLTK-PROCESS-PKG% tblparser
+NOTICE - %DLTK-PROCESS-PKG% Diagrams
+NOTICE - %DLTK-PROCESS-PKG% page::transform::reachable
+NOTICE - %DLTK-PROCESS-PKG% mapproj
+NOTICE - %DLTK-PROCESS-PKG% datefield
+NOTICE - %DLTK-PROCESS-PKG% widget::toolbar
+NOTICE - %DLTK-PROCESS-PKG% switched
+NOTICE - %DLTK-PROCESS-PKG% page::util::flow
+NOTICE - %DLTK-PROCESS-PKG% page::reader::lemon
+NOTICE - %DLTK-PROCESS-PKG% Sesinstr
+NOTICE - %DLTK-PROCESS-PKG% Tcci
+NOTICE - %DLTK-PROCESS-PKG% stooop
+NOTICE - %DLTK-PROCESS-PKG% repro_util
+NOTICE - %DLTK-PROCESS-PKG% snit
+NOTICE - %DLTK-PROCESS-PKG% struct::stack
+NOTICE - %DLTK-PROCESS-PKG% uri
+NOTICE - %DLTK-PROCESS-PKG% sha256
+NOTICE - %DLTK-PROCESS-PKG% Cisco
+NOTICE - %DLTK-PROCESS-PKG% Utx
+NOTICE - %DLTK-PROCESS-PKG% dom::generic
+NOTICE - %DLTK-PROCESS-PKG% widget::superframe
+NOTICE - %DLTK-PROCESS-PKG% page::reader::ser
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::httpd
+NOTICE - %DLTK-PROCESS-PKG% img::tiff
+NOTICE - %DLTK-PROCESS-PKG% textutil::split
+NOTICE - %DLTK-PROCESS-PKG% routing::eigrp
+NOTICE - %DLTK-PROCESS-PKG% page::reader::peg
+NOTICE - %DLTK-PROCESS-PKG% TclUtils
+NOTICE - %DLTK-PROCESS-PKG% pluginmgr
+NOTICE - %DLTK-PROCESS-PKG% struct
+NOTICE - %DLTK-PROCESS-PKG% newclock
+NOTICE - %DLTK-PROCESS-PKG% math::special
+NOTICE - %DLTK-PROCESS-PKG% math::bignum
+NOTICE - %DLTK-PROCESS-PKG% history
+NOTICE - %DLTK-PROCESS-PKG% log
+NOTICE - %DLTK-PROCESS-PKG% starkit
+NOTICE - %DLTK-PROCESS-PKG% Seclib
+NOTICE - %DLTK-PROCESS-PKG% page::transform::mecpu
+NOTICE - %DLTK-PROCESS-PKG% Tcl
+NOTICE - %DLTK-PROCESS-PKG% snmp_util
+NOTICE - %DLTK-PROCESS-PKG% ripemd128
+NOTICE - %DLTK-PROCESS-PKG% smtp
+NOTICE - %DLTK-PROCESS-PKG% Itcl
+NOTICE - %DLTK-PROCESS-PKG% tcltestUtils
+NOTICE - %DLTK-PROCESS-PKG% img::ps
+NOTICE - %DLTK-PROCESS-PKG% mclistbox
+NOTICE - %DLTK-PROCESS-PKG% unicode::data
+NOTICE - %DLTK-PROCESS-PKG% term::ansi::send
+NOTICE - %DLTK-PROCESS-PKG% ftpd
+NOTICE - %DLTK-PROCESS-PKG% Tkined
+NOTICE - %DLTK-PROCESS-PKG% vfs::urltype
+NOTICE - %DLTK-PROCESS-PKG% titan
+NOTICE - %DLTK-PROCESS-PKG% widget::screenruler
+NOTICE - %DLTK-PROCESS-PKG% math::fourier
+NOTICE - %DLTK-PROCESS-PKG% xconnect
+NOTICE - %DLTK-PROCESS-PKG% opt
+NOTICE - %DLTK-PROCESS-PKG% Tablelist
+NOTICE - %DLTK-PROCESS-PKG% transfer::copy
+NOTICE - %DLTK-PROCESS-PKG% bibtex
+NOTICE - %DLTK-PROCESS-PKG% fileutil::traverse
+NOTICE - %DLTK-PROCESS-PKG% doctools
+NOTICE - %DLTK-PROCESS-PKG% grammar::me::util
+NOTICE - %DLTK-PROCESS-PKG% snacksphere
+NOTICE - %DLTK-PROCESS-PKG% Isc
+NOTICE - %DLTK-PROCESS-PKG% Iwidgets
+NOTICE - %DLTK-PROCESS-PKG% tiff
+NOTICE - %DLTK-PROCESS-PKG% math::calculus
+NOTICE - %DLTK-PROCESS-PKG% expat
+NOTICE - %DLTK-PROCESS-PKG% log_scanner
+NOTICE - %DLTK-PROCESS-PKG% routing::pagent
+NOTICE - %DLTK-PROCESS-PKG% tbuilder
+NOTICE - %DLTK-PROCESS-PKG% math::polynomials
+NOTICE - %DLTK-PROCESS-PKG% vfs::template::fish
+NOTICE - %DLTK-PROCESS-PKG% cef_infra
+NOTICE - %DLTK-PROCESS-PKG% textutil::expander
+NOTICE - %DLTK-PROCESS-PKG% dommap
+NOTICE - %DLTK-PROCESS-PKG% grammar::fa::dexec
+NOTICE - %DLTK-PROCESS-PKG% term::ansi::code::macros
+NOTICE - %DLTK-PROCESS-PKG% page::config::peg
+NOTICE - %DLTK-PROCESS-PKG% tar
+NOTICE - %DLTK-PROCESS-PKG% img::gif
+NOTICE - %DLTK-PROCESS-PKG% nntp
+NOTICE - %DLTK-PROCESS-PKG% page::gen::peg::hb
+NOTICE - %DLTK-PROCESS-PKG% radiusUtils
+NOTICE - %DLTK-PROCESS-PKG% mysqltcl
+NOTICE - %DLTK-PROCESS-PKG% img::window
+NOTICE - %DLTK-PROCESS-PKG% math
+NOTICE - %DLTK-PROCESS-PKG% json
+NOTICE - %DLTK-PROCESS-PKG% SOAP::https
+NOTICE - %DLTK-PROCESS-PKG% soapinterop::B
+NOTICE - %DLTK-PROCESS-PKG% units
+NOTICE - %DLTK-PROCESS-PKG% bench::in
+NOTICE - %DLTK-PROCESS-PKG% vfs::http
+NOTICE - %DLTK-PROCESS-PKG% soapinterop::C
+NOTICE - %DLTK-PROCESS-PKG% page::writer::ser
+NOTICE - %DLTK-PROCESS-PKG% vfs::ns
+NOTICE - %DLTK-PROCESS-PKG% mif
+NOTICE - %DLTK-PROCESS-PKG% routing::ospf
+NOTICE - %DLTK-PROCESS-PKG% vfs::template::quota
+NOTICE - %DLTK-PROCESS-PKG% iou
+NOTICE - %DLTK-PROCESS-PKG% img::tga
+NOTICE - %DLTK-PROCESS-PKG% cgi2dom
+NOTICE - %DLTK-PROCESS-PKG% xpath
+NOTICE - %DLTK-PROCESS-PKG% page::writer::peg
+NOTICE - %DLTK-PROCESS-PKG% math::fuzzy
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::mime
+NOTICE - %DLTK-PROCESS-PKG% ipv6Utils
+NOTICE - %DLTK-PROCESS-PKG% img::png
+NOTICE - %DLTK-PROCESS-PKG% math::linearalgebra
+NOTICE - %DLTK-PROCESS-PKG% timsapi
+NOTICE - %DLTK-PROCESS-PKG% widget::scrolledwindow
+NOTICE - %DLTK-PROCESS-PKG% ripemd160
+NOTICE - %DLTK-PROCESS-PKG% transfer::data::source
+NOTICE - %DLTK-PROCESS-PKG% Itk
+NOTICE - %DLTK-PROCESS-PKG% page::util::quote
+NOTICE - %DLTK-PROCESS-PKG% ncgi
+NOTICE - %DLTK-PROCESS-PKG% ftp::geturl
+NOTICE - %DLTK-PROCESS-PKG% router_show
+NOTICE - %DLTK-PROCESS-PKG% rtrUtils
+NOTICE - %DLTK-PROCESS-PKG% page::reader::hb
+NOTICE - %DLTK-PROCESS-PKG% widget::panelframe
+NOTICE - %DLTK-PROCESS-PKG% fileutil::magic::cfront
+NOTICE - %DLTK-PROCESS-PKG% vu
+NOTICE - %DLTK-PROCESS-PKG% xmldefs
+NOTICE - %DLTK-PROCESS-PKG% platform
+NOTICE - %DLTK-PROCESS-PKG% irc
+NOTICE - %DLTK-PROCESS-PKG% SOAP::Domain
+NOTICE - %DLTK-PROCESS-PKG% term::receive::bind
+NOTICE - %DLTK-PROCESS-PKG% tbcload
+NOTICE - %DLTK-PROCESS-PKG% Tablelist_tile
+NOTICE - %DLTK-PROCESS-PKG% widget::all
+NOTICE - %DLTK-PROCESS-PKG% page::compiler::peg::mecpu
+NOTICE - %DLTK-PROCESS-PKG% struct::graph
+NOTICE - %DLTK-PROCESS-PKG% multiplexer
+NOTICE - %DLTK-PROCESS-PKG% page::analysis::peg::minimize
+NOTICE - %DLTK-PROCESS-PKG% otp
+NOTICE - %DLTK-PROCESS-PKG% resolv
+NOTICE - %DLTK-PROCESS-PKG% psb::ios-xr
+NOTICE - %DLTK-PROCESS-PKG% tablelist
+NOTICE - %DLTK-PROCESS-PKG% chatwidget
+NOTICE - %DLTK-PROCESS-PKG% struct::skiplist
+NOTICE - %DLTK-PROCESS-PKG% des
+NOTICE - %DLTK-PROCESS-PKG% Vsc
+NOTICE - %DLTK-PROCESS-PKG% pop3d::udb
+NOTICE - %DLTK-PROCESS-PKG% routing::ip
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::connection
+NOTICE - %DLTK-PROCESS-PKG% psb::asa
+NOTICE - %DLTK-PROCESS-PKG% tclDES
+NOTICE - %DLTK-PROCESS-PKG% activestate::teapot::link
+NOTICE - %DLTK-PROCESS-PKG% Test
+NOTICE - %DLTK-PROCESS-PKG% nmea
+NOTICE - %DLTK-PROCESS-PKG% critcl
+NOTICE - %DLTK-PROCESS-PKG% hltUtils
+NOTICE - %DLTK-PROCESS-PKG% calendar
+NOTICE - %DLTK-PROCESS-PKG% xr
+NOTICE - %DLTK-PROCESS-PKG% tooltip
+NOTICE - %DLTK-PROCESS-PKG% doctools::changelog
+NOTICE - %DLTK-PROCESS-PKG% exif
+NOTICE - %DLTK-PROCESS-PKG% simple_clean
+NOTICE - %DLTK-PROCESS-PKG% xotcl::scriptCreation::recoveryPoint
+NOTICE - %DLTK-PROCESS-PKG% Oratcl
+NOTICE - %DLTK-PROCESS-PKG% term::send
+NOTICE - %DLTK-PROCESS-PKG% img::ppm
+NOTICE - %DLTK-PROCESS-PKG% dom::libxml2
+NOTICE - %DLTK-PROCESS-PKG% doctools::cvs
+NOTICE - %DLTK-PROCESS-PKG% pop3d::dbox
+NOTICE - %DLTK-PROCESS-PKG% term::ansi::code::ctrl
+NOTICE - %DLTK-PROCESS-PKG% Inet
+NOTICE - %DLTK-PROCESS-PKG% base32::hex
+NOTICE - %DLTK-PROCESS-PKG% nameserv
+NOTICE - %DLTK-PROCESS-PKG% aes
+NOTICE - %DLTK-PROCESS-PKG% xotcl::scriptCreation::scriptCreator
+NOTICE - %DLTK-PROCESS-PKG% sound
+NOTICE - %DLTK-PROCESS-PKG% Easy
+NOTICE - %DLTK-PROCESS-PKG% mk4vfs
+NOTICE - %DLTK-PROCESS-PKG% metal
+NOTICE - %DLTK-PROCESS-PKG% page::writer::mecpu
+NOTICE - %DLTK-PROCESS-PKG% vqe
+NOTICE - %DLTK-PROCESS-PKG% widget::scrolledtext
+NOTICE - %DLTK-PROCESS-PKG% png
+NOTICE - %DLTK-PROCESS-PKG% slot_handling
+NOTICE - %DLTK-PROCESS-PKG% yencode
+NOTICE - %DLTK-PROCESS-PKG% widget::dialog
+NOTICE - %DLTK-PROCESS-PKG% term
+NOTICE - %DLTK-PROCESS-PKG% img::xbm
+NOTICE - %DLTK-PROCESS-PKG% khim
+NOTICE - %DLTK-PROCESS-PKG% picoirc
+NOTICE - %DLTK-PROCESS-PKG% spf
+NOTICE - %DLTK-PROCESS-PKG% AtsAuto
+NOTICE - %DLTK-PROCESS-PKG% ipentry
+NOTICE - %DLTK-PROCESS-PKG% hm_plugin::nrt
+NOTICE - %DLTK-PROCESS-PKG% dataUtils
+NOTICE - %DLTK-PROCESS-PKG% page::writer::identity
+NOTICE - %DLTK-PROCESS-PKG% tifftcl
+NOTICE - %DLTK-PROCESS-PKG% trofs
+NOTICE - %DLTK-PROCESS-PKG% term::ansi::code
+NOTICE - %DLTK-PROCESS-PKG% rtrConfig
+NOTICE - %DLTK-PROCESS-PKG% tile
+NOTICE - %DLTK-PROCESS-PKG% unicode
+NOTICE - %DLTK-PROCESS-PKG% smtpd
+NOTICE - %DLTK-PROCESS-PKG% img::pixmap
+NOTICE - %DLTK-PROCESS-PKG% tablelist_tile
+NOTICE - %DLTK-PROCESS-PKG% doctools::toc
+NOTICE - %DLTK-PROCESS-PKG% interp::delegate::proc
+NOTICE - %DLTK-PROCESS-PKG% page::gen::peg::me
+NOTICE - %DLTK-PROCESS-PKG% rc4
+NOTICE - %DLTK-PROCESS-PKG% vfs::tk
+NOTICE - %DLTK-PROCESS-PKG% xslt::cache
+NOTICE - %DLTK-PROCESS-PKG% page::analysis::peg::realizable
+NOTICE - %DLTK-PROCESS-PKG% textutil::tabify
+NOTICE - %DLTK-PROCESS-PKG% vfslib
+NOTICE - %DLTK-PROCESS-PKG% math::optimize
+NOTICE - %DLTK-PROCESS-PKG% time
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::ldap
+NOTICE - %DLTK-PROCESS-PKG% routing::arp
+NOTICE - %DLTK-PROCESS-PKG% msgcat
+NOTICE - %DLTK-PROCESS-PKG% wip
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::httpAccess
+NOTICE - %DLTK-PROCESS-PKG% hm_plugin::cpu::asa
+NOTICE - %DLTK-PROCESS-PKG% eregexp
+NOTICE - %DLTK-PROCESS-PKG% ldapx
+NOTICE - %DLTK-PROCESS-PKG% tie
+NOTICE - %DLTK-PROCESS-PKG% ftp
+NOTICE - %DLTK-PROCESS-PKG% XOTcl
+NOTICE - %DLTK-PROCESS-PKG% Tclx
+NOTICE - %DLTK-PROCESS-PKG% vfs::webdav
+NOTICE - %DLTK-PROCESS-PKG% atshm
+NOTICE - %DLTK-PROCESS-PKG% math::bigfloat
+NOTICE - %DLTK-PROCESS-PKG% rpcvar
+NOTICE - %DLTK-PROCESS-PKG% vfs::template::collate
+NOTICE - %DLTK-PROCESS-PKG% vfs::mk4
+NOTICE - %DLTK-PROCESS-PKG% Catlib
+NOTICE - %DLTK-PROCESS-PKG% img::sun
+NOTICE - %DLTK-PROCESS-PKG% Mk4tcl
+NOTICE - %DLTK-PROCESS-PKG% hm_plugin::pa
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::dav
+NOTICE - %DLTK-PROCESS-PKG% grammar::fa
+NOTICE - %DLTK-PROCESS-PKG% Atslog
+NOTICE - %DLTK-PROCESS-PKG% xmldiff
+NOTICE - %DLTK-PROCESS-PKG% csv
+NOTICE - %DLTK-PROCESS-PKG% Parser
+NOTICE - %DLTK-PROCESS-PKG% xml::tclparser
+NOTICE - %DLTK-PROCESS-PKG% textutil::string
+NOTICE - %DLTK-PROCESS-PKG% ChartFail
+NOTICE - %DLTK-PROCESS-PKG% routing::saf
+NOTICE - %DLTK-PROCESS-PKG% autoscroll
+NOTICE - %DLTK-PROCESS-PKG% page::gen::tree::text
+NOTICE - %DLTK-PROCESS-PKG% mime
+NOTICE - %DLTK-PROCESS-PKG% hm_plugin::memory::asa
+NOTICE - %DLTK-PROCESS-PKG% SOAP::ftp
+NOTICE - %DLTK-PROCESS-PKG% Expect
+NOTICE - %DLTK-PROCESS-PKG% tipstack
+NOTICE - %DLTK-PROCESS-PKG% profiler
+NOTICE - %DLTK-PROCESS-PKG% bench::out::csv
+NOTICE - %DLTK-PROCESS-PKG% zlibtcl
+NOTICE - %DLTK-PROCESS-PKG% Tkhtml
+NOTICE - %DLTK-PROCESS-PKG% atec
+NOTICE - %DLTK-PROCESS-PKG% grammar::me::cpu::core
+NOTICE - %DLTK-PROCESS-PKG% fileutil
+NOTICE - %DLTK-PROCESS-PKG% transfer::receiver
+NOTICE - %DLTK-PROCESS-PKG% Tnm
+NOTICE - %DLTK-PROCESS-PKG% Ibmcon
+NOTICE - %DLTK-PROCESS-PKG% cli_help
+NOTICE - %DLTK-PROCESS-PKG% xml::tcl
+NOTICE - %DLTK-PROCESS-PKG% tclparser
+NOTICE - %DLTK-PROCESS-PKG% zipvfs
+NOTICE - %DLTK-PROCESS-PKG% Utip
+NOTICE - %DLTK-PROCESS-PKG% logger::appender
+NOTICE - %DLTK-PROCESS-PKG% cksum
+NOTICE - %DLTK-PROCESS-PKG% Gd
+NOTICE - %DLTK-PROCESS-PKG% grammar::me::cpu::gasm
+NOTICE - %DLTK-PROCESS-PKG% SASL::XGoogleToken
+NOTICE - %DLTK-PROCESS-PKG% xotcl::trace
+NOTICE - %DLTK-PROCESS-PKG% struct::queue
+NOTICE - %DLTK-PROCESS-PKG% Async
+NOTICE - %DLTK-PROCESS-PKG% xml::dep
+NOTICE - %DLTK-PROCESS-PKG% SOAP::http
+NOTICE - %DLTK-PROCESS-PKG% devtestUtils
+NOTICE - %DLTK-PROCESS-PKG% ioutestbed
+NOTICE - %DLTK-PROCESS-PKG% transfer::data::destination
+NOTICE - %DLTK-PROCESS-PKG% tdomhtml
+NOTICE - %DLTK-PROCESS-PKG% ParallelCall
+NOTICE - %DLTK-PROCESS-PKG% xotcl::comm::pcache
+NOTICE - %DLTK-PROCESS-PKG% vfs::tar
+NOTICE - %DLTK-PROCESS-PKG% page::parse::lemon
+NOTICE - %DLTK-PROCESS-PKG% dict
+NOTICE - %DLTK-PROCESS-PKG% grammar::fa::op
+NOTICE - %DLTK-PROCESS-PKG% tie::std::file
+NOTICE - %DLTK-PROCESS-PKG% sum
+NOTICE - %DLTK-PROCESS-PKG% domtext
+NOTICE - %DLTK-PROCESS-PKG% parse_dashed_args
+NOTICE - %DLTK-PROCESS-PKG% struct::record
+NOTICE - %DLTK-PROCESS-PKG% bench
+NOTICE - %DLTK-PROCESS-PKG% xotcl::htmllib
+NOTICE - %DLTK-PROCESS-PKG% tls
+NOTICE - %DLTK-PROCESS-PKG% SOAP
+NOTICE - %DLTK-PROCESS-PKG% widget
+NOTICE - %DLTK-PROCESS-PKG% page::parse::peg
+NOTICE - %DLTK-PROCESS-PKG% bee
+NOTICE - %DLTK-PROCESS-PKG% dp
+NOTICE - %DLTK-PROCESS-PKG% reload_handler
+NOTICE - %DLTK-PROCESS-PKG% dns
+NOTICE - %DLTK-PROCESS-PKG% tnc
+NOTICE - %DLTK-PROCESS-PKG% page::analysis::peg::emodes
+NOTICE - %DLTK-PROCESS-PKG% page::pluginmgr
+NOTICE - %DLTK-PROCESS-PKG% tie::std::rarray
+NOTICE - %DLTK-PROCESS-PKG% XMLRPC
+NOTICE - %DLTK-PROCESS-PKG% BWidget
+NOTICE - %DLTK-PROCESS-PKG% dom::tcl
+NOTICE - %DLTK-PROCESS-PKG% doctools::idx
+NOTICE - %DLTK-PROCESS-PKG% docstrip
+NOTICE - %DLTK-PROCESS-PKG% struct::prioqueue
+NOTICE - %DLTK-PROCESS-PKG% dom
+NOTICE - %DLTK-PROCESS-PKG% term::interact::pager
+NOTICE - %DLTK-PROCESS-PKG% vfs::test
+NOTICE - %DLTK-PROCESS-PKG% wait_for
+NOTICE - %DLTK-PROCESS-PKG% Trf
+NOTICE - %DLTK-PROCESS-PKG% sha1
+NOTICE - %DLTK-PROCESS-PKG% transfer::copy::queue
+NOTICE - %DLTK-PROCESS-PKG% dom::c
+<DLTK size="0">
+    <path name="" type="builtin">
+        <package name="ActiveTcl" version="8.4.18.1.284378">
+        </package>
+        <package name="Tcl" version="8.4">
+        </package>
+        <package name="activestate::teapot::link" version="1.1">
+        </package>
+        <package name="platform" version="1.0.3">
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib" type="auto_path">
+        <package name="AEtest" version="5.0.0">
+        </package>
+        <package name="Async" version="5.0.0">
+        </package>
+        <package name="Atcios" version="0.1">
+        </package>
+        <package name="AtsAuto" version="5.0.0">
+        </package>
+        <package name="Atslog" version="5.0.0">
+        </package>
+        <package name="Autoeasy" version="5.0.2">
+        </package>
+        <package name="Awc" version="1.0.0">
+        </package>
+        <package name="BWidget" version="1.8">
+        </package>
+        <package name="Catlib" version="5.0.0">
+        </package>
+        <package name="ChartFail" version="1.0">
+        </package>
+        <package name="Cisco" version="5.0.0">
+        </package>
+        <package name="Control" version="5.0.0">
+        </package>
+        <package name="Csccon" version="5.0.0">
+        </package>
+        <package name="Diagcon" version="5.0.2">
+        </package>
+        <package name="Easy" version="5.0.2">
+        </package>
+        <package name="Etest" version="5.0.0">
+        </package>
+        <package name="Expect" version="5.44.1.5">
+        </package>
+        <package name="Gd" version="1.0">
+        </package>
+        <package name="Ibmcon" version="5.0.2">
+        </package>
+        <package name="Ifs" version="1.0">
+        </package>
+        <package name="Img" version="1.3">
+        </package>
+        <package name="Inet" version="5.0.2">
+        </package>
+        <package name="Isc" version="5.0.0">
+        </package>
+        <package name="Itcl" version="3.4">
+        </package>
+        <package name="Itk" version="3.4">
+        </package>
+        <package name="Iwidgets" version="4.0.2">
+        </package>
+        <package name="Mad" version="5.0.2">
+        </package>
+        <package name="Memchan" version="2.2.1">
+        </package>
+        <package name="Mk4tcl" version="2.4.9.7">
+        </package>
+        <package name="Mpexpr" version="1.1">
+        </package>
+        <package name="Oratcl" version="4.4">
+        </package>
+        <package name="Parallel" version="5.0.2">
+        </package>
+        <package name="ParallelCall" version="1.0">
+        </package>
+        <package name="Parser" version="5.0.0">
+        </package>
+        <package name="PatsCmd" version="5.0.0">
+        </package>
+        <package name="Rsrcm" version="5.0.2">
+        </package>
+        <package name="SOAP" version="1.6.7">
+        </package>
+        <package name="SOAP::CGI" version="1.0">
+        </package>
+        <package name="SOAP::Domain" version="1.4">
+        </package>
+        <package name="SOAP::Service" version="0.4">
+        </package>
+        <package name="SOAP::Utils" version="1.0.1">
+        </package>
+        <package name="SOAP::ftp" version="1.0">
+        </package>
+        <package name="SOAP::http" version="1.0">
+        </package>
+        <package name="SOAP::https" version="1.0">
+        </package>
+        <package name="SOAP::smtp" version="1.0">
+        </package>
+        <package name="SOAP::xpath" version="0.2">
+        </package>
+        <package name="Seclib" version="5.0.0">
+        </package>
+        <package name="Sesinstr" version="5.0.2">
+        </package>
+        <package name="Shcon" version="0.1">
+        </package>
+        <package name="Sscon" version="5.0.0">
+        </package>
+        <package name="Tcci" version="5.1.0">
+        </package>
+        <package name="TclUtils" version="5.0.0">
+        </package>
+        <package name="Tclx" version="8.4">
+        </package>
+        <package name="Test" version="5.0.0">
+        </package>
+        <package name="Tk" version="8.4">
+        </package>
+        <package name="Tkhtml" version="2.0">
+        </package>
+        <package name="Tkined" version="1.5.0">
+        </package>
+        <package name="Tktable" version="2.9">
+        </package>
+        <package name="Tnm" version="3.0.0">
+        </package>
+        <package name="Trf" version="2.1.2">
+        </package>
+        <package name="Utip" version="1.0.1">
+        </package>
+        <package name="Utx" version="1.0.1">
+        </package>
+        <package name="Vsc" version="5.0.2">
+        </package>
+        <package name="Wincon" version="5.0.2">
+        </package>
+        <package name="XMLRPC" version="1.0">
+        </package>
+        <package name="XOTcl" version="1.6.0">
+        </package>
+        <package name="aereport" version="1.0.0">
+        </package>
+        <package name="atec" version="1.0">
+        </package>
+        <package name="atshm" version="1.0">
+        </package>
+        <package name="cef_infra" version="1.0">
+        </package>
+        <package name="cflow" version="1.0">
+        </package>
+        <package name="cgi2dom" version="1.1">
+        </package>
+        <package name="cli_help" version="1.0">
+        </package>
+        <package name="crest" version="1.0">
+        </package>
+        <package name="critcl" version="0.0">
+        </package>
+        <package name="dataUtils" version="1.0">
+        </package>
+        <package name="devtestUtils" version="5.0.0">
+        </package>
+        <package name="dict" version="8.5.3">
+        </package>
+        <package name="dom" version="2.6">
+        </package>
+        <package name="dom::c" version="2.6">
+        </package>
+        <package name="dom::generic" version="2.6">
+        </package>
+        <package name="dom::libxml2" version="2.6">
+        </package>
+        <package name="dom::tcl" version="2.6">
+        </package>
+        <package name="dom::tclgeneric" version="2.6">
+        </package>
+        <package name="dommap" version="1.0">
+        </package>
+        <package name="domtext" version="2.6">
+        </package>
+        <package name="domtree" version="2.6">
+        </package>
+        <package name="dp" version="4.0">
+        </package>
+        <package name="eregexp" version="1.1">
+        </package>
+        <package name="expat" version="2.6">
+        </package>
+        <package name="globfind" version="1.0">
+        </package>
+        <package name="ha" version="2.2">
+        </package>
+        <package name="hltUtils" version="1.0">
+        </package>
+        <package name="hm_plugin::cpu::asa" version="1.0">
+        </package>
+        <package name="hm_plugin::cpu::ios" version="1.0">
+        </package>
+        <package name="hm_plugin::memory::asa" version="1.0">
+        </package>
+        <package name="hm_plugin::memory::ios" version="1.0">
+        </package>
+        <package name="hm_plugin::nrt" version="1.0">
+        </package>
+        <package name="hm_plugin::pa" version="1.0">
+        </package>
+        <package name="hm_plugin::uptime" version="1.0">
+        </package>
+        <package name="ibns" version="1.0">
+        </package>
+        <package name="img::base" version="1.3">
+        </package>
+        <package name="img::bmp" version="1.3">
+        </package>
+        <package name="img::gif" version="1.3">
+        </package>
+        <package name="img::ico" version="1.3">
+        </package>
+        <package name="img::jpeg" version="1.3">
+        </package>
+        <package name="img::pcx" version="1.3">
+        </package>
+        <package name="img::pixmap" version="1.3">
+        </package>
+        <package name="img::png" version="1.3">
+        </package>
+        <package name="img::ppm" version="1.3">
+        </package>
+        <package name="img::ps" version="1.3">
+        </package>
+        <package name="img::sgi" version="1.3">
+        </package>
+        <package name="img::sun" version="1.3">
+        </package>
+        <package name="img::tga" version="1.3">
+        </package>
+        <package name="img::tiff" version="1.3">
+        </package>
+        <package name="img::window" version="1.3">
+        </package>
+        <package name="img::xbm" version="1.3">
+        </package>
+        <package name="img::xpm" version="1.3">
+        </package>
+        <package name="iou" version="5.0.0">
+        </package>
+        <package name="iou_sniffer" version="1.0">
+        </package>
+        <package name="ioufarm" version="0.1">
+        </package>
+        <package name="ioutestbed" version="1.0">
+        </package>
+        <package name="ipv6Utils" version="1.0">
+        </package>
+        <package name="jpegtcl" version="1.0">
+        </package>
+        <package name="log_scanner" version="1.0">
+        </package>
+        <package name="marsVoice" version="1.0">
+        </package>
+        <package name="metal" version="1.7">
+        </package>
+        <package name="mif" version="1.0">
+        </package>
+        <package name="mif" version="5.0.0">
+        </package>
+        <package name="mk4vfs" version="1.10">
+        </package>
+        <package name="msgcat" version="1.4.1">
+        </package>
+        <package name="mysqltcl" version="3.02">
+        </package>
+        <package name="newclock" version="1.0.1">
+        </package>
+        <package name="parseRadiusDebugs" version="1.0">
+        </package>
+        <package name="parse_dashed_args" version="4.3.9">
+        </package>
+        <package name="parse_dashed_args" version="5.0.0">
+        </package>
+        <package name="pas" version="1.2.1">
+        </package>
+        <package name="pats" version="5.0.0">
+        </package>
+        <package name="patsgui" version="5.0.0">
+        </package>
+        <package name="pda" version="4.3.9">
+        </package>
+        <package name="pda" version="5.0.0">
+        </package>
+        <package name="pngtcl" version="1.2.12">
+        </package>
+        <package name="power" version="1.0">
+        </package>
+        <package name="psb::asa" version="0.1">
+        </package>
+        <package name="psb::ios" version="0.1">
+        </package>
+        <package name="psb::ios-xr" version="0.1">
+        </package>
+        <package name="puretclparser" version="2.6">
+        </package>
+        <package name="radiusUtils" version="1.0">
+        </package>
+        <package name="reload_handler" version="1.0">
+        </package>
+        <package name="repro_util" version="1.0">
+        </package>
+        <package name="router_show" version="1.0">
+        </package>
+        <package name="routing" version="1.9">
+        </package>
+        <package name="routing::arp" version="1.2">
+        </package>
+        <package name="routing::cli" version="1.5">
+        </package>
+        <package name="routing::common" version="1.6">
+        </package>
+        <package name="routing::eigrp" version="1.5">
+        </package>
+        <package name="routing::ip" version="1.4">
+        </package>
+        <package name="routing::isis" version="1.2">
+        </package>
+        <package name="routing::ospf" version="1.5">
+        </package>
+        <package name="routing::ospfv3" version="1.3">
+        </package>
+        <package name="routing::pagent" version="1.1">
+        </package>
+        <package name="routing::saf" version="1.2">
+        </package>
+        <package name="rpcvar" version="1.2">
+        </package>
+        <package name="rtrConfig" version="1.0">
+        </package>
+        <package name="rtrUtils" version="1.0">
+        </package>
+        <package name="scale_utils" version="1.1">
+        </package>
+        <package name="sgml" version="1.9">
+        </package>
+        <package name="sgmlparser" version="1.1">
+        </package>
+        <package name="simple_clean" version="1.0">
+        </package>
+        <package name="slot_handling" version="1.0">
+        </package>
+        <package name="snack" version="2.2">
+        </package>
+        <package name="snackogg" version="1.3">
+        </package>
+        <package name="snacksphere" version="1.2">
+        </package>
+        <package name="snmp_util" version="1.1">
+        </package>
+        <package name="soapinterop::B" version="1.0">
+        </package>
+        <package name="soapinterop::C" version="1.0">
+        </package>
+        <package name="soapinterop::base" version="1.0">
+        </package>
+        <package name="sound" version="2.2">
+        </package>
+        <package name="sqlite3" version="3.5.6">
+        </package>
+        <package name="starkit" version="1.3.1">
+        </package>
+        <package name="sys" version="1.0">
+        </package>
+        <package name="tblparser" version="1.1">
+        </package>
+        <package name="tbuilder" version="1.0">
+        </package>
+        <package name="tcllibc" version="0.3.2">
+        </package>
+        <package name="tclparser" version="2.6">
+        </package>
+        <package name="tcltestUtils" version="5.0.0">
+        </package>
+        <package name="tdom" version="0.8.3">
+        </package>
+        <package name="tdomhtml" version="0.1.0">
+        </package>
+        <package name="tifftcl" version="3.8.2">
+        </package>
+        <package name="tile" version="0.8.2">
+        </package>
+        <package name="timsapi" version="1.2">
+        </package>
+        <package name="titan" version="1.0">
+        </package>
+        <package name="tls" version="1.5.1">
+        </package>
+        <package name="tnc" version="0.3.0">
+        </package>
+        <package name="topomap" version="1.2.1">
+        </package>
+        <package name="treectrl" version="2.2.6">
+        </package>
+        <package name="trsync" version="1.0">
+        </package>
+        <package name="vfs" version="1.3">
+        </package>
+        <package name="vfs::ftp" version="1.0">
+        </package>
+        <package name="vfs::http" version="0.6">
+        </package>
+        <package name="vfs::mk4" version="1.10">
+        </package>
+        <package name="vfs::ns" version="0.5">
+        </package>
+        <package name="vfs::tar" version="0.9">
+        </package>
+        <package name="vfs::template" version="1.0">
+        </package>
+        <package name="vfs::template::collate" version="1.0">
+        </package>
+        <package name="vfs::template::fish" version="1.0">
+        </package>
+        <package name="vfs::template::quota" version="1.0">
+        </package>
+        <package name="vfs::template::version" version="1.0">
+        </package>
+        <package name="vfs::template::version::delta" version="1.0">
+        </package>
+        <package name="vfs::test" version="1.0">
+        </package>
+        <package name="vfs::tk" version="0.5">
+        </package>
+        <package name="vfs::urltype" version="1.0">
+        </package>
+        <package name="vfs::webdav" version="0.1">
+        </package>
+        <package name="vfs::zip" version="1.0">
+        </package>
+        <package name="vfslib" version="1.3.1">
+        </package>
+        <package name="vqe" version="1.0">
+        </package>
+        <package name="vu" version="2.3">
+        </package>
+        <package name="wait_for" version="1.0">
+        </package>
+        <package name="xconnect" version="1.0">
+        </package>
+        <package name="xml" version="2.6">
+        </package>
+        <package name="xml::c" version="2.6">
+        </package>
+        <package name="xml::dep" version="1.0">
+        </package>
+        <package name="xml::expat" version="2.6">
+        </package>
+        <package name="xml::tcl" version="2.6">
+        </package>
+        <package name="xml::tclparser" version="2.6">
+        </package>
+        <package name="xmldefs" version="2.6">
+        </package>
+        <package name="xmldiff" version="1.0">
+        </package>
+        <package name="xmlswitch" version="1.0">
+        </package>
+        <package name="xotcl::comm::connection" version="1.0">
+        </package>
+        <package name="xotcl::comm::dav" version="0.9">
+        </package>
+        <package name="xotcl::comm::ftp" version="0.9">
+        </package>
+        <package name="xotcl::comm::httpAccess" version="0.91">
+        </package>
+        <package name="xotcl::comm::httpd" version="1.1">
+        </package>
+        <package name="xotcl::comm::imap" version="0.9">
+        </package>
+        <package name="xotcl::comm::ldap" version="0.9">
+        </package>
+        <package name="xotcl::comm::mime" version="0.9">
+        </package>
+        <package name="xotcl::comm::pcache" version="0.9">
+        </package>
+        <package name="xotcl::htmllib" version="0.1">
+        </package>
+        <package name="xotcl::metadataAnalyzer" version="0.84">
+        </package>
+        <package name="xotcl::mixinStrategy" version="0.9">
+        </package>
+        <package name="xotcl::package" version="0.91">
+        </package>
+        <package name="xotcl::script" version="0.9">
+        </package>
+        <package name="xotcl::scriptCreation::recoveryPoint" version="0.8">
+        </package>
+        <package name="xotcl::scriptCreation::scriptCreator" version="0.8">
+        </package>
+        <package name="xotcl::serializer" version="1.0">
+        </package>
+        <package name="xotcl::staticMetadataAnalyzer" version="0.84">
+        </package>
+        <package name="xotcl::test" version="1.38">
+        </package>
+        <package name="xotcl::trace" version="0.91">
+        </package>
+        <package name="xotcl::upvar-compat" version="1.0">
+        </package>
+        <package name="xotcl::wafecompat" version="0.9">
+        </package>
+        <package name="xotcl::xodoc" version="0.84">
+        </package>
+        <package name="xpath" version="1.0">
+        </package>
+        <package name="xr" version="1.0">
+        </package>
+        <package name="xslt" version="2.6">
+        </package>
+        <package name="xslt::cache" version="2.6">
+        </package>
+        <package name="zipvfs" version="1.0">
+        </package>
+        <package name="zlibtcl" version="1.2.3">
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcl8.4" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tcllib1.10" type="auto_path">
+        <package name="SASL" version="1.3.2">
+        </package>
+        <package name="SASL::NTLM" version="1.1.1">
+        </package>
+        <package name="SASL::XGoogleToken" version="1.0.1">
+        </package>
+        <package name="aes" version="1.0.0">
+        </package>
+        <package name="asn" version="0.8.2">
+        </package>
+        <package name="autoproxy" version="1.5.1">
+        </package>
+        <package name="base32" version="0.1">
+        </package>
+        <package name="base32::core" version="0.1">
+        </package>
+        <package name="base32::hex" version="0.1">
+        </package>
+        <package name="base64" version="2.3.2">
+        </package>
+        <package name="bee" version="0.1">
+        </package>
+        <package name="bench" version="0.3.1">
+        </package>
+        <package name="bench::in" version="0.1">
+        </package>
+        <package name="bench::out::csv" version="0.1.2">
+        </package>
+        <package name="bench::out::text" version="0.1.2">
+        </package>
+        <package name="bibtex" version="0.5">
+        </package>
+        <package name="blowfish" version="1.0.4">
+        </package>
+        <package name="calendar" version="0.2">
+        </package>
+        <package name="cksum" version="1.1.1">
+        </package>
+        <package name="cmdline" version="1.3">
+        </package>
+        <package name="comm" version="4.5.7">
+        </package>
+        <package name="control" version="0.1.3">
+        </package>
+        <package name="counter" version="2.0.4">
+        </package>
+        <package name="crc16" version="1.1.1">
+        </package>
+        <package name="crc32" version="1.3">
+        </package>
+        <package name="csv" version="0.7">
+        </package>
+        <package name="des" version="1.1.0">
+        </package>
+        <package name="dns" version="1.3.2">
+        </package>
+        <package name="docstrip" version="1.2">
+        </package>
+        <package name="docstrip::util" version="1.2">
+        </package>
+        <package name="doctools" version="1.3.1">
+        </package>
+        <package name="doctools::changelog" version="0.1.1">
+        </package>
+        <package name="doctools::cvs" version="0.1.1">
+        </package>
+        <package name="doctools::idx" version="0.3">
+        </package>
+        <package name="doctools::toc" version="0.3">
+        </package>
+        <package name="exif" version="1.1.2">
+        </package>
+        <package name="fileutil" version="1.13.4">
+        </package>
+        <package name="fileutil::magic::cfront" version="1.0">
+        </package>
+        <package name="fileutil::magic::cgen" version="1.0">
+        </package>
+        <package name="fileutil::magic::filetype" version="1.0.2">
+        </package>
+        <package name="fileutil::magic::mimetype" version="1.0.2">
+        </package>
+        <package name="fileutil::magic::rt" version="1.0">
+        </package>
+        <package name="fileutil::multi" version="0.1">
+        </package>
+        <package name="fileutil::multi::op" version="0.5">
+        </package>
+        <package name="fileutil::traverse" version="0.4">
+        </package>
+        <package name="ftp" version="2.4.8">
+        </package>
+        <package name="ftp::geturl" version="0.2.1">
+        </package>
+        <package name="ftpd" version="1.2.4">
+        </package>
+        <package name="grammar::fa" version="0.3">
+        </package>
+        <package name="grammar::fa::dacceptor" version="0.1.1">
+        </package>
+        <package name="grammar::fa::dexec" version="0.2">
+        </package>
+        <package name="grammar::fa::op" version="0.4">
+        </package>
+        <package name="grammar::me::cpu" version="0.2">
+        </package>
+        <package name="grammar::me::cpu::core" version="0.2">
+        </package>
+        <package name="grammar::me::cpu::gasm" version="0.1">
+        </package>
+        <package name="grammar::me::tcl" version="0.1">
+        </package>
+        <package name="grammar::me::util" version="0.1">
+        </package>
+        <package name="grammar::peg" version="0.1">
+        </package>
+        <package name="grammar::peg::interp" version="0.1">
+        </package>
+        <package name="html" version="1.4">
+        </package>
+        <package name="htmlparse" version="1.1.2">
+        </package>
+        <package name="ident" version="0.42">
+        </package>
+        <package name="inifile" version="0.2.1">
+        </package>
+        <package name="interp" version="0.1.1">
+        </package>
+        <package name="interp::delegate::method" version="0.2">
+        </package>
+        <package name="interp::delegate::proc" version="0.2">
+        </package>
+        <package name="ip" version="1.1.2">
+        </package>
+        <package name="irc" version="0.6">
+        </package>
+        <package name="javascript" version="1.0.2">
+        </package>
+        <package name="jpeg" version="0.3.2">
+        </package>
+        <package name="json" version="1.0">
+        </package>
+        <package name="ldap" version="1.6.8">
+        </package>
+        <package name="ldapx" version="1.0">
+        </package>
+        <package name="log" version="1.2">
+        </package>
+        <package name="logger" version="0.8">
+        </package>
+        <package name="logger::appender" version="1.3">
+        </package>
+        <package name="logger::utils" version="1.3">
+        </package>
+        <package name="mapproj" version="1.0">
+        </package>
+        <package name="math" version="1.2.4">
+        </package>
+        <package name="math::bigfloat" version="1.2.1">
+        </package>
+        <package name="math::bignum" version="3.1.1">
+        </package>
+        <package name="math::calculus" version="0.7">
+        </package>
+        <package name="math::complexnumbers" version="1.0.2">
+        </package>
+        <package name="math::constants" version="1.0.1">
+        </package>
+        <package name="math::fourier" version="1.0.2">
+        </package>
+        <package name="math::fuzzy" version="0.2">
+        </package>
+        <package name="math::geometry" version="1.0.3">
+        </package>
+        <package name="math::interpolate" version="1.0.2">
+        </package>
+        <package name="math::linearalgebra" version="1.0.3">
+        </package>
+        <package name="math::optimize" version="1.0">
+        </package>
+        <package name="math::polynomials" version="1.0.1">
+        </package>
+        <package name="math::rationalfunctions" version="1.0.1">
+        </package>
+        <package name="math::roman" version="1.0">
+        </package>
+        <package name="math::special" version="0.2.1">
+        </package>
+        <package name="math::statistics" version="0.6">
+        </package>
+        <package name="md4" version="1.0.4">
+        </package>
+        <package name="md5" version="1.4.4">
+        </package>
+        <package name="md5" version="2.0.5">
+        </package>
+        <package name="md5crypt" version="1.1.0">
+        </package>
+        <package name="mime" version="1.5.3">
+        </package>
+        <package name="multiplexer" version="0.2">
+        </package>
+        <package name="nameserv" version="0.3">
+        </package>
+        <package name="nameserv::auto" version="0.2">
+        </package>
+        <package name="nameserv::common" version="0.1">
+        </package>
+        <package name="nameserv::server" version="0.3">
+        </package>
+        <package name="ncgi" version="1.3.2">
+        </package>
+        <package name="nmea" version="0.2.0">
+        </package>
+        <package name="nntp" version="0.2.1">
+        </package>
+        <package name="otp" version="1.0.0">
+        </package>
+        <package name="page::analysis::peg::emodes" version="0.1">
+        </package>
+        <package name="page::analysis::peg::minimize" version="0.1">
+        </package>
+        <package name="page::analysis::peg::reachable" version="0.1">
+        </package>
+        <package name="page::analysis::peg::realizable" version="0.1">
+        </package>
+        <package name="page::compiler::peg::mecpu" version="0.1.1">
+        </package>
+        <package name="page::config::peg" version="0.1">
+        </package>
+        <package name="page::gen::peg::canon" version="0.1">
+        </package>
+        <package name="page::gen::peg::cpkg" version="0.1">
+        </package>
+        <package name="page::gen::peg::hb" version="0.1">
+        </package>
+        <package name="page::gen::peg::me" version="0.1">
+        </package>
+        <package name="page::gen::peg::mecpu" version="0.1">
+        </package>
+        <package name="page::gen::peg::ser" version="0.1">
+        </package>
+        <package name="page::gen::tree::text" version="0.1">
+        </package>
+        <package name="page::parse::lemon" version="0.1">
+        </package>
+        <package name="page::parse::peg" version="0.1">
+        </package>
+        <package name="page::parse::peghb" version="0.1">
+        </package>
+        <package name="page::parse::pegser" version="0.1">
+        </package>
+        <package name="page::pluginmgr" version="0.2">
+        </package>
+        <package name="page::reader::hb" version="0.1">
+        </package>
+        <package name="page::reader::lemon" version="0.1">
+        </package>
+        <package name="page::reader::peg" version="0.1">
+        </package>
+        <package name="page::reader::ser" version="0.1">
+        </package>
+        <package name="page::reader::treeser" version="0.1">
+        </package>
+        <package name="page::transform::mecpu" version="0.1">
+        </package>
+        <package name="page::transform::reachable" version="0.1">
+        </package>
+        <package name="page::transform::realizable" version="0.1">
+        </package>
+        <package name="page::util::flow" version="0.1">
+        </package>
+        <package name="page::util::norm::lemon" version="0.1">
+        </package>
+        <package name="page::util::norm::peg" version="0.1">
+        </package>
+        <package name="page::util::peg" version="0.1">
+        </package>
+        <package name="page::util::quote" version="0.1">
+        </package>
+        <package name="page::writer::hb" version="0.1">
+        </package>
+        <package name="page::writer::identity" version="0.1">
+        </package>
+        <package name="page::writer::me" version="0.1">
+        </package>
+        <package name="page::writer::mecpu" version="0.1.1">
+        </package>
+        <package name="page::writer::null" version="0.1">
+        </package>
+        <package name="page::writer::peg" version="0.1">
+        </package>
+        <package name="page::writer::ser" version="0.1">
+        </package>
+        <package name="page::writer::tpc" version="0.1">
+        </package>
+        <package name="page::writer::tree" version="0.1">
+        </package>
+        <package name="picoirc" version="0.5">
+        </package>
+        <package name="pluginmgr" version="0.2">
+        </package>
+        <package name="png" version="0.1.2">
+        </package>
+        <package name="pop3" version="1.6.3">
+        </package>
+        <package name="pop3d" version="1.1.0">
+        </package>
+        <package name="pop3d::dbox" version="1.0.2">
+        </package>
+        <package name="pop3d::udb" version="1.1">
+        </package>
+        <package name="profiler" version="0.3">
+        </package>
+        <package name="rc4" version="1.1.0">
+        </package>
+        <package name="rcs" version="0.1">
+        </package>
+        <package name="report" version="0.3.1">
+        </package>
+        <package name="resolv" version="1.0.3">
+        </package>
+        <package name="ripemd128" version="1.0.3">
+        </package>
+        <package name="ripemd160" version="1.0.3">
+        </package>
+        <package name="sha1" version="1.1.0">
+        </package>
+        <package name="sha1" version="2.0.3">
+        </package>
+        <package name="sha256" version="1.0.2">
+        </package>
+        <package name="smtp" version="1.4.4">
+        </package>
+        <package name="smtpd" version="1.4.0">
+        </package>
+        <package name="snit" version="1.3.1">
+        </package>
+        <package name="soundex" version="1.0">
+        </package>
+        <package name="spf" version="1.1.0">
+        </package>
+        <package name="stooop" version="4.4.1">
+        </package>
+        <package name="stringprep" version="1.0.0">
+        </package>
+        <package name="stringprep::data" version="1.0.0">
+        </package>
+        <package name="struct" version="1.4">
+        </package>
+        <package name="struct" version="2.1">
+        </package>
+        <package name="struct::graph" version="1.2.1">
+        </package>
+        <package name="struct::graph" version="2.2">
+        </package>
+        <package name="struct::list" version="1.6.2">
+        </package>
+        <package name="struct::matrix" version="1.2.1">
+        </package>
+        <package name="struct::matrix" version="2.0.2">
+        </package>
+        <package name="struct::pool" version="1.2.1">
+        </package>
+        <package name="struct::prioqueue" version="1.3.1">
+        </package>
+        <package name="struct::queue" version="1.4">
+        </package>
+        <package name="struct::record" version="1.2.1">
+        </package>
+        <package name="struct::set" version="2.2.2">
+        </package>
+        <package name="struct::skiplist" version="1.3">
+        </package>
+        <package name="struct::stack" version="1.3.1">
+        </package>
+        <package name="struct::tree" version="1.2.2">
+        </package>
+        <package name="struct::tree" version="2.1.1">
+        </package>
+        <package name="sum" version="1.1.0">
+        </package>
+        <package name="switched" version="2.2.1">
+        </package>
+        <package name="tar" version="0.4">
+        </package>
+        <package name="tclDES" version="1.0.0">
+        </package>
+        <package name="tclDESjr" version="1.0.0">
+        </package>
+        <package name="term" version="0.1">
+        </package>
+        <package name="term::ansi::code" version="0.1">
+        </package>
+        <package name="term::ansi::code::attr" version="0.1">
+        </package>
+        <package name="term::ansi::code::ctrl" version="0.1">
+        </package>
+        <package name="term::ansi::code::macros" version="0.1">
+        </package>
+        <package name="term::ansi::ctrl::unix" version="0.1">
+        </package>
+        <package name="term::ansi::send" version="0.1">
+        </package>
+        <package name="term::interact::menu" version="0.1">
+        </package>
+        <package name="term::interact::pager" version="0.1">
+        </package>
+        <package name="term::receive" version="0.1">
+        </package>
+        <package name="term::receive::bind" version="0.1">
+        </package>
+        <package name="term::send" version="0.1">
+        </package>
+        <package name="textutil" version="0.7.1">
+        </package>
+        <package name="textutil::adjust" version="0.7">
+        </package>
+        <package name="textutil::expander" version="1.3.1">
+        </package>
+        <package name="textutil::repeat" version="0.7">
+        </package>
+        <package name="textutil::split" version="0.7">
+        </package>
+        <package name="textutil::string" version="0.7">
+        </package>
+        <package name="textutil::tabify" version="0.7">
+        </package>
+        <package name="textutil::trim" version="0.7">
+        </package>
+        <package name="tie" version="1.1">
+        </package>
+        <package name="tie::std::array" version="1.0">
+        </package>
+        <package name="tie::std::dsource" version="1.0">
+        </package>
+        <package name="tie::std::file" version="1.0.4">
+        </package>
+        <package name="tie::std::growfile" version="1.0">
+        </package>
+        <package name="tie::std::log" version="1.0">
+        </package>
+        <package name="tie::std::rarray" version="1.0">
+        </package>
+        <package name="tiff" version="0.2">
+        </package>
+        <package name="time" version="1.2.1">
+        </package>
+        <package name="transfer::connect" version="0.1">
+        </package>
+        <package name="transfer::copy" version="0.2">
+        </package>
+        <package name="transfer::copy::queue" version="0.1">
+        </package>
+        <package name="transfer::data::destination" version="0.1">
+        </package>
+        <package name="transfer::data::source" version="0.1">
+        </package>
+        <package name="transfer::receiver" version="0.1">
+        </package>
+        <package name="transfer::transmitter" version="0.1">
+        </package>
+        <package name="treeql" version="1.3.1">
+        </package>
+        <package name="uevent" version="0.1.2">
+        </package>
+        <package name="unicode" version="1.0.0">
+        </package>
+        <package name="unicode::data" version="1.0.0">
+        </package>
+        <package name="units" version="2.1">
+        </package>
+        <package name="uri" version="1.2.1">
+        </package>
+        <package name="uri::urn" version="1.0.2">
+        </package>
+        <package name="uuencode" version="1.1.4">
+        </package>
+        <package name="uuid" version="1.0.1">
+        </package>
+        <package name="wip" version="1.1">
+        </package>
+        <package name="yencode" version="1.1.1">
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tklib" type="auto_path">
+        <package name="mclistbox" version="1.02">
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/lib/tklib0.4" type="auto_path">
+        <package name="Diagrams" version="0.2">
+        </package>
+        <package name="Plotchart" version="1.5.1">
+        </package>
+        <package name="Tablelist" version="4.8.1">
+        </package>
+        <package name="Tablelist_tile" version="4.8.1">
+        </package>
+        <package name="autoscroll" version="1.1">
+        </package>
+        <package name="chatwidget" version="1.0.0">
+        </package>
+        <package name="ctext" version="3.1">
+        </package>
+        <package name="cursor" version="0.2">
+        </package>
+        <package name="datefield" version="0.2">
+        </package>
+        <package name="getstring" version="0.1">
+        </package>
+        <package name="history" version="0.1">
+        </package>
+        <package name="ico" version="0.3.1">
+        </package>
+        <package name="ico" version="1.0.2">
+        </package>
+        <package name="ipentry" version="0.2">
+        </package>
+        <package name="khim" version="1.0.1">
+        </package>
+        <package name="ntext" version="0.81">
+        </package>
+        <package name="style" version="0.3">
+        </package>
+        <package name="style::as" version="1.4">
+        </package>
+        <package name="style::lobster" version="0.2">
+        </package>
+        <package name="swaplist" version="0.2">
+        </package>
+        <package name="tablelist" version="4.8.1">
+        </package>
+        <package name="tablelist::common" version="4.8.1">
+        </package>
+        <package name="tablelist_tile" version="4.8.1">
+        </package>
+        <package name="tipstack" version="1.0">
+        </package>
+        <package name="tkpiechart" version="6.6">
+        </package>
+        <package name="tooltip" version="1.4">
+        </package>
+        <package name="widget" version="3.0">
+        </package>
+        <package name="widget::all" version="1.2">
+        </package>
+        <package name="widget::dialog" version="1.2">
+        </package>
+        <package name="widget::menuentry" version="1.0">
+        </package>
+        <package name="widget::panelframe" version="1.0">
+        </package>
+        <package name="widget::ruler" version="1.1">
+        </package>
+        <package name="widget::screenruler" version="1.2">
+        </package>
+        <package name="widget::scrolledtext" version="1.0">
+        </package>
+        <package name="widget::scrolledwindow" version="1.2">
+        </package>
+        <package name="widget::statusbar" version="1.2">
+        </package>
+        <package name="widget::superframe" version="1.0">
+        </package>
+        <package name="widget::toolbar" version="1.2">
+        </package>
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.0-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.1-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.2-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/linux-glibc2.3-ix86/lib" type="auto_path">
+    </path>
+    <path name="/auto/vwsbey/qmac/wave_1.1.testing/ats5.0.2/teapot/package/tcl/lib" type="auto_path">
+    </path>
+</DLTK>
+NOTICE - Output file:                 
+NOTICE - Number of pkg paths found:   11
+NOTICE - Number of pkgs found:        542
+NOTICE - Number of files sourced:     0
+NOTICE - Number of libs loaded:       0
+NOTICE - Number of pkg dependencies:  0
+NOTICE - Run time = 1 secs
