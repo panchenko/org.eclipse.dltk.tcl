@@ -61,7 +61,7 @@ public class DLTKTclHelper {
 		});
 		t.start();
 		try {
-			t.join(5000);// No more then 5 seconds
+			t.join(50000);// No more then 50 seconds
 		} catch (InterruptedException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
@@ -281,7 +281,7 @@ public class DLTKTclHelper {
 		}
 	};
 
-	private static TclPackage[] getPackagePath(List content) {
+	public static TclPackage[] getPackagePath(List content) {
 		String text = getXMLContent(content);
 		Document document = getDocument(text);
 
