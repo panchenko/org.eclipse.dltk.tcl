@@ -38,11 +38,11 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 			TclSelectionEngine engine) {
 		ASTNode originalNode = key.getOriginalNode();
 		if (originalNode instanceof TclStatement) {
-			processXOTclCommandCalls((TclStatement) originalNode, engine);
+			processIncrTclCommandCalls((TclStatement) originalNode, engine);
 		}
 	}
 
-	private void processXOTclInstanceVariable(IncrTclInstanceVariable node,
+	private void processIncrTclInstanceVariable(IncrTclInstanceVariable node,
 			TclSelectionEngine engine) {
 		SimpleReference classInstanceName = node.getClassInstanceName();
 		if (classInstanceName.sourceStart() <= engine.getActualSelectionStart()
@@ -56,7 +56,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 		}
 	}
 
-	private void processXOTclCommandCalls(TclStatement node,
+	private void processIncrTclCommandCalls(TclStatement node,
 			TclSelectionEngine engine) {
 		// System.out.println("CoOL:" + node);
 		if (node.getCount() == 0) {
@@ -258,7 +258,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 										engine.getParser().getModule())
 										+ IMixinRequestor.MIXIN_NAME_SEPARATOR;
 
-								findXOTclMethodMixin(sTypeMixin
+								findIncrTclMethodMixin(sTypeMixin
 										+ engine.tclNameToKey(callName
 												.getName()),
 										callName.getName(), engine);
@@ -287,12 +287,12 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 									}
 								}
 
-								findXOTclMethodMixin(sTypeMixin
+								findIncrTclMethodMixin(sTypeMixin
 										+ engine.tclNameToKey(callName
 												.getName()),
 										callName.getName(), engine);
 								// Lets also look to toplevel
-								findXOTclMethodMixin(engine
+								findIncrTclMethodMixin(engine
 										.tclNameToKey(superClassName)
 										+ IMixinRequestor.MIXIN_NAME_SEPARATOR
 										+ engine.tclNameToKey(callName
@@ -322,7 +322,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 				if (typeMixin.startsWith("::")) {
 					typeMixin = typeMixin.substring(2);
 				}
-				findXOTclMethodMixin(engine.tclNameToKey(typeMixin)
+				findIncrTclMethodMixin(engine.tclNameToKey(typeMixin)
 						+ IMixinRequestor.MIXIN_NAME_SEPARATOR
 						+ engine.tclNameToKey(callName.getName()), callName
 						.getName(), engine);
@@ -349,7 +349,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 					String superClassName = (String) supersToHandle.get(0);
 					supersToHandle.remove(0);
 					if (superClassName.startsWith("::")) {
-						findXOTclMethodMixin(superClassName.substring(2)
+						findIncrTclMethodMixin(superClassName.substring(2)
 								+ engine.tclNameToKey(callName.getName()),
 								callName.getName(), engine);
 					} else {
@@ -366,7 +366,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 		}
 	}
 
-	private void findXOTclMethodMixin(String pattern, String name,
+	private void findIncrTclMethodMixin(String pattern, String name,
 			TclSelectionEngine engine) {
 		IMixinElement[] find = TclMixinModel.getInstance().find(pattern + "*");
 		int pos = pattern.indexOf(IMixinRequestor.MIXIN_NAME_SEPARATOR);
@@ -411,9 +411,10 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 							.getActualSelectionStart(), engine);
 		} else if (node instanceof TclStatement) {
 			// We need to check for XOTcl command calls.
-			processXOTclCommandCalls((TclStatement) node, engine);
+			processIncrTclCommandCalls((TclStatement) node, engine);
 		} else if (node instanceof IncrTclInstanceVariable) {
-			processXOTclInstanceVariable((IncrTclInstanceVariable) node, engine);
+			processIncrTclInstanceVariable((IncrTclInstanceVariable) node,
+					engine);
 		} else if (node instanceof IncrTclExInstanceVariable) {
 			IncrTclExInstanceVariable ex = (IncrTclExInstanceVariable) node;
 			IncrTclGlobalClassParameter declaringClassParameter = ex

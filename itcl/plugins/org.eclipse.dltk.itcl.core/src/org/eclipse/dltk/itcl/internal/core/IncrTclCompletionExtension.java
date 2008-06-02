@@ -9,6 +9,7 @@ import java.util.Set;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -27,6 +28,7 @@ import org.eclipse.dltk.itcl.internal.core.parser.IncrTclParseUtil;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclExInstanceVariable;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclInstanceVariable;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodCallStatement;
+import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodDeclaration;
 import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclClass;
 import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclClassInstance;
 import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclInstProc;
@@ -110,22 +112,61 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			Set methodNames = new HashSet();
 			char[] token = key.getToken();
 			token = engine.removeLastColonFromToken(token);
-			findLocalXOTclClasses(token, methodNames, astNodeParent, engine);
+			findLocalIncrTclClasses(token, methodNames, astNodeParent, engine);
 			// findLocalClasses
-			findXOTclClasses(token, methodNames, engine);
+			findIncrTclClasses(token, methodNames, engine);
 		}
 		if (!engine.getRequestor().isIgnored(CompletionProposal.FIELD_REF)) {
 			Set methodNames = new HashSet();
 			char[] token = key.getToken();
 			token = engine.removeLastColonFromToken(token);
 			// findLocalClassInstances
-			findLocalXOTclClassInstances(token, methodNames, astNodeParent,
+			findLocalIncrTclClassInstances(token, methodNames, astNodeParent,
 					engine);
-			findXOTclClassInstances(token, methodNames, engine);
+			findIncrTclClassInstances(token, methodNames, engine);
+		}
+		if (!engine.getRequestor().isIgnored(CompletionProposal.METHOD_REF)) {
+			char[] token = key.getToken();
+			token = engine.removeLastColonFromToken(token);
+			findClassMethods(token, astNodeParent, engine);
 		}
 	}
 
-	private void findLocalXOTclClasses(char[] token, Set methodNames,
+	private void findClassMethods(char[] token, ASTNode astNodeParent,
+			TclCompletionEngine engine) {
+		TclResolver resolver = new TclResolver(engine.getSourceModule(), engine
+				.getParser().getModule());
+		List methods = new ArrayList();
+		List methodNames = new ArrayList();
+		if (astNodeParent instanceof IncrTclMethodDeclaration) {
+			IncrTclMethodDeclaration decl = (IncrTclMethodDeclaration) astNodeParent;
+			MethodDeclaration[] statements = ((TypeDeclaration) decl
+					.getDeclaringType()).getMethods();
+			for (int i = 0; i < statements.length; i++) {
+				ASTNode st = statements[i];
+				if (st instanceof IncrTclMethodDeclaration) {
+					IModelElement element = resolver.findModelElementFrom(st);
+					methods.add(element);
+					methodNames.add(element.getElementName());
+					if (element instanceof IMethod) {
+						IMethod m = (IMethod) element;
+						try {
+							methodNames
+									.add(m.getTypeQualifiedName("::", false));
+							methods.add(element);
+						} catch (ModelException e) {
+							if (DLTKCore.DEBUG) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}
+		engine.findMethods(token, true, methods, methodNames);
+	}
+
+	private void findLocalIncrTclClasses(char[] token, Set methodNames,
 			ASTNode astNodeParent, TclCompletionEngine engine) {
 		ASTNode parent = TclParseUtil.getScopeParent(engine.getParser()
 				.getModule(), astNodeParent);
@@ -139,7 +180,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		methodNames.addAll(classes);
 	}
 
-	private void findLocalXOTclClassInstances(char[] token, Set methodNames,
+	private void findLocalIncrTclClassInstances(char[] token, Set methodNames,
 			ASTNode astNodeParent, TclCompletionEngine engine) {
 		ASTNode parent = TclParseUtil.getScopeParent(engine.getParser()
 				.getModule(), astNodeParent);
@@ -216,7 +257,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		classes.addAll(result);
 	}
 
-	private void findXOTclClassInstances(char[] token, Set methodNames,
+	private void findIncrTclClassInstances(char[] token, Set methodNames,
 			TclCompletionEngine engine) {
 		// IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
 		String to_ = new String(token);
@@ -377,7 +418,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		engine.findMixinTclElement(methods, tok, IncrTclInstProc.class);
 	}
 
-	private void findXOTclClasses(char[] token, Set methodNames,
+	private void findIncrTclClasses(char[] token, Set methodNames,
 			TclCompletionEngine engine) {
 
 		// IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
