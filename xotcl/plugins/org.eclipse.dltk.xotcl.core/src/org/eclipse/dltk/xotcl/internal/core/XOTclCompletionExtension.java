@@ -30,6 +30,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.TclCompletionEngine;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclResolver;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordArgumentOrFunctionArgument;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordOrFunction;
+import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnVariable;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 import org.eclipse.dltk.xotcl.core.XOTclParseUtil;
@@ -45,6 +46,7 @@ import org.eclipse.dltk.xotcl.internal.core.search.mixin.model.XOTclProc;
 public class XOTclCompletionExtension implements ICompletionExtension {
 
 	private CompletionRequestor requestor;
+
 	public boolean visit(Expression s, TclCompletionParser parser, int position) {
 		List exprs = new ArrayList();
 		if (s instanceof XOTclMethodCallStatement) {
@@ -433,5 +435,9 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 
 	public void setRequestor(CompletionRequestor requestor) {
 		this.requestor = requestor;
+	}
+
+	public void completeOnVariables(CompletionOnVariable astNode,
+			TclCompletionEngine engine) {
 	}
 }
