@@ -28,7 +28,6 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.rules.FastPartitioner;
 
-
 /**
  * Auto indent strategy sensitive to brackets.
  */
@@ -37,65 +36,73 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 	private IPreferenceStore preferenceStore;
 	private String fPartitioning;
 
-	private boolean closeStrings () {
-		return preferenceStore.getBoolean(PreferenceConstants.EDITOR_CLOSE_STRINGS);
+	private boolean closeStrings() {
+		return preferenceStore
+				.getBoolean(PreferenceConstants.EDITOR_CLOSE_STRINGS);
 	}
-	
+
 	private boolean closeBrackets() {
-		return preferenceStore.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACKETS);
+		return preferenceStore
+				.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACKETS);
 	}
-	
+
 	private boolean closeBraces() {
-		return preferenceStore.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACES);
+		return preferenceStore
+				.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACES);
 	}
-		
-	
-	
 
 	/*
 	 * Switch smart mode on/off
 	 */
 	private boolean isSmartMode() {
-		return preferenceStore.getBoolean(PreferenceConstants.EDITOR_SMART_INDENT);
+		return preferenceStore
+				.getBoolean(PreferenceConstants.EDITOR_SMART_INDENT);
 	}
-	
+
 	/**
-	 * Calculates real length of string. So any char
-	 * except \t has length 1, \t has length getTabWidth.
-	 * @param str string to process
+	 * Calculates real length of string. So any char except \t has length 1, \t
+	 * has length getTabWidth.
+	 * 
+	 * @param str
+	 *            string to process
 	 * @return length
 	 */
 	public int getPhysicalLength(String str) {
 		int res = 0;
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) == '\t')
-				res += getTabSize(); 
+				res += getTabSize();
 			else
 				res++;
-		}  
+		}
 		return res;
 	}
-	
+
 	private int getTabSize() {
-		return preferenceStore.getInt(CodeFormatterConstants.FORMATTER_TAB_SIZE);
+		return preferenceStore
+				.getInt(CodeFormatterConstants.FORMATTER_TAB_SIZE);
 	}
-	
+
 	private int getIndentSize() {
-		return preferenceStore.getInt(CodeFormatterConstants.FORMATTER_INDENTATION_SIZE);
+		return preferenceStore
+				.getInt(CodeFormatterConstants.FORMATTER_INDENTATION_SIZE);
 	}
-	
+
 	private String getTabStyle() {
-		return preferenceStore.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR);
+		return preferenceStore
+				.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR);
 	}
 
 	private boolean isSmartPasteMode1() {
-		return preferenceStore.getInt(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE) == TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_SIMPLE;
+		return preferenceStore
+				.getInt(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE) == TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_SIMPLE;
 	}
-	
+
 	private boolean isSmartPasteMode2() {
-		return preferenceStore.getInt(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE) == TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_FULL;
+		return preferenceStore
+				.getInt(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE) == TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_FULL;
 	}
-	
+
 	public TclAutoEditStrategy(IPreferenceStore store, String part) {
 		preferenceStore = store;
 		fPartitioning = part;
@@ -111,10 +118,10 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 	/**
 	 * Returns the leading whitespaces.
 	 * 
-	 * @param document -
-	 *            the document being parsed
-	 * @param line -
-	 *            the line being searched
+	 * @param document
+	 *            - the document being parsed
+	 * @param line
+	 *            - the line being searched
 	 * @return the leading whitespace
 	 * @throws BadLocationException
 	 *             in case <code>line</code> is invalid in the document
@@ -129,26 +136,26 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		return ""; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Returns the leading whitespaces and tabs.
 	 * 
-	 * @param line -
-	 *            the line being searched
+	 * @param line
+	 *            - the line being searched
 	 * @return the leading whitespace
 	 */
-	public String getLineIndent(String line)  {
+	public String getLineIndent(String line) {
 		int end = line.length();
 		int whiteend = end;
 		int offset = 0;
 		while (offset < end) {
-			char c= line.charAt(offset);
+			char c = line.charAt(offset);
 			if (c != ' ' && c != '\t') {
-				whiteend =  offset;
+				whiteend = offset;
 				break;
 			}
 			offset++;
-		}		
+		}
 		return line.substring(0, whiteend);
 	}
 
@@ -161,10 +168,11 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 		public char openingPeer;
 		public char closingPeer;
 		public String indent;
-		
+
 		protected TclBlock(int o) {
 			offset = o;
-		}		
+		}
+
 		public int getOffset() {
 			return offset;
 		}
@@ -261,16 +269,17 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 		// String lineStr = d.get(lineReg.getOffset(), lineReg.getLength());
 		int offset = start;
 		while (offset > 0) {
-			offset--;			
+			offset--;
 			// skip screening
 			int bslashes = 0;
-			while (offset - bslashes > 0 && d.getChar(offset - bslashes - 1) == '\\')
+			while (offset - bslashes > 0
+					&& d.getChar(offset - bslashes - 1) == '\\')
 				bslashes++;
-			if (bslashes%2 == 1) {
+			if (bslashes % 2 == 1) {
 				offset -= bslashes;
 				continue;
 			}
-			
+
 			// skip comment lines
 			int line = d.getLineOfOffset(offset);
 			String lineStr = d
@@ -279,49 +288,50 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				offset = d.getLineOffset(line);
 				continue;
 			}
-			//skip strings
+			// skip strings
 			ITypedRegion region = TextUtilities.getPartition(d, fPartitioning,
 					offset, true);
 			if (region.getType() == TclPartitions.TCL_STRING) {
 				offset = region.getOffset();
 				offset--;
 			}
-			Character topCh; 
+			Character topCh;
 			char c = d.get(offset, 1).charAt(0);
-					
+
 			boolean insideFig = false;
-			if (blocks.size() > 0 && ((Character) blocks.peek()).charValue() == '}')
+			if (blocks.size() > 0
+					&& ((Character) blocks.peek()).charValue() == '}')
 				insideFig = true;
-			
-			//ommit everything inside {}
+
+			// ommit everything inside {}
 			if (c != '{' && c != '}' && insideFig)
-				continue;	
-						
+				continue;
+
 			switch (c) {
 			case '(':
 				if (0 == blocks.size())
 					return new RoundBracketBlock(offset);
 				topCh = (Character) blocks.pop();
-				if (!topCh.equals( new Character( ')' )))
+				if (!topCh.equals(new Character(')')))
 					return new RoundBracketBlock(offset);
 				break;
 			case '[':
 				if (0 == blocks.size())
 					return new BracketBlock(offset);
 				topCh = (Character) blocks.pop();
-				if (!topCh.equals(new Character( ']' )))
+				if (!topCh.equals(new Character(']')))
 					return new BracketBlock(offset);
 				break;
-			case '{':				
+			case '{':
 				if (0 == blocks.size())
 					return new BraceBlock(offset);
 				topCh = (Character) blocks.pop();
-				if (!topCh.equals( new Character( '}' )))
+				if (!topCh.equals(new Character('}')))
 					return new BraceBlock(offset);
 				break;
 			case ')':
 			case ']':
-			case '}':				
+			case '}':
 				blocks.push(new Character(c));
 				break;
 			}
@@ -367,8 +377,9 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			return;
 		try {
 
-			TclDocumentScanner scanner = new TclDocumentScanner(d, fPartitioning, IDocument.DEFAULT_CONTENT_TYPE);
-			
+			TclDocumentScanner scanner = new TclDocumentScanner(d,
+					fPartitioning, IDocument.DEFAULT_CONTENT_TYPE);
+
 			int pos = (c.offset == d.getLength() ? c.offset - 1 : c.offset);
 
 			int line = d.getLineOfOffset(pos);
@@ -382,36 +393,38 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			// if we need to jump into middle of block without inserting peer
 			// brace
 			boolean dummyPeer = false;
-			
+
 			block = getLastOpenBlockType(d, c.offset);
 			if (curLineStr.trim().endsWith("\\")) {
 				resultIndent = getLineIndent(d, line - 1);
-			} else
-			if (block == null) {
-				int lastCodeLine = getLastCodeLine(d, line);				
+			} else if (block == null) {
+				int lastCodeLine = getLastCodeLine(d, line);
 				// no code above us, just copy last indent
 				if (-1 == lastCodeLine) {
 					resultIndent = getLineIndent(d, line - 1);
 				} else {
-					//	if our line is inside brackets, get line with opening bracket				
-					block = getLastOpenBlockType(d, d.getLineOffset(lastCodeLine));
+					// if our line is inside brackets, get line with opening
+					// bracket
+					block = getLastOpenBlockType(d, d
+							.getLineOffset(lastCodeLine));
 					if (block != null) {
-						int peer = scanner.findOpeningPeer(d.getLineOffset(lastCodeLine), 
+						int peer = scanner.findOpeningPeer(d
+								.getLineOffset(lastCodeLine),
 								block.openingPeer, block.closingPeer);
 						if (peer != TclDocumentScanner.NOT_FOUND) {
 							lastCodeLine = d.getLineOfOffset(peer);
 						}
 					}
 					resultIndent = getLineIndent(d, lastCodeLine);
-				}	
+				}
 			} else {
 				int lastCodeLine = d.getLineOfOffset(block.getOffset());
 				lastIndent = getLineIndent(d, lastCodeLine);
-							
+
 				resultIndent = lastIndent + block.indent;
-								
+
 				int cPos = pos;
-				while ((d.getChar (cPos) == ' ' || d.getChar(cPos) == '\t')) {
+				while ((d.getChar(cPos) == ' ' || d.getChar(cPos) == '\t')) {
 					if (cPos == d.getLength() - 1)
 						break;
 					cPos++;
@@ -419,28 +432,32 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				if (block.closingPeer == d.getChar(cPos)) {
 					dummyPeer = true;
 				}
-				//	find closing peer, if exists		
-				int peerOffset = scanner.findClosingPeer(pos, block.openingPeer, block.closingPeer);
+				// find closing peer, if exists
+				int peerOffset = scanner.findClosingPeer(pos,
+						block.openingPeer, block.closingPeer);
 				// if not fount peer, we need it
 				if (peerOffset == TclDocumentScanner.NOT_FOUND)
 					needPeer = true;
-				
+
 			}
-			
-			//process line indent
+
+			// process line indent
 			resultIndent = remakeIndent(resultIndent);
-			
+
 			IRegion reg = d.getLineInformation(line);
 			int lineEnd = reg.getOffset() + reg.getLength();
 
 			int contentStart = findEndOfWhiteSpace(d, c.offset, lineEnd);
 			c.length = Math.max(contentStart - c.offset, 0);
-						
-			if (block instanceof BraceBlock && !preferenceStore.getBoolean(TclPreferenceConstants.EDITOR_CLOSE_BRACES))
+
+			if (block instanceof BraceBlock
+					&& !preferenceStore
+							.getBoolean(TclPreferenceConstants.EDITOR_CLOSE_BRACES))
 				needPeer = false;
-			
-			if ((block instanceof BracketBlock || block instanceof RoundBracketBlock) 
-					&& !preferenceStore.getBoolean(TclPreferenceConstants.EDITOR_CLOSE_BRACKETS))
+
+			if ((block instanceof BracketBlock || block instanceof RoundBracketBlock)
+					&& !preferenceStore
+							.getBoolean(TclPreferenceConstants.EDITOR_CLOSE_BRACKETS))
 				needPeer = false;
 
 			if (needPeer || dummyPeer) {
@@ -454,7 +471,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 							.toCharArray());
 				}
 
-				buf.append("\n"); //may be we should we default line delimeter?
+				buf.append("\n"); // may be we should we default line delimeter?
 				buf.append(lastIndent);
 				if (!dummyPeer)
 					buf.append(block.closingPeer);
@@ -466,96 +483,94 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 
 		} catch (BadLocationException e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 		}
 
 	}
 
 	private void smartIndentAfterOpeningBracket(IDocument d, DocumentCommand c) {
 		if (c.offset == -1)
-			return;		
-		
+			return;
+
 		try {
 			if (d.getChar(c.offset - 1) == '\\')
 				return;
 		} catch (BadLocationException e1) {
 		}
-		
+
 		if ('\"' == c.text.charAt(0) && !closeStrings())
 			return;
-		
+
 		if ('\'' == c.text.charAt(0) && !closeStrings())
 			return;
-		
-		if (!closeBrackets() && 
-				('[' == c.text.charAt(0) ||
-				'(' == c.text.charAt(0)) 
-				)
+
+		if (!closeBrackets()
+				&& ('[' == c.text.charAt(0) || '(' == c.text.charAt(0)))
 			return;
-		
-		if (!closeBraces() && 
-				('{' == c.text.charAt(0)))
+
+		if (!closeBraces() && ('{' == c.text.charAt(0)))
 			return;
-		
-		try {			
+
+		try {
 			char ch = c.text.charAt(0);
-			switch (ch) {		
-				case '\"':
-				case '\'':
-					//if we close existing quote, do nothing
-					if ('\"' == ch && c.offset > 0
-							&& "\"".equals(d.get(c.offset - 1, 1)))
-						return;
-					
-					if ('\'' == ch && c.offset > 0
-							&& "\'".equals(d.get(c.offset - 1, 1)))
-						return;
-					
-					if (c.offset != d.getLength() && 
-							ch == d.get(c.offset, 1).charAt(0))
-						c.text = "";
-					else {
-						c.text += c.text;
-						c.length = 0;
-						
-					}
-						
-					c.shiftsCaret = false;
-					c.caretOffset = c.offset + 1;
-					break;
-				case '(':
-				case '{':
-				case '[':
-					boolean needPeer = false;
-					TclDocumentScanner scanner = new TclDocumentScanner(d, fPartitioning, IDocument.DEFAULT_CONTENT_TYPE);
-					//	find closing peer, if exists		
-					int peerOffset = scanner.findClosingPeer(c.offset, ch, getBracePair(ch));
-					// if not fount peer, we need it
-					if (peerOffset == TclDocumentScanner.NOT_FOUND)
-						needPeer = true;
-					//	check partition
-					if (getRegionType(d, c.offset) != IDocument.DEFAULT_CONTENT_TYPE)
-						return;
-					
-					if (!needPeer)
-						return;
-					
-					if (c.offset != d.getLength() && 
-							ch == d.get(c.offset, 1).charAt(0))
-						return;
-					
-					//add closing peer
-					c.text = c.text + getBracePair(ch);
+			switch (ch) {
+			case '\"':
+			case '\'':
+				// if we close existing quote, do nothing
+				if ('\"' == ch && c.offset > 0
+						&& "\"".equals(d.get(c.offset - 1, 1)))
+					return;
+
+				if ('\'' == ch && c.offset > 0
+						&& "\'".equals(d.get(c.offset - 1, 1)))
+					return;
+
+				if (c.offset != d.getLength()
+						&& ch == d.get(c.offset, 1).charAt(0))
+					c.text = "";
+				else {
+					c.text += c.text;
 					c.length = 0;
-					
-					c.shiftsCaret = false;
-					c.caretOffset = c.offset + 1;
-					break;				
+
+				}
+
+				c.shiftsCaret = false;
+				c.caretOffset = c.offset + 1;
+				break;
+			case '(':
+			case '{':
+			case '[':
+				boolean needPeer = false;
+				TclDocumentScanner scanner = new TclDocumentScanner(d,
+						fPartitioning, IDocument.DEFAULT_CONTENT_TYPE);
+				// find closing peer, if exists
+				int peerOffset = scanner.findClosingPeer(c.offset, ch,
+						getBracePair(ch));
+				// if not fount peer, we need it
+				if (peerOffset == TclDocumentScanner.NOT_FOUND)
+					needPeer = true;
+				// check partition
+				if (getRegionType(d, c.offset) != IDocument.DEFAULT_CONTENT_TYPE)
+					return;
+
+				if (!needPeer)
+					return;
+
+				if (c.offset != d.getLength()
+						&& ch == d.get(c.offset, 1).charAt(0))
+					return;
+
+				// add closing peer
+				c.text = c.text + getBracePair(ch);
+				c.length = 0;
+
+				c.shiftsCaret = false;
+				c.caretOffset = c.offset + 1;
+				break;
 			}
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-		
 
 	}
 
@@ -566,10 +581,10 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			char bracket = c.text.charAt(0);
 			// if we already have bracket we should jump over it
 			if (c.offset != d.getLength()
-					&& bracket == d.get(c.offset, 1).charAt(0) 
+					&& bracket == d.get(c.offset, 1).charAt(0)
 					&& (getRegionType(d, c.offset) == IDocument.DEFAULT_CONTENT_TYPE)) {
-				if ((bracket == '}' && closeBraces()) || 
-						((bracket == ')' || bracket == ']') && closeBrackets())) {
+				if ((bracket == '}' && closeBraces())
+						|| ((bracket == ')' || bracket == ']') && closeBrackets())) {
 					c.text = "";
 					c.shiftsCaret = false;
 					c.caretOffset = c.offset + 1;
@@ -591,7 +606,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				TclBlock block = null;
 				switch (c.text.charAt(0)) {
 				case ']':
-					block = new BracketBlock(0); 
+					block = new BracketBlock(0);
 					break;
 				case '}':
 					block = new BraceBlock(0);
@@ -604,11 +619,12 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 					return;
 				// evaluate the line with the opening bracket that matches out
 				// closing bracket
-				int reference = scanner.findOpeningPeer(p, block.openingPeer, block.closingPeer);
+				int reference = scanner.findOpeningPeer(p, block.openingPeer,
+						block.closingPeer);
 				int indLine = d.getLineOfOffset(reference);
 				if (indLine != -1 && indLine != line) {
 					// take the indent of the found line
-					StringBuffer replaceText = new StringBuffer();					
+					StringBuffer replaceText = new StringBuffer();
 					// add the rest of the current line including the just added
 					// close bracket
 					replaceText.append(getLineIndent(d, indLine));
@@ -627,9 +643,10 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 
 	private boolean smartIndentJump(IDocument d, DocumentCommand c) {
 		if (c.offset == -1 || d.getLength() == 0)
-			return false; 
+			return false;
 		try {
-			TclDocumentScanner scanner = new TclDocumentScanner(d, fPartitioning, IDocument.DEFAULT_CONTENT_TYPE);
+			TclDocumentScanner scanner = new TclDocumentScanner(d,
+					fPartitioning, IDocument.DEFAULT_CONTENT_TYPE);
 			int p = (c.offset == d.getLength() ? c.offset - 1 : c.offset);
 			int curLine = d.getLineOfOffset(c.offset);
 			String curLineStr = getDocumentLine(d, curLine);
@@ -640,18 +657,19 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			String lastIndent = "";
 			TclBlock block;
 
-			//DUPLICATION: this code is identical to code in smartInsertAfterNewLine
+			// DUPLICATION: this code is identical to code in
+			// smartInsertAfterNewLine
 			block = getLastOpenBlockType(d, c.offset);
 			if (curLineStr.trim().endsWith("\\")) {
 				resultIndent = getLineIndent(d, line - 1);
-			} else 
-			if (block == null) {
+			} else if (block == null) {
 				int lastCodeLine = getLastCodeLine(d, line);
-				//	if our line is inside brackets, get line with opening bracket
+				// if our line is inside brackets, get line with opening bracket
 				block = getLastOpenBlockType(d, d.getLineOffset(curLine));
 				if (block != null) {
-					int peer = scanner.findOpeningPeer(d.getLineOffset(curLine), 
-							block.openingPeer, block.closingPeer);
+					int peer = scanner.findOpeningPeer(
+							d.getLineOffset(curLine), block.openingPeer,
+							block.closingPeer);
 					if (peer != TclDocumentScanner.NOT_FOUND) {
 						lastCodeLine = d.getLineOfOffset(peer);
 					}
@@ -661,13 +679,13 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 					resultIndent = getLineIndent(d, line - 1);
 				} else {
 					resultIndent = getLineIndent(d, lastCodeLine);
-				}	
+				}
 			} else {
 				int lastCodeLine = d.getLineOfOffset(block.getOffset());
-				lastIndent = getLineIndent(d, lastCodeLine);			
+				lastIndent = getLineIndent(d, lastCodeLine);
 				resultIndent = lastIndent + block.indent;
 			}
-			
+
 			if (c.offset >= start + resultIndent.length())
 				return false; // we already in the place
 
@@ -679,14 +697,14 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			c.shiftsCaret = false;
 			c.text = "";
 			c.caretOffset = d.getLineOffset(line) + resultIndent.length();
-			
+
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Installs a partitioner with <code>document</code>.
 	 * 
@@ -702,91 +720,98 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 		document.setDocumentPartitioner(TclPartitions.TCL_PARTITIONING,
 				partitioner);
 	}
-	
+
 	/**
 	 * Removes a partitioner with <code>document</code>.
-	 *
-	 * @param document the document
+	 * 
+	 * @param document
+	 *            the document
 	 */
 	private static void removeStuff(Document document) {
 		document.setDocumentPartitioner(TclPartitions.TCL_PARTITIONING, null);
 	}
-	
-
 
 	/**
-	 * Reindents c.text when pasting(simply indents all to common level). 
+	 * Reindents c.text when pasting(simply indents all to common level).
+	 * 
 	 * @param d
 	 * @param c
 	 */
 	private void smartPasteSimple(IDocument d, DocumentCommand c) {
-		try {			
-			String content = d.get (0, c.offset) + c.text;
-			Document temp = new Document (content);
-			int line = d.getLineOfOffset (c.offset);
-			int start = d.getLineOffset (line);
+		try {
+			String content = d.get(0, c.offset) + c.text;
+			Document temp = new Document(content);
+			int line = d.getLineOfOffset(c.offset);
+			int start = d.getLineOffset(line);
 			int relativeIndent = 0;
 			int sline = line + 1;
-			String commonIndent = getLineIndent (d, line);
+			String commonIndent = getLineIndent(d, line);
 			int back = -1;
-			if (d.get (start, c.offset - start).trim().length() == 0) { //we are inserting lines block
-				//TODO: recalc common indent
-				//try to detect cutten line
+			if (d.get(start, c.offset - start).trim().length() == 0) { // we are
+				// inserting
+				// lines
+				// block
+				// TODO: recalc common indent
+				// try to detect cutten line
 				int i;
 				int depth = 0;
-				myloop:	for (i = 0; i < c.text.length(); i++) {
+				myloop: for (i = 0; i < c.text.length(); i++) {
 					switch (c.text.charAt(i)) {
-						case '(':
-						case '{':
-						case '[':
-							depth++;
-							break;
-						case ')':
-						case ']':
-						case '}':
-							depth--;
-							break;
-						case '\n':
-							break myloop;
+					case '(':
+					case '{':
+					case '[':
+						depth++;
+						break;
+					case ')':
+					case ']':
+					case '}':
+						depth--;
+						break;
+					case '\n':
+						break myloop;
 					}
-				}				
-				if (depth == 0 && i != c.text.length() &&
-						getRegionType(temp, c.offset + i) != TclPartitions.TCL_STRING) {
-					String first = getLineIndent (c.text.substring (0, i));					
-					String second = getLineIndent (temp, line + 1);					
-					temp.replace(start, c.offset - start + first.length(), second);					
+				}
+				if (depth == 0
+						&& i != c.text.length()
+						&& getRegionType(temp, c.offset + i) != TclPartitions.TCL_STRING) {
+					String first = getLineIndent(c.text.substring(0, i));
+					String second = getLineIndent(temp, line + 1);
+					temp.replace(start, c.offset - start + first.length(),
+							second);
 				} else
 					temp.replace(start, c.offset - start, "");
 				back = c.offset - start;
-				relativeIndent = getPhysicalLength(getLineIndent (temp, line));
-				sline = line;				
-			}					
+				relativeIndent = getPhysicalLength(getLineIndent(temp, line));
+				sline = line;
+			}
 			while (true) {
 				try {
-					getDocumentLine (temp, sline);
+					getDocumentLine(temp, sline);
 				} catch (BadLocationException e) {
-					break; //signal of the end of lines
-				}				
-				String currentIndent = getLineIndent (temp, sline);				
-				int newIndentLen = getPhysicalLength(commonIndent) + getPhysicalLength(currentIndent) -
-					relativeIndent;
-				String newIndent = generateIndent (newIndentLen); //may be do here
-				temp.replace (temp.getLineOffset(sline), currentIndent.length(), newIndent);
+					break; // signal of the end of lines
+				}
+				String currentIndent = getLineIndent(temp, sline);
+				int newIndentLen = getPhysicalLength(commonIndent)
+						+ getPhysicalLength(currentIndent) - relativeIndent;
+				String newIndent = generateIndent(newIndentLen); // may be do
+				// here
+				temp.replace(temp.getLineOffset(sline), currentIndent.length(),
+						newIndent);
 				sline++;
 			}
 			if (back > 0) {
 				c.offset = start;
-				c.text = temp.get (start,  temp.getLength() - start);
-				c.length += back;				
+				c.text = temp.get(start, temp.getLength() - start);
+				c.length += back;
 			} else {
-				c.text = temp.get (c.offset, temp.getLength() - c.offset);
+				c.text = temp.get(c.offset, temp.getLength() - c.offset);
 			}
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private String generateIndent(int newIndentLen) {		
+
+	private String generateIndent(int newIndentLen) {
 		String res = "";
 		if (!getTabStyle().equals(CodeFormatterConstants.SPACE)) {
 			int ts = getTabSize();
@@ -795,7 +820,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				newIndentLen -= ts;
 			}
 		}
-		if  (getTabStyle().equals(CodeFormatterConstants.TAB)) {
+		if (getTabStyle().equals(CodeFormatterConstants.TAB)) {
 			if (newIndentLen > 0)
 				res += "\t";
 		} else {
@@ -804,83 +829,90 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		return res;
 	}
-	
-	private String remakeIndent (String indent) {
+
+	private String remakeIndent(String indent) {
 		int len = getPhysicalLength(indent);
 		return generateIndent(len);
 	}
 
-	private void smartPaste2 (IDocument d, DocumentCommand cmd) {
+	private void smartPaste2(IDocument d, DocumentCommand cmd) {
 		try {
 			String content = d.get(0, cmd.offset) + cmd.text;
 			Document temp = new Document(content);
 			installStuff(temp);
-			Vector blocks = new Vector ();
-			int figs = 0; //count of braces
-			int cmdLine = d.getLineOfOffset (cmd.offset);
-			int cmdLineStart = d.getLineOffset (cmdLine);
-			int startLine = d.getLineOfOffset(cmd.offset) + 1;			
-			if (d.get (cmdLineStart, cmd.offset - cmdLineStart).trim().length() == 0) //we are inserting lines block
+			Vector blocks = new Vector();
+			int figs = 0; // count of braces
+			int cmdLine = d.getLineOfOffset(cmd.offset);
+			int cmdLineStart = d.getLineOffset(cmdLine);
+			int startLine = d.getLineOfOffset(cmd.offset) + 1;
+			if (d.get(cmdLineStart, cmd.offset - cmdLineStart).trim().length() == 0) // we
+				// are
+				// inserting
+				// lines
+				// block
 				startLine--;
 			int offset = 0;
-			while (offset < temp.getLength()) {												
-				ITypedRegion region = TextUtilities.getPartition(temp, fPartitioning,
-						offset, true);
-				if (region.getType() != IDocument.DEFAULT_CONTENT_TYPE 
+			while (offset < temp.getLength()) {
+				ITypedRegion region = TextUtilities.getPartition(temp,
+						fPartitioning, offset, true);
+				if (region.getType() != IDocument.DEFAULT_CONTENT_TYPE
 						&& figs == 0) {
 					offset = region.getOffset() + region.getLength();
 					continue;
 				}
-				char c = temp.getChar(offset);				
+				char c = temp.getChar(offset);
 				if (c == '\\') {
 					offset += 2;
-					continue;	
+					continue;
 				}
 				switch (c) {
-					case ')':
-					case ']':
-					case '}':
-						if (c == '}')
-							figs--;
-						if (blocks.size() > 0) {
-								blocks.removeElementAt(blocks.size() - 1);
-						}
-						break;
+				case ')':
+				case ']':
+				case '}':
+					if (c == '}')
+						figs--;
+					if (blocks.size() > 0) {
+						blocks.removeElementAt(blocks.size() - 1);
+					}
+					break;
 				}
-				
-				int line = temp.getLineOfOffset (offset);
-				String currentIndent = getLineIndent (temp, line);
-				//if may start reindenting
-				if (line >= startLine && offset == temp.getLineOffset(line) + currentIndent.length()) {					
-					StringBuffer newIndentBuf = new StringBuffer ();
+
+				int line = temp.getLineOfOffset(offset);
+				String currentIndent = getLineIndent(temp, line);
+				// if may start reindenting
+				if (line >= startLine
+						&& offset == temp.getLineOffset(line)
+								+ currentIndent.length()) {
+					StringBuffer newIndentBuf = new StringBuffer();
 					Iterator iter = blocks.iterator();
 					while (iter.hasNext()) {
-						TclBlock b = (TclBlock)iter.next();
+						TclBlock b = (TclBlock) iter.next();
 						newIndentBuf.append(b.indent);
 					}
 					String newIndent = newIndentBuf.toString();
-					temp.replace(temp.getLineOffset(line), currentIndent.length(), newIndent);
+					temp.replace(temp.getLineOffset(line), currentIndent
+							.length(), newIndent);
 					offset = temp.getLineOffset(line) + newIndent.length();
 				}
-				
+
 				switch (c) {
-					case '(':	
-						blocks.add (new RoundBracketBlock(offset));
-						break;
-					case '[':						
-						blocks.add (new BracketBlock(offset));
-						break;
-					case '{':				
-						figs++;
-						blocks.add(new BraceBlock(offset));
-						break;
+				case '(':
+					blocks.add(new RoundBracketBlock(offset));
+					break;
+				case '[':
+					blocks.add(new BracketBlock(offset));
+					break;
+				case '{':
+					figs++;
+					blocks.add(new BraceBlock(offset));
+					break;
 				}
-				
+
 				offset++;
-			}			
-			cmd.text = temp.get (cmdLineStart, temp.getLength() - cmdLineStart);
+			}
+			cmd.text = temp.get(cmdLineStart, temp.getLength() - cmdLineStart);
 			cmd.offset = cmdLineStart;
-			removeStuff (temp);			
+			removeStuff(temp);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
@@ -900,10 +932,11 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				offset, true);
 		return region.getType();
 	}
-	
+
 	/*
-	 * @see org.eclipse.jface.text.IAutoIndentStrategy#customizeDocumentCommand(org.eclipse.jface.text.IDocument,
-	 *      org.eclipse.jface.text.DocumentCommand)
+	 * @see
+	 * org.eclipse.jface.text.IAutoIndentStrategy#customizeDocumentCommand(org
+	 * .eclipse.jface.text.IDocument, org.eclipse.jface.text.DocumentCommand)
 	 */
 	public void customizeDocumentCommand(IDocument d, DocumentCommand c) {
 		if (c.doit == false)
@@ -914,9 +947,8 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			else {
 				super.customizeDocumentCommand(d, c);
 				return;
-			}				
-		}		
-		else if (c.length <= 1 && c.text.length() == 1) {
+			}
+		} else if (c.length <= 1 && c.text.length() == 1) {
 			switch (c.text.charAt(0)) {
 			case '}':
 			case ']':
@@ -931,10 +963,11 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				break;
 			case '\t':
 				boolean jumped = false;
-				if (preferenceStore.getBoolean(TclPreferenceConstants.EDITOR_SMART_TAB)) {
-					jumped = smartIndentJump(d, c); 
+				if (preferenceStore
+						.getBoolean(TclPreferenceConstants.EDITOR_SMART_TAB)) {
+					jumped = smartIndentJump(d, c);
 				}
-				if (!jumped) { //process tab key using format options
+				if (!jumped) { // process tab key using format options
 					if (getTabStyle().equals(CodeFormatterConstants.SPACE)) {
 						c.text = "";
 						int ts = getTabSize();
@@ -945,12 +978,11 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				}
 				break;
 			}
-		} else if (c.text.length() >= 1 && isSmartPasteMode1()) {			
-			smartPasteSimple(d, c); // 
-		} else if (c.text.length() >= 1 && isSmartPasteMode2()) {			
-			smartPaste2(d, c); 
+		} else if (c.text.length() >= 1 && isSmartPasteMode1()) {
+			smartPasteSimple(d, c); //
+		} else if (c.text.length() >= 1 && isSmartPasteMode2()) {
+			smartPaste2(d, c);
 		}
-		
 
 	}
 

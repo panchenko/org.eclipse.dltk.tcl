@@ -20,56 +20,66 @@ import org.eclipse.swt.graphics.RGB;
 
 public class TclPreferenceConstants extends PreferenceConstants {
 
-    /**
-     * A named preference that holds the color used to render keyword.
-     * <p>
-     * Value is of type <code>String</code>. A RGB color value encoded as a string using class <code>PreferenceConverter</code>
-     * </p>
-     * 
-     * @see org.eclipse.jface.resource.StringConverter
-     * @see org.eclipse.jface.preference.PreferenceConverter
-     */
-    public final static String EDITOR_KEYWORD_RETURN_COLOR = TclColorConstants.TCL_KEYWORD_RETURN;
+	/**
+	 * A named preference that holds the color used to render keyword.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String EDITOR_KEYWORD_RETURN_COLOR = TclColorConstants.TCL_KEYWORD_RETURN;
 
-    /**
-     * A named preference that controls whether kwyword are rendered in bold.
-     * <p>
-     * Value is of type <code>Boolean</code>. If <code>true</code> single line comments are rendered in bold. If <code>false</code> the are
-     * rendered using no font style attribute.
-     * </p>
-     */
-    public final static String EDITOR_KEYWORD_RETURN_BOLD = TclColorConstants.TCL_KEYWORD_RETURN + EDITOR_BOLD_SUFFIX;
+	/**
+	 * A named preference that controls whether kwyword are rendered in bold.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in bold. If <code>false</code> the are rendered
+	 * using no font style attribute.
+	 * </p>
+	 */
+	public final static String EDITOR_KEYWORD_RETURN_BOLD = TclColorConstants.TCL_KEYWORD_RETURN
+			+ EDITOR_BOLD_SUFFIX;
 
-    /**
-     * A named preference that controls whether keyword are rendered in italic.
-     * <p>
-     * Value is of type <code>Boolean</code>. If <code>true</code> single line comments are rendered in italic. If <code>false</code> the
-     * are rendered using no italic font style attribute.
-     * </p>
-     */
-    public final static String EDITOR_KEYWORD_RETURN_ITALIC = TclColorConstants.TCL_KEYWORD_RETURN + EDITOR_ITALIC_SUFFIX;
+	/**
+	 * A named preference that controls whether keyword are rendered in italic.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in italic. If <code>false</code> the are rendered
+	 * using no italic font style attribute.
+	 * </p>
+	 */
+	public final static String EDITOR_KEYWORD_RETURN_ITALIC = TclColorConstants.TCL_KEYWORD_RETURN
+			+ EDITOR_ITALIC_SUFFIX;
 
-    /**
-     * A named preference that controls whether single line comments are rendered in strikethrough.
-     * <p>
-     * Value is of type <code>Boolean</code>. If <code>true</code> single line comments are rendered in strikethrough. If <code>false</code>
-     * the are rendered using no italic font style attribute.
-     * </p>
-     */
-    public final static String EDITOR_KEYWORD_RETURN_STRIKETHROUGH = TclColorConstants.TCL_KEYWORD_RETURN + EDITOR_STRIKETHROUGH_SUFFIX;
+	/**
+	 * A named preference that controls whether single line comments are
+	 * rendered in strikethrough.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in strikethrough. If <code>false</code> the are
+	 * rendered using no italic font style attribute.
+	 * </p>
+	 */
+	public final static String EDITOR_KEYWORD_RETURN_STRIKETHROUGH = TclColorConstants.TCL_KEYWORD_RETURN
+			+ EDITOR_STRIKETHROUGH_SUFFIX;
 
-    /**
-     * A named preference that controls whether keyword are rendered in underline.
-     * <p>
-     * Value is of type <code>Boolean</code>. If <code>true</code> single line comments are rendered in underline. If <code>false</code>
-     * the are rendered using no italic font style attribute.
-     * </p>
-     * 
-     *
-     */
-    public final static String EDITOR_KEYWORD_RETURN_UNDERLINE = TclColorConstants.TCL_KEYWORD_RETURN + EDITOR_UNDERLINE_SUFFIX;
-    
-    
+	/**
+	 * A named preference that controls whether keyword are rendered in
+	 * underline.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in underline. If <code>false</code> the are
+	 * rendered using no italic font style attribute.
+	 * </p>
+	 * 
+	 * 
+	 */
+	public final static String EDITOR_KEYWORD_RETURN_UNDERLINE = TclColorConstants.TCL_KEYWORD_RETURN
+			+ EDITOR_UNDERLINE_SUFFIX;
+
 	/**
 	 * A named preference that holds the color used to render single line
 	 * comments.
@@ -87,9 +97,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in bold.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in bold. If <code>false</code> the are
-	 * rendered using no font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in bold. If <code>false</code> the are rendered
+	 * using no font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_SINGLE_LINE_COMMENT_BOLD = TclColorConstants.TCL_SINGLE_LINE_COMMENT
@@ -99,9 +109,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in italic.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in italic. If <code>false</code> the are
-	 * rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in italic. If <code>false</code> the are rendered
+	 * using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_SINGLE_LINE_COMMENT_ITALIC = TclColorConstants.TCL_SINGLE_LINE_COMMENT
@@ -111,9 +121,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in strikethrough.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in strikethrough. If <code>false</code> the
-	 * are rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in strikethrough. If <code>false</code> the are
+	 * rendered using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_SINGLE_LINE_COMMENT_STRIKETHROUGH = TclColorConstants.TCL_SINGLE_LINE_COMMENT
@@ -123,8 +133,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in underline.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in underline. If <code>false</code> the are
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in underline. If <code>false</code> the are
 	 * rendered using no italic font style attribute.
 	 * </p>
 	 * 
@@ -151,9 +161,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether kwyword are rendered in bold.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in bold. If <code>false</code> the are
-	 * rendered using no font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in bold. If <code>false</code> the are rendered
+	 * using no font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_KEYWORD_BOLD = TclColorConstants.TCL_KEYWORD
@@ -162,9 +172,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether keyword are rendered in italic.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in italic. If <code>false</code> the are
-	 * rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in italic. If <code>false</code> the are rendered
+	 * using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_KEYWORD_ITALIC = TclColorConstants.TCL_KEYWORD
@@ -174,9 +184,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in strikethrough.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in strikethrough. If <code>false</code> the
-	 * are rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in strikethrough. If <code>false</code> the are
+	 * rendered using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_KEYWORD_STRIKETHROUGH = TclColorConstants.TCL_KEYWORD
@@ -186,8 +196,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether keyword are rendered in
 	 * underline.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in underline. If <code>false</code> the are
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in underline. If <code>false</code> the are
 	 * rendered using no italic font style attribute.
 	 * </p>
 	 * 
@@ -214,9 +224,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether number are rendered in bold.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in bold. If <code>false</code> the are
-	 * rendered using no font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in bold. If <code>false</code> the are rendered
+	 * using no font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_NUMBER_BOLD = TclColorConstants.TCL_NUMBER
@@ -225,9 +235,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether NUMBER are rendered in italic.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in italic. If <code>false</code> the are
-	 * rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in italic. If <code>false</code> the are rendered
+	 * using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_NUMBER_ITALIC = TclColorConstants.TCL_NUMBER
@@ -237,9 +247,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in strikethrough.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in strikethrough. If <code>false</code> the
-	 * are rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in strikethrough. If <code>false</code> the are
+	 * rendered using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_NUMBER_STRIKETHROUGH = TclColorConstants.TCL_NUMBER
@@ -249,8 +259,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether NUMBER are rendered in
 	 * underline.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in underline. If <code>false</code> the are
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in underline. If <code>false</code> the are
 	 * rendered using no italic font style attribute.
 	 * </p>
 	 * 
@@ -278,9 +288,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether VARIABLE are rendered in bold.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in bold. If <code>false</code> the are
-	 * rendered using no font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in bold. If <code>false</code> the are rendered
+	 * using no font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_VARIABLE_BOLD = TclColorConstants.TCL_VARIABLE
@@ -289,9 +299,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether VARIABLE are rendered in italic.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in italic. If <code>false</code> the are
-	 * rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in italic. If <code>false</code> the are rendered
+	 * using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_VARIABLE_ITALIC = TclColorConstants.TCL_VARIABLE
@@ -301,9 +311,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in strikethrough.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in strikethrough. If <code>false</code> the
-	 * are rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in strikethrough. If <code>false</code> the are
+	 * rendered using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_VARIABLE_STRIKETHROUGH = TclColorConstants.TCL_VARIABLE
@@ -313,8 +323,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether VARIABLE are rendered in
 	 * underline.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in underline. If <code>false</code> the are
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in underline. If <code>false</code> the are
 	 * rendered using no italic font style attribute.
 	 * </p>
 	 * 
@@ -342,9 +352,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether STRING are rendered in bold.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in bold. If <code>false</code> the are
-	 * rendered using no font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in bold. If <code>false</code> the are rendered
+	 * using no font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_STRING_BOLD = TclColorConstants.TCL_STRING
@@ -353,9 +363,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	/**
 	 * A named preference that controls whether STRING are rendered in italic.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in italic. If <code>false</code> the are
-	 * rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in italic. If <code>false</code> the are rendered
+	 * using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_STRING_ITALIC = TclColorConstants.TCL_STRING
@@ -365,9 +375,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether single line comments are
 	 * rendered in strikethrough.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in strikethrough. If <code>false</code> the
-	 * are rendered using no italic font style attribute.
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in strikethrough. If <code>false</code> the are
+	 * rendered using no italic font style attribute.
 	 * </p>
 	 */
 	public final static String EDITOR_STRING_STRIKETHROUGH = TclColorConstants.TCL_STRING
@@ -377,8 +387,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * A named preference that controls whether STRING are rendered in
 	 * underline.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> single
-	 * line comments are rendered in underline. If <code>false</code> the are
+	 * Value is of type <code>Boolean</code>. If <code>true</code> single line
+	 * comments are rendered in underline. If <code>false</code> the are
 	 * rendered using no italic font style attribute.
 	 * </p>
 	 * 
@@ -434,7 +444,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	public static final String DOC_MAN_PAGES_LOCATIONS = "doc_man_pages_locations";
 
 	public static final String EDITOR_FOLDING_COMMENTS_FOLDING = "editor_folding_comments";
-	
+
 	public static final String CODEASSIST_FILTER_INTERNAL_API = "tcl_filter_internal_api";
 
 	public static void initializeDefaultValues(IPreferenceStore store) {
@@ -446,10 +456,10 @@ public class TclPreferenceConstants extends PreferenceConstants {
 		PreferenceConverter.setDefault(store,
 				TclPreferenceConstants.EDITOR_KEYWORD_COLOR,
 				new RGB(127, 0, 85));
-		PreferenceConverter.setDefault( store, 
-		                TclPreferenceConstants.EDITOR_KEYWORD_RETURN_COLOR, 
-		                new RGB( 127, 0, 85 ) );
-		
+		PreferenceConverter.setDefault(store,
+				TclPreferenceConstants.EDITOR_KEYWORD_RETURN_COLOR, new RGB(
+						127, 0, 85));
+
 		PreferenceConverter
 				.setDefault(store, TclPreferenceConstants.EDITOR_STRING_COLOR,
 						new RGB(42, 0, 255));
@@ -459,7 +469,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 				TclPreferenceConstants.EDITOR_VARIABLE_COLOR,
 				new RGB(200, 0, 0));
 
-		store.setDefault(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS, ManPageFolderXML.getDefault());
+		store.setDefault(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS,
+				ManPageFolderXML.getDefault());
 
 		store.setDefault(
 				TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD, false);
@@ -470,15 +481,16 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 		store.setDefault(TclPreferenceConstants.EDITOR_KEYWORD_BOLD, true);
 		store.setDefault(TclPreferenceConstants.EDITOR_KEYWORD_ITALIC, false);
-	        store.setDefault(TclPreferenceConstants.EDITOR_KEYWORD_RETURN_BOLD, true );
-	        store.setDefault(TclPreferenceConstants.EDITOR_KEYWORD_RETURN_ITALIC, false );
+		store.setDefault(TclPreferenceConstants.EDITOR_KEYWORD_RETURN_BOLD,
+				true);
+		store.setDefault(TclPreferenceConstants.EDITOR_KEYWORD_RETURN_ITALIC,
+				false);
 
 		store.setDefault(TclPreferenceConstants.EDITOR_CLOSE_STRINGS, true);
 		store.setDefault(TclPreferenceConstants.EDITOR_CLOSE_BRACKETS, true);
 		store.setDefault(TclPreferenceConstants.EDITOR_CLOSE_BRACES, true);
 		store.setDefault(TclPreferenceConstants.EDITOR_SMART_TAB, true);
-		store.setDefault(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE,
-				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_SIMPLE);
+		store.setDefault(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE, "");
 
 		store.setDefault(PreferenceConstants.EDITOR_SMART_INDENT, true);
 		store.setDefault(PreferenceConstants.EDITOR_TAB_WIDTH, 4);
@@ -528,7 +540,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 		store.setDefault(
 				PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS, ":$");
-		
+
 		store.setDefault(CODEASSIST_FILTER_INTERNAL_API, true);
 	}
 }
