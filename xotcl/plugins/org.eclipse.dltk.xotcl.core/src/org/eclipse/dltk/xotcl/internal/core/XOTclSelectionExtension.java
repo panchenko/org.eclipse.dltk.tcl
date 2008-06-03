@@ -51,7 +51,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 			TypeDeclaration declaringType = node.getDeclaringType();
 			IModelElement type = engine.findElementFromNode(declaringType);
 			if (type != null) {
-				engine.addSelectionElement(type);	
+				engine.addSelectionElement(type);
 			}
 		}
 	}
@@ -396,7 +396,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 			TclSelectionEngine engine) {
 		IMixinElement[] find = TclMixinModel.getInstance().find(pattern + "*");
 		int pos = pattern.indexOf(IMixinRequestor.MIXIN_NAME_SEPARATOR);
-		if( find.length == 0 && pos != -1 ) {
+		if (find.length == 0 && pos != -1) {
 			String newPattern = pattern.substring(0, pos);
 			find = TclMixinModel.getInstance().find(newPattern + "*");
 		}
@@ -429,20 +429,20 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 	public void selectionOnNode(ASTNode node, int position,
 			TclSelectionEngine engine) {
 		if (node instanceof XOTclMethodCallStatement) {
-			processSelectXOTclMethod((XOTclMethodCallStatement) node,
-					position,engine);
+			processSelectXOTclMethod((XOTclMethodCallStatement) node, position,
+					engine);
 		} else if (node instanceof XOTclProcCallStatement) {
-			processSelectXOTclMethod((XOTclProcCallStatement) node,
-					position,engine);
+			processSelectXOTclMethod((XOTclProcCallStatement) node, position,
+					engine);
 		} else if (node instanceof XOTclMethodDeclaration) {
 			processSelectXOTclMethodDeclaration(
-					(ExtendedTclMethodDeclaration) node,
-					engine.getActualSelectionStart(),engine);
+					(ExtendedTclMethodDeclaration) node, engine
+							.getActualSelectionStart(), engine);
 		} else if (node instanceof TclStatement) {
 			// We need to check for XOTcl command calls.
-			processXOTclCommandCalls((TclStatement) node,engine);
+			processXOTclCommandCalls((TclStatement) node, engine);
 		} else if (node instanceof XOTclInstanceVariable) {
-			processXOTclInstanceVariable((XOTclInstanceVariable) node,engine);
+			processXOTclInstanceVariable((XOTclInstanceVariable) node, engine);
 		} else if (node instanceof XOTclExInstanceVariable) {
 			XOTclExInstanceVariable ex = (XOTclExInstanceVariable) node;
 			XOTclGlobalClassParameter declaringClassParameter = ex
@@ -453,5 +453,10 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 				engine.addSelectionElement(resolveElement);
 			}
 		}
+	}
+
+	public IModelElement findElementParent(ASTNode node, String name,
+			IParent parent, TclSelectionEngine engine) {
+		return null;
 	}
 }
