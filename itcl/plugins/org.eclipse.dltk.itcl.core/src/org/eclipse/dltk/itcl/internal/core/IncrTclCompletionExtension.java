@@ -138,6 +138,10 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 				.getParser().getModule());
 		List methods = new ArrayList();
 		List methodNames = new ArrayList();
+		String prefix = "";
+		if (token.length > 0 && token[0] == ':') {
+			prefix = "::";
+		}
 		if (astNodeParent instanceof IncrTclMethodDeclaration) {
 			IncrTclMethodDeclaration decl = (IncrTclMethodDeclaration) astNodeParent;
 			MethodDeclaration[] statements = ((TypeDeclaration) decl
@@ -151,8 +155,8 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 					if (element instanceof IMethod) {
 						IMethod m = (IMethod) element;
 						try {
-							methodNames
-									.add(m.getTypeQualifiedName("::", false));
+							methodNames.add(prefix
+									+ m.getTypeQualifiedName("::", false));
 							methods.add(element);
 						} catch (ModelException e) {
 							if (DLTKCore.DEBUG) {

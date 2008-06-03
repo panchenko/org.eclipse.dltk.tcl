@@ -12,12 +12,14 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IParent;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.itcl.internal.core.IncrTclResolver;
 import org.eclipse.dltk.itcl.internal.core.parser.IncrTclCommandDetector.IncrTclGlobalClassParameter;
+import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclBodyDeclaration;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclExInstanceVariable;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclInstanceVariable;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodCallStatement;
@@ -425,5 +427,27 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 				engine.addSelectionElement(resolveElement);
 			}
 		}
+	}
+
+	public IModelElement findElementParent(ASTNode node, String name,
+			IParent parent, TclSelectionEngine engine) {
+		if (node instanceof IncrTclBodyDeclaration) {
+			IncrTclBodyDeclaration body = (IncrTclBodyDeclaration) node;
+			ASTNode type = body.getDeclaringType();
+			if (parent instanceof IModelElement) {
+				ISourceModule module = (ISourceModule) ((IModelElement) parent)
+						.getAncestor(IModelElement.SOURCE_MODULE);
+
+				TclResolver resolver = new TclResolver(module, engine
+						.getParser().getModule());
+				IModelElement parentElement = resolver
+						.findModelElementFrom(type);
+				if (parentElement != null && parentElement instanceof IParent) {
+					return TclResolver.findChildrenByName(body.getName(),
+							(IParent) parentElement);
+				}
+			}
+		}
+		return null;
 	}
 }
