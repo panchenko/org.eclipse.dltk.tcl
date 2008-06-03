@@ -191,8 +191,11 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				this.extensions[i].completeOnKeywordOrFunction(key,
 						astNodeParent, this);
 			}
-			this.findVariables(key.getToken(), key.getInParent(), true, astNode
-					.sourceStart(), key.canCompleteEmptyToken(), null);
+			if (key.getToken().length == 0) {
+				this.findVariables(key.getToken(), key.getInParent(), true,
+						astNode.sourceStart(), key.canCompleteEmptyToken(),
+						null);
+			}
 		} else if (astNode instanceof CompletionOnVariable) {
 			this.processCompletionOnVariables(astNode);
 		} else if (astNode instanceof TclPackageDeclaration) {

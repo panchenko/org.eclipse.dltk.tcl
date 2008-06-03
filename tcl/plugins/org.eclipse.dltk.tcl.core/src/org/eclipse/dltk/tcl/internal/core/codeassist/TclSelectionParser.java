@@ -24,6 +24,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.internal.codeassist.select.SelectionNodeFound;
 import org.eclipse.dltk.tcl.ast.ITclStatementLookLike;
 import org.eclipse.dltk.tcl.ast.TclStatement;
+import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnAST;
@@ -80,21 +81,21 @@ public class TclSelectionParser extends TclAssistParser {
 							.indexOf('(') + 1, completionToken.length() - 1);
 				}
 			}
-			// if (completionNode instanceof TclBlockExpression) {
-			// TclBlockExpression block = (TclBlockExpression) completionNode;
-			// List s = block.parseBlock();
-			// if (s != null) {
-			// int slen = s.size();
-			// for (int u = 0; u < slen; ++u) {
-			// ASTNode n = (ASTNode) s.get(u);
-			// if (n != null && n.sourceStart() <= position
-			// && n.sourceEnd() >= position) {
-			// parseBlockStatements(n, inNode, position);
-			// }
-			// }
-			// }
-			// handleNotInElement(inNode, position);
-			// }
+			if (completionNode instanceof TclBlockExpression) {
+				TclBlockExpression block = (TclBlockExpression) completionNode;
+				List s = block.parseBlockSimple();
+				if (s != null) {
+					int slen = s.size();
+					for (int u = 0; u < slen; ++u) {
+						ASTNode n = (ASTNode) s.get(u);
+						if (n != null && n.sourceStart() <= position
+								&& n.sourceEnd() >= position) {
+							parseBlockStatements(n, inNode, position);
+						}
+					}
+				}
+				handleNotInElement(inNode, position);
+			}
 			if (completionNode instanceof StringLiteral) {
 				processStringLiteral(node, inNode, position, completionNode);
 			}

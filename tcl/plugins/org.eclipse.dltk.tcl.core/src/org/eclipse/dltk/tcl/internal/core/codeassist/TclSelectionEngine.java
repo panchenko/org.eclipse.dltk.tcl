@@ -145,18 +145,18 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		return (IModelElement[]) selectionElements
 				.toArray(new IModelElement[selectionElements.size()]);
 	}
-	
 
 	protected ASTNode parseBlockStatements(TypeDeclaration type,
 			ModuleDeclaration unit, int position) {
 		ASTNode result = super.parseBlockStatements(type, unit, position);
-		if( result != null ) {
+		if (result != null) {
 			return result;
 		}
 		if (type instanceof ITclStatementLookLike) {
 			TclStatement statement = ((ITclStatementLookLike) type)
 					.getStatement();
-			ASTNode inNode = TclParseUtil.getScopeParent(parser.getModule(), type);
+			ASTNode inNode = TclParseUtil.getScopeParent(parser.getModule(),
+					type);
 			this.getParser().parseBlockStatements(statement, inNode, position);
 			SelectionOnNode nde = new SelectionOnNode(type);
 			nde.setPosition(position);
@@ -174,7 +174,6 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 			 * TODO: Add search for functions. Variables start with $ so it will
 			 * not be here... To all functions are possible. Functions with
 			 * ::will not be here.
-			 * 
 			 */
 			String name = key.getName();
 			if (name != null) {
@@ -678,6 +677,13 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 	protected IModelElement findElementParent(ASTNode node, String name,
 			IParent parent) {
+		for (int i = 0; i < extensions.length; i++) {
+			IModelElement pel = extensions[i].findElementParent(node, name,
+					parent, this);
+			if (pel != null) {
+				return pel;
+			}
+		}
 		return null;
 	}
 
@@ -718,7 +724,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 						while (end < source.length()
 								&& source.charAt(end) != '}')
 							end++;
-						if( end < source.length()) {
+						if (end < source.length()) {
 							end++;
 						}
 					}
@@ -730,7 +736,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 			// array
 			while (end < source.length() && source.charAt(end) != ')')
 				end++;
-			if( end < source.length()) {
+			if (end < source.length()) {
 				end++;
 			}
 		}
@@ -739,12 +745,12 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 			int pos = start;
 			while (pos < source.length() && source.charAt(pos) != '}')
 				pos++;
-			if( pos < source.length()) {
+			if (pos < source.length()) {
 				pos++;
 			}
 			end = pos;
 		}
-		if( !(start <= end && end <= source.length() )) {
+		if (!(start <= end && end <= source.length())) {
 			System.out.println();
 		}
 		String sub = source.substring(start, end);
@@ -758,10 +764,10 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				pos--;
 			}
 			if (pos > 0) {
-				if( source.charAt(pos-1) == '$') {
+				if (source.charAt(pos - 1) == '$') {
 					isVariable = true;
 					start = pos - 1;
-					sub = source.substring(start,end);
+					sub = source.substring(start, end);
 				}
 			}
 		}

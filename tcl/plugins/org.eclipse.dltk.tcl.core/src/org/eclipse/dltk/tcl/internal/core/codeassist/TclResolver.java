@@ -27,18 +27,23 @@ public class TclResolver {
 	private IResolveElementParent resolver;
 	private ModuleDeclaration moduleDeclaration;
 	private ISourceModule sourceModule;
-	public TclResolver(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, IResolveElementParent resolver) {
+
+	public TclResolver(ISourceModule sourceModule,
+			ModuleDeclaration moduleDeclaration, IResolveElementParent resolver) {
 		this(sourceModule, moduleDeclaration);
 		this.resolver = resolver;
 	}
-	public TclResolver(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration) {
+
+	public TclResolver(ISourceModule sourceModule,
+			ModuleDeclaration moduleDeclaration) {
 		this.sourceModule = sourceModule;
 		this.moduleDeclaration = moduleDeclaration;
 	}
+
 	public IModelElement findModelElementFrom(ASTNode node) {
 		List statements = moduleDeclaration.getStatements();
 		List elements = new ArrayList();
-		searchAddElementsTo(statements, node, sourceModule, elements );
+		searchAddElementsTo(statements, node, sourceModule, elements);
 		if (elements.size() == 1) {
 			return (IModelElement) elements.get(0);
 		}
@@ -51,7 +56,7 @@ public class TclResolver {
 	}
 
 	public void searchAddElementsTo(List statements, final ASTNode node,
-			IParent element, List selectionElements ) {
+			IParent element, List selectionElements) {
 		if (statements == null || element == null) {
 			return;
 		}
@@ -99,14 +104,12 @@ public class TclResolver {
 					IModelElement e = null;
 					if (nodeName.startsWith("::")) {
 						nodeName = nodeName.substring(2);
-						e = findChildrenByName(nodeName, (IParent) sourceModule);
+						e = findChildrenByName(nodeName, sourceModule);
 					} else {
-						e = findChildrenByName(nodeName, (IParent) element);
+						e = findChildrenByName(nodeName, element);
 					}
 					if (e == null && resolver != null) {
-						e = resolver.findElementParent(node, nodeName,
-								(IParent) element);
-
+						e = resolver.findElementParent(node, nodeName, element);
 					}
 					if (e != null) {
 						List toRemove = new ArrayList();
@@ -152,15 +155,14 @@ public class TclResolver {
 									selectionElements);
 						}
 					} else if (nde instanceof MethodDeclaration) {
-						searchInMethod(node, element, nde, selectionElements );
+						searchInMethod(node, element, nde, selectionElements);
 					} /*
-						 * else if (nde instanceof TclStatement) { TclStatement
-						 * s = (TclStatement) nde; Expression commandId =
-						 * s.getAt(0); final IParent e = element; if (commandId !=
-						 * null && commandId instanceof SimpleReference) {
-						 * String qname = ((SimpleReference) commandId)
-						 * .getName(); } }
-						 */
+					 * else if (nde instanceof TclStatement) { TclStatement s =
+					 * (TclStatement) nde; Expression commandId = s.getAt(0);
+					 * final IParent e = element; if (commandId != null &&
+					 * commandId instanceof SimpleReference) { String qname =
+					 * ((SimpleReference) commandId) .getName(); } }
+					 */
 					else {
 						final IParent e = element;
 						List statements2 = findExtractBlocks(nde);
@@ -178,7 +180,7 @@ public class TclResolver {
 	public static IModelElement findChildrenByName(String childName,
 			IParent element) {
 		try {
-			if( element == null) {
+			if (element == null) {
 				return null;
 			}
 			String nextName = null;
@@ -266,8 +268,9 @@ public class TclResolver {
 		}
 		return null;
 	}
+
 	public void searchInMethod(final ASTNode node, IParent element,
-			ASTNode nde, List selectionElements ) {
+			ASTNode nde, List selectionElements) {
 		MethodDeclaration method = (MethodDeclaration) nde;
 		String methodName = method.getName();
 		if (methodName.indexOf("::") != -1) {
@@ -294,10 +297,10 @@ public class TclResolver {
 				(IParent) element);
 		if (e != null && e instanceof IParent) {
 			List stats = ((MethodDeclaration) nde).getStatements();
-			searchAddElementsTo(stats, node, (IParent) e,
-					selectionElements );
+			searchAddElementsTo(stats, node, (IParent) e, selectionElements);
 		}
 	}
+
 	public static List findExtractBlocks(ASTNode node) {
 		final List statements2 = new ArrayList();
 		ASTVisitor visitor = new ASTVisitor() {
