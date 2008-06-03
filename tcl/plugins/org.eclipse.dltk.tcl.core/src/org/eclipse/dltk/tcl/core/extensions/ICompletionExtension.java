@@ -10,6 +10,7 @@ import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclCompletionEngine;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordArgumentOrFunctionArgument;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordOrFunction;
+import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnVariable;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
 
 public interface ICompletionExtension {
@@ -28,4 +29,7 @@ public interface ICompletionExtension {
 			TclCompletionEngine tclCompletionEngine);
 
 	void setRequestor(CompletionRequestor requestor);
+
+	void completeOnVariables(CompletionOnVariable astNode,
+			TclCompletionEngine engine);
 }

@@ -187,7 +187,6 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			this.processCompletionOnFunctions(astNodeParent, key);
 
 			for (int i = 0; i < this.extensions.length; i++) {
-				this.extensions[i].setRequestor(this.getRequestor());
 				this.extensions[i].completeOnKeywordOrFunction(key,
 						astNodeParent, this);
 			}
@@ -198,6 +197,10 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 		} else if (astNode instanceof CompletionOnVariable) {
 			this.processCompletionOnVariables(astNode);
+			for (int i = 0; i < this.extensions.length; i++) {
+				this.extensions[i].completeOnVariables(
+						(CompletionOnVariable) astNode, this);
+			}
 		} else if (astNode instanceof TclPackageDeclaration) {
 			TclPackageDeclaration pkg = (TclPackageDeclaration) astNode;
 			int len = this.actualCompletionPosition - pkg.getNameStart();

@@ -789,7 +789,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		return parser;
 	}
 
-	protected IParent getSourceModule() {
+	public IParent getSourceModule() {
 		return this.sourceModule;
 	}
 
