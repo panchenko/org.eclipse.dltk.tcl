@@ -38,6 +38,28 @@ public class TclCompletionProposalCollector extends
 		return new TclCompletionProposalLabelProvider();
 	}
 
+	protected boolean isFiltered(CompletionProposal proposal) {
+		if (isIgnored(proposal.getKind())) {
+			return true;
+		}
+		String name = new String(proposal.getName());
+		String completion = new String(proposal.getCompletion());
+		// Filter duplicates, by name and model element.
+		CompletionProposal[] proposals = getRawCompletionProposals();
+		for (int i = 0; i < proposals.length; i++) {
+			String pName = new String(proposals[i].getName());
+			proposal.getCompletion();
+			if (name.equals(pName)) {
+				if (proposal.getModelElement() != null
+						&& proposal.getModelElement().equals(
+								proposals[i].getModelElement())) {
+
+				}
+			}
+		}
+		return false;
+	}
+
 	// Invocation context
 	protected ScriptContentAssistInvocationContext createScriptContentAssistInvocationContext(
 			ISourceModule sourceModule) {
@@ -71,16 +93,21 @@ public class TclCompletionProposalCollector extends
 				compilationUnit, name, paramTypes, start, length, displayName,
 				completionProposal);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector#createKeywordProposal(org.eclipse.dltk.core.CompletionProposal)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector
+	 * #createKeywordProposal(org.eclipse.dltk.core.CompletionProposal)
 	 */
 	protected IScriptCompletionProposal createKeywordProposal(
 			CompletionProposal proposal) {
 		final ScriptCompletionProposal completionProposal = (ScriptCompletionProposal) super
 				.createKeywordProposal(proposal);
-		completionProposal.setContextInformation(new TclKeywordLazyContextInformation(
-				completionProposal));
+		completionProposal
+				.setContextInformation(new TclKeywordLazyContextInformation(
+						completionProposal));
 		return completionProposal;
 	}
 
