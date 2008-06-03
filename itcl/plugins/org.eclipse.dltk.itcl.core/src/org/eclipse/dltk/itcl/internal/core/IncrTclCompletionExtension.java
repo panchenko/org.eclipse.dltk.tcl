@@ -41,6 +41,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.TclCompletionEngine;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclResolver;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordArgumentOrFunctionArgument;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordOrFunction;
+import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnVariable;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
 
 public class IncrTclCompletionExtension implements ICompletionExtension {
@@ -124,16 +125,24 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			findLocalIncrTclClassInstances(token, methodNames, astNodeParent,
 					engine);
 			findIncrTclClassInstances(token, methodNames, engine);
+
+			// Add $this
+			ASTNode node = key.getInParent();
+			if (node instanceof IncrTclMethodDeclaration) {
+				engine.findKeywords(token,
+						new char[][] { "$this".toCharArray() }, true);
+			}
 		}
 		if (!engine.getRequestor().isIgnored(CompletionProposal.METHOD_REF)) {
 			char[] token = key.getToken();
 			token = engine.removeLastColonFromToken(token);
-			findClassMethods(token, astNodeParent, engine);
+			findClassMethods(token, astNodeParent, engine, true);
+
 		}
 	}
 
 	private void findClassMethods(char[] token, ASTNode astNodeParent,
-			TclCompletionEngine engine) {
+			TclCompletionEngine engine, boolean addTop) {
 		TclResolver resolver = new TclResolver(engine.getSourceModule(), engine
 				.getParser().getModule());
 		List methods = new ArrayList();
@@ -152,15 +161,17 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 					IModelElement element = resolver.findModelElementFrom(st);
 					methods.add(element);
 					methodNames.add(element.getElementName());
-					if (element instanceof IMethod) {
-						IMethod m = (IMethod) element;
-						try {
-							methodNames.add(prefix
-									+ m.getTypeQualifiedName("::", false));
-							methods.add(element);
-						} catch (ModelException e) {
-							if (DLTKCore.DEBUG) {
-								e.printStackTrace();
+					if (addTop) {
+						if (element instanceof IMethod) {
+							IMethod m = (IMethod) element;
+							try {
+								methodNames.add(prefix
+										+ m.getTypeQualifiedName("::", false));
+								methods.add(element);
+							} catch (ModelException e) {
+								if (DLTKCore.DEBUG) {
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -178,7 +189,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 
 		Set classes = new HashSet();
 
-		findXOTclClassessIn(parent, classes, engine);
+		findIncrTclClassessIn(parent, classes, engine);
 		engine.removeSameFrom(methodNames, classes, new String(token));
 		engine.findTypes(token, true, engine.toList(classes));
 		methodNames.addAll(classes);
@@ -192,7 +203,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 
 		Set classes = new HashSet();
 
-		findXOTclClassInstancesIn(parent, classes, engine);
+		findIncrTclClassInstancesIn(parent, classes, engine);
 		engine.removeSameFrom(methodNames, classes, new String(token));
 		engine.findFields(token, true, engine.toList(classes), "");
 		methodNames.addAll(classes);
@@ -201,7 +212,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		// parser.getModule());
 	}
 
-	private void findXOTclClassessIn(ASTNode parent, Set classes,
+	private void findIncrTclClassessIn(ASTNode parent, Set classes,
 			final TclCompletionEngine engine) {
 		// List statements = TclASTUtil.getStatements(parent);
 		final List result = new ArrayList();
@@ -233,7 +244,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		classes.addAll(result);
 	}
 
-	private void findXOTclClassInstancesIn(ASTNode parent, Set classes,
+	private void findIncrTclClassInstancesIn(ASTNode parent, Set classes,
 			final TclCompletionEngine engine) {
 		// List statements = TclASTUtil.getStatements(parent);
 		final List result = new ArrayList();
@@ -478,9 +489,26 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			completionForInstanceVariableMethods(var, token, methodNames,
 					engine);
 		}
+		if ("$this".equals(name)) {
+			if (compl.argumentIndex() == 1) {
+				ASTNode inNode = TclParseUtil.getScopeParent(engine.getParser()
+						.getModule(), st);
+				findClassMethods(token, inNode, engine, false);
+			} else {
+			}
+		}
 	}
 
 	public void setRequestor(CompletionRequestor requestor) {
 		this.requestor = requestor;
+	}
+
+	public void completeOnVariables(CompletionOnVariable astNode,
+			TclCompletionEngine engine) {
+		ASTNode inNode = astNode.getInNode();
+		if (inNode instanceof IncrTclMethodDeclaration) {
+			engine.findKeywords(astNode.getToken(), new char[][] { "$this"
+					.toCharArray() }, false);
+		}
 	}
 }

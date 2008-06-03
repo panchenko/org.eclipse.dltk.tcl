@@ -15,12 +15,12 @@ import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodDeclaration;
 import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclClass;
 import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclClassInstance;
 import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclInstProc;
-import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclProc;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.ast.ExtendedTclMethodDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.IMixinBuildVisitorExtension;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinBuildVisitor;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
 
 public class IncrTclMixinBuildVisitorExtension implements
 		IMixinBuildVisitorExtension {
@@ -41,8 +41,7 @@ public class IncrTclMixinBuildVisitorExtension implements
 
 		String name = s.getName();
 		ASTNode declaringType = method.getDeclaringType();
-		if (declaringType != null
-				&& declaringType instanceof TypeDeclaration) {
+		if (declaringType != null && declaringType instanceof TypeDeclaration) {
 			List levels = TclParseUtil.findLevelsTo(original
 					.getModuleDeclaration(), declaringType);
 			info.key = original.getKeyFromLevels(levels)
@@ -55,7 +54,7 @@ public class IncrTclMixinBuildVisitorExtension implements
 				info.object = new IncrTclInstProc();
 				break;
 			case ExtendedTclMethodDeclaration.KIND_PROC:
-				info.object = new IncrTclProc();
+				info.object = new TclProc();
 				break;
 			}
 		}

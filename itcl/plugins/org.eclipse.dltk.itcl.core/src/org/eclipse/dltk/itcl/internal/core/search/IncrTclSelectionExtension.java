@@ -71,6 +71,42 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 						.getModule());
 		Expression commandExpr = node.getAt(0);
 		String command = TclParseUtil.getNameFromNode(commandExpr);
+
+		if ("$this".equals(command)) {
+			ASTNode scopeParent = TclParseUtil.getScopeParent(engine
+					.getParser().getModule(), node);
+			if (scopeParent instanceof IncrTclMethodDeclaration) {
+				IncrTclMethodDeclaration method = (IncrTclMethodDeclaration) scopeParent;
+				ASTNode type = method.getDeclaringType();
+				TclResolver resolver = new TclResolver((ISourceModule) engine
+						.getSourceModule(), engine.getParser().getModule());
+				IModelElement typeElement = resolver.findModelElementFrom(type);
+				if (commandExpr.sourceStart() <= engine
+						.getActualSelectionStart()
+						&& engine.getActualSelectionStart() <= commandExpr
+								.sourceEnd()) {
+					engine.addSelectionElement(typeElement);
+				}
+				if (node.getCount() > 1) {
+					ASTNode callExpr = node.getAt(1);
+					if (callExpr.sourceStart() <= engine
+							.getActualSelectionStart()
+							&& engine.getActualSelectionStart() <= callExpr
+									.sourceEnd()
+							&& callExpr instanceof SimpleReference
+							&& typeElement instanceof IParent) {
+						SimpleReference callName = (SimpleReference) callExpr;
+						IModelElement child = TclResolver.findChildrenByName(
+								callName.getName(), (IParent) typeElement);
+						if (child != null) {
+							engine.addSelectionElement(child);
+						}
+					}
+				}
+				// TclResolver.findChildrenByName(, null)
+			}
+		}
+
 		if (command != null && command.startsWith("::")) {
 			String name = command.substring(2);
 			// Check class proc call

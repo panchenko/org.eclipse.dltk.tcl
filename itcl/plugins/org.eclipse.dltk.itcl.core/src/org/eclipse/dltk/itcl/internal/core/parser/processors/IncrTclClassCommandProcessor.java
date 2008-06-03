@@ -280,7 +280,11 @@ public class IncrTclClassCommandProcessor extends AbstractTclCommandProcessor {
 		method.acceptArguments(arguments);
 		method.setModifier(IIncrTclModifiers.AccIncrTcl | modifier);
 		method.setDeclaringType(type);
-		method.setKind(ExtendedTclMethodDeclaration.KIND_INSTPROC);
+		if ((modifier & IIncrTclModifiers.AccIncrTclProc) != 0) {
+			method.setKind(ExtendedTclMethodDeclaration.KIND_PROC);
+		} else {
+			method.setKind(ExtendedTclMethodDeclaration.KIND_INSTPROC);
+		}
 		IncrTclUtils.parseBlockAdd(parser, procCode, method);
 		type.getMethodList().add(method);
 
