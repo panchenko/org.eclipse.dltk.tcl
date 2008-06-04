@@ -21,20 +21,38 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.documentation.ScriptDocumentationAccess;
 import org.eclipse.dltk.ui.text.completion.HTMLPrinter;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.swt.graphics.Image;
 
-public class TclKeywordLazyContextInformation implements IContextInformation {
+public class TclKeywordLazyContextInformation implements IContextInformation,
+		IContextInformationExtension {
 
 	private final ICompletionProposal proposal;
+	private final String target;
 	private boolean informationComputed = false;
 	private String information;
 
 	/**
 	 * @param completionProposal
 	 */
-	public TclKeywordLazyContextInformation(ICompletionProposal proposal) {
+	public TclKeywordLazyContextInformation(ICompletionProposal proposal,
+			String target) {
 		this.proposal = proposal;
+		this.target = removeColons(target);
+	}
+
+	/**
+	 * @param target2
+	 * @return
+	 */
+	private static String removeColons(String s) {
+		int i = 0;
+		while (i < s.length() && s.charAt(i) == ':') {
+			++i;
+		}
+		return s.substring(i);
 	}
 
 	/*
@@ -78,8 +96,7 @@ public class TclKeywordLazyContextInformation implements IContextInformation {
 	private String getInfo() {
 		try {
 			final Reader reader = ScriptDocumentationAccess
-					.getHTMLContentReader(TclNature.NATURE_ID, proposal
-							.getDisplayString());
+					.getHTMLContentReader(TclNature.NATURE_ID, target);
 			if (reader != null) {
 				return HTMLPrinter.read(reader);
 			}
@@ -105,12 +122,77 @@ public class TclKeywordLazyContextInformation implements IContextInformation {
 					start = matcher.end();
 				}
 			} else {
-				String synopsis = content.substring(start, matcher.start());
-				return CUT_HTML_TAGS.matcher(synopsis).replaceAll("").trim(); //$NON-NLS-1$
+				return formatSynopsis(content.substring(start, matcher.start()));
 			}
 		}
 		return proposal.getDisplayString();
 	}
+
+	/**
+	 * @param synopsis
+	 * @return
+	 */
+	private String formatSynopsis(String synopsis) {
+		synopsis = CUT_HTML_TAGS.matcher(synopsis).replaceAll(EMPTY);
+		final String[] parts = EOL.split(synopsis);
+		final String keyword = target;
+		final StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < parts.length; ++i) {
+			final String part = parts[i].trim();
+			if (part.length() != 0 && part.startsWith(keyword)) {
+				if (sb.length() != 0) {
+					sb.append('\n');
+				}
+				sb.append(part);
+			}
+		}
+		if (sb.length() == 0) {
+			for (int i = 0; i < parts.length; ++i) {
+				final String part = parts[i].trim();
+				if (part.length() != 0) {
+					if (sb.length() != 0) {
+						sb.append('\n');
+					}
+					sb.append(part);
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+	public boolean equals(Object obj) {
+		if (obj instanceof TclKeywordLazyContextInformation) {
+			final TclKeywordLazyContextInformation other = (TclKeywordLazyContextInformation) obj;
+			final String displayString = proposal.getDisplayString();
+			if (displayString != null) {
+				if (!displayString.equals(other.proposal.getDisplayString())) {
+					return false;
+				}
+			} else {
+				if (other.proposal.getDisplayString() != null) {
+					return false;
+				}
+			}
+			return getContextInformationPosition() == other
+					.getContextInformationPosition();
+		}
+		return false;
+	}
+
+	/*
+	 * @see IContextInformationExtension#getContextInformationPosition()
+	 */
+	public int getContextInformationPosition() {
+		if (proposal instanceof ICompletionProposalExtension) {
+			return ((ICompletionProposalExtension) proposal)
+					.getContextInformationPosition();
+		}
+		return -1;
+	}
+
+	private static final String EMPTY = ""; //$NON-NLS-1$
+
+	private static final Pattern EOL = Pattern.compile("[\r\n]+"); //$NON-NLS-1$
 
 	private static final Pattern HEADER = Pattern.compile(
 			"<h\\d>(.*?)</h\\d>", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$

@@ -105,9 +105,15 @@ public class TclCompletionProposalCollector extends
 			CompletionProposal proposal) {
 		final ScriptCompletionProposal completionProposal = (ScriptCompletionProposal) super
 				.createKeywordProposal(proposal);
+		final String prefix;
+		if (proposal.extraInfo instanceof String) {
+			prefix = (String) proposal.extraInfo;
+		} else {
+			prefix = completionProposal.getReplacementString();
+		}
 		completionProposal
 				.setContextInformation(new TclKeywordLazyContextInformation(
-						completionProposal));
+						completionProposal, prefix));
 		return completionProposal;
 	}
 
