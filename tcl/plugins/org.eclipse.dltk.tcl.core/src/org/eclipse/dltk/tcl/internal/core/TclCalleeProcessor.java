@@ -74,6 +74,10 @@ public class TclCalleeProcessor implements ICalleeProcessor {
 	public Map doOperation() {
 		try {
 			String methodSource = method.getSource();
+			if (methodSource == null) {
+				// TODO: Report error here.
+				return fSearchResults;
+			}
 			CaleeSourceElementRequestor requestor = new CaleeSourceElementRequestor();
 			ISourceElementParser parser = DLTKLanguageManager
 					.getSourceElementParser(TclNature.NATURE_ID);

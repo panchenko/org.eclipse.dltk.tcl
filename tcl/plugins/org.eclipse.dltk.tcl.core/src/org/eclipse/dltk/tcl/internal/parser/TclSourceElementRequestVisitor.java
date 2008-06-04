@@ -28,6 +28,7 @@ import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclKeywordsManager;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
+import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ISourceElementRequestVisitorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
@@ -317,6 +318,16 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			if (st instanceof TclExecuteExpression) {
 				TclExecuteExpression expr = (TclExecuteExpression) st;
 				List exprs = expr.parseExpression();
+				for (int i = 0; i < exprs.size(); ++i) {
+					if (exprs.get(i) instanceof TclStatement) {
+						this.processReferences((TclStatement) exprs.get(i));
+					} else if (exprs.get(i) instanceof TclPackageDeclaration) {
+						processPackage((Statement) exprs.get(i));
+					}
+				}
+			} else if (st instanceof TclAdvancedExecuteExpression) {
+				TclAdvancedExecuteExpression expr = (TclAdvancedExecuteExpression) st;
+				List exprs = expr.getStatements();
 				for (int i = 0; i < exprs.size(); ++i) {
 					if (exprs.get(i) instanceof TclStatement) {
 						this.processReferences((TclStatement) exprs.get(i));
