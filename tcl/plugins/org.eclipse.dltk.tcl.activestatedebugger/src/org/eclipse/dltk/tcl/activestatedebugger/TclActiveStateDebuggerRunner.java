@@ -57,7 +57,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 
 		IFileHandle file = getDebuggingEnginePath(delegate);
 
-		final String exe = getInstall().getInstallLocation().toString();
+		final String exe = getInstall().getInstallLocation().toOSString();
 		final String host = (String) config
 				.getProperty(DbgpConstants.HOST_PROP);
 		final String port = (String) config
