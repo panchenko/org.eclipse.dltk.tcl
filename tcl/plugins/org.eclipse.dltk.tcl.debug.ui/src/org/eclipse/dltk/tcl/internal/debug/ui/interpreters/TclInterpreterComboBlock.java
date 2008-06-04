@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
@@ -49,7 +51,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
 public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
-	protected TclInterpreterComboBlock(IMainLaunchConfigurationTabListenerManager tab) {
+	protected TclInterpreterComboBlock(
+			IMainLaunchConfigurationTabListenerManager tab) {
 		super(tab);
 	}
 
@@ -223,6 +226,16 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			public void run() {
 				fElements.refresh();
 				IInterpreterInstall install = getInterpreter();
+				if (install == null) {
+					try {
+						install = ScriptRuntime
+								.getInterpreterInstall(scriptProject);
+					} catch (CoreException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
+					}
+				}
 				addButton.setEnabled(install != null);
 			}
 		});
