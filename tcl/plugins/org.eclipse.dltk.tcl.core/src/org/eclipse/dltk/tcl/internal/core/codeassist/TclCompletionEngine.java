@@ -317,16 +317,26 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	protected void processPartOfKeywords(int sourceStart,
 			CompletionOnKeywordArgumentOrFunctionArgument compl, String prefix,
 			Set methodNames) {
-		String[] keywords = compl.getPossibleKeywords();
-		List k = processPartOfKeywords(keywords, prefix, sourceStart);
-		if (methodNames != null) {
-			methodNames.addAll(k);
+		if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+			List k = processPartOfKeywords(compl.getPossibleKeywords(), prefix,
+					sourceStart);
+			if (methodNames != null) {
+				methodNames.addAll(k);
+			}
 		}
 	}
 
 	protected List processPartOfKeywords(String[] keywords, String prefix,
 			int sourceStart) {
+		if (prefix != null && prefix.length() != 0 && prefix.charAt(0) == ':') {
+			String[] doubleColonPrependedKeywords = new String[keywords.length];
+			for (int i = 0; i < keywords.length; ++i) {
+				doubleColonPrependedKeywords[i] = "::" + keywords[i];
+			}
+			keywords = doubleColonPrependedKeywords;
+		}
 		List k = new ArrayList();
+		prefix = prefix.trim();
 		selectKeywords(keywords, prefix, k, requestor
 				.isContextInformationMode());
 		if (k.isEmpty() && requestor.isContextInformationMode()
@@ -365,6 +375,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				proposal.setReplaceRange(sourceStart - this.offset,
 						this.endPosition - this.offset);
 				proposal.setRelevance(relevance);
+				proposal.extraInfo = prefix;
 				this.requestor.accept(proposal);
 				if (DEBUG) {
 					this.printDebug(proposal);
@@ -443,21 +454,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	protected void processCompletionOnKeywords(
 			CompletionOnKeywordOrFunction key, String token) {
 		if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
-			String[] kw = key.getPossibleKeywords();
-			processCompletionOnKeywords(token, key.canCompleteEmptyToken(), kw);
+			processPartOfKeywords(key.getPossibleKeywords(), token,
+					this.startPosition);
 		}
-	}
-
-	protected void processCompletionOnKeywords(String token,
-			boolean canCompleteEmptyToken, String[] kw) {
-		if (token != null && token.length() != 0 && token.charAt(0) == ':') {
-			String[] doubleColonPrependedKeywords = new String[kw.length];
-			for (int i = 0; i < kw.length; ++i) {
-				doubleColonPrependedKeywords[i] = "::" + kw[i];
-			}
-			kw = doubleColonPrependedKeywords;
-		}
-		processPartOfKeywords(kw, token, this.startPosition);
 	}
 
 	/**
