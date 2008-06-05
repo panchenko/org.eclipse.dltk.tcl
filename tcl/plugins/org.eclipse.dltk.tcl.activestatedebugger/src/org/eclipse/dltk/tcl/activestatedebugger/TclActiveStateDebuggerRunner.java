@@ -10,6 +10,7 @@ package org.eclipse.dltk.tcl.activestatedebugger;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -19,6 +20,7 @@ import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
 import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
+import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.launching.debug.DbgpConstants;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 import org.eclipse.dltk.utils.PlatformFileUtils;
@@ -179,6 +181,17 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 
 	protected IScriptDebugThreadConfigurator createThreadConfigurator() {
 		return new TclActiveStateDebugThreadConfigurator();
+	}
+
+	protected void abort(String message, Throwable exception, int code)
+			throws CoreException {
+		if (code == ScriptLaunchConfigurationConstants.ERR_DEBUGGING_ENGINE_NOT_CONFIGURED) {
+			super
+					.abort(
+							"Tcl Debugging Engine is not correctly configured. Path is not specified or not valid. Please configure Tcl Debugging Engine...",
+							exception, code);
+		}
+		super.abort(message, exception, code);
 	}
 
 }
