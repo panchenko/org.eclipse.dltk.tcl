@@ -6,8 +6,9 @@ public class IncrTclKeywords implements ITclKeywords {
 	private static String[] IncrTclKeywords = { "class", "itcl", "body",
 			"code", "configbody", "delete", "ensemble", "scope", "part",
 			"constructor", "destructor", "common", "public", "protected",
-			"private", "method", "itcl::class", "itcl::body", "itcl::code",
-			"itcl::configbody", "itcl::delete", "itcl::ensemble", "itcl::scope" };
+			"inherit", "private", "method", "itcl::class", "itcl::body",
+			"itcl::code", "itcl::configbody", "itcl::delete", "itcl::ensemble",
+			"itcl::scope" };
 
 	public String[] getKeywords() {
 		return IncrTclKeywords;
