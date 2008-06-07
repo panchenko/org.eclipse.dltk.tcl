@@ -349,7 +349,7 @@ public class TclParseUtils {
 		}
 		if (from >= content.length())
 			from--;
-		for (pos = from; pos > 0 && pos < content.length(); ++pos) {
+		for (pos = from; pos >= 0 && pos < content.length(); ++pos) {
 			if (checkBounds(content, pos)) {
 				if (content.charAt(pos) == '$' && pos == from) {
 					continue;
@@ -385,13 +385,16 @@ public class TclParseUtils {
 		if (from >= content.length())
 			from--;
 		int pos;
-		for (pos = from; pos > 0 && pos < content.length(); --pos) {
+		for (pos = from; pos >= 0 && pos < content.length(); --pos) {
 			if (checkBounds(content, pos)) {
 				if (content.charAt(pos) == '$') {
 					return pos;
 				}
 				return pos + 1;
 			}
+		}
+		if (pos == -1) {
+			return 0;
 		}
 		return pos;
 	}
