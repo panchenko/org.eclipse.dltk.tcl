@@ -28,21 +28,27 @@ import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.tcl.core.TclMatchLocatorParser;
+import org.eclipse.dltk.tcl.core.extensions.IMatchLocatorExtension;
+import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 
 public class TclMatchLocator extends MatchLocator {
+	IMatchLocatorExtension[] extensions = null;
 
 	public TclMatchLocator(SearchPattern pattern, SearchRequestor requestor,
 			IDLTKSearchScope scope, IProgressMonitor progressMonitor) {
 		super(pattern, requestor, scope, progressMonitor);
+		extensions = TclExtensionManager.getDefault()
+				.getMatchLocatorExtensions();
 	}
 
 	/*
 	 * Create method handle. Store occurences for create handle to retrieve
 	 * possible duplicate ones.
 	 */
-	protected IModelElement createMethodHandle(ISourceModule module,
+	public IModelElement createMethodHandle(ISourceModule module,
 			String methodName) {
 		IMethod methodHandle = null;
+
 		if (methodName.indexOf("::") != -1) {
 			int pos = methodName.lastIndexOf("::");
 			String cName = methodName.substring(0, pos);
@@ -91,11 +97,21 @@ public class TclMatchLocator extends MatchLocator {
 		// if (!(parent instanceof IType)) return parent;
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			return createMethodHandle(type, ((TclMatchLocatorParser) parser).getRealMethodName(method));
+			return createMethodHandle(type, ((TclMatchLocatorParser) parser)
+					.getRealMethodName(method));
 		} else if (parent instanceof ISourceModule) {
+			for (int i = 0; i < extensions.length; i++) {
+				IModelElement handle = extensions[i].createMethodHandle(
+						(ISourceModule) parent, method, this);
+				if (handle != null) {
+					return handle;
+				}
+			}
 			if (method.getName().indexOf("::") != -1) {
-				String methodName = method.getDeclaringTypeName() + "::"
-						+ ((TclMatchLocatorParser) parser).getRealMethodName(method);
+				String methodName = method.getDeclaringTypeName()
+						+ "::"
+						+ ((TclMatchLocatorParser) parser)
+								.getRealMethodName(method);
 				return createMethodHandle((ISourceModule) parent, methodName);
 			} else {
 				return createMethodHandle((ISourceModule) parent, method
@@ -127,8 +143,8 @@ public class TclMatchLocator extends MatchLocator {
 		if (name.startsWith("::")) {
 			name = name.substring(2);
 		}
-		if( name.endsWith("::")) {
-			name = name.substring(0, name.length()- 2);
+		if (name.endsWith("::")) {
+			name = name.substring(0, name.length() - 2);
 		}
 		if (openable instanceof SourceModule
 				|| openable instanceof ExternalSourceModule

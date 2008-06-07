@@ -471,12 +471,15 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	}
 
 	public boolean visit(MethodDeclaration method) throws Exception {
+		this.fNodes.push(method);
+		this.fInMethod = true;
+		this.fCurrentMethod = method;
 		for (int i = 0; i < extensions.length; i++) {
 			if (extensions[i].skipMethod(method, this)) {
 				return true;
 			}
 		}
-		this.fNodes.push(method);
+
 		String[] parameter = null;
 		String[] parameterInitializers = null;
 		List arguments = method.getArguments();
@@ -561,6 +564,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		for (int i = 0; i < extensions.length; i++) {
 			if (extensions[i].skipMethod(method, this)) {
+				this.fNodes.pop();
 				return true;
 			}
 		}
