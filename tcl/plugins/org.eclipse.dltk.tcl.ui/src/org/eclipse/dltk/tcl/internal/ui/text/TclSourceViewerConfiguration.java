@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ScriptSourceViewer;
 import org.eclipse.dltk.internal.ui.text.ScriptElementProvider;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.internal.ui.hierarchy.TclHierarchyInformationControl;
 import org.eclipse.dltk.tcl.internal.ui.text.completion.TclContentAssistPreference;
 import org.eclipse.dltk.tcl.internal.ui.text.completion.TclScriptCompletionProcessor;
@@ -20,9 +21,9 @@ import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
 import org.eclipse.dltk.ui.text.AbstractScriptScanner;
 import org.eclipse.dltk.ui.text.IColorManager;
+import org.eclipse.dltk.ui.text.ScriptCommentScanner;
 import org.eclipse.dltk.ui.text.ScriptPresentationReconciler;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
-import org.eclipse.dltk.ui.text.SingleTokenScriptScanner;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
 import org.eclipse.dltk.ui.text.completion.ContentAssistProcessor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -33,7 +34,6 @@ import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
@@ -91,6 +91,7 @@ public class TclSourceViewerConfiguration extends
 			}
 		};
 	}
+
 	public IInformationPresenter getHierarchyPresenter(
 			ScriptSourceViewer sourceViewer, boolean doCodeResolve) {
 		// Do not create hierarchy presenter if there's no CU.
@@ -122,13 +123,15 @@ public class TclSourceViewerConfiguration extends
 		fStringScanner = new TclStringScanner(getColorManager(),
 				fPreferenceStore);
 
-		fCommentScanner = new SingleTokenScriptScanner(getColorManager(),
-				fPreferenceStore, TclColorConstants.TCL_SINGLE_LINE_COMMENT);
+		fCommentScanner = new ScriptCommentScanner(getColorManager(),
+				fPreferenceStore, TclColorConstants.TCL_SINGLE_LINE_COMMENT,
+				TclColorConstants.TCL_TODO_TAG, TclPlugin.getDefault()
+						.getPluginPreferences());
+
 	}
 
 	/**
-	 * @return <code>true</code> iff the new setup without text tools is in
-	 *         use.
+	 * @return <code>true</code> iff the new setup without text tools is in use.
 	 */
 	private boolean isNewSetup() {
 		return fTextTools == null;
@@ -235,7 +238,7 @@ public class TclSourceViewerConfiguration extends
 		assistant.setContentAssistProcessor(stringProcessor,
 				TclPartitions.TCL_STRING);
 	}
-	
+
 	protected ContentAssistPreference getContentAssistPreference() {
 		return TclContentAssistPreference.getDefault();
 	}

@@ -40,6 +40,8 @@ public class TclEditorColoringConfigurationBlock extends
 			{ PreferencesMessages.DLTKEditorPreferencePage_singleLineComment,
 					TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR,
 					sCommentsCategory },
+			{ PreferencesMessages.DLTKEditorPreferencePage_CommentTaskTags,
+					TclPreferenceConstants.COMMENT_TASK_TAGS, sCommentsCategory },
 			{ PreferencesMessages.DLTKEditorPreferencePage_keywords,
 					TclPreferenceConstants.EDITOR_KEYWORD_COLOR, sCoreCategory },
 

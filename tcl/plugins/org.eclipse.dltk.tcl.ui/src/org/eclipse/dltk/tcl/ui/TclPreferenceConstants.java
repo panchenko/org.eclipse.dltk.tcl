@@ -447,12 +447,19 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 	public static final String CODEASSIST_FILTER_INTERNAL_API = "tcl_filter_internal_api";
 
+	public final static String COMMENT_TASK_TAGS = TclColorConstants.TCL_TODO_TAG;
+
+	public final static String COMMENT_TASK_TAGS_BOLD = COMMENT_TASK_TAGS
+			+ EDITOR_BOLD_SUFFIX;
+	
 	public static void initializeDefaultValues(IPreferenceStore store) {
 		PreferenceConstants.initializeDefaultValues(store);
 
 		PreferenceConverter.setDefault(store,
 				TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR,
 				new RGB(63, 127, 95));
+		PreferenceConverter.setDefault(store, COMMENT_TASK_TAGS, new RGB(127,
+				159, 191));
 		PreferenceConverter.setDefault(store,
 				TclPreferenceConstants.EDITOR_KEYWORD_COLOR,
 				new RGB(127, 0, 85));
@@ -474,6 +481,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 		store.setDefault(
 				TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD, false);
+		store.setDefault(COMMENT_TASK_TAGS_BOLD, true);
 		store
 				.setDefault(
 						TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_ITALIC,
