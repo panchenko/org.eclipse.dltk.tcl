@@ -89,6 +89,8 @@ public class IncrTclBodyCommandProcessor extends AbstractTclCommandProcessor {
 				if (methods[i].getName().equals(methodName)) {
 					method.setModifier(methods[i].getModifiers());
 					method.setDeclaringType(possiblyType);
+					method.setDeclaringTypeName(TclParseUtil.getElementFQN(
+							possiblyType, "::", module));
 					this.addToParent(parent, method);
 					found = true;
 					break;

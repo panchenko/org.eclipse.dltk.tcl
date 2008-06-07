@@ -61,29 +61,33 @@ public class IncrTclSourceElementRequestVisitorExtension implements
 
 	public boolean extendedExitRequired(MethodDeclaration method,
 			TclSourceElementRequestVisitor original) {
+		if (method instanceof IncrTclBodyDeclaration) {
+			return true;
+		}
 		return false;// (method.getModifiers() & IIncrTclModifiers.AccIncrTcl)
-						// != 0;
+		// != 0;
 	}
 
 	public ExitFromType processField(FieldDeclaration decl,
 			TclSourceElementRequestVisitor original) {
-		// if ((decl.getModifiers() & IIncrTclModifiers.AccIncrTcl) != 0
-		// && decl instanceof IncrTclFieldDeclaration) {
-		// IncrTclFieldDeclaration field = (IncrTclFieldDeclaration) decl;
-		// String tName = field.getDeclaringTypeName();
-		// if (tName == null) {
-		// tName = "";
-		// }
-		// return original.resolveType(field, tName + "::dummy", false);
-		// }
+		// TclParseUtil.getScopeParent(decl,)
+		MethodDeclaration method = original.getCurrentMethod();
+		if (method != null && method instanceof IncrTclBodyDeclaration) {
+			IncrTclBodyDeclaration body = (IncrTclBodyDeclaration) method;
+			Declaration dtn = (Declaration) body.getDeclaringType();
+			// return original.resolveType(dtn, body.getDeclaringTypeName() +
+			// "::"
+			// + body.getName(), false);
+			return null;
+		}
 		return null;
 	}
 
 	public boolean skipMethod(MethodDeclaration method,
 			TclSourceElementRequestVisitor tclSourceElementRequestVisitor) {
-		if (method instanceof IncrTclBodyDeclaration) {
-			return true;
-		}
+		// if (method instanceof IncrTclBodyDeclaration) {
+		// return true;
+		// }
 		return false;
 	}
 }
