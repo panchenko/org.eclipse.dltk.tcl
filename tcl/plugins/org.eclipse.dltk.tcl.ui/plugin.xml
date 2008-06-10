@@ -82,15 +82,7 @@
          <perspectiveShortcut
                id="org.eclipse.dltk.tcl.ui.TclPerspective">
          </perspectiveShortcut>
-      </perspectiveExtension>
-      
-      <perspectiveExtension
-            targetID="org.eclipse.debug.ui.DebugPerspective">
-         <actionSet
-               id="org.eclipse.dltk.ui.DLTKActionSet">
-         </actionSet>
-      </perspectiveExtension>
-      
+      </perspectiveExtension>  
       
       <perspectiveExtension
             targetID="org.eclipse.dltk.tcl.ui.TclPerspective">
