@@ -10,6 +10,7 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ScriptSourceViewer;
 import org.eclipse.dltk.internal.ui.text.ScriptElementProvider;
@@ -125,8 +126,8 @@ public class TclSourceViewerConfiguration extends
 
 		fCommentScanner = new ScriptCommentScanner(getColorManager(),
 				fPreferenceStore, TclColorConstants.TCL_SINGLE_LINE_COMMENT,
-				TclColorConstants.TCL_TODO_TAG, TclPlugin.getDefault()
-						.getPluginPreferences());
+				TclColorConstants.TCL_TODO_TAG, new TodoTaskPreferences(
+						TclPlugin.getDefault().getPluginPreferences()));
 
 	}
 
