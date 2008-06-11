@@ -199,7 +199,9 @@ public final class TclCheckerHelper {
 		if (paths.containsKey(environment)) {
 			String path = (String) paths.get(environment);
 			if (path.length() != 0) {
-				IFileHandle file = environment.getFile(new Path(path));
+				IFileHandle file = PlatformFileUtils
+						.findAbsoluteOrEclipseRelativeFile(environment,
+								new Path(path));
 				if (file.exists()) {
 					return true;
 				}
