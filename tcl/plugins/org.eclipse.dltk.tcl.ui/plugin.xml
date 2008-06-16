@@ -557,5 +557,40 @@
             contentMergeViewerId="org.eclipse.dltk.tcl.internal.ui.compare.TclMergeViewer">
 	  </contentTypeBinding>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Tcl browsing"
+            icon="icons/eview16/browse_persp.gif"
+            class="org.eclipse.dltk.tcl.internal.ui.browsing.TclBrowsingPerspectiveFactory"
+            id="org.eclipse.jdt.ui.XOTclBrowsingPerspective">
+         <description>
+            Tcl browsing
+         </description>
+      </perspective>
+   </extension>
+   <extension
+      point="org.eclipse.ui.views">
+   <view
+         category="org.eclipse.dltk.tcl.ui"
+         class="org.eclipse.dltk.ui.browsing.ProjectsView:org.eclipse.dltk.tcl.core.nature"
+         icon="icons/eview16/tcl_persp.gif"
+         id="org.eclipse.dltk.tcl.ui.Projects"
+         name="Tcl Projects">
+   </view>   
+   <view
+         category="org.eclipse.dltk.tcl.ui"
+         class="org.eclipse.dltk.ui.browsing.ext.ExtendedClassesView:org.eclipse.dltk.tcl.core.nature"
+         icon="icons/eview16/tcl_persp.gif"
+         id="org.eclipse.dltk.tcl.ui.extbrowsing"
+         name="Tcl Namespaces/Classes">
+   </view>
+   <view
+         category="org.eclipse.dltk.tcl.ui"
+         class="org.eclipse.dltk.ui.browsing.MembersView:org.eclipse.dltk.tcl.core.nature"
+         icon="icons/eview16/tcl_persp.gif"
+         id="org.eclipse.dltk.tcl.ui.Members"
+         name="Tcl Members">
+   </view>
+</extension>
 </plugin>

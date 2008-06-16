@@ -17,4 +17,20 @@ public class TclOpenTypeAction extends OpenTypeAction {
 	protected IDLTKUILanguageToolkit getUILanguageToolkit() {
 		return TclUILanguageToolkit.getInstance();
 	}
+
+	protected String getOpenTypeErrorMessage() {
+		return "An exception occurred while opening the namespace/class.";
+	}
+
+	protected String getOpenTypeErrorTitle() {
+		return "Open Namespace/Class";
+	}
+
+	protected String getOpenTypeDialogMessage() {
+		return "&Select a namespace/class to open (? = any character, * = any String, TZ = TimeZone):";
+	}
+
+	protected String getOpenTypeDialogTitle() {
+		return "Open Namespace/Class";
+	}
 }
