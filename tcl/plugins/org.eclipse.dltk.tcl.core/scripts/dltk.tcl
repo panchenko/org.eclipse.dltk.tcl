@@ -51,6 +51,7 @@ proc package {subcmd args} {
             set path $path_tmp
             if {[info exists lcl_use_path]} {
                 set path [lindex $lcl_use_path end]
+                set path [get-canonical-path $path]
                 set path_tmp $path
             }
             add-pkg-info $name $vers $path $lcl_dir
@@ -216,7 +217,6 @@ proc process-pkg-info {find_level find_pkgs} {
 
     # load all specified pkgs
     set pkgs $find_pkgs
-    puts $pkgs
     if {[string equal $pkgs ""]} {
         set pkgs [package names]
     } ;# End of if stmt
