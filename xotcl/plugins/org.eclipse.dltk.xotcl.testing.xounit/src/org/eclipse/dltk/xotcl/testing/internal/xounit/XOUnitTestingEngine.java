@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.ast.ASTNode;
@@ -128,6 +129,7 @@ public class XOUnitTestingEngine implements ITclTestingEngine {
 			IPath runner = deployment.add(Activator.getDefault().getBundle(),
 					"scripts/xounitTestingEngine.tcl");
 			IPath scriptFilePath = config.getScriptFilePath();
+			runner = new Path(deployment.getFile(runner).toOSString());
 			config.setScriptFile(runner);
 			if (scriptFilePath != null) {
 				config.addScriptArg(scriptFilePath.toOSString(), 0);
