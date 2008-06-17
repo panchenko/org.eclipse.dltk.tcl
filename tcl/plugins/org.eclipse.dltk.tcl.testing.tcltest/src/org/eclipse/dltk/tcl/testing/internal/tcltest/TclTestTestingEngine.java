@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.ast.ASTNode;
@@ -99,6 +100,7 @@ public class TclTestTestingEngine implements ITclTestingEngine {
 					.createDeployment();
 			IPath runner = deployment.add(Activator.getDefault().getBundle(),
 					"scripts/tcltestEngine.tcl");
+			runner = new Path(deployment.getFile(runner).toOSString());
 			IPath scriptFilePath = config.getScriptFilePath();
 			config.setScriptFile(runner);
 			if (scriptFilePath != null) {
