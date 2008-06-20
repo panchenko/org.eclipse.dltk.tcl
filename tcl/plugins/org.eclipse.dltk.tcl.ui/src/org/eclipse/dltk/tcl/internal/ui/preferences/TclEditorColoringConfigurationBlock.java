@@ -12,8 +12,10 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 import java.io.InputStream;
 
 import org.eclipse.dltk.internal.ui.editor.ScriptSourceViewer;
+import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.editor.TclDocumentSetupParticipant;
 import org.eclipse.dltk.tcl.internal.ui.text.SimpleTclSourceViewerConfiguration;
+import org.eclipse.dltk.tcl.internal.ui.text.TclTextTools;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.preferences.AbstractScriptEditorColoringConfigurationBlock;
@@ -22,6 +24,7 @@ import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
 import org.eclipse.dltk.ui.preferences.PreferencesMessages;
 import org.eclipse.dltk.ui.text.IColorManager;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
+import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IOverviewRuler;
@@ -55,7 +58,20 @@ public class TclEditorColoringConfigurationBlock extends
 			{ PreferencesMessages.DLTKEditorPreferencePage_numbers,
 					TclPreferenceConstants.EDITOR_NUMBER_COLOR, sCoreCategory },
 			{ PreferencesMessages.DLTKEditorPreferencePage_variables,
-					TclPreferenceConstants.EDITOR_VARIABLE_COLOR, sCoreCategory } };
+					TclPreferenceConstants.EDITOR_VARIABLE_COLOR, sCoreCategory },
+/*					
+			{ PreferencesMessages.DLTKEditorPreferencePage_function_colors,
+				TclPreferenceConstants.EDITOR_PROCEDURES_COLOR, sCoreCategory },
+					
+			{ PreferencesMessages.DLTKEditorPreferencePage_class_colors,
+					TclPreferenceConstants.EDITOR_CLASSES_COLOR, sCoreCategory },
+			{ PreferencesMessages.DLTKEditorPreferencePage_arguments,
+				TclPreferenceConstants.EDITOR_ARGUMENTS_COLOR, sCoreCategory },
+					
+			{ PreferencesMessages.DLTKEditorPreferencePage_base_classes,
+				TclPreferenceConstants.EDITOR_BASE_CLASS_COLOR, sCoreCategory },
+*/
+	};
 
 	public TclEditorColoringConfigurationBlock(OverlayPreferenceStore store) {
 		super(store);
@@ -88,4 +104,12 @@ public class TclEditorColoringConfigurationBlock extends
 	protected InputStream getPreviewContentReader() {
 		return getClass().getResourceAsStream(PREVIEW_FILE_NAME);
 	}
+	
+	/**
+	 * Override getTextTools() for enabling semantic highlighting in preview editor 
+	 */
+	protected ScriptTextTools getTextTools() {
+		return TclUI.getDefault().getTextTools();
+	}
+	
 }

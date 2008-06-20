@@ -451,7 +451,19 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 	public final static String COMMENT_TASK_TAGS_BOLD = COMMENT_TASK_TAGS
 			+ EDITOR_BOLD_SUFFIX;
-	
+
+	public final static String EDITOR_CLASSES_COLOR = TclColorConstants.TCL_CLASS;
+	public final static String EDITOR_CLASSES_COLOR_BOLD = EDITOR_CLASSES_COLOR
+			+ EDITOR_BOLD_SUFFIX;
+
+	public final static String EDITOR_PROCEDURES_COLOR = TclColorConstants.TCL_PROCEDURE;
+
+	public final static String EDITOR_PROCEDURES_COLOR_BOLD = EDITOR_PROCEDURES_COLOR
+			+ EDITOR_BOLD_SUFFIX;
+
+	public final static String EDITOR_ARGUMENTS_COLOR = TclColorConstants.TCL_ARGUMENT;
+	public final static String EDITOR_BASE_CLASS_COLOR = TclColorConstants.TCL_BASE_CLASS;
+
 	public static void initializeDefaultValues(IPreferenceStore store) {
 		PreferenceConstants.initializeDefaultValues(store);
 

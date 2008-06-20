@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.dltk.core.SimpleClassDLTKExtensionManager;
 import org.eclipse.dltk.tcl.internal.ui.TclSemanticPositionUpdater;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
-import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.semantilhighlighting.ISemanticHighlightingExtension;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlighter;
@@ -73,8 +72,12 @@ public class TclTextTools extends ScriptTextTools {
 				highlightings.addAll(Arrays.asList(hl));
 			}
 		}
-		return new SemanticHighlighting[] { new SH(
-				TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR, null) };
+		SemanticHighlighting[] ret = new SemanticHighlighting[highlightings
+				.size()];
+		for (int i = 0; i < highlightings.size(); i++)
+			ret[i] = (SemanticHighlighting) highlightings.get(i);
+
+		return ret;
 	}
 
 	public ISemanticHighlighter getSemanticPositionUpdater() {
@@ -83,21 +86,24 @@ public class TclTextTools extends ScriptTextTools {
 
 	public final static class SH extends SemanticHighlighting {
 
-		private String preferenceKey;
-
-		public String getBackgroundPreferenceKey() {
-			return bgColor;
-		}
-
-		private String bgColor;
+		private final String preferenceKey;
+		private final String bgColor;
 
 		public SH(String editorXmlTagNameColor, String bgColor) {
 			this.preferenceKey = editorXmlTagNameColor;
 			this.bgColor = bgColor;
 		}
 
+		public boolean isSemanticOnly() {
+			return true;
+		}
+
 		public String getPreferenceKey() {
 			return preferenceKey;
+		}
+
+		public String getBackgroundPreferenceKey() {
+			return bgColor;
 		}
 
 		public int hashCode() {

@@ -55,4 +55,26 @@ public final class TclColorConstants {
 	 * The color key for TO-DO tasks in comments.
 	 */
 	public static final String TCL_TODO_TAG = DLTKColorConstants.TASK_TAG;
+	
+	/**
+	 * The color key for TCL classes
+	 */
+	public static final String TCL_CLASS = DLTKColorConstants.DLTK_CLASS_DEFINITION;
+	
+	/**
+	 * The color key for TCL procedures
+	 */
+	public static final String TCL_PROCEDURE = DLTKColorConstants.DLTK_FUNCTION_DEFINITION;
+	
+	/**
+	 * The color key for arguments of TCL procedures
+	 */
+	public static final String TCL_ARGUMENT = DLTKColorConstants.DLTK_ARGUMENT;
+
+	/**
+	 * The color key for base classes in TCL class declarations
+	 */
+	public static final String TCL_BASE_CLASS = DLTKColorConstants.DLTK_BASE_CLASS;
+
+	
 }

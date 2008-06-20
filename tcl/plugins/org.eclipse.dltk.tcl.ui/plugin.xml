@@ -593,4 +593,10 @@
          name="Tcl Members">
    </view>
 </extension>
+<extension
+	point="org.eclipse.dltk.tcl.ui.tclSemanticHighlighting">
+	<highlightingExtension
+		class="org.eclipse.dltk.tcl.internal.ui.DefaultTclSemanticHighlightingExtension">
+	</highlightingExtension>
+</extension>
 </plugin>

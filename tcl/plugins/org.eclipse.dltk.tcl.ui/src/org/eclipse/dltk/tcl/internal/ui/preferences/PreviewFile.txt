@@ -1,6 +1,5 @@
-###############################################################################
 # Comment
-###############################################################################
+# TODO add task here
 
 namespace eval myNamespace {
 	proc myproc ( a { b 20 } } {
@@ -11,4 +10,16 @@ namespace eval myNamespace {
 		set s "Alfa"
 		return [expr { s + b }]
 	}
+}
+
+#XOTcl
+package require XOTcl
+Class baseClass
+baseClass instproc func1 {arg0 arg1} {
+
+}
+  
+Class derivedClass -superclass baseClass
+derivedClass instproc func2 {arg0} {
+	 
 }

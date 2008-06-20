@@ -11,6 +11,7 @@ package org.eclipse.dltk.tcl.internal.ui;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
+import org.eclipse.dltk.ui.editor.highlighting.SemanticHighlightingUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.editors.text.EditorsUI;
 
@@ -26,6 +27,8 @@ public class TclUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		EditorsUI.useAnnotationsPreferencePage(store);
 		EditorsUI.useQuickDiffPreferencePage(store);
 		TclPreferenceConstants.initializeDefaultValues(store);
+		SemanticHighlightingUtils.initializeDefaultValues(store, TclUI
+				.getDefault().getTextTools().getSemanticHighlightings());
 	}	
 	
 }
