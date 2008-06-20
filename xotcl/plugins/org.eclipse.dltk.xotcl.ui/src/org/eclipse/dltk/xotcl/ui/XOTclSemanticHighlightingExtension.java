@@ -14,7 +14,7 @@ public class XOTclSemanticHighlightingExtension implements
 		ISemanticHighlightingExtension {
 
 	private final SemanticHighlighting[] highlightings = new SemanticHighlighting[] { new TclTextTools.SH(
-			TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR, null) };
+			TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR, null, null) };
 
 	private static final int HL_EOL_COMMENT = 0;
 
