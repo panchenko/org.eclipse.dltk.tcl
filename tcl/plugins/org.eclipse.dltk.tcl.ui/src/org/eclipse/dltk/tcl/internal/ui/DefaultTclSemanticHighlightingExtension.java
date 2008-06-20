@@ -14,16 +14,25 @@ import org.eclipse.dltk.tcl.ui.semantilhighlighting.ISemanticHighlightingExtensi
 import org.eclipse.dltk.ui.editor.highlighting.HighlightedPosition;
 import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlightingRequestor;
 import org.eclipse.dltk.ui.editor.highlighting.SemanticHighlighting;
+import org.eclipse.dltk.ui.preferences.PreferencesMessages;
 
 public class DefaultTclSemanticHighlightingExtension implements
 		ISemanticHighlightingExtension {
 
 	private SemanticHighlighting[] highlightings = new SemanticHighlighting[] {
-			new TclTextTools.SH(TclPreferenceConstants.EDITOR_PROCEDURES_COLOR,	null),			
-			new TclTextTools.SH(TclPreferenceConstants.EDITOR_ARGUMENTS_COLOR, null),
-			new TclTextTools.SH(TclPreferenceConstants.EDITOR_CLASSES_COLOR, null),
-			new TclTextTools.SH(TclPreferenceConstants.EDITOR_BASE_CLASS_COLOR, null)
-	};
+			new TclTextTools.SH(
+					TclPreferenceConstants.EDITOR_PROCEDURES_COLOR,
+					null,
+					PreferencesMessages.DLTKEditorPreferencePage_function_colors),
+			new TclTextTools.SH(TclPreferenceConstants.EDITOR_ARGUMENTS_COLOR,
+					null,
+					PreferencesMessages.DLTKEditorPreferencePage_arguments),
+			new TclTextTools.SH(TclPreferenceConstants.EDITOR_CLASSES_COLOR,
+					null,
+					PreferencesMessages.DLTKEditorPreferencePage_class_colors),
+			new TclTextTools.SH(TclPreferenceConstants.EDITOR_BASE_CLASS_COLOR,
+					null,
+					PreferencesMessages.DLTKEditorPreferencePage_base_classes) };
 
 	private static final int HL_PROCEDURES = 0;
 	private static final int HL_ARGUMENTS = 1;

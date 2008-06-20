@@ -88,14 +88,16 @@ public class TclTextTools extends ScriptTextTools {
 
 		private final String preferenceKey;
 		private final String bgColor;
+		private final String description;
 
-		public SH(String editorXmlTagNameColor, String bgColor) {
+		public SH(String editorXmlTagNameColor, String bgColor, String desc) {
 			this.preferenceKey = editorXmlTagNameColor;
 			this.bgColor = bgColor;
+			this.description = desc;
 		}
 
 		public boolean isSemanticOnly() {
-			return true;
+			return description != null;
 		}
 
 		public String getPreferenceKey() {
@@ -128,6 +130,10 @@ public class TclTextTools extends ScriptTextTools {
 			} else if (!preferenceKey.equals(other.preferenceKey))
 				return false;
 			return true;
+		}
+
+		public String getDisplayName() {
+			return description;
 		}
 	}
 }

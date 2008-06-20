@@ -58,20 +58,7 @@ public class TclEditorColoringConfigurationBlock extends
 			{ PreferencesMessages.DLTKEditorPreferencePage_numbers,
 					TclPreferenceConstants.EDITOR_NUMBER_COLOR, sCoreCategory },
 			{ PreferencesMessages.DLTKEditorPreferencePage_variables,
-					TclPreferenceConstants.EDITOR_VARIABLE_COLOR, sCoreCategory },
-/*					
-			{ PreferencesMessages.DLTKEditorPreferencePage_function_colors,
-				TclPreferenceConstants.EDITOR_PROCEDURES_COLOR, sCoreCategory },
-					
-			{ PreferencesMessages.DLTKEditorPreferencePage_class_colors,
-					TclPreferenceConstants.EDITOR_CLASSES_COLOR, sCoreCategory },
-			{ PreferencesMessages.DLTKEditorPreferencePage_arguments,
-				TclPreferenceConstants.EDITOR_ARGUMENTS_COLOR, sCoreCategory },
-					
-			{ PreferencesMessages.DLTKEditorPreferencePage_base_classes,
-				TclPreferenceConstants.EDITOR_BASE_CLASS_COLOR, sCoreCategory },
-*/
-	};
+					TclPreferenceConstants.EDITOR_VARIABLE_COLOR, sCoreCategory } };
 
 	public TclEditorColoringConfigurationBlock(OverlayPreferenceStore store) {
 		super(store);
@@ -104,12 +91,13 @@ public class TclEditorColoringConfigurationBlock extends
 	protected InputStream getPreviewContentReader() {
 		return getClass().getResourceAsStream(PREVIEW_FILE_NAME);
 	}
-	
+
 	/**
-	 * Override getTextTools() for enabling semantic highlighting in preview editor 
+	 * Override getTextTools() for enabling semantic highlighting in preview
+	 * editor
 	 */
 	protected ScriptTextTools getTextTools() {
 		return TclUI.getDefault().getTextTools();
 	}
-	
+
 }

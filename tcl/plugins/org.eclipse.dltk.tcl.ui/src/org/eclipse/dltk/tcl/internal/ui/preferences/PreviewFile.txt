@@ -14,6 +14,11 @@ namespace eval myNamespace {
 
 #XOTcl
 package require XOTcl
+@ @File {
+	description {
+		XOTcl documentation example
+	}
+}
 Class baseClass
 baseClass instproc func1 {arg0 arg1} {
 
