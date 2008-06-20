@@ -2,7 +2,7 @@
 # TODO add task here
 
 namespace eval myNamespace {
-	proc myproc ( a { b 20 } } {
+	proc myproc { a { b 20 } } {
 		upvar 1 $a array
 		s = [string length $a]
 		puts $array
