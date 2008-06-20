@@ -2,58 +2,38 @@ package org.eclipse.dltk.xotcl.ui;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.internal.ui.editor.SemanticHighlightingManager.HighlightedPosition;
-import org.eclipse.dltk.internal.ui.editor.semantic.highlighting.Highlighting;
-import org.eclipse.dltk.internal.ui.editor.semantic.highlighting.SemanticHighlighting;
-import org.eclipse.dltk.internal.ui.editor.semantic.highlighting.SemanticHighlightingPresenter;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.internal.ui.text.TclTextTools;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.semantilhighlighting.ISemanticHighlightingExtension;
+import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlightingRequestor;
+import org.eclipse.dltk.ui.editor.highlighting.SemanticHighlighting;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclDocumentationNode;
 
 public class XOTclSemanticHighlightingExtension implements
 		ISemanticHighlightingExtension {
-	private SemanticHighlighting[] highlightings = new SemanticHighlighting[] { new TclTextTools.SH(
+
+	private final SemanticHighlighting[] highlightings = new SemanticHighlighting[] { new TclTextTools.SH(
 			TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR, null) };
+
+	private static final int HL_EOL_COMMENT = 0;
 
 	public XOTclSemanticHighlightingExtension() {
 	}
 
-	public HighlightedPosition[] calculatePositions(ASTNode node,
-			SemanticHighlightingPresenter presenter,
-			Highlighting[] highlightings) {
-		Highlighting highlightingFrom = getHighlightingFrom(
-				this.highlightings[0], highlightings);
+	public void processNode(ASTNode node,
+			ISemanticHighlightingRequestor requestor) {
 		if (node instanceof TclStatement) {
 			TclStatement st = (TclStatement) node;
 			if (st.getAt(0) instanceof SimpleReference
-					&& ((SimpleReference) st.getAt(0)).getName().equals("@")) {
-				Highlighting hl = highlightingFrom;
-				return new HighlightedPosition[] { presenter
-						.createHighlightedPosition(st.sourceStart(), st
-								.sourceEnd()
-								- st.sourceStart(), hl) };
+					&& ((SimpleReference) st.getAt(0)).getName().equals("@")) { //$NON-NLS-1$
+				requestor.addPosition(st.sourceStart(), st.sourceEnd(),
+						HL_EOL_COMMENT);
 			}
 		} else if (node instanceof XOTclDocumentationNode) {
-			return new HighlightedPosition[] { presenter
-					.createHighlightedPosition(node.sourceStart(), node
-							.sourceEnd()
-							- node.sourceStart(), highlightingFrom) };
+			requestor.addPosition(node.sourceStart(), node.sourceEnd(),
+					HL_EOL_COMMENT);
 		}
-		return new HighlightedPosition[0];
-	}
-
-	private Highlighting getHighlightingFrom(
-			SemanticHighlighting semanticHighlighting,
-			Highlighting[] highlightings2) {
-		for (int i = 0; i < highlightings2.length; i++) {
-			if (highlightings2[i].getSemaHighlighting().equals(
-					semanticHighlighting)) {
-				return highlightings2[i];
-			}
-		}
-		return null;
 	}
 
 	public SemanticHighlighting[] getHighlightings() {
