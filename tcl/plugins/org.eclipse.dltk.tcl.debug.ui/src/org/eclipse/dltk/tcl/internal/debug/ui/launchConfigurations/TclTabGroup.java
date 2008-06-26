@@ -25,7 +25,7 @@ public class TclTabGroup extends AbstractLaunchConfigurationTabGroup {
 				new EnvironmentTab(),
 				// new SourceContainerLookupTab(),
 				// new CommonTab()
-				new ScriptCommonTab() };
+				new ScriptCommonTab(main) };
 		setTabs(tabs);
 	}
 }
