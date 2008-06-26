@@ -62,8 +62,10 @@ public class TclParseUtils {
 									ASTNode node = (ASTNode) elements.get(0);
 									Expression initializer = null;
 									if (elements.size() > 1) {
-										initializer = (Expression) elements
-												.get(1);
+										if (elements.get(1) instanceof Expression) {
+											initializer = (Expression) elements
+													.get(1);
+										}
 									}
 									if (node instanceof TclStatement
 											&& ((TclStatement) node).getCount() > 0) {
