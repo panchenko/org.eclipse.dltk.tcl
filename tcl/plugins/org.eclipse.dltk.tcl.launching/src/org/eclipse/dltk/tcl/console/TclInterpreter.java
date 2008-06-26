@@ -11,6 +11,7 @@ package org.eclipse.dltk.tcl.console;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -85,15 +86,18 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 	}
 
 	public void close() throws IOException {
-		if (protocol != null) {
-			protocol.execShell(CLOSE_COMMAND, new String[] {});
-			protocol.close();
-		}
-		// run all close runnables.
-		for (Iterator iterator = this.closeRunnables.iterator(); iterator
-				.hasNext();) {
-			Runnable op = (Runnable) iterator.next();
-			op.run();
+		try {
+			if (protocol != null) {
+				protocol.execShell(CLOSE_COMMAND, new String[] {});
+				protocol.close();
+			}
+			// run all close runnables.
+			for (Iterator iterator = this.closeRunnables.iterator(); iterator
+					.hasNext();) {
+				Runnable op = (Runnable) iterator.next();
+				op.run();
+			}
+		} catch (SocketException e) {
 		}
 	}
 
