@@ -37,7 +37,7 @@ public class XOTclOpenSuperImplementation implements
 		if (this.method == null) {
 			this.method = findTclEditorElement();
 		}
-		if( method != null ) {
+		if (method != null) {
 			IMethod superMethod = XOTclResolver.resolveSuperMethod(this.method);
 			if (superMethod != null) {
 				try {
@@ -56,7 +56,7 @@ public class XOTclOpenSuperImplementation implements
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.method = getMethod(selection);
+		// this.method = getMethod(selection);
 	}
 
 	private IMethod getMethod(ISelection selection) {
