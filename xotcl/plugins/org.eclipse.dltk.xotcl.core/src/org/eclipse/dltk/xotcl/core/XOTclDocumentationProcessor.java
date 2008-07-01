@@ -7,6 +7,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
@@ -23,7 +24,6 @@ public class XOTclDocumentationProcessor extends AbstractTclCommandProcessor
 		implements ITclCommandProcessor {
 
 	public XOTclDocumentationProcessor() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void preprocessStatement(TclStatement st) {
@@ -50,43 +50,37 @@ public class XOTclDocumentationProcessor extends AbstractTclCommandProcessor
 						}
 					}
 				} catch (TclParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 		st.setExpressions(Arrays.asList(nodes));
 	}
 
-	public ASTNode process(TclStatement st, ITclParser parser, 
-			ASTNode parent) {
+	public ASTNode process(TclStatement st, ITclParser parser, ASTNode parent) {
 		// preprocessStatement(st);
 		final XOTclDocumentationNode doc = new XOTclDocumentationNode();
-		String objName = TclParseUtil.getNameFromNode((ASTNode) (st.getAt(1)));
+		String objName = TclParseUtil.getNameFromNode(st.getAt(1));
 		if (objName != null) {
 			doc.setStart(st.sourceStart());
 			doc.setEnd(st.sourceEnd());
 			if ("Class".equals(objName)) {
-				String name = TclParseUtil.getNameFromNode((ASTNode) (st
-						.getAt(2)));
+				String name = TclParseUtil.getNameFromNode(st.getAt(2));
 				if (name != null) {
 					processAddDescriptions(name, st, doc);
 				}
-			}
-			else if ("Object".equals(objName)) {
-				String name = TclParseUtil.getNameFromNode((ASTNode) (st
-						.getAt(2)));
+			} else if ("Object".equals(objName)) {
+				String name = TclParseUtil.getNameFromNode(st.getAt(2));
 				if (name != null) {
 					processAddDescriptions(name, st, doc);
 				}
-			}
-			else {
-				String docCommand = TclParseUtil.getNameFromNode((ASTNode) (st
-						.getAt(2)));
+			} else {
+				String docCommand = TclParseUtil.getNameFromNode(st.getAt(2));
 				if (docCommand != null) {
 					if ("instproc".equals(docCommand)) {
-						String name = TclParseUtil
-								.getNameFromNode((ASTNode) (st.getAt(3)));
+						String name = TclParseUtil.getNameFromNode(st.getAt(3));
 						if (name != null) {
 							processAddDescriptions(objName + "::" + name, st,
 									doc);
