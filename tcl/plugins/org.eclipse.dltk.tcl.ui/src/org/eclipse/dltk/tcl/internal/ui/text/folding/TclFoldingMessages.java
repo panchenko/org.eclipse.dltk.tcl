@@ -18,6 +18,7 @@ public final class TclFoldingMessages extends NLS {
 	private TclFoldingMessages() {
 	}
 
+	public static String DefaultFoldingPreferenceBlock_comments;
 	public static String DefaultFoldingPreferenceBlock_headers;
 	public static String DefaultFoldingPreferenceBlock_innerTypes;
 	public static String DefaultFoldingPreferenceBlock_methods;

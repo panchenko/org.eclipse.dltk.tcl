@@ -35,6 +35,7 @@ import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
@@ -52,6 +53,7 @@ public class TclFoldingStructureProvider extends
 	private List fBlockIncludeList = new ArrayList();
 	private boolean fInitCollapseBlocks = true;
 	private boolean fInitCollapseComments = true;
+	private boolean fInitCollapseHeaderComments = false;
 	private boolean fInitCollapseNamespaces = true;
 
 	// ~ Methods
@@ -225,6 +227,8 @@ public class TclFoldingStructureProvider extends
 				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS);
 		fInitCollapseComments = store
 				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS);
+		fInitCollapseHeaderComments = store
+				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS);
 		fInitCollapseNamespaces = store
 				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES);
 	}
@@ -256,9 +260,13 @@ public class TclFoldingStructureProvider extends
 	 * (org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider
 	 * .FoldingStructureComputationContext)
 	 */
-	protected boolean initiallyCollapseComments(
+	protected boolean initiallyCollapseComments(IRegion commentRegion,
 			FoldingStructureComputationContext ctx) {
-		return ctx.allowCollapsing() && fInitCollapseComments;
+		if (ctx.allowCollapsing()) {
+			return isHeaderRegion(commentRegion, ctx) ? fInitCollapseHeaderComments
+					: fInitCollapseComments;
+		}
+		return false;
 	}
 
 	/*

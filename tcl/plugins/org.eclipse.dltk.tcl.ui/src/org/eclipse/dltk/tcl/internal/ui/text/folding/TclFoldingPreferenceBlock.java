@@ -222,6 +222,9 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
+				TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
@@ -298,8 +301,11 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock
 		initialFolding.setLayout(new GridLayout());
 
 		addCheckBox(initialFolding,
-				TclFoldingMessages.DefaultFoldingPreferenceBlock_headers,
+				TclFoldingMessages.DefaultFoldingPreferenceBlock_comments,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS, 0);
+		addCheckBox(initialFolding,
+				TclFoldingMessages.DefaultFoldingPreferenceBlock_headers,
+				TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS, 0);
 		addCheckBox(initialFolding,
 				TclFoldingMessages.DefaultFoldingPreferenceBlock_innerTypes,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES, 0);

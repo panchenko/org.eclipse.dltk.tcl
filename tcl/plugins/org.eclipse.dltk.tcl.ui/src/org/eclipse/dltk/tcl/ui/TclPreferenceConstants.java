@@ -435,6 +435,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 	public static final String EDITOR_FOLDING_INIT_COMMENTS = "editor_folding_init_comments"; //$NON-NLS-1$
 
+	public static final String EDITOR_FOLDING_INIT_HEADER_COMMENTS = "editor_folding_init_header_comments"; //$NON-NLS-1$
+
 	public static final String EDITOR_FOLDING_INIT_NAMESPACES = "editor_folding_init_namespaces"; //$NON-NLS-1$
 
 	public static final String EDITOR_FOLDING_INIT_BLOCKS = "editor_folding_init_blocks"; //$NON-NLS-1$
@@ -532,7 +534,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 		store.setDefault(
 				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
 				true);
-		store.setDefault(TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS,
+		store.setDefault(
+				TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS,
 				true);
 		store.setDefault(PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT, 5);
 
