@@ -240,7 +240,7 @@ public class TclSourceViewerConfiguration extends
 				TclPartitions.TCL_STRING);
 	}
 
-	protected ContentAssistPreference getContentAssistPreference() {
+	public ContentAssistPreference getContentAssistPreference() {
 		return TclContentAssistPreference.getDefault();
 	}
 
