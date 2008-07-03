@@ -9,18 +9,17 @@ public class ScriptDocumentationProvider {
 		super();
 	}
 
-	protected String getLine(Document d, int line)
-			throws BadLocationException {
-				return d.get(d.getLineOffset(line), d.getLineLength(line));
-			}
+	protected String getLine(Document d, int line) throws BadLocationException {
+		return d.get(d.getLineOffset(line), d.getLineLength(line));
+	}
 
 	protected String convertToHTML(String header) {
-		StringBuffer result = new StringBuffer ();
-		//result.append("<p>\n");
-		Document d = new Document (header);
-		for (int line = 0; ;line++) {
+		StringBuffer result = new StringBuffer();
+		// result.append("<p>\n");
+		Document d = new Document(header);
+		for (int line = 0;; line++) {
 			try {
-				String str = getLine (d, line).trim();
+				String str = getLine(d, line).trim();
 				if (str == null)
 					break;
 				while (str.length() > 0 && str.startsWith("#"))
@@ -30,19 +29,21 @@ public class ScriptDocumentationProvider {
 				if (str.length() == 0)
 					result.append("<p>");
 				else {
-					if (str.trim().matches("\\w*:")) {
-						result.append ("<h4>");
-						result.append (str);
-						result.append ("</h4>");
+					if (str.trim().matches("(\\w*):.*")) {
+						int pos = str.indexOf(":");
+						result.append("<h4>");
+						result.append(str.substring(0, pos + 1));
+						result.append("</h4>");
+						result.append(str.substring(pos + 1));
 					} else
-						result.append (str + "<br>");
+						result.append(str + "<br>");
 				}
 			} catch (BadLocationException e) {
 				break;
 			}
-			
+
 		}
-		//result.append("</p>\n");
+		// result.append("</p>\n");
 		return result.toString();
 	}
 
