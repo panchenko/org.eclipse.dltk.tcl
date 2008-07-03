@@ -10,6 +10,7 @@
 
 package org.eclipse.dltk.tcl.internal.ui.preferences;
 
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPreferencePage;
 import org.eclipse.dltk.ui.preferences.ScriptEditorHoverConfigurationBlock;
@@ -29,7 +30,7 @@ public class TclEditorHoverPreferencePage extends
 		AbstractConfigurationBlockPreferencePage {
 
 	/*
-	 * @seeorg.eclipse.ui.internal.editors.text.
+	 * @see org.eclipse.ui.internal.editors.text.
 	 * AbstractConfigureationBlockPreferencePage#getHelpId()
 	 */
 	protected String getHelpId() {
@@ -49,7 +50,7 @@ public class TclEditorHoverPreferencePage extends
 	}
 
 	/*
-	 * @seeorg.org.eclipse.ui.internal.editors.text.
+	 * @see org.org.eclipse.ui.internal.editors.text.
 	 * AbstractConfigurationBlockPreferencePage#setPreferenceStore()
 	 */
 	protected void setPreferenceStore() {
@@ -61,7 +62,7 @@ public class TclEditorHoverPreferencePage extends
 	}
 
 	/*
-	 * @seeorg.eclipse.ui.internal.editors.text.
+	 * @see org.eclipse.ui.internal.editors.text.
 	 * AbstractConfigureationBlockPreferencePage
 	 * #createConfigurationBlock(org.eclipse
 	 * .ui.internal.editors.text.OverlayPreferenceStore)
@@ -69,6 +70,6 @@ public class TclEditorHoverPreferencePage extends
 	protected IPreferenceConfigurationBlock createConfigurationBlock(
 			OverlayPreferenceStore overlayPreferenceStore) {
 		return new ScriptEditorHoverConfigurationBlock(this,
-				overlayPreferenceStore);
+				overlayPreferenceStore, TclNature.NATURE_ID);
 	}
 }
