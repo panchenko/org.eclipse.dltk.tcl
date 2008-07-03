@@ -1,8 +1,10 @@
 package org.eclipse.dltk.tcl.core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -567,6 +569,7 @@ public class TclParseUtil {
 	public static List findLevelFromModule(final ModuleDeclaration module,
 			final IMember member, final String memberFQN) {
 		final List levels = new ArrayList();
+		final Set processed = new HashSet();
 
 		ASTVisitor visitor = new ASTVisitor() {
 			public boolean visitGeneral(ASTNode s) throws Exception {
@@ -574,7 +577,10 @@ public class TclParseUtil {
 					Declaration d = (Declaration) s;
 					String key = "::" + getElementFQN(s, "::", module);
 					if (key.equals(memberFQN)) {
-						levels.add(d);
+						if (!processed.contains(key)) {
+							processed.add(key);
+							levels.add(d);
+						}
 					}
 				}
 				return true;
