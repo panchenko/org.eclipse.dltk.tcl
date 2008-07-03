@@ -19,52 +19,56 @@ import org.eclipse.dltk.ui.preferences.PreferencesMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-
-
-
 /**
  * Tcl Editor Hovers preferences
  * <p>
  * Note: Must be public since it is referenced from plugin.xml
  * </p>
- * 
-	 *
  */
-public class TclEditorHoverPreferencePage extends AbstractConfigurationBlockPreferencePage {
+public class TclEditorHoverPreferencePage extends
+		AbstractConfigurationBlockPreferencePage {
 
 	/*
-	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigureationBlockPreferencePage#getHelpId()
+	 * @seeorg.eclipse.ui.internal.editors.text.
+	 * AbstractConfigureationBlockPreferencePage#getHelpId()
 	 */
 	protected String getHelpId() {
-		//return ITclHelpContextIds.TCL_EDITOR_PREFERENCE_PAGE;
-		
+		// return ITclHelpContextIds.TCL_EDITOR_PREFERENCE_PAGE;
+
 		return null;
 	}
 
 	/*
-	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage#setDescription()
+	 * @see
+	 * org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage
+	 * #setDescription()
 	 */
 	protected void setDescription() {
-		String description= PreferencesMessages.DLTKEditorPreferencePage_hoverTab_title; 
+		String description = PreferencesMessages.DLTKEditorPreferencePage_hoverTab_title;
 		setDescription(description);
 	}
-	
+
 	/*
-	 * @see org.org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage#setPreferenceStore()
+	 * @seeorg.org.eclipse.ui.internal.editors.text.
+	 * AbstractConfigurationBlockPreferencePage#setPreferenceStore()
 	 */
 	protected void setPreferenceStore() {
 		setPreferenceStore(TclUI.getDefault().getPreferenceStore());
 	}
-	
-	
+
 	protected Label createDescriptionLabel(Composite parent) {
 		return null; // no description for new look.
 	}
 
 	/*
-	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigureationBlockPreferencePage#createConfigurationBlock(org.eclipse.ui.internal.editors.text.OverlayPreferenceStore)
+	 * @seeorg.eclipse.ui.internal.editors.text.
+	 * AbstractConfigureationBlockPreferencePage
+	 * #createConfigurationBlock(org.eclipse
+	 * .ui.internal.editors.text.OverlayPreferenceStore)
 	 */
-	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
-		return new ScriptEditorHoverConfigurationBlock(this, overlayPreferenceStore);
+	protected IPreferenceConfigurationBlock createConfigurationBlock(
+			OverlayPreferenceStore overlayPreferenceStore) {
+		return new ScriptEditorHoverConfigurationBlock(this,
+				overlayPreferenceStore);
 	}
 }
