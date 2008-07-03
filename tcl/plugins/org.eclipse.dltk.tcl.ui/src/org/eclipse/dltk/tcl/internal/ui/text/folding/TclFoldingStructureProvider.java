@@ -108,29 +108,25 @@ public class TclFoldingStructureProvider extends
 			ASTNode node = (ASTNode) iterator.next();
 			if (node instanceof TclStatement) {
 				checkStatement(code, offset, result, (Statement) node);
-			}
-			else if (node instanceof TypeDeclaration) {
+			} else if (node instanceof TypeDeclaration) {
 				TypeDeclaration statement = (TypeDeclaration) node;
 				result.add(new CodeBlock(statement, new Region(offset
 						+ statement.sourceStart(), statement.sourceEnd()
 						- statement.sourceStart())));
 				traverse(result, statement.getStatements(), offset, code);
-			}
-			else if( node instanceof MethodDeclaration ) {
+			} else if (node instanceof MethodDeclaration) {
 				MethodDeclaration statement = (MethodDeclaration) node;
 				result.add(new CodeBlock(statement, new Region(offset
 						+ statement.sourceStart(), statement.sourceEnd()
 						- statement.sourceStart())));
 				traverse(result, statement.getStatements(), offset, code);
-			}
-			else if( node instanceof IfStatement ) {
+			} else if (node instanceof IfStatement) {
 				IfStatement statement = (IfStatement) node;
 				result.add(new CodeBlock(statement, new Region(offset
 						+ statement.sourceStart(), statement.sourceEnd()
 						- statement.sourceStart())));
 				traverse(result, statement.getChilds(), offset, code);
-			} 
-			else if( node instanceof TclCatchStatement ) {
+			} else if (node instanceof TclCatchStatement) {
 				TclCatchStatement statement = (TclCatchStatement) node;
 				result.add(new CodeBlock(statement, new Region(offset
 						+ statement.sourceStart(), statement.sourceEnd()
@@ -141,49 +137,63 @@ public class TclFoldingStructureProvider extends
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#getCommentPartition()
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * getCommentPartition()
 	 */
 	protected String getCommentPartition() {
 		return TclPartitions.TCL_COMMENT;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#getLog()
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * getLog()
 	 */
 	protected ILog getLog() {
 		return TclUI.getDefault().getLog();
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#getPartition()
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * getPartition()
 	 */
 	protected String getPartition() {
 		return TclPartitions.TCL_PARTITIONING;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#getPartitionScanner()
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * getPartitionScanner()
 	 */
 	protected IPartitionTokenScanner getPartitionScanner() {
 		return new TclPartitionScanner();
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#getPartitionTypes()
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * getPartitionTypes()
 	 */
 	protected String[] getPartitionTypes() {
 		return TclPartitions.TCL_PARTITION_TYPES;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#getNatureId()
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * getNatureId()
 	 */
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#initializePreferences(org.eclipse.jface.preference.IPreferenceStore)
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * initializePreferences(org.eclipse.jface.preference.IPreferenceStore)
 	 */
 	protected void initializePreferences(IPreferenceStore store) {
 		super.initializePreferences(store);
@@ -240,7 +250,11 @@ public class TclFoldingStructureProvider extends
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#initiallyCollapseComments(org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider.FoldingStructureComputationContext)
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * initiallyCollapseComments
+	 * (org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider
+	 * .FoldingStructureComputationContext)
 	 */
 	protected boolean initiallyCollapseComments(
 			FoldingStructureComputationContext ctx) {
@@ -248,10 +262,13 @@ public class TclFoldingStructureProvider extends
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#mayCollapse(org.eclipse.dltk.ast.statements.Statement,
-	 *      org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider.FoldingStructureComputationContext)
+	 * @see
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
+	 * mayCollapse(org.eclipse.dltk.ast.statements.Statement,
+	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider.
+	 * FoldingStructureComputationContext)
 	 */
-	protected boolean canFold( String name ) {
+	protected boolean canFold(String name) {
 		switch (fBlockFolding) {
 		case TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF: {
 			if (name.equals("proc") || name.equals("namespace")) {
@@ -277,24 +294,20 @@ public class TclFoldingStructureProvider extends
 		}
 		return false;
 	}
+
 	protected boolean mayCollapse(ASTNode s,
 			FoldingStructureComputationContext ctx) {
-		if( s instanceof TypeDeclaration ) {
+		if (s instanceof TypeDeclaration) {
 			return canFold("namespace");
-		}
-		else if( s instanceof MethodDeclaration ) {
+		} else if (s instanceof MethodDeclaration) {
 			return canFold("proc");
-		}
-		else if( s instanceof IfStatement ) {
+		} else if (s instanceof IfStatement) {
 			return canFold("if");
-		}
-		else if( s instanceof TclSwitchStatement ) {
+		} else if (s instanceof TclSwitchStatement) {
 			return canFold("if");
-		}
-		else if( s instanceof TclCatchStatement ) {
+		} else if (s instanceof TclCatchStatement) {
 			return canFold("catch");
-		}
-		else if (s instanceof TclStatement) {
+		} else if (s instanceof TclStatement) {
 			TclStatement statement = (TclStatement) s;
 			if (!(statement.getAt(0) instanceof SimpleReference)) {
 				return false;
