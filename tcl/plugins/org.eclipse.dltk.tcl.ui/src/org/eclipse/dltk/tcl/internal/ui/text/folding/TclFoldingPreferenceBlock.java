@@ -37,11 +37,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-
 /**
  * Script default folding preferences.
  */
-public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock implements IFoldingPreferenceBlock {
+public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock
+		implements IFoldingPreferenceBlock {
 
 	protected class ListBlock {
 		private ListViewer fList;
@@ -73,31 +73,40 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock implem
 			pathButtonLayout.marginHeight = 0;
 			pathButtonLayout.marginWidth = 0;
 			pathButtonComp.setLayout(pathButtonLayout);
-			gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_FILL);
+			gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING
+					| GridData.HORIZONTAL_ALIGN_FILL);
 			pathButtonComp.setLayoutData(gd);
 			pathButtonComp.setFont(font);
-			fAddButton = createPushButton(pathButtonComp, TclFoldingMessages.TclFoldingPreferenceBlock_0);
+			fAddButton = createPushButton(pathButtonComp,
+					TclFoldingMessages.TclFoldingPreferenceBlock_0);
 			fAddButton.addSelectionListener(new SelectionListener() {
-				public void widgetDefaultSelected(SelectionEvent e) {}
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
 
 				public void widgetSelected(SelectionEvent e) {
 					IInputValidator validator = new IInputValidator() {
 						public String isValid(String newText) {
-							if (newText.trim().length() > 0 && newText.matches("[_a-zA-Z]*")) //$NON-NLS-1$
-								return null;							
+							if (newText.trim().length() > 0
+									&& newText.matches("[_a-zA-Z]*")) //$NON-NLS-1$
+								return null;
 							return TclFoldingMessages.TclFoldingPreferenceBlock_2;
 						}
 					};
-					InputDialog dlg = new InputDialog(null, TclFoldingMessages.TclFoldingPreferenceBlock_3, TclFoldingMessages.TclFoldingPreferenceBlock_4, "", validator); //$NON-NLS-3$
+					InputDialog dlg = new InputDialog(null,
+							TclFoldingMessages.TclFoldingPreferenceBlock_3,
+							TclFoldingMessages.TclFoldingPreferenceBlock_4,
+							"", validator); //$NON-NLS-3$
 					if (dlg.open() == InputDialog.OK) {
 						fList.add(dlg.getValue());
 						save();
 					}
 				}
 			});
-			fRemoveButton = createPushButton(pathButtonComp, TclFoldingMessages.TclFoldingPreferenceBlock_6);
+			fRemoveButton = createPushButton(pathButtonComp,
+					TclFoldingMessages.TclFoldingPreferenceBlock_6);
 			fRemoveButton.addSelectionListener(new SelectionListener() {
-				public void widgetDefaultSelected(SelectionEvent e) {}
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
 
 				public void widgetSelected(SelectionEvent e) {
 					ISelection s = fList.getSelection();
@@ -130,15 +139,17 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock implem
 		public int getButtonWidthHint(Button button) {
 			button.setFont(JFaceResources.getDialogFont());
 			PixelConverter converter = new PixelConverter(button);
-			int widthHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-			return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
+			int widthHint = converter
+					.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+			return Math.max(widthHint, button.computeSize(SWT.DEFAULT,
+					SWT.DEFAULT, true).x);
 		}
 
 		private String[] getEntries() {
 			return fList.getList().getItems();
 		}
-		
-		private void setEntries (String items[]) {
+
+		private void setEntries(String items[]) {
 			fList.remove(fList.getList().getItems());
 			for (int i = 0; i < items.length; i++) {
 				if (items[i].trim().length() > 0)
@@ -156,32 +167,33 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock implem
 			}
 			getPreferenceStore().setValue(fKey, buf.toString());
 		}
-		
-		public void initialize () {
+
+		public void initialize() {
 			String val = getPreferenceStore().getString(fKey);
 			if (val != null) {
 				String items[] = val.split(","); //$NON-NLS-1$
-				setEntries (items);
+				setEntries(items);
 			}
-			
+
 		}
 
 		public void performDefault() {
 			String val = getPreferenceStore().getDefaultString(fKey);
 			if (val != null) {
 				String items[] = val.split(","); //$NON-NLS-1$
-				setEntries (items);
+				setEntries(items);
 			}
 		}
 	}
-	
+
 	private ListBlock fExcludePatterns;
 	private ListBlock fIncludePatterns;
-	
+
 	private OverlayPreferenceStore fOverlayStore;
 	private OverlayKey[] fKeys;
 
-	public TclFoldingPreferenceBlock(OverlayPreferenceStore store, PreferencePage mainPreferencePage) {
+	public TclFoldingPreferenceBlock(OverlayPreferenceStore store,
+			PreferencePage mainPreferencePage) {
 		super(store, mainPreferencePage);
 		fOverlayStore = store;
 		fKeys = createKeys();
@@ -190,97 +202,123 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock implem
 
 	private OverlayKey[] createKeys() {
 		ArrayList overlayKeys = new ArrayList();
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.INT, 
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.INT,
 				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.INT, 
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.INT,
 				PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
 				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
 				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
 				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES));
-		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
+		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
+				.size()];
 		overlayKeys.toArray(keys);
 		return keys;
 	}
-	
+
 	public Control createControl(Composite composite) {
 		Composite inner = new Composite(composite, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		inner.setLayout(layout);
-		
-		
-		Composite blockFolding = createSubsection(inner, null, TclFoldingMessages.TclFoldingPreferenceBlock_10);
+
+		Composite blockFolding = createSubsection(inner, null,
+				TclFoldingMessages.TclFoldingPreferenceBlock_10);
 		blockFolding.setLayout(new GridLayout());
-		
-		addRadioButton(blockFolding, TclFoldingMessages.TclFoldingPreferenceBlock_11, TclPreferenceConstants.EDITOR_FOLDING_BLOCKS, TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF);
-		addRadioButton(blockFolding, TclFoldingMessages.TclFoldingPreferenceBlock_12, TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
+
+		addRadioButton(blockFolding,
+				TclFoldingMessages.TclFoldingPreferenceBlock_11,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF);
+		addRadioButton(blockFolding,
+				TclFoldingMessages.TclFoldingPreferenceBlock_12,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
 				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_EXCLUDE);
-		fExcludePatterns = new ListBlock(blockFolding, TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST);
-		addRadioButton(blockFolding, TclFoldingMessages.TclFoldingPreferenceBlock_13, TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
+		fExcludePatterns = new ListBlock(blockFolding,
+				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST);
+		addRadioButton(blockFolding,
+				TclFoldingMessages.TclFoldingPreferenceBlock_13,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
 				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_INCLUDE);
-		fIncludePatterns = new ListBlock(blockFolding, TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
-		
-		IInputValidator val = new IInputValidator () {
+		fIncludePatterns = new ListBlock(blockFolding,
+				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
+
+		IInputValidator val = new IInputValidator() {
 
 			public String isValid(String number) {
 				if (number.length() == 0) {
-					return PreferencesMessages.DLTKEditorPreferencePage_empty_input; 
+					return PreferencesMessages.DLTKEditorPreferencePage_empty_input;
 				} else {
 					try {
-						int value= Integer.parseInt(number);
+						int value = Integer.parseInt(number);
 						if (value < 2)
-							return "You may input numbers >= 2."; 
+							return "You may input numbers >= 2.";
 					} catch (NumberFormatException e) {
-						return "Input is not a number"; 
+						return "Input is not a number";
 					}
 				}
 				return null;
 			}
-			
+
 		};
-		
-		addLabelledTextField(blockFolding, "Minimal amount of lines to be folded(>=2):", 
+
+		addLabelledTextField(blockFolding,
+				"Minimal amount of lines to be folded(>=2):",
 				PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT, 3, 1, true, val);
-		
-		Composite commentFolding = createSubsection(inner, null, TclFoldingMessages.TclFoldingPreferenceBlock_14);
+
+		Composite commentFolding = createSubsection(inner, null,
+				TclFoldingMessages.TclFoldingPreferenceBlock_14);
 		commentFolding.setLayout(new GridLayout());
-		
-		addCheckBox(commentFolding, TclFoldingMessages.TclFoldingPreferenceBlock_15,
+
+		addCheckBox(commentFolding,
+				TclFoldingMessages.TclFoldingPreferenceBlock_15,
 				PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED, 0);
-		
-		Composite initialFolding = createSubsection(inner, null, TclFoldingMessages.TclFoldingPreferenceBlock_16);
+
+		Composite initialFolding = createSubsection(inner, null,
+				TclFoldingMessages.TclFoldingPreferenceBlock_16);
 		initialFolding.setLayout(new GridLayout());
-		
-		addCheckBox(initialFolding, TclFoldingMessages.DefaultFoldingPreferenceBlock_headers,
+
+		addCheckBox(initialFolding,
+				TclFoldingMessages.DefaultFoldingPreferenceBlock_headers,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS, 0);
-		addCheckBox(initialFolding, TclFoldingMessages.DefaultFoldingPreferenceBlock_innerTypes,
+		addCheckBox(initialFolding,
+				TclFoldingMessages.DefaultFoldingPreferenceBlock_innerTypes,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES, 0);
-		addCheckBox(initialFolding, TclFoldingMessages.DefaultFoldingPreferenceBlock_methods,
+		addCheckBox(initialFolding,
+				TclFoldingMessages.DefaultFoldingPreferenceBlock_methods,
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS, 0);
-		
+
 		return inner;
 	}
-	
+
 	public void initialize() {
 		super.initialize();
-		fExcludePatterns.initialize ();
-		fIncludePatterns.initialize ();
+		fExcludePatterns.initialize();
+		fIncludePatterns.initialize();
 	}
-	
+
 	public void performDefaults() {
 		super.performDefaults();
-		fExcludePatterns.performDefault ();
-		fIncludePatterns.performDefault ();
+		fExcludePatterns.performDefault();
+		fIncludePatterns.performDefault();
 	}
 }
