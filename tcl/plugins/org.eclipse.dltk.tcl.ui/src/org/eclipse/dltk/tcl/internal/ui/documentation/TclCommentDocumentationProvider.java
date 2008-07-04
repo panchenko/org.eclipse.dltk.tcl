@@ -13,7 +13,6 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import org.eclipse.dltk.core.IBuffer;
-import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
@@ -30,9 +29,9 @@ public class TclCommentDocumentationProvider extends
 	}
 
 	protected String getHeaderComment(IMember member) {
-		if (member instanceof IField) {
-			return null;
-		}
+		// if (member instanceof IField) {
+		// return null;
+		// }
 		try {
 			ISourceRange range = member.getSourceRange();
 			if (range == null)
