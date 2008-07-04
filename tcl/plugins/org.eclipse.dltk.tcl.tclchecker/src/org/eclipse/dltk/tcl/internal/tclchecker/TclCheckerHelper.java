@@ -40,6 +40,7 @@ public final class TclCheckerHelper {
 	private static final Object NO_PCX_OPTION = "-nopcx";
 
 	private static final String SUPPRESS_OPTION = "-suppress";
+	private static final String CHECK_OPTION = "-check";
 
 	private static final Pattern pattern;
 
@@ -86,7 +87,12 @@ public final class TclCheckerHelper {
 		Iterator it = problems.iterator();
 		while (it.hasNext()) {
 			String warningName = (String) it.next();
-			if (store.getBoolean(warningName)) {
+			int processType = store.getInt(warningName);
+			switch (processType) {
+			case TclCheckerConstants.PROCESS_TYPE_CHECK:
+				cmdLine.add(CHECK_OPTION);
+				cmdLine.add(warningName);
+			case TclCheckerConstants.PROCESS_TYPE_SUPPRESS:
 				cmdLine.add(SUPPRESS_OPTION);
 				cmdLine.add(warningName);
 			}

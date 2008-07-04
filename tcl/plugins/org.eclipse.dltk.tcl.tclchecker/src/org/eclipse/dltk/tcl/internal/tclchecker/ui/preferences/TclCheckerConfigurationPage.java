@@ -9,35 +9,50 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerHelper;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
+import org.eclipse.dltk.ui.environment.IEnvironmentPathBlockListener;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.dltk.validators.ui.ValidatorConfigurationPage;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -51,8 +66,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbench;
 
-public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
-		implements ISelectionChangedListener {
+public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
+
+	private static final String[] processTypes = new String[] {
+			PreferencesMessages.TclChecker_processType_default,
+			PreferencesMessages.TclChecker_processType_suppress,
+			PreferencesMessages.TclChecker_processType_check };
 
 	EnvironmentPathBlock environmentPathBlock;
 	private Map pcxPaths;
@@ -62,6 +81,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 	private Button allMode;
 
 	private Table problemsTable;
+	private TableViewer problemsTableViewer;
 
 	private String message = "";
 	private int messageType = IStatus.OK;
@@ -84,10 +104,6 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		c.setLayoutData(gd);
 		c.setLayout(new FillLayout());
 		createContents(c);
-		initializeValues();
-
-		validateTclCheckerPath();
-
 	}
 
 	public IStatus getStatus() {
@@ -113,75 +129,110 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		return -1;
 	}
 
-	public void validateTclCheckerPath() {
-		// String txtPath = path.getText().trim();
-		//
-		// if ("".equals(txtPath)) {
-		// setMessage(PreferencesMessages.TclChecker_path_isempty,
-		// IStatus.WARNING);
-		// updateStatus();
-		// return;
-		// }
-		//
-		// IPath path = Path.fromOSString(txtPath);
-		// File file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(path
-		// .toFile());
-		//
-		// if (!path.isValidPath(path.toOSString())) {
-		// setMessage(PreferencesMessages.TclChecker_path_isinvalid,
-		// IStatus.ERROR);
-		// } else if (!file.isFile()) {
-		// setMessage(PreferencesMessages.TclChecker_path_notexists,
-		// IStatus.ERROR);
-		// } else if (!file.exists()) {
-		// setMessage(PreferencesMessages.TclChecker_path_notexists,
-		// IStatus.ERROR);
-		// } else if (txtPath.indexOf("tclchecker") == -1) {
-		// setMessage(PreferencesMessages.TclChecker_path_notlookslike,
-		// IStatus.WARNING);
-		// } else {
-		// setMessage(null);
-		// }
-		// updateStatus();
+	protected void validateTclCheckerPath() {
+		Map envs = environmentPathBlock.getPaths();
+		for (Iterator it = envs.keySet().iterator(); it.hasNext();) {
+			IEnvironment env = (IEnvironment) it.next();
+			String txtPath = envs.get(env).toString();
+			txtPath = txtPath.trim();
+
+			if ("".equals(txtPath)) {
+				/*
+				 * setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+				 * PreferencesMessages.TclChecker_path_isempty, IStatus.INFO);
+				 */
+				continue;
+			}
+
+			IPath path = Path.fromPortableString(txtPath);
+			IFileHandle file = env.getFile(path);
+
+			if (file == null) {
+				setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+						PreferencesMessages.TclChecker_path_isinvalid,
+						IStatus.ERROR);
+				continue;
+			} else if (!file.isFile()) {
+				setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+						PreferencesMessages.TclChecker_path_notexists,
+						IStatus.ERROR);
+				continue;
+			} else if (!file.exists()) {
+				setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+						PreferencesMessages.TclChecker_path_notexists,
+						IStatus.ERROR);
+				continue;
+			} /*
+			 * else if (txtPath.indexOf("tclchecker") == -1) {
+			 * setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+			 * PreferencesMessages.TclChecker_path_notlookslike, IStatus.INFO);
+			 * continue; }
+			 */
+		}
 	}
 
-	private void setMessage(Object object) {
+	protected void validatePCXTclCheckerPath() {
+		Collection envs = pcxPaths.keySet();
+		for (Iterator it = envs.iterator(); it.hasNext();) {
+			IEnvironment env = (IEnvironment) it.next();
+			if (Boolean.valueOf((String) noPCXValues.get(env)).booleanValue()) {
+				continue;
+			}
+
+			List txtPaths = (List) pcxPaths.get(env);
+			for (int index = 0; index < txtPaths.size(); index++) {
+				String txtPath = txtPaths.get(index).toString();
+				txtPath = txtPath.trim();
+
+				if ("".equals(txtPath)) {
+					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+							PreferencesMessages.TclChecker_path_isempty,
+							IStatus.INFO);
+					continue;
+				}
+
+				IPath path = Path.fromPortableString(txtPath);
+				IFileHandle file = env.getFile(path);
+
+				if (file == null) {
+					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+							PreferencesMessages.TclChecker_path_isinvalid,
+							IStatus.WARNING);
+					continue;
+				} else if (!file.isDirectory()) {
+					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+							PreferencesMessages.TclChecker_path_notexists,
+							IStatus.WARNING);
+					continue;
+				} else if (!file.exists()) {
+					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
+							PreferencesMessages.TclChecker_path_notexists,
+							IStatus.WARNING);
+					continue;
+				}
+			}
+		}
+	}
+
+	private void setMessage(String group, IEnvironment env, String message,
+			int type) {
+		String pattern = PreferencesMessages.TclChecker_path_msgPattern;
+		message = MessageFormat.format(pattern, new String[] { group,
+				env.getName(), message });
+		setMessage(message, type);
+	}
+
+	private void resetMessage() {
 		this.message = "";
 		this.messageType = IStatus.OK;
 	}
 
 	private void setMessage(String message, int type) {
-		this.message = message;
-		this.messageType = type;
+		if (type > messageType) {
+			this.message = message;
+			this.messageType = type;
+		}
 	}
-
-	// public void validatePCXTclCheckerPath() {
-	// String txtPath = pcxPath.getText().trim();
-	//
-	// if ("".equals(txtPath)) {
-	// setMessage(null);
-	// updateStatus();
-	// return;
-	// }
-	//
-	// IPath path = Path.fromOSString(txtPath);
-	// File file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(path
-	// .toFile());
-	//
-	// if (!path.isValidPath(path.toOSString())) {
-	// setMessage(PreferencesMessages.TclChecker_path_isinvalid,
-	// IStatus.WARNING);
-	// } else if (!file.isDirectory()) {
-	// setMessage(PreferencesMessages.TclChecker_path_notexists,
-	// IStatus.WARNING);
-	// } else if (!file.exists()) {
-	// setMessage(PreferencesMessages.TclChecker_path_notexists,
-	// IStatus.WARNING);
-	// } else {
-	// setMessage(null);
-	// }
-	// updateStatus();
-	// }
 
 	protected void createModeGroup(Composite parent, Object data) {
 		Group radioGroup = new Group(parent, SWT.NONE);
@@ -217,6 +268,18 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 
 		environmentPathBlock = new EnvironmentPathBlock();
 		environmentPathBlock.createControl(group);
+		environmentPathBlock.addListener(new IEnvironmentPathBlockListener() {
+			public void valueChanged(Map paths) {
+				validate();
+			}
+		});
+
+		environmentPathBlock
+				.addSelectionListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						updatePCXGroup();
+					}
+				});
 	}
 
 	protected void editPDX() {
@@ -313,13 +376,11 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 				boolean selection = noPCX.getSelection();
 				noPCXValues.put(getEnvironment(), new Boolean(selection)
 						.toString());
-				//
+
 				IStructuredSelection pathSelection = (IStructuredSelection) environmentPathBlock
 						.getSelection();
 				boolean enabled = !pathSelection.isEmpty();
-				//
-				// list.setEnabled(!selection && enabled);
-				// pcxAdd.setEnabled(!selection && enabled);
+				pcxAdd.setEnabled(!selection && enabled);
 				pcxRemove.setEnabled(!selection && enabled);
 				updatePCX();
 			}
@@ -337,18 +398,13 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		return (IEnvironment) selection.getFirstElement();
 	}
 
-	protected void setSelection(boolean value) {
+	protected void setProcessType(int type) {
 		TableItem[] items = problemsTable.getItems();
 		for (int i = 0; i < items.length; ++i) {
-			items[i].setChecked(value);
+			ProblemItem item = (ProblemItem) items[i].getData();
+			item.setProcessType(type);
 		}
-	}
-
-	protected void invertSelection() {
-		TableItem[] items = problemsTable.getItems();
-		for (int i = 0; i < items.length; ++i) {
-			items[i].setChecked(!items[i].getChecked());
-		}
+		problemsTableViewer.refresh();
 	}
 
 	protected void createSuppressProblemsGroup(Composite parent, Object data) {
@@ -357,13 +413,15 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		group.setLayoutData(data);
 
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
+		layout.numColumns = 3;
 		group.setLayout(layout);
 
-		problemsTable = new Table(group, SWT.V_SCROLL | SWT.CHECK
-				| SWT.HIDE_SELECTION);
+		// Table
+		problemsTable = new Table(group, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE
+				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
 		problemsTable.setBounds(0, 0, 150, 200);
 		problemsTable.setHeaderVisible(false);
+		problemsTable.setLinesVisible(true);
 
 		GridData tableData = new GridData(SWT.FILL, SWT.FILL, true, true, 0, 0);
 		tableData.heightHint = 100;
@@ -371,35 +429,37 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 
 		// Columns
 		TableColumn problemsColumn = new TableColumn(problemsTable, SWT.LEFT);
-		problemsColumn.setWidth(200);
+		problemsColumn.setWidth(140);
 
 		TableColumn typesColumn = new TableColumn(problemsTable, SWT.LEFT);
-		typesColumn.setWidth(100);
+		typesColumn.setWidth(70);
+
+		TableColumn actionColumn = new TableColumn(problemsTable, SWT.LEFT);
+		actionColumn.setWidth(70);
+
+		// TableViewer
+		problemsTableViewer = new TableViewer(problemsTable);
+		String[] propNames = new String[problemsTable.getColumnCount()];
+		for (int index = 0; index < propNames.length; index++) {
+			propNames[index] = Integer.toString(index);
+		}
+		problemsTableViewer.setColumnProperties(propNames);
+		CellEditor[] editors = new CellEditor[problemsTable.getColumnCount()];
+		editors[0] = null;
+		editors[1] = null;
+		editors[2] = new ComboBoxCellEditor(problemsTable, processTypes,
+				SWT.READ_ONLY);
+		problemsTableViewer.setCellEditors(editors);
+		problemsTableViewer.setCellModifier(new ProblemsCellModifier(Arrays
+				.asList(propNames)));
 
 		// Items
+		problemsTableViewer.setContentProvider(new ArrayContentProvider());
+		problemsTableViewer.setLabelProvider(new ProblemsLabelProvider());
+
 		List problems = TclCheckerProblemDescription.getProblemIdentifiers();
 		Collections.sort(problems);
-		Iterator it = problems.iterator();
-		while (it.hasNext()) {
-			TableItem item = new TableItem(problemsTable, SWT.NONE);
-			String problemId = (String) it.next();
-
-			item.setData(problemId);
-
-			String type = TclCheckerProblemDescription
-					.getProblemType(problemId);
-			int category = TclCheckerProblemDescription
-					.matchProblemCategory(type);
-
-			String typeString = "";
-			if (TclCheckerProblemDescription.isError(category)) {
-				typeString = PreferencesMessages.TclChecker_error;
-			} else if (TclCheckerProblemDescription.isWarning(category)) {
-				typeString = PreferencesMessages.TclChecker_warning;
-			}
-
-			item.setText(new String[] { problemId, typeString });
-		}
+		problemsTableViewer.setInput(createProblemInput(problems));
 
 		// Buttons composite
 		Composite buttonsComposite = new Composite(group, SWT.NULL);
@@ -412,30 +472,29 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		buttonsData.verticalAlignment = SWT.TOP;
 		buttonsComposite.setLayoutData(buttonsData);
 
-		Button selectAll = new Button(buttonsComposite, SWT.PUSH);
-		selectAll.setText(PreferencesMessages.TclChecker_selectAll);
-		selectAll.addSelectionListener(new SelectionAdapter() {
+		Button defaultAll = new Button(buttonsComposite, SWT.PUSH);
+		defaultAll
+				.setText(PreferencesMessages.TclChecker_processType_defaultAll);
+		defaultAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				setSelection(true);
+				setProcessType(TclCheckerConstants.PROCESS_TYPE_DEFAULT);
 			}
 		});
 
-		Button clearSelection = new Button(buttonsComposite, SWT.PUSH);
-		clearSelection.setText(PreferencesMessages.TclChecker_clearSelection);
-		clearSelection.addSelectionListener(new SelectionAdapter() {
+		Button suppressAll = new Button(buttonsComposite, SWT.PUSH);
+		suppressAll
+				.setText(PreferencesMessages.TclChecker_processType_suppressAll);
+		suppressAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				setSelection(false);
+				setProcessType(TclCheckerConstants.PROCESS_TYPE_SUPPRESS);
 			}
 		});
 
-		Button invertSelection = new Button(buttonsComposite, SWT.PUSH);
-		invertSelection.setText(PreferencesMessages.TclChecker_invertSelection);
-		invertSelection.addSelectionListener(new SelectionAdapter() {
+		Button checkAll = new Button(buttonsComposite, SWT.PUSH);
+		checkAll.setText(PreferencesMessages.TclChecker_processType_checkAll);
+		checkAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				TableItem[] items = problemsTable.getItems();
-				for (int i = 0; i < items.length; ++i) {
-					items[i].setChecked(!items[i].getChecked());
-				}
+				setProcessType(TclCheckerConstants.PROCESS_TYPE_CHECK);
 			}
 		});
 	}
@@ -465,8 +524,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 				GridData.FILL, true, true));
 
 		initializeValues();
-
-		validateTclCheckerPath();
+		validate();
 
 		return top;
 	}
@@ -490,13 +548,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		// noPCXSelectionListener.widgetSelected(null);
 
 		lview.setInput(this.pcxPaths);
-		String value = (String) this.noPCXValues.get(getEnvironment());
-		if ("true".equals(value)) {
-			noPCX.setSelection(true);
-		} else {
-			noPCX.setSelection(false);
-		}
-		updatePCX();
+		updatePCXGroup();
 
 		// Mode
 		setModeSelection(store.getInt(TclCheckerConstants.PREF_MODE));
@@ -504,15 +556,49 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		// Problems
 		TableItem[] items = problemsTable.getItems();
 		for (int i = 0; i < items.length; ++i) {
-			TableItem item = items[i];
-			item.setChecked(store.getBoolean((String) (item.getData())));
+			ProblemItem item = (ProblemItem) items[i].getData();
+			item.setProcessType(loadProcessType(store, item.getProblemId()));
 		}
+		problemsTableViewer.refresh();
 		// selectionChanged(null);
+	}
+
+	/**
+	 * Use for compatibility with old preference store format.
+	 * 
+	 * @param store
+	 * @return
+	 */
+	private int loadProcessType(IPreferenceStore store, String id) {
+		String processType = store.getString(id);
+		if ("true".equalsIgnoreCase(processType)) {
+			return TclCheckerConstants.PROCESS_TYPE_SUPPRESS;
+		} else if ("false".equalsIgnoreCase(processType)) {
+			return TclCheckerConstants.PROCESS_TYPE_DEFAULT;
+		}
+
+		return store.getInt(id);
+	}
+
+	/**
+	 * Get List<ProblemItem>
+	 * 
+	 * @param problems
+	 * @return
+	 */
+	protected List createProblemInput(List problems) {
+		List result = new ArrayList();
+		for (int index = 0; index < problems.size(); index++) {
+			String problem = (String) problems.get(index);
+			result.add(new ProblemItem(problem,
+					TclCheckerConstants.PROCESS_TYPE_DEFAULT));
+		}
+		return result;
 	}
 
 	protected void performDefaults() {
 		setModeSelection(TclCheckerConstants.MODE_ALL);
-		setSelection(false);
+		setProcessType(TclCheckerConstants.PROCESS_TYPE_DEFAULT);
 	}
 
 	public void applyChanges() {
@@ -529,29 +615,142 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage
 		// Problems
 		TableItem[] items = problemsTable.getItems();
 		for (int i = 0; i < items.length; ++i) {
-			TableItem item = items[i];
-			store.setValue((String) item.getData(), item.getChecked());
+			ProblemItem item = (ProblemItem) items[i].getData();
+			store.setValue(item.getProblemId(), item.getProcessType());
 		}
 	}
 
-	public void selectionChanged(SelectionChangedEvent event) {
-		IStructuredSelection selection = (IStructuredSelection) environmentPathBlock
-				.getSelection();
+	private void updatePCXGroup() {
+		boolean isNoPCXChecked = Boolean.valueOf(
+				(String) noPCXValues.get(getEnvironment())).booleanValue();
+		noPCX.setSelection(isNoPCXChecked);
+		pcxAdd.setEnabled(!isNoPCXChecked);
+		pcxRemove.setEnabled(!isNoPCXChecked);
+
 		updatePCX();
-		// boolean enabled = noPCX.getSelection();
-		// pcxGroup.setEnabled(enabled);
-		// lview.getControl().setEnabled(enabled);
 	}
 
 	private void updatePCX() {
-		String value = (String) this.noPCXValues.get(getEnvironment());
-		if ("true".equals(value)) {
-			// noPCX.setSelection(true);
-			lview.getControl().setEnabled(false);
-		} else {
-			// noPCX.setSelection(false);
-			lview.getControl().setEnabled(true);
-		}
+		Boolean value = Boolean.valueOf((String) noPCXValues
+				.get(getEnvironment()));
+		lview.getControl().setEnabled(!value.booleanValue());
 		lview.refresh();
+		validate();
+	}
+
+	protected void validate() {
+		resetMessage();
+		validateTclCheckerPath();
+		validatePCXTclCheckerPath();
+
+		updateStatus();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Check/Suppress problem table item.
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private static class ProblemItem {
+		private String problemId;
+		private int processType;
+
+		public ProblemItem(String problemId, int processType) {
+			super();
+			this.problemId = problemId;
+			this.processType = processType;
+		}
+
+		public String getProblemId() {
+			return problemId;
+		}
+
+		public int getProcessType() {
+			return processType;
+		}
+
+		public void setProcessType(int processType) {
+			this.processType = processType;
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Label provider for Check/Suppress problems table.
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	private static class ProblemsLabelProvider extends LabelProvider implements
+			ITableLabelProvider {
+
+		public String getColumnText(Object element, int columnIndex) {
+			ProblemItem problemItem = (ProblemItem) element;
+			switch (columnIndex) {
+			case 0:
+				return problemItem.getProblemId();
+			case 1:
+				return getType(problemItem.getProblemId());
+			case 2:
+				return processTypes[problemItem.getProcessType()];
+			}
+			return null;
+		}
+
+		public Image getColumnImage(Object element, int columnIndex) {
+			return null;
+		}
+
+		private String getType(String problemId) {
+			String type = TclCheckerProblemDescription
+					.getProblemType(problemId);
+			int category = TclCheckerProblemDescription
+					.matchProblemCategory(type);
+
+			if (TclCheckerProblemDescription.isError(category)) {
+				return PreferencesMessages.TclChecker_error;
+			} else if (TclCheckerProblemDescription.isWarning(category)) {
+				return PreferencesMessages.TclChecker_warning;
+			}
+			return null;
+		}
+	}
+
+	// ////////////////////////////////////////////////////////////////////////
+	//
+	// Cell modifier for Check/Suppress problems table.
+	//
+	// ////////////////////////////////////////////////////////////////////////
+	public class ProblemsCellModifier implements ICellModifier {
+
+		/**
+		 * List<String>
+		 */
+		private List properties;
+
+		public ProblemsCellModifier(List properties) {
+			super();
+			this.properties = properties;
+		}
+
+		public boolean canModify(Object element, String property) {
+			int columnIndex = properties.indexOf(property);
+			return (columnIndex == 2);
+		}
+
+		/**
+		 * Only for columnIndex == 2
+		 */
+		public Object getValue(Object element, String property) {
+			ProblemItem item = (ProblemItem) element;
+			return new Integer(item.getProcessType());
+		}
+
+		/**
+		 * Only for columnIndex == 2
+		 */
+		public void modify(Object element, String property, Object value) {
+			ProblemItem item = (ProblemItem) ((TableItem) element).getData();
+			item.setProcessType(((Number) value).intValue());
+			problemsTableViewer.update(item, null);
+		}
 	}
 }

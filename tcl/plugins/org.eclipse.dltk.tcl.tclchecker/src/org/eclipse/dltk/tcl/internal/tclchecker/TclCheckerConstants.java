@@ -30,4 +30,7 @@ public final class TclCheckerConstants {
 
 	public static final String TCL_DEVKIT_LOCAL_VARIABLE = "TCLDEVKIT_LOCAL";
 
+	public static final int PROCESS_TYPE_DEFAULT = 0;
+	public static final int PROCESS_TYPE_SUPPRESS = 1;
+	public static final int PROCESS_TYPE_CHECK = 2;
 }

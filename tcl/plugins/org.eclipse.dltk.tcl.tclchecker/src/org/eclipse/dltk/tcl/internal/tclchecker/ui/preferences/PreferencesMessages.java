@@ -28,16 +28,24 @@ public class PreferencesMessages extends NLS {
 	public static String TclChecker_path_notexists;
 
 	public static String TclChecker_path_notlookslike;
+	
+	public static String TclChecker_path_msgPattern;
 
 	public static String TclChecker_suppressProblems;
 
+	public static String TclChecker_processType_default;
+
+	public static String TclChecker_processType_suppress;
+
+	public static String TclChecker_processType_check;
+	
+	public static String TclChecker_processType_defaultAll;
+
+	public static String TclChecker_processType_suppressAll;
+
+	public static String TclChecker_processType_checkAll;
+
 	public static String TclChecker_browse;
-
-	public static String TclChecker_selectAll;
-
-	public static String TclChecker_clearSelection;
-
-	public static String TclChecker_invertSelection;
 
 	public static String TclChecker_mode;
 
@@ -48,9 +56,9 @@ public class PreferencesMessages extends NLS {
 	public static String TclChecker_mode_all;
 
 	public static String TclChecker_work_name;
-	
+
 	public static String TclChecker_error;
-	
+
 	public static String TclChecker_warning;
 
 	static {
