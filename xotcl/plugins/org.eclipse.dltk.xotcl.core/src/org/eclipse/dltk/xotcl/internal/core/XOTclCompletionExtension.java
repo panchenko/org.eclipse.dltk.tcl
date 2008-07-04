@@ -440,4 +440,8 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 	public void completeOnVariables(CompletionOnVariable astNode,
 			TclCompletionEngine engine) {
 	}
+
+	public boolean modelFilter(Set completions, IModelElement modelElement) {
+		return true;
+	}
 }

@@ -459,4 +459,8 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 			IParent parent, TclSelectionEngine engine) {
 		return null;
 	}
+
+	public void findVariables(String name, ASTNode parent, int beforePosition,
+			TclSelectionEngine tclSelectionEngine) {
+	}
 }
