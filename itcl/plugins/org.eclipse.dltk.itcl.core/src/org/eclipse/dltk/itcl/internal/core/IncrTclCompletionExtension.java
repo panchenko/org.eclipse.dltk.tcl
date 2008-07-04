@@ -131,6 +131,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			if (node instanceof IncrTclMethodDeclaration) {
 				engine.findKeywords(token,
 						new char[][] { "$this".toCharArray() }, true);
+				findVariables(key.getToken(), true, true, engine, node);
 			}
 		}
 		if (!engine.getRequestor().isIgnored(CompletionProposal.METHOD_REF)) {
@@ -494,7 +495,6 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 				ASTNode inNode = TclParseUtil.getScopeParent(engine.getParser()
 						.getModule(), st);
 				findClassMethods(token, inNode, engine, false);
-			} else {
 			}
 		}
 	}
@@ -506,9 +506,66 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 	public void completeOnVariables(CompletionOnVariable astNode,
 			TclCompletionEngine engine) {
 		ASTNode inNode = astNode.getInNode();
+		findVariables(astNode.getToken(), astNode.canHandleEmpty(), astNode
+				.getProvideDollar(), engine, inNode);
+	}
+
+	private void findVariables(char[] token, boolean canHandleEmpty,
+			boolean provideDollar, TclCompletionEngine engine, ASTNode inNode) {
 		if (inNode instanceof IncrTclMethodDeclaration) {
-			engine.findKeywords(astNode.getToken(), new char[][] { "$this"
-					.toCharArray() }, false);
+			engine.findKeywords(token, new char[][] { "$this".toCharArray() },
+					false);
+			// Process all class public fields.
+			IncrTclMethodDeclaration method = (IncrTclMethodDeclaration) inNode;
+			TypeDeclaration type = (TypeDeclaration) method.getDeclaringType();
+			List list = type.getStatements();
+			List fields = new ArrayList();
+			List fieldNames = new ArrayList();
+			TclResolver resolver = new TclResolver(engine.getSourceModule(),
+					engine.getParser().getModule());
+			for (int i = 0; i < list.size(); i++) {
+				ASTNode nde = (ASTNode) list.get(i);
+				if (nde instanceof FieldDeclaration) {
+					FieldDeclaration field = (FieldDeclaration) nde;
+					IModelElement element = resolver
+							.findModelElementFrom(field);
+					if (Flags.isPublic(field.getModifiers())
+							|| !engine
+									.getRequestor()
+									.isIgnored(
+											ITclCompletionProposalTypes.FILTER_INTERNAL_API)) {
+						fields.add(element);
+						if (provideDollar) {
+							fieldNames.add("$" + element.getElementName());
+						} else {
+							fieldNames.add(element.getElementName());
+						}
+					}
+				}
+			}
+			if (fields.size() > 0) {
+				engine.findFields(token, canHandleEmpty, fields,
+						CompletionProposal.FIELD_REF, fieldNames);
+			}
 		}
+	}
+
+	public boolean modelFilter(Set completions, IModelElement modelElement) {
+		if (modelElement.getElementType() == IModelElement.METHOD) {
+			IMethod method = (IMethod) modelElement;
+			try {
+				if ((method.getFlags() & IIncrTclModifiers.AccConstructor) != 0) {
+					return false;
+				}
+				if ((method.getFlags() & IIncrTclModifiers.AccDestructor) != 0) {
+					return false;
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return true;
 	}
 }

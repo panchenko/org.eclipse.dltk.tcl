@@ -1,6 +1,7 @@
 package org.eclipse.dltk.itcl.internal.core.search;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -485,5 +486,23 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 			}
 		}
 		return null;
+	}
+
+	public void findVariables(String name, ASTNode parent, int beforePosition,
+			TclSelectionEngine engine) {
+		if (parent instanceof IncrTclMethodDeclaration) {
+			if (name.startsWith("$")) {
+				name = name.substring(1);
+			}
+			IncrTclMethodDeclaration method = (IncrTclMethodDeclaration) parent;
+			TypeDeclaration type = (TypeDeclaration) method.getDeclaringType();
+			List fieldList = type.getFieldList();
+			for (Iterator iterator = fieldList.iterator(); iterator.hasNext();) {
+				FieldDeclaration field = (FieldDeclaration) iterator.next();
+				if (field.getName().equals(name)) {
+					engine.addElementFromASTNode(field);
+				}
+			}
+		}
 	}
 }
