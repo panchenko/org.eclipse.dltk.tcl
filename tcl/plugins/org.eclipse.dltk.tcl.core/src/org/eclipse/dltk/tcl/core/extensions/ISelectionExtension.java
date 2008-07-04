@@ -19,4 +19,6 @@ public interface ISelectionExtension {
 	IModelElement findElementParent(ASTNode node, String name, IParent parent,
 			TclSelectionEngine engine);
 
+	void findVariables(String name, ASTNode parent, int beforePosition,
+			TclSelectionEngine tclSelectionEngine);
 }

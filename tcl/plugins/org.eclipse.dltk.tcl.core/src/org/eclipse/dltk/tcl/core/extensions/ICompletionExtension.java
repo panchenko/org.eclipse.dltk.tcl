@@ -6,6 +6,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclCompletionEngine;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordArgumentOrFunctionArgument;
@@ -32,4 +33,9 @@ public interface ICompletionExtension {
 
 	void completeOnVariables(CompletionOnVariable astNode,
 			TclCompletionEngine engine);
+
+	/**
+	 * If filtered return false
+	 */
+	boolean modelFilter(Set completions, IModelElement modelElement);
 }

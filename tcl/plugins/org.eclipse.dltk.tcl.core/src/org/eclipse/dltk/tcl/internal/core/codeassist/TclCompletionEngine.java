@@ -666,16 +666,12 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		IModelElement[] elements = TclMixinUtils.findModelElementsFromMixin(
 				pattern, mixinClass);
-		// long start = System.currentTimeMillis();
 		for (int i = 0; i < elements.length; i++) {
 			// We should filter external source modules with same
 			// external path.
 			if (this.moduleFilter(completions, elements[i])) {
 				completions.add(elements[i]);
 			}
-			// if (System.currentTimeMillis() - start > 1000) {
-			// return;
-			// }
 		}
 	}
 
@@ -707,6 +703,12 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		// (org.eclipse.dltk.core.ISourceModule) modelElement
 		// .getAncestor(IModelElement.SOURCE_MODULE);
 		// firstly lets filter member names
+
+		for (int i = 0; i < this.extensions.length; i++) {
+			if (!this.extensions[i].modelFilter(completions, modelElement)) {
+				return false;
+			}
+		}
 
 		String fullyQualifiedName = TclParseUtil.getFQNFromModelElement(
 				modelElement, "::");
@@ -1107,7 +1109,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					// }
 				} else if (element instanceof IField) {
 					IField field = (IField) element;
-					if ((field.getParent() instanceof IType)) {
+					if (!(field.getParent() instanceof ISourceModule)) {
 						return;
 					}
 					String mn = field.getTypeQualifiedName("$", false)
@@ -1219,7 +1221,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				System.out.println("Completion methods cound:" + fields.size());
 			}
 		}
-		this.findTypes(token, true, types);
+		// this.findTypes(token, true, types);
 		this.findFields(token, false, fields, provideDollar ? "$" : "");
 	}
 

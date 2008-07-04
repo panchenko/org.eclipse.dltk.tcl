@@ -535,6 +535,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		mi.nameSourceStart = method.getNameStart();
 		mi.nameSourceEnd = method.getNameEnd() - 1;
 		mi.declarationStart = method.sourceStart();
+
 		ExitFromType exit = null;
 		// boolean requireFieldExit = false;
 		if (extendedExitRequired(method)) {

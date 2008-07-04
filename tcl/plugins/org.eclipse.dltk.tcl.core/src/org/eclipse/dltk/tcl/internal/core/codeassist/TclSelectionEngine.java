@@ -274,6 +274,15 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 	protected void findVariables(String name, ASTNode parent, int beforePosition) {
 		String originalName = name;
+
+		for (int i = 0; i < this.extensions.length; i++) {
+			this.extensions[i]
+					.findVariables(name, parent, beforePosition, this);
+			if (this.selectionElements.size() > 0) {
+				return;
+			}
+		}
+
 		if (parent instanceof MethodDeclaration) {
 			MethodDeclaration method = (MethodDeclaration) parent;
 			List statements = method.getArguments();
@@ -344,6 +353,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 		// Search from mixins if not found local.
 		findFieldFromMixin(parent, originalName);
+
 	}
 
 	protected void findFieldFromMixin(ASTNode parent, String name) {
@@ -385,8 +395,8 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		for (int i = 0; i < find.length; i++) {
 			Object[] allObjects = find[i].getAllObjects();
 			for (int j = 0; j < allObjects.length; j++) {
-				if (allObjects[i] != null && allObjects[i] instanceof TclField) {
-					TclField field = (TclField) allObjects[i];
+				if (allObjects[j] != null && allObjects[j] instanceof TclField) {
+					TclField field = (TclField) allObjects[j];
 					if (name.equals(field.getName())) {
 						this.selectionElements.add(field.getModelElement());
 						return;
