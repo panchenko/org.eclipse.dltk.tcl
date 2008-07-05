@@ -12,7 +12,6 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -31,7 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
@@ -139,46 +137,12 @@ public class TclChecker {
 		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 				.getAdapter(IExecutionEnvironment.class);
 		IDeployment deployment = execEnvironment.createDeployment();
-		// IPath stateLocation = TclCheckerPlugin.getDefault().getStateLocation(
-		// );
-		// IPath patternFile = stateLocation.append("pattern.txt");
-		ByteArrayOutputStream baros = new ByteArrayOutputStream();
-		try {
-			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
-				String path = (String) arg.next();
-				baros.write((path + "\n").getBytes()); //$NON-NLS-1$
-			}
-			baros.close();
-		} catch (FileNotFoundException e1) {
-			if (DLTKCore.DEBUG) {
-				e1.printStackTrace();
-			}
-		} catch (IOException e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
-		}
-		IPath pattern;
-		try {
-			pattern = deployment.add(new ByteArrayInputStream(baros
-					.toByteArray()), PATTERN_TXT);
-		} catch (IOException e1) {
-			if (DLTKCore.DEBUG) {
-				TclCheckerPlugin
-						.getDefault()
-						.getLog()
-						.log(
-								new Status(
-										IStatus.ERROR,
-										TclCheckerPlugin.PLUGIN_ID,
-										Messages.TclChecker_filelist_deploy_failed,
-										e1));
-				if (DLTKCore.DEBUG) {
-					e1.printStackTrace();
-				}
-			}
+
+		final IPath pattern = deployFileList(deployment, arguments);
+		if (pattern == null) {
 			return;
 		}
+
 		cmdLine.add("-@"); //$NON-NLS-1$
 		cmdLine.add(deployment.getFile(pattern).toOSString());
 		Process process;
@@ -294,11 +258,10 @@ public class TclChecker {
 					return;
 				}
 			}
-			String error = errorMessage.toString();
-			if (error.length() > 0) {
-				TclCheckerPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID,
-								Messages.TclChecker_execution_error + error));
+			if (errorMessage.length() > 0) {
+				TclCheckerPlugin.log(IStatus.ERROR,
+						Messages.TclChecker_execution_error
+								+ errorMessage.toString());
 			}
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
@@ -346,6 +309,32 @@ public class TclChecker {
 			return (ISourceModule) pathToSource.get(fullPath);
 		}
 		return null;
+	}
+
+	private IPath deployFileList(IDeployment deployment, List arguments) {
+		ByteArrayOutputStream baros = new ByteArrayOutputStream();
+		try {
+			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
+				String path = (String) arg.next();
+				baros.write((path + "\n").getBytes()); //$NON-NLS-1$
+			}
+			baros.close();
+		} catch (IOException e) {
+			// should not happen
+		}
+		try {
+			return deployment.add(
+					new ByteArrayInputStream(baros.toByteArray()), PATTERN_TXT);
+		} catch (IOException e) {
+			if (DLTKCore.DEBUG) {
+				TclCheckerPlugin.log(IStatus.ERROR,
+						Messages.TclChecker_filelist_deploy_failed, e);
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
 	}
 
 }

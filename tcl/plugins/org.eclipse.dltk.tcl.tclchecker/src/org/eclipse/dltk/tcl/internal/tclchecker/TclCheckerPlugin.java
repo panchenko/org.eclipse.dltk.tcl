@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -17,11 +18,11 @@ import org.osgi.framework.BundleContext;
  */
 public class TclCheckerPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.tclchecker";
-	
-	//The shared instance.
+	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.tclchecker"; //$NON-NLS-1$
+
+	// The shared instance.
 	private static TclCheckerPlugin plugin;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -49,15 +50,25 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 	 */
 	public static TclCheckerPlugin getDefault() {
 		return plugin;
-	}	
-	
-//	private IPreferenceStore preferenceStore;
-//	
-//	public IPreferenceStore getPreferenceStore() {
-//        if (preferenceStore == null) {
-//            preferenceStore = new ScopedPreferenceStore(new InstanceScope(),getBundle().getSymbolicName());
-//
-//        }        
-//        return preferenceStore;
-//    }
+	}
+
+	public static void log(int severity, String message) {
+		getDefault().getLog().log(new Status(severity, PLUGIN_ID, message));
+	}
+
+	public static void log(int severity, String message, Throwable throwable) {
+		getDefault().getLog().log(
+				new Status(severity, PLUGIN_ID, message, throwable));
+	}
+
+	// private IPreferenceStore preferenceStore;
+	//	
+	// public IPreferenceStore getPreferenceStore() {
+	// if (preferenceStore == null) {
+	// preferenceStore = new ScopedPreferenceStore(new
+	// InstanceScope(),getBundle().getSymbolicName());
+	//
+	// }
+	// return preferenceStore;
+	// }
 }
