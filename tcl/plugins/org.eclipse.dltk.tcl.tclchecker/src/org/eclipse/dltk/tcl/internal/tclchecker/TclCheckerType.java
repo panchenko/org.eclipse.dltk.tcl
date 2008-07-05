@@ -11,6 +11,7 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import java.io.IOException;
 
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.validators.core.AbstractValidatorType;
 import org.eclipse.dltk.validators.core.IValidator;
 import org.w3c.dom.Element;
@@ -44,7 +45,7 @@ public class TclCheckerType extends AbstractValidatorType {
 	}
 
 	public String getNature() {
-		return "org.eclipse.dltk.tcl.core.nature";
+		return TclNature.NATURE_ID;
 	}
 
 	public boolean isConfigurable() {
