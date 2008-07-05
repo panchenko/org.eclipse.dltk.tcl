@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +81,7 @@ public class TclChecker {
 	}
 
 	public void check(final List sourceModules, IProgressMonitor monitor,
-			OutputStream console, IEnvironment environment) {
+			OutputStream consoleStream, IEnvironment environment) {
 		if (!canCheck(environment)) {
 			throw new IllegalStateException(
 					Messages.TclChecker_cannot_be_executed);
@@ -114,24 +115,19 @@ public class TclChecker {
 			pathToSource.put(loc, module);
 			arguments.add(loc);
 		}
-		if (arguments.size() == 0) {
+		if (arguments.isEmpty()) {
 			if (monitor != null) {
 				monitor.done();
 			}
 			return;
 		}
+		final PrintStream console = consoleStream != null ? new PrintStream(
+				consoleStream, true) : null;
 		List cmdLine = new ArrayList();
 		if (!TclCheckerHelper
 				.passOriginalArguments(store, cmdLine, environment)) {
 			if (console != null) {
-				try {
-					console.write(Messages.TclChecker_path_not_specified
-							.getBytes());
-				} catch (IOException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
+				console.println(Messages.TclChecker_path_not_specified);
 			}
 		}
 		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
@@ -157,6 +153,7 @@ public class TclChecker {
 		monitor.beginTask(Messages.TclChecker_executing,
 				sourceModules.size() * 2 + 1);
 
+		// FIXME why we always use LOCAL environment ?
 		Map map = DebugPlugin.getDefault().getLaunchManager()
 				.getNativeEnvironmentCasePreserved();
 
@@ -173,20 +170,16 @@ public class TclChecker {
 			process = execEnvironment.exec((String[]) cmdLine
 					.toArray(new String[cmdLine.size()]), null, env);
 
-			// process = DebugPlugin.exec((String[]) cmdLine
-			// .toArray(new String[cmdLine.size()]), null, env);
-
 			monitor.worked(1);
 
 			input = new BufferedReader(new InputStreamReader(process
 					.getInputStream()));
 
-			String line = null;
+			String line;
 			CodeModel model = null;
 			while ((line = input.readLine()) != null) {
-				// lines.add(line);
 				if (console != null) {
-					console.write((line + "\n").getBytes()); //$NON-NLS-1$
+					console.println(line);
 				}
 				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line);
 				if (monitor.isCanceled()) {
@@ -246,13 +239,12 @@ public class TclChecker {
 			input = new BufferedReader(new InputStreamReader(process
 					.getErrorStream()));
 
-			line = null;
 			while ((line = input.readLine()) != null) {
 				// lines.add(line);
 				if (console != null) {
-					console.write((line + "\n").getBytes()); //$NON-NLS-1$
+					console.println(line);
 				}
-				errorMessage.append(line).append("\n"); //$NON-NLS-1$
+				errorMessage.append(line).append('\n');
 				if (monitor.isCanceled()) {
 					process.destroy();
 					return;
@@ -284,15 +276,15 @@ public class TclChecker {
 
 	/**
 	 * Finds the source module comparing short file name with names in the Map.
-	 * Returns {@link ISourceModule} found or <code>null</code>.
+	 * Returns {@link ISourceModule} if single match is found or
+	 * <code>null</code> if there are no matches or if there are multiple
+	 * matches.
 	 * 
 	 * @param pathToSource
 	 * @param path
 	 * @return
 	 */
 	private ISourceModule findSourceModule(Map pathToSource, IPath path) {
-		// Lets search for fileName. If it is present one
-		// time, associate with it.
 		final String shortFileName = path.lastSegment();
 		String fullPath = null;
 		for (Iterator iterator = pathToSource.keySet().iterator(); iterator
@@ -316,6 +308,10 @@ public class TclChecker {
 		try {
 			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
 				String path = (String) arg.next();
+				/*
+				 * FIXME filename encoding on the remote system should be
+				 * configurable
+				 */
 				baros.write((path + "\n").getBytes()); //$NON-NLS-1$
 			}
 			baros.close();
