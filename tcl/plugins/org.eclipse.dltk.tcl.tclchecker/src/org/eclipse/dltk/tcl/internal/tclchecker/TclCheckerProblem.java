@@ -16,10 +16,12 @@ public class TclCheckerProblem {
 
 	private TclCheckerProblemDescription description;
 
-	public TclCheckerProblem(String source, int lineNumber, String messageID, String message) {
+	public TclCheckerProblem(String source, int lineNumber, String messageID,
+			String message) {
 		this.source = source;
 		this.lineNumber = lineNumber;
-		this.description = TclCheckerProblemDescription.getProblemDescription(messageID, message);
+		this.description = TclCheckerProblemDescription.getProblemDescription(
+				messageID, message);
 	}
 
 	public String getFile() {
@@ -32,5 +34,9 @@ public class TclCheckerProblem {
 
 	public TclCheckerProblemDescription getDescription() {
 		return description;
+	}
+
+	public String toString() {
+		return source + ":" + lineNumber + " " + description; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }
