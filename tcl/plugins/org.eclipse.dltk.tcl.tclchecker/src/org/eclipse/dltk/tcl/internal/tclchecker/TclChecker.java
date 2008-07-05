@@ -107,9 +107,9 @@ public class TclChecker {
 			String loc = null;
 			if (location == null) {
 				URI locationURI = module.getResource().getLocationURI();
-				loc = environment.getFile(locationURI).toOSString();
+				loc = environment.getFile(locationURI).toString();
 			} else {
-				loc = location.toOSString();
+				loc = location.toString();
 			}
 			pathToSource.put(loc, module);
 			arguments.add(loc);
@@ -240,7 +240,7 @@ public class TclChecker {
 				if (line.startsWith(CHECKING)) {
 					String fileName = line.substring(CHECKING.length() + 1)
 							.trim();
-					checkingFile = fileName;
+					checkingFile = Path.fromOSString(fileName).toString();
 					checkingModule = (ISourceModule) pathToSource
 							.get(checkingFile);
 					if (checkingModule == null) {
