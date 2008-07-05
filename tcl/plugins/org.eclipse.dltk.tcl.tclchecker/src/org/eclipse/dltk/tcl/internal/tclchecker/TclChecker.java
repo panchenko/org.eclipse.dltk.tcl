@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URI;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,6 +41,7 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.osgi.util.NLS;
 
 public class TclChecker {
 	private static final String PATTERN_TXT = "pattern.txt"; //$NON-NLS-1$
@@ -84,7 +84,8 @@ public class TclChecker {
 	public void check(final List sourceModules, IProgressMonitor monitor,
 			OutputStream console, IEnvironment environment) {
 		if (!canCheck(environment)) {
-			throw new IllegalStateException("TclChecker cannot be executed");
+			throw new IllegalStateException(
+					Messages.TclChecker_cannot_be_executed);
 		}
 
 		List arguments = new ArrayList();
@@ -126,7 +127,7 @@ public class TclChecker {
 				.passOriginalArguments(store, cmdLine, environment)) {
 			if (console != null) {
 				try {
-					console.write("Path to TclChecker is not specified."
+					console.write(Messages.TclChecker_path_not_specified
 							.getBytes());
 				} catch (IOException e) {
 					if (DLTKCore.DEBUG) {
@@ -145,7 +146,7 @@ public class TclChecker {
 		try {
 			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
 				String path = (String) arg.next();
-				baros.write((path + "\n").getBytes());
+				baros.write((path + "\n").getBytes()); //$NON-NLS-1$
 			}
 			baros.close();
 		} catch (FileNotFoundException e1) {
@@ -163,16 +164,22 @@ public class TclChecker {
 					.toByteArray()), PATTERN_TXT);
 		} catch (IOException e1) {
 			if (DLTKCore.DEBUG) {
-				TclCheckerPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID,
-								"Failed to deploy file list", e1));
+				TclCheckerPlugin
+						.getDefault()
+						.getLog()
+						.log(
+								new Status(
+										IStatus.ERROR,
+										TclCheckerPlugin.PLUGIN_ID,
+										Messages.TclChecker_filelist_deploy_failed,
+										e1));
 				if (DLTKCore.DEBUG) {
 					e1.printStackTrace();
 				}
 			}
 			return;
 		}
-		cmdLine.add("-@");
+		cmdLine.add("-@"); //$NON-NLS-1$
 		cmdLine.add(deployment.getFile(pattern).toOSString());
 		Process process;
 		BufferedReader input = null;
@@ -183,7 +190,7 @@ public class TclChecker {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 
-		monitor.beginTask("Executing TclChecker...",
+		monitor.beginTask(Messages.TclChecker_executing,
 				sourceModules.size() * 2 + 1);
 
 		Map map = DebugPlugin.getDefault().getLaunchManager()
@@ -194,11 +201,11 @@ public class TclChecker {
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			String value = (String) map.get(key);
-			env[i] = key + "=" + value;
+			env[i] = key + "=" + value; //$NON-NLS-1$
 			++i;
 		}
 		try {
-			monitor.subTask("Launching TclChecker...");
+			monitor.subTask(Messages.TclChecker_launching);
 			process = execEnvironment.exec((String[]) cmdLine
 					.toArray(new String[cmdLine.size()]), null, env);
 
@@ -215,7 +222,7 @@ public class TclChecker {
 			while ((line = input.readLine()) != null) {
 				// lines.add(line);
 				if (console != null) {
-					console.write((line + "\n").getBytes());
+					console.write((line + "\n").getBytes()); //$NON-NLS-1$
 				}
 				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line);
 				if (monitor.isCanceled()) {
@@ -226,15 +233,9 @@ public class TclChecker {
 					String fileName = line.substring(SCANNING.length() + 1)
 							.trim();
 					fileName = Path.fromOSString(fileName).lastSegment();
-					monitor
-							.subTask(MessageFormat
-									.format(
-											"TclChecker scanning \"{0}\" ({1} to scan)...",
-											new Object[] {
-													fileName,
-													new Integer(sourceModules
-															.size()
-															- scanned) }));
+					monitor.subTask(NLS.bind(Messages.TclChecker_scanning,
+							fileName, String.valueOf(sourceModules.size()
+									- scanned)));
 					monitor.worked(1);
 					scanned++;
 				}
@@ -250,15 +251,9 @@ public class TclChecker {
 					}
 					model = (CodeModel) moduleToCodeModel.get(checkingModule);
 
-					monitor
-							.subTask(MessageFormat
-									.format(
-											"TclChecker checking  \"{0}\" ({1} to check)...",
-											new Object[] {
-													path.lastSegment(),
-													new Integer(sourceModules
-															.size()
-															- checked) }));
+					monitor.subTask(NLS.bind(Messages.TclChecker_checking, path
+							.lastSegment(), String.valueOf(sourceModules.size()
+							- checked)));
 					monitor.worked(1);
 					checked++;
 				}
@@ -291,9 +286,9 @@ public class TclChecker {
 			while ((line = input.readLine()) != null) {
 				// lines.add(line);
 				if (console != null) {
-					console.write((line + "\n").getBytes());
+					console.write((line + "\n").getBytes()); //$NON-NLS-1$
 				}
-				errorMessage.append(line).append("\n");
+				errorMessage.append(line).append("\n"); //$NON-NLS-1$
 				if (monitor.isCanceled()) {
 					process.destroy();
 					return;
@@ -301,12 +296,9 @@ public class TclChecker {
 			}
 			String error = errorMessage.toString();
 			if (error.length() > 0) {
-				TclCheckerPlugin.getDefault().getLog()
-						.log(
-								new Status(IStatus.ERROR,
-										TclCheckerPlugin.PLUGIN_ID,
-										"Error during tcl_checker execution:\n"
-												+ error));
+				TclCheckerPlugin.getDefault().getLog().log(
+						new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID,
+								Messages.TclChecker_execution_error + error));
 			}
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
