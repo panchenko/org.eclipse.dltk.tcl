@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -45,9 +44,11 @@ import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclChecker {
-	private static final String CHECKING = "checking:";
+	private static final String PATTERN_TXT = "pattern.txt"; //$NON-NLS-1$
 
-	private static final String SCANNING = "scanning:";
+	private static final String CHECKING = "checking:"; //$NON-NLS-1$
+
+	private static final String SCANNING = "scanning:"; //$NON-NLS-1$
 
 	protected static IMarker reportErrorProblem(IResource resource,
 			TclCheckerProblem problem, int start, int end) throws CoreException {
@@ -70,7 +71,7 @@ public class TclChecker {
 
 	public TclChecker(IPreferenceStore store) {
 		if (store == null) {
-			throw new NullPointerException("store cannot be null");
+			throw new NullPointerException("store cannot be null"); //$NON-NLS-1$
 		}
 
 		this.store = store;
@@ -159,7 +160,7 @@ public class TclChecker {
 		IPath pattern;
 		try {
 			pattern = deployment.add(new ByteArrayInputStream(baros
-					.toByteArray()), "pattern.txt");
+					.toByteArray()), PATTERN_TXT);
 		} catch (IOException e1) {
 			if (DLTKCore.DEBUG) {
 				TclCheckerPlugin.getDefault().getLog().log(
@@ -175,7 +176,7 @@ public class TclChecker {
 		cmdLine.add(deployment.getFile(pattern).toOSString());
 		Process process;
 		BufferedReader input = null;
-		String checkingFile = null;
+
 		int scanned = 0;
 		int checked = 0;
 
@@ -240,47 +241,28 @@ public class TclChecker {
 				if (line.startsWith(CHECKING)) {
 					String fileName = line.substring(CHECKING.length() + 1)
 							.trim();
-					checkingFile = Path.fromOSString(fileName).toString();
+					final IPath path = Path.fromOSString(fileName);
+					final String checkingFile = path.toString();
 					checkingModule = (ISourceModule) pathToSource
 							.get(checkingFile);
 					if (checkingModule == null) {
-						// Lets search for fileName. If it is present one
-						// time, associate with it.
-						Set paths = pathToSource.keySet();
-						String fullPath = null;
-						for (Iterator iterator = paths.iterator(); iterator
-								.hasNext();) {
-							String p = (String) iterator.next();
-							if (p.endsWith(fileName)) {
-								if (fullPath != null) {
-									fullPath = null;
-									break;
-								}
-								fullPath = p;
-							}
-						}
-						if (fullPath != null) {
-							checkingModule = (ISourceModule) pathToSource
-									.get(fullPath);
-						}
+						checkingModule = findSourceModule(pathToSource, path);
 					}
 					model = (CodeModel) moduleToCodeModel.get(checkingModule);
 
-					fileName = Path.fromOSString(fileName).lastSegment();
 					monitor
 							.subTask(MessageFormat
 									.format(
 											"TclChecker checking  \"{0}\" ({1} to check)...",
 											new Object[] {
-													fileName,
+													path.lastSegment(),
 													new Integer(sourceModules
 															.size()
 															- checked) }));
 					monitor.worked(1);
 					checked++;
 				}
-				if (problem != null && checkingFile != null
-						&& checkingModule != null) {
+				if (problem != null && checkingModule != null) {
 					if (model != null) {
 						TclCheckerProblemDescription desc = problem
 								.getDescription();
@@ -344,4 +326,34 @@ public class TclChecker {
 			}
 		}
 	}
+
+	/**
+	 * Finds the source module comparing short file name with names in the Map.
+	 * Returns {@link ISourceModule} found or <code>null</code>.
+	 * 
+	 * @param pathToSource
+	 * @param path
+	 * @return
+	 */
+	private ISourceModule findSourceModule(Map pathToSource, IPath path) {
+		// Lets search for fileName. If it is present one
+		// time, associate with it.
+		final String shortFileName = path.lastSegment();
+		String fullPath = null;
+		for (Iterator iterator = pathToSource.keySet().iterator(); iterator
+				.hasNext();) {
+			final String p = (String) iterator.next();
+			if (p.endsWith(shortFileName)) {
+				if (fullPath != null) {
+					return null;
+				}
+				fullPath = p;
+			}
+		}
+		if (fullPath != null) {
+			return (ISourceModule) pathToSource.get(fullPath);
+		}
+		return null;
+	}
+
 }
