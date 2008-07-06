@@ -171,10 +171,16 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		}
 	}
 
+	/**
+	 * Validation only for local file system
+	 */
 	protected void validatePCXTclCheckerPath() {
 		Collection envs = pcxPaths.keySet();
 		for (Iterator it = envs.iterator(); it.hasNext();) {
 			IEnvironment env = (IEnvironment) it.next();
+			if (!env.getId().equals(LocalEnvironment.ENVIRONMENT_ID)) {
+				continue;
+			}
 			if (Boolean.valueOf((String) noPCXValues.get(env)).booleanValue()) {
 				continue;
 			}
@@ -420,7 +426,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		problemsTable = new Table(group, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
 		problemsTable.setBounds(0, 0, 150, 200);
-		problemsTable.setHeaderVisible(false);
+		problemsTable.setHeaderVisible(true);
 		problemsTable.setLinesVisible(true);
 
 		GridData tableData = new GridData(SWT.FILL, SWT.FILL, true, true, 0, 0);
@@ -429,12 +435,15 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 		// Columns
 		TableColumn problemsColumn = new TableColumn(problemsTable, SWT.LEFT);
+		problemsColumn.setText(PreferencesMessages.TclChecker_problems_name);
 		problemsColumn.setWidth(140);
 
 		TableColumn typesColumn = new TableColumn(problemsTable, SWT.LEFT);
+		typesColumn.setText(PreferencesMessages.TclChecker_problems_type);
 		typesColumn.setWidth(70);
 
 		TableColumn actionColumn = new TableColumn(problemsTable, SWT.LEFT);
+		actionColumn.setText(PreferencesMessages.TclChecker_problems_action);
 		actionColumn.setWidth(70);
 
 		// TableViewer
