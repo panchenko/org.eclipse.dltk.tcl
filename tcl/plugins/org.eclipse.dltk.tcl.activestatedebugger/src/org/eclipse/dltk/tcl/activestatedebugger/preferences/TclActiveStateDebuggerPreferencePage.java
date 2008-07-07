@@ -58,9 +58,11 @@ public class TclActiveStateDebuggerPreferencePage extends
 	private static String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug.engines.activestatedebugger";
 
 	/*
-	 * @see org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage#createOptionsBlock(org.eclipse.dltk.ui.util.IStatusChangeListener,
-	 *      org.eclipse.core.resources.IProject,
-	 *      org.eclipse.ui.preferences.IWorkbenchPreferenceContainer)
+	 * @seeorg.eclipse.dltk.ui.preferences.
+	 * AbstractConfigurationBlockPropertyAndPreferencePage
+	 * #createOptionsBlock(org.eclipse.dltk.ui.util.IStatusChangeListener,
+	 * org.eclipse.core.resources.IProject,
+	 * org.eclipse.ui.preferences.IWorkbenchPreferenceContainer)
 	 */
 	protected AbstractOptionsBlock createOptionsBlock(
 			IStatusChangeListener newStatusChangedListener, IProject project,
@@ -88,15 +90,17 @@ public class TclActiveStateDebuggerPreferencePage extends
 				final Group group = SWTFactory.createGroup(parent,
 						PreferenceMessages.DebuggingEnginePDXGroup, 3, 1,
 						GridData.FILL_BOTH);
-				pdxPath = new EnvironmentPathBlock();
+				pdxPath = new EnvironmentPathBlock(true);
 				pdxPath.createControl(group);
-				Map paths = EnvironmentPathUtils.decodePaths(getString(PDX_PATH));
+				Map paths = EnvironmentPathUtils
+						.decodePaths(getString(PDX_PATH));
 				pdxPath.setPaths(paths);
 			}
-			
+
 			protected boolean processChanges(
 					IWorkbenchPreferenceContainer container) {
-				String pdxPathKeyValue = EnvironmentPathUtils.encodePaths(pdxPath.getPaths());
+				String pdxPathKeyValue = EnvironmentPathUtils
+						.encodePaths(pdxPath.getPaths());
 				setString(PDX_PATH, pdxPathKeyValue);
 				return super.processChanges(container);
 			}
@@ -120,21 +124,24 @@ public class TclActiveStateDebuggerPreferencePage extends
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage#getHelpId()
+	 * @seeorg.eclipse.dltk.ui.preferences.
+	 * AbstractConfigurationBlockPropertyAndPreferencePage#getHelpId()
 	 */
 	protected String getHelpId() {
 		return null;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage#getPreferencePageId()
+	 * @seeorg.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage#
+	 * getPreferencePageId()
 	 */
 	protected String getPreferencePageId() {
 		return PREFERENCE_PAGE_ID;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage#getProjectHelpId()
+	 * @seeorg.eclipse.dltk.ui.preferences.
+	 * AbstractConfigurationBlockPropertyAndPreferencePage#getProjectHelpId()
 	 */
 	protected String getProjectHelpId() {
 		// TODO Auto-generated method stub
@@ -142,21 +149,24 @@ public class TclActiveStateDebuggerPreferencePage extends
 	}
 
 	/*
-	 * @see org.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage#getPropertyPageId()
+	 * @seeorg.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage#
+	 * getPropertyPageId()
 	 */
 	protected String getPropertyPageId() {
 		return PROPERTY_PAGE_ID;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage#setDescription()
+	 * @seeorg.eclipse.dltk.ui.preferences.
+	 * AbstractConfigurationBlockPropertyAndPreferencePage#setDescription()
 	 */
 	protected void setDescription() {
 		setDescription(PreferenceMessages.DebuggingEngineDescription);
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage#setPreferenceStore()
+	 * @seeorg.eclipse.dltk.ui.preferences.
+	 * AbstractConfigurationBlockPropertyAndPreferencePage#setPreferenceStore()
 	 */
 	protected void setPreferenceStore() {
 		setPreferenceStore(TclActiveStateDebuggerPlugin.getDefault()
