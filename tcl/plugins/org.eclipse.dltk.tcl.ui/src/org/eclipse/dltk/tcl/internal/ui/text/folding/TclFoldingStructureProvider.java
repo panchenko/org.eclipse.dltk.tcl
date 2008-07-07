@@ -21,14 +21,19 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.tcl.ast.ITclStatementLookLike;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.ast.IfStatement;
 import org.eclipse.dltk.tcl.core.ast.TclCatchStatement;
+import org.eclipse.dltk.tcl.core.ast.TclForStatement;
+import org.eclipse.dltk.tcl.core.ast.TclForeachStatement;
 import org.eclipse.dltk.tcl.core.ast.TclSwitchStatement;
+import org.eclipse.dltk.tcl.core.ast.TclWhileStatement;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.text.TclPartitionScanner;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
@@ -105,35 +110,83 @@ public class TclFoldingStructureProvider extends
 		}
 	}
 
+	private class TclFoldBlock extends Block {
+		public TclFoldBlock(Block block) {
+			super(block.sourceStart(), block.sourceEnd());
+			this.getStatements().addAll(block.getStatements());
+		}
+	}
+
 	private void traverse(List result, List statements, int offset, String code) {
 		for (Iterator iterator = statements.iterator(); iterator.hasNext();) {
 			ASTNode node = (ASTNode) iterator.next();
 			if (node instanceof TclStatement) {
 				checkStatement(code, offset, result, (Statement) node);
-			} else if (node instanceof TypeDeclaration) {
+				continue;
+			}
+			boolean fold = false;
+			List children = null;
+			if (node instanceof TypeDeclaration) {
 				TypeDeclaration statement = (TypeDeclaration) node;
-				result.add(new CodeBlock(statement, new Region(offset
-						+ statement.sourceStart(), statement.sourceEnd()
-						- statement.sourceStart())));
-				traverse(result, statement.getStatements(), offset, code);
+				children = statement.getStatements();
+				fold = true;
 			} else if (node instanceof MethodDeclaration) {
 				MethodDeclaration statement = (MethodDeclaration) node;
-				result.add(new CodeBlock(statement, new Region(offset
-						+ statement.sourceStart(), statement.sourceEnd()
-						- statement.sourceStart())));
-				traverse(result, statement.getStatements(), offset, code);
+				children = statement.getStatements();
+				fold = true;
 			} else if (node instanceof IfStatement) {
+				fold = true;
+				children = new ArrayList();
 				IfStatement statement = (IfStatement) node;
-				result.add(new CodeBlock(statement, new Region(offset
-						+ statement.sourceStart(), statement.sourceEnd()
-						- statement.sourceStart())));
-				traverse(result, statement.getChilds(), offset, code);
+				Statement thenNode = statement.getThen();
+				if (thenNode instanceof Block) {
+					children.addAll(((Block) thenNode).getStatements());
+				}
+				ASTNode elseNode = statement.getElse();
+				if (elseNode instanceof Block) {
+					children.addAll(((Block) elseNode).getStatements());
+				}
 			} else if (node instanceof TclCatchStatement) {
+				fold = true;
 				TclCatchStatement statement = (TclCatchStatement) node;
-				result.add(new CodeBlock(statement, new Region(offset
-						+ statement.sourceStart(), statement.sourceEnd()
-						- statement.sourceStart())));
-				traverse(result, statement.getStatements(), offset, code);
+				children = statement.getStatements();
+			} else if (node instanceof TclSwitchStatement) {
+				fold = true;
+				TclSwitchStatement statement = (TclSwitchStatement) node;
+				Block alts = statement.getAlternatives();
+				List childs = alts.getStatements();
+				children = new ArrayList();
+				for (int i = 0; i < childs.size(); i++) {
+					ASTNode child = (ASTNode) childs.get(i);
+					if (child instanceof Block) {
+						result.add(new CodeBlock(
+								new TclFoldBlock((Block) child), new Region(
+										offset + child.sourceStart(), child
+												.sourceEnd()
+												- child.sourceStart())));
+						children.addAll(((Block) child).getStatements());
+					}
+				}
+			} else if (node instanceof TclWhileStatement) {
+				fold = true;
+				TclWhileStatement statement = (TclWhileStatement) node;
+				children = statement.getBlock().getStatements();
+			} else if (node instanceof TclForeachStatement) {
+				fold = true;
+				TclForeachStatement statement = (TclForeachStatement) node;
+				children = statement.getBlock().getStatements();
+			} else if (node instanceof TclForStatement) {
+				fold = true;
+				TclForStatement statement = (TclForStatement) node;
+				children = statement.getBlock().getStatements();
+			}
+			if (fold) {
+				result.add(new CodeBlock(node, new Region(offset
+						+ node.sourceStart(), node.sourceEnd()
+						- node.sourceStart())));
+			}
+			if (children != null && children.size() > 0) {
+				traverse(result, children, offset, code);
 			}
 		}
 	}
@@ -235,8 +288,16 @@ public class TclFoldingStructureProvider extends
 
 	protected boolean initiallyCollapse(ASTNode s,
 			FoldingStructureComputationContext ctx) {
-		if (s instanceof TclStatement) {
-			TclStatement statement = (TclStatement) s;
+		if (s instanceof TclStatement || s instanceof ITclStatementLookLike) {
+			TclStatement statement = null;
+			if (s instanceof ITclStatementLookLike) {
+				statement = ((ITclStatementLookLike) s).getStatement();
+			} else {
+				statement = (TclStatement) s;
+			}
+			if (statement == null) {
+				return false;
+			}
 			if (!(statement.getAt(0) instanceof SimpleReference)) {
 				return false;
 			}
@@ -312,9 +373,17 @@ public class TclFoldingStructureProvider extends
 		} else if (s instanceof IfStatement) {
 			return canFold("if");
 		} else if (s instanceof TclSwitchStatement) {
-			return canFold("if");
+			return canFold("swith");
+		} else if (s instanceof TclFoldBlock) {
+			return canFold("swith");
 		} else if (s instanceof TclCatchStatement) {
 			return canFold("catch");
+		} else if (s instanceof TclWhileStatement) {
+			return canFold("while");
+		} else if (s instanceof TclForeachStatement) {
+			return canFold("foreach");
+		} else if (s instanceof TclForStatement) {
+			return canFold("for");
 		} else if (s instanceof TclStatement) {
 			TclStatement statement = (TclStatement) s;
 			if (!(statement.getAt(0) instanceof SimpleReference)) {
