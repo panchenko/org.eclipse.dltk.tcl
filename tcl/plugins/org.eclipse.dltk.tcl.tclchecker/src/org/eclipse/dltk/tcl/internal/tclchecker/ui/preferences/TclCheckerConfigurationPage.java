@@ -129,10 +129,17 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		return -1;
 	}
 
+	/**
+	 * Check only for local environment.
+	 */
 	protected void validateTclCheckerPath() {
 		Map envs = environmentPathBlock.getPaths();
 		for (Iterator it = envs.keySet().iterator(); it.hasNext();) {
 			IEnvironment env = (IEnvironment) it.next();
+			if (!env.getId().equals(LocalEnvironment.ENVIRONMENT_ID)) {
+				continue;
+			}
+
 			String txtPath = envs.get(env).toString();
 			txtPath = txtPath.trim();
 

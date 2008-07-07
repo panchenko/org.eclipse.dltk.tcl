@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -153,9 +152,7 @@ public class TclChecker {
 		monitor.beginTask(Messages.TclChecker_executing,
 				sourceModules.size() * 2 + 1);
 
-		// FIXME why we always use LOCAL environment ?
-		Map map = DebugPlugin.getDefault().getLaunchManager()
-				.getNativeEnvironmentCasePreserved();
+		Map map = execEnvironment.getEnvironmentVariables(false);
 
 		String[] env = new String[map.size()];
 		int i = 0;
