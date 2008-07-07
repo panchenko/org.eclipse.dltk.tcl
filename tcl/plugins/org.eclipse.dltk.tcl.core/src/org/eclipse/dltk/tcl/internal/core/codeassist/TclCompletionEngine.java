@@ -658,6 +658,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 		}
+		elements.removeAll(methodNames);
 	}
 
 	public void findMixinTclElement(final Set completions, String tok,
