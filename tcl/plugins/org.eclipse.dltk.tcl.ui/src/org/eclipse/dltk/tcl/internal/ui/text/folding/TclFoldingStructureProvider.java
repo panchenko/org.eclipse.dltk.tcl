@@ -118,6 +118,7 @@ public class TclFoldingStructureProvider extends
 	}
 
 	private void traverse(List result, List statements, int offset, String code) {
+
 		for (Iterator iterator = statements.iterator(); iterator.hasNext();) {
 			ASTNode node = (ASTNode) iterator.next();
 			if (node instanceof TclStatement) {
@@ -154,31 +155,41 @@ public class TclFoldingStructureProvider extends
 				fold = true;
 				TclSwitchStatement statement = (TclSwitchStatement) node;
 				Block alts = statement.getAlternatives();
-				List childs = alts.getStatements();
-				children = new ArrayList();
-				for (int i = 0; i < childs.size(); i++) {
-					ASTNode child = (ASTNode) childs.get(i);
-					if (child instanceof Block) {
-						result.add(new CodeBlock(
-								new TclFoldBlock((Block) child), new Region(
-										offset + child.sourceStart(), child
-												.sourceEnd()
-												- child.sourceStart())));
-						children.addAll(((Block) child).getStatements());
+				if (alts != null) {
+					List childs = alts.getStatements();
+					children = new ArrayList();
+					for (int i = 0; i < childs.size(); i++) {
+						ASTNode child = (ASTNode) childs.get(i);
+						if (child instanceof Block) {
+							result.add(new CodeBlock(new TclFoldBlock(
+									(Block) child), new Region(offset
+									+ child.sourceStart(), child.sourceEnd()
+									- child.sourceStart())));
+							children.addAll(((Block) child).getStatements());
+						}
 					}
 				}
 			} else if (node instanceof TclWhileStatement) {
 				fold = true;
 				TclWhileStatement statement = (TclWhileStatement) node;
-				children = statement.getBlock().getStatements();
+				Block block = statement.getBlock();
+				if (block != null) {
+					children = block.getStatements();
+				}
 			} else if (node instanceof TclForeachStatement) {
 				fold = true;
 				TclForeachStatement statement = (TclForeachStatement) node;
-				children = statement.getBlock().getStatements();
+				Block block = statement.getBlock();
+				if (block != null) {
+					children = block.getStatements();
+				}
 			} else if (node instanceof TclForStatement) {
 				fold = true;
 				TclForStatement statement = (TclForStatement) node;
-				children = statement.getBlock().getStatements();
+				Block block = statement.getBlock();
+				if (block != null) {
+					children = block.getStatements();
+				}
 			}
 			if (fold) {
 				result.add(new CodeBlock(node, new Region(offset
