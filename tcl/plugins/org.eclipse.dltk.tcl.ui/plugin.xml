@@ -314,6 +314,15 @@
             toolbarPath="org.eclipse.search.searchActionSet/Search"
             tooltip="%OpenTypeAction.tooltip">
          </action>
+         <action
+            class="org.eclipse.dltk.tcl.internal.ui.actions.TclOpenMethodAction"
+            definitionId="org.eclipse.dltk.tcl.ui.navigate.open.method"
+            icon="icons/etool16/openmethod.gif"
+            id="openType"
+            label="%OpenMethodAction.label"
+            menubarPath="navigate/open.ext2"
+            tooltip="%OpenMethodAction.tooltip">
+         </action>
           <action
                definitionId="org.eclipse.dltk.tcl.ui.navigate.open.type.in.hierarchy"
                label="%OpenTypeInHierarchyAction.label"
@@ -382,6 +391,12 @@
             description="%ActionDefinition.OpenType.description"
             categoryId="org.eclipse.ui.category.navigate"
             id="org.eclipse.dltk.tcl.ui.navigate.open.type">
+         </command>
+       <command
+            name="%ActionDefinition.OpenMethod.name"
+            description="%ActionDefinition.OpenMethod.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.dltk.tcl.ui.navigate.open.method">
          </command>
  </extension>
   
