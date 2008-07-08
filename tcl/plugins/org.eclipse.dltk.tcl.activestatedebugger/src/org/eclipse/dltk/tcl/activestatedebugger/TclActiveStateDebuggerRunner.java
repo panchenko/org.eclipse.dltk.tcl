@@ -12,11 +12,17 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.debug.core.DebugOption;
+import org.eclipse.dltk.debug.core.IDbgpService;
+import org.eclipse.dltk.debug.core.model.DefaultDebugOptions;
+import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
 import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
+import org.eclipse.dltk.internal.debug.core.model.ScriptDebugTarget;
 import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -118,6 +124,22 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		newConfig.addScriptArgs(args);
 
 		return newConfig;
+	}
+
+	protected IScriptDebugTarget createDebugTarget(ILaunch launch,
+			IDbgpService dbgpService) throws CoreException {
+		return new ScriptDebugTarget(getDebugModelId(), dbgpService,
+				getSessionId(launch.getLaunchConfiguration()), launch, null,
+				new TclDebugOptions());
+	}
+
+	private static class TclDebugOptions extends DefaultDebugOptions {
+		public boolean get(BooleanOption option) {
+			if (option == DebugOption.DBGP_ASYNC) {
+				return false;
+			}
+			return super.get(option);
+		}
 	}
 
 	/*
