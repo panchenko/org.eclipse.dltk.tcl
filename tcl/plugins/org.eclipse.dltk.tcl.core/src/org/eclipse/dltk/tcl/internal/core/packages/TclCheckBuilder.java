@@ -31,6 +31,7 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -41,12 +42,12 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 
 public class TclCheckBuilder implements IScriptBuilder {
 
-	public static final String TCL_PROBLEM_REQUIRE = "tcl.problem.require";
 	IScriptProject project;
 
 	public IStatus buildModelElements(IScriptProject project, List elements,
@@ -255,12 +256,13 @@ public class TclCheckBuilder implements IScriptBuilder {
 	}
 
 	public static void cleanMarkers(IResource resource) throws CoreException {
-		IMarker[] findMarkers = resource.findMarkers(
+		IMarker[] markers = resource.findMarkers(
 				DefaultProblem.MARKER_TYPE_PROBLEM, true,
 				IResource.DEPTH_INFINITE);
-		for (int j = 0; j < findMarkers.length; j++) {
-			if (findMarkers[j].getAttribute(TCL_PROBLEM_REQUIRE, null) != null) {
-				findMarkers[j].delete();
+		for (int j = 0; j < markers.length; j++) {
+			final IMarker m = markers[j];
+			if (m.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
+				m.delete();
 			}
 		}
 	}
@@ -297,11 +299,13 @@ public class TclCheckBuilder implements IScriptBuilder {
 			IProblemReporter reporter, CodeModel model, String name,
 			String pkgName) {
 		try {
-			IMarker marker = reporter.reportProblem(new DefaultProblem("",
-					name, 777, null, ProblemSeverities.Error,
-					pkg.sourceStart(), pkg.sourceEnd(), model.getLineNumber(pkg
-							.sourceStart(), pkg.sourceEnd())));
-			marker.setAttribute(TCL_PROBLEM_REQUIRE, pkgName);
+			reporter
+					.reportProblem(new DefaultProblem("", name,
+							TclProblems.UNKNOWN_REQUIRED_PACKAGE,
+							new String[] { pkgName }, ProblemSeverities.Error,
+							pkg.sourceStart(), pkg.sourceEnd(), model
+									.getLineNumber(pkg.sourceStart(), pkg
+											.sourceEnd())));
 		} catch (CoreException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
@@ -330,12 +334,13 @@ public class TclCheckBuilder implements IScriptBuilder {
 			if (!packageNames.contains(packageName)
 					&& !internalNames.contains(packageName)) {
 				try {
-					IMarker marker = reporter.reportProblem(new DefaultProblem(
-							"", "Unknown package:" + packageName, 777, null,
+					reporter.reportProblem(new DefaultProblem("",
+							"Unknown package:" + packageName,
+							TclProblems.UNKNOWN_REQUIRED_PACKAGE,
+							new String[] { packageName },
 							ProblemSeverities.Error, pkg.sourceStart(), pkg
 									.sourceEnd(), model.getLineNumber(pkg
 									.sourceStart(), pkg.sourceEnd())));
-					marker.setAttribute(TCL_PROBLEM_REQUIRE, packageName);
 				} catch (CoreException e) {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
