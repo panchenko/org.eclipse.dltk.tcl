@@ -8,17 +8,19 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.CorrectionEngine;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
-import org.eclipse.dltk.tcl.internal.core.packages.TclCheckBuilder;
 import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
@@ -50,9 +52,10 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 				MarkerAnnotation mAnnot = (MarkerAnnotation) annotation;
 				IMarker marker = mAnnot.getMarker();
 				if (isFixable(marker)) {
-					String pkgName = marker.getAttribute(
-							TclCheckBuilder.TCL_PROBLEM_REQUIRE, null);
-					if (pkgName != null) {
+					final String[] args = CorrectionEngine
+							.getProblemArguments(marker);
+					if (args != null && args.length == 1 && args[0] != null) {
+						final String pkgName = args[0];
 						ScriptEditor editor = (ScriptEditor) this.fAssistant
 								.getEditor();
 						IModelElement element = editor.getInputModelElement();
@@ -83,16 +86,16 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 	}
 
 	public static boolean isFixable(IMarker marker) {
-		String pkgName = marker.getAttribute(
-				TclCheckBuilder.TCL_PROBLEM_REQUIRE, null);
-		if (pkgName != null) {
-			IResource resource = marker.getResource();
-			IProject project = resource.getProject();
-			IScriptProject scriptProject = DLTKCore.create(project);
-			if (isFixable(pkgName, scriptProject)) {
-				return true;
+		if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
+			final String[] args = CorrectionEngine.getProblemArguments(marker);
+			if (args != null && args.length != 0 && args[0] != null) {
+				IResource resource = marker.getResource();
+				IProject project = resource.getProject();
+				IScriptProject scriptProject = DLTKCore.create(project);
+				if (isFixable(args[0], scriptProject)) {
+					return true;
+				}
 			}
-			return false;
 		}
 		return false;
 	}
@@ -112,8 +115,7 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 			}
 			if (install != null) {
 				PackagesManager manager = PackagesManager.getInstance();
-				IPath[] paths = manager
-						.getPathsForPackage(install, pkgName);
+				IPath[] paths = manager.getPathsForPackage(install, pkgName);
 				if (paths != null && paths.length > 0) {
 					return true;
 				}
@@ -121,8 +123,7 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 				for (Iterator iterator = dependencies.keySet().iterator(); iterator
 						.hasNext();) {
 					String pkg = (String) iterator.next();
-					IPath[] paths2 = manager
-							.getPathsForPackage(install, pkg);
+					IPath[] paths2 = manager.getPathsForPackage(install, pkg);
 					if (paths2 != null && paths2.length > 0) {
 						return true;
 					}
