@@ -390,7 +390,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 				noPCXValues.put(getEnvironment(), new Boolean(selection)
 						.toString());
 
-				IStructuredSelection pathSelection = (IStructuredSelection) environmentPathBlock
+				IStructuredSelection pathSelection = environmentPathBlock
 						.getSelection();
 				boolean enabled = !pathSelection.isEmpty();
 				pcxAdd.setEnabled(!selection && enabled);
@@ -402,8 +402,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	}
 
 	protected IEnvironment getEnvironment() {
-		IStructuredSelection selection = (IStructuredSelection) environmentPathBlock
-				.getSelection();
+		IStructuredSelection selection = environmentPathBlock.getSelection();
 		if (selection.isEmpty()) {
 			return EnvironmentManager
 					.getEnvironmentById(LocalEnvironment.ENVIRONMENT_ID);
