@@ -17,31 +17,35 @@ import org.eclipse.dltk.validators.core.IValidator;
 import org.w3c.dom.Element;
 
 public class TclCheckerType extends AbstractValidatorType {
-	private static final String SCRIPT_CHECKER_ID = "Tcl Checker";
+
+	private static final String CHECKER_ID = "Tcl Checker"; //$NON-NLS-1$
+
 	private TclCheckerImpl checker;
+
 	public TclCheckerType() {
-		this.checker = new TclCheckerImpl(SCRIPT_CHECKER_ID, this);
-		this.checker.setName("Tcl Checker");
-		this.validators.put(SCRIPT_CHECKER_ID, checker);
+		this.checker = new TclCheckerImpl(CHECKER_ID, this);
+		this.checker.setName(CHECKER_ID);
+		this.validators.put(CHECKER_ID, checker);
 	}
+
 	public IValidator createValidator(String id) {
-//		return new ScriptChecker(id, this);
+		// return new ScriptChecker(id, this);
 		return null;
 	}
 
 	public IValidator createValidatorFrom(String id, Element validatorElement)
 			throws IOException {
-//		return new ScriptChecker(id, validatorElement, this);
+		// return new ScriptChecker(id, validatorElement, this);
 		checker.loadInfo(validatorElement);
 		return checker;
 	}
 
 	public String getID() {
-		return "org.eclipse.dltk.tclchecker";
+		return "org.eclipse.dltk.tclchecker"; //$NON-NLS-1$
 	}
 
 	public String getName() {
-		return "Tcl Checker";
+		return CHECKER_ID;
 	}
 
 	public String getNature() {
