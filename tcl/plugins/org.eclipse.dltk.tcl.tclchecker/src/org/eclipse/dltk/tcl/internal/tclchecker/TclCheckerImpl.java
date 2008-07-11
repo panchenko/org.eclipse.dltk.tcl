@@ -77,7 +77,7 @@ public class TclCheckerImpl extends AbstractValidator {
 		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
 				.getPreferenceStore());
 		//TODO: Add environment detection for each file separately.
-		IScriptProject project = ((ISourceModule)module[0]).getScriptProject();
+		IScriptProject project = module[0].getScriptProject();
 		IEnvironment environment = EnvironmentManager.getEnvironment(project);
 		checker.check(els, monitor, console, environment);
 		return Status.OK_STATUS;
