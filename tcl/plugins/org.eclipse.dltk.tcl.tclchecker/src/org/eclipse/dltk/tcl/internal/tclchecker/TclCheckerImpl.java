@@ -35,15 +35,6 @@ public class TclCheckerImpl extends AbstractValidator {
 		super(id, null, type);
 	}
 
-	protected TclCheckerImpl(String id, String name, IValidatorType type) {
-		super(id, name, type);
-	}
-
-	protected TclCheckerImpl(String id, Element element, IValidatorType type) {
-		super(id, null, type);
-		loadFrom(element);
-	}
-
 	protected void loadFrom(Element element) {
 		if (initialized) {
 			return;
@@ -76,7 +67,7 @@ public class TclCheckerImpl extends AbstractValidator {
 		}
 		TclChecker checker = new TclChecker(TclCheckerPlugin.getDefault()
 				.getPreferenceStore());
-		//TODO: Add environment detection for each file separately.
+		// TODO: Add environment detection for each file separately.
 		IScriptProject project = module[0].getScriptProject();
 		IEnvironment environment = EnvironmentManager.getEnvironment(project);
 		checker.check(els, monitor, console, environment);
