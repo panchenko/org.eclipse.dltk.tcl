@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -220,9 +219,10 @@ public class TclResolver {
 		try {
 			for (int i = 0; i < childs.length; ++i) {
 				if (childs[i] instanceof IType) {
-					if ((((IType) childs[i]).getFlags() & Modifiers.AccNameSpace) == 0) {
-						continue;
-					}
+					// if ((((IType) childs[i]).getFlags() &
+					// Modifiers.AccNameSpace) == 0) {
+					// continue;
+					// }
 					IType type = (IType) childs[i];
 					String qname = name + delimiter + type.getElementName();
 					if (qname.equals(parentName)) {
@@ -292,6 +292,29 @@ public class TclResolver {
 				}
 			}
 			methodName = TclResolver.getNodeChildName(nde);
+		} else {
+			if (method.getDeclaringTypeName() != null) {
+				String pName = method.getDeclaringTypeName();
+				if (!pName.startsWith("::")) {
+					pName = "$" + pName;
+				}
+				pName = pName.replaceAll("::", "\\$");
+				if (pName.equals("$")) {
+					element = sourceModule;
+				} else {
+					try {
+						element = TclResolver.findTypeFrom(sourceModule
+								.getChildren(), "", pName, '$');
+						if (element == null) {
+							return;
+						}
+					} catch (ModelException e) {
+						e.printStackTrace();
+						return;
+					}
+				}
+				methodName = TclResolver.getNodeChildName(nde);
+			}
 		}
 		IModelElement e = TclResolver.findChildrenByName(methodName,
 				(IParent) element);
