@@ -83,7 +83,7 @@ public class TclCheckerProblemDescription {
 		}
 	}
 
-	public static boolean isError(int category) {		
+	public static boolean isError(int category) {
 		return category == ERROR || category == UPGRADE_ERROR;
 	}
 
@@ -147,7 +147,8 @@ public class TclCheckerProblemDescription {
 			explanation = getProblemExplanation(messageId);
 		}
 
-		return new TclCheckerProblemDescription(category, message, explanation);
+		return new TclCheckerProblemDescription(category, "(" + messageId
+				+ ") " + message, explanation);
 	}
 
 	private int category;

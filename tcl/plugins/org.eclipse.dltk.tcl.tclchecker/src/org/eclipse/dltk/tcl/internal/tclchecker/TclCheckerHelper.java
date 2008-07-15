@@ -92,9 +92,11 @@ public final class TclCheckerHelper {
 			case TclCheckerConstants.PROCESS_TYPE_CHECK:
 				cmdLine.add(CHECK_OPTION);
 				cmdLine.add(warningName);
+				break;
 			case TclCheckerConstants.PROCESS_TYPE_SUPPRESS:
 				cmdLine.add(SUPPRESS_OPTION);
 				cmdLine.add(warningName);
+				break;
 			}
 		}
 
