@@ -42,16 +42,16 @@ import org.xml.sax.SAXException;
  * interpreter package to path associations.
  */
 public class PackagesManager {
-	private static final String DEPENDENCY_TAG = "dependency";
-	private static final String INTERPRETER_TAG = "interpreter";
-	private static final String VALUE_ATTR = "value";
-	private static final String PACKAGES_FILE = "packages.txt";
-	private static final String PACKAGES_TAG = "packages";
-	private static final String PACKAGE_TAG = "package";
+	private static final String DEPENDENCY_TAG = "dependency"; //$NON-NLS-1$
+	private static final String INTERPRETER_TAG = "interpreter"; //$NON-NLS-1$
+	private static final String VALUE_ATTR = "value"; //$NON-NLS-1$
+	private static final String PACKAGES_FILE = "packages.txt"; //$NON-NLS-1$
+	private static final String PACKAGES_TAG = "packages"; //$NON-NLS-1$
+	private static final String PACKAGE_TAG = "package"; //$NON-NLS-1$
 
 	private static final String INTERPRETER_ATTR = INTERPRETER_TAG;
-	private static final String NAME_ATTR = "name";
-	private static final String PATH_TAG = "path";
+	private static final String NAME_ATTR = "name"; //$NON-NLS-1$
+	private static final String PATH_TAG = "path"; //$NON-NLS-1$
 
 	private static PackagesManager manager;
 
