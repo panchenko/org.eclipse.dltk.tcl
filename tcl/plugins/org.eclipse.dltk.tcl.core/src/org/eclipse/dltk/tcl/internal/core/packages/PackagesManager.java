@@ -131,23 +131,15 @@ public class PackagesManager {
 	}
 
 	public static class PackageInformation {
-		private Set paths = new HashSet();
-		private Set dependencies = new HashSet();
+		private final Set paths = new HashSet();
+		private final Set dependencies = new HashSet();
 
 		public Set getPaths() {
 			return paths;
 		}
 
-		public void setPaths(Set paths) {
-			this.paths = paths;
-		}
-
 		public Set getDependencies() {
 			return dependencies;
-		}
-
-		public void setDependencies(Set dependencies) {
-			this.dependencies = dependencies;
 		}
 	}
 
