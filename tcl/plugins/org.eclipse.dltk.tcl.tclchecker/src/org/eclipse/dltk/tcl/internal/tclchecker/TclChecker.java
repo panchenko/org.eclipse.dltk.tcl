@@ -14,8 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,12 +23,14 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -38,50 +38,53 @@ import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
+import org.eclipse.dltk.validators.core.AbstractExternalValidator;
+import org.eclipse.dltk.validators.core.CommandLine;
+import org.eclipse.dltk.validators.core.ISourceModuleValidator;
+import org.eclipse.dltk.validators.core.IValidatorOutput;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
 
-public class TclChecker {
+public class TclChecker extends AbstractExternalValidator implements
+		ISourceModuleValidator {
 	private static final String PATTERN_TXT = "pattern.txt"; //$NON-NLS-1$
 
 	private static final String CHECKING = "checking:"; //$NON-NLS-1$
 
 	private static final String SCANNING = "scanning:"; //$NON-NLS-1$
 
-	protected static IMarker reportErrorProblem(IResource resource,
+	protected IMarker reportErrorProblem(IResource resource,
 			TclCheckerProblem problem, int start, int end) throws CoreException {
-
-		return TclCheckerMarker.setMarker(resource, problem.getLineNumber(),
-				start, end, problem.getDescription().getMessage(),
-				IMarker.SEVERITY_ERROR, IMarker.PRIORITY_NORMAL);
+		return reportError(resource, problem.getLineNumber(), start, end,
+				problem.getDescription().getMessage());
 	}
 
-	protected static IMarker reportWarningProblem(IResource resource,
+	protected IMarker reportWarningProblem(IResource resource,
 			TclCheckerProblem problem, int start, int end) throws CoreException {
-
-		return TclCheckerMarker.setMarker(resource, problem.getLineNumber(),
-				start, end, problem.getDescription().getMessage(),
-				IMarker.SEVERITY_WARNING, IMarker.PRIORITY_NORMAL);
+		return reportWarning(resource, problem.getLineNumber(), start, end,
+				problem.getDescription().getMessage());
 	}
 
 	private ISourceModule checkingModule;
-	private IPreferenceStore store;
+	private final IPreferenceStore store;
+	private final IEnvironment environment;
 
-	public TclChecker(IPreferenceStore store) {
-		if (store == null) {
-			throw new NullPointerException("store cannot be null"); //$NON-NLS-1$
-		}
+	public static final String PROBLEM_ID = TclCheckerPlugin.PLUGIN_ID
+			+ ".tclcheckerproblem"; //$NON-NLS-1$
 
+	public TclChecker(IPreferenceStore store, IEnvironment environment) {
+		Assert.isNotNull(store, "store cannot be null"); //$NON-NLS-1$
 		this.store = store;
+		this.environment = environment;
 	}
 
-	public boolean canCheck(IEnvironment environment) {
+	private boolean canCheck() {
 		return TclCheckerHelper.canExecuteTclChecker(store, environment);
 	}
 
-	public void check(final List sourceModules, IProgressMonitor monitor,
-			OutputStream consoleStream, IEnvironment environment) {
-		if (!canCheck(environment)) {
+	public void check(final List sourceModules, IValidatorOutput console,
+			IProgressMonitor monitor) {
+		if (!canCheck()) {
 			throw new IllegalStateException(
 					Messages.TclChecker_cannot_be_executed);
 		}
@@ -120,14 +123,10 @@ public class TclChecker {
 			}
 			return;
 		}
-		final PrintStream console = consoleStream != null ? new PrintStream(
-				consoleStream, true) : null;
-		List cmdLine = new ArrayList();
+		CommandLine cmdLine = new CommandLine();
 		if (!TclCheckerHelper
 				.passOriginalArguments(store, cmdLine, environment)) {
-			if (console != null) {
-				console.println(Messages.TclChecker_path_not_specified);
-			}
+			console.println(Messages.TclChecker_path_not_specified);
 		}
 		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 				.getAdapter(IExecutionEnvironment.class);
@@ -164,8 +163,7 @@ public class TclChecker {
 		}
 		try {
 			monitor.subTask(Messages.TclChecker_launching);
-			process = execEnvironment.exec((String[]) cmdLine
-					.toArray(new String[cmdLine.size()]), null, env);
+			process = execEnvironment.exec(cmdLine.toArray(), null, env);
 
 			monitor.worked(1);
 
@@ -175,9 +173,7 @@ public class TclChecker {
 			String line;
 			CodeModel model = null;
 			while ((line = input.readLine()) != null) {
-				if (console != null) {
-					console.println(line);
-				}
+				console.println(line);
 				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line);
 				if (monitor.isCanceled()) {
 					process.destroy();
@@ -237,10 +233,7 @@ public class TclChecker {
 					.getErrorStream()));
 
 			while ((line = input.readLine()) != null) {
-				// lines.add(line);
-				if (console != null) {
-					console.println(line);
-				}
+				console.println(line);
 				errorMessage.append(line).append('\n');
 				if (monitor.isCanceled()) {
 					process.destroy();
@@ -328,6 +321,27 @@ public class TclChecker {
 			}
 			return null;
 		}
+	}
+
+	protected String getMarkerType() {
+		return PROBLEM_ID;
+	}
+
+	public IStatus validate(ISourceModule[] modules, IValidatorOutput console,
+			IProgressMonitor monitor) {
+		final List elements = new ArrayList();
+		for (int i = 0; i < modules.length; i++) {
+			final IResource resource = modules[i].getResource();
+			if (resource != null) {
+				clean(resource);
+				elements.add(modules[i]);
+			}
+		}
+		if (elements.isEmpty()) {
+			return Status.OK_STATUS;
+		}
+		check(elements, console, monitor);
+		return Status.OK_STATUS;
 	}
 
 }

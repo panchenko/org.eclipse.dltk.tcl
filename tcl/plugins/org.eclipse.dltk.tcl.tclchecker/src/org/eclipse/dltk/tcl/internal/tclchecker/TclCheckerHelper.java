@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.utils.PlatformFileUtils;
+import org.eclipse.dltk.validators.core.CommandLine;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class TclCheckerHelper {
@@ -36,8 +37,8 @@ public final class TclCheckerHelper {
 
 	private static final String W3_OPTION = "-W3";
 
-	private static final Object PCX_OPTION = "-pcx";
-	private static final Object NO_PCX_OPTION = "-nopcx";
+	private static final String PCX_OPTION = "-pcx";
+	private static final String NO_PCX_OPTION = "-nopcx";
 
 	private static final String SUPPRESS_OPTION = "-suppress";
 	private static final String CHECK_OPTION = "-check";
@@ -50,17 +51,14 @@ public final class TclCheckerHelper {
 
 	public static String[] makeTclCheckerCmdLine(IPreferenceStore store,
 			String path, IEnvironment environment) {
-		List cmdLine = new ArrayList();
-
+		CommandLine cmdLine = new CommandLine();
 		passOriginalArguments(store, cmdLine, environment);
-
 		cmdLine.add(path);
-
-		return (String[]) cmdLine.toArray(new String[cmdLine.size()]);
+		return cmdLine.toArray();
 	}
 
 	public static boolean passOriginalArguments(IPreferenceStore store,
-			List cmdLine, IEnvironment environment) {
+			CommandLine cmdLine, IEnvironment environment) {
 		Map paths = getPaths(store);
 		String path = (String) paths.get(environment);
 		if (path == null || path.length() == 0) {

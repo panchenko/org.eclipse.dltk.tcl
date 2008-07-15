@@ -9,18 +9,16 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
-import java.io.IOException;
-
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.validators.core.AbstractValidatorType;
+import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidator;
-import org.w3c.dom.Element;
 
 public class TclCheckerType extends AbstractValidatorType {
 
 	private static final String CHECKER_ID = "Tcl Checker"; //$NON-NLS-1$
 
-	private TclCheckerImpl checker;
+	private final TclCheckerImpl checker;
 
 	public TclCheckerType() {
 		this.checker = new TclCheckerImpl(CHECKER_ID, this);
@@ -29,15 +27,7 @@ public class TclCheckerType extends AbstractValidatorType {
 	}
 
 	public IValidator createValidator(String id) {
-		// return new ScriptChecker(id, this);
-		return null;
-	}
-
-	public IValidator createValidatorFrom(String id, Element validatorElement)
-			throws IOException {
-		// return new ScriptChecker(id, validatorElement, this);
-		checker.loadInfo(validatorElement);
-		return checker;
+		throw new UnsupportedOperationException();
 	}
 
 	public String getID() {
@@ -52,11 +42,11 @@ public class TclCheckerType extends AbstractValidatorType {
 		return TclNature.NATURE_ID;
 	}
 
-	public boolean isConfigurable() {
+	public boolean isBuiltin() {
 		return true;
 	}
 
-	public boolean isBuiltin() {
-		return true;
+	public boolean supports(Class validatorType) {
+		return ISourceModuleValidator.class.equals(validatorType);
 	}
 }
