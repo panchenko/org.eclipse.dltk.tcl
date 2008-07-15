@@ -583,7 +583,7 @@ public class PackagesManager {
 
 		for (Iterator jiterator = packagesSet.iterator(); jiterator.hasNext();) {
 			String name = (String) jiterator.next();
-			Map dependencies = manager.getDependencies(name, install);
+			Map dependencies = getDependencies(name, install);
 			for (Iterator iterator = dependencies.keySet().iterator(); iterator
 					.hasNext();) {
 				String pkgName = (String) iterator.next();
