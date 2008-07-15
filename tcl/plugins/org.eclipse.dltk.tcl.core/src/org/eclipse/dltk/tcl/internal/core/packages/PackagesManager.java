@@ -221,7 +221,7 @@ public class PackagesManager {
 	}
 
 	private synchronized void save(Document doc) {
-		Element packagesElement = doc.createElement(PACKAGES_TAG); //$NON-NLS-1$
+		Element packagesElement = doc.createElement(PACKAGES_TAG);
 		doc.appendChild(packagesElement);
 		for (Iterator iterator = this.packages.keySet().iterator(); iterator
 				.hasNext();) {
