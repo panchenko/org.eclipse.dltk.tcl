@@ -566,7 +566,7 @@ public class PackagesManager {
 		IPath[] paths = this.getPathsForPackage(install, name);
 		result.addAll(Arrays.asList(paths));
 
-		Map dependencies = manager.getDependencies(name, install);
+		Map dependencies = getDependencies(name, install);
 		for (Iterator iterator = dependencies.keySet().iterator(); iterator
 				.hasNext();) {
 			String pkgName = (String) iterator.next();
