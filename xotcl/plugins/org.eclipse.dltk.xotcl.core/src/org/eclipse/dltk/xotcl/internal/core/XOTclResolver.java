@@ -87,8 +87,8 @@ public class XOTclResolver {
 		ISourceModule sourceModule = (ISourceModule) method
 				.getAncestor(IModelElement.SOURCE_MODULE);
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(
-				sourceModule, null);
+		ModuleDeclaration module = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
 		return module;
 
 	}
