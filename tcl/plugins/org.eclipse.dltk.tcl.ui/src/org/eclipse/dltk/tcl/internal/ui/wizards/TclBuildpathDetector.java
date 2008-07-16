@@ -19,18 +19,16 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.internal.core.packages.TclCheckBuilder;
+import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
+import org.eclipse.osgi.util.NLS;
 
 public class TclBuildpathDetector extends BuildpathDetector {
-	private Set packagesInBuild;
-	private Set packageNamesInProject;
+	private final Set packagesInBuild = new HashSet();
 	private boolean useAnalysis;
 
 	public TclBuildpathDetector(IProject project, IDLTKLanguageToolkit toolkit)
 			throws CoreException {
 		super(project, toolkit);
-		packagesInBuild = new HashSet();
-		packageNamesInProject = new HashSet();
 	}
 
 	protected void addInterpreterContainer(ArrayList cpEntries) {
@@ -43,36 +41,35 @@ public class TclBuildpathDetector extends BuildpathDetector {
 	protected void processSources(final List correctFiles,
 			final SubProgressMonitor sub) {
 		if (useAnalysis) {
-			sub.beginTask("Analysing", correctFiles.size());
-
+			sub.beginTask(TclWizardMessages.TclBuildpathDetector_AnalysingTask,
+					correctFiles.size());
+			final TclBuildPathPackageCollector collector = new TclBuildPathPackageCollector();
 			int count = 0;
-			for (Iterator iterator = correctFiles.iterator(); iterator
-					.hasNext();) {
-				IFile object = (IFile) iterator.next();
-				sub.subTask("Analysing " + "("
-						+ String.valueOf(correctFiles.size() - count) + "):"
-						+ object.getName());
-				processModule(object);
-				count++;
-			}
-
-			sub.done();
-		}
-	}
-
-	private void processModule(IFile file) {
-		ISourceModule module = DLTKCore.createSourceModuleFrom(file);
-		if (module.exists()) {
-			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(module);
-			try {
-				TclCheckBuilder.fillPackagesDeclarations(moduleDeclaration,
-						null, packagesInBuild, packageNamesInProject);
-			} catch (Exception e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+			for (Iterator i = correctFiles.iterator(); i.hasNext();) {
+				final IFile file = (IFile) i.next();
+				final String msg = TclWizardMessages.TclBuildpathDetector_AnalysingSubTask;
+				sub.subTask(NLS.bind(msg, String.valueOf(correctFiles.size()
+						- count), file.getName()));
+				ISourceModule module = DLTKCore.createSourceModuleFrom(file);
+				if (module.exists()) {
+					ModuleDeclaration moduleDeclaration = SourceParserUtil
+							.getModuleDeclaration(module);
+					try {
+						collector.process(moduleDeclaration);
+					} catch (Exception e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
+					}
+					count++;
 				}
+				sub.done();
 			}
+			/*
+			 * TODO should we check that required packages are available in the
+			 * selected interpreter ?
+			 */
+			packagesInBuild.addAll(collector.getPackagesRequired());
 		}
 	}
 
