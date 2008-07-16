@@ -213,6 +213,17 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		return (c == '{' || c == '}' || c == '\"' || c == '[' || c == ']');
 	}
 
+	private static boolean isBraceAt(IDocument document, int offset)
+			throws BadLocationException {
+		if (offset < document.getLength() && isBrace(document.getChar(offset))) {
+			return true;
+		}
+		if (offset > 0 && isBrace(document.getChar(offset - 1))) {
+			return true;
+		}
+		return false;
+	}
+
 	public IRegion match(IDocument document, int offset) {
 		if (document == null || offset < 0) {
 			throw new IllegalArgumentException();
@@ -221,9 +232,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		try {
 			fOffset = offset;
 			fDocument = document;
-
-			if (!isBrace(fDocument.getChar(offset))
-					&& (offset == 0 || !isBrace(fDocument.getChar(offset - 1)))) {
+			if (!isBraceAt(document, offset)) {
 				return null;
 			}
 
