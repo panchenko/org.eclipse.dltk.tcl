@@ -9,7 +9,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.core;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -17,11 +19,11 @@ import org.osgi.framework.BundleContext;
  */
 public class TclPlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.core";
+	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.core"; //$NON-NLS-1$
 
-	//The shared instance.
+	// The shared instance.
 	private static TclPlugin plugin;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -33,7 +35,7 @@ public class TclPlugin extends Plugin {
 	 * This method is called upon plug-in activation
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);		
+		super.start(context);
 	}
 
 	/**
@@ -49,6 +51,12 @@ public class TclPlugin extends Plugin {
 	 */
 	public static TclPlugin getDefault() {
 		return plugin;
+	}
+
+	public static void error(Throwable t) {
+		plugin.getLog().log(
+				new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
+						t.getMessage(), t));
 	}
 
 }
