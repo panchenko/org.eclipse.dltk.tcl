@@ -22,6 +22,14 @@
       </validatorType>
    </extension>
    <extension
+         point="org.eclipse.dltk.validators.core.validator">
+      <validatorType
+            class="org.eclipse.dltk.tcl.internal.parser.TclTodoParserType"
+            id="org.eclipse.dltk.tcl.todo"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </validatorType>
+   </extension>
+   <extension
          point="org.eclipse.dltk.core.language">
       <language
             class="org.eclipse.dltk.tcl.core.TclLanguageToolkit"

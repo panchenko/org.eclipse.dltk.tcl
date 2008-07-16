@@ -11,24 +11,29 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.parser;
 
-import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.compiler.task.TodoTaskAstParser;
 import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
-import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.core.TclPlugin;
+import org.eclipse.dltk.validators.core.AbstractBuildParticipantType;
 import org.eclipse.dltk.validators.core.IBuildParticipant;
 
-public class TclTodoTaskAstParser extends TodoTaskAstParser implements
-		IBuildParticipant {
+public class TclTodoParserType extends AbstractBuildParticipantType {
 
-	public TclTodoTaskAstParser(TodoTaskPreferences preferences) {
-		super(preferences);
+	private static final String ID = "org.eclipse.dltk.tcl.todo"; //$NON-NLS-1$
+	private static final String NAME = "Tcl TODO task parser"; //$NON-NLS-1$
+
+	public TclTodoParserType() {
+		super(ID, NAME);
 	}
 
-	protected boolean isSimpleNode(ASTNode node) {
-		if (node instanceof TclBlockExpression) {
-			return true;
-		}
-		return super.isSimpleNode(node);
+	protected IBuildParticipant createBuildParticipant(IScriptProject project) {
+		return new TclTodoTaskAstParser(new TodoTaskPreferences(TclPlugin
+				.getDefault().getPluginPreferences()));
+	}
+
+	public String getNature() {
+		return TclNature.NATURE_ID;
 	}
 
 }

@@ -15,14 +15,11 @@ package org.eclipse.dltk.tcl.internal.parser;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParserConstants;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
-import org.eclipse.dltk.compiler.task.ITaskReporter;
-import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
 import org.eclipse.dltk.core.AbstractSourceElementParser;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.tcl.core.TclPlugin;
 
 public class TclSourceElementParser extends AbstractSourceElementParser {
 
@@ -48,27 +45,6 @@ public class TclSourceElementParser extends AbstractSourceElementParser {
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
-			}
-		}
-		if (getProblemReporter() != null) {
-			final ITaskReporter taskReporter = (ITaskReporter) getProblemReporter()
-					.getAdapter(ITaskReporter.class);
-			if (taskReporter != null) {
-				taskReporter.clearTasks();
-				parseTasks(taskReporter, contents, moduleDeclaration);
-			}
-		}
-	}
-
-	protected void parseTasks(ITaskReporter taskReporter, char[] content,
-			ModuleDeclaration moduleDeclaration) {
-		final TodoTaskPreferences preferences = new TodoTaskPreferences(
-				TclPlugin.getDefault().getPluginPreferences());
-		if (preferences.isEnabled()) {
-			final TclTodoTaskAstParser taskParser = new TclTodoTaskAstParser(
-					taskReporter, preferences, moduleDeclaration);
-			if (taskParser.isValid()) {
-				taskParser.parse(content);
 			}
 		}
 	}
