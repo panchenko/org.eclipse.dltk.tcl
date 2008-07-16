@@ -83,15 +83,14 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 	}
 
 	private PairBlock[] computePairRanges(final int offset, String contents) {
-		ISourceParser pp = null;
-		pp = DLTKLanguageManager.getSourceParser(TclNature.NATURE_ID);
-		ModuleDeclaration md = null;// pp.parse(null, contents.toCharArray(),
-		// null);
+		ModuleDeclaration md = null;
 		IModelElement el = this.editor.getInputModelElement();
 		if (el != null && el instanceof ISourceModule) {
 			md = SourceParserUtil.getModuleDeclaration((ISourceModule) el);
 		}
-		if( md == null ) {
+		if (md == null) {
+			final ISourceParser pp = DLTKLanguageManager
+					.getSourceParser(TclNature.NATURE_ID);
 			md = pp.parse(null, contents.toCharArray(), null);
 		}
 		if (md == null) {
