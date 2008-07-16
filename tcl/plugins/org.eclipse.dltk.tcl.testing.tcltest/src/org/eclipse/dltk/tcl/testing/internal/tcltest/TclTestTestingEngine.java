@@ -42,7 +42,7 @@ public class TclTestTestingEngine implements ITclTestingEngine {
 	public boolean isValidModule(ISourceModule module) {
 		// We need to find test or tcltest::test calls in module.
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(module, null);
+				.getModuleDeclaration(module);
 		ASTNode[] findTests = findTests(moduleDeclaration);
 		if (findTests.length > 0) {
 			return true;
