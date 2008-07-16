@@ -12,7 +12,15 @@
          <run class="org.eclipse.dltk.tcl.core.TclNature"/>
       </runtime>
    </extension> 
-   
+
+   <extension
+         point="org.eclipse.dltk.validators.core.validator">
+      <validatorType
+            class="org.eclipse.dltk.tcl.internal.core.packages.TclPackageCheckerType"
+            id="org.eclipse.dltk.tcl.packageChecker"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </validatorType>
+   </extension>
    <extension
          point="org.eclipse.dltk.core.language">
       <language
@@ -154,13 +162,6 @@
             priority="0">
       </mixin>
    </extension>
-   <extension
-       point="org.eclipse.dltk.core.builder">
-    <builder
-          class="org.eclipse.dltk.tcl.internal.core.packages.TclCheckBuilder"
-          nature="org.eclipse.dltk.tcl.core.nature">
-    </builder>
- </extension>
    <extension
          point="org.eclipse.dltk.core.interpreterContainerExtension">
       <interpreterContainerExtension

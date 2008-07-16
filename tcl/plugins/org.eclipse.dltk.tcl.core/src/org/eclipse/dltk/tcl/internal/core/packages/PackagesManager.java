@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -424,27 +425,30 @@ public class PackagesManager {
 	}
 
 	private String getInterpreterKey(IInterpreterInstall install) {
-		return install.getInstallLocation().toOSString() + ":"
+		return install.getInstallLocation().toOSString() + ":" //$NON-NLS-1$
 				+ install.getEnvironment().getId();
+	}
+
+	private String getInterpreterProjectKey(IInterpreterInstall install,
+			IScriptProject project) {
+		return "internal|||" + project.getElementName() + "|||" //$NON-NLS-1$ //$NON-NLS-2$
+				+ getInterpreterKey(install);
 	}
 
 	public synchronized Set getInternalPackageNames(
 			IInterpreterInstall install, IScriptProject project) {
-		String key = "internal|||" + project.getElementName() + "|||"
-				+ getInterpreterKey(install);
+		final String key = getInterpreterProjectKey(install, project);
 		if (this.interpreterToPackages.containsKey(key)) {
-			Set set = (Set) this.interpreterToPackages.get(key);
-			return set;
+			return (Set) this.interpreterToPackages.get(key);
 		}
-		return new HashSet();
+		return Collections.EMPTY_SET;
 	}
 
 	public synchronized void setInternalPackageNames(
-			IInterpreterInstall install, Set names) {
-		String key = "internal|||" + getInterpreterKey(install);
-		Set values = new HashSet();
-		values.addAll(names);
-		this.interpreterToPackages.put(key, values);
+			IInterpreterInstall install, IScriptProject project, Set names) {
+		String key = getInterpreterProjectKey(install, project);
+		// TODO compare and save only if there are changes
+		this.interpreterToPackages.put(key, new HashSet(names));
 		save();
 	}
 
@@ -458,7 +462,7 @@ public class PackagesManager {
 		String[] pkgs = (String[]) packagesInBuild
 				.toArray(new String[packagesInBuild.size()]);
 		for (int i = 0; i < pkgs.length; i++) {
-			buf.append(pkgs[i]).append(" ");
+			buf.append(pkgs[i]).append(" "); //$NON-NLS-1$
 		}
 		PackageKey key = makeKey(buf.toString(), getInterpreterKey(install));
 

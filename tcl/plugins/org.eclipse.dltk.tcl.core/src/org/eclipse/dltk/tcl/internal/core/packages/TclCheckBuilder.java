@@ -1,6 +1,7 @@
 package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,30 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParserConstants;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
-import org.eclipse.dltk.compiler.problem.IProblemFactory;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
-import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -41,266 +29,143 @@ import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
+import org.eclipse.dltk.validators.core.IBuildParticipant;
+import org.eclipse.dltk.validators.core.IBuildParticipantExtension;
+import org.eclipse.osgi.util.NLS;
 
-public class TclCheckBuilder implements IScriptBuilder {
+public class TclCheckBuilder implements IBuildParticipant,
+		IBuildParticipantExtension {
 
-	IScriptProject project;
+	private final IScriptProject project;
+	private final IInterpreterInstall install;
 
-	public IStatus buildModelElements(IScriptProject project, List elements,
-			IProgressMonitor monitor, int status) {
-		if (monitor == null) {
-			monitor = new NullProgressMonitor();
+	private final PackagesManager manager = PackagesManager.getInstance();
+	private final TclBuildPathPackageCollector packageCollector = new TclBuildPathPackageCollector();
+	private final Map codeModels = new HashMap();
+	private final Map resourceToModuleInfos = new HashMap();
+	private final Set knownPackageNames;
+	private final Set buildpath;
+
+	private static class ModuleInfo {
+		final List requireDirectives;
+		final IProblemReporter reporter;
+
+		public ModuleInfo(IProblemReporter reporter, List requireDirectives) {
+			this.reporter = reporter;
+			this.requireDirectives = requireDirectives;
 		}
-		int est = estimateElementsToBuild(elements);
+
+	}
+
+	public TclCheckBuilder(IScriptProject project) throws CoreException {
 		this.project = project;
-		if (est == 0) {
-			monitor.done();
-			return null;
-		}
-		IDLTKLanguageToolkit toolkit;
-		toolkit = DLTKLanguageManager.getLanguageToolkit(project);
-		if (!toolkit.getNatureId().equals(TclNature.NATURE_ID)) {
-			return null;
-		}
-		monitor.beginTask("Perfoming code checks", 101);
+		install = ScriptRuntime.getInterpreterInstall(project);
+		knownPackageNames = manager.getPackageNames(install);
+		buildpath = getBuildpath(project);
+	}
 
-		Map resourceToPackagesList = new HashMap();
-		Set packagesInBuild = new HashSet();
+	public void beginBuild(int kind) {
+		if (kind != IScriptBuilder.FULL_BUILD) {
+			packageCollector.getPackagesProvided().addAll(
+					manager.getInternalPackageNames(install, project));
+		}
+	}
 
-		IInterpreterInstall install = null;
-		try {
-			install = ScriptRuntime.getInterpreterInstall(project);
-		} catch (CoreException e1) {
-			if (DLTKCore.DEBUG) {
-				e1.printStackTrace();
+	public void build(ISourceModule module, ModuleDeclaration ast,
+			IProblemReporter reporter) throws CoreException {
+		final IContentAction action = new IContentAction() {
+			public void run(ISourceModule cmodule, char[] content) {
+				codeModels.put(cmodule, new CodeModel(new String(content)));
 			}
+		};
+		final ModuleDeclaration declaration = SourceParserUtil
+				.getModuleDeclaration(module, null,
+						ISourceParserConstants.RUNTIME_MODEL, action);
+		if (declaration == null) {
+			return;
 		}
-		if (install == null) {
-			return null;
+		packageCollector.getRequireDirectives().clear();
+		packageCollector.process(declaration);
+		if (!packageCollector.getRequireDirectives().isEmpty()) {
+			resourceToModuleInfos.put(module, new ModuleInfo(reporter,
+					new ArrayList(packageCollector.getRequireDirectives())));
 		}
+	}
 
-		PackagesManager manager = PackagesManager.getInstance();
-		Set packageNames = manager.getPackageNames(install);
-		Set buildpath = getBuildpath(project);
-
-		Set packageNamesInProject = new HashSet();
-		if (status != IScriptBuilder.FULL_BUILD) {
-			Set names = manager.getInternalPackageNames(install, project);
-			if (names != null) {
-				packageNamesInProject.addAll(names);
-			}
-		}
-		Map codeModels = new HashMap();
-		processSources(elements, new SubProgressMonitor(monitor, 50),
-				resourceToPackagesList, packagesInBuild, packageNamesInProject,
-				codeModels);
-
-		manager.setInternalPackageNames(install, packageNamesInProject);
-
+	public void endBuild() {
+		// TODO re-process files with our errors
+		manager.setInternalPackageNames(install, project, packageCollector
+				.getPackagesProvided());
 		// This method will populate all required paths.
-		manager.getPathsForPackages(install, packagesInBuild);
+		manager.getPathsForPackages(install, packageCollector
+				.getPackagesRequired());
+		manager.getPathsForPackagesWithDeps(install, packageCollector
+				.getPackagesRequired());
+		for (Iterator i = resourceToModuleInfos.entrySet().iterator(); i
+				.hasNext();) {
+			final Map.Entry entry = (Map.Entry) i.next();
+			final ISourceModule module = (ISourceModule) entry.getKey();
+			final ModuleInfo info = (ModuleInfo) entry.getValue();
 
-		// Cache packages information.
-		SubProgressMonitor spm = new SubProgressMonitor(monitor, 1);
-		spm.beginTask("Seaching for packages information...", 1);
-		PackagesManager.getInstance().getPathsForPackagesWithDeps(install,
-				packagesInBuild);
-		spm.worked(1);
-		spm.done();
-
-		Set keySet = resourceToPackagesList.keySet();
-		IProblemFactory factory;
-		factory = DLTKLanguageManager.getProblemFactory(toolkit.getNatureId());
-		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 50);
-		int i = 0;
-		subMonitor.beginTask("Setting markers", keySet.size());
-		for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
-			if (subMonitor.isCanceled()) {
-				return Status.CANCEL_STATUS;
-			}
-			ISourceModule module = (ISourceModule) iterator.next();
-			String taskTitle = "Setting markers for "
-					+ project.getElementName() + " (" + (keySet.size() - i)
-					+ "):" + module.getElementName();
-			++i;
-			subMonitor.subTask(taskTitle);
-
-			try {
-				cleanMarkers(module.getResource());
-			} catch (CoreException e1) {
-				if (DLTKCore.DEBUG) {
-					e1.printStackTrace();
-				}
-			}
-			List pkgs = (List) resourceToPackagesList.get(module);
-			CodeModel model = null;
-			// Obtain cached.
-			model = (CodeModel) codeModels.get(module);
+			final CodeModel model = getCodeModel(module);
 			if (model == null) {
-				try {
-					model = new CodeModel(module.getSource());
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-					continue;
-				}
+				continue;
 			}
 
-			IProblemReporter reporter = factory.createReporter(module
-					.getResource());
-			for (Iterator iterator2 = pkgs.iterator(); iterator2.hasNext();) {
-				TclPackageDeclaration pkg = (TclPackageDeclaration) iterator2
-						.next();
-				checkPackage(pkg, packageNames, reporter, model, manager,
-						install, buildpath, project, subMonitor);
-				if (subMonitor.isCanceled()) {
-					return null;
+			for (Iterator j = info.requireDirectives.iterator(); j.hasNext();) {
+				TclPackageDeclaration pkg = (TclPackageDeclaration) j.next();
+				if (pkg.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
+					checkPackage(pkg, info.reporter, model);
 				}
 			}
-			subMonitor.worked(1);
 		}
-		subMonitor.done();
-		monitor.done();
-		return null;
+	}
+
+	private CodeModel getCodeModel(ISourceModule module) {
+		CodeModel model = (CodeModel) codeModels.get(module);
+		if (model == null) {
+			try {
+				model = new CodeModel(module.getSource());
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+		}
+		return model;
 	}
 
 	private static Set getBuildpath(IScriptProject project) {
-		IBuildpathEntry[] resolvedBuildpath;
+		final IBuildpathEntry[] resolvedBuildpath;
 		try {
 			resolvedBuildpath = project.getResolvedBuildpath(true);
 		} catch (ModelException e1) {
-			e1.printStackTrace();
-			return null;
+			TclPlugin.error(e1);
+			return Collections.EMPTY_SET;
 		}
-		Set buildpath = new HashSet();
+		final Set buildpath = new HashSet();
 		for (int i = 0; i < resolvedBuildpath.length; i++) {
-			if (resolvedBuildpath[i].getEntryKind() == IBuildpathEntry.BPE_LIBRARY
-					&& resolvedBuildpath[i].isExternal()) {
+			final IBuildpathEntry entry = resolvedBuildpath[i];
+			if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
+					&& entry.isExternal()) {
 				buildpath.add(EnvironmentPathUtils
-						.getLocalPath(resolvedBuildpath[i].getPath()));
+						.getLocalPath(entry.getPath()));
 			}
 		}
 		return buildpath;
 	}
 
-	private void processSources(List elements, IProgressMonitor monitor,
-			Map resourceToPackagesList, Set packagesInBuild,
-			Set packageNamesInProject, final Map codeModels) {
-		monitor.beginTask("Performing code checks", FULL_BUILD);
-		for (int i = 0; i < elements.size(); i++) {
-			if (monitor.isCanceled()) {
-				return;
-			}
-			IModelElement element = (IModelElement) elements.get(i);
-			if (element.getElementType() == IModelElement.SOURCE_MODULE) {
-				IProjectFragment projectFragment = (IProjectFragment) element
-						.getAncestor(IModelElement.PROJECT_FRAGMENT);
-				if (!projectFragment.isExternal()) {
-					try {
-						String taskTitle = "Performing code checks for "
-								+ project.getElementName() + " ("
-								+ (elements.size() - i) + "):"
-								+ element.getElementName();
-						monitor.subTask(taskTitle);
-
-						IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-								.getLanguageToolkit(element);
-						if (toolkit == null) {
-							monitor.worked(1);
-							continue;
-						}
-
-						ISourceModule module = (ISourceModule) element;
-						// IResource resource = module.getResource();
-						// cleanMarkers(resource);
-
-						IContentAction action = new IContentAction() {
-							public void run(ISourceModule cmodule,
-									char[] content) {
-								codeModels.put(cmodule, new CodeModel(
-										new String(content)));
-							}
-						};
-						ModuleDeclaration declaration = SourceParserUtil
-								.getModuleDeclaration(module, null,
-										ISourceParserConstants.RUNTIME_MODEL,
-										action);
-						if (declaration == null) {
-							return;
-						}
-
-						final ArrayList list = new ArrayList();
-						resourceToPackagesList.put(module, list);
-						fillPackagesDeclarations(declaration, list,
-								packagesInBuild, packageNamesInProject);
-
-						monitor.worked(1);
-					} catch (CoreException e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
-						}
-					} catch (Exception e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-		monitor.done();
-	}
-
-	public static void cleanMarkers(IResource resource) throws CoreException {
-		IMarker[] markers = resource.findMarkers(
-				DefaultProblem.MARKER_TYPE_PROBLEM, true,
-				IResource.DEPTH_INFINITE);
-		for (int j = 0; j < markers.length; j++) {
-			final IMarker m = markers[j];
-			if (m.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
-				m.delete();
-			}
-		}
-	}
-
-	public static void fillPackagesDeclarations(ModuleDeclaration declaration,
-			final ArrayList list, final Set packagesInBuild,
-			final Set packageNamesInProject) throws Exception {
-		declaration.traverse(new ASTVisitor() {
-			public boolean visit(Statement s) throws Exception {
-				if (s instanceof TclPackageDeclaration) {
-					TclPackageDeclaration pkg = (TclPackageDeclaration) s;
-					if (pkg.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
-						TclPackageDeclaration copy = new TclPackageDeclaration(
-								pkg);
-						String name = copy.getName();
-						if (name.indexOf("$") == -1) {
-							if (list != null) {
-								list.add(copy);
-							}
-							packagesInBuild.add(name);
-						}
-					} else if (pkg.getStyle() == TclPackageDeclaration.STYLE_IFNEEDED
-							|| pkg.getStyle() == TclPackageDeclaration.STYLE_PROVIDE) {
-						packageNamesInProject.add(pkg.getName());
-					}
-					return false;
-				}
-				return super.visit(s);
-			}
-		});
-	}
-
 	private static void reportPackageProblem(TclPackageDeclaration pkg,
-			IProblemReporter reporter, CodeModel model, String name,
+			IProblemReporter reporter, CodeModel model, String message,
 			String pkgName) {
 		try {
 			reporter
-					.reportProblem(new DefaultProblem("", name,
+					.reportProblem(new DefaultProblem(message,
 							TclProblems.UNKNOWN_REQUIRED_PACKAGE,
 							new String[] { pkgName }, ProblemSeverities.Error,
 							pkg.sourceStart(), pkg.sourceEnd(), model
@@ -313,129 +178,99 @@ public class TclCheckBuilder implements IScriptBuilder {
 		}
 	}
 
-	public static void checkPackage(TclPackageDeclaration pkg,
-			Set packageNames, IProblemReporter reporter, CodeModel model,
-			PackagesManager manager, IInterpreterInstall install,
-			Set buildpath, IScriptProject scriptProject,
-			IProgressMonitor monitor) {
-		if (pkg.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
-			String packageName = pkg.getName();
+	private void checkPackage(TclPackageDeclaration pkg,
+			IProblemReporter reporter, CodeModel model) {
+		final String packageName = pkg.getName();
 
-			Set internalNames = manager.getInternalPackageNames(install,
-					scriptProject);
-			if (internalNames.contains(packageName)) {
+		if (packageCollector.getPackagesProvided().contains(packageName)) {
+			return;
+		}
+		if (!isValidPackageName(packageName)) {
+			return;
+		}
+
+		// Report unknown packages
+		if (!knownPackageNames.contains(packageName)) {
+			reportPackageProblem(pkg, reporter, model, NLS.bind(
+					Messages.TclCheckBuilder_unknownPackage, packageName),
+					packageName);
+			return;
+		}
+
+		// Receive main package and it paths.
+		if (checkPackage(packageName)) {
+			reportPackageProblem(pkg, reporter, model, NLS.bind(
+					Messages.TclCheckBuilder_unresolvedDependencies,
+					packageName), packageName);
+			return;
+		}
+
+		final Set dependencies = manager.getDependencies(packageName, install)
+				.keySet();
+		for (Iterator i = dependencies.iterator(); i.hasNext();) {
+			String pkgName = (String) i.next();
+			if (checkPackage(pkgName)) {
+				reportPackageProblem(pkg, reporter, model, NLS.bind(
+						Messages.TclCheckBuilder_unresolvedDependencies,
+						packageName), packageName);
 				return;
-			}
-			if (packageIsFiltered(packageName)) {
-				return;
-			}
-
-			// Report unknown projects
-			if (!packageNames.contains(packageName)
-					&& !internalNames.contains(packageName)) {
-				try {
-					reporter.reportProblem(new DefaultProblem("",
-							"Unknown package:" + packageName,
-							TclProblems.UNKNOWN_REQUIRED_PACKAGE,
-							new String[] { packageName },
-							ProblemSeverities.Error, pkg.sourceStart(), pkg
-									.sourceEnd(), model.getLineNumber(pkg
-									.sourceStart(), pkg.sourceEnd())));
-				} catch (CoreException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
-				return;
-			}
-
-			// Receive main package and it paths.
-			boolean error = checkPackage(pkg, reporter, model, manager,
-					install, buildpath, packageName, scriptProject);
-
-			Map dependencies = manager.getDependencies(packageName, install);
-			for (Iterator iterator = dependencies.keySet().iterator(); iterator
-					.hasNext();) {
-				if (monitor != null && monitor.isCanceled()) {
-					return;
-				}
-				String pkgName = (String) iterator.next();
-				boolean fail = checkPackage(pkg, reporter, model, manager,
-						install, buildpath, pkgName, scriptProject);
-				if (fail) {
-					error = true;
-				}
-			}
-			if (error) {
-				reportPackageProblem(pkg, reporter, model, "Package "
-						+ packageName + " has unresolved dependencies.",
-						packageName);
 			}
 		}
 	}
 
-	private static boolean packageIsFiltered(String packageName) {
-		if (packageName == null || packageName.length() == 0) {
-			return true;
+	static boolean isValidPackageName(String packageName) {
+		return packageName != null && packageName.length() != 0
+				&& packageName.indexOf('$') == -1
+				&& packageName.indexOf('[') == -1
+				&& packageName.indexOf(']') == -1;
+	}
+
+	/**
+	 * returns <code>true</code> on error
+	 * 
+	 * @param packageName
+	 * @return
+	 */
+	private boolean checkPackage(String packageName) {
+		if (packageCollector.getPackagesProvided().contains(packageName)) {
+			return false;
 		}
-		if (packageName.indexOf("$") != -1 || packageName.indexOf("[") != -1
-				|| packageName.indexOf("]") != -1) {
-			return true;
+		return isOnBuildpath(buildpath, manager.getPathsForPackage(install,
+				packageName));
+	}
+
+	private static boolean isOnBuildpath(Set buildpath, IPath path) {
+		if (!buildpath.contains(path)) {
+			for (Iterator i = buildpath.iterator(); i.hasNext();) {
+				IPath pp = (IPath) i.next();
+				if (pp.isPrefixOf(path)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private static boolean isOnBuildpath(Set buildpath, IPath[] paths) {
+		if (paths != null) {
+			for (int i = 0; i < paths.length; i++) {
+				final IPath path = paths[i];
+				if (!isOnBuildpath(buildpath, path)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
 
-	public static boolean checkPackage(TclPackageDeclaration pkg,
-			IProblemReporter reporter, CodeModel model,
-			PackagesManager manager, IInterpreterInstall install,
-			Set buildpath, String packageName, IScriptProject project) {
-
-		Set names = manager.getInternalPackageNames(install, project);
-		if (names != null) { // Internal package check
-			if (names.contains(packageName)) {
-				return false;
-			}
-		}
-
-		IPath[] paths = manager.getPathsForPackage(install, packageName);
-		// Check what package path are in project buildpath.
-		return checkPackagePaths(pkg, reporter, model, buildpath, paths,
-				packageName);
-	}
-
-	private static boolean checkPackagePaths(TclPackageDeclaration pkg,
-			IProblemReporter reporter, CodeModel model, Set buildpath,
-			IPath[] paths, String packageName) {
-		boolean error = false;
-		List notPaths = new ArrayList();
-		if (paths != null) {
-			for (int i = 0; i < paths.length; i++) {
-				if (!buildpath.contains(paths[i])) {
-					boolean prefix = false;
-					for (Iterator iterator = buildpath.iterator(); iterator
-							.hasNext();) {
-						IPath pp = (IPath) iterator.next();
-						if (pp.isPrefixOf(paths[i])) {
-							prefix = true;
-							break;
-						}
-					}
-					if (!prefix) {
-						error = true;
-						notPaths.add(paths[i]);
-					}
-				}
-			}
-		}
-		return error;
-	}
-
-	public IStatus buildResources(IScriptProject project, List resources,
-			IProgressMonitor monitor, int status) {
-		return null;
-	}
-
-	public int estimateElementsToBuild(List elements) {
+	/**
+	 * TODO integrate with the new API
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	private int estimateElementsToBuild(List elements) {
 		int estimation = 0;
 		for (int i = 0; i < elements.size(); i++) {
 			IModelElement element = (IModelElement) elements.get(i);
@@ -449,28 +284,17 @@ public class TclCheckBuilder implements IScriptBuilder {
 		return estimation;
 	}
 
-	public static void checkPackage(TclPackageDeclaration pkg,
-			IProblemReporter reporter, IScriptProject scriptProject,
-			CodeModel model, IProgressMonitor monitor) {
-		IInterpreterInstall install = null;
-		try {
-			install = ScriptRuntime.getInterpreterInstall(scriptProject);
-		} catch (CoreException e1) {
-			if (DLTKCore.DEBUG) {
-				e1.printStackTrace();
-			}
-		}
-		if (install == null) {
-			return;
-		}
-		Set buildpath = getBuildpath(scriptProject);
-		PackagesManager manager = PackagesManager.getInstance();
-		Set packageNames = manager.getPackageNames(install);
-		checkPackage(pkg, packageNames, reporter, model, manager, install,
-				buildpath, scriptProject, monitor);
-	}
-
-	public Set getDependencies(IScriptProject project, Set resources,
+	/**
+	 * TODO integrate with the new API
+	 * 
+	 * @param project
+	 * @param resources
+	 * @param allResources
+	 * @param oldExternalFolders
+	 * @param externalFolders
+	 * @return
+	 */
+	private Set getDependencies(IScriptProject project, Set resources,
 			Set allResources, Set oldExternalFolders, Set externalFolders) {
 		if (oldExternalFolders.size() != externalFolders.size()) {
 			// We need to rebuild all elements in this builder.
@@ -484,4 +308,5 @@ public class TclCheckBuilder implements IScriptBuilder {
 		}
 		return null;
 	}
+
 }
