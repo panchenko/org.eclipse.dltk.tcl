@@ -19,18 +19,12 @@ import org.eclipse.dltk.compiler.task.ITaskReporter;
 import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
 import org.eclipse.dltk.core.AbstractSourceElementParser;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceElementParserExtension;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPlugin;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 
-public class TclSourceElementParser extends AbstractSourceElementParser
-		implements ISourceElementParserExtension {
-
-	private IScriptProject scriptProject = null;
+public class TclSourceElementParser extends AbstractSourceElementParser {
 
 	/*
 	 * @see org.eclipse.dltk.core.AbstractSourceElementParser#createVisitor()
@@ -47,21 +41,8 @@ public class TclSourceElementParser extends AbstractSourceElementParser
 				.getModuleDeclaration(filename, contents, getNatureId(),
 						getProblemReporter(), astCache,
 						ISourceParserConstants.DEFAULT);
-		//
 
-		TclSourceElementRequestVisitor requestor = (TclSourceElementRequestVisitor) createVisitor();
-		requestor.setScriptProject(null);
-		if (getProblemReporter() != null) {
-			if (this.scriptProject != null) {
-				boolean markersCleaned = getProblemReporter()
-						.isMarkersCleaned();
-				if (markersCleaned) {
-					CodeModel model = new CodeModel(new String(contents));
-					requestor.setCodeModel(model);
-					requestor.setScriptProject(this.scriptProject);
-				}
-			}
-		}
+		final SourceElementRequestVisitor requestor = createVisitor();
 		try {
 			moduleDeclaration.traverse(requestor);
 		} catch (Exception e) {
@@ -99,7 +80,4 @@ public class TclSourceElementParser extends AbstractSourceElementParser
 		return TclNature.NATURE_ID;
 	}
 
-	public void setScriptProject(IScriptProject project) {
-		this.scriptProject = project;
-	}
 }

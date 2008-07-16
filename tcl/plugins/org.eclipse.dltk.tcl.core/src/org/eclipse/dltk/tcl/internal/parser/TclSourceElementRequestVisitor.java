@@ -20,19 +20,16 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclKeywordsManager;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ISourceElementRequestVisitorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
-import org.eclipse.dltk.tcl.internal.core.packages.TclCheckBuilder;
 
 public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor {
 
@@ -42,8 +39,6 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 
 	protected ISourceElementRequestVisitorExtension[] extensions = TclExtensionManager
 			.getDefault().getSourceElementRequestoVisitorExtensions();
-	private IScriptProject scriptProject;
-	private CodeModel codeModel;
 
 	public TclSourceElementRequestVisitor(ISourceElementRequestor requestor,
 			IProblemReporter reporter) {
@@ -385,11 +380,6 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 						.getNameEnd(), (pack.getName() + "*").toCharArray());
 			}
 		}
-		if (this.scriptProject != null) {
-			TclPackageDeclaration pkg = (TclPackageDeclaration) statement;
-			TclCheckBuilder.checkPackage(pkg, this.fReporter,
-					this.scriptProject, this.codeModel, null);
-		}
 	}
 
 	protected boolean processField(Statement statement) {
@@ -579,11 +569,4 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		return this.fRequestor;
 	}
 
-	public void setScriptProject(IScriptProject scriptProject) {
-		this.scriptProject = scriptProject;
-	}
-
-	public void setCodeModel(CodeModel model) {
-		this.codeModel = model;
-	}
 }
