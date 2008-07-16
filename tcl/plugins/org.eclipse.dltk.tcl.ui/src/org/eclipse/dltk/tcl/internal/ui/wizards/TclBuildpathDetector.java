@@ -64,7 +64,7 @@ public class TclBuildpathDetector extends BuildpathDetector {
 		ISourceModule module = DLTKCore.createSourceModuleFrom(file);
 		if (module.exists()) {
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(module, null);
+					.getModuleDeclaration(module);
 			try {
 				TclCheckBuilder.fillPackagesDeclarations(moduleDeclaration,
 						null, packagesInBuild, packageNamesInProject);

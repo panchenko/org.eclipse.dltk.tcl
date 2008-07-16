@@ -89,7 +89,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		// null);
 		IModelElement el = this.editor.getInputModelElement();
 		if (el != null && el instanceof ISourceModule) {
-			md = SourceParserUtil.getModuleDeclaration((ISourceModule)el, null);
+			md = SourceParserUtil.getModuleDeclaration((ISourceModule) el);
 		}
 		if( md == null ) {
 			md = pp.parse(null, contents.toCharArray(), null);
