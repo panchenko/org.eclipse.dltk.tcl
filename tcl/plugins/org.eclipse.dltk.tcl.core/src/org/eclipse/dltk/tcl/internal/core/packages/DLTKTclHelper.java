@@ -37,6 +37,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class DLTKTclHelper {
+
+	private static final String DLTK_TCL = "scripts/dltk.tcl"; //$NON-NLS-1$
+
 	public static List getScriptOutput(InputStream stream) {
 		final List elements = new ArrayList();
 		final BufferedReader input = new BufferedReader(new InputStreamReader(
@@ -83,7 +86,7 @@ public class DLTKTclHelper {
 		InterpreterConfig config = ScriptLaunchUtil.createInterpreterConfig(
 				exeEnv, script, workingDir, env);
 		// For wish
-		config.removeEnvVar("DISPLAY");
+		config.removeEnvVar("DISPLAY"); //$NON-NLS-1$
 
 		if (arguments != null) {
 			config.addScriptArgs(arguments);
@@ -102,7 +105,7 @@ public class DLTKTclHelper {
 			return new ArrayList();
 		}
 		List output = getScriptOutput(process.getInputStream());
-		List error = getScriptOutput(process.getErrorStream());
+		getScriptOutput(process.getErrorStream());
 		process.destroy();
 		deployment.dispose();
 		return output;
@@ -112,7 +115,7 @@ public class DLTKTclHelper {
 		IFileHandle script;
 		try {
 			IPath path = deployment.add(TclPlugin.getDefault().getBundle(),
-					"scripts/dltk.tcl");
+					DLTK_TCL);
 			script = deployment.getFile(path);
 		} catch (IOException e) {
 			if (DLTKCore.DEBUG) {
@@ -156,7 +159,7 @@ public class DLTKTclHelper {
 		ByteArrayInputStream bais = new ByteArrayInputStream(names.getBytes());
 		IPath packagesPath = null;
 		try {
-			packagesPath = deployment.add(bais, "packages.txt");
+			packagesPath = deployment.add(bais, "packages.txt"); //$NON-NLS-1$
 		} catch (IOException e1) {
 			if (DLTKCore.DEBUG) {
 				e1.printStackTrace();
@@ -165,8 +168,8 @@ public class DLTKTclHelper {
 		}
 		IFileHandle file = deployment.getFile(packagesPath);
 		// For wish
-		config.removeEnvVar("DISPLAY");
-		String[] arguments = new String[] { "get-srcs", "-fpkgs",
+		config.removeEnvVar("DISPLAY"); //$NON-NLS-1$
+		String[] arguments = new String[] { "get-srcs", "-fpkgs", //$NON-NLS-1$ //$NON-NLS-2$
 				file.toOSString() };
 
 		config.addScriptArgs(arguments);
@@ -184,7 +187,7 @@ public class DLTKTclHelper {
 			return null;
 		}
 		List output = getScriptOutput(process.getInputStream());
-		List error = getScriptOutput(process.getErrorStream());
+		getScriptOutput(process.getErrorStream());
 		process.destroy();
 		deployment.dispose();
 		return getPackagePath(output);
@@ -212,9 +215,9 @@ public class DLTKTclHelper {
 			int len = childNodes.getLength();
 			for (int i = 0; i < len; i++) {
 				Node nde = childNodes.item(i);
-				if (isElementName(nde, "path")) {
+				if (isElementName(nde, "path")) { //$NON-NLS-1$
 					Element el = (Element) nde;
-					String path = el.getAttribute("name");
+					String path = el.getAttribute("name"); //$NON-NLS-1$
 					if (path.length() > 0) {
 						paths.add(path);
 					}
@@ -305,12 +308,12 @@ public class DLTKTclHelper {
 			int len = childNodes.getLength();
 			for (int i = 0; i < len; i++) {
 				Node nde = childNodes.item(i);
-				if (isElementName(nde, "path")) {
+				if (isElementName(nde, "path")) { //$NON-NLS-1$
 					Element el = (Element) nde;
 					NodeList elChilds = el.getChildNodes();
 					for (int j = 0; j < elChilds.getLength(); j++) {
 						Node pkgNde = elChilds.item(j);
-						if (isElementName(pkgNde, "package")) {
+						if (isElementName(pkgNde, "package")) { //$NON-NLS-1$
 							populatePackage(packages, pkgNde);
 						}
 					}
@@ -323,7 +326,7 @@ public class DLTKTclHelper {
 
 	private static void populatePackage(Map packages, Node pkgNde) {
 		Element pkg = (Element) pkgNde;
-		String pkgName = pkg.getAttribute("name");
+		String pkgName = pkg.getAttribute("name"); //$NON-NLS-1$
 		TclPackage tclPackage = new TclPackage(pkgName);
 		if (packages.containsKey(tclPackage)) {
 			tclPackage = (TclPackage) packages.get(tclPackage);
@@ -333,14 +336,14 @@ public class DLTKTclHelper {
 		NodeList childs = pkg.getChildNodes();
 		for (int i = 0; i < childs.getLength(); i++) {
 			Node nde = childs.item(i);
-			if (isElementName(nde, "source")) {
+			if (isElementName(nde, "source")) { //$NON-NLS-1$
 				Element el = (Element) nde;
-				String name = el.getAttribute("name");
+				String name = el.getAttribute("name"); //$NON-NLS-1$
 				IPath path = new Path(name).removeLastSegments(1);
 				tclPackage.getPaths().add(path);
-			} else if (isElementName(nde, "require")) {
+			} else if (isElementName(nde, "require")) { //$NON-NLS-1$
 				Element el = (Element) nde;
-				String name = el.getAttribute("name");
+				String name = el.getAttribute("name"); //$NON-NLS-1$
 				tclPackage.getDependencies().add(name);
 			}
 		}
@@ -373,8 +376,8 @@ public class DLTKTclHelper {
 		if (content != null) {
 			for (Iterator iterator = content.iterator(); iterator.hasNext();) {
 				String line = (String) iterator.next();
-				if (line.trim().startsWith("<")) {
-					newList.append(line).append("\n");
+				if (line.trim().startsWith("<")) { //$NON-NLS-1$
+					newList.append(line).append("\n"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -384,7 +387,7 @@ public class DLTKTclHelper {
 	public static Set getPackages(IInterpreterInstall install) {
 		IExecutionEnvironment exeEnv = install.getExecEnvironment();
 		List content = deployExecute(exeEnv, install.getInstallLocation()
-				.toOSString(), new String[] { "get-pkgs" }, install
+				.toOSString(), new String[] { "get-pkgs" }, install //$NON-NLS-1$
 				.getEnvironmentVariables());
 		Set packages = new HashSet();
 		TclPackage[] packagePath = getPackagePath(content);
