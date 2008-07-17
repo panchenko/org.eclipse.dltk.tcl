@@ -163,19 +163,10 @@ public class TclCheckBuilder implements IBuildParticipant,
 	private static void reportPackageProblem(TclPackageDeclaration pkg,
 			IProblemReporter reporter, CodeModel model, String message,
 			String pkgName) {
-		try {
-			reporter
-					.reportProblem(new DefaultProblem(message,
-							TclProblems.UNKNOWN_REQUIRED_PACKAGE,
-							new String[] { pkgName }, ProblemSeverities.Error,
-							pkg.sourceStart(), pkg.sourceEnd(), model
-									.getLineNumber(pkg.sourceStart(), pkg
-											.sourceEnd())));
-		} catch (CoreException e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
-		}
+		reporter.reportProblem(new DefaultProblem(message,
+				TclProblems.UNKNOWN_REQUIRED_PACKAGE, new String[] { pkgName },
+				ProblemSeverities.Error, pkg.sourceStart(), pkg.sourceEnd(),
+				model.getLineNumber(pkg.sourceStart(), pkg.sourceEnd())));
 	}
 
 	private void checkPackage(TclPackageDeclaration pkg,
