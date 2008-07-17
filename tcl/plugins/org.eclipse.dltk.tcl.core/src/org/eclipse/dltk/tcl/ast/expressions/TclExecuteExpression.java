@@ -22,12 +22,11 @@ import org.eclipse.dltk.tcl.core.ITclSourceParser;
 import org.eclipse.dltk.tcl.core.TclNature;
 
 public class TclExecuteExpression extends Expression {
-	private String fExceuteContent;
-	private char[] fileName = null;
+	private String fExecuteContent;
 	public TclExecuteExpression(int start, int end, String content) {
 		this.setStart(start);
 		this.setEnd(end);
-		this.fExceuteContent = content;
+		this.fExecuteContent = content;
 	}
 
 	public int getKind() {
@@ -48,7 +47,7 @@ public class TclExecuteExpression extends Expression {
 	}
 
 	public String getExpression() {
-		return this.fExceuteContent;
+		return this.fExecuteContent;
 	}
 
 	public List parseExpression() {
@@ -56,13 +55,13 @@ public class TclExecuteExpression extends Expression {
 	}
 
 	public List parseExpression(int startFrom) {
-		if (this.fExceuteContent == null) {
+		if (this.fExecuteContent == null) {
 			return null;
 		}
 
 		String content = null;
-		if (this.fExceuteContent.length() >= 2) {
-			content = this.fExceuteContent.substring(1, this.fExceuteContent
+		if (this.fExecuteContent.length() >= 2) {
+			content = this.fExecuteContent.substring(1, this.fExecuteContent
 					.length() - 1);
 		} else {
 			return new ArrayList();
@@ -76,6 +75,6 @@ public class TclExecuteExpression extends Expression {
 	}
 
 	public String toString() {
-		return this.fExceuteContent;
+		return this.fExecuteContent;
 	}
 }
