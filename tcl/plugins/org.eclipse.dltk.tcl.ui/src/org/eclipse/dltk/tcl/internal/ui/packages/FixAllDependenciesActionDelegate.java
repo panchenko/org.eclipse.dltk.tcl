@@ -80,7 +80,7 @@ public class FixAllDependenciesActionDelegate implements
 					&& element.getResource() != null) {
 				if (!elements.contains(element)) {
 					IDLTKLanguageToolkit tk = DLTKLanguageManager
-							.getLanguageToolkit((IModelElement) element);
+							.getLanguageToolkit(element);
 					if (tk != null
 							&& tk.getNatureId().equals(TclNature.NATURE_ID)) {
 						elements.add(element);
@@ -146,7 +146,7 @@ public class FixAllDependenciesActionDelegate implements
 				}
 			}
 			for (Iterator iterator = els.iterator(); iterator.hasNext();) {
-				Object object = (Object) iterator.next();
+				Object object = iterator.next();
 
 				Object eo = convertResourceToModelElement(object);
 				if (eo != null) {
@@ -200,7 +200,7 @@ public class FixAllDependenciesActionDelegate implements
 			}
 		}
 
-		Job job = new Job("Fix pacakge dependencies...") {
+		Job job = new Job("Fix package dependencies...") {
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Fixing dependencies", elements.size());
 				final Map projectToPackages = new HashMap();
