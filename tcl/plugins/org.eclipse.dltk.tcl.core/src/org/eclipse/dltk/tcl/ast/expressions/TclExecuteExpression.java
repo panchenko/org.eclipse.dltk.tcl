@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.ast.expressions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -59,8 +60,13 @@ public class TclExecuteExpression extends Expression {
 			return null;
 		}
 
-		String content = this.fExceuteContent.substring(1,
-				this.fExceuteContent.length() - 1);
+		String content = null;
+		if (this.fExceuteContent.length() >= 2) {
+			content = this.fExceuteContent.substring(1, this.fExceuteContent
+					.length() - 1);
+		} else {
+			return new ArrayList();
+		}
 
 		ITclSourceParser parser = null;
 		parser = (ITclSourceParser) DLTKLanguageManager.getSourceParser(TclNature.NATURE_ID);
