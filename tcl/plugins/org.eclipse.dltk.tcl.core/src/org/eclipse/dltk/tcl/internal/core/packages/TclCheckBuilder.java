@@ -25,7 +25,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.SourceParserUtil.IContentAction;
-import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -68,8 +67,11 @@ public class TclCheckBuilder implements IBuildParticipant,
 		buildpath = getBuildpath(project);
 	}
 
-	public void beginBuild(int kind) {
-		if (kind != IScriptBuilder.FULL_BUILD) {
+	private int buildType;
+
+	public void beginBuild(int buildType) {
+		this.buildType = buildType;
+		if (buildType != FULL_BUILD) {
 			packageCollector.getPackagesProvided().addAll(
 					manager.getInternalPackageNames(install, project));
 		}
@@ -98,8 +100,10 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	public void endBuild() {
 		// TODO re-process files with our errors
-		manager.setInternalPackageNames(install, project, packageCollector
-				.getPackagesProvided());
+		if (buildType != STRUCTURE_BUILD) {
+			manager.setInternalPackageNames(install, project, packageCollector
+					.getPackagesProvided());
+		}
 		// This method will populate all required paths.
 		manager.getPathsForPackages(install, packageCollector
 				.getPackagesRequired());
