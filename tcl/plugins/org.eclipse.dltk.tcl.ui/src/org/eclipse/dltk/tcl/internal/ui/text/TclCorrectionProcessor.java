@@ -69,7 +69,7 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 				if (isFixable(marker)) {
 					final String pkgName = CorrectionEngine
 							.getProblemArguments(marker)[0];
-					new MarkerResolutionProposal(
+					proposal = new MarkerResolutionProposal(
 							new TclRequirePackageMarkerResolution(pkgName,
 									scriptProject), marker);
 				}
