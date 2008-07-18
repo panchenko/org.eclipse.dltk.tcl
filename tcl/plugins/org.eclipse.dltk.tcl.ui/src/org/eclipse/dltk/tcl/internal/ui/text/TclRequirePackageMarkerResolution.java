@@ -3,28 +3,16 @@
  */
 package org.eclipse.dltk.tcl.internal.ui.text;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathAttribute;
-import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.BuildpathEntry;
-import org.eclipse.dltk.internal.core.ModelManager;
-import org.eclipse.dltk.internal.core.builder.State;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IMarkerResolution;
 
 final class TclRequirePackageMarkerResolution implements IMarkerResolution {
@@ -38,7 +26,8 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution {
 	}
 
 	public String getLabel() {
-		return "Add package " + this.pkgName + " to buildpath.";
+		final String msg = Messages.TclRequirePackageMarkerResolution_addPackageToBuildpath;
+		return NLS.bind(msg, pkgName);
 	}
 
 	public void run(final IMarker marker) {
@@ -61,9 +50,11 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution {
 					e.printStackTrace();
 				}
 			}
-			Set names = InterpreterContainerHelper.getInterpreterContainerDependencies(project);
+			Set names = InterpreterContainerHelper
+					.getInterpreterContainerDependencies(project);
 			names.add(pkgName);
-			InterpreterContainerHelper.setInterpreterContainerDependencies(project, names);
+			InterpreterContainerHelper.setInterpreterContainerDependencies(
+					project, names);
 		}
 	}
 }
