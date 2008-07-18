@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.text.TclCorrectionProcessor;
-import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
+import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -65,8 +65,7 @@ public class TclSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	}
 
 	public void run() {
-		if (fStore
-				.getBoolean(TclPreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER))
+		if (fStore.getBoolean(PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER))
 			return;
 
 		runWithEvent(null);
