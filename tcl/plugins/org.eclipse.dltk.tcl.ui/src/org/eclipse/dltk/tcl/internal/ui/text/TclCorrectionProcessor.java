@@ -1,6 +1,8 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
@@ -15,18 +17,24 @@ import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.editor.IScriptAnnotation;
+import org.eclipse.dltk.ui.text.AnnotationResolutionProposal;
 import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
 import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
+import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
 public class TclCorrectionProcessor implements IQuickAssistProcessor {
 	TclCorrectionAssistant fAssistant;
@@ -40,34 +48,50 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 	}
 
 	public boolean canFix(Annotation annotation) {
-		return isQuickFixableType(annotation);
+		return hasCorrections(annotation);
 	}
 
 	public ICompletionProposal[] computeQuickAssistProposals(
 			IQuickAssistInvocationContext invocationContext) {
-		Annotation[] annotations = fAssistant.getAnnotationsAtOffset();
+		final Annotation[] annotations = fAssistant.getAnnotationsAtOffset();
+		final ScriptEditor editor = (ScriptEditor) this.fAssistant.getEditor();
+		final IAnnotationModel model = DLTKUIPlugin.getDocumentProvider()
+				.getAnnotationModel(editor.getEditorInput());
+		final IModelElement element = editor.getInputModelElement();
+		final IScriptProject scriptProject = element.getScriptProject();
+		List proposals = null;
 		for (int i = 0; i < annotations.length; i++) {
-			Annotation annotation = annotations[i];
+			final Annotation annotation = annotations[i];
+			ICompletionProposal proposal = null;
 			if (annotation instanceof MarkerAnnotation) {
 				MarkerAnnotation mAnnot = (MarkerAnnotation) annotation;
 				IMarker marker = mAnnot.getMarker();
 				if (isFixable(marker)) {
-					final String[] args = CorrectionEngine
-							.getProblemArguments(marker);
-					if (args != null && args.length == 1 && args[0] != null) {
-						final String pkgName = args[0];
-						ScriptEditor editor = (ScriptEditor) this.fAssistant
-								.getEditor();
-						IModelElement element = editor.getInputModelElement();
-						IScriptProject scriptProject = element
-								.getScriptProject();
-						MarkerResolutionProposal prop = new MarkerResolutionProposal(
-								new TclRequirePackageMarkerResolution(pkgName,
-										scriptProject), marker);
-						return new ICompletionProposal[] { prop };
-					}
+					final String pkgName = CorrectionEngine
+							.getProblemArguments(marker)[0];
+					new MarkerResolutionProposal(
+							new TclRequirePackageMarkerResolution(pkgName,
+									scriptProject), marker);
+				}
+			} else if (annotation instanceof IScriptAnnotation) {
+				if (isFixable((IScriptAnnotation) annotation)) {
+					final String pkgName = ((IScriptAnnotation) annotation)
+							.getArguments()[0];
+					proposal = new AnnotationResolutionProposal(
+							new TclRequirePackageMarkerResolution(pkgName,
+									scriptProject), model, annotation);
 				}
 			}
+			if (proposal != null) {
+				if (proposals == null) {
+					proposals = new ArrayList();
+				}
+				proposals.add(proposal);
+			}
+		}
+		if (proposals != null) {
+			return (ICompletionProposal[]) proposals
+					.toArray(new ICompletionProposal[proposals.size()]);
 		}
 		return null;
 	}
@@ -77,12 +101,8 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 	}
 
 	public static boolean isQuickFixableType(Annotation annotation) {
-		if (annotation instanceof MarkerAnnotation) {
-			MarkerAnnotation mAnnot = (MarkerAnnotation) annotation;
-			IMarker marker = mAnnot.getMarker();
-			return isFixable(marker);
-		}
-		return false;
+		return (annotation instanceof IScriptAnnotation || annotation instanceof SimpleMarkerAnnotation)
+				&& !annotation.isMarkedDeleted();
 	}
 
 	public static boolean isFixable(IMarker marker) {
@@ -94,6 +114,24 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 				IScriptProject scriptProject = DLTKCore.create(project);
 				if (isFixable(args[0], scriptProject)) {
 					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isFixable(IScriptAnnotation annotation) {
+		if (annotation.getId() == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
+			final String[] args = annotation.getArguments();
+			if (args != null && args.length != 0 && args[0] != null) {
+				final ISourceModule module = annotation.getSourceModule();
+				if (module != null) {
+					final IScriptProject project = module.getScriptProject();
+					if (project != null) {
+						if (isFixable(args[0], project)) {
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -138,6 +176,8 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 			MarkerAnnotation mAnnot = (MarkerAnnotation) annotation;
 			IMarker marker = mAnnot.getMarker();
 			return isFixable(marker);
+		} else if (annotation instanceof IScriptAnnotation) {
+			return isFixable((IScriptAnnotation) annotation);
 		}
 		return false;
 	}

@@ -12,10 +12,15 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.internal.ui.TclUI;
+import org.eclipse.dltk.ui.text.IAnnotationResolution;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IMarkerResolution;
 
-final class TclRequirePackageMarkerResolution implements IMarkerResolution {
+final class TclRequirePackageMarkerResolution implements IMarkerResolution,
+		IAnnotationResolution {
 	private String pkgName;
 	private IScriptProject project;
 
@@ -30,19 +35,26 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution {
 		return NLS.bind(msg, pkgName);
 	}
 
-	public void run(final IMarker marker) {
+	private boolean resolve() {
 		final IInterpreterInstall install;
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
-		} catch (CoreException e1) {
-			if (DLTKCore.DEBUG) {
-				e1.printStackTrace();
+			if (install != null) {
+				Set names = InterpreterContainerHelper
+						.getInterpreterContainerDependencies(project);
+				names.add(pkgName);
+				InterpreterContainerHelper.setInterpreterContainerDependencies(
+						project, names);
+				return true;
 			}
-			return;
+		} catch (CoreException e) {
+			TclUI.error("require package resolve error", e); //$NON-NLS-1$
 		}
-		if (install != null) {
-			// Ru = new Job("Add package dependencies") {
-			// protected IStatus run(IProgressMonitor monitor) {
+		return false;
+	}
+
+	public void run(final IMarker marker) {
+		if (resolve()) {
 			try {
 				marker.delete();
 			} catch (CoreException e) {
@@ -50,11 +62,10 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution {
 					e.printStackTrace();
 				}
 			}
-			Set names = InterpreterContainerHelper
-					.getInterpreterContainerDependencies(project);
-			names.add(pkgName);
-			InterpreterContainerHelper.setInterpreterContainerDependencies(
-					project, names);
 		}
+	}
+
+	public boolean run(Annotation annotation, IDocument document) {
+		return resolve();
 	}
 }

@@ -15,6 +15,8 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.core.TclConstants;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.ui.text.SimpleTclSourceViewerConfiguration;
+import org.eclipse.dltk.tcl.internal.ui.text.TclCorrectionProcessor;
+import org.eclipse.dltk.ui.IDLTKCorrectionProcessor;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
@@ -22,8 +24,10 @@ import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.source.Annotation;
 
-public class TclUILanguageToolkit implements IDLTKUILanguageToolkit {
+public class TclUILanguageToolkit implements IDLTKUILanguageToolkit,
+		IDLTKCorrectionProcessor {
 
 	private static TclUILanguageToolkit sToolkit = null;
 
@@ -132,5 +136,9 @@ public class TclUILanguageToolkit implements IDLTKUILanguageToolkit {
 
 	public String[] getEditorPreferencePages() {
 		return EDITOR_PREFERENCE_PAGES_IDS;
+	}
+
+	public boolean hasCorrections(Annotation annotation) {
+		return TclCorrectionProcessor.hasCorrections(annotation);
 	}
 }
