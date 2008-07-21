@@ -20,7 +20,6 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
@@ -35,8 +34,6 @@ import org.eclipse.jface.text.source.ICharacterPairMatcher;
  * Helper class for match pairs of characters.
  */
 public final class TclPairMatcher implements ICharacterPairMatcher {
-
-	// private char[] fPairs;
 
 	private IDocument fDocument;
 
@@ -68,29 +65,18 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 
 	private long cachedHash = -1;
 
-	public TclPairMatcher(char[] pairs, ScriptEditor editor) {
-		// if (pairs == null) {
-		// throw new IllegalArgumentException();
-		// }
-
-		// fPairs = pairs;
+	public TclPairMatcher() {
 	}
-    /**
-	 * editor.getInputModelElement() out of keeping of real content => we use
-	 * ModuleDeclaration#parse(char[] fileName, char[] source, IProblemReporter
-	 * reporter);
-	 */
+
 	private PairBlock[] computePairRanges(final int offset, String contents) {
-		ModuleDeclaration md = null;
-//		IModelElement el = this.editor.getInputModelElement();
-//		if (el != null && el instanceof ISourceModule) {
-//			md = SourceParserUtil.getModuleDeclaration((ISourceModule) el);
-//		}
-		if (md == null) {
-			final ISourceParser pp = DLTKLanguageManager
-					.getSourceParser(TclNature.NATURE_ID);
-			md = pp.parse(null, contents.toCharArray(), null);
-		}
+		/*
+		 * ISourceModule returned by editor.getInputModelElement() could be
+		 * inconsistent with current editor contents so we always reparse.
+		 */
+		final ISourceParser pp = DLTKLanguageManager
+				.getSourceParser(TclNature.NATURE_ID);
+		final ModuleDeclaration md = pp.parse(null, contents.toCharArray(),
+				null);
 		if (md == null) {
 			return new PairBlock[0];
 		}
@@ -127,45 +113,6 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 			}
 		}
 
-		// Iterator i = statements.iterator();
-		// while (i.hasNext()) {
-		// Statement sst = (Statement) i.next();
-		// if (sst instanceof TclStatement) {
-		// TclStatement statement = (TclStatement) sst;
-		// /*
-		// * result.add(new CodeBlock(statement, new Region(offset +
-		// * statement.sourceStart(), statement.sourceEnd() -
-		// * statement.sourceStart())));
-		// */
-		// Iterator si = statement.getExpressions().iterator();
-		// while (si.hasNext()) {
-		// Expression ex = (Expression) si.next();
-		// if (ex instanceof TclBlockExpression) {
-		// TclBlockExpression be = (TclBlockExpression) ex;
-		// try {
-		// String newContents = contents.substring(be
-		// .sourceStart() + 1, be.sourceEnd() - 1);
-		// result.add(new PairBlock(offset + be.sourceStart(),
-		// offset + be.sourceEnd() - 1, '{'));
-		// PairBlock[] cb = computePairRanges(offset
-		// + be.sourceStart() + 1, newContents);
-		// for (int j = 0; j < cb.length; j++) {
-		// result.add(cb[j]);
-		// }
-		// } catch (StringIndexOutOfBoundsException e) {
-		// }
-		// } else if (ex instanceof StringLiteral) {
-		// StringLiteral be = (StringLiteral) ex;
-		// result.add(new PairBlock(offset + be.sourceStart(),
-		// offset + be.sourceEnd() - 1, '\"'));
-		// } else if (ex instanceof TclExecuteExpression) {
-		// TclExecuteExpression be = (TclExecuteExpression) ex;
-		// result.add(new PairBlock(offset + be.sourceStart(),
-		// offset + be.sourceEnd() - 1, '['));
-		// }
-		// }
-		// }
-		// }
 		return (PairBlock[]) result.toArray(new PairBlock[result.size()]);
 	}
 
@@ -213,11 +160,22 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		return (c == '{' || c == '}' || c == '\"' || c == '[' || c == ']');
 	}
 
+	/**
+	 * Tests that either the symbol at <code>offset</code> or the previous one
+	 * is a brace. This function checks that offsets are in the allowed range.
+	 * 
+	 * @param document
+	 * @param offset
+	 * @return
+	 * @throws BadLocationException
+	 */
 	private static boolean isBraceAt(IDocument document, int offset)
 			throws BadLocationException {
+		// test symbol at offset
 		if (offset < document.getLength() && isBrace(document.getChar(offset))) {
 			return true;
 		}
+		// test previous symbol
 		if (offset > 0 && isBrace(document.getChar(offset - 1))) {
 			return true;
 		}
@@ -232,12 +190,8 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		try {
 			fOffset = offset;
 			fDocument = document;
-			
-			boolean symblolIsBrace = (offset != 0 && isBrace(fDocument
-					.getChar(offset - 1)));
-			symblolIsBrace |= (offset != fDocument.getLength() && isBrace(fDocument
-					.getChar(offset)));
-			if (!symblolIsBrace) {
+
+			if (!isBraceAt(document, offset)) {
 				return null;
 			}
 
