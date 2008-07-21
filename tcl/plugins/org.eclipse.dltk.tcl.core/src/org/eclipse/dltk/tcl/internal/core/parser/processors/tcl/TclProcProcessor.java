@@ -58,7 +58,7 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 		if (procArguments instanceof TclBlockExpression) {
 			List/* < Statement > */st = null;
 
-			st = ((TclBlockExpression) procArguments).parseBlockSimple();
+			st = ((TclBlockExpression) procArguments).parseBlockSimple(false);
 
 			arguments = TclParseUtils.parseArguments(st);
 		}
