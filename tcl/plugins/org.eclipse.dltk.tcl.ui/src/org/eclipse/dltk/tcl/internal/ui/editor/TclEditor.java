@@ -44,11 +44,11 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
 
 public class TclEditor extends ScriptEditor {
-	public static final String EDITOR_ID = "org.eclipse.dltk.tcl.ui.editor.TclEditor";
+	public static final String EDITOR_ID = "org.eclipse.dltk.tcl.ui.editor.TclEditor"; //$NON-NLS-1$
 
-	public static final String EDITOR_CONTEXT = "#TclEditorContext";
+	public static final String EDITOR_CONTEXT = "#TclEditorContext"; //$NON-NLS-1$
 
-	public static final String RULER_CONTEXT = "#TclRulerContext";
+	public static final String RULER_CONTEXT = "#TclRulerContext"; //$NON-NLS-1$
 
 	private IFoldingStructureProvider foldingProvider;
 
@@ -177,7 +177,7 @@ public class TclEditor extends ScriptEditor {
 	}
 
 	public String getCallHierarchyID() {
-		return "org.eclipse.dltk.callhierarchy.view";
+		return "org.eclipse.dltk.callhierarchy.view"; //$NON-NLS-1$
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class TclEditor extends ScriptEditor {
 
 	protected void configureSourceViewerDecorationSupport(
 			SourceViewerDecorationSupport support) {
-		bracketMatcher = new TclPairMatcher(BRACKETS, this);
+		bracketMatcher = new TclPairMatcher();
 		support.setCharacterPairMatcher(bracketMatcher);
 		support.setMatchingCharacterPainterPreferenceKeys(MATCHING_BRACKETS,
 				MATCHING_BRACKETS_COLOR);
