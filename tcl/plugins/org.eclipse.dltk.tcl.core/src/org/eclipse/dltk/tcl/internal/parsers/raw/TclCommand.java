@@ -31,4 +31,8 @@ public class TclCommand extends TclElement {
 	public List getWords() {
 		return words;
 	}
+
+	public String toString() {
+		return "TclCommand" + words; //$NON-NLS-1$
+	}
 }

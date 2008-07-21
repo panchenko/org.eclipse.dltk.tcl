@@ -75,5 +75,9 @@ public class TclWord extends TclElement {
 		}
 		return result;
 	}
+	
+	public String toString() {
+		return "TclWord" + contents; //$NON-NLS-1$
+	}
 
 }
