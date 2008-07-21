@@ -55,14 +55,16 @@ public class TclBlockExpression extends Expression {
 	public void setFilename(char[] fileName) {
 		this.fileName = fileName;
 	}
+
 	public List parseBlockSimple() {
 		return parseBlockSimple(true);
 	}
+
 	public List parseBlockSimple(boolean useProcessors) {
 		if (this.fBlockContent == null) {
 			return null;
 		}
-		
+
 		String content = this.fBlockContent.substring(1, this.fBlockContent
 				.length() - 1);
 		ITclSourceParser parser = null;
@@ -73,5 +75,5 @@ public class TclBlockExpression extends Expression {
 		ModuleDeclaration module = parser.parse(this.fileName, content
 				.toCharArray(), null);
 		return module.getStatements();
-	}	
+	}
 }
