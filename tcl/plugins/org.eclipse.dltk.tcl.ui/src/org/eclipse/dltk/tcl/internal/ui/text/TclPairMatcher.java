@@ -20,9 +20,6 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -50,8 +47,6 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 	private int fEndPos;
 
 	private int fAnchor;
-	
-	private ScriptEditor editor;
 
 	private class PairBlock {
 		public PairBlock(int start, int end, char c) {
@@ -79,15 +74,18 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		// }
 
 		// fPairs = pairs;
-		this.editor = editor;
 	}
-
+    /**
+	 * editor.getInputModelElement() out of keeping of real content => we use
+	 * ModuleDeclaration#parse(char[] fileName, char[] source, IProblemReporter
+	 * reporter);
+	 */
 	private PairBlock[] computePairRanges(final int offset, String contents) {
 		ModuleDeclaration md = null;
-		IModelElement el = this.editor.getInputModelElement();
-		if (el != null && el instanceof ISourceModule) {
-			md = SourceParserUtil.getModuleDeclaration((ISourceModule) el);
-		}
+//		IModelElement el = this.editor.getInputModelElement();
+//		if (el != null && el instanceof ISourceModule) {
+//			md = SourceParserUtil.getModuleDeclaration((ISourceModule) el);
+//		}
 		if (md == null) {
 			final ISourceParser pp = DLTKLanguageManager
 					.getSourceParser(TclNature.NATURE_ID);
@@ -110,13 +108,15 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 								offset + be.sourceEnd() - 1, '['));
 					} else if (node instanceof TclAdvancedExecuteExpression) {
 						Block be = (Block) node;
-						result.add(new PairBlock(offset + be.sourceStart()-1,
-								offset + be.sourceEnd() - 1, '['));
-					} 
-					else if (node instanceof Block) {
+						result.add(new PairBlock(offset + be.sourceStart() - 1,
+								offset + be.sourceEnd(), '['));
+					} else if (node instanceof Block) {
 						Block be = (Block) node;
-						result.add(new PairBlock(offset + be.sourceStart(),
-								offset + be.sourceEnd() - 1, '{'));
+						int start = offset + be.sourceStart();
+						if (start != 0) {
+							result.add(new PairBlock(offset + be.sourceStart(),
+									offset + be.sourceEnd() - 1, '{'));
+						}
 					}
 					return super.visitGeneral(node);
 				}
@@ -232,7 +232,12 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		try {
 			fOffset = offset;
 			fDocument = document;
-			if (!isBraceAt(document, offset)) {
+			
+			boolean symblolIsBrace = (offset != 0 && isBrace(fDocument
+					.getChar(offset - 1)));
+			symblolIsBrace |= (offset != fDocument.getLength() && isBrace(fDocument
+					.getChar(offset)));
+			if (!symblolIsBrace) {
 				return null;
 			}
 
