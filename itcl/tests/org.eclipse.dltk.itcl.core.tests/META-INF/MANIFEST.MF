@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
-Export-Package: org.eclipse.dltk.itcl.tests
-Bundle-Activator: org.eclipse.dltk.itcl.tests.ITclTestsPlugin
+Export-Package: org.eclipse.dltk.itcl.core.tests
+Bundle-Activator: org.eclipse.dltk.itcl.core.tests.ITclTestsPlugin
 Bundle-Localization: plugin

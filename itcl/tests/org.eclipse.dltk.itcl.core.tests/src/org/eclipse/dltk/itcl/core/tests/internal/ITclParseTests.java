@@ -7,7 +7,7 @@
  *
  
  *******************************************************************************/
-package org.eclipse.dltk.itcl.tests.internal;
+package org.eclipse.dltk.itcl.core.tests.internal;
 
 import junit.framework.Test;
 
@@ -18,7 +18,7 @@ import org.eclipse.dltk.ast.parser.ISourceParserConstants;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.tests.model.AbstractModelTests;
-import org.eclipse.dltk.itcl.tests.ITclTestsPlugin;
+import org.eclipse.dltk.itcl.core.tests.ITclTestsPlugin;
 
 public class ITclParseTests extends AbstractModelTests {
 	public ITclParseTests(String name) {

@@ -7,9 +7,9 @@
  *
  
  *******************************************************************************/
-package org.eclipse.dltk.itcl.tests;
+package org.eclipse.dltk.itcl.core.tests;
 
-import org.eclipse.dltk.itcl.tests.internal.ITclParseTests;
+import org.eclipse.dltk.itcl.core.tests.internal.ITclParseTests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
