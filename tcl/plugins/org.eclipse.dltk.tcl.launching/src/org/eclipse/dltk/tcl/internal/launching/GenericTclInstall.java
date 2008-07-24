@@ -35,6 +35,8 @@ import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 public class GenericTclInstall extends AbstractInterpreterInstall {
 	public class BuiltinsHelper {
 		StringBuffer source = new StringBuffer();
+		
+		long lastModified;
 
 		void load() {
 			Job loadTclBuiltin = new Job("Generate Tcl builtin file...") {
@@ -58,7 +60,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 								.createInterpreterConfig(exeEnv, builderFile,
 										builderFile.getParent());
 						// For wish
-						config.removeEnvVar("DISPLAY");
+						config.removeEnvVar("DISPLAY"); //$NON-NLS-1$
 						// config.addInterpreterArg("-KU"); //$NON-NLS-1$
 						final Process process = ScriptLaunchUtil
 								.runScriptWithInterpreter(exeEnv,
@@ -76,7 +78,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 									String line = null;
 									while ((line = input.readLine()) != null) {
 										source.append(line);
-										source.append("\n");
+										source.append("\n"); //$NON-NLS-1$
 										monitor.worked(1);
 									}
 								} catch (IOException e) {
@@ -114,6 +116,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 							e.printStackTrace();
 						}
 					}
+					lastModified = System.currentTimeMillis();
 					return Status.OK_STATUS;
 				}
 			};
@@ -158,6 +161,11 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 		return helper.source.toString();
 	}
 
+	public long lastModified() {
+		initialize();
+		return helper.lastModified;
+	}
+
 	private synchronized void initialize() {
 		if (helper == null) {
 			helper = new BuiltinsHelper();
@@ -166,6 +174,6 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 	}
 
 	public String[] getBuiltinModules() {
-		return new String[] { "builtins.tcl" };
+		return new String[] { "builtins.tcl" }; //$NON-NLS-1$
 	}
 }
