@@ -361,7 +361,7 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		assertEquals(field, elements[0]);
 	}
 
-	public void process018(int add, int size ) throws ModelException {
+	public void process018(int add, int size) throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
 
@@ -379,7 +379,8 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		assertNotNull(field);
 		assertEquals(field, elements[0]);
 	}
-	public void process023(int add, int size ) throws ModelException {
+
+	public void process023(int add, int size) throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
 
@@ -401,62 +402,79 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 	public void testSelection018() throws ModelException {
 		process018(0, 7);
 	}
+
 	public void testSelection019() throws ModelException {
 		process018(2, 1);
 	}
+
 	public void testSelection019a() throws ModelException {
 		process018(2, 0);
 	}
+
 	public void testSelection020() throws ModelException {
 		process018(3, 1);
 	}
+
 	public void testSelection020a() throws ModelException {
 		process018(3, 0);
 	}
+
 	public void REM_testSelection021() throws ModelException {
 		process018(4, 1);
 	}
+
 	public void testSelection021a() throws ModelException {
 		process018(4, 0);
 	}
+
 	public void testSelection022() throws ModelException {
 		process018(5, 1);
 	}
+
 	public void testSelection022a() throws ModelException {
 		process018(5, 0);
 	}
+
 	public void REM_testSelection023() throws ModelException {
 		process023(5, 0);
 	}
-	
+
 	public void testSelection023a() throws ModelException {
 		process023(0, 7);
 	}
+
 	public void testSelection023b() throws ModelException {
 		process023(2, 1);
 	}
+
 	public void testSelection023c() throws ModelException {
 		process023(2, 0);
 	}
+
 	public void testSelection023d() throws ModelException {
 		process023(3, 1);
 	}
+
 	public void testSelection023e() throws ModelException {
 		process023(3, 0);
 	}
+
 	public void REM_testSelection023f() throws ModelException {
 		process023(4, 1);
 	}
+
 	public void testSelection023g() throws ModelException {
 		process023(4, 0);
 	}
+
 	public void REM_testSelection023h() throws ModelException {
 		process023(5, 1);
 	}
+
 	public void REM_testSelection023i() throws ModelException {
 		process023(5, 0);
 	}
-	
+
 	public void process024(int add, int size) throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
@@ -475,12 +493,15 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		assertNotNull(field1);
 		assertEquals(field1, elements[0]);
 	}
+
 	public void testSelection024a() throws ModelException {
 		process024(0, 6);
 	}
+
 	public void testSelection024b() throws ModelException {
 		process024(3, 0);
 	}
+
 	public void process025(int add, int size) throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
@@ -499,12 +520,15 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		assertNotNull(field);
 		assertEquals(field, elements[0]);
 	}
+
 	public void testSelection025a() throws ModelException {
 		process024(0, 6);
 	}
+
 	public void testSelection025b() throws ModelException {
 		process024(3, 0);
 	}
+
 	public void process026(int add, int size) throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
@@ -523,12 +547,15 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		assertNotNull(field);
 		assertEquals(field, elements[0]);
 	}
+
 	public void testSelection026a() throws ModelException {
 		process024(0, 6);
 	}
+
 	public void testSelection026b() throws ModelException {
 		process024(3, 0);
 	}
+
 	public void testSelection27a() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
@@ -546,7 +573,8 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		IField field = cu.getField("x3");
 		assertNotNull(field);
 		assertEquals(field, elements[0]);
-	}	
+	}
+
 	public void testSelection27b() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
@@ -565,6 +593,7 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		assertNotNull(field);
 		assertEquals(field, elements[0]);
 	}
+
 	public void REM_testSelection27c() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
@@ -576,16 +605,18 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		String sub = source.substring(start, start + 4);
 		assertEquals("{x3}", sub);
 
-		IModelElement[] elements = cu.codeSelect(start, source.length()-1);
+		IModelElement[] elements = cu.codeSelect(start, source.length() - 1);
 		assertNotNull(elements);
 		assertEquals(1, elements.length);
 		IField field = cu.getField("x3");
 		assertNotNull(field);
 		assertEquals(field, elements[0]);
 	}
-	public IModelElement process028(ISourceModule cu, String pattern, int sadd, int add, int size) throws ModelException {
-//		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
-//				"selection003.tcl");
+
+	public IModelElement process028(ISourceModule cu, String pattern, int sadd,
+			int add, int size) throws ModelException {
+		// ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
+		// "selection003.tcl");
 
 		String source = cu.getSource();
 		int start = source.indexOf(pattern) + sadd;
@@ -596,126 +627,143 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		IModelElement[] elements = cu.codeSelect(start + add, size);
 		assertNotNull(elements);
 		assertEquals(1, elements.length);
-		
-//		IField field = cu.getField("x2(0)");
-//		assertNotNull(field);
-//		assertEquals(field, elements[0]);
+
+		// IField field = cu.getField("x2(0)");
+		// assertNotNull(field);
+		// assertEquals(field, elements[0]);
 		return elements[0];
 	}
+
 	public void testSelection028() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::c::vac";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getType("a").getType("c").getField("vac");
 		assertEquals(field, element);
 	}
+
 	public void testSelection029() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::c::vac2";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getType("a").getType("c").getField("vac2");
 		assertEquals(field, element);
 	}
+
 	public void testSelection030() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::c::vac4";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getType("a").getType("c").getField("vac4");
 		assertEquals(field, element);
 	}
+
 	public void testSelection031() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::f::q::t::vafqt0";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
-		IField field = cu.getType("a").getType("f").getType("q").getType("t").getField("vafqt0");
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
+		IField field = cu.getType("a").getType("f").getType("q").getType("t")
+				.getField("vafqt0");
 		assertEquals(field, element);
 	}
+
 	public void testSelection032() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::f::q::vafq";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
-		IField field = cu.getType("a").getType("f").getType("q").getField("vafq");
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
+		IField field = cu.getType("a").getType("f").getType("q").getField(
+				"vafq");
 		assertEquals(field, element);
 	}
+
 	public void testSelection033() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::f::q::vafq2";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
-		IField field = cu.getType("a").getType("f").getType("q").getField("vafq2");
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
+		IField field = cu.getType("a").getType("f").getType("q").getField(
+				"vafq2");
 		assertEquals(field, element);
 	}
+
 	public void testSelection034() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::f::vaf";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getType("a").getType("f").getField("vaf");
 		assertEquals(field, element);
 	}
+
 	public void testSelection035() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::a::va";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getType("a").getField("va");
 		assertEquals(field, element);
 	}
+
 	public void REM_testSelection036() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::b::a::c::vca3";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
-		IField field = cu.getType("b").getType("a").getType("c").getField("vca3");
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
+		IField field = cu.getType("b").getType("a").getType("c").getField(
+				"vca3");
 		assertEquals(field, element);
 	}
+
 	public void testSelection037() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection003.tcl");
 		String s = "puts $::b::vb";
 		int i = 5;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getType("b").getField("vb");
 		assertEquals(field, element);
 	}
+
 	public void testSelection038() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
 		String s = "puts [$x6]";
 		int i = 7;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getField("x6");
 		assertEquals(field, element);
 	}
+
 	public void testSelection039() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
 		String s = "puts \"[$x6]\"";
 		int i = 8;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getField("x6");
 		assertEquals(field, element);
 	}
+
 	public void testSelection040() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection002.tcl");
 		String s = "puts $x7";
 		int i = 6;
-		IModelElement element = process028(cu, s, i, 0, s.length() - i );
+		IModelElement element = process028(cu, s, i, 0, s.length() - i);
 		IField field = cu.getField("x7");
 		assertEquals(field, element);
 	}
