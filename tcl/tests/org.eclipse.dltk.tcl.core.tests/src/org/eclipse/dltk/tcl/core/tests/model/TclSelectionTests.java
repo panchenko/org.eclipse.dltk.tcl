@@ -30,6 +30,7 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		PROJECT = setUpScriptProjectTo(SELECTION_PROJECT, "Selection");
 
 		super.setUpSuite();
+		waitUntilIndexesReady();
 	}
 
 	public static Test suite() {
