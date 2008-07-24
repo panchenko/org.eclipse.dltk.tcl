@@ -247,7 +247,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 				IModelElement methodElement = TclResolver.findChildrenByName(
 						method.getName(), (IParent) parent);
-				this.selectionElements.add(methodElement);
+				addSelectionElement(methodElement);
 				return true;
 			}
 		}
@@ -337,7 +337,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 					IModelElement field = TclResolver.findChildrenByName(
 							varName, (IParent) type);
 					if (field != null) {
-						this.selectionElements.add(field);
+						addSelectionElement(field);
 					}
 				}
 			} catch (ModelException e) {
@@ -398,7 +398,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				if (allObjects[j] != null && allObjects[j] instanceof TclField) {
 					TclField field = (TclField) allObjects[j];
 					if (name.equals(field.getName())) {
-						this.selectionElements.add(field.getModelElement());
+						addSelectionElement(field.getModelElement());
 						return;
 					}
 				}
@@ -414,7 +414,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				if (allObjects[j] != null && allObjects[j] instanceof TclProc) {
 					TclProc field = (TclProc) allObjects[j];
 					if (name.equals(field.getName())) {
-						this.selectionElements.add(field.getModelElement());
+						addSelectionElement(field.getModelElement());
 						return;
 					}
 				}
@@ -808,7 +808,9 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	public void addSelectionElement(IModelElement element) {
-		this.selectionElements.add(element);
+		if (!selectionElements.contains(element)) {
+			this.selectionElements.add(element);
+		}
 	}
 
 	public int getSelectionElementsSize() {
