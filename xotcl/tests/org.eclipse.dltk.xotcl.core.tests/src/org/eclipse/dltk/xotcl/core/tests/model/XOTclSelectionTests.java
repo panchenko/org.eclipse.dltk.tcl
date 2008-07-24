@@ -11,9 +11,6 @@ package org.eclipse.dltk.xotcl.core.tests.model;
 
 import junit.framework.Test;
 
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -37,10 +34,7 @@ public class XOTclSelectionTests extends AbstractModelCompletionTests {
 			PROJECT = setUpScriptProjectTo("XOTCL_Selection", "Selection");
 
 			super.setUpSuite();
-			ResourcesPlugin.getWorkspace().build(
-					IncrementalProjectBuilder.FULL_BUILD,
-					new NullProgressMonitor());
-			waitForAutoBuild();
+			waitUntilIndexesReady();
 		}
 	}
 
