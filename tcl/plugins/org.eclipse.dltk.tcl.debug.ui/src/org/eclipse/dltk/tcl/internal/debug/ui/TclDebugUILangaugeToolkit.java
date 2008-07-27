@@ -19,4 +19,11 @@ public class TclDebugUILangaugeToolkit extends AbstractDebugUILanguageToolkit {
 	public IPreferenceStore getPreferenceStore() {
 		return TclDebugUIPlugin.getDefault().getPreferenceStore();
 	}
+
+	/*
+	 * @see org.eclipse.dltk.debug.ui.AbstractDebugUILanguageToolkit#getVariablesViewPreferencePages()
+	 */
+	public String[] getVariablesViewPreferencePages() {
+		return new String[] { "org.eclipse.dltk.tcl.preferences.debug.detailFormatters" };
+	}
 }

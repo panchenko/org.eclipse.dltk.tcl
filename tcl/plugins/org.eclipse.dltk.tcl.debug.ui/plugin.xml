@@ -31,7 +31,11 @@
     <command
       id="org.eclipse.dltk.tcl.debug.ui.commands.toggleLocalVariables"
       description="%showLocalVarsCommand.name"
-      name="%showLocalVarsCommand.description" />      
+      name="%showLocalVarsCommand.description" /> 
+    <command
+      id="org.eclipse.dltk.tcl.debug.ui.commands.showPreferences"
+      description="%showPreferences.description"
+      name="%showPreferencesCommand.name" />                
   </extension>
 
   <extension point="org.eclipse.ui.bindings">
@@ -353,7 +357,9 @@
       <command 
         commandId="org.eclipse.dltk.tcl.debug.ui.commands.toggleLocalVariables"
         tooltip="%showLocalVarsCommand.tooltip" 
-        style="toggle" />                      
+        style="toggle" />
+      <command
+        commandId="org.eclipse.dltk.tcl.debug.ui.commands.showPreferences" />                          
     </menuContribution>  
   </extension>
 
@@ -366,7 +372,10 @@
       class="org.eclipse.dltk.tcl.internal.debug.ui.handlers.ToggleClassVariablesHandler" />
     <handler 
       commandId="org.eclipse.dltk.tcl.debug.ui.commands.toggleLocalVariables"
-      class="org.eclipse.dltk.tcl.internal.debug.ui.handlers.ToggleLocalVariablesHandler" />      
+      class="org.eclipse.dltk.tcl.internal.debug.ui.handlers.ToggleLocalVariablesHandler" />
+    <handler
+      commandId="org.eclipse.dltk.tcl.debug.ui.commands.showPreferences"
+      class="org.eclipse.dltk.debug.ui.handlers.VariablesViewOptionsHandler:org.eclipse.dltk.tcl.core.nature" />                         
   </extension>
 
   <extension point="org.eclipse.dltk.debug.ui.language">
