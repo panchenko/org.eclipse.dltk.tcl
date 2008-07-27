@@ -4,6 +4,7 @@
   <extension point="org.eclipse.core.runtime.preferences">
     <initializer
       class="org.eclipse.dltk.tcl.internal.console.ui.preferences.TclConsolePreferenceInitializer" />
+    <initializer class="org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPreferenceInitializer" />
   </extension>
 
   <extension point="org.eclipse.ui.commands">
@@ -184,6 +185,11 @@
       class="org.eclipse.dltk.tcl.internal.console.ui.preferences.TclConsolePreferencePage"
       id="org.eclipse.dltk.tcl.preferences.console"
       name="%TclConsole.PreferencePage" />
+    <page
+      category="org.eclipse.dltk.tcl.preferences.debug"
+      class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.eclipse.dltk.tcl.core.nature"
+      id="org.eclipse.dltk.tcl.preferences.debug.detailFormatters"
+      name="%DetailFormattersPreferencePage.name" />      
   </extension>
 
   <extension point="org.eclipse.ui.editorActions">
@@ -361,6 +367,12 @@
     <handler 
       commandId="org.eclipse.dltk.tcl.debug.ui.commands.toggleLocalVariables"
       class="org.eclipse.dltk.tcl.internal.debug.ui.handlers.ToggleLocalVariablesHandler" />      
+  </extension>
+
+  <extension point="org.eclipse.dltk.debug.ui.language">
+    <language
+      class="org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUILangaugeToolkit"
+      nature="org.eclipse.dltk.tcl.core.nature"/>
   </extension>
 
 </plugin>
