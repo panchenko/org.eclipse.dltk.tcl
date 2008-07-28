@@ -33,6 +33,12 @@ public class CodeScanner {
 		return c;
 	}
 
+	/**
+	 * Returns the character at the current position without incrementing
+	 * position.
+	 * 
+	 * @return
+	 */
 	public int peek() {
 		return isEOF() ? EOF : content[pos];
 	}
