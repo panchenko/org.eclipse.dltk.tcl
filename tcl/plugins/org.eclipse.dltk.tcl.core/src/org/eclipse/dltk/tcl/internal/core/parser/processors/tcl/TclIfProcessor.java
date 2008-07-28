@@ -29,9 +29,8 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 		final int end;
 
 		/**
-		 * @param tclIfProcessor_incorrectIfCondition
+		 * @param message
 		 * @param node
-		 * @param error
 		 */
 		public IfStatementError(String message, ASTNode node) {
 			this(message, node.sourceStart(), node.sourceEnd());
@@ -41,7 +40,6 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 		 * @param message
 		 * @param start
 		 * @param end
-		 * @param severity
 		 */
 		public IfStatementError(String message, int start, int end) {
 			super(message);
