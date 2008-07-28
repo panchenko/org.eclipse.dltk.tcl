@@ -1,6 +1,5 @@
 package org.eclipse.dltk.tcl.internal.core.parser.processors.tcl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTListNode;
@@ -9,6 +8,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
@@ -19,100 +19,191 @@ import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 
 public class TclIfProcessor extends AbstractTclCommandProcessor {
 
+	private static final String THEN = "then"; //$NON-NLS-1$
+	private static final String ELSE = "else"; //$NON-NLS-1$
+	private static final String ELSEIF = "elseif"; //$NON-NLS-1$
+
+	private static class IfStatementError extends RuntimeException {
+
+		final int start;
+		final int end;
+
+		/**
+		 * @param tclIfProcessor_incorrectIfCondition
+		 * @param node
+		 * @param error
+		 */
+		public IfStatementError(String message, ASTNode node) {
+			this(message, node.sourceStart(), node.sourceEnd());
+		}
+
+		/**
+		 * @param message
+		 * @param start
+		 * @param end
+		 * @param severity
+		 */
+		public IfStatementError(String message, int start, int end) {
+			super(message);
+			this.start = start;
+			this.end = end;
+		}
+
+	}
+
+	private static class IfContext {
+		final ITclParser parser;
+		final TclStatement statement;
+		final List exprs;
+		int index;
+
+		public IfContext(ITclParser parser, TclStatement statement) {
+			this.parser = parser;
+			this.statement = statement;
+			this.exprs = statement.getExpressions();
+			index = 1;
+		}
+
+		public int start() {
+			return statement.sourceStart();
+		}
+
+		public int end() {
+			return statement.sourceEnd();
+		}
+
+		public int size() {
+			return exprs.size();
+		}
+
+		public ASTNode get(int i) {
+			return (ASTNode) exprs.get(i);
+		}
+
+		public ASTNode get() {
+			return get(index++);
+		}
+
+		boolean isEOF() {
+			return index >= exprs.size();
+		}
+	}
+
 	public TclIfProcessor() {
 	}
 
 	public ASTNode process(TclStatement statement, ITclParser parser,
 			ASTNode parent) {
-		List exprs = statement.getExpressions();
-		int start = statement.sourceStart();
-		int end = statement.sourceEnd();
-		IfStatement ifStatement = new IfStatement(start, end);
+		final IfContext context = new IfContext(parser, statement);
+		IfStatement ifStatement = new IfStatement(context.start(), context
+				.end());
 		addToParent(parent, ifStatement);
-		ifStatement.acceptCondition(this.extractCondition(exprs, 1, parser));
-		Block bl = new Block(ifStatement.sourceStart(), ifStatement.sourceEnd());
-		ifStatement.acceptThen(bl);
-		int currentPosition = 2;
-		currentPosition = this.extractThen(exprs, currentPosition, parser,
-				start, end, bl);
-		if (statement.getCount() == 3) {
-			return ifStatement;
+		try {
+			parseIf(context, ifStatement);
+			if (!context.isEOF()) {
+				final ASTNode extraBegin = context.get(context.index);
+				final ASTNode extraEnd = context.get(context.size() - 1);
+				report(parser, Messages.TclIfProcessor_unexpectedStatements,
+						extraBegin.sourceStart(), extraEnd.sourceEnd(),
+						ProblemSeverities.Error);
+			}
+		} catch (IfStatementError e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+			report(parser, e.getMessage(), e.start, e.end,
+					ProblemSeverities.Error);
 		}
-		List elseList = this.makeElseList(exprs, currentPosition, parser,
-				start, end);
-		Block el = new Block();
-		ifStatement.acceptElse(el);
-		ifStatement.acceptElse(this.extractElse(elseList, parser, start, end,
-				el));
 		return ifStatement;
 	}
 
-	private ASTNode extractElse(List exprs, ITclParser parser, int start,
-			int end, Block el) {
-		if (exprs.size() == 0) {
-			return null;
+	private void parseIf(IfContext context, IfStatement ifStatement) {
+		ifStatement.acceptCondition(parseCondition(context));
+		if (context.isEOF()) {
+			throw new IfStatementError(
+					Messages.TclIfProcessor_missingThenBlock, context.start(),
+					context.end());
 		}
-		if (exprs.size() == 1) {
-			ASTNode node = (ASTNode) exprs.get(0);
-			if (node instanceof TclBlockExpression) {
-				TclBlockExpression block = (TclBlockExpression) node;
-				parseBlock(parser, el, block);
-				el.setStart(node.sourceStart());
-				el.setEnd(node.sourceEnd());
-				return el;
-			} else if (node instanceof SimpleReference) {
-				el.addStatement(node);
+		if (checkKeyword(context, THEN)) {
+			if (context.isEOF()) {
+				throw new IfStatementError(
+						Messages.TclIfProcessor_missingThenBlock, context
+								.start(), context.end());
 			}
-			else if (node instanceof Statement) {
-				return node;
-			}
-			else if (node instanceof TclExecuteExpression) {
-				return node;
-			}
-			return null;
 		}
-		if (exprs.size() < 2) {
-			this.report(parser, "Incorrect else", start, end,
-					ProblemSeverities.Error);
-			return null;
-		}
-		ASTNode node = (ASTNode) exprs.get(0);
-		if (!(node instanceof SimpleReference)) {
-			this.report(parser, "Incorrect else block", start, end,
-					ProblemSeverities.Error);
-			return null;
-		}
-		SimpleReference ref = (SimpleReference) node;
-		if (ref.getName().equals("else")) {
-			ASTNode nde = (ASTNode) exprs.get(1);
-			if (nde instanceof TclBlockExpression) {
-				TclBlockExpression block = (TclBlockExpression) nde;
-				parseBlock(parser, el, block);
-				el.setStart(nde.sourceStart());
-				el.setEnd(nde.sourceEnd());
-				return el;
+		ifStatement.acceptThen(parseBranch(context, true,
+				Messages.TclIfProcessor_incorrectThenBlock));
+		if (!context.isEOF()) {
+			if (checkKeyword(context, ELSEIF)) {
+				final ASTNode elseIfKeyword = context.get(context.index - 1);
+				final IfStatement nestedIf = new IfStatement(elseIfKeyword
+						.sourceStart(), context.end());
+				parseIf(context, nestedIf);
+				ifStatement.acceptElse(nestedIf);
 			} else {
-				this.report(parser, "Incorrect else block", ref.sourceStart(),
-						ref.sourceEnd(), ProblemSeverities.Error);
-				return null;
+				if (checkKeyword(context, ELSE)) {
+					if (context.isEOF()) {
+						throw new IfStatementError(
+								Messages.TclIfProcessor_incorrectElse, context
+										.start(), context.end());
+					}
+				}
+				ifStatement.acceptElse(parseBranch(context, false,
+						Messages.TclIfProcessor_incorrectElseBlock));
 			}
-		} else if (ref.getName().equals("elseif")) {
-			IfStatement ifStatement = new IfStatement(ref.sourceStart(), end);
-			el.addStatement(ifStatement);
-			ifStatement
-					.acceptCondition(this.extractCondition(exprs, 1, parser));
-			Block bl = new Block(start, end);
-			ifStatement.acceptThen(bl);
-			this.extractThen(exprs, 2, parser, start, end, bl);
-			List elseList = this.makeElseList(exprs, 2, parser, start, end);
-			Block el2 = new Block(start, end);
-			ifStatement.acceptElse(el2);
-			ifStatement.acceptElse(this.extractElse(elseList, parser, start,
-					end, el2));
-			return ifStatement;
 		}
+	}
 
-		return null;
+	private Statement parseBranch(IfContext context, boolean wrapAsBlock,
+			String message) {
+		final ASTNode node = context.get();
+		if (node instanceof TclBlockExpression) {
+			final Block block = new Block(node.sourceStart(), node.sourceEnd());
+			parseBlock(context.parser, block, (TclBlockExpression) node);
+			return block;
+		} else if (node instanceof SimpleReference) {
+			final Block block = new Block(node.sourceStart(), node.sourceEnd());
+			block.addStatement(node);
+			return block;
+		} else if (node instanceof TclStatement) {
+			if (wrapAsBlock) {
+				final Block block = new Block(node.sourceStart(), node
+						.sourceEnd());
+				block.addStatement(node);
+				return block;
+			} else {
+				return (TclStatement) node;
+			}
+		} else if (node instanceof TclExecuteExpression) {
+			if (wrapAsBlock) {
+				final Block block = new Block(node.sourceStart(), node
+						.sourceEnd());
+				block.addStatement(node);
+				return block;
+			} else {
+				return (TclExecuteExpression) node;
+			}
+		} else {
+			throw new IfStatementError(message, context.start(), context.end());
+		}
+	}
+
+	/**
+	 * @param exprs
+	 * @param index
+	 * @param keyword
+	 * @return
+	 */
+	private boolean checkKeyword(IfContext context, String keyword) {
+		final ASTNode node = context.get(context.index);
+		if (node instanceof SimpleReference) {
+			final SimpleReference ref = (SimpleReference) node;
+			if (keyword.equals(ref.getName())) {
+				++context.index;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void parseBlock(ITclParser parser, Block el,
@@ -123,80 +214,13 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 				- parser.getStartPos(), el);
 	}
 
-	private List makeElseList(List exprs, int i, ITclParser parser, int start,
-			int end) {
-		if (exprs.size() <= i) {
-			this.report(parser, "Incorrect if statement", start, end,
-					ProblemSeverities.Error);
-			return new ArrayList();
+	private ASTNode parseCondition(IfContext context) {
+		if (context.isEOF()) {
+			throw new IfStatementError(
+					Messages.TclIfProcessor_missingCondition, context.start(),
+					context.end());
 		}
-		ASTNode node = (ASTNode) exprs.get(i);
-		if (node instanceof SimpleReference
-				&& ((SimpleReference) node).getName().equals("then")) {
-			if (exprs.size() >= i + 1) {
-				this.report(parser, "Incorrect if statement", node,
-						ProblemSeverities.Error);
-			}
-			return exprs.subList(i + 2, exprs.size());
-		} else {
-			return exprs.subList(i + 1, exprs.size());
-		}
-	}
-
-	private int extractThen(List exprs, int i, ITclParser parser, int start,
-			int end, Block bl) {
-		if (exprs.size() <= i) {
-			this.report(parser, "Incorrect if statement", start, end,
-					ProblemSeverities.Error);
-			return 0;
-		}
-		ASTNode node = (ASTNode) exprs.get(i);
-		if (node instanceof SimpleReference
-				&& ((SimpleReference) node).getName().equals("then")) {
-			if (exprs.size() < i + 1) {
-				this.report(parser, "Incorrect if statement", node,
-						ProblemSeverities.Error);
-			}
-			++i;
-			node = (ASTNode) exprs.get(i);
-		}
-		if (node instanceof TclBlockExpression) {
-			TclBlockExpression block = (TclBlockExpression) node;
-			parseBlock(parser, bl, block);
-			bl.setStart(node.sourceStart());
-			bl.setEnd(node.sourceEnd());
-			return i;
-		} else if (node instanceof TclStatement) {
-			bl.addStatement(node);
-			bl.setStart(node.sourceStart());
-			bl.setEnd(node.sourceEnd());
-			return i;
-		} else if (node instanceof TclExecuteExpression) {
-			bl.addStatement(node);
-			bl.setStart(node.sourceStart());
-			bl.setEnd(node.sourceEnd());
-			return i;
-		} else if (node instanceof SimpleReference) {
-			List es = new ArrayList();
-			es.add(node);
-			TclStatement st = new TclStatement(es);
-			st.setStart(node.sourceStart());
-			st.setEnd(node.sourceEnd());
-			bl.addStatement(node);
-			bl.setStart(node.sourceStart());
-			bl.setEnd(node.sourceEnd());
-			return i;
-		}
-		this.report(parser, "Incorrect if then block", node,
-				ProblemSeverities.Error);
-		return 0;
-	}
-
-	private ASTNode extractCondition(List exprs, int i, ITclParser parser) {
-		if (exprs.size() <= i) {
-			return null;
-		}
-		ASTNode node = (ASTNode) exprs.get(i);
+		ASTNode node = context.get();
 		if (node instanceof TclBlockExpression) {
 			TclBlockExpression bl = (TclBlockExpression) node;
 			List parseBlock = bl.parseBlockSimple();
@@ -214,20 +238,16 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 			}
 			return list;
 		} else if (node instanceof SimpleReference) {
-			return (Statement) node;
+			return node;
 		} else if (node instanceof TclAdvancedExecuteExpression) {
 			TclAdvancedExecuteExpression ex = (TclAdvancedExecuteExpression) node;
 			List childs = ex.getChilds();
-			// report(parser, "If condition not in {}", node.sourceStart() - 1,
-			// node.sourceEnd(), ProblemSeverities.Warning);
 			return new ASTListNode(node.sourceStart(), node.sourceEnd(), childs);
-		}
-		else if (node instanceof TclExecuteExpression) {
+		} else if (node instanceof TclExecuteExpression) {
 			return node;
 		}
-		this.report(parser, "Incorrect if condition", node,
-				ProblemSeverities.Error);
-		return null;
+		throw new IfStatementError(Messages.TclIfProcessor_incorrectCondition,
+				node);
 	}
 
 }
