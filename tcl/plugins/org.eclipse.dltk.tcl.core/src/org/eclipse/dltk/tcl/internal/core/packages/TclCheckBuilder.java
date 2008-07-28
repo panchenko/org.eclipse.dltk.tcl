@@ -86,7 +86,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 		};
 		final ModuleDeclaration declaration = SourceParserUtil
 				.getModuleDeclaration(module, null,
-						ISourceParserConstants.RUNTIME_MODEL, action);
+						ISourceParserConstants.DEFAULT, action);
 		if (declaration == null) {
 			return;
 		}

@@ -303,6 +303,6 @@ public class TclSourceParser extends AbstractSourceParser implements
 	}
 
 	private boolean isBuildingRuntimeModel() {
-		return (flags & ISourceParserConstants.RUNTIME_MODEL) != 0;
+		return true; // (flags & ISourceParserConstants.RUNTIME_MODEL) != 0
 	}
 }
