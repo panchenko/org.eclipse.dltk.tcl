@@ -9,18 +9,21 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser.tests;
 
+import java.io.IOException;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllTests {
 
-	public static Test suite() {
+	public static Test suite() throws IOException {
 		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.dltk.tcl.parser.tests");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(AllParseTests.class);
+				"Test for org.eclipse.dltk.tcl.parser.tests"); //$NON-NLS-1$
+		// $JUnit-BEGIN$
+		suite.addTest(AllParseTests.suite());
 		suite.addTestSuite(SimpleParserTests.class);
-		//$JUnit-END$
+		suite.addTestSuite(SmallParserTests.class);
+		// $JUnit-END$
 		return suite;
 	}
 

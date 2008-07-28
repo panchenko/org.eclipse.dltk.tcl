@@ -26,7 +26,7 @@ import org.eclipse.dltk.tcl.core.tests.model.Activator;
 
 public class AllParseTests extends TestCase {
 
-	private static final String CHARSET = "ISO-8859-1"; //$NON-NLS-1$
+	static final String CHARSET = "ISO-8859-1"; //$NON-NLS-1$
 
 	private static final String SCRIPTS_ZIP = "scripts/scripts.zip"; //$NON-NLS-1$
 
