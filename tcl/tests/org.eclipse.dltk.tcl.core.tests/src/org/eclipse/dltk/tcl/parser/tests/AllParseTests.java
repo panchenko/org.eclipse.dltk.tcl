@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.dltk.ast.parser.ISourceParser;
+import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -30,7 +31,7 @@ public class AllParseTests extends TestCase {
 
 	private static final String SCRIPTS_ZIP = "scripts/scripts.zip"; //$NON-NLS-1$
 
-	public static TestSuite suite() throws IOException {
+	public static TestSuite suite() {
 		final TestSuite suite = new TestSuite();
 		final URL scripts = Activator.getDefault().getBundle().getEntry(
 				SCRIPTS_ZIP);
@@ -41,26 +42,38 @@ public class AllParseTests extends TestCase {
 						}
 					});
 		} else {
-			final ZipInputStream zipInputStream = new ZipInputStream(scripts
-					.openStream());
 			try {
-				int count = 0;
-				ZipEntry entry;
-				while ((entry = zipInputStream.getNextEntry()) != null) {
-					final InputStream entryStream = new FilterInputStream(
-							zipInputStream) {
-						public void close() throws IOException {
-							// empty
-						}
-					};
-					final char[] content = Util.getInputStreamAsCharArray(
-							entryStream, (int) entry.getSize(), CHARSET);
-					final String testName = ++count + "-" + entry.getName(); //$NON-NLS-1$
-					suite.addTest(new AllParseTests(testName, content));
-					zipInputStream.closeEntry();
+				final ZipInputStream zipInputStream = new ZipInputStream(
+						scripts.openStream());
+				try {
+					int count = 0;
+					ZipEntry entry;
+					while ((entry = zipInputStream.getNextEntry()) != null) {
+						final InputStream entryStream = new FilterInputStream(
+								zipInputStream) {
+							public void close() throws IOException {
+								// empty
+							}
+						};
+						final char[] content = Util.getInputStreamAsCharArray(
+								entryStream, (int) entry.getSize(), CHARSET);
+						final String testName = ++count + "-" + entry.getName(); //$NON-NLS-1$
+						suite.addTest(new AllParseTests(testName, content));
+						zipInputStream.closeEntry();
+					}
+				} finally {
+					try {
+						zipInputStream.close();
+					} catch (IOException e) {
+						// 
+					}
 				}
-			} finally {
-				zipInputStream.close();
+			} catch (final IOException e) {
+				suite.addTest(new TestCase("IOException") { //$NON-NLS-1$
+							protected void runTest() throws Throwable {
+								throw e;
+							}
+						});
 			}
 		}
 		return suite;
@@ -77,7 +90,11 @@ public class AllParseTests extends TestCase {
 		System.out.println("Test " + getName()); //$NON-NLS-1$
 		final ISourceParser parser = DLTKLanguageManager
 				.getSourceParser(TclNature.NATURE_ID);
-		parser.parse(null, content, null);
+		final ProblemCollector collector = new ProblemCollector();
+		parser.parse(null, content, collector);
+		if (collector.hasErrors()) {
+			fail(collector.getErrors().toString());
+		}
 	}
 
 }
