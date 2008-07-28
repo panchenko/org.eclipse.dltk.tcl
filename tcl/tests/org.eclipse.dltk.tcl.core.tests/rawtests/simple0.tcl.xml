@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <script>
-<command end="42" start="0">
+<command end="40" start="0">
 <word end="3" start="0" text="proc">
 <string text="proc"/>
 </word>
@@ -10,81 +10,81 @@
 <word end="13" start="9" text="{ a }">
 <braces text="{ a }"/>
 </word>
-<word end="42" start="15" text="{&#13;&#10;&#9;puts $a ; puts &quot;wow!&quot;&#13;&#10;}">
-<braces text="{&#13;&#10;&#9;puts $a ; puts &quot;wow!&quot;&#13;&#10;}"/>
+<word end="40" start="15" text="{&#10;&#9;puts $a ; puts &quot;wow!&quot;&#10;}">
+<braces text="{&#10;&#9;puts $a ; puts &quot;wow!&quot;&#10;}"/>
 </word>
 </command>
-<command end="54" start="47">
-<word end="49" start="47" text="set">
+<command end="50" start="43">
+<word end="45" start="43" text="set">
 <string text="set"/>
 </word>
-<word end="51" start="51" text="x">
+<word end="47" start="47" text="x">
 <string text="x"/>
 </word>
-<word end="54" start="53" text="13">
+<word end="50" start="49" text="13">
 <string text="13"/>
 </word>
 </command>
-<command end="95" start="89">
-<word end="92" start="89" text="puts">
+<command end="88" start="82">
+<word end="85" start="82" text="puts">
 <string text="puts"/>
+</word>
+<word end="88" start="87" text="$x">
+<variable end="88" kind="0" name="x" start="87"/>
+</word>
+</command>
+<command end="95" start="90">
+<word end="92" start="90" text="foo">
+<string text="foo"/>
 </word>
 <word end="95" start="94" text="$x">
 <variable end="95" kind="0" name="x" start="94"/>
 </word>
 </command>
-<command end="103" start="98">
-<word end="100" start="98" text="foo">
-<string text="foo"/>
-</word>
-<word end="103" start="102" text="$x">
-<variable end="103" kind="0" name="x" start="102"/>
-</word>
-</command>
-<command end="127" start="108">
-<word end="111" start="108" text="puts">
+<command end="117" start="98">
+<word end="101" start="98" text="puts">
 <string text="puts"/>
 </word>
-<word end="127" start="113" text="[expr {$x + 1}]">
+<word end="117" start="103" text="[expr {$x + 1}]">
 <command text="[expr {$x + 1}]"/>
 </word>
 </command>
-<command end="181" start="132">
-<word end="134" start="132" text="set">
+<command end="169" start="120">
+<word end="122" start="120" text="set">
 <string text="set"/>
 </word>
-<word end="141" start="136" text="string">
+<word end="129" start="124" text="string">
 <string text="string"/>
 </word>
-<word end="181" start="143" text="&quot;_________! and number really is $x...&quot;">
+<word end="169" start="131" text="&quot;_________! and number really is $x...&quot;">
 <quotes text="&quot;_________! and number really is $x...&quot;"/>
 </word>
 </command>
-<command end="198" start="186">
-<word end="188" start="186" text="set">
+<command end="183" start="172">
+<word end="174" start="172" text="set">
 <string text="set"/>
 </word>
-<word end="195" start="190" text="{a&#13;&#10;b}">
-<braces text="{a&#13;&#10;b}"/>
+<word end="180" start="176" text="{a&#10;b}">
+<braces text="{a&#10;b}"/>
 </word>
-<word end="198" start="197" text="12">
+<word end="183" start="182" text="12">
 <string text="12"/>
 </word>
 </command>
-<command end="213" start="201">
-<word end="205" start="202" text="puts">
+<command end="197" start="186">
+<word end="190" start="187" text="puts">
 <string text="puts"/>
 </word>
-<word end="213" start="207" text="${a&#13;&#10;b}">
-<variable end="213" kind="2" name="a&#13;&#10;b" start="207"/>
+<word end="197" start="192" text="${a&#10;b}">
+<variable end="197" kind="2" name="a&#10;b" start="192"/>
 </word>
 </command>
-<command end="279" start="243">
-<word end="246" start="243" text="puts">
+<command end="258" start="223">
+<word end="226" start="223" text="puts">
 <string text="puts"/>
 </word>
-<word end="279" start="248" text="&quot;bye! \&#13;&#10;and thanks for a fish!&quot;">
-<quotes text="&quot;bye! \&#13;&#10;and thanks for a fish!&quot;"/>
+<word end="258" start="228" text="&quot;bye! \&#10;and thanks for a fish!&quot;">
+<quotes text="&quot;bye! \&#10;and thanks for a fish!&quot;"/>
 </word>
 </command>
 </script>
