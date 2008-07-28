@@ -33,6 +33,10 @@ public class CodeScanner {
 		return c;
 	}
 
+	public int peek() {
+		return isEOF() ? EOF : content[pos];
+	}
+
 	public boolean isEOF() {
 		return pos >= content.length;
 	}
