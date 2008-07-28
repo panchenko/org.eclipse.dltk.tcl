@@ -27,7 +27,7 @@ public abstract class AbstractTclCommandProcessor implements
 		if (problemReporter == null) {
 			return;
 		}
-		problemReporter.reportProblem(new DefaultProblem("", message, 0, null,
+		problemReporter.reportProblem(new DefaultProblem(message, 0, null,
 				severity, start, end, parser.getCodeModel().getLineNumber(
 						start, end)));
 	}
