@@ -12,15 +12,10 @@ package org.eclipse.dltk.tcl.parser.tests;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.WritableByteChannel;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -37,7 +32,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.dltk.launching.LaunchingMessages;
 import org.eclipse.dltk.tcl.core.tests.model.Activator;
 import org.eclipse.dltk.tcl.internal.parsers.raw.BracesSubstitution;
@@ -61,21 +55,23 @@ public class SimpleParserTests extends TestCase {
 
 	private String getContents(URL url) throws IOException {
 		InputStream input = null;
-		String result = "";
+		StringBuffer result = new StringBuffer(512);
 		try {
 			input = new BufferedInputStream(url.openStream());
 
 			// Simple copy
 			int ch = -1;
 			while ((ch = input.read()) != -1) {
-				result += (char) ch;
+				if (ch != '\r') {
+					result.append((char) ch);
+				}
 			}
 		} finally {
 			if (input != null) {
 				input.close();
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 	private void print(TclWord s) {
