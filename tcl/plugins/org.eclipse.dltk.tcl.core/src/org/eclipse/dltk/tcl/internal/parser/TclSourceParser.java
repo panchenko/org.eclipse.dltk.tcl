@@ -10,7 +10,6 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
-import org.eclipse.dltk.ast.parser.ISourceParserConstants;
 import org.eclipse.dltk.ast.parser.ISourceParserExtension;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
@@ -23,6 +22,7 @@ import org.eclipse.dltk.tcl.core.ITclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.ITclSourceParser;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.ITclCommandDetector.CommandInfo;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
@@ -160,7 +160,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		TclStatement node = (TclStatement) this.localProcessor.process(st,
 				this, null);
 		TclParseUtil.addToDeclaration(parent, node);
-		this.convertExecuteToBlocks((TclStatement) node);
+		this.convertExecuteToBlocks(node);
 		TclParseUtil.removeFromDeclaration(parent, node);
 
 		commandToStatement.put(key, node);
@@ -196,9 +196,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 						localProcessor.process(st, this, decl);
 					}
 				} catch (Exception e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
+					TclPlugin.error(e);
 				}
 			}
 		}
