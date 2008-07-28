@@ -39,7 +39,7 @@ public class ITclParseTests extends AbstractModelTests {
 		assertNotNull(module);
 		final ModuleDeclaration declaration = SourceParserUtil
 				.getModuleDeclaration(module, null,
-						ISourceParserConstants.RUNTIME_MODEL);
+						ISourceParserConstants.DEFAULT);
 		final MethodDeclaration[] children = declaration.getFunctions();
 		assertNotNull(children);
 		assertEquals(1, children.length);
