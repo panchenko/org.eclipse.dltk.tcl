@@ -9,16 +9,16 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.core.tests;
 
-import org.eclipse.dltk.tcl.core.tests.launching.TclLaunchingTests;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.dltk.tcl.core.tests.launching.TclLaunchingTests;
 
 public class AllTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.dltk.tcl.core.tests");
+				"Test for org.eclipse.dltk.tcl.core.tests"); //$NON-NLS-1$
 		// $JUnit-BEGIN$
 		suite.addTest(org.eclipse.dltk.tcl.core.tests.model.AllTests.suite());
 		suite.addTest(org.eclipse.dltk.tcl.parser.tests.AllTests.suite());
