@@ -144,8 +144,7 @@ public class PeromanceTest0 extends TestCase {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil
 						.getModuleDeclaration("".toCharArray(), content
 								.toCharArray(), TclNature.NATURE_ID, null,
-								null,
-								ISourceParserConstants.RUNTIME_MODEL);
+								null, ISourceParserConstants.DEFAULT);
 
 				TclMixinBuildVisitor visitor = new TclMixinBuildVisitor(
 						moduleDeclaration, null, false, requestor);
