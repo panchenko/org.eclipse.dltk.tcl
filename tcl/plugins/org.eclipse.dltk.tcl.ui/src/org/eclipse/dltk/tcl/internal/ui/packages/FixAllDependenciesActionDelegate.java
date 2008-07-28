@@ -211,7 +211,7 @@ public class FixAllDependenciesActionDelegate implements
 					// IResource res = module.getResource();
 					ModuleDeclaration declaration = SourceParserUtil
 							.getModuleDeclaration(module, null,
-									ISourceParserConstants.RUNTIME_MODEL);
+									ISourceParserConstants.DEFAULT);
 					processModule(projectToPackages, module, declaration);
 					monitor.worked(1);
 				}
