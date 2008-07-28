@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <script>
-<command end="113" start="0">
+<command end="107" start="0">
 <word end="8" start="0" text="namespace">
 <string text="namespace"/>
 </word>
@@ -10,8 +10,8 @@
 <word end="19" start="15" text="::tcl">
 <string text="::tcl"/>
 </word>
-<word end="113" start="21" text="{&#13;&#10;    &#13;&#10;    namespace export \&#13;&#10;             OptProc &#13;&#10;&#13;&#10;    proc OptCreateTestProc {} {}&#13;&#10;}">
-<braces text="{&#13;&#10;    &#13;&#10;    namespace export \&#13;&#10;             OptProc &#13;&#10;&#13;&#10;    proc OptCreateTestProc {} {}&#13;&#10;}"/>
+<word end="107" start="21" text="{&#10;    &#10;    namespace export \&#10;             OptProc &#10;&#10;    proc OptCreateTestProc {} {}&#10;}">
+<braces text="{&#10;    &#10;    namespace export \&#10;             OptProc &#10;&#10;    proc OptCreateTestProc {} {}&#10;}"/>
 </word>
 </command>
 </script>

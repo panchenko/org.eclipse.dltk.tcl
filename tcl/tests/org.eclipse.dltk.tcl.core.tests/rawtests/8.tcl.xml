@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <script>
-<command end="51" start="0">
+<command end="47" start="0">
 <word end="8" start="0" text="namespace">
 <string text="namespace"/>
 </word>
@@ -10,22 +10,22 @@
 <word end="17" start="15" text="Moo">
 <string text="Moo"/>
 </word>
-<word end="51" start="19" text="{&#13;&#10;&#9;proc vffoo {} {&#13;&#10;&#9;    &#13;&#10;&#9;}&#13;&#10;}">
-<braces text="{&#13;&#10;&#9;proc vffoo {} {&#13;&#10;&#9;    &#13;&#10;&#9;}&#13;&#10;}"/>
+<word end="47" start="19" text="{&#10;&#9;proc vffoo {} {&#10;&#9;    &#10;&#9;}&#10;}">
+<braces text="{&#10;&#9;proc vffoo {} {&#10;&#9;    &#10;&#9;}&#10;}"/>
 </word>
 </command>
-<command end="86" start="60">
-<word end="64" start="61" text="proc">
+<command end="76" start="52">
+<word end="56" start="53" text="proc">
 <string text="proc"/>
 </word>
-<word end="70" start="66" text="vffoo">
+<word end="62" start="58" text="vffoo">
 <string text="vffoo"/>
 </word>
-<word end="73" start="72" text="{}">
+<word end="65" start="64" text="{}">
 <braces text="{}"/>
 </word>
-<word end="86" start="75" text="{&#13;&#10;&#9;    &#13;&#10;&#9;}">
-<braces text="{&#13;&#10;&#9;    &#13;&#10;&#9;}"/>
+<word end="76" start="67" text="{&#10;&#9;    &#10;&#9;}">
+<braces text="{&#10;&#9;    &#10;&#9;}"/>
 </word>
 </command>
 </script>

@@ -8,50 +8,50 @@
 <command text="[expr {$x + 1}]"/>
 </word>
 </command>
-<command end="31" start="24">
-<word end="27" start="24" text="puts">
+<command end="29" start="22">
+<word end="25" start="22" text="puts">
 <string text="puts"/>
 </word>
-<word end="31" start="29" text="wow">
+<word end="29" start="27" text="wow">
 <string text="wow"/>
 </word>
 </command>
-<command end="42" start="36">
-<word end="38" start="36" text="set">
+<command end="38" start="32">
+<word end="34" start="32" text="set">
 <string text="set"/>
 </word>
-<word end="40" start="40" text="y">
+<word end="36" start="36" text="y">
 <string text="y"/>
 </word>
-<word end="42" start="42" text="5">
+<word end="38" start="38" text="5">
 <string text="5"/>
 </word>
 </command>
-<command end="51" start="44">
-<word end="48" start="45" text="puts">
+<command end="47" start="40">
+<word end="44" start="41" text="puts">
 <string text="puts"/>
 </word>
-<word end="51" start="50" text="$y">
-<variable end="51" kind="0" name="y" start="50"/>
+<word end="47" start="46" text="$y">
+<variable end="47" kind="0" name="y" start="46"/>
 </word>
 </command>
-<command end="60" start="54">
-<word end="56" start="54" text="set">
+<command end="55" start="49">
+<word end="51" start="49" text="set">
 <string text="set"/>
 </word>
-<word end="58" start="58" text="y">
+<word end="53" start="53" text="y">
 <string text="y"/>
 </word>
-<word end="60" start="60" text="5">
+<word end="55" start="55" text="5">
 <string text="5"/>
 </word>
 </command>
-<command end="69" start="63">
-<word end="66" start="63" text="puts">
+<command end="63" start="57">
+<word end="60" start="57" text="puts">
 <string text="puts"/>
 </word>
-<word end="69" start="68" text="$y">
-<variable end="69" kind="0" name="y" start="68"/>
+<word end="63" start="62" text="$y">
+<variable end="63" kind="0" name="y" start="62"/>
 </word>
 </command>
 </script>

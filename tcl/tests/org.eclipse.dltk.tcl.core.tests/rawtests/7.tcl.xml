@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <script>
-<command end="23" start="0">
+<command end="21" start="0">
 <word end="3" start="0" text="proc">
 <string text="proc"/>
 </word>
@@ -10,8 +10,8 @@
 <word end="12" start="11" text="{}">
 <braces text="{}"/>
 </word>
-<word end="23" start="14" text="{&#13;&#10;    &#13;&#10;}">
-<braces text="{&#13;&#10;    &#13;&#10;}"/>
+<word end="21" start="14" text="{&#10;    &#10;}">
+<braces text="{&#10;    &#10;}"/>
 </word>
 </command>
 </script>
