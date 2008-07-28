@@ -11,14 +11,14 @@
 <string text="2"/>
 </word>
 </command>
-<command end="15" start="9">
-<word end="11" start="9" text="set">
+<command end="14" start="8">
+<word end="10" start="8" text="set">
 <string text="set"/>
 </word>
-<word end="13" start="13" text="y">
+<word end="12" start="12" text="y">
 <string text="y"/>
 </word>
-<word end="15" start="15" text="2">
+<word end="14" start="14" text="2">
 <string text="2"/>
 </word>
 </command>
