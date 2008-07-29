@@ -51,6 +51,7 @@ public class SearchTests extends AbstractDLTKSearchTests implements
 		if (SCRIPT_PROJECT == null) {
 			SCRIPT_PROJECT = setUpScriptProjectTo(TCLSEARCH, "TCLSearch");
 			setUpScriptProjectTo(TCLSEARCH2, "TCLSearch2");
+			waitUntilIndexesReady();
 		}
 	}
 
