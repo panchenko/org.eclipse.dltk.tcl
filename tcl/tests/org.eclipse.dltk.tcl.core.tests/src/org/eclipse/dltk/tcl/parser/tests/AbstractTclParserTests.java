@@ -14,8 +14,6 @@ package org.eclipse.dltk.tcl.parser.tests;
 import java.io.IOException;
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.compiler.util.Util;
@@ -23,9 +21,11 @@ import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.tests.model.Activator;
 
-public class SmallParserTests extends TestCase {
+import junit.framework.TestCase;
 
-	private char[] readResource(String resourceName) throws IOException {
+public abstract class AbstractTclParserTests extends TestCase {
+
+	protected char[] readResource(String resourceName) throws IOException {
 		final URL resource = Activator.getDefault().getBundle().getEntry(
 				resourceName);
 		assertNotNull(resourceName + " is not found", resource); //$NON-NLS-1$
@@ -33,14 +33,16 @@ public class SmallParserTests extends TestCase {
 				AllParseTests.CHARSET);
 	}
 
-	public void testIfElse() throws IOException {
-		final ISourceParser parser = DLTKLanguageManager
-				.getSourceParser(TclNature.NATURE_ID);
+	protected ISourceParser getParser() {
+		return DLTKLanguageManager.getSourceParser(TclNature.NATURE_ID);
+	}
+
+	protected ProblemCollector parse(final String resourceName)
+			throws IOException {
 		final ProblemCollector collector = new ProblemCollector();
-		parser.parse(null, readResource("scripts/elseif.tcl"), collector); //$NON-NLS-1$
-		if (collector.hasErrors()) {
-			fail(collector.getErrors().toString());
-		}
+		getParser().parse(resourceName.toCharArray(),
+				readResource(resourceName), collector);
+		return collector;
 	}
 
 }

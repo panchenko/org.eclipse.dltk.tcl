@@ -20,7 +20,7 @@ public class AllTests {
 		// $JUnit-BEGIN$
 		suite.addTest(AllParseTests.suite());
 		suite.addTestSuite(SimpleParserTests.class);
-		suite.addTestSuite(SmallParserTests.class);
+		suite.addTestSuite(TclIfProcessorTests.class);
 		// $JUnit-END$
 		return suite;
 	}
