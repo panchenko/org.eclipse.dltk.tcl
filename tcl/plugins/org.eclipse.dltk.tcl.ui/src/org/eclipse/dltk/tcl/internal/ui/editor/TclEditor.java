@@ -12,10 +12,8 @@ package org.eclipse.dltk.tcl.internal.ui.editor;
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.internal.ui.actions.FoldingActionGroup;
-import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.internal.ui.editor.ScriptOutlinePage;
-import org.eclipse.dltk.internal.ui.editor.ToggleCommentAction;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.text.TclPairMatcher;
@@ -23,25 +21,22 @@ import org.eclipse.dltk.tcl.internal.ui.text.folding.TclFoldingStructureProvider
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.PreferenceConstants;
-import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
+import org.eclipse.dltk.ui.actions.GenerateActionGroup;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
-import org.eclipse.ui.texteditor.TextOperationAction;
 
 public class TclEditor extends ScriptEditor {
 	public static final String EDITOR_ID = "org.eclipse.dltk.tcl.ui.editor.TclEditor"; //$NON-NLS-1$
@@ -54,51 +49,18 @@ public class TclEditor extends ScriptEditor {
 
 	private TclPairMatcher bracketMatcher;
 
-	private void configureToggleCommentAction() {
-		IAction action = getAction("ToggleComment"); //$NON-NLS-1$
-		if (action instanceof ToggleCommentAction) {
-			ISourceViewer sourceViewer = getSourceViewer();
-			SourceViewerConfiguration configuration = getSourceViewerConfiguration();
-			((ToggleCommentAction) action).configure(sourceViewer,
-					configuration);
-		}
-	}
-
 	protected void initializeEditor() {
 		super.initializeEditor();
-
+		
 		setEditorContextMenuId(EDITOR_CONTEXT);
 		setRulerContextMenuId(RULER_CONTEXT);
 	}
 
 	protected void createActions() {
 		super.createActions();
-
-		// Comment
-		Action action = new TextOperationAction(DLTKEditorMessages
-				.getBundleForConstructedKeys(),
-				"Comment.", this, ITextOperationTarget.PREFIX); //$NON-NLS-1$
-		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.COMMENT);
-		setAction("Comment", action); //$NON-NLS-1$
-		markAsStateDependentAction("Comment", true); //$NON-NLS-1$
-
-		// Uncomment
-		action = new TextOperationAction(DLTKEditorMessages
-				.getBundleForConstructedKeys(),
-				"Uncomment.", this, ITextOperationTarget.STRIP_PREFIX); //$NON-NLS-1$
-		action
-				.setActionDefinitionId(IScriptEditorActionDefinitionIds.UNCOMMENT);
-		setAction("Uncomment", action); //$NON-NLS-1$
-		markAsStateDependentAction("Uncomment", true); //$NON-NLS-1$
-
-		// Toggle comment
-		action = new ToggleCommentAction(DLTKEditorMessages
-				.getBundleForConstructedKeys(), "ToggleComment.", this); //$NON-NLS-1$
-		action
-				.setActionDefinitionId(IScriptEditorActionDefinitionIds.TOGGLE_COMMENT);
-		setAction("ToggleComment", action); //$NON-NLS-1$
-		markAsStateDependentAction("ToggleComment", true); //$NON-NLS-1$
-		configureToggleCommentAction();
+		ActionGroup generateActions = new GenerateActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+		fActionGroups.addGroup(generateActions);
+		fContextMenuGroup.addGroup(generateActions);
 	}
 
 	final static String[] properties = new String[] {
@@ -129,15 +91,15 @@ public class TclEditor extends ScriptEditor {
 	}
 
 	protected IPreferenceStore getScriptPreferenceStore() {
-		return TclUI.getDefault().getPreferenceStore();
+		return TclUI.getDefault().getPreferenceStore(); 
 	}
-
+	
 	public ScriptTextTools getTextTools() {
 		return TclUI.getDefault().getTextTools();
 	}
 
 	protected ScriptOutlinePage doCreateOutlinePage() {
-		return new TclOutlinePage(this, TclUI.getDefault().getPreferenceStore());
+		return new TclOutlinePage(this, TclUI.getDefault().getPreferenceStore());		
 	}
 
 	protected void connectPartitioningToElement(IEditorInput input,
@@ -155,7 +117,7 @@ public class TclEditor extends ScriptEditor {
 		if (foldingProvider == null) {
 			foldingProvider = new TclFoldingStructureProvider();
 		}
-
+		
 		return foldingProvider;
 	}
 
@@ -202,7 +164,7 @@ public class TclEditor extends ScriptEditor {
 		int sourceCaretOffset = selection.getOffset() + selection.getLength();
 		if (isSurroundedByBrackets(document, sourceCaretOffset))
 			sourceCaretOffset -= selection.getLength();
-
+		
 		IRegion region = bracketMatcher.match(document, sourceCaretOffset);
 		if (region == null) {
 			setStatusLineErrorMessage("No matching bracket found");

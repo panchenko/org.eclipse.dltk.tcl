@@ -415,6 +415,18 @@
             targetID="org.eclipse.dltk.ui.ScriptCodingActionSet">
          <part id="org.eclipse.dltk.tcl.ui.editor.TclEditor"/>
       </actionSetPartAssociation>
+      <actionSetPartAssociation
+            targetID="org.eclipse.dltk.tcl.ui.SearchActionSet">
+         <part
+               id="org.eclipse.dltk.ui.ScriptExplorer">
+         </part>
+         <part
+               id="org.eclipse.dltk.tcl.ui.editor.TclEditor">
+         </part>
+         <part
+               id="org.eclipse.search.SearchResultView">
+         </part>
+      </actionSetPartAssociation>
  </extension>
 	<extension
 		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer"
@@ -455,21 +467,6 @@
           nature="org.eclipse.dltk.tcl.core.nature"/>
  </extension>
    
-    <extension
-         point="org.eclipse.ui.actionSetPartAssociations">
-      <actionSetPartAssociation
-            targetID="org.eclipse.dltk.tcl.ui.SearchActionSet">
-         <part
-               id="org.eclipse.dltk.ui.ScriptExplorer">
-         </part>
-         <part
-               id="org.eclipse.dltk.tcl.ui.editor.TclEditor">
-         </part>
-         <part
-               id="org.eclipse.search.SearchResultView">
-         </part>
-      </actionSetPartAssociation>
-   </extension>   
    
    
    <!-- <extension
