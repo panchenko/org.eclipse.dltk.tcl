@@ -73,7 +73,7 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 
 	private CommandInfo checkInstanceOperations(ModuleDeclaration module,
 			ASTNode parent, TclStatement statement, ITclParser parser) {
-		if (runtimeModel) {
+		if (false) {// runtimeModel
 			return null;
 		}
 		Expression commandName = statement.getAt(0);
@@ -188,7 +188,7 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 		Expression arg = statement.getAt(1);
 		if (arg instanceof SimpleReference) {
 			String value = ((SimpleReference) arg).getName();
-			if (!runtimeModel) {
+			if (true) {// !runtimeModel
 				TypeDeclaration type = TclParseUtil
 						.findXOTclTypeDeclarationFrom(module, parent, "Class");
 				// if (type != null) {
