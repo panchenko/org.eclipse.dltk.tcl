@@ -247,10 +247,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 				return processor;
 			}
 		}
-		if (!isBuildingRuntimeModel()) {
-			return this.localProcessor;
-		}
-		return null;
+		return this.localProcessor;
 	}
 
 	public CodeModel getCodeModel() {
