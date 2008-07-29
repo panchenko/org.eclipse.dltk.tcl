@@ -221,7 +221,7 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 		ASTNode node = context.get();
 		if (node instanceof TclBlockExpression) {
 			TclBlockExpression bl = (TclBlockExpression) node;
-			List parseBlock = bl.parseBlockSimple();
+			List parseBlock = bl.parseBlockSimple(false);
 			ASTListNode list = new ASTListNode(bl.sourceStart() + 1, bl
 					.sourceEnd() - 1);
 			for (int j = 0; j < parseBlock.size(); j++) {
