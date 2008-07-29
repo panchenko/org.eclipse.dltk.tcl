@@ -387,13 +387,13 @@ public class TclCommandProcessorTests extends TestCase {
 	public void testTclSwitchProcessor002() throws TclParseException {
 		String script = "switch -glob aaab {" + "	a*b -" + "	b {" + "		expr 1"
 				+ "	} " + "	a* {" + "		expr 2" + "	} " + "	default {"
-				+ "		expr 3" + "}";
+				+ "		expr 3" + "}" + " }";
 		testTclSwitchProcessor(script, 3);
 	}
 
 	public void testTclSwitchProcessor003() throws TclParseException {
 		String script = "switch -exact -regexp -glob \"\" {"
-				+ "	[func] {puts py!}" + "	default {puts boo}";
+				+ "	[func] {puts py!}" + "	default {puts boo}" + " }";
 		testTclSwitchProcessor(script, 2);
 	}
 
