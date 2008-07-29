@@ -17,6 +17,7 @@ import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclInstanceVariable;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclMethodCallStatement;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclMethodDeclaration;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclObjectDeclaration;
+import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclProcCallStatement;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclVariableDeclaration;
 import org.eclipse.dltk.xotcl.internal.core.parser.processors.xotcl.XOTclClassAllProcProcessor;
 import org.eclipse.dltk.xotcl.internal.core.parser.processors.xotcl.XOTclClassMethodCallProcessor;
@@ -26,6 +27,7 @@ import org.eclipse.dltk.xotcl.internal.core.parser.processors.xotcl.XOTclObjectC
 import org.eclipse.dltk.xotcl.internal.core.parser.processors.xotcl.XOTclObjectSetProcessor;
 
 public class XOTclCommandProcessorTests extends TestCase {
+
 	public void testClassCreateCommandProcessor005() throws Throwable {
 		String content1 = "Class ClubMember -superclass MySuperClass -parameter {title goal {name \"\"}}";
 		String content2 = "Class create ClubMember -superclass MySuperClass -parameter {title goal {name \"\"}}";
@@ -68,15 +70,15 @@ public class XOTclCommandProcessorTests extends TestCase {
 		AbstractTclCommandProcessor processor = new XOTclObjectCreateProcessor();
 
 		ASTNode statement = processor.process(TclCommandProcessorTests
-				.toCommand(content1), new TestTclParser(content1),  null);
+				.toCommand(content1), new TestTclParser(content1), null);
 		testObjectCreateProcessor(statement);
 		statement = processor.process(TclCommandProcessorTests
-				.toCommand(content2), new TestTclParser(content2),  null);
+				.toCommand(content2), new TestTclParser(content2), null);
 		testObjectCreateProcessor(statement);
 	}
 
 	private void testObjectCreateProcessor(ASTNode statement) // making
-																// assertions
+	// assertions
 	{
 		assertNotNull(statement);
 		assertTrue(statement instanceof XOTclObjectDeclaration);
@@ -86,14 +88,14 @@ public class XOTclCommandProcessorTests extends TestCase {
 		assertTrue(0 != (IXOTclModifiers.AccXOTclObject & decl.getModifiers()));
 	}
 
-	public void testObjectSetProcessor() throws TclParseException {
+	public void testObjectSetProcessor001() throws TclParseException {
 		String content = "obj set field value";
 		AbstractTclCommandProcessor processor = new XOTclObjectSetProcessor();
 
 		processor
 				.setDetectedParameter(new TypeDeclaration("Object", 0, 0, 0, 0));
 		ASTNode statement = processor.process(TclCommandProcessorTests
-				.toCommand(content), new TestTclParser(content),  null);
+				.toCommand(content), new TestTclParser(content), null);
 		assertNotNull(statement);
 		assertTrue(statement instanceof FieldDeclaration);
 		XOTclVariableDeclaration decl = (XOTclVariableDeclaration) statement;
@@ -105,6 +107,20 @@ public class XOTclCommandProcessorTests extends TestCase {
 		// decl.getDeclaringType().getModifiers())!=0);
 	}
 
+	public void testObjectSetProcessor002() throws TclParseException {
+		String content = "obj set field";
+		AbstractTclCommandProcessor processor = new XOTclObjectSetProcessor();
+
+		processor
+				.setDetectedParameter(new TypeDeclaration("Object", 0, 0, 0, 0));
+		ASTNode statement = processor.process(TclCommandProcessorTests
+				.toCommand(content), new TestTclParser(content), null);
+		assertNotNull(statement);
+		assertTrue(statement instanceof XOTclProcCallStatement);
+		XOTclProcCallStatement call = (XOTclProcCallStatement) statement;
+		assertEquals("set", call.getCallName().getName());
+	}
+
 	public void testXOTclProcCallProcessor() throws TclParseException {
 		String content = "obj procedure arg0";
 		AbstractTclCommandProcessor processor = new XOTclClassMethodCallProcessor();
@@ -112,7 +128,7 @@ public class XOTclCommandProcessorTests extends TestCase {
 		processor.setDetectedParameter(new XOTclInstanceVariable("obj", 0, 0,
 				0, 0));
 		ASTNode statement = processor.process(TclCommandProcessorTests
-				.toCommand(content), new TestTclParser(content),  null);
+				.toCommand(content), new TestTclParser(content), null);
 		assertNotNull(statement);
 		assertTrue(statement instanceof XOTclMethodCallStatement);
 		XOTclMethodCallStatement methodCall = (XOTclMethodCallStatement) statement;
@@ -128,7 +144,7 @@ public class XOTclCommandProcessorTests extends TestCase {
 		processor.setDetectedParameter(new TypeDeclaration("ClassName", 0, 0,
 				0, 0));
 		ASTNode statement = processor.process(TclCommandProcessorTests
-				.toCommand(content), new TestTclParser(content),  null);
+				.toCommand(content), new TestTclParser(content), null);
 		assertNotNull(statement);
 		assertTrue(statement instanceof XOTclInstanceVariable);
 		XOTclInstanceVariable var = (XOTclInstanceVariable) statement;
@@ -143,7 +159,7 @@ public class XOTclCommandProcessorTests extends TestCase {
 		processor.setDetectedParameter(new XOTclInstanceVariable("Foo", 0, 0,
 				0, 0));
 		ASTNode statement = processor.process(TclCommandProcessorTests
-				.toCommand(content), new TestTclParser(content),  null);
+				.toCommand(content), new TestTclParser(content), null);
 		assertNotNull(statement);
 		assertTrue(statement instanceof XOTclMethodCallStatement);
 		XOTclMethodCallStatement methodCall = (XOTclMethodCallStatement) statement;
@@ -176,7 +192,7 @@ public class XOTclCommandProcessorTests extends TestCase {
 		processor
 				.setDetectedParameter(new TypeDeclaration("Object", 0, 0, 0, 0));
 		ASTNode statement = processor.process(TclCommandProcessorTests
-				.toCommand(content), new TestTclParser(content),  null);
+				.toCommand(content), new TestTclParser(content), null);
 		assertNotNull(statement);
 		assertTrue(statement instanceof XOTclMethodDeclaration);
 		ExtendedTclMethodDeclaration decl = (ExtendedTclMethodDeclaration) statement;
@@ -186,14 +202,14 @@ public class XOTclCommandProcessorTests extends TestCase {
 		assertTrue(0 != (IXOTclModifiers.AccXOTcl & decl.getModifiers()));
 	}
 
-	// making assertion on the content
+	// making assertions on the content
 	private void testXOTclClassAllProcProcessor(String content, Object parameter)
 			throws TclParseException {
 		AbstractTclCommandProcessor processor = new XOTclClassAllProcProcessor();
 
 		processor.setDetectedParameter(parameter);
 		ASTNode statement = processor.process(TclCommandProcessorTests
-				.toCommand(content), new TestTclParser(content),  null);
+				.toCommand(content), new TestTclParser(content), null);
 		assertNotNull(statement);
 		assertTrue(statement instanceof XOTclMethodDeclaration);
 		ExtendedTclMethodDeclaration decl = (ExtendedTclMethodDeclaration) statement;
