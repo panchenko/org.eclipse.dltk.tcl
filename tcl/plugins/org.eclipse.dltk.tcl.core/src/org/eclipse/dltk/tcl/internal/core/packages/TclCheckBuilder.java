@@ -12,7 +12,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.parser.ISourceParserConstants;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
@@ -23,8 +22,6 @@ import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.dltk.core.SourceParserUtil.IContentAction;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -79,19 +76,8 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	public void build(ISourceModule module, ModuleDeclaration ast,
 			IProblemReporter reporter) throws CoreException {
-		final IContentAction action = new IContentAction() {
-			public void run(ISourceModule cmodule, char[] content) {
-				codeModels.put(cmodule, new CodeModel(new String(content)));
-			}
-		};
-		final ModuleDeclaration declaration = SourceParserUtil
-				.getModuleDeclaration(module, null,
-						ISourceParserConstants.DEFAULT, action);
-		if (declaration == null) {
-			return;
-		}
 		packageCollector.getRequireDirectives().clear();
-		packageCollector.process(declaration);
+		packageCollector.process(ast);
 		if (!packageCollector.getRequireDirectives().isEmpty()) {
 			resourceToModuleInfos.put(module, new ModuleInfo(reporter,
 					new ArrayList(packageCollector.getRequireDirectives())));
