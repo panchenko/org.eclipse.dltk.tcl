@@ -135,13 +135,18 @@ public class TclSourceParser extends AbstractSourceParser implements
 
 				TclExecuteExpression tclExecuteExpression = ((TclExecuteExpression) nodes[i]);
 				String expression = tclExecuteExpression.getExpression();
-				expression = expression.substring(1, expression.length() - 1);
-				TclAdvancedExecuteExpression newExpr = new TclAdvancedExecuteExpression(
-						nodes[i].sourceStart() + 1, nodes[i].sourceEnd() - 1);
-				nodes[i] = newExpr;
-				st.setExpressions(Arrays.asList(nodes));
-				TclSourceParser.this.parse(expression, nodes[i].sourceStart()
-						- getStartPos(), newExpr);
+				if (expression.length() > 2) {
+					expression = expression.substring(1,
+							expression.length() - 1);
+					TclAdvancedExecuteExpression newExpr = new TclAdvancedExecuteExpression(
+							nodes[i].sourceStart() + 1,
+							nodes[i].sourceEnd() - 1);
+					nodes[i] = newExpr;
+					st.setExpressions(Arrays.asList(nodes));
+					TclSourceParser.this.parse(expression, nodes[i]
+							.sourceStart()
+							- getStartPos(), newExpr);
+				}
 			}
 		}
 		st.setExpressions(Arrays.asList(nodes));

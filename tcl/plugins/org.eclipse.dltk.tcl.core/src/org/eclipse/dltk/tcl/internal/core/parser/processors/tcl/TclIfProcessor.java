@@ -8,7 +8,6 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
@@ -23,8 +22,7 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 	private static final String ELSE = "else"; //$NON-NLS-1$
 	private static final String ELSEIF = "elseif"; //$NON-NLS-1$
 
-	private static class IfStatementError extends RuntimeException {
-
+	private static class IfStatementError extends Exception {
 		final int start;
 		final int end;
 
@@ -106,16 +104,16 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 						ProblemSeverities.Error);
 			}
 		} catch (IfStatementError e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
+			// if (DLTKCore.DEBUG) {
+			// e.printStackTrace();
+			// }
 			report(parser, e.getMessage(), e.start, e.end,
 					ProblemSeverities.Error);
 		}
 		return ifStatement;
 	}
 
-	private void parseIf(IfContext context, IfStatement ifStatement) {
+	private void parseIf(IfContext context, IfStatement ifStatement) throws IfStatementError {
 		ifStatement.acceptCondition(parseCondition(context));
 		if (context.isEOF()) {
 			throw new IfStatementError(
@@ -153,7 +151,7 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 	}
 
 	private Statement parseBranch(IfContext context, boolean wrapAsBlock,
-			String message) {
+			String message) throws IfStatementError {
 		final ASTNode node = context.get();
 		if (node instanceof TclBlockExpression) {
 			final Block block = new Block(node.sourceStart(), node.sourceEnd());
@@ -212,7 +210,7 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 				- parser.getStartPos(), el);
 	}
 
-	private ASTNode parseCondition(IfContext context) {
+	private ASTNode parseCondition(IfContext context) throws IfStatementError {
 		if (context.isEOF()) {
 			throw new IfStatementError(
 					Messages.TclIfProcessor_missingCondition, context.start(),

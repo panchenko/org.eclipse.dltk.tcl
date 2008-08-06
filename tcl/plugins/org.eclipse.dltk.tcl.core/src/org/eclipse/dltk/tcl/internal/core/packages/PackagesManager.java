@@ -7,11 +7,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,6 +67,7 @@ public class PackagesManager {
 	 * Contains set of interpreter to list of packages association.
 	 */
 	private Map interpreterToPackages = new HashMap();
+	private Map packsWithDeps = new HashMap();
 
 	public static PackagesManager getInstance() {
 		if (manager == null) {
@@ -425,6 +428,9 @@ public class PackagesManager {
 	}
 
 	private String getInterpreterKey(IInterpreterInstall install) {
+		if( install == null ) {
+			return "";
+		}
 		return install.getInstallLocation().toOSString() + ":" //$NON-NLS-1$
 				+ install.getEnvironment().getId();
 	}
@@ -553,6 +559,7 @@ public class PackagesManager {
 	public synchronized void clearCache() {
 		this.interpreterToPackages.clear();
 		this.packages.clear();
+		this.packsWithDeps.clear();
 		save();
 	}
 
@@ -573,6 +580,12 @@ public class PackagesManager {
 
 	public IPath[] getPathsForPackagesWithDeps(IInterpreterInstall install,
 			Set packagesSet) {
+
+		String pkey = makePKey(packagesSet);
+		if( this.packsWithDeps.containsKey(pkey)) {
+			return (IPath[]) this.packsWithDeps.get(pkey);
+		}
+
 		Set result = new HashSet();
 		IPath[] paths = this.getPathsForPackages(install, packagesSet);
 		result.addAll(Arrays.asList(paths));
@@ -587,6 +600,20 @@ public class PackagesManager {
 						.asList(getPathsForPackage(install, pkgName)));
 			}
 		}
-		return (IPath[]) result.toArray(new IPath[result.size()]);
+		IPath[] array = (IPath[]) result.toArray(new IPath[result.size()]);
+		this.packsWithDeps.put(pkey, array);
+		return array;
+	}
+
+	private String makePKey(Set packagesSet) {
+		StringBuffer buffer = new StringBuffer();
+		List l = new ArrayList();
+		l.addAll(packagesSet);
+		Collections.sort(l);
+		for (Iterator iterator = l.iterator(); iterator.hasNext();) {
+			String object = (String) iterator.next();
+			buffer.append(object);
+		}
+		return buffer.toString();
 	}
 }

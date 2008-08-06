@@ -60,22 +60,39 @@ public class TclCheckBuilder implements IBuildParticipant,
 	public TclCheckBuilder(IScriptProject project) throws CoreException {
 		this.project = project;
 		install = ScriptRuntime.getInterpreterInstall(project);
-		knownPackageNames = manager.getPackageNames(install);
-		buildpath = getBuildpath(project);
+		if (install != null) {
+			knownPackageNames = manager.getPackageNames(install);
+			buildpath = getBuildpath(project);
+		}
+		else {
+			knownPackageNames = new HashSet();
+			buildpath = new HashSet();
+		}
 	}
 
 	private int buildType;
 
 	public void beginBuild(int buildType) {
+		if( install == null ) {
+			return;
+		}
 		this.buildType = buildType;
 		if (buildType != FULL_BUILD) {
 			packageCollector.getPackagesProvided().addAll(
 					manager.getInternalPackageNames(install, project));
 		}
+		// This method will populate all required paths.
+		manager.getPathsForPackages(install, packageCollector
+				.getPackagesRequired());
+		manager.getPathsForPackagesWithDeps(install, packageCollector
+				.getPackagesRequired());
 	}
 
 	public void build(ISourceModule module, ModuleDeclaration ast,
 			IProblemReporter reporter) throws CoreException {
+		if( install == null ) {
+			return;
+		}
 		packageCollector.getRequireDirectives().clear();
 		packageCollector.process(ast);
 		if (!packageCollector.getRequireDirectives().isEmpty()) {
@@ -85,16 +102,14 @@ public class TclCheckBuilder implements IBuildParticipant,
 	}
 
 	public void endBuild() {
+		if( install == null ) {
+			return;
+		}
 		// TODO re-process files with our errors
 		if (buildType != STRUCTURE_BUILD) {
 			manager.setInternalPackageNames(install, project, packageCollector
 					.getPackagesProvided());
 		}
-		// This method will populate all required paths.
-		manager.getPathsForPackages(install, packageCollector
-				.getPackagesRequired());
-		manager.getPathsForPackagesWithDeps(install, packageCollector
-				.getPackagesRequired());
 		for (Iterator i = resourceToModuleInfos.entrySet().iterator(); i
 				.hasNext();) {
 			final Map.Entry entry = (Map.Entry) i.next();
