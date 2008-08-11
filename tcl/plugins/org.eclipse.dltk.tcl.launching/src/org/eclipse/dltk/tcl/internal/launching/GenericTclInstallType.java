@@ -17,19 +17,26 @@ import java.util.Map;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.launching.AbstractInterpreterInstallType;
+import org.eclipse.dltk.internal.launching.InterpreterMessages;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.LibraryLocation;
+import org.eclipse.dltk.launching.ScriptLaunchUtil;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.core.packages.DLTKTclHelper;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 public class GenericTclInstallType extends AbstractInterpreterInstallType {
+	private static final String CORRECT_INTERPRETER_PATTERN = "#DLTK INTERPRETER TEST:5";
+
 	private static final String INSTALL_TYPE_NAME = "Generic Tcl";
 
 	private static final String[] INTERPRETER_NAMES = { "tclsh", "tclsh84",
@@ -42,7 +49,7 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 			"expect",
 
 			"base-tcl-linux", "base-tk-linux",
-			
+
 			"base-tcl-thread", "base-tk-thread", "base-tcl8.5-thread",
 			"base-tk8.5-thread" };
 
@@ -73,8 +80,39 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 		environment.remove("DISPLAY");
 	}
 
-	protected ILookupRunnable createLookupRunnable(final IFileHandle installLocation,
-			final List locations, final EnvironmentVariable[] variables) {
+	public IStatus validateInstallLocation(IFileHandle installLocation) {
+		if (!installLocation.exists() || !installLocation.isFile()) {
+			return createStatus(IStatus.ERROR,
+					InterpreterMessages.errNonExistentOrInvalidInstallLocation,
+					null);
+		}
+		IEnvironment environment = installLocation.getEnvironment();
+		IExecutionEnvironment executionEnvironment = (IExecutionEnvironment) environment
+				.getAdapter(IExecutionEnvironment.class);
+
+		String output = ScriptLaunchUtil.runEmbeddedScriptReadContent(
+				executionEnvironment, "scripts/test.tcl", TclLaunchingPlugin
+						.getDefault().getBundle(), installLocation,
+				new NullProgressMonitor());
+		String[] lines = output.split("\\n");
+		boolean correct = false;
+		for (int i = 0; i < lines.length; i++) {
+			if (CORRECT_INTERPRETER_PATTERN.equals(lines[i])) {
+				correct = true;
+			}
+		}
+
+		if (correct) {
+			return createStatus(IStatus.OK, "", null); //$NON-NLS-1$
+		} else {
+			return createStatus(IStatus.ERROR,
+					InterpreterMessages.errNoInterpreterExecutablesFound, null);
+		}
+	}
+
+	protected ILookupRunnable createLookupRunnable(
+			final IFileHandle installLocation, final List locations,
+			final EnvironmentVariable[] variables) {
 		return new ILookupRunnable() {
 			public void run(IProgressMonitor monitor) {
 				// This retrieval could not receive paths in some cases.
