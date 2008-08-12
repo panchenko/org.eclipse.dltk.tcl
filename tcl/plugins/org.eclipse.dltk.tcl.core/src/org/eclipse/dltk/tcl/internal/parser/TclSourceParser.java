@@ -41,6 +41,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 	private int startPos = 0;
 	boolean useProcessors = true;
 	private int flags;
+	private boolean useDetectors = true;
 
 	Map commandToStatement = new HashMap();
 
@@ -87,6 +88,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 
 	public ModuleDeclaration parse(char[] fileName, char[] source,
 			IProblemReporter reporter) {
+		detectors = CommandManager.getInstance().getDetectors();
 		this.problemReporter = reporter;
 		this.content = new String(source);
 		this.codeModel = new CodeModel(this.content);
@@ -126,6 +128,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		public void setDetectedParameter(Object parameter) {
 		}
 	};
+	private ITclCommandDetector[] detectors;
 
 	private void convertExecuteToBlocks(TclStatement st) {
 		ASTNode[] nodes = (ASTNode[]) st.getExpressions().toArray(
@@ -173,6 +176,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 	}
 
 	public void parse(String content, int offset, ASTNode decl) {
+		//detectors = CommandManager.getInstance().getDetectors();
 		commandToStatement.clear();
 		TclScript script = null;
 		try {
@@ -197,8 +201,16 @@ public class TclSourceParser extends AbstractSourceParser implements
 					offset, decl);
 			if (processor != null) {
 				try {
-					if (processor.process(st, this, decl) == null) {
-						localProcessor.process(st, this, decl);
+					ASTNode nde = processor.process(st, this, decl);
+					if (nde == null) {
+						nde = localProcessor.process(st, this, decl);
+					}
+					if (nde != null && this.useDetectors) {
+						for (int i = 0; i < this.detectors.length; i++) {
+							if (detectors[i] != null) {
+								detectors[i].processASTNode(nde);
+							}
+						}
 					}
 				} catch (Exception e) {
 					TclPlugin.error(e);
@@ -227,23 +239,26 @@ public class TclSourceParser extends AbstractSourceParser implements
 					.getProcessor(name);
 			if (processor == null) {
 				// advanced command detection.
-				ITclCommandDetector[] detectors = CommandManager.getInstance()
-						.getDetectors();
-				for (int i = 0; i < detectors.length; i++) {
-					if (detectors[i] instanceof ITclCommandDetectorExtension) {
-						((ITclCommandDetectorExtension) detectors[i])
-								.setBuildRuntimeModelFlag(isBuildingRuntimeModel());
-					}
-					CommandInfo commandName = detectors[i].detectCommand(
-							command, this.moduleDeclaration, this, decl);
-					if (commandName != null) {
-						processor = CommandManager.getInstance().getProcessor(
-								commandName.commandName);
-						if (processor != null) {
-							processor
-									.setDetectedParameter(commandName.parameter);
+				if (this.useDetectors) {
+					for (int i = 0; i < detectors.length; i++) {
+						if (detectors[i] == null) {
+							continue;
 						}
-						break;
+						if (detectors[i] instanceof ITclCommandDetectorExtension) {
+							((ITclCommandDetectorExtension) detectors[i])
+									.setBuildRuntimeModelFlag(isBuildingRuntimeModel());
+						}
+						CommandInfo commandName = detectors[i].detectCommand(
+								command, this.moduleDeclaration, this, decl);
+						if (commandName != null) {
+							processor = CommandManager.getInstance()
+									.getProcessor(commandName.commandName);
+							if (processor != null) {
+								processor
+										.setDetectedParameter(commandName.parameter);
+							}
+							break;
+						}
 					}
 				}
 			}
@@ -303,6 +318,10 @@ public class TclSourceParser extends AbstractSourceParser implements
 	}
 
 	private boolean isBuildingRuntimeModel() {
-		return true; // (flags & ISourceParserConstants.RUNTIME_MODEL) != 0
+		return false; // (flags & ISourceParserConstants.RUNTIME_MODEL) != 0
+	}
+
+	public void setUseDetectors(boolean b) {
+		this.useDetectors = false;
 	}
 }
