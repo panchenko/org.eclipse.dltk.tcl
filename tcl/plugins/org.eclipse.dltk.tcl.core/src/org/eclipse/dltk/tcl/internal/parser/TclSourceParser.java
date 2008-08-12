@@ -88,7 +88,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 
 	public ModuleDeclaration parse(char[] fileName, char[] source,
 			IProblemReporter reporter) {
-		detectors = CommandManager.getInstance().getDetectors();
+		initDetectors();
 		this.problemReporter = reporter;
 		this.content = new String(source);
 		this.codeModel = new CodeModel(this.content);
@@ -98,6 +98,12 @@ public class TclSourceParser extends AbstractSourceParser implements
 
 		this.parse(this.content, 0, moduleDeclaration);
 		return moduleDeclaration;
+	}
+
+	private void initDetectors() {
+		if (detectors == null) {
+			detectors = CommandManager.getInstance().getDetectors();
+		}
 	}
 
 	ITclCommandProcessor localProcessor = new ITclCommandProcessor() {
@@ -176,7 +182,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 	}
 
 	public void parse(String content, int offset, ASTNode decl) {
-		//detectors = CommandManager.getInstance().getDetectors();
+		initDetectors();
 		commandToStatement.clear();
 		TclScript script = null;
 		try {
