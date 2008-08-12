@@ -1,5 +1,8 @@
 package org.eclipse.dltk.itcl.internal.core.parser;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -27,6 +30,7 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 			"local", "scope" };
 	private String prefix = "itcl::";
 	private boolean runtimeModel = false;
+	private Set names = new HashSet();
 
 	public static class IncrTclGlobalClassParameter {
 		private String name;
@@ -104,27 +108,44 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 			return null;
 		}
 		String commandNameValue = ((SimpleReference) commandName).getName();
-
-		TypeDeclaration type = TclParseUtil.findXOTclTypeDeclarationFrom(
-				module, parent, commandNameValue);
-		if (statement.getCount() == 1) {
-			return null;
+		String[] names = null;
+		if (commandNameValue.startsWith("::")) {
+			names = commandNameValue.substring(2).split("::");
+		} else {
+			names = commandNameValue.split("::");
 		}
-		Expression arg = statement.getAt(1);
-		if (type != null) {
-			if (arg instanceof SimpleReference) {
-				return check(type, (SimpleReference) arg);
+
+		boolean found = false;
+		for (int i = 0; i < names.length; i++) {
+			if (this.names.contains(names[i])) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			TypeDeclaration type = TclParseUtil.findXOTclTypeDeclarationFrom(
+					module, parent, commandNameValue);
+			if (statement.getCount() == 1) {
+				return null;
+			}
+			Expression arg = statement.getAt(1);
+			if (type != null) {
+				if (arg instanceof SimpleReference) {
+					return check(type, (SimpleReference) arg);
+				}
 			}
 		}
 
 		// Lets check possibly this is method call for existing instance
 		// variable.
-		FieldDeclaration variable = IncrTclParseUtil
-				.findInstanceVariableDeclarationFrom(module, parent,
-						commandNameValue);
-		if (variable != null) {
-			// Add support of procs etc.
-			return new CommandInfo("#itcl#$methodCall", variable);
+		if (found) {
+			FieldDeclaration variable = IncrTclParseUtil
+					.findInstanceVariableDeclarationFrom(module, parent,
+							commandNameValue);
+			if (variable != null) {
+				// Add support of procs etc.
+				return new CommandInfo("#itcl#$methodCall", variable);
+			}
 		}
 
 		// class list check operation.
@@ -158,5 +179,27 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 
 	public void setBuildRuntimeModelFlag(boolean value) {
 		this.runtimeModel = value;
+	}
+
+	public void processASTNode(ASTNode node) {
+		String name = null;
+		if (node instanceof FieldDeclaration) {
+			FieldDeclaration decl = (FieldDeclaration) node;
+			name = decl.getName();
+		} else if (node instanceof TypeDeclaration) {
+			TypeDeclaration decl = (TypeDeclaration) node;
+			name = decl.getName();
+		}
+		if (name != null) {
+			String[] names = null;
+			if (name.startsWith("::")) {
+				names = name.substring(2).split("::");
+			} else {
+				names = name.split("::");
+			}
+			for (int i = 0; i < names.length; i++) {
+				this.names.add(names[i]);
+			}
+		}
 	}
 }
