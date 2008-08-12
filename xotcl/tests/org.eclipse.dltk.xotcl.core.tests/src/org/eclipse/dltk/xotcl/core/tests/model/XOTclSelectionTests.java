@@ -852,7 +852,8 @@ public class XOTclSelectionTests extends AbstractModelCompletionTests {
 		assertEquals(field, element);
 	}
 
-	public void testSelection046() throws ModelException {
+	public void testSelection046() throws Exception {
+		setUpSuite();
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection004.tcl");
 		String s = "c1_inst foo";
