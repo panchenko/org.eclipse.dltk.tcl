@@ -1,5 +1,8 @@
 package org.eclipse.dltk.xotcl.internal.core.parser;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -24,6 +27,8 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 	public static boolean INTERPRET_CLASS_UNKNOWN_AS_CREATE = true;
 	public static boolean INTERPRET_OBJECT_UNKNOWN_AS_CREATE = true;
 	private boolean runtimeModel = false;
+
+	private Set names = new HashSet();
 
 	public static class XOTclGlobalClassParameter {
 		private String name;
@@ -81,40 +86,58 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 			return null;
 		}
 		String commandNameValue = ((SimpleReference) commandName).getName();
+		String[] names = null;
+		if (commandNameValue.startsWith("::")) {
+			names = commandNameValue.substring(2).split("::");
+		} else {
+			names = commandNameValue.split("::");
+		}
 
-		TypeDeclaration type = TclParseUtil.findXOTclTypeDeclarationFrom(
-				module, parent, commandNameValue);
+		boolean found = false;
+		for (int i = 0; i < names.length; i++) {
+			if (this.names.contains(names[i])) {
+				found = true;
+				break;
+			}
+		}
 		if (statement.getCount() == 1) {
 			return null;
 		}
 		Expression arg = statement.getAt(1);
-		if (type != null) {
-			if (arg instanceof SimpleReference) {
-				return check(type, (SimpleReference) arg);
+		if (found) {
+			TypeDeclaration type = TclParseUtil.findXOTclTypeDeclarationFrom(
+					module, parent, commandNameValue);
+			if (type != null) {
+				if (arg instanceof SimpleReference) {
+					return check(type, (SimpleReference) arg);
+				}
+			}
+			// Find Object instance
+			XOTclObjectDeclaration decl = XOTclParseUtil
+					.findXOTclObjectInstanceFrom(module, parent,
+							commandNameValue);
+			if (decl != null) {
+				if (arg instanceof SimpleReference) {
+					String value = ((SimpleReference) arg).getName();
+					if (value.equals("proc")) {
+						return new CommandInfo("#Class#proc", decl);
+					}
+				}
+				// Method call
+				return new CommandInfo("#Class#$ProcCall", type);
 			}
 		}
 
-		// Find Object instance
-		XOTclObjectDeclaration decl = XOTclParseUtil
-				.findXOTclObjectInstanceFrom(module, parent, commandNameValue);
-		if (decl != null) {
-			if (arg instanceof SimpleReference) {
-				String value = ((SimpleReference) arg).getName();
-				if (value.equals("proc")) {
-					return new CommandInfo("#Class#proc", decl);
-				}
-			}
-			// Method call
-			return new CommandInfo("#Class#$ProcCall", type);
-		}
 		// Lets check possibly this is method call for existing instance
 		// variable.
-		FieldDeclaration variable = XOTclParseUtil
-				.findXOTclInstanceVariableDeclarationFrom(module, parent,
-						commandNameValue);
-		if (variable != null) {
-			// Add support of procs etc.
-			return new CommandInfo("#Class#$MethodCall", variable);
+		if (found) {
+			FieldDeclaration variable = XOTclParseUtil
+					.findXOTclInstanceVariableDeclarationFrom(module, parent,
+							commandNameValue);
+			if (variable != null) {
+				// Add support of procs etc.
+				return new CommandInfo("#Class#$MethodCall", variable);
+			}
 		}
 
 		// Class instance field declaration
@@ -267,5 +290,27 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 
 	public void setBuildRuntimeModelFlag(boolean value) {
 		this.runtimeModel = value;
+	}
+
+	public void processASTNode(ASTNode node) {
+		String name = null;
+		if (node instanceof FieldDeclaration) {
+			FieldDeclaration decl = (FieldDeclaration) node;
+			name = decl.getName();
+		} else if (node instanceof TypeDeclaration) {
+			TypeDeclaration decl = (TypeDeclaration) node;
+			name = decl.getName();
+		}
+		if (name != null) {
+			String[] names = null;
+			if (name.startsWith("::")) {
+				names = name.substring(2).split("::");
+			} else {
+				names = name.split("::");
+			}
+			for (int i = 0; i < names.length; i++) {
+				this.names.add(names[i]);
+			}
+		}
 	}
 }
