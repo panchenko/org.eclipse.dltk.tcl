@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.parser;
 
+import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
 import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -28,8 +29,15 @@ public class TclTodoParserType extends AbstractBuildParticipantType {
 	}
 
 	protected IBuildParticipant createBuildParticipant(IScriptProject project) {
-		return new TclTodoTaskAstParser(new TodoTaskPreferences(TclPlugin
-				.getDefault().getPluginPreferences()));
+		final ITodoTaskPreferences prefs = new TodoTaskPreferences(TclPlugin
+				.getDefault().getPluginPreferences());
+		if (prefs.isEnabled()) {
+			final TclTodoTaskAstParser parser = new TclTodoTaskAstParser(prefs);
+			if (parser.isValid()) {
+				return parser;
+			}
+		}
+		return null;
 	}
 
 	public String getNature() {
