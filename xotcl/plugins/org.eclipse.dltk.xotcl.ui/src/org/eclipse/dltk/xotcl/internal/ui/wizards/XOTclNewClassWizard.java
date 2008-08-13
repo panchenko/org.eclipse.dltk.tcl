@@ -41,7 +41,7 @@ public class XOTclNewClassWizard extends NewSourceModuleWizard {
 				String text = getFileText();
 				String className = Character.toUpperCase(text.charAt(0))
 						+ text.substring(1);
-				return XOTclWizardMessages.XOTcl_module_prefix + "Class " + className + "\n";
+				return XOTclWizardMessages.XOTcl_module_prefix + "xotcl::Class " + className + "\n";
 			}
 		};
 	}
