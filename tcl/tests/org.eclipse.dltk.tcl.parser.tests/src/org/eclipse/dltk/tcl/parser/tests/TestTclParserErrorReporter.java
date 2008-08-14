@@ -24,7 +24,6 @@ public class TestTclParserErrorReporter implements ITclErrorReporter {
 	public TestTclParserErrorReporter() {
 	}
 
-	@Override
 	public void report(int code, String value, int start, int end, int kind) {
 		Integer key = new Integer(code);
 		Integer old = errors.get(key);

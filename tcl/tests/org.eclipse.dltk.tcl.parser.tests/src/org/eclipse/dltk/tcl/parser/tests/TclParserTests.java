@@ -172,6 +172,7 @@ public class TclParserTests {
 		List<TclCommand> module = parser.parse(source, collector, null);
 		TestCase.assertEquals(1, module.size());
 		TestUtils.outErrors(source, collector);
+		TestCase.assertEquals(1, collector.getCount());
 	}
 
 	@Test
@@ -182,5 +183,17 @@ public class TclParserTests {
 		List<TclCommand> module = parser.parse(source, collector, null);
 		TestCase.assertEquals(1, module.size());
 		TestUtils.outErrors(source, collector);
+		TestCase.assertEquals(1, collector.getCount());
+	}
+
+	@Test
+	public void testSimpleErrors003() throws Exception {
+		TclParser parser = new TclParser();
+		String source = "set a {This is\nset b 20";
+		TclErrorCollector collector = new TclErrorCollector();
+		List<TclCommand> module = parser.parse(source, collector, null);
+		TestCase.assertEquals(1, module.size());
+		TestUtils.outErrors(source, collector);
+		TestCase.assertEquals(1, collector.getCount());
 	}
 }
