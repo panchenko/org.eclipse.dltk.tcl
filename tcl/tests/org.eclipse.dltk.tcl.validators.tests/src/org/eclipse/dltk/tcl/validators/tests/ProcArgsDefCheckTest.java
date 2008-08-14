@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
  *******************************************************************************/
 
-package org.eclipse.dltk.tcl.validators.internal.tests;
+package org.eclipse.dltk.tcl.validators.tests;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -33,8 +33,7 @@ import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-
-public class ProcArgsDefCheckTest {
+public class ProcArgsDefCheckTest extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
 	@Test

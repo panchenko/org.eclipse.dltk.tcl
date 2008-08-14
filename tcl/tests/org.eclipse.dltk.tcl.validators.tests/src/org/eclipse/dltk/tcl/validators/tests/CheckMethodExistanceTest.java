@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
  *******************************************************************************/
 
-package org.eclipse.dltk.tcl.validators.internal.tests;
+package org.eclipse.dltk.tcl.validators.tests;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,6 +26,7 @@ import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.internal.validators.DefinitionManager;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.internal.validators.TclCheckBuildParticipant;
+import org.eclipse.dltk.tcl.internal.validators.TclValidatorTestsPlugin;
 import org.eclipse.dltk.tcl.internal.validators.checks.UndefinedProcCheck;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclError;

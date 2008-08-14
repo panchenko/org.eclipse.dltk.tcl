@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
  *******************************************************************************/
 
-package org.eclipse.dltk.tcl.validators.internal.tests;
+package org.eclipse.dltk.tcl.internal.validators;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

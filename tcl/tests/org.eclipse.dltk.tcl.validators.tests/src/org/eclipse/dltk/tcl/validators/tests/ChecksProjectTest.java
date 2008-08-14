@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
  *******************************************************************************/
 
-package org.eclipse.dltk.tcl.validators.internal.tests;
+package org.eclipse.dltk.tcl.validators.tests;
 
 import junit.framework.TestCase;
 
@@ -37,8 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
-
-public class ChecksProjectTest {
+public class ChecksProjectTest extends TestCase {
 	private IProgressMonitor monitor = new IProgressMonitor() {
 		@Override
 		public void beginTask(String name, int totalWork) {
@@ -83,7 +82,7 @@ public class ChecksProjectTest {
 	IProject project;
 
 	@Before
-	public void initialize() throws Exception {
+	public void setUp() throws Exception {
 		TclCheckBuildParticipant.TESTING_DO_OPERATIONS = false;
 		TclCheckBuildParticipant.TESTING_DO_CHECKS = false;
 		String name = "test_project_name";
