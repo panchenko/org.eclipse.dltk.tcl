@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tclparse:Scope xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tclparse="http://www.eclipse.org/dltk/tcl/parserules.ecore">
+  <children xsi:type="tclparse:Namespace" name="builtin">
+    <children xsi:type="tclparse:Command" name="set">
+      <arguments xsi:type="tclparse:TypedArgument" name="field"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="value"/>
+    </children>
+    <children xsi:type="tclparse:Command" name="unset">
+      <arguments xsi:type="tclparse:TypedArgument" name="field"/>
+    </children>
+  </children>
+</tclparse:Scope>
