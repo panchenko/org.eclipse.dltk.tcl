@@ -403,7 +403,7 @@ public class DefinitionTests {
 				+ "                  [file join $tcl_path bin page]    \\"
 				+ "                  [file join $tcl_path bin tcldocstrip] \\"
 				+ "                  [file join / moto qwe bin nmicmpd]   \\"
-				+ "                  [file join / moto qwe bin nmtrapd]   \\";
+				+ "                  [file join / moto qwe bin nmtrapd]]";
 		typedCheck(source, 0, 0, "8.4");
 	}
 
