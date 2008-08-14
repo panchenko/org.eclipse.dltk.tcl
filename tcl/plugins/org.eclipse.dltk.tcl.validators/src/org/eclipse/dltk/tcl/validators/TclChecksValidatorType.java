@@ -28,13 +28,11 @@ public class TclChecksValidatorType extends AbstractBuildParticipantType {
 		super(ID, NAME);
 	}
 
-	@Override
 	protected IBuildParticipant createBuildParticipant(IScriptProject project)
 			throws CoreException {
 		return new TclCheckBuildParticipant();
 	}
 
-	@Override
 	public String getNature() {
 		return TclNature.NATURE_ID;
 	}

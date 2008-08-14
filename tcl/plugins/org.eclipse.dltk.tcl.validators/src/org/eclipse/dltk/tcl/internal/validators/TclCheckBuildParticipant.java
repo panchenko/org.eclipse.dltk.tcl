@@ -36,10 +36,9 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 	public static boolean TESTING_DO_CHECKS = true;
 	public static boolean TESTING_DO_OPERATIONS = true;
 
-	@Override
 	public void build(ISourceModule module, ModuleDeclaration ast,
 			final IProblemReporter reporter) throws CoreException {
-		if( !TESTING_DO_OPERATIONS) {
+		if (!TESTING_DO_OPERATIONS) {
 			return;
 		}
 		final TclCheckInfo[] checks = ChecksExtensionManager.getInstance()
@@ -73,7 +72,6 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 
 		final CodeModel codeModel = new CodeModel(source);
 		errorCollector.reportAll(new ITclErrorReporter() {
-			@Override
 			public void report(int code, String message, int start, int end,
 					int kind) {
 				int line = codeModel.getLineNumber(start, end);
