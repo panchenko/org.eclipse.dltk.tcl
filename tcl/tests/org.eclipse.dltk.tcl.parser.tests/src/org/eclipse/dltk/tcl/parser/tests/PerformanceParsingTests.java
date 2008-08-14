@@ -76,7 +76,6 @@ public class PerformanceParsingTests extends TestCase {
 		PerformanceMonitor.getDefault().begin(GLOBAL_NEW_PARSE_TIME);
 		final TclErrorCollector collector = new TclErrorCollector();
 		traverse(file, new IOperation() {
-			@Override
 			public void run(File file) {
 				try {
 					if (file.getName().endsWith(".tcl")
