@@ -30,7 +30,7 @@ import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.junit.Test;
 
-public class TclComplexArgumentParseTests {
+public class TclComplexArgumentParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
 		DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 

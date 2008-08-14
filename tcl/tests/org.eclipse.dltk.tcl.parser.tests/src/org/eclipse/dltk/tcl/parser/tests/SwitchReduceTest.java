@@ -32,7 +32,7 @@ import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SwitchReduceTest {
+public class SwitchReduceTest extends TestCase {
 	public Command createCommand001() throws Exception {
 		DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 
@@ -152,7 +152,7 @@ public class SwitchReduceTest {
 	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
 
 	@Before
-	public void initialize() throws Exception {
+	public void setUp() throws Exception {
 		Scope scope = DefinitionLoader
 				.loadDefinitions(new URL(
 						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));

@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -44,7 +46,7 @@ import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
-public class TclCheckerDLTKErrorComparisonTests {
+public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 	IProject project;
 
 	@Test

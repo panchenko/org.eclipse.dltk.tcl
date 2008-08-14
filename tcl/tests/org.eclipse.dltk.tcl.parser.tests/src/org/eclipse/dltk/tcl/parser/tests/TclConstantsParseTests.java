@@ -24,7 +24,7 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.junit.Test;
 
-public class TclConstantsParseTests {
+public class TclConstantsParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
 		DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 

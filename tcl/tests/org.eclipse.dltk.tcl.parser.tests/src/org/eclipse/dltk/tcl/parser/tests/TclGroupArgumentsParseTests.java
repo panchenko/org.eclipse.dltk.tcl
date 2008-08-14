@@ -30,7 +30,7 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class TclGroupArgumentsParseTests {
+public class TclGroupArgumentsParseTests extends TestCase {
 	public Command createGroupCommand001() throws Exception {
 		DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 

@@ -41,15 +41,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.Bundle;
 
-
-public class PerformanceParsingTests {
+public class PerformanceParsingTests extends TestCase {
 	private static final String NEW_PARSE_TIME = "NEW PARSE TIME:";
 	private static final String GLOBAL_NEW_PARSE_TIME = "GLOBAL NEW PARSE TIME:";
 	private long index = 0;
 	IProject project;
 
 	@Before
-	public void initialize() throws Exception {
+	public void setUp() throws Exception {
 		String name = "test_project_name";
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		project = root.getProject(name);

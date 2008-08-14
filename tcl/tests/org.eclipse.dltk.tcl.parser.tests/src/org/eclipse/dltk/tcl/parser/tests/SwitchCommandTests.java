@@ -29,7 +29,7 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class SwitchCommandTests {
+public class SwitchCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
 	@Test

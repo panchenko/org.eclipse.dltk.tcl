@@ -37,8 +37,7 @@ import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
 import org.junit.Test;
 
-
-public class NamespaceScopeProcessorTests {
+public class NamespaceScopeProcessorTests extends TestCase {
 
 	private Namespace createNamespace(DefinitionsFactory factory, Scope scope,
 			String name) {

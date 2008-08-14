@@ -29,7 +29,7 @@ import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.junit.Test;
 
-public class VersionsParserTests {
+public class VersionsParserTests extends TestCase {
 	@Test
 	public void testParseVersion() {
 		TestCase.assertEquals(true, TclParserUtils.parseVersion("[8.1;8.2)",

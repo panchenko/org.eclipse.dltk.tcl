@@ -30,63 +30,63 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class MatchPrefixTests {
+public class MatchPrefixTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
-	
+
 	@Test
 	public void test001() throws Exception {
 		String source = "array names arg";
 		typedCheck(source, 0, 0);
-	}	
-	
+	}
+
 	@Test
 	public void test002() throws Exception {
 		String source = "array name arg";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test003() throws Exception {
 		String source = "array na arg";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test005() throws Exception {
 		String source = "array n arg";
 		typedCheck(source, 1, 0);
 	}
-	
+
 	@Test
 	public void test006() throws Exception {
 		String source = "array name";
 		typedCheck(source, 1, 0);
 	}
-	
+
 	@Test
 	public void test007() throws Exception {
 		String source = "fconfigure stdin -blocking";
 		typedCheck(source, 0, 0);
-	}	
-	
+	}
+
 	@Test
 	public void test008() throws Exception {
 		String source = "fconfigure stdin -block";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test009() throws Exception {
 		String source = "fconfigure stdin -b";
 		typedCheck(source, 1, 0);
 	}
-		
+
 	@Test
 	public void test010() throws Exception {
 		String source = "fconfigure stdin -blockingg";
 		typedCheck(source, 1, 0);
 	}
-	
+
 	private void typedCheck(String source, int errs, int code) throws Exception {
 		Scope scope = DefinitionLoader
 				.loadDefinitions(new URL(
@@ -104,27 +104,26 @@ public class MatchPrefixTests {
 		for (int i = 0; i < args.size(); i++) {
 			if (args.get(i) instanceof Script) {
 				scripts++;
-				TestUtils.outCode(source, 
-						args.get(i).getStart(), 
-						args.get(i).getEnd());
+				TestUtils.outCode(source, args.get(i).getStart(), args.get(i)
+						.getEnd());
 			}
 			if (args.get(i) instanceof TclArgumentListImpl) {
-				EList<TclArgument> innerArgs = ((TclArgumentList)args.get(i)).getArguments();
+				EList<TclArgument> innerArgs = ((TclArgumentList) args.get(i))
+						.getArguments();
 				for (int k = 0; k < innerArgs.size(); k++) {
 					if (innerArgs.get(k) instanceof Script) {
 						scripts++;
-						TestUtils.outCode(source, 
-								innerArgs.get(i).getStart(), 
+						TestUtils.outCode(source, innerArgs.get(i).getStart(),
 								innerArgs.get(i).getEnd());
 					}
 				}
-			} 
-			
+			}
+
 		}
 		if (errors.getCount() > 0) {
 			TestUtils.outErrors(source, errors);
 		}
-		
+
 		TestCase.assertEquals(code, scripts);
 		TestCase.assertEquals(errs, errors.getCount());
 	}

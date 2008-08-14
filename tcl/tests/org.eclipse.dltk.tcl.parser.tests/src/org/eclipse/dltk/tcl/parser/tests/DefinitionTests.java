@@ -32,11 +32,11 @@ import org.eclipse.emf.common.util.EList;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DefinitionTests {
+public class DefinitionTests extends TestCase {
 	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
 
 	@Before
-	public void initialize() throws Exception {
+	public void setUp() throws Exception {
 		Scope scope = DefinitionLoader
 				.loadDefinitions(new URL(
 						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));

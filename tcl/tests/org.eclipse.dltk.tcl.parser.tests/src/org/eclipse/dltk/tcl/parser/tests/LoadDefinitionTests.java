@@ -22,11 +22,10 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
 import org.junit.Test;
 
-
-public class LoadDefinitionTests {
+public class LoadDefinitionTests extends TestCase {
 
 	@Test
-	public void loadTest001() throws Exception {
+	public void testLoad001() throws Exception {
 		TestScopeProcessor processor = new TestScopeProcessor();
 		Scope scope = DefinitionLoader
 				.loadDefinitions(new URL(
@@ -40,11 +39,12 @@ public class LoadDefinitionTests {
 		TestCase.assertNotNull(unsetCommand[0]);
 		TestCase.assertEquals("unset", unsetCommand[0].getName());
 	}
+
 	@Test
-	public void loadTest002() throws Exception {
+	public void testLoad002() throws Exception {
 		TestScopeProcessor processor = new TestScopeProcessor();
-		Scope scope = DefinitionLoader.loadDefinitions(Activator.getDefault().getBundle()
-				.getEntry("/definitions/test0.xml"));
+		Scope scope = DefinitionLoader.loadDefinitions(Activator.getDefault()
+				.getBundle().getEntry("/definitions/test0.xml"));
 		TestCase.assertNotNull(scope);
 		processor.add(scope);
 		Command[] setCommand = processor.getCommandDefinition("set");

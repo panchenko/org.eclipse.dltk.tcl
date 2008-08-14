@@ -27,7 +27,7 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class WhileCommandTests {
+public class WhileCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
 	@Test

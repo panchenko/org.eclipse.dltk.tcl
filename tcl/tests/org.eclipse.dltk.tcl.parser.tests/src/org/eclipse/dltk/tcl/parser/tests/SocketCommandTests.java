@@ -27,7 +27,7 @@ import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.junit.Test;
 
-public class SocketCommandTests {
+public class SocketCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
 	@Test

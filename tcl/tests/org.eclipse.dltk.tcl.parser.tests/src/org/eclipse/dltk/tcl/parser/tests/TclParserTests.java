@@ -25,7 +25,7 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class TclParserTests {
+public class TclParserTests extends TestCase {
 	@Test
 	public void testParser001() throws Exception {
 		TclParser parser = new TclParser();

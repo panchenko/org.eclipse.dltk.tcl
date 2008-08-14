@@ -26,7 +26,7 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class AfterCommandTests {
+public class AfterCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
 	@Test
@@ -40,7 +40,7 @@ public class AfterCommandTests {
 		String source = "after cancel {puts alpha} {puts beta}";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test003() throws Exception {
 		String source = "after $cancel lala";

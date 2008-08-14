@@ -28,7 +28,7 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class NotNegativeTypeParseTests {
+public class NotNegativeTypeParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
 		DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 

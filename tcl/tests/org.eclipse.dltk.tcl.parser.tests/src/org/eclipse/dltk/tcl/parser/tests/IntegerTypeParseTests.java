@@ -28,7 +28,7 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
-public class IntegerTypeParseTests {
+public class IntegerTypeParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
 		DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 
@@ -41,7 +41,7 @@ public class IntegerTypeParseTests {
 			arg.setName("integer");
 			command.getArguments().add(arg);
 		}
-		
+
 		return command;
 	}
 
@@ -50,48 +50,49 @@ public class IntegerTypeParseTests {
 		String source = "cmd 34";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test002() throws Exception {
 		String source = "cmd -34";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test003() throws Exception {
 		String source = "cmd 34.5";
 		typedCheck(source, 2, 0);
 	}
-	
+
 	@Test
 	public void test004() throws Exception {
 		String source = "cmd lalala";
 		typedCheck(source, 2, 0);
 	}
+
 	@Test
 	public void test005() throws Exception {
 		String source = "cmd \"34\"";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test006() throws Exception {
 		String source = "cmd \"-34\"";
 		typedCheck(source, 0, 0);
 	}
-	
+
 	@Test
 	public void test007() throws Exception {
 		String source = "cmd \"34.5\"";
 		typedCheck(source, 2, 0);
 	}
-	
+
 	@Test
 	public void test008() throws Exception {
 		String source = "cmd \"lalala\"";
 		typedCheck(source, 2, 0);
 	}
-	
+
 	private void typedCheck(String source, int errs, int code) throws Exception {
 		TclParser parser = new TclParser();
 		TestScopeProcessor manager = new TestScopeProcessor();

@@ -15,7 +15,7 @@ import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.definitions.Synopsis;
 import org.junit.Test;
 
-public class SynopsisTests {
+public class SynopsisTests extends TestCase {
 	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
 
 	@Test
