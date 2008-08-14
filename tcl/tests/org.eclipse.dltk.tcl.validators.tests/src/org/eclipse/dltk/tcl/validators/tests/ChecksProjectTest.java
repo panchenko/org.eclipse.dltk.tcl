@@ -39,41 +39,33 @@ import org.osgi.framework.Bundle;
 
 public class ChecksProjectTest extends TestCase {
 	private IProgressMonitor monitor = new IProgressMonitor() {
-		@Override
 		public void beginTask(String name, int totalWork) {
 			System.out.println("Begin task:" + name);
 		}
 
-		@Override
 		public void done() {
 		}
 
-		@Override
 		public void internalWorked(double work) {
 		}
 
-		@Override
 		public boolean isCanceled() {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
-		@Override
 		public void setCanceled(boolean value) {
 			// TODO Auto-generated method stub
 
 		}
 
-		@Override
 		public void setTaskName(String name) {
 		}
 
-		@Override
 		public void subTask(String name) {
 			System.out.println("Sub task:" + name);
 		}
 
-		@Override
 		public void worked(int work) {
 			System.out.println("@");
 		}
