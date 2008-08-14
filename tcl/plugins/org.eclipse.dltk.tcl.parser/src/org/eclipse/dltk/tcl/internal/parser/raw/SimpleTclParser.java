@@ -70,9 +70,11 @@ public class SimpleTclParser {
 		while (true) {
 			ch = input.read();
 			boolean eof = (ch == CodeScanner.EOF);
+			StopTclCommand stopTclCommand = new StopTclCommand();
 			if (eof && cmd.getWords().size() == 0
 					&& (currentWord == null || currentWord.empty())) {
-				return new StopTclCommand();
+				stopTclCommand.onEOF = eof;
+				return stopTclCommand;
 			}
 			if (TclTextUtils.isTrueWhitespace(ch) || eof) {
 				if (currentWord != null) {
@@ -111,7 +113,7 @@ public class SimpleTclParser {
 				}
 				if (ch == ']' && nest) {
 					input.read();
-					return new StopTclCommand();
+					return stopTclCommand;
 				}
 			} else {
 				if (ch == ']' && nest) {
@@ -184,6 +186,10 @@ public class SimpleTclParser {
 		return cmd;
 	}
 
+	public interface IEOFHandler {
+		void handle();
+	}
+
 	/**
 	 * Parses input. If nest is <code>true</code> treats ] command as end.
 	 * 
@@ -191,13 +197,16 @@ public class SimpleTclParser {
 	 * @param nest
 	 * @throws ParseException
 	 */
-	public TclScript parse(CodeScanner input, boolean nest)
+	public TclScript parse(CodeScanner input, boolean nest, IEOFHandler handler)
 			throws TclParseException {
 		TclScript script = new TclScript();
 		script.setStart(input.getPosition());
 		while (true) {
 			TclCommand cmd = nextCommand(input, nest);
 			if (cmd instanceof StopTclCommand) {
+				if (((StopTclCommand) cmd).onEOF && handler != null) {
+					handler.handle();
+				}
 				break;
 			}
 
@@ -212,7 +221,7 @@ public class SimpleTclParser {
 
 	public TclScript parse(String content) throws TclParseException {
 		CodeScanner scanner = new CodeScanner(content);
-		TclScript script = parse(scanner, false);
+		TclScript script = parse(scanner, false, null);
 		return script;
 	}
 

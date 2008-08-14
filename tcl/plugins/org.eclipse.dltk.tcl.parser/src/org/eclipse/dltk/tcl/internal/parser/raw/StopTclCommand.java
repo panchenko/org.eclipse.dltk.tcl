@@ -12,4 +12,5 @@
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
 public class StopTclCommand extends TclCommand {
+	boolean onEOF = false;
 }

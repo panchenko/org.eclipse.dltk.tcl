@@ -17,7 +17,6 @@ import java.util.List;
 public class TclErrorCollector implements ITclErrorReporter {
 	private List<TclError> errors = new ArrayList<TclError>();
 
-	@Override
 	public void report(int code, String value, int start, int end, int kind) {
 		errors.add(new TclError(code, value, start, end, kind));
 	}

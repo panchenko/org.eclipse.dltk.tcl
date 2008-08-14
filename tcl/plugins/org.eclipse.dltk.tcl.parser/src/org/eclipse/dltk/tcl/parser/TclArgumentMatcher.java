@@ -384,7 +384,6 @@ public class TclArgumentMatcher {
 
 		matchSinglePositionArgument(results, arguments, pos, definition,
 				new ISinglePositionRule() {
-					@Override
 					public boolean check(TclArgument argument,
 							Argument definition, List<Integer> scriptPositions,
 							int position, TclErrorCollector collector,
@@ -731,7 +730,6 @@ public class TclArgumentMatcher {
 		final String value = constDefinition.getValue();
 		matchSinglePositionArgument(results, arguments, pos, definition,
 				new ISinglePositionRule() {
-					@Override
 					public boolean check(TclArgument argument,
 							Argument definition, List<Integer> scriptPositions,
 							int position, TclErrorCollector collector,
@@ -756,7 +754,6 @@ public class TclArgumentMatcher {
 		final ArgumentType type = arg.getType();
 		matchSinglePositionArgument(results, arguments, pos, definition,
 				new ISinglePositionRule() {
-					@Override
 					public boolean check(TclArgument argument,
 							Argument definition, List<Integer> scriptPositions,
 							int position, TclErrorCollector collector,
