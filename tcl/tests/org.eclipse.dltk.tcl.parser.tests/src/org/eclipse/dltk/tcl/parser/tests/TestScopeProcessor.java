@@ -27,7 +27,6 @@ import org.eclipse.emf.common.util.EList;
 public class TestScopeProcessor implements IScopeProcessor {
 	private Map<String, Object> commands = new HashMap<String, Object>();
 
-	@Override
 	public Command[] getCommandDefinition(String command) {
 		Object cmd = commands.get(command);
 		if (cmd != null && cmd instanceof Command) {
@@ -67,20 +66,16 @@ public class TestScopeProcessor implements IScopeProcessor {
 		}
 	}
 
-	@Override
 	public void endProcessCommand() {
 	}
 
-	@Override
 	public void processCommand(TclCommand command) {
 	}
 
-	@Override
 	public String getQualifiedName(String commandValue) {
 		return commandValue;
 	}
 
-	@Override
 	public ISubstitutionManager getSubstitutionManager() {
 		// TODO Auto-generated method stub
 		return null;
