@@ -29,12 +29,13 @@ public class Synopsis {
 
 	private Command command;
 
-	private String synopsis;
+	private String synopsis = "";
 
 	static private DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 
 	public Synopsis(Command command) {
-		if (command.getName() == null || command.getName().equals("")) {
+		if (command == null || command.getName() == null
+				|| command.getName().equals("")) {
 			throw new IllegalArgumentException();
 		}
 		this.command = command;
