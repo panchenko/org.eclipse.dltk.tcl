@@ -74,7 +74,6 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 		}
 	}
 
-	@Override
 	public Command[] getCommandDefinition(String command) {
 		if (command.startsWith("::")) {
 			// This is top level command
@@ -129,12 +128,10 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 		return results.toArray(new String[results.size()]);
 	}
 
-	@Override
 	public void processCommand(TclCommand command) {
 		commandStack.push(command);
 	}
 
-	@Override
 	public void endProcessCommand() {
 		commandStack.pop();
 	}
@@ -146,7 +143,6 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 		return processor;
 	}
 
-	@Override
 	public String getQualifiedName(String command) {
 		if (command.startsWith("::")) {
 			// This is top level command
@@ -168,7 +164,6 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 		return command;
 	}
 
-	@Override
 	public ISubstitutionManager getSubstitutionManager() {
 		return null;
 	}
