@@ -19,11 +19,11 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
 				"Test for org.eclipse.dltk.tcl.validators.internal.tests");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(ChecksProjectTest.class);
+		// $JUnit-BEGIN$
+		// suite.addTestSuite(ChecksProjectTest.class);
 		suite.addTestSuite(ProcArgsDefCheckTest.class);
-		suite.addTestSuite(CheckMethodExistanceTest.class);
-		//$JUnit-END$
+		// suite.addTestSuite(CheckMethodExistanceTest.class);
+		// $JUnit-END$
 		return suite;
 	}
 
