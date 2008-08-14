@@ -32,7 +32,6 @@ public class UndefinedVariableCheck implements ITclCheck {
 	public UndefinedVariableCheck() {
 	}
 
-	@Override
 	public void checkCommands(List<TclCommand> commands,
 			final ITclErrorReporter reporter, Map<String, String> options) {
 		TclParserUtils.traverse(commands, new TclVisitor() {

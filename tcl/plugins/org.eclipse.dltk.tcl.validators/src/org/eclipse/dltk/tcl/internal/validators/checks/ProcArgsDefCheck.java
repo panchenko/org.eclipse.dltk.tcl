@@ -36,7 +36,6 @@ public class ProcArgsDefCheck implements ITclCheck {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
 	public void checkCommands(List<TclCommand> commands,
 			final ITclErrorReporter reporter, Map<String, String> options) {
 
