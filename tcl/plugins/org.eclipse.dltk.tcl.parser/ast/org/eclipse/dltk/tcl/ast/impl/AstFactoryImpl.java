@@ -12,20 +12,13 @@
 package org.eclipse.dltk.tcl.ast.impl;
 
 import org.eclipse.dltk.tcl.ast.*;
-import org.eclipse.dltk.tcl.ast.ArgumentMatch;
-import org.eclipse.dltk.tcl.ast.AstFactory;
-import org.eclipse.dltk.tcl.ast.AstPackage;
-import org.eclipse.dltk.tcl.ast.Node;
-import org.eclipse.dltk.tcl.ast.Script;
-import org.eclipse.dltk.tcl.ast.StringArgument;
-import org.eclipse.dltk.tcl.ast.Substitution;
-import org.eclipse.dltk.tcl.ast.TclArgument;
-import org.eclipse.dltk.tcl.ast.TclArgumentList;
-import org.eclipse.dltk.tcl.ast.TclCommand;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**

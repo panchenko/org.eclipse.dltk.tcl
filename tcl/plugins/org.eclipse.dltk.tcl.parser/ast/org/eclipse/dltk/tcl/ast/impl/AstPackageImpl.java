@@ -24,12 +24,16 @@ import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.VariableReference;
+
 import org.eclipse.dltk.tcl.definitions.DefinitionsPackage;
+
 import org.eclipse.dltk.tcl.definitions.impl.DefinitionsPackageImpl;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -165,15 +169,23 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public static AstPackage init() {
-		if (isInited) return (AstPackage)EPackage.Registry.INSTANCE.getEPackage(AstPackage.eNS_URI);
+		if (isInited)
+			return (AstPackage) EPackage.Registry.INSTANCE
+					.getEPackage(AstPackage.eNS_URI);
 
 		// Obtain or create and register package
-		AstPackageImpl theAstPackage = (AstPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof AstPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new AstPackageImpl());
+		AstPackageImpl theAstPackage = (AstPackageImpl) (EPackage.Registry.INSTANCE
+				.getEPackage(eNS_URI) instanceof AstPackageImpl ? EPackage.Registry.INSTANCE
+				.getEPackage(eNS_URI)
+				: new AstPackageImpl());
 
 		isInited = true;
 
 		// Obtain or create and register interdependencies
-		DefinitionsPackageImpl theDefinitionsPackage = (DefinitionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionsPackage.eNS_URI) instanceof DefinitionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionsPackage.eNS_URI) : DefinitionsPackage.eINSTANCE);
+		DefinitionsPackageImpl theDefinitionsPackage = (DefinitionsPackageImpl) (EPackage.Registry.INSTANCE
+				.getEPackage(DefinitionsPackage.eNS_URI) instanceof DefinitionsPackageImpl ? EPackage.Registry.INSTANCE
+				.getEPackage(DefinitionsPackage.eNS_URI)
+				: DefinitionsPackage.eINSTANCE);
 
 		// Create package meta-data objects
 		theAstPackage.createPackageContents();
@@ -204,7 +216,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EAttribute getNode_Start() {
-		return (EAttribute)nodeEClass.getEStructuralFeatures().get(0);
+		return (EAttribute) nodeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -213,7 +225,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EAttribute getNode_End() {
-		return (EAttribute)nodeEClass.getEStructuralFeatures().get(1);
+		return (EAttribute) nodeEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -231,7 +243,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getScript_Commands() {
-		return (EReference)scriptEClass.getEStructuralFeatures().get(0);
+		return (EReference) scriptEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -249,7 +261,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EAttribute getStringArgument_Value() {
-		return (EAttribute)stringArgumentEClass.getEStructuralFeatures().get(0);
+		return (EAttribute) stringArgumentEClass.getEStructuralFeatures()
+				.get(0);
 	}
 
 	/**
@@ -267,7 +280,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getSubstitution_Commands() {
-		return (EReference)substitutionEClass.getEStructuralFeatures().get(0);
+		return (EReference) substitutionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -294,7 +307,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getTclCommand_Name() {
-		return (EReference)tclCommandEClass.getEStructuralFeatures().get(0);
+		return (EReference) tclCommandEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -303,7 +316,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getTclCommand_Arguments() {
-		return (EReference)tclCommandEClass.getEStructuralFeatures().get(1);
+		return (EReference) tclCommandEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -312,7 +325,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getTclCommand_Definition() {
-		return (EReference)tclCommandEClass.getEStructuralFeatures().get(2);
+		return (EReference) tclCommandEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -321,7 +334,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getTclCommand_Matches() {
-		return (EReference)tclCommandEClass.getEStructuralFeatures().get(3);
+		return (EReference) tclCommandEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -330,7 +343,16 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EAttribute getTclCommand_QualifiedName() {
-		return (EAttribute)tclCommandEClass.getEStructuralFeatures().get(4);
+		return (EAttribute) tclCommandEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclCommand_Matched() {
+		return (EAttribute) tclCommandEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -348,7 +370,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getTclArgumentList_Arguments() {
-		return (EReference)tclArgumentListEClass.getEStructuralFeatures().get(0);
+		return (EReference) tclArgumentListEClass.getEStructuralFeatures().get(
+				0);
 	}
 
 	/**
@@ -357,7 +380,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getTclArgumentList_DefinitionArgument() {
-		return (EReference)tclArgumentListEClass.getEStructuralFeatures().get(1);
+		return (EReference) tclArgumentListEClass.getEStructuralFeatures().get(
+				1);
 	}
 
 	/**
@@ -375,7 +399,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getArgumentMatch_Definition() {
-		return (EReference)argumentMatchEClass.getEStructuralFeatures().get(0);
+		return (EReference) argumentMatchEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -384,7 +408,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getArgumentMatch_Arguments() {
-		return (EReference)argumentMatchEClass.getEStructuralFeatures().get(1);
+		return (EReference) argumentMatchEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -402,7 +426,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getComplexString_Arguments() {
-		return (EReference)complexStringEClass.getEStructuralFeatures().get(0);
+		return (EReference) complexStringEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -420,7 +444,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EAttribute getVariableReference_Name() {
-		return (EAttribute)variableReferenceEClass.getEStructuralFeatures().get(0);
+		return (EAttribute) variableReferenceEClass.getEStructuralFeatures()
+				.get(0);
 	}
 
 	/**
@@ -429,7 +454,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public EReference getVariableReference_Index() {
-		return (EReference)variableReferenceEClass.getEStructuralFeatures().get(1);
+		return (EReference) variableReferenceEClass.getEStructuralFeatures()
+				.get(1);
 	}
 
 	/**
@@ -447,7 +473,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public AstFactory getAstFactory() {
-		return (AstFactory)getEFactoryInstance();
+		return (AstFactory) getEFactoryInstance();
 	}
 
 	/**
@@ -465,7 +491,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated) return;
+		if (isCreated)
+			return;
 		isCreated = true;
 
 		// Create classes and their features
@@ -490,10 +517,12 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 		createEReference(tclCommandEClass, TCL_COMMAND__DEFINITION);
 		createEReference(tclCommandEClass, TCL_COMMAND__MATCHES);
 		createEAttribute(tclCommandEClass, TCL_COMMAND__QUALIFIED_NAME);
+		createEAttribute(tclCommandEClass, TCL_COMMAND__MATCHED);
 
 		tclArgumentListEClass = createEClass(TCL_ARGUMENT_LIST);
 		createEReference(tclArgumentListEClass, TCL_ARGUMENT_LIST__ARGUMENTS);
-		createEReference(tclArgumentListEClass, TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT);
+		createEReference(tclArgumentListEClass,
+				TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT);
 
 		argumentMatchEClass = createEClass(ARGUMENT_MATCH);
 		createEReference(argumentMatchEClass, ARGUMENT_MATCH__DEFINITION);
@@ -524,7 +553,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized) return;
+		if (isInitialized)
+			return;
 		isInitialized = true;
 
 		// Initialize package
@@ -533,7 +563,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		DefinitionsPackage theDefinitionsPackage = (DefinitionsPackage)EPackage.Registry.INSTANCE.getEPackage(DefinitionsPackage.eNS_URI);
+		DefinitionsPackage theDefinitionsPackage = (DefinitionsPackage) EPackage.Registry.INSTANCE
+				.getEPackage(DefinitionsPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -553,44 +584,119 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 		variableReferenceEClass.getESuperTypes().add(this.getISubstitution());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getNode_Start(), ecorePackage.getEInt(), "start", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getNode_End(), ecorePackage.getEInt(), "end", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNode_Start(), ecorePackage.getEInt(), "start", null,
+				0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
+				!IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNode_End(), ecorePackage.getEInt(), "end", null, 0,
+				1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
+				!IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(scriptEClass, Script.class, "Script", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getScript_Commands(), this.getTclCommand(), null, "commands", null, 0, -1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(scriptEClass, Script.class, "Script", !IS_ABSTRACT,
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getScript_Commands(), this.getTclCommand(), null,
+				"commands", null, 0, -1, Script.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(stringArgumentEClass, StringArgument.class, "StringArgument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStringArgument_Value(), ecorePackage.getEString(), "value", null, 0, 1, StringArgument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(stringArgumentEClass, StringArgument.class,
+				"StringArgument", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringArgument_Value(), ecorePackage.getEString(),
+				"value", null, 0, 1, StringArgument.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
-		initEClass(substitutionEClass, Substitution.class, "Substitution", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSubstitution_Commands(), this.getTclCommand(), null, "commands", null, 0, -1, Substitution.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(substitutionEClass, Substitution.class, "Substitution",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSubstitution_Commands(), this.getTclCommand(), null,
+				"commands", null, 0, -1, Substitution.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(tclArgumentEClass, TclArgument.class, "TclArgument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(tclArgumentEClass, TclArgument.class, "TclArgument",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(tclCommandEClass, TclCommand.class, "TclCommand", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTclCommand_Name(), this.getTclArgument(), null, "name", null, 0, 1, TclCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTclCommand_Arguments(), this.getTclArgument(), null, "arguments", null, 0, -1, TclCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTclCommand_Definition(), theDefinitionsPackage.getCommand(), null, "definition", null, 0, 1, TclCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTclCommand_Matches(), this.getArgumentMatch(), null, "matches", null, 0, -1, TclCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTclCommand_QualifiedName(), ecorePackage.getEString(), "qualifiedName", null, 0, 1, TclCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(tclCommandEClass, TclCommand.class, "TclCommand",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTclCommand_Name(), this.getTclArgument(), null,
+				"name", null, 0, 1, TclCommand.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTclCommand_Arguments(), this.getTclArgument(), null,
+				"arguments", null, 0, -1, TclCommand.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTclCommand_Definition(), theDefinitionsPackage
+				.getCommand(), null, "definition", null, 0, 1,
+				TclCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getTclCommand_Matches(), this.getArgumentMatch(), null,
+				"matches", null, 0, -1, TclCommand.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclCommand_QualifiedName(),
+				ecorePackage.getEString(), "qualifiedName", null, 0, 1,
+				TclCommand.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
+				!IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclCommand_Matched(), ecorePackage.getEBoolean(),
+				"matched", null, 0, 1, TclCommand.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
-		initEClass(tclArgumentListEClass, TclArgumentList.class, "TclArgumentList", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTclArgumentList_Arguments(), this.getTclArgument(), null, "arguments", null, 0, -1, TclArgumentList.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTclArgumentList_DefinitionArgument(), theDefinitionsPackage.getComplexArgument(), null, "definitionArgument", null, 0, 1, TclArgumentList.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(tclArgumentListEClass, TclArgumentList.class,
+				"TclArgumentList", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTclArgumentList_Arguments(), this.getTclArgument(),
+				null, "arguments", null, 0, -1, TclArgumentList.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEReference(getTclArgumentList_DefinitionArgument(),
+				theDefinitionsPackage.getComplexArgument(), null,
+				"definitionArgument", null, 0, 1, TclArgumentList.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
-		initEClass(argumentMatchEClass, ArgumentMatch.class, "ArgumentMatch", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getArgumentMatch_Definition(), theDefinitionsPackage.getArgument(), null, "definition", null, 0, 1, ArgumentMatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getArgumentMatch_Arguments(), this.getTclArgument(), null, "arguments", null, 0, -1, ArgumentMatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(argumentMatchEClass, ArgumentMatch.class, "ArgumentMatch",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getArgumentMatch_Definition(), theDefinitionsPackage
+				.getArgument(), null, "definition", null, 0, 1,
+				ArgumentMatch.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getArgumentMatch_Arguments(), this.getTclArgument(),
+				null, "arguments", null, 0, -1, ArgumentMatch.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
-		initEClass(complexStringEClass, ComplexString.class, "ComplexString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getComplexString_Arguments(), this.getTclArgument(), null, "arguments", null, 0, -1, ComplexString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(complexStringEClass, ComplexString.class, "ComplexString",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getComplexString_Arguments(), this.getTclArgument(),
+				null, "arguments", null, 0, -1, ComplexString.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
-		initEClass(variableReferenceEClass, VariableReference.class, "VariableReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getVariableReference_Name(), ecorePackage.getEString(), "name", null, 0, 1, VariableReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getVariableReference_Index(), this.getTclArgument(), null, "index", null, 0, 1, VariableReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(variableReferenceEClass, VariableReference.class,
+				"VariableReference", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getVariableReference_Name(), ecorePackage.getEString(),
+				"name", null, 0, 1, VariableReference.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getVariableReference_Index(), this.getTclArgument(),
+				null, "index", null, 0, 1, VariableReference.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
-		initEClass(iSubstitutionEClass, ISubstitution.class, "ISubstitution", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(iSubstitutionEClass, ISubstitution.class, "ISubstitution",
+				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

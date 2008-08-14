@@ -12,6 +12,7 @@
 package org.eclipse.dltk.tcl.ast;
 
 import org.eclipse.dltk.tcl.definitions.Command;
+
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -27,6 +28,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.dltk.tcl.ast.TclCommand#getDefinition <em>Definition</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.ast.TclCommand#getMatches <em>Matches</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.ast.TclCommand#getQualifiedName <em>Qualified Name</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.TclCommand#isMatched <em>Matched</em>}</li>
  * </ul>
  * </p>
  *
@@ -144,5 +146,31 @@ public interface TclCommand extends Node {
 	 * @generated
 	 */
 	void setQualifiedName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Matched</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Matched</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Matched</em>' attribute.
+	 * @see #setMatched(boolean)
+	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclCommand_Matched()
+	 * @model
+	 * @generated
+	 */
+	boolean isMatched();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.TclCommand#isMatched <em>Matched</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Matched</em>' attribute.
+	 * @see #isMatched()
+	 * @generated
+	 */
+	void setMatched(boolean value);
 
 } // TclCommand

@@ -191,7 +191,10 @@ public class TclParser implements ITclParserOptions {
 						System.out.println("Matching command:"
 								+ definitions[i].getName());
 					}
+					st.setDefinition(definition);
+					st.setMatched(false);
 					if (matcher.match(definition)) {
+						st.setMatched(true);
 						perfDone("matchTclCommand:" + definitions[i].getName());
 						// Set deprecation
 						if (definition.getDeprecated() != null
@@ -203,7 +206,6 @@ public class TclParser implements ITclParserOptions {
 							}
 						}
 
-						st.setDefinition(definition);
 						this.scopeProcessor.processCommand(st);
 						// Parse block arguments.
 						int[] blockArguments = matcher.getBlockArguments();
@@ -225,7 +227,6 @@ public class TclParser implements ITclParserOptions {
 					repr("error count:" + definitions[i].getName(), matcher
 							.getErrorReporter().getCount());
 					perfDone("GLOBAL_MATCH_TIME");
-					st.setDefinition(definition);
 
 					matcher.reportErrors(this.reporter);
 					repr("error count:" + definitions[i].getName(), matcher

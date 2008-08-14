@@ -3,7 +3,7 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.dltk.tcl.parser/definitions"
     modelPluginID="org.eclipse.dltk.tcl.parser" modelName="Definitions" importerID="org.eclipse.emf.importer.java"
-    complianceLevel="6.0" copyrightFields="false">
+    complianceLevel="5.0" copyrightFields="false">
   <foreignModel>@model</foreignModel>
   <genPackages prefix="Definitions" basePackage="org.eclipse.dltk.tcl" resource="XML"
       disposableProviderFactory="true" contentTypeIdentifier="" fileExtensions="definitions"
@@ -15,18 +15,11 @@
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/NotNegative"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Expression"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Script"/>
-      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/ComplexScript"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/VarName"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/CmdName"/>
-      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/ArrayName"/>
-      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/FileName"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Level"/>
-      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Channel"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Package"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Namespace"/>
-      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/ProcArgs"/>
-      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Format"/>
-      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Pattern"/>
       <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Boolean"/>
     </genEnums>
     <genClasses image="false" ecoreClass="definitions.ecore#//Argument">
@@ -46,6 +39,7 @@
     </genClasses>
     <genClasses ecoreClass="definitions.ecore#//Constant" labelFeature="#//definitions/Constant/value">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Constant/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Constant/strictMatch"/>
     </genClasses>
     <genClasses ecoreClass="definitions.ecore#//Group" labelFeature="#//definitions/Group/constant">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Group/constant"/>
@@ -53,6 +47,7 @@
     </genClasses>
     <genClasses ecoreClass="definitions.ecore#//Switch">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definitions.ecore#//Switch/groups"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Switch/checkPrefix"/>
     </genClasses>
     <genClasses ecoreClass="definitions.ecore#//TypedArgument" labelFeature="#//definitions/TypedArgument/name">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//TypedArgument/type"/>

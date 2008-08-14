@@ -350,14 +350,22 @@ public interface AstPackage extends EPackage {
 	int TCL_COMMAND__QUALIFIED_NAME = NODE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Matched</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_COMMAND__MATCHED = NODE_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Command</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_COMMAND_FEATURE_COUNT = NODE_FEATURE_COUNT + 5;
-
+	int TCL_COMMAND_FEATURE_COUNT = NODE_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl <em>Tcl Argument List</em>}' class.
@@ -413,7 +421,6 @@ public interface AstPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCL_ARGUMENT_LIST_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 2;
-
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.ArgumentMatchImpl <em>Argument Match</em>}' class.
@@ -743,6 +750,17 @@ public interface AstPackage extends EPackage {
 	EAttribute getTclCommand_QualifiedName();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclCommand#isMatched <em>Matched</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Matched</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclCommand#isMatched()
+	 * @see #getTclCommand()
+	 * @generated
+	 */
+	EAttribute getTclCommand_Matched();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.TclArgumentList <em>Tcl Argument List</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -969,7 +987,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference SUBSTITUTION__COMMANDS = eINSTANCE.getSubstitution_Commands();
+		EReference SUBSTITUTION__COMMANDS = eINSTANCE
+				.getSubstitution_Commands();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentImpl <em>Tcl Argument</em>}' class.
@@ -1013,7 +1032,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TCL_COMMAND__DEFINITION = eINSTANCE.getTclCommand_Definition();
+		EReference TCL_COMMAND__DEFINITION = eINSTANCE
+				.getTclCommand_Definition();
 
 		/**
 		 * The meta object literal for the '<em><b>Matches</b></em>' reference list feature.
@@ -1029,7 +1049,16 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TCL_COMMAND__QUALIFIED_NAME = eINSTANCE.getTclCommand_QualifiedName();
+		EAttribute TCL_COMMAND__QUALIFIED_NAME = eINSTANCE
+				.getTclCommand_QualifiedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Matched</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_COMMAND__MATCHED = eINSTANCE.getTclCommand_Matched();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl <em>Tcl Argument List</em>}' class.
@@ -1047,7 +1076,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TCL_ARGUMENT_LIST__ARGUMENTS = eINSTANCE.getTclArgumentList_Arguments();
+		EReference TCL_ARGUMENT_LIST__ARGUMENTS = eINSTANCE
+				.getTclArgumentList_Arguments();
 
 		/**
 		 * The meta object literal for the '<em><b>Definition Argument</b></em>' reference feature.
@@ -1055,7 +1085,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT = eINSTANCE.getTclArgumentList_DefinitionArgument();
+		EReference TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT = eINSTANCE
+				.getTclArgumentList_DefinitionArgument();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.ArgumentMatchImpl <em>Argument Match</em>}' class.
@@ -1073,7 +1104,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ARGUMENT_MATCH__DEFINITION = eINSTANCE.getArgumentMatch_Definition();
+		EReference ARGUMENT_MATCH__DEFINITION = eINSTANCE
+				.getArgumentMatch_Definition();
 
 		/**
 		 * The meta object literal for the '<em><b>Arguments</b></em>' reference list feature.
@@ -1081,7 +1113,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ARGUMENT_MATCH__ARGUMENTS = eINSTANCE.getArgumentMatch_Arguments();
+		EReference ARGUMENT_MATCH__ARGUMENTS = eINSTANCE
+				.getArgumentMatch_Arguments();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.ComplexStringImpl <em>Complex String</em>}' class.
@@ -1099,7 +1132,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference COMPLEX_STRING__ARGUMENTS = eINSTANCE.getComplexString_Arguments();
+		EReference COMPLEX_STRING__ARGUMENTS = eINSTANCE
+				.getComplexString_Arguments();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.VariableReferenceImpl <em>Variable Reference</em>}' class.
@@ -1117,7 +1151,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute VARIABLE_REFERENCE__NAME = eINSTANCE.getVariableReference_Name();
+		EAttribute VARIABLE_REFERENCE__NAME = eINSTANCE
+				.getVariableReference_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Index</b></em>' reference feature.
@@ -1125,7 +1160,8 @@ public interface AstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference VARIABLE_REFERENCE__INDEX = eINSTANCE.getVariableReference_Index();
+		EReference VARIABLE_REFERENCE__INDEX = eINSTANCE
+				.getVariableReference_Index();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.ISubstitution <em>ISubstitution</em>}' class.
