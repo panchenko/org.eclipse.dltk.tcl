@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.dltk.tcl.parser.definitions">
+      <definitions
+            url="platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml">
+      </definitions>
+   </extension>
+
+</plugin>

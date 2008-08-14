@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="tclCheck" name="tclCheck" schema="schema/tclCheck.exsd"/>
+   <extension
+         point="org.eclipse.dltk.validators.core.validator">
+      <validatorType
+            class="org.eclipse.dltk.tcl.validators.TclChecksValidatorType"
+            id="org.eclipse.dltk.tcl.validators.checks"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </validatorType>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.tcl.validators.tclCheck">
+      <!--check
+            class="org.eclipse.dltk.tcl.internal.validators.checks.UndefinedVariableCheck"
+            id="org.eclipse.dltk.tcl.validators.undefvariable"
+            title="Undefined variable check">
+      </check>
+      <check
+            class="org.eclipse.dltk.tcl.internal.validators.checks.UndefinedProcCheck"
+            id="org.eclipse.dltk.tcl.validators.undefproc"
+            title="Undefined proc check">
+      </check-->
+      <check
+            class="org.eclipse.dltk.tcl.internal.validators.checks.ProcArgsDefCheck"
+            id="org.eclipse.dltk.tcl.validators.procargsdefcheck"
+            title="Proc Command Arguments Definition Check">
+      </check>
+   </extension>
+
+</plugin>

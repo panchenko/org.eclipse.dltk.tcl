@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.dltk.tcl.parser/ast"
+    modelPluginID="org.eclipse.dltk.tcl.parser" modelName="Ast" importerID="org.eclipse.emf.importer.java"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>@model</foreignModel>
+  <genPackages prefix="Ast" basePackage="org.eclipse.dltk.tcl" disposableProviderFactory="true"
+      ecorePackage="ast.ecore#/">
+    <genClasses ecoreClass="ast.ecore#//Node">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ast.ecore#//Node/start"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ast.ecore#//Node/end"/>
+    </genClasses>
+    <genClasses ecoreClass="ast.ecore#//Script">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//Script/commands"/>
+    </genClasses>
+    <genClasses ecoreClass="ast.ecore#//StringArgument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ast.ecore#//StringArgument/value"/>
+    </genClasses>
+    <genClasses ecoreClass="ast.ecore#//Substitution">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//Substitution/commands"/>
+    </genClasses>
+    <genClasses ecoreClass="ast.ecore#//TclArgument"/>
+    <genClasses ecoreClass="ast.ecore#//TclCommand">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//TclCommand/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//TclCommand/arguments"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//TclCommand/definition"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//TclCommand/matches"/>
+    </genClasses>
+    <genClasses ecoreClass="ast.ecore#//TclArgumentList">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//TclArgumentList/arguments"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//TclArgumentList/definitionArgument"/>
+    </genClasses>
+    <genClasses ecoreClass="ast.ecore#//ArgumentMatch">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//ArgumentMatch/definition"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ast.ecore#//ArgumentMatch/arguments"/>
+    </genClasses>
+  </genPackages>
+  <genPackages prefix="Definitions" basePackage="org.eclipse.dltk.tcl" ecorePackage="definitions.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="definitions.ecore#//ArgumentType">
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Any"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Integer"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Index"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/NotNegative"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Expression"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Script"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/ComplexScript"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/VarName"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/CmdName"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/ArrayName"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/FileName"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Level"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Channel"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Package"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Namespace"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/ProcArgs"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Format"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Pattern"/>
+      <genEnumLiterals ecoreEnumLiteral="definitions.ecore#//ArgumentType/Boolean"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="definitions.ecore#//Argument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Argument/lowerBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Argument/upperBound"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//Command">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Command/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definitions.ecore#//Command/arguments"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Command/version"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference definitions.ecore#//Command/scope"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Command/deprecated"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//Scope">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definitions.ecore#//Scope/children"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//Constant">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Constant/value"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//Group">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Group/constant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definitions.ecore#//Group/arguments"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//Switch">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference definitions.ecore#//Switch/groups"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//TypedArgument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//TypedArgument/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//TypedArgument/name"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//Namespace">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definitions.ecore#//Namespace/name"/>
+    </genClasses>
+    <genClasses ecoreClass="definitions.ecore#//ComplexArgument">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference definitions.ecore#//ComplexArgument/arguments"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
