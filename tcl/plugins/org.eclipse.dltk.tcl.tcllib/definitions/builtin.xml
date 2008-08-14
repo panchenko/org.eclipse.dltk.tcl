@@ -2179,16 +2179,32 @@
       </arguments>
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-      <arguments xsi:type="tclparse:ComplexArgument">
-        <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
-          <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
-          <arguments xsi:type="tclparse:Switch">
-            <groups constant="-"/>
-            <groups>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
-            </groups>
+      
+      <arguments xsi:type="tclparse:Switch" lowerBound="1" upperBound="1">
+        <groups>
+          <arguments xsi:type="tclparse:ComplexArgument">
+            <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
+              <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
+              <arguments xsi:type="tclparse:Switch">
+                <groups constant="-"/>
+                <groups>
+                  <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+                </groups>
+              </arguments>
+            </arguments>
+          </arguments>  
+        </groups>
+        <groups>
+          <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
+            <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
+            <arguments xsi:type="tclparse:Switch">
+              <groups constant="-"/>
+              <groups>
+                <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+              </groups>
+            </arguments>
           </arguments>
-        </arguments>
+        </groups>
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="tcl_endOfWord">
