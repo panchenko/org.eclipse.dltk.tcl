@@ -65,7 +65,7 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 				c = input.read();
 				if (c == -1) {
 					throw new TclParseException(
-							"unexpected EOF while processing braces variable name",
+							Messages.VariableSubstitution_BracesVariableName,
 							input.getPosition());
 				}
 				if (c == '}')
@@ -96,13 +96,14 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 								if (ch == CodeScanner.EOF) {
 									boolean cont = parser
 											.handleError(new ErrorDescription(
-													"unexpected EOF while processing variable index",
-													input.getPosition(),
+													Messages.VariableSubstitution_VariableIndex,
+													getStart(), input
+															.getPosition(),
 													ErrorDescription.ERROR));
 									if (!cont)
 										throw new TclParseException(
-												"unexpected EOF while processing variable index",
-												input.getPosition());
+												Messages.VariableSubstitution_VariableIndex,
+												getStart());
 									else
 										break; // stop!
 								}

@@ -40,7 +40,7 @@ public class TclWord extends TclElement {
 	}
 
 	public void add(char c) {
-		add("" + c);
+		add("" + c); //$NON-NLS-1$
 	}
 
 	public void add(ISubstitution s) {

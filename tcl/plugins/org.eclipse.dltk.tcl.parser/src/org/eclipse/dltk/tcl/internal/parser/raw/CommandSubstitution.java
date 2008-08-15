@@ -38,9 +38,8 @@ public class CommandSubstitution extends TclElement implements ISubstitution {
 		this.script = parser.parse(input, true, new IEOFHandler() {
 			public void handle() {
 				parser.handleError(new ErrorDescription(
-						"unexpected eof while processing command substitution started at "
-								+ getStart(), getStart(), input.getPosition(),
-						ErrorDescription.ERROR));
+						Messages.CommandSubstitution_0, getStart(), input
+								.getPosition(), ErrorDescription.ERROR));
 			}
 		});
 		setEnd(input.getPosition() - (input.isEOF() ? 0 : 1));

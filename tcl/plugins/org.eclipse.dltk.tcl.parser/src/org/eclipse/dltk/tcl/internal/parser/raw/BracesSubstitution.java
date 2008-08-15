@@ -33,9 +33,8 @@ public class BracesSubstitution extends TclElement implements ISubstitution {
 			c = input.read();
 			if (c == -1) {
 				parser.handleError(new ErrorDescription(
-						"unexpected eof while processing braces started at "
-								+ getStart(), getStart(), input.getPosition(),
-						ErrorDescription.ERROR));
+						Messages.BracesSubstitution_Error, getStart(), input
+								.getPosition(), ErrorDescription.ERROR));
 				break;
 			}
 			if (c == '\\') {

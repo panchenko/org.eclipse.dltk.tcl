@@ -39,8 +39,8 @@ public class SimpleTclParser {
 	}
 
 	public static String magicSubstitute(String src) {
-		String regex = "\\\\\\r*\\n\\s*";
-		return src.replaceAll(regex, " ");
+		String regex = "\\\\\\r*\\n\\s*"; //$NON-NLS-1$
+		return src.replaceAll(regex, " "); //$NON-NLS-1$
 	}
 
 	public ISubstitution getCVB(CodeScanner input) throws TclParseException {

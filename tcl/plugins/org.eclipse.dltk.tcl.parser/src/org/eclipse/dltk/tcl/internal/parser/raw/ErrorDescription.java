@@ -52,6 +52,6 @@ public class ErrorDescription {
 	}
 
 	public String toString() {
-		return getMessage() + " at " + getPosition();
+		return getMessage() + " at " + getPosition(); //$NON-NLS-1$
 	}
 }
