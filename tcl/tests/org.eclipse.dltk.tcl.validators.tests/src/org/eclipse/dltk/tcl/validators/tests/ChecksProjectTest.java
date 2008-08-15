@@ -33,8 +33,6 @@ import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.validators.TclCheckBuildParticipant;
 import org.eclipse.dltk.tcl.parser.PerformanceMonitor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils;
-import org.junit.Before;
-import org.junit.Test;
 import org.osgi.framework.Bundle;
 
 public class ChecksProjectTest extends TestCase {
@@ -73,7 +71,6 @@ public class ChecksProjectTest extends TestCase {
 
 	IProject project;
 
-	@Before
 	public void setUp() throws Exception {
 		TclCheckBuildParticipant.TESTING_DO_OPERATIONS = false;
 		TclCheckBuildParticipant.TESTING_DO_CHECKS = false;
@@ -90,7 +87,6 @@ public class ChecksProjectTest extends TestCase {
 		project.open(monitor);
 	}
 
-	@Test
 	public void testProjectOperations() throws Exception {
 		PerformanceMonitor.getDefault().end("DLTK:Create project");
 		PerformanceMonitor.getDefault().begin("DLTK:Wait for build and index");

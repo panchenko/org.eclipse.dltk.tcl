@@ -33,9 +33,6 @@ import org.eclipse.dltk.tcl.parser.TclError;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 public class CheckMethodExistanceTest extends AbstractModelTests {
 	private static final String CHECK_PROC_EXISTS_NAME = "CheckProcExists";
@@ -45,7 +42,6 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 		super(TclValidatorTestsPlugin.PLUGIN_ID, "CheckMethodExistanceTest");
 	}
 
-	@Before
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
 		TclCheckBuildParticipant.TESTING_DO_CHECKS = false;
@@ -60,13 +56,11 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 		waitUntilIndexesReady();
 	}
 
-	@After
 	public void tearDownSuite() throws Exception {
 		super.tearDownSuite();
 		deleteProject(CHECK_PROC_EXISTS_NAME);
 	}
 
-	@Test
 	public void testMethodExistsCheck001() throws Exception {
 		ISourceModule module = getSourceModule("/CheckProcExists/src/src1.tcl");
 		TestCase.assertNotNull(module);
@@ -88,7 +82,6 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 				.assertEquals(error.getCode(), ICheckKinds.CHECK_UNDEFINED_PROC);
 	}
 
-	@Test
 	public void testMethodExistsCheck002() throws Exception {
 		ISourceModule module = getSourceModule("/CheckProcExists/src/src2.tcl");
 		TestCase.assertNotNull(module);
