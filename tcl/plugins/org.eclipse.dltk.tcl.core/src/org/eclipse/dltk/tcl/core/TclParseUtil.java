@@ -95,9 +95,9 @@ public class TclParseUtil {
 			int len = codeLineLengths.length;
 			for (int i = 0; i < len - 1; ++i) {
 				int s = this.codeLineLengths[i];
-				int e = start + this.codeLineLengths[i + 1] - 1;
+				int e = this.codeLineLengths[i + 1] - 1;
 
-				if (start <= s && end <= e) {
+				if (s <= start && end <= e) {
 					return i + 1;
 				}
 			}
