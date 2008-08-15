@@ -46,7 +46,7 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 
 		final CheckPreferenceManager preferences = new CheckPreferenceManager(
 				TclValidatorsCore.getDefault().getPluginPreferences());
-		String source = module.getSource();
+		final String source = module.getSource();
 
 		TclParser parser = new TclParser();
 		TclErrorCollector errorCollector = new TclErrorCollector();
@@ -74,13 +74,14 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 		errorCollector.reportAll(new ITclErrorReporter() {
 			public void report(int code, String message, int start, int end,
 					int kind) {
-				int line = codeModel.getLineNumber(start, end);
+				int line = codeModel.getLineNumber(start, start + 1);
 				DefaultProblem problem = new DefaultProblem(
 						message,
 						code,
 						null,
 						kind == ITclErrorReporter.ERROR ? ProblemSeverities.Error
-								: ProblemSeverities.Warning, start, end, line);
+								: ProblemSeverities.Warning, start, end,
+						line - 1);
 				reporter.reportProblem(problem);
 			}
 		});
