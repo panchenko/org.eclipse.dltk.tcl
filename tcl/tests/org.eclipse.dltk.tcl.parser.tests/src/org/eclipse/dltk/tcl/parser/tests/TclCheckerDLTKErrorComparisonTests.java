@@ -43,13 +43,12 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
 import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
-import org.junit.Test;
 import org.osgi.framework.Bundle;
 
 public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 	IProject project;
 
-	@Test
+	
 	public void test001() throws Exception {
 		String fileName = "main1.tcl";
 

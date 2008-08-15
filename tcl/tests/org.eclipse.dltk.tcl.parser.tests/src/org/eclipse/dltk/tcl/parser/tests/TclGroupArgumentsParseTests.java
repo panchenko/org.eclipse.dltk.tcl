@@ -28,7 +28,6 @@ import org.eclipse.dltk.tcl.definitions.TypedArgument;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class TclGroupArgumentsParseTests extends TestCase {
 	public Command createGroupCommand001() throws Exception {
@@ -96,73 +95,73 @@ public class TclGroupArgumentsParseTests extends TestCase {
 		return command;
 	}
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "constants -id {set a 20}";
 		check001(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "constants -id {set a 20} -id {set a 20}";
 		check001(source, 0, 2);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "constants";
 		check001(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "constants -id {set a 20} -id {set a 20} -id {set a 20}";
 		check001(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test005() throws Exception {
 		String source = "constants -id {set a 20} -id {set a 20} -- {set a 20}";
 		check002(source, 0, 3);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "constants -id {set a 20} -- {set a 20}";
 		check002(source, 0, 2);
 	}
 
-	@Test
+	
 	public void test007() throws Exception {
 		String source = "constants -- {set a 20}";
 		check002(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test008() throws Exception {
 		String source = "constants --- {set a 20}";
 		check002(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test009() throws Exception {
 		String source = "constants -- {set a 20} {set a 20}";
 		check002(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test010() throws Exception {
 		String source = "constants -- -- {set a 20} {set a 20}";
 		check002(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test011() throws Exception {
 		String source = "constants -id { set a 30 } -- {set a 20} {set a 20}";
 		check002(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test012() throws Exception {
 		String source = "constants -id { set a 30 } -- {set a 20}";
 		check002(source, 0, 2);

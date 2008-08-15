@@ -25,25 +25,24 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class WhileCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	@Test
+	
 	public void testAdvancedParse001() throws Exception {
 		String source = "while 1 {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
 	// -----------------------------------------------------------
-	@Test
+	
 	public void testAdvancedParse002() throws Exception {
 		String source = "while 1";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void testAdvancedParse003() throws Exception {
 		String source = "while 1 {puts alpha} {puts alpha}";
 		typedCheck(source, 1, 0);

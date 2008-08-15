@@ -28,7 +28,6 @@ import org.eclipse.dltk.tcl.definitions.TypedArgument;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class GroupParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
@@ -70,37 +69,37 @@ public class GroupParseTests extends TestCase {
 		return command;
 	}
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "group";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "group const val";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "group const val val";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "group val val";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test005() throws Exception {
 		String source = "group const val val val";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "group const val val const val val";
 		typedCheck(source, 0, 0);

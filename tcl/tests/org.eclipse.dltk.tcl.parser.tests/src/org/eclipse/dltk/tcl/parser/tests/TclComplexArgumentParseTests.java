@@ -28,7 +28,6 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
-import org.junit.Test;
 
 public class TclComplexArgumentParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
@@ -67,37 +66,37 @@ public class TclComplexArgumentParseTests extends TestCase {
 		return command;
 	}
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "constants";
 		constantsCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "constants {a {set a 20}} ";
 		constantsCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "constants {a {set a 20}} {a {set a 20}}";
 		constantsCheck(source, 0, 2);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "constants {} {a {set a 20}}";
 		constantsCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test005() throws Exception {
 		String source = "constants {a {set a 20} b {set a 20} c {set a 20}} {a {set a 20}}";
 		constantsCheck(source, 0, 4);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "constants {\n" + "a {\n" + "	set a 20\n" + "}\n"
 				+ "b {\n" + "	set a 20\n" + "}\n" + "c {\n" + "	set a 20\n"

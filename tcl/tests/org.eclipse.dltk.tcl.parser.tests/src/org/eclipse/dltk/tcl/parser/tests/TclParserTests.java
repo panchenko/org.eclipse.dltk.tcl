@@ -23,10 +23,9 @@ import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class TclParserTests extends TestCase {
-	@Test
+	
 	public void testParser001() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "set a 20\n" + "set c 30";
@@ -50,7 +49,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("20", ref3.getValue());
 	}
 
-	@Test
+	
 	public void testParser002() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "set a \"wer\"\n" + "set c 30";
@@ -75,7 +74,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("\"wer\"", ref3.getValue());
 	}
 
-	@Test
+	
 	public void testParser003() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "set a {wer}\n" + "set c 30";
@@ -100,7 +99,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("{wer}", ref3.getValue());
 	}
 
-	@Test
+	
 	public void testParser004() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "set a [wer]\n" + "set c 30";
@@ -134,7 +133,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("wer", ((StringArgument) argument).getValue());
 	}
 
-	@Test
+	
 	public void testParser005() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "puts \"alfa[de]be$teta\" $delta";
@@ -149,7 +148,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("puts", ref1.getValue());
 	}
 
-	@Test
+	
 	public void testParser006() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "incr i -$length";
@@ -164,7 +163,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("incr", ref1.getValue());
 	}
 
-	@Test
+	
 	public void testSimpleErrors001() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "set a \"This is\nset b 20";
@@ -175,7 +174,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals(1, collector.getCount());
 	}
 
-	@Test
+	
 	public void testSimpleErrors002() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "set a [This is\nset b 20";
@@ -186,7 +185,7 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals(1, collector.getCount());
 	}
 
-	@Test
+	
 	public void testSimpleErrors003() throws Exception {
 		TclParser parser = new TclParser();
 		String source = "set a {This is\nset b 20";

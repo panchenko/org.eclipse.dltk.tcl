@@ -26,10 +26,9 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
-import org.junit.Test;
 
 public class PerfomanceTests extends TestCase {
-	@Test
+	
 	public void testBigFilePerfomance() throws Exception {
 		PerformanceMonitor.getDefault().begin("LOAD BIG FILE:");
 		String contents = BigFileGenerator.generateBigFile001();

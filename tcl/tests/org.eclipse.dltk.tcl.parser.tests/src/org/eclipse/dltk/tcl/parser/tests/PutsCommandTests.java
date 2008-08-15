@@ -25,61 +25,60 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class PutsCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "puts message";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "puts file0 message";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "puts -nonewline message";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "puts -nonewline file0 message";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test005() throws Exception {
 		String source = "puts -nonewline";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "puts -nonewline file0";
 		typedCheck(source, 0, 0);
 	}
 
 	// -----------------------------------------------------------
-	@Test
+	
 	public void test007() throws Exception {
 		String source = "puts";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test008() throws Exception {
 		String source = "puts -nonewline file0 msg0 msg1";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test009() throws Exception {
 		String source = "puts msg0 msg1 msg2";
 		typedCheck(source, 1, 0);

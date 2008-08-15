@@ -26,7 +26,6 @@ import org.eclipse.dltk.tcl.definitions.TypedArgument;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class SetCommandParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
@@ -54,26 +53,26 @@ public class SetCommandParseTests extends TestCase {
 		return command;
 	}
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "set var value";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "set var";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "set var value value";
 		typedCheck(source, 1, 0);
 	}
 
 	/*
-	 * @Test public void test004() throws Exception { String source =
+	 *  public void test004() throws Exception { String source =
 	 * "set {var} value"; typedCheck(source, 1, 1); }
 	 */
 

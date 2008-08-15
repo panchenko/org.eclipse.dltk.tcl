@@ -22,7 +22,6 @@ import org.eclipse.dltk.tcl.definitions.Constant;
 import org.eclipse.dltk.tcl.definitions.DefinitionsFactory;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
-import org.junit.Test;
 
 public class TclConstantsParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
@@ -55,103 +54,103 @@ public class TclConstantsParseTests extends TestCase {
 		return command;
 	}
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "constants alfa gamma gamma";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "constants alfa beta gamma gamma";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "constants alfa beta gamma";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "constants alfa beta";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test005() throws Exception {
 		String source = "constants alfa";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "constants alfa gamma";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test007() throws Exception {
 		String source = "constants";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test008() throws Exception {
 		String source = "constants alfa alfa";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test009() throws Exception {
 		String source = "constants alfa alfa beta beta";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test010() throws Exception {
 		String source = "constants alfa alfa beta beta beta";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test011() throws Exception {
 		String source = "constants alfa alfa beta beta beta gamma";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test012() throws Exception {
 		String source = "constants alfa alfa beta beta beta gamma gamma gamma";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test013() throws Exception {
 		String source = "constants alfa beta beta beta gamma gamma gamma";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test014() throws Exception {
 		String source = "constants [alfa] beta gamma";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test015() throws Exception {
 		String source = "constants [alfa] alfa beta gamma";
 		constantsCheck(source, 1);
 	}
 
-	@Test
+	
 	public void test016() throws Exception {
 		String source = "constants [alfa] [beta] gamma";
 		constantsCheck(source, 0);
 	}
 
-	@Test
+	
 	public void test017() throws Exception {
 		String source = "constants beta gamma";
 		constantsCheck(source, 1);

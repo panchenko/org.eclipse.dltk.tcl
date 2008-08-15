@@ -25,30 +25,29 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
-import org.junit.Test;
 
 public class SocketCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "socket $host $port";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "socket -server [list ::ftpd::PasvAccept $sock] 0";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "set data(sock2a) [socket -server [list ::ftpd::PasvAccept $sock] 0]";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "socket -server lala";
 		typedCheck(source, 1, 0);

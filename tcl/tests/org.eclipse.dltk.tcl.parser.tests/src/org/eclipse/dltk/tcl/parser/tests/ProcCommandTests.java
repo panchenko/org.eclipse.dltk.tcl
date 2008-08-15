@@ -25,12 +25,11 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class ProcCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "proc cmd arg {puts alpha}";
 		TclCommand cmd = typedCheck(source, 0, 1);
@@ -38,68 +37,68 @@ public class ProcCommandTests extends TestCase {
 		// TestCase.assertEquals(1, arguments.length);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "proc cmd {arg} {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "proc cmd {arg1 arg2} {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2}} {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test005() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2} args} {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "proc cmd {{arg1} {{arg2}}} {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test007() throws Exception {
 		String source = "proc cmd {} {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test008() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2 def22} args} {puts alpha}";
 		typedCheck(source, 1, 1);
 	}
 
-	@Test
+	
 	public void test009() throws Exception {
 		String source = "proc cmd {puts alpha}";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test010() throws Exception {
 		String source = "proc cmd arg1 puts alpha";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test011() throws Exception {
 		// !!!
 		String source = "proc cmd {{{{arg1}}}} {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test012() throws Exception {
 		// !!!
 		String source = "proc al {q} {}";

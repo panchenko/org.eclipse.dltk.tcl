@@ -27,74 +27,73 @@ import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class SwitchCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "switch $some {a {puts $some}}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "switch -glob -- -some {a concat2}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "switch -glob -- $some {a \"puts $some\"}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "switch -glob -- $some {a {puts $some} b \"puts $some\" c break}";
 		typedCheck(source, 0, 3);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "switch -exact -- $caller {cancel {puts cancel}}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test007() throws Exception {
 		String source = "switch $caller {cancel return cancel2 return}";
 		typedCheck(source, 0, 2);
 	}
 
-	@Test
+	
 	public void test008() throws Exception {
 		String source = "switch -- $caller {cancel return cancel2 return}";
 		typedCheck(source, 0, 2);
 	}
 
-	@Test
+	
 	public void test009() throws Exception {
 		String source = "switch -- $caller cancel return cancel2 return2";
 		typedCheck(source, 0, 2);
 	}
 
-	@Test
+	
 	public void test010() throws Exception {
 		// cancel - unknown command - ats_rmserver
 		String source = "switch $caller {{cancel} {puts cancel}}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test011() throws Exception {
 		// -jobs unknown command - autoeasy_abort
 		String source = "switch -exact -- $i { -jobs { set flag 1} }";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test012() throws Exception {
 		// -jobs unknown command - autoeasy_abort
 		String source = "switch -exact -- $i { \"jobs\" { set flag 1} }";

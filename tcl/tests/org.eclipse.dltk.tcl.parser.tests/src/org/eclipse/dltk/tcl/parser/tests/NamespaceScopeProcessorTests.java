@@ -35,7 +35,6 @@ import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
-import org.junit.Test;
 
 public class NamespaceScopeProcessorTests extends TestCase {
 
@@ -82,7 +81,7 @@ public class NamespaceScopeProcessorTests extends TestCase {
 		return command;
 	}
 
-	@Test
+	
 	public void test001() throws Exception {
 		DefinitionsFactory factory = DefinitionsFactory.eINSTANCE;
 
@@ -138,7 +137,7 @@ public class NamespaceScopeProcessorTests extends TestCase {
 		TestCase.assertEquals(c, alfaDefinitions.get(6));
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String content = TestUtils.getContents(Activator.getDefault()
 				.getBundle().getEntry("/scripts/namespace002.tcl"));

@@ -29,8 +29,6 @@ import org.eclipse.dltk.tcl.parser.PerformanceMonitor;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionUtils;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SwitchReduceTest extends TestCase {
 	public Command createCommand001() throws Exception {
@@ -125,7 +123,6 @@ public class SwitchReduceTest extends TestCase {
 		return command;
 	}
 
-	@Test
 	public void testReplaceSwitch001() throws Exception {
 		System.out.println("TEST:"
 				+ Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -137,7 +134,6 @@ public class SwitchReduceTest extends TestCase {
 		}
 	}
 
-	@Test
 	public void testReplaceSwitch002() throws Exception {
 		System.out.println("TEST:"
 				+ Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -151,7 +147,6 @@ public class SwitchReduceTest extends TestCase {
 
 	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
 
-	@Before
 	public void setUp() throws Exception {
 		Scope scope = DefinitionLoader
 				.loadDefinitions(new URL(
@@ -160,7 +155,6 @@ public class SwitchReduceTest extends TestCase {
 		processor.addScope(scope);
 	}
 
-	@Test
 	public void testReplaceSwitch004() throws Exception {
 		System.out.println("TEST:"
 				+ Thread.currentThread().getStackTrace()[1].getMethodName());

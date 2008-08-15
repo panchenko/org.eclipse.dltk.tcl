@@ -20,11 +20,10 @@ import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
-import org.junit.Test;
 
 public class LoadDefinitionTests extends TestCase {
 
-	@Test
+	
 	public void testLoad001() throws Exception {
 		TestScopeProcessor processor = new TestScopeProcessor();
 		Scope scope = DefinitionLoader
@@ -40,7 +39,7 @@ public class LoadDefinitionTests extends TestCase {
 		TestCase.assertEquals("unset", unsetCommand[0].getName());
 	}
 
-	@Test
+	
 	public void testLoad002() throws Exception {
 		TestScopeProcessor processor = new TestScopeProcessor();
 		Scope scope = DefinitionLoader.loadDefinitions(Activator.getDefault()

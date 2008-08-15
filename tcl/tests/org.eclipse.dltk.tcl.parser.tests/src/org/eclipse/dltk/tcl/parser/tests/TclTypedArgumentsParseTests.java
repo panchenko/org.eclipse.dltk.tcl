@@ -28,7 +28,6 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class TclTypedArgumentsParseTests extends TestCase {
 	public Command createConstantsCommand() throws Exception {
@@ -72,7 +71,7 @@ public class TclTypedArgumentsParseTests extends TestCase {
 		return command;
 	}
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "constants alfa {set a 20} gamma {set a 20}";
 		TclCommand cmd = typedCheck(source, 0, 2);
@@ -93,7 +92,7 @@ public class TclTypedArgumentsParseTests extends TestCase {
 
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "constants alfa gamma {set a 20}";
 		TclCommand cmd = typedCheck(source, 0, 1);
@@ -113,13 +112,13 @@ public class TclTypedArgumentsParseTests extends TestCase {
 		TestCase.assertEquals(1, deltaMatch.length);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "constants alfa [alfa gamma] gamma {set a 20}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test004() throws Exception {
 		String source = "constants alfa {set a 20} [gamma] {set a 20}";
 		TclCommand command = typedCheck(source, 0, 2);
@@ -141,13 +140,13 @@ public class TclTypedArgumentsParseTests extends TestCase {
 		TestCase.assertEquals(1, deltaMatch.length);
 	}
 
-	@Test
+	
 	public void test005() throws Exception {
 		String source = "constants alfa alfa {set a 20} [gamma] {set a 20}";
 		typedCheck(source, 1, 0);
 	}
 
-	@Test
+	
 	public void test006() throws Exception {
 		String source = "constants alfa {set} [gamma] set";
 		typedCheck(source, 0, 2);

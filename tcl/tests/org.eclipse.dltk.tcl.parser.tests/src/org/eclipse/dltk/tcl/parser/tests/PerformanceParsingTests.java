@@ -37,8 +37,6 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
-import org.junit.Before;
-import org.junit.Test;
 import org.osgi.framework.Bundle;
 
 public class PerformanceParsingTests extends TestCase {
@@ -47,7 +45,6 @@ public class PerformanceParsingTests extends TestCase {
 	private long index = 0;
 	IProject project;
 
-	@Before
 	public void setUp() throws Exception {
 		String name = "test_project_name";
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -61,7 +58,6 @@ public class PerformanceParsingTests extends TestCase {
 		project.open(new NullProgressMonitor());
 	}
 
-	@Test
 	public void testOriginalParserPerformance() throws Exception {
 		File file = new File(project.getLocation().toOSString());
 		// FileOutputStream fout = new FileOutputStream(

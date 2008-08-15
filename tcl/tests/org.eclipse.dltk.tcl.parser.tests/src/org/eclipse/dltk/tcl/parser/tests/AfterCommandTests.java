@@ -24,24 +24,23 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
 public class AfterCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	@Test
+	
 	public void test001() throws Exception {
 		String source = "after 10 {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
-	@Test
+	
 	public void test002() throws Exception {
 		String source = "after cancel {puts alpha} {puts beta}";
 		typedCheck(source, 0, 0);
 	}
 
-	@Test
+	
 	public void test003() throws Exception {
 		String source = "after $cancel lala";
 		typedCheck(source, 0, 1);
