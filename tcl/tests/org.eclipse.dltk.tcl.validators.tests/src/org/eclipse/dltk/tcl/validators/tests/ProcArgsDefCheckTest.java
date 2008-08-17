@@ -18,6 +18,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.dltk.core.tests.TestSupport;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -197,12 +198,10 @@ public class ProcArgsDefCheckTest extends TestCase {
 	}
 
 	public void test033_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "proc cmd {arg {}} {puts alpha}";
-		try {
-			typedCheck(source, true, ICheckKinds.CHECK_ARG_WITH_NO_NAME);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, true, ICheckKinds.CHECK_ARG_WITH_NO_NAME);
 	}
 
 	private void typedCheck(String source, boolean isError, int errorCode)
@@ -210,12 +209,12 @@ public class ProcArgsDefCheckTest extends TestCase {
 		Scope scope = DefinitionLoader
 				.loadDefinitions(new URL(
 						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
+		assertNotNull(scope);
 		processor.add(scope);
 		TclParser parser = new TclParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
-		TestCase.assertEquals(1, module.size());
+		assertEquals(1, module.size());
 		ITclCheck check = new ProcArgsDefCheck();
 		check.checkCommands(module, errors, new HashMap<String, String>());
 		TclCommand tclCommand = module.get(0);
@@ -230,10 +229,10 @@ public class ProcArgsDefCheckTest extends TestCase {
 			TestUtils.outErrors(source, errors);
 		}
 		if (isError) {
-			TestCase.assertEquals(1, errors.getCount());
-			TestCase.assertEquals(errorCode, (errors.getErrors()[0]).getCode());
+			assertEquals(1, errors.getCount());
+			assertEquals(errorCode, (errors.getErrors()[0]).getCode());
 		} else {
-			TestCase.assertEquals(0, errors.getCount());
+			assertEquals(0, errors.getCount());
 		}
 	}
 }
