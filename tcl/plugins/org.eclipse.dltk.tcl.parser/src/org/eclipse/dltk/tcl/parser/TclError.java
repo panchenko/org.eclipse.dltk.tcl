@@ -32,8 +32,7 @@ public class TclError {
 		int result = 1;
 		result = prime * result + code;
 		result = prime * result + end;
-		result = prime * result
-				+ ((message == null) ? 0 : message.hashCode());
+		result = prime * result + (message == null ? 0 : message.hashCode());
 		result = prime * result + start;
 		return result;
 	}
@@ -99,5 +98,10 @@ public class TclError {
 
 	public void setErrorKind(int errorKind) {
 		this.errorKind = errorKind;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + start + ".." + end + "]" + code + ":" + message;
 	}
 }
