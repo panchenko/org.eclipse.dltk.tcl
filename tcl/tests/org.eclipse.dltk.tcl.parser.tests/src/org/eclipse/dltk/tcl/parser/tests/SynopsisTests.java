@@ -5,6 +5,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.internal.resources.TestingSupport;
+import org.eclipse.dltk.core.tests.TestSupport;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
@@ -138,6 +140,8 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test016_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "chan";
 		String synopsis = "chan blocked channelId\n"
 				+ "chan close channelId\n"
@@ -157,11 +161,7 @@ public class SynopsisTests extends TestCase {
 				+ "chan read ?-nonewline? channelId\n"
 				+ "chan seek channelId offset ?origin?\n"
 				+ "chan tell channelId \n" + "chan truncate channelId ?length?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -239,13 +239,11 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test027_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "exec";
 		String synopsis = "exec ?-ignorestderr? ?-keepnewline? ?--? arg ?arg ...?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -334,14 +332,12 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test040_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "glob";
 		String synopsis = "glob ?-directory directory? ?-join? ?-nocomplain? "
 				+ "?-path pathPrefix? ?-tails? ?-types typeList? ?--? pattern ?pattern ...?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -582,17 +578,15 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test074_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "lsearch";
 		String synopsis = "lsearch ?-ascii? ?-all? ?-dictionary? "
 				+ "?-decreasing? ?-exact? ?-glob? ?-inline? ?-integer? "
 				+ "?-not? ?-real? ?-regexp? ?-sorted? ?-start index? "
 				+ "?-index indexList? ?-nocase? ?-decreasing? "
 				+ "?-increasing? ?-subindices? list pattern";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -604,15 +598,13 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test076_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "lsort";
 		String synopsis = "lsort ?-ascii? ?-dictionary? ?-integer? "
 				+ "?-real? ?-command command? ?-increasing? ?-decreasing? "
 				+ "?-indices? ?-index indexList? ?-nocase? ?-unique? list";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -723,14 +715,12 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test092_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "pkg_mkIndex";
 		String synopsis = "pkg_mkIndex ?-direct? ?-lazy? ?-load "
 				+ "pkgPat? ?-verbose? ?--? dir ?pattern ...?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -806,26 +796,22 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test103_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "cmdPrefix";
 		String synopsis = "cmdPrefix option ?arg ...?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
 	public void test104_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "regexp";
 		String synopsis = "regexp ?-about? ?-expanded? ?-indices? ?-line? "
 				+ "?-linestop? ?-lineanchor? ?-nocase? ?-all? ?-inline? "
 				+ "?-start index? ?--? exp string ?matchVar ...?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -837,15 +823,13 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test106_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "regsub";
 		String synopsis = "regsub ?-about? ?-expanded? ?-indices? ?-line? "
 				+ "?-linestop? ?-lineanchor? ?-nocase? ?-all? ?-inline? "
 				+ "?-start index? ?--? exp string subSpec ?varName?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -857,14 +841,12 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test108_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "return";
 		String synopsis = "return ?-errorcode list? ?-errorinfo info? "
 				+ "?-level level? ?-options options? ?-code code? ?result?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -931,13 +913,11 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test117_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "seek";
 		String synopsis = "seek channelId offset ?origin?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -949,14 +929,12 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test119_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "socket";
 		String synopsis = "socket -server command ?-myaddr addr? port\n"
 				+ "socket ?-myaddr addr? ?-myport port? ?-async? host port";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -982,25 +960,21 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test123_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "subst";
 		String synopsis = "subst ?-nobackslashes? ?-nocommands? ?-novariables? string";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
 	public void test124_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "switch";
 		String synopsis = "switch ?options? string pattern body ?pattern body ...?\n"
 				+ "switch ?options? string {pattern body ?pattern body ...?}";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -1054,25 +1028,21 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test132_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "::tcl::tm::path";
 		String synopsis = "path add ?path ...?\n" + "path remove ?path ...?\n"
 				+ "path list";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
 	public void test132_1_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "::tcl::tm::roots";
 		String synopsis = "roots ?path ...?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
@@ -1091,24 +1061,20 @@ public class SynopsisTests extends TestCase {
 
 	
 	public void test135_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "unload";
 		String synopsis = "unload ?-nocomplain? ?-keeplibrary? ?--? fileName  ?packageName? ?interp?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
 	public void test136_FAILED() throws Exception {
+		if (TestSupport.notYetImplemented(this))
+			return;
 		String source = "unset";
 		String synopsis = "unset ?-nocomplain? ?--? ?name ...?";
-		try {
-			typedCheck(source, synopsis, "8.5");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		typedCheck(source, synopsis, "8.5");
 	}
 
 	
