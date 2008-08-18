@@ -5,7 +5,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.internal.resources.TestingSupport;
 import org.eclipse.dltk.core.tests.TestSupport;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Scope;
