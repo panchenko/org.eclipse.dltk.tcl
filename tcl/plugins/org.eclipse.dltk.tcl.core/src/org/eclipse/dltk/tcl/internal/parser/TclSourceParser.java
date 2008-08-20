@@ -203,6 +203,9 @@ public class TclSourceParser extends AbstractSourceParser implements
 			TclStatement st = TclParseUtil.convertToAST(command, this
 					.getFileName(), offset, TclSourceParser.this.content,
 					TclSourceParser.this.startPos);
+			if (st == null) {
+				continue; // could be null on errors in source code
+			}
 			ITclCommandProcessor processor = this.locateProcessor(st, content,
 					offset, decl);
 			if (processor != null) {
