@@ -29,7 +29,7 @@ foreach name [package names] {
 	}
 }
 if {$libs != 4 } {
-	puts "Could not find xounit libraries. Pleae configure your project."
+	puts "Could not find xounit libraries. Please configure your project."
 	exit
 }
 puts [package names]
