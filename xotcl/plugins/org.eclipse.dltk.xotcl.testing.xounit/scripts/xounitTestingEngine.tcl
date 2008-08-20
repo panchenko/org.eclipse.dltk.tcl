@@ -15,16 +15,16 @@ catch {
 set libs 0
 foreach name [package names] {
 	if { "x$name" == "xXOTcl" } {
-		puts "XOTcl pressent"
+		puts "XOTcl present"
 		incr libs
 	} elseif { "x$name" == "xxox" } {
-		puts "xox pressent"
+		puts "xox present"
 		incr libs
 	} elseif { "x$name" == "xxounit" } {
-		puts "xounit pressent"
+		puts "xounit present"
 		incr libs
 	} elseif { "x$name" == "xxoexception" } {
-		puts "xexception pressent"
+		puts "xexception present"
 		incr libs
 	}
 }
