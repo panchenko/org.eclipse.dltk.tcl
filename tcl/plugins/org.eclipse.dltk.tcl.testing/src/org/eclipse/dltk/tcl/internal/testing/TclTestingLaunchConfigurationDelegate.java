@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.launching.IInterpreterRunner;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
@@ -24,7 +25,7 @@ public class TclTestingLaunchConfigurationDelegate extends
 				launch);
 		ITclTestingEngine[] engines = TclTestingEngineManager.getEngines();
 		String engineId = configuration.getAttribute(
-				IDLTKTestingConstants.ENGINE_ID_ATR, "");
+				IDLTKTestingConstants.ENGINE_ID_ATR, Util.EMPTY_STRING);
 		for (int i = 0; i < engines.length; i++) {
 			if (engines[i].getId().equals(engineId)) {
 				engines[i].correctLaunchConfiguration(config, configuration, launch);
