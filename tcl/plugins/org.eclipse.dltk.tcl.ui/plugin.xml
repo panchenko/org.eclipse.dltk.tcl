@@ -222,7 +222,7 @@
             name="Libraries"
             category="org.eclipse.dltk.tcl.preferences"
             class="org.eclipse.dltk.tcl.internal.ui.preferences.TclLibraryPreferencePage"
-            id="org.eclipse.dltk.ui.preferences.UserLibraryPreferencePage">
+            id="org.eclipse.dltk.tcl.preferences.UserLibraryPreferencePage">
             <keywordReference id="org.eclipse.dltk.ui.userlibs"/>
       </page>
      <page
