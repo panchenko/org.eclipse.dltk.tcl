@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -147,7 +148,8 @@ public class TclTestingLaunchShortcut implements ILaunchShortcut {
 		ILaunchConfigurationWorkingCopy wc= configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(testName));
 			
 		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_PROJECT_NAME, folder.getProject().getName());
-		
+		wc.setMappedResources(new IResource[] { folder });
+
 //		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_TEST_NAME, EMPTY_STRING);
 //		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_CONTAINER_PATH, folder.getFullPath().toPortableString());
 //		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_TEST_ELEMENT_NAME, EMPTY_STRING);
@@ -264,6 +266,10 @@ public class TclTestingLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME, testFileName);
 		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_SCRIPT_NATURE, TclNature.NATURE_ID);
 		wc.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_CONSOLE, "true");
+		final IResource resource = element.getUnderlyingResource();
+		if (resource != null) {
+			wc.setMappedResources(new IResource[] { resource });
+		}
 //		wc.setAttribute(XUnitLaunchConfigurationConstants.ATTR_TEST_NAME, testFileName);
 //		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_CONTAINER_PATH, containerHandleId);
 //		wc.setAttribute(XUnitLaunchConfigurationConstants.ATTR_TEST_ELEMENT_NAME, testElementName);
