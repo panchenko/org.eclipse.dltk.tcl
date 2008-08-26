@@ -26,7 +26,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.testing.ITclTestingEngine;
-import org.eclipse.dltk.testing.IDLTKTestingConstants;
+import org.eclipse.dltk.testing.DLTKTestingConstants;
 import org.eclipse.dltk.testing.ITestKind;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
@@ -279,7 +279,7 @@ public class TclTestingLaunchShortcut implements ILaunchShortcut {
 		boolean engineFound = false;
 		for (int i = 0; i < engines.length; i++) {
 			if( engines[i].isValidModule(module)) {
-				wc.setAttribute(IDLTKTestingConstants.ENGINE_ID_ATR, engines[i].getId());
+				wc.setAttribute(DLTKTestingConstants.ATTR_ENGINE_ID, engines[i].getId());
 				engineFound = true;
 				break;
 			}

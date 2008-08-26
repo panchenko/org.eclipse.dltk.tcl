@@ -11,7 +11,7 @@ import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
 import org.eclipse.dltk.tcl.testing.ITclTestingEngine;
 import org.eclipse.dltk.testing.DLTKTestingCore;
-import org.eclipse.dltk.testing.IDLTKTestingConstants;
+import org.eclipse.dltk.testing.DLTKTestingConstants;
 
 public class TclTestingLaunchConfigurationDelegate extends
 		TclLaunchConfigurationDelegate implements ILaunchConfigurationDelegate {
@@ -25,7 +25,7 @@ public class TclTestingLaunchConfigurationDelegate extends
 				launch);
 		ITclTestingEngine[] engines = TclTestingEngineManager.getEngines();
 		String engineId = configuration.getAttribute(
-				IDLTKTestingConstants.ENGINE_ID_ATR, Util.EMPTY_STRING);
+				DLTKTestingConstants.ATTR_ENGINE_ID, Util.EMPTY_STRING);
 		for (int i = 0; i < engines.length; i++) {
 			if (engines[i].getId().equals(engineId)) {
 				engines[i].correctLaunchConfiguration(config, configuration, launch);

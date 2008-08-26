@@ -14,7 +14,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.debug.ui.messages.DLTKLaunchConfigurationsMessages;
 import org.eclipse.dltk.tcl.internal.debug.ui.launchConfigurations.TclMainLaunchConfigurationTab;
 import org.eclipse.dltk.tcl.testing.ITclTestingEngine;
-import org.eclipse.dltk.testing.IDLTKTestingConstants;
+import org.eclipse.dltk.testing.DLTKTestingConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -131,7 +131,7 @@ public class TclTestingMainLaunchConfigurationTab extends
 
 	protected void doPerformApply(ILaunchConfigurationWorkingCopy config) {
 		super.doPerformApply(config);
-		config.setAttribute(IDLTKTestingConstants.ENGINE_ID_ATR, getEngineId());
+		config.setAttribute(DLTKTestingConstants.ATTR_ENGINE_ID, getEngineId());
 	}
 
 	private String getEngineId() {
@@ -143,7 +143,7 @@ public class TclTestingMainLaunchConfigurationTab extends
 		ITclTestingEngine[] engines = TclTestingEngineManager.getEngines();
 		String id = null;
 		try {
-			id = config.getAttribute(IDLTKTestingConstants.ENGINE_ID_ATR, "");
+			id = config.getAttribute(DLTKTestingConstants.ATTR_ENGINE_ID, "");
 		} catch (CoreException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
