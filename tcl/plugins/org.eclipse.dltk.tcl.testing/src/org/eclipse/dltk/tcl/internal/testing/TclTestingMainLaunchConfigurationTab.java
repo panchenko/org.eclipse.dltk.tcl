@@ -38,7 +38,7 @@ public class TclTestingMainLaunchConfigurationTab extends
 	public TclTestingMainLaunchConfigurationTab(String mode) {
 		super(mode);
 	}
-	
+
 	protected void doCreateControl(Composite composite) {
 		createMainModuleEditor(composite,
 				DLTKLaunchConfigurationsMessages.mainTab_mainModule);
@@ -109,8 +109,8 @@ public class TclTestingMainLaunchConfigurationTab extends
 		return module;
 	}
 
-	protected boolean doCanSave() {
-		return validateScript() && validateEngine();
+	protected boolean validate() {
+		return super.validate() && validateEngine();
 	}
 
 	private boolean validateEngine() {
@@ -159,6 +159,6 @@ public class TclTestingMainLaunchConfigurationTab extends
 				}
 			}
 		}
-//		handleDetectButtonSelected();
+		// handleDetectButtonSelected();
 	}
 }
