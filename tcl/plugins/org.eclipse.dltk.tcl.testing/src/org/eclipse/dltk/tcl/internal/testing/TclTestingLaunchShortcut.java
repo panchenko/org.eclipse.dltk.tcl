@@ -27,7 +27,6 @@ import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.testing.ITclTestingEngine;
 import org.eclipse.dltk.testing.DLTKTestingConstants;
-import org.eclipse.dltk.testing.ITestKind;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
@@ -262,7 +261,7 @@ public class TclTestingLaunchShortcut implements ILaunchShortcut {
 		ILaunchConfigurationWorkingCopy wc= configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(testName));
 			
 		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_PROJECT_NAME, element.getScriptProject().getElementName());
-		wc.setAttribute(ITestKind.LAUNCH_ATTR_TEST_KIND, "#");
+		// wc.setAttribute(ITestKind.LAUNCH_ATTR_TEST_KIND, "#");
 		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME, testFileName);
 		wc.setAttribute(ScriptLaunchConfigurationConstants.ATTR_SCRIPT_NATURE, TclNature.NATURE_ID);
 		wc.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_CONSOLE, "true");
