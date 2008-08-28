@@ -3,13 +3,10 @@ package org.eclipse.dltk.tcl.internal.testing;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.debug.ui.messages.DLTKLaunchConfigurationsMessages;
 import org.eclipse.dltk.tcl.internal.debug.ui.launchConfigurations.TclMainLaunchConfigurationTab;
@@ -94,19 +91,6 @@ public class TclTestingMainLaunchConfigurationTab extends
 				}
 			}
 		}
-	}
-
-	private ISourceModule getSourceModule() {
-		IScriptProject project = this.getProject();
-		if (project == null) {
-			return null;
-		}
-		IProject prj = project.getProject();
-		String scriptName = this.getScriptName();
-		ISourceModule module = null;
-		IResource res = prj.getFile(scriptName);
-		module = (ISourceModule) DLTKCore.create(res);
-		return module;
 	}
 
 	protected boolean validate() {
