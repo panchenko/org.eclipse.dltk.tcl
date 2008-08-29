@@ -48,7 +48,7 @@ public class TclSearchPatternProcessor implements ISearchPatternProcessor {
 		}
 		return patternString.toCharArray();
 	}
-	public String getDelimeterReplacementString() {
+	public String getDelimiterReplacementString() {
 		return "::";
 	}
 
