@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
@@ -637,7 +638,9 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 	}
 
