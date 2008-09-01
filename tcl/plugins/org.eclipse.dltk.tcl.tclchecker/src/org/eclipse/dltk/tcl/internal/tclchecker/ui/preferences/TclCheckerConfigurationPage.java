@@ -33,6 +33,7 @@ import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.environment.IEnvironmentPathBlockListener;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
+import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.dltk.validators.ui.ValidatorConfigurationPage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -95,6 +96,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	private Group pcxGroup;
 	private Button pcxAdd;
+	private Button pcxBrowse;
 	private Button pcxRemove;
 
 	public void createControl(Composite parent, int columns) {
@@ -152,7 +154,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 			}
 
 			IPath path = Path.fromPortableString(txtPath);
-			IFileHandle file = env.getFile(path);
+			IFileHandle file = PlatformFileUtils
+					.findAbsoluteOrEclipseRelativeFile(env, path);
 
 			if (file == null) {
 				setMessage(PreferencesMessages.TclChecker_pcxPath, env,
@@ -182,6 +185,9 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	 * Validation only for local file system
 	 */
 	protected void validatePCXTclCheckerPath() {
+		if (this.noPCX.getSelection()) {
+			return;
+		}
 		Collection envs = pcxPaths.keySet();
 		for (Iterator it = envs.iterator(); it.hasNext();) {
 			IEnvironment env = (IEnvironment) it.next();
@@ -205,22 +211,23 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 				}
 
 				IPath path = Path.fromPortableString(txtPath);
-				IFileHandle file = env.getFile(path);
+				IFileHandle file = PlatformFileUtils
+						.findAbsoluteOrEclipseRelativeFile(env, path);
 
 				if (file == null) {
 					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-							PreferencesMessages.TclChecker_path_isinvalid,
-							IStatus.WARNING);
+							PreferencesMessages.TclChecker_path_isinvalid + ":"
+									+ path.toOSString(), IStatus.WARNING);
 					continue;
 				} else if (!file.isDirectory()) {
 					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-							PreferencesMessages.TclChecker_path_notexists,
-							IStatus.WARNING);
+							PreferencesMessages.TclChecker_path_notexists + ":"
+									+ path.toOSString(), IStatus.WARNING);
 					continue;
 				} else if (!file.exists()) {
 					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-							PreferencesMessages.TclChecker_path_notexists,
-							IStatus.WARNING);
+							PreferencesMessages.TclChecker_path_notexists + ":"
+									+ path.toOSString(), IStatus.WARNING);
 					continue;
 				}
 			}
@@ -348,9 +355,25 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		pcxAdd.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IEnvironment environment = getEnvironment();
+				PathDialog pathDialog = new PathDialog(pcxAdd.getShell(),
+						environment);
+				if (pathDialog.open() == PathDialog.OK) {
+					String path = pathDialog.getPath();
+					if (path != null) {
+						((List) pcxPaths.get(environment)).add(path);
+					}
+					updatePCX();
+				}
+			}
+		});
+		pcxBrowse = new Button(buttons, SWT.PUSH);
+		pcxBrowse.setText("Browse...");
+		pcxBrowse.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				IEnvironment environment = getEnvironment();
 				IEnvironmentUI ui = (IEnvironmentUI) environment
 						.getAdapter(IEnvironmentUI.class);
-				String path = ui.selectFolder(pcxAdd.getShell());
+				String path = ui.selectFolder(pcxBrowse.getShell());
 				if (path != null) {
 					((List) pcxPaths.get(environment)).add(path);
 				}
