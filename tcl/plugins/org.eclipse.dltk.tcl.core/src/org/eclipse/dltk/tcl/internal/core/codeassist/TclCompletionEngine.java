@@ -666,7 +666,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		String pattern = tok.replaceAll("::",
 				IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		IModelElement[] elements = TclMixinUtils.findModelElementsFromMixin(
-				pattern, mixinClass);
+				pattern, mixinClass, this.scriptProject);
 		for (int i = 0; i < elements.length; i++) {
 			// We should filter external source modules with same
 			// external path.
@@ -681,7 +681,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		String pattern = tok.replaceAll("::",
 				IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		IModelElement[] elements = TclMixinUtils.findModelElementsFromMixin(
-				pattern, mixinClass);
+				pattern, mixinClass, this.scriptProject);
 		// long start = System.currentTimeMillis();
 		for (int i = 0; i < elements.length; i++) {
 			// We should filter external source modules with same

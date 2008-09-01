@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.ITclMixinElement;
 
@@ -11,11 +12,12 @@ public class TclMixinUtils {
 	private static final boolean TRACE_COMPLETION_TIME = false;
 
 	public static IModelElement[] findModelElementsFromMixin(String pattern,
-			Class mixinClass) {
+			Class mixinClass, IScriptProject project) {
 		long delta = 200;
 		long time = System.currentTimeMillis();
 		List elements = new ArrayList();
-		IMixinElement[] find = TclMixinModel.getInstance().find(pattern, delta);
+		IMixinElement[] find = TclMixinModel.getInstance().getMixin(project)
+				.find(pattern, delta);
 		if (TRACE_COMPLETION_TIME) {
 			System.out.println("findMethod from mixin: request model:"
 					+ Long.toString(System.currentTimeMillis() - time));
