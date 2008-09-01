@@ -9,10 +9,12 @@ import org.eclipse.dltk.core.ScriptContentDescriber;
 
 public class TclContentDescriber extends ScriptContentDescriber {
 	protected static Pattern[] header_patterns = {
-			Pattern.compile("#!\\s*.*tclsh", Pattern.MULTILINE),
-			Pattern.compile("#!\\s*/usr/bin/tclsh", Pattern.MULTILINE),
-			Pattern.compile("#!\\s*/usr/bin/expect", Pattern.MULTILINE),
-			Pattern.compile("#!\\s*/usr/bin/wish", Pattern.MULTILINE),
+			// Pattern.compile("#!\\s*.*tclsh", Pattern.MULTILINE),
+			// Pattern.compile("#!\\s*/usr/bin/tclsh", Pattern.MULTILINE),
+			// Pattern.compile("#!\\s*/usr/bin/expect", Pattern.MULTILINE),
+			// Pattern.compile("#!\\s*/usr/bin/wish", Pattern.MULTILINE),
+			Pattern.compile("#!.*(tclsh.*|wish.*|expect(k)?.*).*",
+					Pattern.MULTILINE),
 			Pattern
 					.compile(
 							"# ;;; Local Variables?: \\*\\*\\*\\s*\r*\n# ;;; mode: t|Tcl \\*\\*\\*\\s*\r*\n# ;;; End: \\*\\*\\*",
