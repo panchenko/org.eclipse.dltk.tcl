@@ -42,6 +42,7 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 		public IModelElement resolveElement() {
 			IMixinElement[] find = TclMixinModel
 					.getInstance()
+					.getMixin(null)
 					.find(
 							name.replaceAll("::",
 									IMixinRequestor.MIXIN_NAME_SEPARATOR), 1000);

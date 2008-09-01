@@ -13,6 +13,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IParent;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -113,21 +114,23 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 			// Check class proc call
 			String[] split = name.split("::");
 			IModelElement[] typeMixin = IncrTclResolver.findTypeMixin(engine
-					.tclNameToKey(name), split[split.length - 1]);
+					.tclNameToKey(name), split[split.length - 1], engine
+					.getScriptProject());
 			checkMixinTypeForMethod(node, commandExpr, typeMixin, prefix,
 					engine);
 		} else if (command != null) {
 			String[] split = command.split("::");
 			if (parent instanceof ModuleDeclaration) {
 				IModelElement[] typeMixin = IncrTclResolver.findTypeMixin(
-						engine.tclNameToKey(command), split[split.length - 1]);
+						engine.tclNameToKey(command), split[split.length - 1],
+						engine.getScriptProject());
 				checkMixinTypeForMethod(node, commandExpr, typeMixin, prefix,
 						engine);
 			} else {
 				IModelElement[] typeMixin = IncrTclResolver.findTypeMixin(
 						prefix + IMixinRequestor.MIXIN_NAME_SEPARATOR
 								+ engine.tclNameToKey(command),
-						split[split.length - 1]);
+						split[split.length - 1], engine.getScriptProject());
 				checkMixinTypeForMethod(node, commandExpr, typeMixin, prefix,
 						engine);
 			}
@@ -188,7 +191,9 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 																: "")
 																+ engine
 																		.tclNameToKey(superClasses[j]),
-														superClasses[j]);
+														superClasses[j],
+														engine
+																.getScriptProject());
 										String[] split = superClasses[j]
 												.split("::");
 										checkMixinTypeForMethod(node,
@@ -407,11 +412,14 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 
 	private void findIncrTclMethodMixin(String pattern, String name,
 			TclSelectionEngine engine) {
-		IMixinElement[] find = TclMixinModel.getInstance().find(pattern + "*");
+		IScriptProject project = engine.getScriptProject();
+		IMixinElement[] find = TclMixinModel.getInstance().getMixin(project)
+				.find(pattern + "*");
 		int pos = pattern.indexOf(IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		if (find.length == 0 && pos != -1) {
 			String newPattern = pattern.substring(0, pos);
-			find = TclMixinModel.getInstance().find(newPattern + "*");
+			find = TclMixinModel.getInstance().getMixin(project).find(
+					newPattern + "*");
 		}
 		for (int i = 0; i < find.length; i++) {
 			Object[] allObjects = find[i].getAllObjects();
