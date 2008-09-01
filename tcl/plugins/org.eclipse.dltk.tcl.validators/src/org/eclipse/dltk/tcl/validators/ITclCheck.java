@@ -15,6 +15,7 @@ package org.eclipse.dltk.tcl.validators;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 
@@ -23,5 +24,5 @@ public interface ITclCheck {
 	 * Called for all commands, if check has not declared trigger.
 	 */
 	void checkCommands(List<TclCommand> commands, ITclErrorReporter reporter,
-			Map<String, String> options);
+			Map<String, String> options, IScriptProject project);
 }

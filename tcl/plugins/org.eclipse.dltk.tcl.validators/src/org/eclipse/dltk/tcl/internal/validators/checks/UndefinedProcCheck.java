@@ -15,6 +15,7 @@ package org.eclipse.dltk.tcl.internal.validators.checks;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -34,7 +35,8 @@ public class UndefinedProcCheck implements ITclCheck {
 	}
 
 	public void checkCommands(List<TclCommand> commands,
-			final ITclErrorReporter reporter, Map<String, String> options) {
+			final ITclErrorReporter reporter, Map<String, String> options,
+			final IScriptProject project) {
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(TclCommand command) {
@@ -50,9 +52,10 @@ public class UndefinedProcCheck implements ITclCheck {
 				if (qName == null) {
 					return true;
 				}
-				IMixinElement[] elements = TclMixinModel.getInstance().find(
-						qName.replaceAll("::",
-								IMixinRequestor.MIXIN_NAME_SEPARATOR));
+				IMixinElement[] elements = TclMixinModel.getInstance()
+						.getMixin(project).find(
+								qName.replaceAll("::",
+										IMixinRequestor.MIXIN_NAME_SEPARATOR));
 				String realName = ((StringArgument) name).getValue();
 				if (realName.indexOf("::") != -1) {
 					realName = realName

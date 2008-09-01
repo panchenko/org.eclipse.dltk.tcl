@@ -19,6 +19,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
@@ -61,8 +62,10 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 				if (preferences.isEnabled(info)) {
 					if (info.getCommandName() == null) {
 						ITclCheck check = info.getCheck();
+						IScriptProject scriptProject = module
+								.getScriptProject();
 						check.checkCommands(commands, errorCollector,
-								preferences.getOptions(info));
+								preferences.getOptions(info), scriptProject);
 					}
 				}
 			}

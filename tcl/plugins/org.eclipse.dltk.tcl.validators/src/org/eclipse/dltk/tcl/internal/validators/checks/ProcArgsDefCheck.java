@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.Substitution;
@@ -37,7 +38,8 @@ public class ProcArgsDefCheck implements ITclCheck {
 	}
 
 	public void checkCommands(List<TclCommand> commands,
-			final ITclErrorReporter reporter, Map<String, String> options) {
+			final ITclErrorReporter reporter, Map<String, String> options,
+			IScriptProject project) {
 
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override

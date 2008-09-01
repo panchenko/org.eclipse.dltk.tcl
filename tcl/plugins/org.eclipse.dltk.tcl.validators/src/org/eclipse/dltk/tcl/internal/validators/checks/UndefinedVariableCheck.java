@@ -15,6 +15,7 @@ package org.eclipse.dltk.tcl.internal.validators.checks;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -33,14 +34,16 @@ public class UndefinedVariableCheck implements ITclCheck {
 	}
 
 	public void checkCommands(List<TclCommand> commands,
-			final ITclErrorReporter reporter, Map<String, String> options) {
+			final ITclErrorReporter reporter, Map<String, String> options,
+			final IScriptProject project) {
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(VariableReference ref) {
 				String name = ref.getName();
-				IMixinElement[] elements = TclMixinModel.getInstance().find(
-						name.replaceAll("::",
-								IMixinRequestor.MIXIN_NAME_SEPARATOR));
+				IMixinElement[] elements = TclMixinModel.getInstance()
+						.getMixin(project).find(
+								name.replaceAll("::",
+										IMixinRequestor.MIXIN_NAME_SEPARATOR));
 				String realName = name;
 				if (realName.indexOf("::") != -1) {
 					realName = realName
