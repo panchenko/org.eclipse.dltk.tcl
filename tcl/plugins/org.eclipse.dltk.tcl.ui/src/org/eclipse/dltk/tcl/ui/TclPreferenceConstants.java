@@ -541,7 +541,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 		store.setDefault(CodeFormatterConstants.FORMATTER_TAB_CHAR,
 				CodeFormatterConstants.MIXED);
-		store.setDefault(CodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
+		store.setDefault(CodeFormatterConstants.FORMATTER_TAB_SIZE, "8");
 		store
 				.setDefault(CodeFormatterConstants.FORMATTER_INDENTATION_SIZE,
 						"4");
