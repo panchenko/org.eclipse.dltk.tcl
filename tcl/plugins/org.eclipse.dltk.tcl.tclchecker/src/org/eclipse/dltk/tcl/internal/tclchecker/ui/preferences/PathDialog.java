@@ -117,7 +117,7 @@ public class PathDialog extends StatusDialog {
 	private IStatus validate() {
 		String path = fPath.getText();
 		StatusInfo info = new StatusInfo();
-		if (path.isEmpty()) {
+		if (path.length() == 0) {
 			info.setError("Path is empty");
 			return info;
 		}
