@@ -38,7 +38,7 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 		}
 
 		public IModelElement resolveElement() {
-			XOTclClass e = XOTclMixinUtils.findMixinElement(name);
+			XOTclClass e = XOTclMixinUtils.findMixinElement(name, null);
 			if (e != null) {
 				return e.getModelElement();
 			}

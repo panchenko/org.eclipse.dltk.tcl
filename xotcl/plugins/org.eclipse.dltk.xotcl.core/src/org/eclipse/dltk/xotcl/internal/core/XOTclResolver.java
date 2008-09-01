@@ -7,6 +7,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -46,7 +47,7 @@ public class XOTclResolver {
 				}
 				String[] split = superClass.split("::");
 				IModelElement[] types = findTypeMixin(memberkey,
-						split[split.length - 1]);
+						split[split.length - 1], method.getScriptProject());
 				for (int j = 0; j < types.length; j++) {
 					IType type = (IType) types[j];
 					IMethod[] methods = type.getMethods();
@@ -93,8 +94,10 @@ public class XOTclResolver {
 
 	}
 
-	public static IModelElement[] findTypeMixin(String pattern, String name) {
-		IMixinElement[] find = TclMixinModel.getInstance().find(pattern + "*");
+	public static IModelElement[] findTypeMixin(String pattern, String name,
+			IScriptProject project) {
+		IMixinElement[] find = TclMixinModel.getInstance().getMixin(project)
+				.find(pattern + "*");
 		List elements = new ArrayList();
 		for (int i = 0; i < find.length; i++) {
 			Object[] allObjects = find[i].getAllObjects();

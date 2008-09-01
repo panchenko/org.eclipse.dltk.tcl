@@ -12,6 +12,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IParent;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.mixin.IMixinElement;
@@ -69,27 +70,28 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 						.getModule());
 		Expression commandExpr = node.getAt(0);
 		String command = TclParseUtil.getNameFromNode(commandExpr);
+		IScriptProject project = engine.getScriptProject();
 		if (command != null && command.startsWith("::")) {
 			String name = command.substring(2);
 			// Check class proc call
 			String[] split = name.split("::");
 			IModelElement[] typeMixin = XOTclResolver.findTypeMixin(engine
-					.tclNameToKey(name), split[split.length - 1]);
+					.tclNameToKey(name), split[split.length - 1], project);
 			checkMixinTypeForMethod(node, commandExpr, typeMixin, prefix,
 					engine);
 		} else if (command != null) {
 			String[] split = command.split("::");
 			if (parent instanceof ModuleDeclaration) {
 				IModelElement[] typeMixin = XOTclResolver.findTypeMixin(engine
-						.tclNameToKey(command), split[split.length - 1]);
+						.tclNameToKey(command), split[split.length - 1],
+						project);
 				checkMixinTypeForMethod(node, commandExpr, typeMixin, prefix,
 						engine);
 			} else {
-				IModelElement[] typeMixin = XOTclResolver
-						.findTypeMixin(prefix
-								+ IMixinRequestor.MIXIN_NAME_SEPARATOR
-								+ engine.tclNameToKey(command),
-								split[split.length - 1]);
+				IModelElement[] typeMixin = XOTclResolver.findTypeMixin(prefix
+						+ IMixinRequestor.MIXIN_NAME_SEPARATOR
+						+ engine.tclNameToKey(command),
+						split[split.length - 1], project);
 				checkMixinTypeForMethod(node, commandExpr, typeMixin, prefix,
 						engine);
 			}
@@ -138,8 +140,8 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 							IType type = (IType) eParent;
 							try {
 								String[] superClasses = type.getSuperClasses();
-								String command = TclParseUtil
-										.getNameFromNode(commandExpr);
+								// String command = TclParseUtil
+								// .getNameFromNode(commandExpr);
 								if (superClasses != null) {
 									for (int j = 0; j < superClasses.length; j++) {
 
@@ -150,7 +152,9 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 																: "")
 																+ engine
 																		.tclNameToKey(superClasses[j]),
-														superClasses[j]);
+														superClasses[j],
+														engine
+																.getScriptProject());
 										String[] split = superClasses[j]
 												.split("::");
 										checkMixinTypeForMethod(node,
@@ -394,11 +398,14 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 
 	private void findXOTclMethodMixin(String pattern, String name,
 			TclSelectionEngine engine) {
-		IMixinElement[] find = TclMixinModel.getInstance().find(pattern + "*");
+		IScriptProject project = engine.getScriptProject();
+		IMixinElement[] find = TclMixinModel.getInstance().getMixin(project)
+				.find(pattern + "*");
 		int pos = pattern.indexOf(IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		if (find.length == 0 && pos != -1) {
 			String newPattern = pattern.substring(0, pos);
-			find = TclMixinModel.getInstance().find(newPattern + "*");
+			find = TclMixinModel.getInstance().getMixin(project).find(
+					newPattern + "*");
 		}
 		for (int i = 0; i < find.length; i++) {
 			Object[] allObjects = find[i].getAllObjects();
