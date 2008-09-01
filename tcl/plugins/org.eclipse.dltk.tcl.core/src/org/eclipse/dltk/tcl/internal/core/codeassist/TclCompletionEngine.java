@@ -10,7 +10,6 @@
 package org.eclipse.dltk.tcl.internal.core.codeassist;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -734,7 +733,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	public List toList(Set types) {
-		return Arrays.asList(types.toArray());
+		return new ArrayList(types);
 	}
 
 	protected void search(String patternString, int searchFor, int limitTo,
