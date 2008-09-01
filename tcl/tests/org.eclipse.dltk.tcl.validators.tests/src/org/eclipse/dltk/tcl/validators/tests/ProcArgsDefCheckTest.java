@@ -216,7 +216,9 @@ public class ProcArgsDefCheckTest extends TestCase {
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		assertEquals(1, module.size());
 		ITclCheck check = new ProcArgsDefCheck();
-		check.checkCommands(module, errors, new HashMap<String, String>());
+		check
+				.checkCommands(module, errors, new HashMap<String, String>(),
+						null);
 		TclCommand tclCommand = module.get(0);
 		EList<TclArgument> arguments = tclCommand.getArguments();
 		int scripts = 0;
