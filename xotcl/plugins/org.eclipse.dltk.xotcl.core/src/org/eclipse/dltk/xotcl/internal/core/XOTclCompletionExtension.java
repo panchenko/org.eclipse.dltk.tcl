@@ -274,12 +274,33 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 		findClassesFromMixin(methods, keyPrefix, engine);
 		Set result = new HashSet();
 		// replace class name with methods.
-		for (Iterator iterator = methods.iterator(); iterator.hasNext();) {
-			IModelElement e = (IModelElement) iterator.next();
+		while (methods.size() > 0) {
+			IModelElement e = (IModelElement) methods.iterator().next();
+			methods.remove(e);
 			if (e instanceof IType) {
+				IType type = (IType) e;
 				try {
-					IMethod[] ms = ((IType) e).getMethods();
+					IMethod[] ms = type.getMethods();
 					result.addAll(Arrays.asList(ms));
+				} catch (ModelException e1) {
+					if (DLTKCore.DEBUG) {
+						e1.printStackTrace();
+					}
+				}
+				// Add super types information.
+				try {
+					String[] superClasses = type.getSuperClasses();
+					if (superClasses != null) {
+						for (int i = 0; i < superClasses.length; i++) {
+							String key = superClasses[i];
+							if (key.startsWith("::")) {
+								key = key.substring(2);
+							}
+							if (key.length() > 0) {
+								findClassesFromMixin(methods, key, engine);
+							}
+						}
+					}
 				} catch (ModelException e1) {
 					if (DLTKCore.DEBUG) {
 						e1.printStackTrace();
@@ -356,13 +377,20 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 			TclCompletionEngine engine) {
 		List methodsList = engine.toList(methods);
 		List methodNames = new ArrayList();
+		List remove = new ArrayList();
 		for (Iterator iterator = methodsList.iterator(); iterator.hasNext();) {
 			IMethod method = (IMethod) iterator.next();
 			String methodName = method.getElementName();
 			if (!methodNames.contains(methodName)) {
 				methodNames.add(methodName);
 				allMethods.add(methodName);
+			} else {
+				remove.add(method);
 			}
+		}
+		for (Iterator iterator = remove.iterator(); iterator.hasNext();) {
+			Object object = (Object) iterator.next();
+			methodsList.remove(object);
 		}
 		engine.findMethods(cs, true, methodsList, methodNames);
 	}
