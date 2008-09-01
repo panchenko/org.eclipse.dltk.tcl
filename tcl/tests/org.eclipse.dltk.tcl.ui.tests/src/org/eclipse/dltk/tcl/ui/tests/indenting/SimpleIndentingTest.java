@@ -370,38 +370,38 @@ public class SimpleIndentingTest extends TestCase {
 		assertEquals(temp.getLineOffset(2), newOffset);
 	}
 
-	public void testIndent05_pasting_simple() throws Exception {
-		final String text0 = TclUITestsPlugin.getDefault()
-				.getPluginFileContent("/tcls/expr-old.tcl");
-		Document temp = new Document("proc foo{} {\n\t\n}");
-		DocumentRewriteSession session = temp
-				.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
-		installStuff(temp);
-
-		DocumentCommand c = new DocumentCommand() {
-			{
-				this.doit = true;
-				this.caretOffset = -1;
-				this.shiftsCaret = true;
-				this.length = 0;
-				this.offset = "proc foo{} {\n\t".length();
-				this.text = text0;
-			}
-		};
-
-		fStore.setValue(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE, 1);
-		strategy.customizeDocumentCommand(temp, c);
-
-		// execute
-		temp.replace(c.offset, c.length, c.text);
-
-		temp.stopRewriteSession(session);
-
-		// check document
-		assertEquals('i', temp.getChar(temp.getLineOffset(966) + 1));
-		assertEquals('f', temp.getChar(temp.getLineOffset(666) + 2));
-		assertEquals('S', temp.getChar(temp.getLineOffset(13) + 3));
-	}
+	// public void testIndent05_pasting_simple() throws Exception {
+	// final String text0 = TclUITestsPlugin.getDefault()
+	// .getPluginFileContent("/tcls/expr-old.tcl");
+	// Document temp = new Document("proc foo{} {\n\t\n}");
+	// DocumentRewriteSession session = temp
+	// .startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
+	// installStuff(temp);
+	//
+	// DocumentCommand c = new DocumentCommand() {
+	// {
+	// this.doit = true;
+	// this.caretOffset = -1;
+	// this.shiftsCaret = true;
+	// this.length = 0;
+	// this.offset = "proc foo{} {\n\t".length();
+	// this.text = text0;
+	// }
+	// };
+	//
+	// fStore.setValue(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE, 1);
+	// strategy.customizeDocumentCommand(temp, c);
+	//
+	// // execute
+	// temp.replace(c.offset, c.length, c.text);
+	//
+	// temp.stopRewriteSession(session);
+	//
+	// // check document
+	// assertEquals('i', temp.getChar(temp.getLineOffset(966) + 1));
+	// assertEquals('f', temp.getChar(temp.getLineOffset(666) + 2));
+	// assertEquals('S', temp.getChar(temp.getLineOffset(13) + 3));
+	// }
 
 	public void testIndent06_pasting_hard() throws Exception {
 		final String text0 = TclUITestsPlugin.getDefault()
