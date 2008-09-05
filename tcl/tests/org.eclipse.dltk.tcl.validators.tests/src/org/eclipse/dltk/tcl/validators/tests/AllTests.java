@@ -11,11 +11,12 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.validators.tests;
 
-
-import org.eclipse.dltk.tcl.validators.internal.tests.ArgumentsDefinitionCheckTest;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.dltk.tcl.validators.internal.tests.ArgumentsDefinitionCheckTest;
+import org.eclipse.dltk.tcl.validators.internal.tests.CommandRedefinitionCheckTest;
+import org.eclipse.dltk.tcl.validators.internal.tests.UnreachableCodeCheckTest;
 
 public class AllTests {
 
@@ -25,6 +26,8 @@ public class AllTests {
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(ChecksProjectTest.class);
 		suite.addTestSuite(ArgumentsDefinitionCheckTest.class);
+		suite.addTestSuite(CommandRedefinitionCheckTest.class);
+		suite.addTestSuite(UnreachableCodeCheckTest.class);
 		// suite.addTestSuite(CheckMethodExistanceTest.class);
 		// $JUnit-END$
 		return suite;

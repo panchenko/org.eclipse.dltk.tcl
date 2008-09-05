@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.internal.validators.checks.ArgumentsDefinitionCheck;
@@ -163,6 +164,11 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 		typedCheck(source, ICheckKinds.CHECK_ARG_AFTER_ARGS);
 	}
 
+	public void test036() throws Exception {
+		String source = "proc cmd {{args {}}} {puts alpha}";
+		typedCheck(source);
+	}
+
 	private void typedCheck(String source) throws Exception {
 		typedCheck(source, new ArrayList<Integer>());
 	}
@@ -186,7 +192,7 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 		TestCase.assertEquals(1, module.size());
 		ITclCheck check = new ArgumentsDefinitionCheck();
 		check.checkCommands(module, errors, new HashMap<String, String>(),
-				null, null);
+				null, new CodeModel(source));
 
 		TclCommand tclCommand = module.get(0);
 		EList<TclArgument> arguments = tclCommand.getArguments();
