@@ -60,6 +60,7 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 					false);
 			List<TclCommand> commands = parser.parse(source, errorCollector,
 					processor);
+			final CodeModel codeModel = new CodeModel(source);
 			if (TESTING_DO_CHECKS) {
 				// Perform all checks.
 				for (int i = 0; i < checks.length; i++) {
@@ -69,10 +70,9 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 							ITclCheck check = info.getCheck();
 							IScriptProject scriptProject = module
 									.getScriptProject();
-							check
-									.checkCommands(commands, errorCollector,
-											preferences.getOptions(info),
-											scriptProject);
+							check.checkCommands(commands, errorCollector,
+									preferences.getOptions(info),
+									scriptProject, codeModel);
 						}
 					}
 				}
@@ -80,25 +80,24 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 
 			// Locate and execute all enabled checks
 
-			final CodeModel codeModel = new CodeModel(source);
 			errorCollector.reportAll(new ITclErrorReporter() {
 				public void report(int code, String message,
 						String[] extraMessage, int start, int end, int kind) {
-					if (extraMessage != null) {
-						for (int i = 0; i < extraMessage.length; i++) {
-							if (extraMessage[i].startsWith(SHORT)) {
-								message = message
-										+ "\nExplanation:"
-										+ extraMessage[i].substring(SHORT
-												.length());
-							}
-						}
-					}
+					// if (extraMessage != null) {
+					// for (int i = 0; i < extraMessage.length; i++) {
+					// if (extraMessage[i].startsWith(SHORT)) {
+					// message = message
+					// + "\nExplanation:"
+					// + extraMessage[i].substring(SHORT
+					// .length());
+					// }
+					// }
+					// }
 					int line = codeModel.getLineNumber(start, start + 1);
 					DefaultProblem problem = new DefaultProblem(
 							message,
 							code,
-							null,
+							extraMessage,
 							kind == ITclErrorReporter.ERROR ? ProblemSeverities.Error
 									: ProblemSeverities.Warning, start, end,
 							line - 1);

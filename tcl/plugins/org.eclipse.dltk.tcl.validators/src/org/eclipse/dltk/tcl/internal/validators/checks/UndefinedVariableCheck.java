@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.VariableReference;
+import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
@@ -35,7 +36,7 @@ public class UndefinedVariableCheck implements ITclCheck {
 
 	public void checkCommands(List<TclCommand> commands,
 			final ITclErrorReporter reporter, Map<String, String> options,
-			final IScriptProject project) {
+			final IScriptProject project, CodeModel codeModel) {
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(VariableReference ref) {
@@ -62,8 +63,8 @@ public class UndefinedVariableCheck implements ITclCheck {
 				if (!found) {
 					reporter.report(ICheckKinds.CHECK_UNDEFINED_VARIABLE,
 							"Use of undefined variable:" + realName, null, ref
-											.getStart(),
-							ref.getEnd(), ITclErrorReporter.WARNING);
+									.getStart(), ref.getEnd(),
+							ITclErrorReporter.WARNING);
 				}
 				return true;
 			}

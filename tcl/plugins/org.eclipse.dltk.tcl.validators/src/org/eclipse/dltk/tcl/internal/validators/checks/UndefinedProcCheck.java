@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
@@ -36,7 +37,7 @@ public class UndefinedProcCheck implements ITclCheck {
 
 	public void checkCommands(List<TclCommand> commands,
 			final ITclErrorReporter reporter, Map<String, String> options,
-			final IScriptProject project) {
+			final IScriptProject project, CodeModel codeModel) {
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(TclCommand command) {
@@ -74,8 +75,8 @@ public class UndefinedProcCheck implements ITclCheck {
 				if (!found) {
 					reporter.report(ICheckKinds.CHECK_UNDEFINED_PROC,
 							"Call to undefined proc:" + realName, null, name
-											.getStart(),
-							name.getEnd(), ITclErrorReporter.WARNING);
+									.getStart(), name.getEnd(),
+							ITclErrorReporter.WARNING);
 				}
 				return true;
 

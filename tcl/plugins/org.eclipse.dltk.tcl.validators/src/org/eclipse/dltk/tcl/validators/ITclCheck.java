@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 
 public interface ITclCheck {
@@ -24,5 +25,6 @@ public interface ITclCheck {
 	 * Called for all commands, if check has not declared trigger.
 	 */
 	void checkCommands(List<TclCommand> commands, ITclErrorReporter reporter,
-			Map<String, String> options, IScriptProject project);
+			Map<String, String> options, IScriptProject project,
+			CodeModel codeModel);
 }

@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
@@ -34,7 +35,7 @@ public class ArgumentsDefinitionCheck implements ITclCheck {
 
 	public void checkCommands(List<TclCommand> commands,
 			final ITclErrorReporter reporter, Map<String, String> options,
-			IScriptProject project) {
+			IScriptProject project, CodeModel codeModel) {
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(TclCommand tclCommand) {
