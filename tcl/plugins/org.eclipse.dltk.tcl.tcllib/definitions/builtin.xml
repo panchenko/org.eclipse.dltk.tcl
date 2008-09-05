@@ -4,10 +4,10 @@
     <children xsi:type="tclparse:Command" name="after">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="">
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="ms"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="ms" type="NotNegative"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0">
             <groups>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
             </groups>
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="script"/>
@@ -22,7 +22,7 @@
             <groups>
               <arguments xsi:type="tclparse:Switch">
                 <groups>
-                  <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+                  <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
                 </groups>
                 <groups>
                   <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="script"/>
@@ -34,7 +34,7 @@
         <groups constant="idle">
           <arguments xsi:type="tclparse:Switch">
             <groups>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
             </groups>
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="script"/>
@@ -47,7 +47,7 @@
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="append">
-      <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="value"/>
     </children>
     <children xsi:type="tclparse:Command" name="apply" version="[8.5;-)">
@@ -60,8 +60,8 @@
             <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="value"/>
           </arguments>
         </arguments>
-        <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
-        <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Namespace" name="namespace"/>
+        <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
+        <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="namespace" type="Namespace"/>
       </arguments>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
     </children>
@@ -150,18 +150,19 @@
         <groups constant="scan">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
           <arguments xsi:type="tclparse:TypedArgument" name="formatString"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="VarName" name="varName"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="varName" type="VarName"/>
         </groups>
       </arguments>
     </children>
-    <children xsi:type="tclparse:Command" name="break" scope="//@children.0/@children.41 //@children.0/@children.42 //@children.0/@children.114"/>
+    <children xsi:type="tclparse:Command" name="break" scope="//@children.0/@children.40 //@children.0/@children.41 //@children.0/@children.113"/>
     <children xsi:type="tclparse:Command" name="catch" version="(-;8.5)">
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="VarName" name="resultVarName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="resultVarName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="catch" version="[8.5;-)">
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="2" type="VarName" name="resultVarName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="resultVarName" type="VarName"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="optionsVarName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="cd">
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="dirName"/>
@@ -176,7 +177,7 @@
         </groups>
         <groups constant="configure">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:Switch" lowerBound="0">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" name="option">
             <groups>
               <arguments xsi:type="tclparse:Switch" lowerBound="0" checkPrefix="true">
                 <groups constant="-blocking"/>
@@ -190,7 +191,7 @@
             <groups>
               <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
                 <groups constant="-blocking">
-                  <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+                  <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
                 </groups>
                 <groups constant="-buffering">
                   <arguments xsi:type="tclparse:Switch">
@@ -199,7 +200,7 @@
                   </arguments>
                 </groups>
                 <groups constant="-buffersize">
-                  <arguments xsi:type="tclparse:TypedArgument" type="Integer" name="newSize"/>
+                  <arguments xsi:type="tclparse:TypedArgument" name="newSize" type="Integer"/>
                 </groups>
                 <groups constant="-encoding">
                   <arguments xsi:type="tclparse:TypedArgument" name="name"/>
@@ -209,7 +210,7 @@
                   <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="outChar"/>
                 </groups>
                 <groups constant="-translation">
-                  <arguments xsi:type="tclparse:Switch">
+                  <arguments xsi:type="tclparse:Switch" upperBound="2">
                     <groups constant="auto"/>
                     <groups constant="binary"/>
                     <groups constant="cr"/>
@@ -217,30 +218,19 @@
                     <groups constant="lf"/>
                   </arguments>
                 </groups>
-                <groups constant="-translation">
-                  <arguments xsi:type="tclparse:ComplexArgument">
-                    <arguments xsi:type="tclparse:Switch" upperBound="2">
-                      <groups constant="auto"/>
-                      <groups constant="binary"/>
-                      <groups constant="cr"/>
-                      <groups constant="crlf"/>
-                      <groups constant="lf"/>
-                    </arguments>
-                  </arguments>
-                </groups>
               </arguments>
             </groups>
           </arguments>
         </groups>
         <groups constant="copy">
-          <arguments xsi:type="tclparse:TypedArgument" name="inputAny"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="outputAny"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="inputChan"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="outputChan"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
             <groups constant="-size">
-              <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="size"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="size" type="NotNegative"/>
             </groups>
             <groups constant="-command">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="callback"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="callback" type="CmdName"/>
             </groups>
           </arguments>
         </groups>
@@ -249,25 +239,25 @@
             <groups constant="read"/>
             <groups constant="write"/>
           </arguments>
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="cmdPrefix"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="cmdPrefix" type="CmdName"/>
         </groups>
         <groups constant="eof">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
+        </groups>
+        <groups constant="event">
+          <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
+          <arguments xsi:type="tclparse:Switch" name="event" checkPrefix="true">
+            <groups constant="readable"/>
+            <groups constant="writable"/>
+          </arguments>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="script" type="Script"/>
         </groups>
         <groups constant="flush">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
         </groups>
         <groups constant="gets">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="VarName" name="varName"/>
-        </groups>
-        <groups constant="event">
-          <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:Switch" checkPrefix="true">
-            <groups constant="readable"/>
-            <groups constant="writable"/>
-          </arguments>
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="varName" type="VarName"/>
         </groups>
         <groups constant="names">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
@@ -292,7 +282,7 @@
           <arguments xsi:type="tclparse:Switch">
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="NotNegative" name="numChars"/>
+              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="numChars" type="NotNegative"/>
             </groups>
             <groups>
               <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-nonewline"/>
@@ -302,8 +292,8 @@
         </groups>
         <groups constant="seek">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Integer" name="offset"/>
-          <arguments xsi:type="tclparse:Switch" lowerBound="0" checkPrefix="true">
+          <arguments xsi:type="tclparse:TypedArgument" name="offset" type="Integer"/>
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" name="origin" checkPrefix="true">
             <groups constant="start"/>
             <groups constant="current"/>
             <groups constant="end"/>
@@ -314,17 +304,17 @@
         </groups>
         <groups constant="truncate">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="NotNegative" name="length"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="length" type="NotNegative"/>
         </groups>
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="clock" version="[8.5;-)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="add">
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="timeVal"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="timeVal" type="NotNegative"/>
           <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
-            <arguments xsi:type="tclparse:TypedArgument" type="Index" name="count"/>
-            <arguments xsi:type="tclparse:Switch" checkPrefix="true">
+            <arguments xsi:type="tclparse:TypedArgument" name="count" type="Index"/>
+            <arguments xsi:type="tclparse:Switch" name="unit" checkPrefix="true">
               <groups constant="seconds"/>
               <groups constant="minutes"/>
               <groups constant="hours"/>
@@ -336,7 +326,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
             <groups constant="-gmt">
-              <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
             </groups>
             <groups constant="-locale">
               <arguments xsi:type="tclparse:TypedArgument" name="localeName"/>
@@ -347,19 +337,19 @@
           </arguments>
         </groups>
         <groups constant="clicks">
-          <arguments xsi:type="tclparse:Switch" lowerBound="0" checkPrefix="true">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" name="option" checkPrefix="true">
             <groups constant="-milliseconds"/>
             <groups constant="-microseconds"/>
           </arguments>
         </groups>
         <groups constant="format">
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="timeVal"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="timeVal" type="NotNegative"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
             <groups constant="-format">
               <arguments xsi:type="tclparse:TypedArgument" name="format"/>
             </groups>
             <groups constant="-gmt">
-              <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
             </groups>
             <groups constant="-locale">
               <arguments xsi:type="tclparse:TypedArgument" name="localeName"/>
@@ -381,7 +371,7 @@
               <arguments xsi:type="tclparse:TypedArgument" name="format"/>
             </groups>
             <groups constant="-gmt">
-              <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
             </groups>
             <groups constant="-locale">
               <arguments xsi:type="tclparse:TypedArgument" name="localeName"/>
@@ -400,24 +390,24 @@
           <arguments xsi:type="tclparse:Group" lowerBound="0" constant="-milliseconds"/>
         </groups>
         <groups constant="format">
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="timeVal"/>
-          <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
+          <arguments xsi:type="tclparse:TypedArgument" name="clockValue" type="NotNegative"/>
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" name="options" checkPrefix="true">
             <groups constant="-format">
-              <arguments xsi:type="tclparse:TypedArgument" name="format"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="string"/>
             </groups>
             <groups constant="-gmt">
-              <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
             </groups>
           </arguments>
         </groups>
         <groups constant="scan">
-          <arguments xsi:type="tclparse:TypedArgument" name="inputString"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dateString"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
             <groups constant="-base">
-              <arguments xsi:type="tclparse:TypedArgument" name="time"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="clockVal"/>
             </groups>
             <groups constant="-gmt">
-              <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
             </groups>
           </arguments>
         </groups>
@@ -427,11 +417,10 @@
     <children xsi:type="tclparse:Command" name="close">
       <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
     </children>
-    <children xsi:type="tclparse:Command" name="cmdPrefix"/>
     <children xsi:type="tclparse:Command" name="concat">
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
     </children>
-    <children xsi:type="tclparse:Command" name="continue" scope="//@children.0/@children.41 //@children.0/@children.42 //@children.0/@children.114"/>
+    <children xsi:type="tclparse:Command" name="continue" scope="//@children.0/@children.40 //@children.0/@children.41 //@children.0/@children.113"/>
     <children xsi:type="tclparse:Command" name="dde" version="(-;8.5)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="servername">
@@ -453,7 +442,7 @@
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-binary"/>
           <arguments xsi:type="tclparse:TypedArgument" name="service"/>
           <arguments xsi:type="tclparse:TypedArgument" name="topic"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="data"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="item"/>
         </groups>
         <groups constant="services">
           <arguments xsi:type="tclparse:TypedArgument" name="service"/>
@@ -462,7 +451,7 @@
         <groups constant="eval">
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-async"/>
           <arguments xsi:type="tclparse:TypedArgument" name="topic"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="cmd"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="cmd" type="CmdName"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
         </groups>
       </arguments>
@@ -475,8 +464,8 @@
             <groups constant="-handler">
               <arguments xsi:type="tclparse:TypedArgument" name="proc"/>
             </groups>
-            <groups constant="--"/>
           </arguments>
+          <arguments xsi:type="tclparse:Group" lowerBound="0" constant="--"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="topic"/>
         </groups>
         <groups constant="execute">
@@ -495,7 +484,7 @@
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-binary"/>
           <arguments xsi:type="tclparse:TypedArgument" name="service"/>
           <arguments xsi:type="tclparse:TypedArgument" name="topic"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="data"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="item"/>
         </groups>
         <groups constant="services">
           <arguments xsi:type="tclparse:TypedArgument" name="service"/>
@@ -504,7 +493,7 @@
         <groups constant="eval">
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-async"/>
           <arguments xsi:type="tclparse:TypedArgument" name="topic"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="cmd"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="cmd" type="CmdName"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
         </groups>
       </arguments>
@@ -512,7 +501,7 @@
     <children xsi:type="tclparse:Command" name="dict" version="[8.5;-)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="append">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable" type="VarName"/>
           <arguments xsi:type="tclparse:TypedArgument" name="key"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="string"/>
         </groups>
@@ -530,31 +519,34 @@
           <arguments xsi:type="tclparse:TypedArgument" name="dictionaryValue"/>
           <arguments xsi:type="tclparse:Switch" checkPrefix="true">
             <groups constant="key">
-              <arguments xsi:type="tclparse:TypedArgument" name="globAny"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="globPattern"/>
             </groups>
             <groups constant="script">
-              <arguments xsi:type="tclparse:ComplexArgument"/>
-              <arguments xsi:type="tclparse:TypedArgument" name="script"/>
+              <arguments xsi:type="tclparse:ComplexArgument">
+                <arguments xsi:type="tclparse:TypedArgument" name="keyVar" type="VarName"/>
+                <arguments xsi:type="tclparse:TypedArgument" name="valueVar" type="VarName"/>
+              </arguments>
+              <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
             </groups>
             <groups constant="value">
-              <arguments xsi:type="tclparse:TypedArgument" name="globAny"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="globPattern"/>
             </groups>
           </arguments>
         </groups>
         <groups constant="for">
           <arguments xsi:type="tclparse:ComplexArgument">
-            <arguments xsi:type="tclparse:TypedArgument" name="keyVar"/>
-            <arguments xsi:type="tclparse:TypedArgument" name="valueVar"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="keyVar" type="VarName"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="valueVar" type="VarName"/>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="dictionaryValue"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
         </groups>
         <groups constant="get">
           <arguments xsi:type="tclparse:TypedArgument" name="dictionaryValue"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="key"/>
         </groups>
         <groups constant="incr">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable" type="VarName"/>
           <arguments xsi:type="tclparse:TypedArgument" name="key"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="increment"/>
         </groups>
@@ -566,9 +558,9 @@
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="globPattern"/>
         </groups>
         <groups constant="lappend">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable" type="VarName"/>
           <arguments xsi:type="tclparse:TypedArgument" name="key"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="string"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="value"/>
         </groups>
         <groups constant="merge">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="dictionaryValue"/>
@@ -578,40 +570,40 @@
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="key"/>
         </groups>
         <groups constant="replace">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryValue"/>
           <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1" constant="">
             <arguments xsi:type="tclparse:TypedArgument" name="key"/>
             <arguments xsi:type="tclparse:TypedArgument" name="value"/>
           </arguments>
         </groups>
         <groups constant="set">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable" type="VarName"/>
           <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="key"/>
           <arguments xsi:type="tclparse:TypedArgument" name="value"/>
         </groups>
         <groups constant="size">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="dictionaryValue"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryValue"/>
         </groups>
         <groups constant="unset">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable" type="VarName"/>
           <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="key"/>
         </groups>
         <groups constant="update">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable" type="VarName"/>
           <arguments xsi:type="tclparse:Group" upperBound="-1" constant="">
             <arguments xsi:type="tclparse:TypedArgument" name="key"/>
-            <arguments xsi:type="tclparse:TypedArgument" name="value"/>
-            <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
           </arguments>
+          <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
         </groups>
         <groups constant="values">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="dictionaryValue"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryValue"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="globPattern"/>
         </groups>
         <groups constant="with">
-          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="dictionaryVariable" type="VarName"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="key"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
         </groups>
       </arguments>
     </children>
@@ -661,7 +653,7 @@
     <children xsi:type="tclparse:Command" name="eval">
       <arguments xsi:type="tclparse:Switch">
         <groups>
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="arg"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="arg" type="Script"/>
         </groups>
         <groups>
           <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="arg"/>
@@ -694,9 +686,9 @@
     </children>
     <children xsi:type="tclparse:Command" name="fconfigure" deprecated="[8.5;-)">
       <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-      <arguments xsi:type="tclparse:Switch" lowerBound="0">
+      <arguments xsi:type="tclparse:Switch">
         <groups>
-          <arguments xsi:type="tclparse:Switch" checkPrefix="true">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" name="name" checkPrefix="true">
             <groups constant="-blocking"/>
             <groups constant="-buffering"/>
             <groups constant="-buffersize"/>
@@ -711,15 +703,15 @@
           </arguments>
         </groups>
         <groups upperBound="-1">
-          <arguments xsi:type="tclparse:Switch" checkPrefix="true">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" name="name" checkPrefix="true">
             <groups constant="-blocking">
-              <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
             </groups>
             <groups constant="-buffering">
               <arguments xsi:type="tclparse:TypedArgument" name="newValue"/>
             </groups>
             <groups constant="-buffersize">
-              <arguments xsi:type="tclparse:TypedArgument" type="Integer" name="newSize"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="newSize" type="Integer"/>
             </groups>
             <groups constant="-encoding">
               <arguments xsi:type="tclparse:TypedArgument" name="name"/>
@@ -775,10 +767,10 @@
       <arguments xsi:type="tclparse:TypedArgument" name="outchan"/>
       <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
         <groups constant="-size">
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="size"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="size" type="NotNegative"/>
         </groups>
         <groups constant="-command">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="callback"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="callback" type="CmdName"/>
         </groups>
       </arguments>
     </children>
@@ -790,14 +782,11 @@
         </groups>
         <groups constant="attributes">
           <arguments xsi:type="tclparse:TypedArgument" name="name"/>
-          <arguments xsi:type="tclparse:Switch" lowerBound="0">
-            <groups>
-              <arguments xsi:type="tclparse:TypedArgument" name="option"/>
-            </groups>
-            <groups upperBound="-1">
-              <arguments xsi:type="tclparse:TypedArgument" name="option"/>
-              <arguments xsi:type="tclparse:TypedArgument" name="value"/>
-            </groups>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="option"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="value"/>
+          <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
+            <arguments xsi:type="tclparse:TypedArgument" name="option"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="value"/>
           </arguments>
         </groups>
         <groups constant="channels">
@@ -808,8 +797,16 @@
             <groups constant="-force"/>
           </arguments>
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
-          <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="source"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="target"/>
+          <arguments xsi:type="tclparse:Switch">
+            <groups>
+              <arguments xsi:type="tclparse:TypedArgument" name="source"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="target"/>
+            </groups>
+            <groups>
+              <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="source"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="targetDir"/>
+            </groups>
+          </arguments>
         </groups>
         <groups constant="delete">
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
@@ -846,7 +843,7 @@
         </groups>
         <groups constant="lstat">
           <arguments xsi:type="tclparse:TypedArgument" name="name"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
         </groups>
         <groups constant="mkdir">
           <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="dir"/>
@@ -878,8 +875,16 @@
             <groups constant="-force"/>
           </arguments>
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
-          <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="source"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="target"/>
+          <arguments xsi:type="tclparse:Switch">
+            <groups>
+              <arguments xsi:type="tclparse:TypedArgument" name="source"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="target"/>
+            </groups>
+            <groups>
+              <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="source"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="targetDir"/>
+            </groups>
+          </arguments>
         </groups>
         <groups constant="rootname">
           <arguments xsi:type="tclparse:TypedArgument" name="name"/>
@@ -895,7 +900,7 @@
         </groups>
         <groups constant="stat">
           <arguments xsi:type="tclparse:TypedArgument" name="name"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
         </groups>
         <groups constant="system">
           <arguments xsi:type="tclparse:TypedArgument" name="name"/>
@@ -914,27 +919,30 @@
     </children>
     <children xsi:type="tclparse:Command" name="fileevent" deprecated="[8.5;-)">
       <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-      <arguments xsi:type="tclparse:Switch" lowerBound="0" checkPrefix="true">
-        <groups constant="readable"/>
-        <groups constant="writable"/>
+      <arguments xsi:type="tclparse:Switch" name="" checkPrefix="true">
+        <groups constant="readable">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="script" type="Script"/>
+        </groups>
+        <groups constant="writable">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="script" type="Script"/>
+        </groups>
       </arguments>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Script" name="script"/>
     </children>
     <children xsi:type="tclparse:Command" name="flush" deprecated="[8.5;-)">
       <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
     </children>
     <children xsi:type="tclparse:Command" name="for">
-      <arguments xsi:type="tclparse:TypedArgument" type="Expression" name="start"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Expression" name="test"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Expression" name="next"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="start" type="Expression"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="test" type="Expression"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="next" type="Expression"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
     </children>
     <children xsi:type="tclparse:Command" name="foreach">
       <arguments xsi:type="tclparse:Group" upperBound="-1">
-        <arguments xsi:type="tclparse:TypedArgument" name="varname"/>
+        <arguments xsi:type="tclparse:TypedArgument" name="varname" type="VarName"/>
         <arguments xsi:type="tclparse:TypedArgument" name="list"/>
       </arguments>
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
     </children>
     <children xsi:type="tclparse:Command" name="format">
       <arguments xsi:type="tclparse:TypedArgument" name="formatString"/>
@@ -942,10 +950,10 @@
     </children>
     <children xsi:type="tclparse:Command" name="gets">
       <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="VarName" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="varName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="glob">
-      <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
+      <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" name="switches" checkPrefix="true">
         <groups constant="-directory">
           <arguments xsi:type="tclparse:TypedArgument" name="directory"/>
         </groups>
@@ -963,12 +971,12 @@
       <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="pattern"/>
     </children>
     <children xsi:type="tclparse:Command" name="global">
-      <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" type="VarName" name="varname"/>
+      <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="varname" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="history">
       <arguments xsi:type="tclparse:Switch" lowerBound="0" checkPrefix="true">
         <groups constant="add">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="CmdName"/>
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="exec"/>
         </groups>
         <groups constant="change">
@@ -992,46 +1000,46 @@
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="if">
-      <arguments xsi:type="tclparse:TypedArgument" type="Expression" name="expr1"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="expr1" type="Expression"/>
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="then"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body1"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="body1" type="Script"/>
       <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1" constant="elseif">
-        <arguments xsi:type="tclparse:TypedArgument" type="Expression" name="expr2"/>
+        <arguments xsi:type="tclparse:TypedArgument" name="expr2" type="Expression"/>
         <arguments xsi:type="tclparse:Constant" lowerBound="0" value="then"/>
-        <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body2"/>
+        <arguments xsi:type="tclparse:TypedArgument" name="body2" type="Script"/>
       </arguments>
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="else"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Script" name="bodyN"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="bodyN" type="Script"/>
     </children>
     <children xsi:type="tclparse:Command" name="incr">
-      <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Integer" name="increment"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="increment" type="Integer"/>
     </children>
     <children xsi:type="tclparse:Command" name="info" version="[8.5;-)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="args">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="procname"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="procname" type="CmdName"/>
         </groups>
         <groups constant="body">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="procname"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="procname" type="CmdName"/>
         </groups>
         <groups constant="cmdcount"/>
         <groups constant="commands">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
         </groups>
         <groups constant="complete">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="CmdName"/>
         </groups>
         <groups constant="default">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="procname"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="procname" type="CmdName"/>
           <arguments xsi:type="tclparse:TypedArgument" name="arg"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
         </groups>
         <groups constant="exists">
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
         </groups>
         <groups constant="frame">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Level" name="number"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="number" type="Level"/>
         </groups>
         <groups constant="functions">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
@@ -1041,7 +1049,62 @@
         </groups>
         <groups constant="hostname"/>
         <groups constant="level">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Level" name="number"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="number" type="Level"/>
+        </groups>
+        <groups name="" constant="library"/>
+        <groups constant="loaded">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="interp"/>
+        </groups>
+        <groups constant="locals">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
+        </groups>
+        <groups constant="nameofexecutable"/>
+        <groups constant="patchlevel"/>
+        <groups constant="procs">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
+        </groups>
+        <groups constant="script">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="filename"/>
+        </groups>
+        <groups constant="sharedlibextension"/>
+        <groups constant="tclversion"/>
+        <groups constant="vars">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
+        </groups>
+      </arguments>
+    </children>
+    <children xsi:type="tclparse:Command" name="info" version="(-;8.5)">
+      <arguments xsi:type="tclparse:Switch" checkPrefix="true">
+        <groups constant="args">
+          <arguments xsi:type="tclparse:TypedArgument" name="procname" type="CmdName"/>
+        </groups>
+        <groups constant="body">
+          <arguments xsi:type="tclparse:TypedArgument" name="procname" type="CmdName"/>
+        </groups>
+        <groups constant="cmdcount"/>
+        <groups constant="commands">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
+        </groups>
+        <groups constant="complete">
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="CmdName"/>
+        </groups>
+        <groups constant="default">
+          <arguments xsi:type="tclparse:TypedArgument" name="procname" type="CmdName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="arg"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
+        </groups>
+        <groups constant="exists">
+          <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
+        </groups>
+        <groups constant="functions">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
+        </groups>
+        <groups constant="globals">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
+        </groups>
+        <groups constant="hostname"/>
+        <groups constant="level">
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="number" type="Level"/>
         </groups>
         <groups constant="library"/>
         <groups constant="loaded">
@@ -1058,59 +1121,7 @@
         <groups constant="script">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="filename"/>
         </groups>
-        <groups constant="tclversion"/>
-        <groups constant="vars">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
-        </groups>
-      </arguments>
-    </children>
-    <children xsi:type="tclparse:Command" name="info" version="(-;8.5)">
-      <arguments xsi:type="tclparse:Switch" checkPrefix="true">
-        <groups constant="args">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="procname"/>
-        </groups>
-        <groups constant="body">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="procname"/>
-        </groups>
-        <groups constant="cmdcount"/>
-        <groups constant="commands">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
-        </groups>
-        <groups constant="complete">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
-        </groups>
-        <groups constant="default">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="procname"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="arg"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
-        </groups>
-        <groups constant="exists">
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
-        </groups>
-        <groups constant="functions">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
-        </groups>
-        <groups constant="globals">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
-        </groups>
-        <groups constant="hostname"/>
-        <groups constant="level">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Level" name="number"/>
-        </groups>
-        <groups constant="loaded">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="interp"/>
-        </groups>
-        <groups constant="locals">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
-        </groups>
-        <groups constant="nameofexecutable"/>
-        <groups constant="patchlevel"/>
-        <groups constant="procs">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
-        </groups>
-        <groups constant="script">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="filename"/>
-        </groups>
+        <groups constant="sharedlibextension"/>
         <groups constant="tclversion"/>
         <groups constant="vars">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
@@ -1124,7 +1135,11 @@
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" name="srcPath"/>
               <arguments xsi:type="tclparse:TypedArgument" name="srcToken"/>
-              <arguments xsi:type="tclparse:ComplexArgument" lowerBound="0"/>
+            </groups>
+            <groups>
+              <arguments xsi:type="tclparse:TypedArgument" name="srcPath"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="srcToken"/>
+              <arguments xsi:type="tclparse:ComplexArgument"/>
             </groups>
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" name="srcPath"/>
@@ -1166,7 +1181,7 @@
         </groups>
         <groups constant="hide">
           <arguments xsi:type="tclparse:TypedArgument" name="path"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="hiddenName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="exposedCmdName"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="hiddenCmdName"/>
         </groups>
         <groups constant="hidden">
@@ -1179,20 +1194,20 @@
             <groups constant="-global"/>
           </arguments>
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="hiddenCmdName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="hiddenCmdName"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
         </groups>
         <groups constant="limit">
           <arguments xsi:type="tclparse:TypedArgument" name="path"/>
           <arguments xsi:type="tclparse:TypedArgument" name="limitType"/>
-          <arguments xsi:type="tclparse:Switch">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" name="option">
             <groups constant="-command"/>
             <groups constant="-granularity"/>
             <groups constant="-milliseconds"/>
             <groups constant="-seconds"/>
             <groups constant="-value"/>
           </arguments>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="value"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="value"/>
         </groups>
         <groups constant="issafe">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="path"/>
@@ -1228,20 +1243,20 @@
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="joinString"/>
     </children>
     <children xsi:type="tclparse:Command" name="lappend">
-      <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="value"/>
     </children>
     <children xsi:type="tclparse:Command" name="lassign" version="[8.5;-)">
       <arguments xsi:type="tclparse:TypedArgument" name="list"/>
-      <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" type="VarName" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="varName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="lindex">
       <arguments xsi:type="tclparse:TypedArgument" name="list"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="Index" name="index"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="index" type="Index"/>
     </children>
     <children xsi:type="tclparse:Command" name="linsert">
       <arguments xsi:type="tclparse:TypedArgument" name="list"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Index" name="index"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="index" type="Index"/>
       <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="element"/>
     </children>
     <children xsi:type="tclparse:Command" name="list">
@@ -1257,17 +1272,17 @@
     </children>
     <children xsi:type="tclparse:Command" name="lrange">
       <arguments xsi:type="tclparse:TypedArgument" name="list"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Index" name="first"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Index" name="last"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="first" type="Index"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="last" type="Index"/>
     </children>
     <children xsi:type="tclparse:Command" name="lrepeat">
-      <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="number"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="number" type="NotNegative"/>
       <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="element"/>
     </children>
     <children xsi:type="tclparse:Command" name="lreplace">
       <arguments xsi:type="tclparse:TypedArgument" name="list"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Index" name="first"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Index" name="last"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="first" type="Index"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="last" type="Index"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="element"/>
     </children>
     <children xsi:type="tclparse:Command" name="lreverse">
@@ -1288,7 +1303,7 @@
         <groups constant="-regexp"/>
         <groups constant="-sorted"/>
         <groups constant="-start">
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="index"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="index" type="Index"/>
         </groups>
         <groups constant="-index">
           <arguments xsi:type="tclparse:TypedArgument" name="indexList"/>
@@ -1302,8 +1317,8 @@
       <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
     </children>
     <children xsi:type="tclparse:Command" name="lset">
-      <arguments xsi:type="tclparse:TypedArgument" name="list"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="Index" name="index"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="index" type="Index"/>
       <arguments xsi:type="tclparse:TypedArgument" name="newValue"/>
     </children>
     <children xsi:type="tclparse:Command" name="lsort" version="[8.5;-)">
@@ -1313,7 +1328,7 @@
         <groups constant="-integer"/>
         <groups constant="-real"/>
         <groups constant="-command">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="CmdName"/>
         </groups>
         <groups constant="-increasing"/>
         <groups constant="-decreasing"/>
@@ -1333,7 +1348,7 @@
         <groups constant="-integer"/>
         <groups constant="-real"/>
         <groups constant="-command">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="CmdName"/>
         </groups>
         <groups constant="-increasing"/>
         <groups constant="-decreasing"/>
@@ -1350,7 +1365,7 @@
           <arguments xsi:type="tclparse:TypedArgument" name="file"/>
         </groups>
         <groups constant="break_on_malloc">
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="count"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
         </groups>
         <groups constant="info"/>
         <groups constant="init">
@@ -1372,7 +1387,7 @@
           </arguments>
         </groups>
         <groups constant="trace_on_at_malloc">
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="count"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
         </groups>
         <groups constant="validate">
           <arguments xsi:type="tclparse:Switch">
@@ -1385,21 +1400,25 @@
     <children xsi:type="tclparse:Command" name="namespace" version="[8.5;-)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="children">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="namespace" type="Namespace"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
         </groups>
         <groups constant="code">
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
         </groups>
         <groups constant="current"/>
         <groups constant="delete">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="namespace" type="Namespace"/>
+        </groups>
+        <groups name="" constant="ensemble">
+          <arguments xsi:type="tclparse:TypedArgument" name="subcommand"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
         </groups>
         <groups constant="eval">
-          <arguments xsi:type="tclparse:TypedArgument" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="namespace" type="Namespace"/>
           <arguments xsi:type="tclparse:Switch">
             <groups>
-              <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" type="Script" name="scripts"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="arg" type="Script"/>
             </groups>
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="arg"/>
@@ -1407,7 +1426,7 @@
           </arguments>
         </groups>
         <groups constant="exists">
-          <arguments xsi:type="tclparse:TypedArgument" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="namespace" type="Namespace"/>
         </groups>
         <groups constant="export">
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-clear"/>
@@ -1421,15 +1440,15 @@
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="pattern"/>
         </groups>
         <groups constant="inscope">
-          <arguments xsi:type="tclparse:TypedArgument" type="Namespace" name="namespace"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="namespace" type="Namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="script"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
         </groups>
         <groups constant="origin">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="CmdName"/>
         </groups>
         <groups constant="parent">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="namespace" type="Namespace"/>
         </groups>
         <groups constant="path">
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="namespaceList"/>
@@ -1441,45 +1460,42 @@
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
         </groups>
         <groups constant="upvar">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="namespace" type="Namespace"/>
           <arguments xsi:type="tclparse:Group" upperBound="-1">
-            <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="otherVar"/>
-            <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="myVar"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="otherVar" type="VarName"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="myVar" type="VarName"/>
           </arguments>
         </groups>
         <groups constant="unknown">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="script" type="Script"/>
         </groups>
         <groups constant="which">
-          <arguments xsi:type="tclparse:Switch" checkPrefix="true">
-            <groups constant="-variable">
-              <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
-            </groups>
-            <groups constant="-command">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
-            </groups>
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
+            <groups constant="-command"/>
+            <groups constant="-variable"/>
           </arguments>
+          <arguments xsi:type="tclparse:TypedArgument" name="name" type="CmdName"/>
         </groups>
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="namespace" version="(-;8.5)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="children">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="namespace" type="Namespace"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="pattern"/>
         </groups>
         <groups constant="code">
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
         </groups>
         <groups constant="current"/>
         <groups constant="delete">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="namespace" type="Namespace"/>
         </groups>
         <groups constant="eval">
-          <arguments xsi:type="tclparse:TypedArgument" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="namespace" type="Namespace"/>
           <arguments xsi:type="tclparse:Switch">
             <groups>
-              <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" type="Script" name="scripts"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="arg" type="Script"/>
             </groups>
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="arg"/>
@@ -1487,7 +1503,7 @@
           </arguments>
         </groups>
         <groups constant="exists">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="namespace" type="Namespace"/>
         </groups>
         <groups constant="export">
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-clear"/>
@@ -1501,15 +1517,15 @@
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="pattern"/>
         </groups>
         <groups constant="inscope">
-          <arguments xsi:type="tclparse:TypedArgument" type="Namespace" name="namespace"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="namespace" type="Namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="script"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
         </groups>
         <groups constant="origin">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="CmdName"/>
         </groups>
         <groups constant="parent">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Namespace" name="namespace"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="namespace" type="Namespace"/>
         </groups>
         <groups constant="qualifiers">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -1518,14 +1534,11 @@
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
         </groups>
         <groups constant="which">
-          <arguments xsi:type="tclparse:Switch" checkPrefix="true">
-            <groups constant="-variable">
-              <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
-            </groups>
-            <groups constant="-command">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
-            </groups>
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
+            <groups constant="-command"/>
+            <groups constant="-variable"/>
           </arguments>
+          <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
         </groups>
       </arguments>
     </children>
@@ -1537,60 +1550,58 @@
     <children xsi:type="tclparse:Command" name="package" version="[8.5;-)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="forget">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="package" type="Package"/>
         </groups>
         <groups constant="ifneeded">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
           <arguments xsi:type="tclparse:TypedArgument" name="version"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="script" type="Script"/>
         </groups>
         <groups constant="names"/>
         <groups constant="present">
           <arguments xsi:type="tclparse:Switch">
             <groups>
-              <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-exact"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="version"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
+              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="requirement"/>
             </groups>
             <groups constant="-exact">
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="requirement"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
+              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="version"/>
             </groups>
           </arguments>
         </groups>
         <groups constant="provide">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="version"/>
         </groups>
         <groups constant="require">
           <arguments xsi:type="tclparse:Switch">
             <groups>
-              <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-exact"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="version"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
+              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="requirement"/>
             </groups>
             <groups constant="-exact">
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="requirement"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
+              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="version"/>
             </groups>
           </arguments>
         </groups>
         <groups constant="unknown">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="command" type="CmdName"/>
         </groups>
         <groups constant="vcompare">
           <arguments xsi:type="tclparse:TypedArgument" name="version1"/>
           <arguments xsi:type="tclparse:TypedArgument" name="version2"/>
         </groups>
         <groups constant="versions">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
         </groups>
         <groups constant="vsatisfies">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="version"/>
           <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="requirement"/>
         </groups>
         <groups constant="prefer">
-          <arguments xsi:type="tclparse:Switch" checkPrefix="true">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0" checkPrefix="true">
             <groups constant="latest"/>
             <groups constant="stable"/>
           </arguments>
@@ -1600,57 +1611,41 @@
     <children xsi:type="tclparse:Command" name="package" version="(-;8.5)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="forget">
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="package" type="Package"/>
         </groups>
         <groups constant="ifneeded">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
           <arguments xsi:type="tclparse:TypedArgument" name="version"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="script" type="Script"/>
         </groups>
         <groups constant="names"/>
         <groups constant="present">
-          <arguments xsi:type="tclparse:Switch">
-            <groups>
-              <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-exact"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="version"/>
-            </groups>
-            <groups constant="-exact">
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="requirement"/>
-            </groups>
-          </arguments>
+          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-exact"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="version"/>
         </groups>
         <groups constant="provide">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="version"/>
         </groups>
         <groups constant="require">
-          <arguments xsi:type="tclparse:Switch">
-            <groups>
-              <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-exact"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="version"/>
-            </groups>
-            <groups constant="-exact">
-              <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="requirement"/>
-            </groups>
-          </arguments>
+          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-exact"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="version"/>
         </groups>
         <groups constant="unknown">
-          <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="command" type="CmdName"/>
         </groups>
         <groups constant="vcompare">
           <arguments xsi:type="tclparse:TypedArgument" name="version1"/>
           <arguments xsi:type="tclparse:TypedArgument" name="version2"/>
         </groups>
         <groups constant="versions">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="package" type="Package"/>
         </groups>
         <groups constant="vsatisfies">
-          <arguments xsi:type="tclparse:TypedArgument" type="Package" name="package"/>
-          <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="requirement"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="version1"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="version2"/>
         </groups>
       </arguments>
     </children>
@@ -1683,7 +1678,7 @@
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="value"/>
         </arguments>
       </arguments>
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
     </children>
     <children xsi:type="tclparse:Command" name="puts" deprecated="[8.5;-)">
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-nonewline" strictMatch="true"/>
@@ -1695,7 +1690,7 @@
       <arguments xsi:type="tclparse:Switch">
         <groups>
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="NotNegative" name="numChars"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="numChars" type="NotNegative"/>
         </groups>
         <groups>
           <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-nonewline"/>
@@ -1715,20 +1710,20 @@
         <groups constant="-all"/>
         <groups constant="-inline"/>
         <groups constant="-start">
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="index"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="index" type="Index"/>
         </groups>
       </arguments>
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
       <arguments xsi:type="tclparse:TypedArgument" name="exp"/>
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="VarName" name="matchVar"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="matchVar" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="registry">
       <arguments xsi:type="tclparse:Switch">
         <groups constant="broadcast">
           <arguments xsi:type="tclparse:TypedArgument" name="keyName"/>
           <arguments xsi:type="tclparse:Group" lowerBound="0" constant="-timeout">
-            <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="milliseconds"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="milliseconds" type="NotNegative"/>
           </arguments>
         </groups>
         <groups constant="delete">
@@ -1748,7 +1743,7 @@
           <arguments xsi:type="tclparse:Group" lowerBound="0">
             <arguments xsi:type="tclparse:TypedArgument" name="valueName"/>
             <arguments xsi:type="tclparse:TypedArgument" name="data"/>
-            <arguments xsi:type="tclparse:Switch">
+            <arguments xsi:type="tclparse:Switch" lowerBound="0" name="type">
               <groups constant="binary"/>
               <groups constant="none"/>
               <groups constant="sz"/>
@@ -1763,7 +1758,7 @@
         </groups>
         <groups constant="type">
           <arguments xsi:type="tclparse:TypedArgument" name="keyName"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="valueName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="valueName"/>
         </groups>
         <groups constant="values">
           <arguments xsi:type="tclparse:TypedArgument" name="keyName"/>
@@ -1783,18 +1778,18 @@
         <groups constant="-all"/>
         <groups constant="-inline"/>
         <groups constant="-start">
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="index"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="index" type="Index"/>
         </groups>
       </arguments>
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
       <arguments xsi:type="tclparse:TypedArgument" name="exp"/>
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
       <arguments xsi:type="tclparse:TypedArgument" name="subSpec"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="VarName" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="varName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="rename">
-      <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="oldName"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="newName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="oldName" type="CmdName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="newName" type="CmdName"/>
     </children>
     <children xsi:type="tclparse:Command" name="return">
       <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
@@ -1805,7 +1800,7 @@
           <arguments xsi:type="tclparse:TypedArgument" name="info"/>
         </groups>
         <groups constant="-level">
-          <arguments xsi:type="tclparse:TypedArgument" type="Level" name="level"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="level" type="Level"/>
         </groups>
         <groups constant="-options">
           <arguments xsi:type="tclparse:TypedArgument" name="options"/>
@@ -1819,11 +1814,11 @@
     <children xsi:type="tclparse:Command" name="scan">
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
       <arguments xsi:type="tclparse:TypedArgument" name="format"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="varName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="seek" deprecated="[8.5;-)">
       <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Integer" name="offset"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="offset" type="Integer"/>
       <arguments xsi:type="tclparse:Switch" lowerBound="0" checkPrefix="true">
         <groups constant="start"/>
         <groups constant="current"/>
@@ -1831,7 +1826,7 @@
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="set">
-      <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="value"/>
     </children>
     <children xsi:type="tclparse:Command" name="socket">
@@ -1843,6 +1838,7 @@
               <arguments xsi:type="tclparse:TypedArgument" name="addr"/>
             </groups>
           </arguments>
+          <arguments xsi:type="tclparse:TypedArgument" name="port" type="NotNegative"/>
         </groups>
         <groups>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
@@ -1855,9 +1851,9 @@
             <groups constant="-async"/>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="host"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="port" type="NotNegative"/>
         </groups>
       </arguments>
-      <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="port"/>
     </children>
     <children xsi:type="tclparse:Command" name="source">
       <arguments xsi:type="tclparse:Group" lowerBound="0" constant="-encoding">
@@ -1880,7 +1876,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="int"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
@@ -1892,23 +1888,23 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="int"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
           <arguments xsi:type="tclparse:TypedArgument" name="string2"/>
         </groups>
         <groups constant="first">
-          <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="string2"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="startIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="needleString"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="haystackString"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="startIndex" type="Index"/>
         </groups>
         <groups constant="index">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="charIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="charIndex" type="Index"/>
         </groups>
         <groups constant="is">
-          <arguments xsi:type="tclparse:Switch">
+          <arguments xsi:type="tclparse:Switch" name="class">
             <groups constant="alnum"/>
             <groups constant="alpha"/>
             <groups constant="ascii"/>
@@ -1935,15 +1931,15 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-failindex">
-              <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
         </groups>
         <groups constant="last">
-          <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="string2"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="lastIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="needleString"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="haystackString"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="lastIndex" type="Index"/>
         </groups>
         <groups constant="length">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -1964,36 +1960,36 @@
         </groups>
         <groups constant="range">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="last" type="Index"/>
         </groups>
         <groups constant="repeat">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="count"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
         </groups>
         <groups constant="replace">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="string"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="last" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="newString"/>
         </groups>
         <groups constant="reverse">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
         </groups>
         <groups constant="tolower">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="last" type="Index"/>
         </groups>
         <groups constant="totitle">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="last" type="Index"/>
         </groups>
         <groups constant="toupper">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="last" type="Index"/>
         </groups>
         <groups constant="trim">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -2009,11 +2005,11 @@
         </groups>
         <groups constant="wordend">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="charIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="charIndex" type="Index"/>
         </groups>
         <groups constant="wordstart">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="charIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="charIndex" type="Index"/>
         </groups>
       </arguments>
     </children>
@@ -2028,7 +2024,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="int"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
@@ -2040,7 +2036,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="int"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
@@ -2049,14 +2045,14 @@
         <groups constant="first">
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
           <arguments xsi:type="tclparse:TypedArgument" name="string2"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="startIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="startIndex" type="Index"/>
         </groups>
         <groups constant="index">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="charIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="charIndex" type="Index"/>
         </groups>
         <groups constant="is">
-          <arguments xsi:type="tclparse:Switch" checkPrefix="true">
+          <arguments xsi:type="tclparse:Switch" name="class" checkPrefix="true">
             <groups constant="alnum"/>
             <groups constant="alpha"/>
             <groups constant="ascii"/>
@@ -2081,7 +2077,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-failindex">
-              <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -2089,7 +2085,7 @@
         <groups constant="last">
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
           <arguments xsi:type="tclparse:TypedArgument" name="string2"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="lastIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="lastIndex" type="Index"/>
         </groups>
         <groups constant="length">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -2110,33 +2106,33 @@
         </groups>
         <groups constant="range">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="last" type="Index"/>
         </groups>
         <groups constant="repeat">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="NotNegative" name="count"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
         </groups>
         <groups constant="replace">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="string"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="last" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="newString"/>
         </groups>
         <groups constant="tolower">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="last" type="Index"/>
         </groups>
         <groups constant="totitle">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="last" type="Index"/>
         </groups>
         <groups constant="toupper">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="first"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Index" name="last"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="first" type="Index"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="last" type="Index"/>
         </groups>
         <groups constant="trim">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -2152,11 +2148,11 @@
         </groups>
         <groups constant="wordend">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="charIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="charIndex" type="Index"/>
         </groups>
         <groups constant="wordstart">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Index" name="charIndex"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="charIndex" type="Index"/>
         </groups>
       </arguments>
     </children>
@@ -2166,7 +2162,7 @@
         <groups constant="-nocommands"/>
         <groups constant="-novariables"/>
       </arguments>
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="string"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="string" type="Script"/>
     </children>
     <children xsi:type="tclparse:Command" name="switch">
       <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
@@ -2179,29 +2175,34 @@
       </arguments>
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-      
-      <arguments xsi:type="tclparse:Switch" lowerBound="1" upperBound="1">
+      <arguments xsi:type="tclparse:Switch">
         <groups>
-          <arguments xsi:type="tclparse:ComplexArgument">
-            <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
-              <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
-              <arguments xsi:type="tclparse:Switch">
-                <groups constant="-"/>
-                <groups>
-                  <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
-                </groups>
-              </arguments>
-            </arguments>
-          </arguments>  
-        </groups>
-        <groups>
-          <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
+          <arguments xsi:type="tclparse:Group" upperBound="-1">
             <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
             <arguments xsi:type="tclparse:Switch">
               <groups constant="-"/>
               <groups>
-                <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+                <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
               </groups>
+            </arguments>
+          </arguments>
+          <arguments xsi:type="tclparse:Group" lowerBound="0" constant="default">
+            <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
+          </arguments>
+        </groups>
+        <groups>
+          <arguments xsi:type="tclparse:ComplexArgument">
+            <arguments xsi:type="tclparse:Group" upperBound="-1">
+              <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
+              <arguments xsi:type="tclparse:Switch">
+                <groups constant="-"/>
+                <groups>
+                  <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
+                </groups>
+              </arguments>
+            </arguments>
+            <arguments xsi:type="tclparse:Group" lowerBound="0" constant="default">
+              <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
             </arguments>
           </arguments>
         </groups>
@@ -2216,8 +2217,8 @@
       <arguments xsi:type="tclparse:TypedArgument" name="version"/>
       <arguments xsi:type="tclparse:TypedArgument" name="patch"/>
       <arguments xsi:type="tclparse:TypedArgument" name="initScript"/>
-      <arguments xsi:type="tclparse:TypedArgument" name="enVarName"/>
-      <arguments xsi:type="tclparse:TypedArgument" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="enVarName" type="VarName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="tcl_startOfNextWord">
       <arguments xsi:type="tclparse:TypedArgument" name="str"/>
@@ -2239,79 +2240,79 @@
       <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
     </children>
     <children xsi:type="tclparse:Command" name="time">
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="NotNegative" name="count"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="count" type="NotNegative"/>
     </children>
     <children xsi:type="tclparse:Command" name="trace">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="add">
           <arguments xsi:type="tclparse:Switch" checkPrefix="true">
             <groups constant="command">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="CmdName"/>
               <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="commandPrefix" type="Script"/>
             </groups>
             <groups constant="execution">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="CmdName"/>
               <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="commandPrefix" type="Script"/>
             </groups>
             <groups constant="variable">
-              <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
               <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="commandPrefix" type="Script"/>
             </groups>
           </arguments>
         </groups>
         <groups constant="remove">
           <arguments xsi:type="tclparse:Switch" checkPrefix="true">
             <groups constant="command">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="CmdName"/>
               <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="commandPrefix" type="Script"/>
             </groups>
             <groups constant="execution">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="CmdName"/>
               <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="commandPrefix" type="Script"/>
             </groups>
             <groups constant="variable">
-              <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
               <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
-              <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="commandPrefix" type="Script"/>
             </groups>
           </arguments>
         </groups>
         <groups constant="info">
           <arguments xsi:type="tclparse:Switch" checkPrefix="true">
             <groups constant="command">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="CmdName"/>
             </groups>
             <groups constant="execution">
-              <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="CmdName"/>
             </groups>
             <groups constant="variable">
-              <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
             </groups>
           </arguments>
         </groups>
         <groups constant="variable">
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="opt"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="Script"/>
         </groups>
         <groups constant="vdelete">
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="opt"/>
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="command"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="ops"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="command" type="Script"/>
         </groups>
         <groups constant="vinfo">
-          <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
         </groups>
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="unknown">
-      <arguments xsi:type="tclparse:TypedArgument" type="CmdName" name="cmdName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="cmdName" type="CmdName"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
     </children>
     <children xsi:type="tclparse:Command" name="unload" version="[8.5;-)">
@@ -2327,16 +2328,16 @@
     <children xsi:type="tclparse:Command" name="unset">
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="-nocomplain" strictMatch="true"/>
       <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="VarName" name="name"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="name" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="update">
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="idletasks"/>
     </children>
     <children xsi:type="tclparse:Command" name="uplevel">
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Level" name="level"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="level" type="Level"/>
       <arguments xsi:type="tclparse:Switch">
         <groups>
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="arg"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="arg" type="Script"/>
         </groups>
         <groups>
           <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="arg"/>
@@ -2344,26 +2345,26 @@
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="upvar">
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Level" name="level"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="level" type="Level"/>
       <arguments xsi:type="tclparse:Group" upperBound="-1">
-        <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="otherVar"/>
-        <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="myVar"/>
+        <arguments xsi:type="tclparse:TypedArgument" name="otherVar" type="VarName"/>
+        <arguments xsi:type="tclparse:TypedArgument" name="myVar" type="VarName"/>
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="variable">
       <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
-        <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
+        <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
         <arguments xsi:type="tclparse:TypedArgument" name="value"/>
       </arguments>
-      <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="name"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="name" type="VarName"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="value"/>
     </children>
     <children xsi:type="tclparse:Command" name="vwait">
-      <arguments xsi:type="tclparse:TypedArgument" type="VarName" name="varName"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="varName" type="VarName"/>
     </children>
     <children xsi:type="tclparse:Command" name="while">
-      <arguments xsi:type="tclparse:TypedArgument" type="Expression" name="test"/>
-      <arguments xsi:type="tclparse:TypedArgument" type="Script" name="body"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="test" type="Expression"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="body" type="Script"/>
     </children>
   </children>
   <children xsi:type="tclparse:Namespace" name="tcl">
@@ -2455,15 +2456,15 @@
           <arguments xsi:type="tclparse:TypedArgument" name="directoryList"/>
         </groups>
         <groups constant="-statics">
-          <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
         </groups>
         <groups constant="-noStatics"/>
         <groups constant="-nested">
-          <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
         </groups>
         <groups constant="-nestedLoadOk"/>
         <groups constant="-deleteHook">
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
         </groups>
       </arguments>
     </children>
@@ -2474,15 +2475,15 @@
           <arguments xsi:type="tclparse:TypedArgument" name="directoryList"/>
         </groups>
         <groups constant="-statics">
-          <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
         </groups>
         <groups constant="-noStatics"/>
         <groups constant="-nested">
-          <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
         </groups>
         <groups constant="-nestedLoadOk"/>
         <groups constant="-deleteHook">
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
         </groups>
       </arguments>
     </children>
@@ -2493,15 +2494,15 @@
           <arguments xsi:type="tclparse:TypedArgument" name="directoryList"/>
         </groups>
         <groups constant="-statics">
-          <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
         </groups>
         <groups constant="-noStatics"/>
         <groups constant="-nested">
-          <arguments xsi:type="tclparse:TypedArgument" type="Boolean" name="boolean"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="boolean" type="Boolean"/>
         </groups>
         <groups constant="-nestedLoadOk"/>
         <groups constant="-deleteHook">
-          <arguments xsi:type="tclparse:TypedArgument" type="Script" name="script"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
         </groups>
       </arguments>
     </children>
@@ -2517,15 +2518,15 @@
       <arguments xsi:type="tclparse:TypedArgument" name="directory"/>
     </children>
     <children xsi:type="tclparse:Command" name="setLogCmd">
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" type="Script" name="cmd"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" type="Script" name="arg"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="cmd" type="Script"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg" type="Script"/>
     </children>
   </children>
   <children xsi:type="tclparse:Namespace" name="http">
     <children xsi:type="tclparse:Command" name="config">
-      <arguments xsi:type="tclparse:Switch" lowerBound="0">
+      <arguments xsi:type="tclparse:Switch">
         <groups>
-          <arguments xsi:type="tclparse:Switch">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0">
             <groups constant="-accept"/>
             <groups constant="-proxyhost"/>
             <groups constant="-proxyport"/>
@@ -2534,7 +2535,7 @@
             <groups constant="-useragent"/>
           </arguments>
         </groups>
-        <groups upperBound="-1">
+        <groups>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-accept">
               <arguments xsi:type="tclparse:TypedArgument" name="mimetypes"/>
@@ -2559,9 +2560,10 @@
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="geturl">
-      <arguments xsi:type="tclparse:Switch" lowerBound="0">
+      <arguments xsi:type="tclparse:TypedArgument" name="url"/>
+      <arguments xsi:type="tclparse:Switch">
         <groups>
-          <arguments xsi:type="tclparse:Switch">
+          <arguments xsi:type="tclparse:Switch" lowerBound="0">
             <groups constant="-binary"/>
             <groups constant="-blocksize"/>
             <groups constant="-channel"/>
@@ -2588,7 +2590,7 @@
             <groups constant="-useragent"/>
           </arguments>
         </groups>
-        <groups upperBound="-1">
+        <groups>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-binary">
               <arguments xsi:type="tclparse:TypedArgument" name="boolean"/>
