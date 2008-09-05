@@ -23,4 +23,7 @@ public interface ICheckKinds extends ITclErrorConstants {
 	public static final int CHECK_ARG_AFTER_ARGS = CHECK_UNDEFINED_PROC + 5;
 	public static final int CHECK_ARGS_DEFAULT = CHECK_UNDEFINED_PROC + 6;
 	public static final int CHECK_SAME_ARG_NAME = CHECK_UNDEFINED_PROC + 7;
+	public static final int UNREACHABLE_CODE = 8;
+	public static final int BUILTIN_COMMAND_REDEFINITION = 9;
+	public static final int USER_COMMAND_REDEFINITION = 10;
 }
