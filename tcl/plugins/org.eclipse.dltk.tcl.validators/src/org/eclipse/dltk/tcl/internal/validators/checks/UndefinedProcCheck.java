@@ -73,9 +73,9 @@ public class UndefinedProcCheck implements ITclCheck {
 				}
 				if (!found) {
 					reporter.report(ICheckKinds.CHECK_UNDEFINED_PROC,
-							"Call to undefined proc:" + realName, name
-									.getStart(), name.getEnd(),
-							ITclErrorReporter.WARNING);
+							"Call to undefined proc:" + realName, null, name
+											.getStart(),
+							name.getEnd(), ITclErrorReporter.WARNING);
 				}
 				return true;
 

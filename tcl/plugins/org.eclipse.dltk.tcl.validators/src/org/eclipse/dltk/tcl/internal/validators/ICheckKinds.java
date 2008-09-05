@@ -22,5 +22,5 @@ public interface ICheckKinds extends ITclErrorConstants {
 	public static final int CHECK_NON_DEF_AFTER_DEF = CHECK_UNDEFINED_PROC + 4;
 	public static final int CHECK_ARG_AFTER_ARGS = CHECK_UNDEFINED_PROC + 5;
 	public static final int CHECK_ARGS_DEFAULT = CHECK_UNDEFINED_PROC + 6;
-	public static final int CHECK_ARG_WITH_NO_NAME = CHECK_UNDEFINED_PROC + 7;
+	public static final int CHECK_SAME_ARG_NAME = CHECK_UNDEFINED_PROC + 7;
 }

@@ -23,9 +23,9 @@
             title="Undefined proc check">
       </check-->
       <check
-            class="org.eclipse.dltk.tcl.internal.validators.checks.ProcArgsDefCheck"
-            id="org.eclipse.dltk.tcl.validators.procargsdefcheck"
-            title="Proc Command Arguments Definition Check">
+            class="org.eclipse.dltk.tcl.internal.validators.checks.ArgumentsDefinitionCheck"
+            id="org.eclipse.dltk.tcl.validators.argumentsdefinitioncheck"
+            title="Arguments Definition Check">
       </check>
    </extension>
 

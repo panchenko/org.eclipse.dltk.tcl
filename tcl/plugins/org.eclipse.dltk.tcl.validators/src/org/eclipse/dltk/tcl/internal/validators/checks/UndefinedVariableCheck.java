@@ -61,9 +61,9 @@ public class UndefinedVariableCheck implements ITclCheck {
 				}
 				if (!found) {
 					reporter.report(ICheckKinds.CHECK_UNDEFINED_VARIABLE,
-							"Use of undefined variable:" + realName, ref
-									.getStart(), ref.getEnd(),
-							ITclErrorReporter.WARNING);
+							"Use of undefined variable:" + realName, null, ref
+											.getStart(),
+							ref.getEnd(), ITclErrorReporter.WARNING);
 				}
 				return true;
 			}
