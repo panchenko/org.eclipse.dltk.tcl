@@ -147,21 +147,22 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 		if (command.startsWith("::")) {
 			// This is top level command
 			String commandName = command.substring(2);
-			Command[] cmnds = this.getCommandsByName(commandName);
-			if (cmnds != null) {
-				return commandName;
-			}
+			return commandName;
 		}
 		// Else try to look for namespace command.
 		String[] namespacePrefix = calculatePrefixes(this.commandStack);
+		String result = command;
 		for (int i = namespacePrefix.length; i >= 1; i--) {
 			String name = namespacePrefix[i - 1] + command;
 			Command[] cmnd = this.getCommandsByName(name);
 			if (cmnd != null && cmnd.length > 0) {
 				return name;
 			}
+			if (i == namespacePrefix.length) {
+				result = name;
+			}
 		}
-		return command;
+		return result;
 	}
 
 	public ISubstitutionManager getSubstitutionManager() {
