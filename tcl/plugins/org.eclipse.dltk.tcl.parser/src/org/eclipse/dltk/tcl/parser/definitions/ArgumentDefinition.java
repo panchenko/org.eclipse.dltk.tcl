@@ -47,8 +47,15 @@ public class ArgumentDefinition {
 		} else if (argument instanceof TclArgumentList) {
 			List<TclArgument> args = ((TclArgumentList) argument)
 					.getArguments();
-			if (args.size() > 1)
-				defaulted = true;
+			if (args.size() > 1) {
+				TclArgument def = args.get(1);
+				if (def instanceof StringArgument
+						&& "{}".equals(((StringArgument) def).getValue())) {
+					defaulted = false;
+				} else
+					defaulted = true;
+			}
+
 			if (argument instanceof StringArgument) {
 				name = ((StringArgument) argument).getValue();
 			} else if (args.get(0) instanceof TclArgumentList) {
