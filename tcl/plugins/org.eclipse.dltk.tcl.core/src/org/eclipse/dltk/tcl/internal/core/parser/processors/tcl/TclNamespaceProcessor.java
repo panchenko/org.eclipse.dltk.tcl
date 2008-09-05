@@ -65,6 +65,9 @@ public class TclNamespaceProcessor extends AbstractTclCommandProcessor {
 				return null;
 			}
 			final int FIRST_ARGUMENT_POSITION = 3;
+			if (statement.getCount() < 4) {
+				return null;
+			}
 
 			// List statements = new ArrayList(statement.getCount() -
 			// FIRST_ARGUMENT_POSITION);
