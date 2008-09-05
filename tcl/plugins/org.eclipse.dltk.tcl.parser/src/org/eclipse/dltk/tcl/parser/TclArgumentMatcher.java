@@ -792,6 +792,9 @@ public class TclArgumentMatcher {
 		}
 		case ArgumentType.INTEGER_VALUE: {
 			try {
+				if (value.startsWith("+")) {
+					value = value.substring(1);
+				}
 				Integer.parseInt(value);
 				result = true;
 			} catch (NumberFormatException e) {
