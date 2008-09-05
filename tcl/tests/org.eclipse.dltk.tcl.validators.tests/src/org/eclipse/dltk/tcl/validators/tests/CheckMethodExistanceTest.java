@@ -75,7 +75,7 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 				errorCollector, processor);
 		TestCase.assertEquals(0, errorCollector.getCount());
 		check.checkCommands(commands, errorCollector,
-				new HashMap<String, String>(), module.getScriptProject());
+				new HashMap<String, String>(), module.getScriptProject(), null);
 		TestCase.assertEquals(1, errorCollector.getCount());
 		TclError error = errorCollector.getErrors()[0];
 		TestCase
@@ -96,7 +96,7 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 				errorCollector, processor);
 		TestCase.assertEquals(0, errorCollector.getCount());
 		check.checkCommands(commands, errorCollector,
-				new HashMap<String, String>(), module.getScriptProject());
+				new HashMap<String, String>(), module.getScriptProject(), null);
 		TestCase.assertEquals(4, errorCollector.getCount());
 		TclError[] errors = errorCollector.getErrors();
 		for (int i = 0; i < errors.length; i++) {

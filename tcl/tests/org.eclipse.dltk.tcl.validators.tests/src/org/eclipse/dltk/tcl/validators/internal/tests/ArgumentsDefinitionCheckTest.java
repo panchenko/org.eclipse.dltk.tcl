@@ -33,54 +33,45 @@ import org.eclipse.dltk.tcl.parser.tests.TestScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Test;
 
-public class ArgumentsDefinitionCheckTest {
+public class ArgumentsDefinitionCheckTest extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	@Test
 	public void test001() throws Exception {
 		String source = "proc cmd arg {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test002() throws Exception {
 		String source = "proc cmd {arg} {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test003() throws Exception {
 		String source = "proc cmd {arg1 arg2} {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test004() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2}} {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test005() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2} {arg3 def3} args} {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test006() throws Exception {
 		String source = "proc cmd {{arg1} {{arg2}}} {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test007() throws Exception {
 		String source = "proc cmd {} {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test008() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2 def22} args} {puts alpha}";
 		List<Integer> errorCodes = new ArrayList<Integer>();
@@ -89,37 +80,31 @@ public class ArgumentsDefinitionCheckTest {
 		typedCheck(source, errorCodes);
 	}
 
-	@Test
 	public void test009() throws Exception {
 		String source = "proc cmd {puts alpha}";
 		typedCheck(source, TclErrorCollector.INVALID_ARGUMENT_COUNT);
 	}
 
-	@Test
 	public void test010() throws Exception {
 		String source = "proc cmd arg1 puts alpha";
 		typedCheck(source, TclErrorCollector.EXTRA_ARGUMENTS);
 	}
 
-	@Test
 	public void test011() throws Exception {
 		String source = "proc cmd {{{{arg1}}}} {puts alpha}";
 		typedCheck(source, ICheckKinds.CHECK_BAD_ARG_DEFINITION);
 	}
 
-	@Test
 	public void test013() throws Exception {
 		String source = "proc cmd \"arg0 {{arg1}} {{arg2} {def2}} args\" {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test016() throws Exception {
 		String source = "proc cmd10 \"arg\" {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test017() throws Exception {
 		String source = "proc cmd11 $arg {puts alpha}";
 		typedCheck(source);
@@ -130,43 +115,36 @@ public class ArgumentsDefinitionCheckTest {
 		typedCheck(source);
 	}
 
-	@Test
 	public void test025() throws Exception {
 		String source = "proc cmd7 arg0$s {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test026() throws Exception {
 		String source = "proc cmd7 arg0[lala] {puts alpha}";
 		typedCheck(source);
 	}
 
-	@Test
 	public void test027() throws Exception {
 		String source = "proc cmd {arg0 {arg1 def1} arg2} {puts alpha}";
 		typedCheck(source, ICheckKinds.CHECK_NON_DEF_AFTER_DEF);
 	}
 
-	@Test
 	public void test028() throws Exception {
 		String source = "proc cmd {arg0 args arg2} {puts alpha}";
 		typedCheck(source, ICheckKinds.CHECK_ARG_AFTER_ARGS);
 	}
 
-	@Test
 	public void test030() throws Exception {
 		String source = "proc cmd {arg0 {args def}} {puts alpha}";
 		typedCheck(source, ICheckKinds.CHECK_ARGS_DEFAULT);
 	}
 
-	@Test
 	public void test031() throws Exception {
 		String source = "proc cmd {arg0 {{{arg1}}}} {puts alpha}";
 		typedCheck(source, ICheckKinds.CHECK_BAD_ARG_DEFINITION);
 	}
 
-	@Test
 	public void test033() throws Exception {
 		String source = "proc cmd {arg {}} {puts alpha}";
 		List<Integer> errorCodes = new ArrayList<Integer>();
@@ -175,13 +153,11 @@ public class ArgumentsDefinitionCheckTest {
 		typedCheck(source, errorCodes);
 	}
 
-	@Test
 	public void test034() throws Exception {
 		String source = "proc cmd {arg {arg}} {puts alpha}";
 		typedCheck(source, ICheckKinds.CHECK_SAME_ARG_NAME);
 	}
 
-	@Test
 	public void test035() throws Exception {
 		String source = "apply {{args arg} {puts alpha}} 1 2";
 		typedCheck(source, ICheckKinds.CHECK_ARG_AFTER_ARGS);
@@ -209,9 +185,8 @@ public class ArgumentsDefinitionCheckTest {
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, module.size());
 		ITclCheck check = new ArgumentsDefinitionCheck();
-		check
-				.checkCommands(module, errors, new HashMap<String, String>(),
-						null);
+		check.checkCommands(module, errors, new HashMap<String, String>(),
+				null, null);
 
 		TclCommand tclCommand = module.get(0);
 		EList<TclArgument> arguments = tclCommand.getArguments();
