@@ -42,6 +42,7 @@ public class TclPlugin extends Plugin {
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
+		savePluginPreferences();
 		super.stop(context);
 		plugin = null;
 	}
