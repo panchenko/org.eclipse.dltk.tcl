@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.ISubstitution;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -33,6 +34,7 @@ import org.eclipse.dltk.tcl.definitions.DefinitionsFactory;
 import org.eclipse.dltk.tcl.definitions.Group;
 import org.eclipse.dltk.tcl.definitions.Switch;
 import org.eclipse.dltk.tcl.definitions.TypedArgument;
+import org.eclipse.dltk.tcl.parser.definitions.SynopsisBuilder;
 import org.eclipse.emf.common.util.EList;
 
 public class TclArgumentMatcher {
@@ -1020,14 +1022,16 @@ public class TclArgumentMatcher {
 		return this.errors;
 	}
 
-	// private String getSynopsis() {
-	// SynopsisBuilder synopsis = new SynopsisBuilder(this.definition);
-	// String synText = synopsis.toString();
-	// if (synText.length() > 0) {
-	// return synText;
-	// }
-	// return "";
-	// }
+	private String getSynopsis() {
+		SynopsisBuilder synopsis = new SynopsisBuilder(this.definition);
+		String synText = synopsis.toString();
+
+		if (synText.length() > 0) {
+			return synText;
+		}
+		return "";
+	}
+
 	//
 	// private String getShortSynopsis() {
 	// SynopsisBuilder synopsis = new SynopsisBuilder(this.command);
@@ -1039,7 +1043,9 @@ public class TclArgumentMatcher {
 	// }
 
 	private String[] getExtraArgs() {
-		return null;// new String[] { SYNOPSIS_ARG + getSynopsis(),
+		return new String[] { IProblem.DESCRIPTION_ARGUMENT_PREFIX
+				+ "Synapsis:\n" + getSynopsis() };
+		// return null;// new String[] { SYNOPSIS_ARG + getSynopsis(),
 		// SHORT_ARG + getShortSynopsis() };
 	}
 
