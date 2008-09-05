@@ -94,13 +94,22 @@ public interface DefinitionsPackage extends EPackage {
 	int ARGUMENT__UPPER_BOUND = 1;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARGUMENT__NAME = 2;
+
+	/**
 	 * The number of structural features of the '<em>Argument</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ARGUMENT_FEATURE_COUNT = 2;
+	int ARGUMENT_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.definitions.impl.ScopeImpl <em>Scope</em>}' class.
@@ -232,6 +241,15 @@ public interface DefinitionsPackage extends EPackage {
 	int CONSTANT__UPPER_BOUND = ARGUMENT__UPPER_BOUND;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONSTANT__NAME = ARGUMENT__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -285,6 +303,15 @@ public interface DefinitionsPackage extends EPackage {
 	 * @ordered
 	 */
 	int GROUP__UPPER_BOUND = ARGUMENT__UPPER_BOUND;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GROUP__NAME = ARGUMENT__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Constant</b></em>' attribute.
@@ -342,6 +369,15 @@ public interface DefinitionsPackage extends EPackage {
 	int SWITCH__UPPER_BOUND = ARGUMENT__UPPER_BOUND;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SWITCH__NAME = ARGUMENT__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Groups</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -397,6 +433,15 @@ public interface DefinitionsPackage extends EPackage {
 	int TYPED_ARGUMENT__UPPER_BOUND = ARGUMENT__UPPER_BOUND;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPED_ARGUMENT__NAME = ARGUMENT__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -406,22 +451,13 @@ public interface DefinitionsPackage extends EPackage {
 	int TYPED_ARGUMENT__TYPE = ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPED_ARGUMENT__NAME = ARGUMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Typed Argument</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPED_ARGUMENT_FEATURE_COUNT = ARGUMENT_FEATURE_COUNT + 2;
+	int TYPED_ARGUMENT_FEATURE_COUNT = ARGUMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.definitions.impl.NamespaceImpl <em>Namespace</em>}' class.
@@ -489,6 +525,15 @@ public interface DefinitionsPackage extends EPackage {
 	int COMPLEX_ARGUMENT__UPPER_BOUND = ARGUMENT__UPPER_BOUND;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPLEX_ARGUMENT__NAME = ARGUMENT__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Arguments</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -548,6 +593,17 @@ public interface DefinitionsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getArgument_UpperBound();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.definitions.Argument#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.dltk.tcl.definitions.Argument#getName()
+	 * @see #getArgument()
+	 * @generated
+	 */
+	EAttribute getArgument_Name();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.definitions.Command <em>Command</em>}'.
@@ -753,17 +809,6 @@ public interface DefinitionsPackage extends EPackage {
 	EAttribute getTypedArgument_Type();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.definitions.TypedArgument#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.dltk.tcl.definitions.TypedArgument#getName()
-	 * @see #getTypedArgument()
-	 * @generated
-	 */
-	EAttribute getTypedArgument_Name();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.definitions.Namespace <em>Namespace</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -862,6 +907,14 @@ public interface DefinitionsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ARGUMENT__UPPER_BOUND = eINSTANCE.getArgument_UpperBound();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ARGUMENT__NAME = eINSTANCE.getArgument_Name();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.definitions.impl.CommandImpl <em>Command</em>}' class.
@@ -1026,14 +1079,6 @@ public interface DefinitionsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TYPED_ARGUMENT__TYPE = eINSTANCE.getTypedArgument_Type();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TYPED_ARGUMENT__NAME = eINSTANCE.getTypedArgument_Name();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.definitions.impl.NamespaceImpl <em>Namespace</em>}' class.

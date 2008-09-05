@@ -209,6 +209,15 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getArgument_Name() {
+		return (EAttribute)argumentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getCommand() {
 		return commandEClass;
 	}
@@ -380,15 +389,6 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTypedArgument_Name() {
-		return (EAttribute)typedArgumentEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getNamespace() {
 		return namespaceEClass;
 	}
@@ -460,6 +460,7 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 		argumentEClass = createEClass(ARGUMENT);
 		createEAttribute(argumentEClass, ARGUMENT__LOWER_BOUND);
 		createEAttribute(argumentEClass, ARGUMENT__UPPER_BOUND);
+		createEAttribute(argumentEClass, ARGUMENT__NAME);
 
 		commandEClass = createEClass(COMMAND);
 		createEAttribute(commandEClass, COMMAND__NAME);
@@ -485,7 +486,6 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 
 		typedArgumentEClass = createEClass(TYPED_ARGUMENT);
 		createEAttribute(typedArgumentEClass, TYPED_ARGUMENT__TYPE);
-		createEAttribute(typedArgumentEClass, TYPED_ARGUMENT__NAME);
 
 		namespaceEClass = createEClass(NAMESPACE);
 		createEAttribute(namespaceEClass, NAMESPACE__NAME);
@@ -537,6 +537,7 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 		initEClass(argumentEClass, Argument.class, "Argument", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getArgument_LowerBound(), ecorePackage.getEInt(), "lowerBound", "1", 0, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getArgument_UpperBound(), ecorePackage.getEInt(), "upperBound", "1", 0, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getArgument_Name(), ecorePackage.getEString(), "name", null, 0, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commandEClass, Command.class, "Command", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCommand_Name(), ecorePackage.getEString(), "name", null, 0, 1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -562,7 +563,6 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 
 		initEClass(typedArgumentEClass, TypedArgument.class, "TypedArgument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTypedArgument_Type(), this.getArgumentType(), "type", null, 0, 1, TypedArgument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTypedArgument_Name(), ecorePackage.getEString(), "name", null, 0, 1, TypedArgument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(namespaceEClass, Namespace.class, "Namespace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNamespace_Name(), ecorePackage.getEString(), "name", null, 0, 1, Namespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -192,7 +192,7 @@ public class DefinitionUtils {
 			Constant nc = copyConstant((Constant) argument);
 			results.add(nc);
 		} else if (argument instanceof TypedArgument) {
-			TypedArgument tc = copyTypedArgument(argument);
+			TypedArgument tc = copyTypedArgument((TypedArgument) argument);
 			results.add(tc);
 		}
 		return results;
@@ -202,32 +202,35 @@ public class DefinitionUtils {
 		Switch nsw = DefinitionsFactory.eINSTANCE.createSwitch();
 		nsw.setLowerBound(sw.getLowerBound());
 		nsw.setUpperBound(sw.getUpperBound());
+		nsw.setName(sw.getName());
 		return nsw;
 	}
 
-	public static TypedArgument copyTypedArgument(Argument argument) {
-		TypedArgument tc = DefinitionsFactory.eINSTANCE.createTypedArgument();
-		tc.setLowerBound(argument.getLowerBound());
-		tc.setUpperBound(argument.getUpperBound());
-		tc.setType(((TypedArgument) argument).getType());
-		tc.setName(((TypedArgument) argument).getName());
-		return tc;
+	public static TypedArgument copyTypedArgument(TypedArgument t) {
+		TypedArgument nt = DefinitionsFactory.eINSTANCE.createTypedArgument();
+		nt.setLowerBound(t.getLowerBound());
+		nt.setUpperBound(t.getUpperBound());
+		nt.setType(t.getType());
+		nt.setName(t.getName());
+		return nt;
 	}
 
-	public static Constant copyConstant(Constant argument) {
+	public static Constant copyConstant(Constant c) {
 		Constant nc = DefinitionsFactory.eINSTANCE.createConstant();
-		nc.setLowerBound(argument.getLowerBound());
-		nc.setUpperBound(argument.getUpperBound());
-		nc.setValue(argument.getValue());
+		nc.setLowerBound(c.getLowerBound());
+		nc.setUpperBound(c.getUpperBound());
+		nc.setValue(c.getValue());
+		nc.setName(c.getName());
 		return nc;
 	}
 
 	public static ComplexArgument copyComplexArgument(ComplexArgument c) {
-		ComplexArgument ng = DefinitionsFactory.eINSTANCE
+		ComplexArgument nc = DefinitionsFactory.eINSTANCE
 				.createComplexArgument();
-		ng.setLowerBound(c.getLowerBound());
-		ng.setUpperBound(c.getUpperBound());
-		return ng;
+		nc.setLowerBound(c.getLowerBound());
+		nc.setUpperBound(c.getUpperBound());
+		nc.setName(c.getName());
+		return nc;
 	}
 
 	public static Group copyGroup(Group g) {
@@ -235,6 +238,7 @@ public class DefinitionUtils {
 		ng.setLowerBound(g.getLowerBound());
 		ng.setUpperBound(g.getUpperBound());
 		ng.setConstant(g.getConstant());
+		ng.setName(g.getName());
 		return ng;
 	}
 
@@ -282,7 +286,7 @@ public class DefinitionUtils {
 		if (a instanceof Constant) {
 			return copyConstant((Constant) a);
 		} else if (a instanceof TypedArgument) {
-			return copyTypedArgument(a);
+			return copyTypedArgument((TypedArgument) a);
 		} else if (a instanceof Switch) {
 			Switch s = (Switch) a;
 			Switch ns = copySwitch(s);
@@ -309,6 +313,79 @@ public class DefinitionUtils {
 			return ng;
 		}
 		return null;
+	}
+
+	public static boolean equalsArgumentIgnoreName(Argument a1, Argument a2) {
+		return equalsArgument(a1, a2, true);
+	}
+
+	public static boolean equalsArgument(Argument a1, Argument a2,
+			boolean ignoreName) {
+		if (a1.getClass() != a2.getClass())
+			return false;
+		if (a1 == a2)
+			return true;
+		if (a1.getLowerBound() != a2.getLowerBound()
+				|| a1.getUpperBound() != a2.getUpperBound())
+			return false;
+		if (!ignoreName
+				&& (a1.getName() != a2.getName() || a1.getName() == null || !a1
+						.getName().equals(a2.getName())))
+			return false;
+		if (a1 instanceof Constant) {
+			String value1 = ((Constant) a1).getValue();
+			String value2 = ((Constant) a2).getValue();
+			if (value1 != value2 || value1 == null || !value1.equals(value2))
+				return false;
+		} else if (a1 instanceof TypedArgument) {
+			if (((TypedArgument) a1).getType().getValue() != ((TypedArgument) a2)
+					.getType().getValue())
+				return false;
+		} else if (a1 instanceof Switch) {
+			if (((Switch) a1).getGroups().size() != ((Switch) a2).getGroups()
+					.size())
+				return false;
+			for (int i = 0; i < ((Switch) a1).getGroups().size(); i++) {
+				if (!equalsArgument(((Switch) a1).getGroups().get(i),
+						((Switch) a2).getGroups().get(i), ignoreName))
+					return false;
+			}
+		} else if (a1 instanceof Group) {
+			String const1 = ((Group) a1).getConstant();
+			String const2 = ((Group) a2).getConstant();
+			if (const1 != const2 && (const1 != null && !const1.equals(const2)))
+				return false;
+			if (((Group) a1).getArguments().size() != ((Group) a2)
+					.getArguments().size())
+				return false;
+			for (int i = 0; i < ((Group) a1).getArguments().size(); i++) {
+				if (!equalsArgument(((Group) a1).getArguments().get(i),
+						((Group) a2).getArguments().get(i), ignoreName))
+					return false;
+			}
+		} else if (a1 instanceof ComplexArgument) {
+			if (((ComplexArgument) a1).getArguments().size() != ((ComplexArgument) a2)
+					.getArguments().size())
+				return false;
+			for (int i = 0; i < ((ComplexArgument) a1).getArguments().size(); i++) {
+				if (!equalsArgument(((ComplexArgument) a1).getArguments()
+						.get(i), ((ComplexArgument) a2).getArguments().get(i),
+						ignoreName))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public static Command copyCommand(Command c) {
+		Command nc = DefinitionsFactory.eINSTANCE.createCommand();
+		nc.setName(c.getName());
+		nc.setDeprecated(c.getDeprecated());
+		nc.setVersion(c.getVersion());
+		for (Argument a : c.getArguments()) {
+			nc.getArguments().add(copyArgument(a));
+		}
+		return nc;
 	}
 
 	private static List<Group> processGroups(Switch sw, int l, int u,

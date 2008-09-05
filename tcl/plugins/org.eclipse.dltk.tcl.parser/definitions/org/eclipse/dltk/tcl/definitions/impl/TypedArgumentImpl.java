@@ -31,8 +31,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.TypedArgumentImpl#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.TypedArgumentImpl#getUpperBound <em>Upper Bound</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.TypedArgumentImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.TypedArgumentImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.TypedArgumentImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -80,26 +80,6 @@ public class TypedArgumentImpl extends EObjectImpl implements TypedArgument {
 	protected int upperBound = UPPER_BOUND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final ArgumentType TYPE_EDEFAULT = ArgumentType.ANY;
-
-	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
-	protected ArgumentType type = TYPE_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -118,6 +98,26 @@ public class TypedArgumentImpl extends EObjectImpl implements TypedArgument {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final ArgumentType TYPE_EDEFAULT = ArgumentType.ANY;
+
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected ArgumentType type = TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -234,10 +234,10 @@ public class TypedArgumentImpl extends EObjectImpl implements TypedArgument {
 				return new Integer(getLowerBound());
 			case DefinitionsPackage.TYPED_ARGUMENT__UPPER_BOUND:
 				return new Integer(getUpperBound());
-			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
-				return getType();
 			case DefinitionsPackage.TYPED_ARGUMENT__NAME:
 				return getName();
+			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
+				return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -256,11 +256,11 @@ public class TypedArgumentImpl extends EObjectImpl implements TypedArgument {
 			case DefinitionsPackage.TYPED_ARGUMENT__UPPER_BOUND:
 				setUpperBound(((Integer)newValue).intValue());
 				return;
-			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
-				setType((ArgumentType)newValue);
-				return;
 			case DefinitionsPackage.TYPED_ARGUMENT__NAME:
 				setName((String)newValue);
+				return;
+			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
+				setType((ArgumentType)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -280,11 +280,11 @@ public class TypedArgumentImpl extends EObjectImpl implements TypedArgument {
 			case DefinitionsPackage.TYPED_ARGUMENT__UPPER_BOUND:
 				setUpperBound(UPPER_BOUND_EDEFAULT);
 				return;
-			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
-				setType(TYPE_EDEFAULT);
-				return;
 			case DefinitionsPackage.TYPED_ARGUMENT__NAME:
 				setName(NAME_EDEFAULT);
+				return;
+			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
+				setType(TYPE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -302,10 +302,10 @@ public class TypedArgumentImpl extends EObjectImpl implements TypedArgument {
 				return lowerBound != LOWER_BOUND_EDEFAULT;
 			case DefinitionsPackage.TYPED_ARGUMENT__UPPER_BOUND:
 				return upperBound != UPPER_BOUND_EDEFAULT;
-			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
-				return type != TYPE_EDEFAULT;
 			case DefinitionsPackage.TYPED_ARGUMENT__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case DefinitionsPackage.TYPED_ARGUMENT__TYPE:
+				return type != TYPE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -324,10 +324,10 @@ public class TypedArgumentImpl extends EObjectImpl implements TypedArgument {
 		result.append(lowerBound);
 		result.append(", upperBound: ");
 		result.append(upperBound);
-		result.append(", type: ");
-		result.append(type);
 		result.append(", name: ");
 		result.append(name);
+		result.append(", type: ");
+		result.append(type);
 		result.append(')');
 		return result.toString();
 	}

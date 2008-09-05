@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.GroupImpl#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.GroupImpl#getUpperBound <em>Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.GroupImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.GroupImpl#getConstant <em>Constant</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.GroupImpl#getArguments <em>Arguments</em>}</li>
  * </ul>
@@ -87,6 +88,26 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * @ordered
 	 */
 	protected int upperBound = UPPER_BOUND_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getConstant() <em>Constant</em>}' attribute.
@@ -184,6 +205,27 @@ public class GroupImpl extends EObjectImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DefinitionsPackage.GROUP__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getConstant() {
 		return constant;
 	}
@@ -238,6 +280,8 @@ public class GroupImpl extends EObjectImpl implements Group {
 				return new Integer(getLowerBound());
 			case DefinitionsPackage.GROUP__UPPER_BOUND:
 				return new Integer(getUpperBound());
+			case DefinitionsPackage.GROUP__NAME:
+				return getName();
 			case DefinitionsPackage.GROUP__CONSTANT:
 				return getConstant();
 			case DefinitionsPackage.GROUP__ARGUMENTS:
@@ -260,6 +304,9 @@ public class GroupImpl extends EObjectImpl implements Group {
 				return;
 			case DefinitionsPackage.GROUP__UPPER_BOUND:
 				setUpperBound(((Integer)newValue).intValue());
+				return;
+			case DefinitionsPackage.GROUP__NAME:
+				setName((String)newValue);
 				return;
 			case DefinitionsPackage.GROUP__CONSTANT:
 				setConstant((String)newValue);
@@ -286,6 +333,9 @@ public class GroupImpl extends EObjectImpl implements Group {
 			case DefinitionsPackage.GROUP__UPPER_BOUND:
 				setUpperBound(UPPER_BOUND_EDEFAULT);
 				return;
+			case DefinitionsPackage.GROUP__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 			case DefinitionsPackage.GROUP__CONSTANT:
 				setConstant(CONSTANT_EDEFAULT);
 				return;
@@ -308,6 +358,8 @@ public class GroupImpl extends EObjectImpl implements Group {
 				return lowerBound != LOWER_BOUND_EDEFAULT;
 			case DefinitionsPackage.GROUP__UPPER_BOUND:
 				return upperBound != UPPER_BOUND_EDEFAULT;
+			case DefinitionsPackage.GROUP__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case DefinitionsPackage.GROUP__CONSTANT:
 				return CONSTANT_EDEFAULT == null ? constant != null : !CONSTANT_EDEFAULT.equals(constant);
 			case DefinitionsPackage.GROUP__ARGUMENTS:
@@ -330,6 +382,8 @@ public class GroupImpl extends EObjectImpl implements Group {
 		result.append(lowerBound);
 		result.append(", upperBound: ");
 		result.append(upperBound);
+		result.append(", name: ");
+		result.append(name);
 		result.append(", constant: ");
 		result.append(constant);
 		result.append(')');

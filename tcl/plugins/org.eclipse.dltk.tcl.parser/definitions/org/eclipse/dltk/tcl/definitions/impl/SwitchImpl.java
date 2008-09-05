@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.SwitchImpl#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.SwitchImpl#getUpperBound <em>Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.SwitchImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.SwitchImpl#getGroups <em>Groups</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.SwitchImpl#isCheckPrefix <em>Check Prefix</em>}</li>
  * </ul>
@@ -87,6 +88,26 @@ public class SwitchImpl extends EObjectImpl implements Switch {
 	 * @ordered
 	 */
 	protected int upperBound = UPPER_BOUND_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getGroups() <em>Groups</em>}' containment reference list.
@@ -184,6 +205,27 @@ public class SwitchImpl extends EObjectImpl implements Switch {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DefinitionsPackage.SWITCH__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Group> getGroups() {
 		if (groups == null) {
 			groups = new EObjectContainmentEList<Group>(Group.class, this, DefinitionsPackage.SWITCH__GROUPS);
@@ -238,6 +280,8 @@ public class SwitchImpl extends EObjectImpl implements Switch {
 				return new Integer(getLowerBound());
 			case DefinitionsPackage.SWITCH__UPPER_BOUND:
 				return new Integer(getUpperBound());
+			case DefinitionsPackage.SWITCH__NAME:
+				return getName();
 			case DefinitionsPackage.SWITCH__GROUPS:
 				return getGroups();
 			case DefinitionsPackage.SWITCH__CHECK_PREFIX:
@@ -260,6 +304,9 @@ public class SwitchImpl extends EObjectImpl implements Switch {
 				return;
 			case DefinitionsPackage.SWITCH__UPPER_BOUND:
 				setUpperBound(((Integer)newValue).intValue());
+				return;
+			case DefinitionsPackage.SWITCH__NAME:
+				setName((String)newValue);
 				return;
 			case DefinitionsPackage.SWITCH__GROUPS:
 				getGroups().clear();
@@ -286,6 +333,9 @@ public class SwitchImpl extends EObjectImpl implements Switch {
 			case DefinitionsPackage.SWITCH__UPPER_BOUND:
 				setUpperBound(UPPER_BOUND_EDEFAULT);
 				return;
+			case DefinitionsPackage.SWITCH__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 			case DefinitionsPackage.SWITCH__GROUPS:
 				getGroups().clear();
 				return;
@@ -308,6 +358,8 @@ public class SwitchImpl extends EObjectImpl implements Switch {
 				return lowerBound != LOWER_BOUND_EDEFAULT;
 			case DefinitionsPackage.SWITCH__UPPER_BOUND:
 				return upperBound != UPPER_BOUND_EDEFAULT;
+			case DefinitionsPackage.SWITCH__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case DefinitionsPackage.SWITCH__GROUPS:
 				return groups != null && !groups.isEmpty();
 			case DefinitionsPackage.SWITCH__CHECK_PREFIX:
@@ -330,6 +382,8 @@ public class SwitchImpl extends EObjectImpl implements Switch {
 		result.append(lowerBound);
 		result.append(", upperBound: ");
 		result.append(upperBound);
+		result.append(", name: ");
+		result.append(name);
 		result.append(", checkPrefix: ");
 		result.append(checkPrefix);
 		result.append(')');

@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getUpperBound <em>Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getValue <em>Value</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#isStrictMatch <em>Strict Match</em>}</li>
  * </ul>
@@ -77,6 +78,26 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 	 * @ordered
 	 */
 	protected int upperBound = UPPER_BOUND_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
@@ -184,6 +205,27 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DefinitionsPackage.CONSTANT__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getValue() {
 		return value;
 	}
@@ -233,6 +275,8 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 				return new Integer(getLowerBound());
 			case DefinitionsPackage.CONSTANT__UPPER_BOUND:
 				return new Integer(getUpperBound());
+			case DefinitionsPackage.CONSTANT__NAME:
+				return getName();
 			case DefinitionsPackage.CONSTANT__VALUE:
 				return getValue();
 			case DefinitionsPackage.CONSTANT__STRICT_MATCH:
@@ -254,6 +298,9 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 				return;
 			case DefinitionsPackage.CONSTANT__UPPER_BOUND:
 				setUpperBound(((Integer)newValue).intValue());
+				return;
+			case DefinitionsPackage.CONSTANT__NAME:
+				setName((String)newValue);
 				return;
 			case DefinitionsPackage.CONSTANT__VALUE:
 				setValue((String)newValue);
@@ -279,6 +326,9 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 			case DefinitionsPackage.CONSTANT__UPPER_BOUND:
 				setUpperBound(UPPER_BOUND_EDEFAULT);
 				return;
+			case DefinitionsPackage.CONSTANT__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 			case DefinitionsPackage.CONSTANT__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
@@ -301,6 +351,8 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 				return lowerBound != LOWER_BOUND_EDEFAULT;
 			case DefinitionsPackage.CONSTANT__UPPER_BOUND:
 				return upperBound != UPPER_BOUND_EDEFAULT;
+			case DefinitionsPackage.CONSTANT__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case DefinitionsPackage.CONSTANT__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 			case DefinitionsPackage.CONSTANT__STRICT_MATCH:
@@ -323,6 +375,8 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 		result.append(lowerBound);
 		result.append(", upperBound: ");
 		result.append(upperBound);
+		result.append(", name: ");
+		result.append(name);
 		result.append(", value: ");
 		result.append(value);
 		result.append(", strictMatch: ");

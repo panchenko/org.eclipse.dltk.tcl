@@ -33,10 +33,12 @@ import org.eclipse.dltk.tcl.definitions.DefinitionsFactory;
 import org.eclipse.dltk.tcl.definitions.Group;
 import org.eclipse.dltk.tcl.definitions.Switch;
 import org.eclipse.dltk.tcl.definitions.TypedArgument;
-import org.eclipse.dltk.tcl.parser.definitions.Synopsis;
 import org.eclipse.emf.common.util.EList;
 
 public class TclArgumentMatcher {
+	public static final String SHORT_ARG = "short:";
+	public static final String SYNOPSIS_ARG = "synopsis:";
+
 	private List<Integer> codePositions;
 	private TclErrorCollector errors;
 	private TclCommand command;
@@ -351,16 +353,16 @@ public class TclArgumentMatcher {
 		return results;
 	}
 
-	private Argument findNextRequiredArgument(
-			List<Argument> definitionArguments, int defPos) {
-		for (int i = defPos + 1; i < definitionArguments.size(); i++) {
-			Argument a = definitionArguments.get(i);
-			if (a.getLowerBound() > 0) {
-				return a;
-			}
-		}
-		return definitionArguments.get(defPos);
-	}
+	// private Argument findNextRequiredArgument(
+	// List<Argument> definitionArguments, int defPos) {
+	// for (int i = defPos + 1; i < definitionArguments.size(); i++) {
+	// Argument a = definitionArguments.get(i);
+	// if (a.getLowerBound() > 0) {
+	// return a;
+	// }
+	// }
+	// return definitionArguments.get(defPos);
+	// }
 
 	private List<MatchResult> matchDefinition(List<TclArgument> arguments,
 			int pos, Argument definition) {
@@ -1018,22 +1020,35 @@ public class TclArgumentMatcher {
 		return this.errors;
 	}
 
-	private String getSynapsis() {
-		Synopsis synopsis = new Synopsis(this.definition);
-		String synText = synopsis.toString();
-		if (synText.length() > 0) {
-			return "\nSynopsis:" + synText;
-		}
-		return "";
+	// private String getSynopsis() {
+	// SynopsisBuilder synopsis = new SynopsisBuilder(this.definition);
+	// String synText = synopsis.toString();
+	// if (synText.length() > 0) {
+	// return synText;
+	// }
+	// return "";
+	// }
+	//
+	// private String getShortSynopsis() {
+	// SynopsisBuilder synopsis = new SynopsisBuilder(this.command);
+	// String synText = synopsis.toString();
+	// if (synText.length() > 0) {
+	// return synText;
+	// }
+	// return "";
+	// }
+
+	private String[] getExtraArgs() {
+		return null;// new String[] { SYNOPSIS_ARG + getSynopsis(),
+		// SHORT_ARG + getShortSynopsis() };
 	}
 
 	// Error reporting
 	private void reportInvalidArgumentCount(int start, int end, int count,
 			TclErrorCollector collector, Command definition) {
-		String message = Messages.TclArgumentMatcher_Invlid_Arguments
-				+ getSynapsis();
+		String message = Messages.TclArgumentMatcher_Invlid_Arguments;
 		collector.report(ITclErrorReporter.INVALID_ARGUMENT_COUNT, message,
-				start, end, ITclErrorConstants.ERROR);
+				getExtraArgs(), start, end, ITclErrorConstants.ERROR);
 	}
 
 	// private void reportInvalidComplexArgumentValue(TclArgument argument,
@@ -1056,9 +1071,9 @@ public class TclArgumentMatcher {
 											Messages.TclArgumentMatcher_Argument_Of_Type_ExpectedDetail,
 											new Object[] { type.getName(),
 													argumentToString(argument),
-													additional })
-									+ getSynapsis(), argument.getStart(),
-							argument.getEnd(), ITclErrorReporter.ERROR);
+													additional }),
+							getExtraArgs(), argument.getStart(), argument
+									.getEnd(), ITclErrorReporter.ERROR);
 		} else {
 			collector
 					.report(
@@ -1067,9 +1082,9 @@ public class TclArgumentMatcher {
 									.format(
 											Messages.TclArgumentMatcher_Argument_Of_Type_Expected,
 											new Object[] { type.getName(),
-													argumentToString(argument) })
-									+ getSynapsis(), argument.getStart(),
-							argument.getEnd(), ITclErrorReporter.ERROR);
+													argumentToString(argument) }),
+							getExtraArgs(), argument.getStart(), argument
+									.getEnd(), ITclErrorReporter.ERROR);
 		}
 	}
 
@@ -1080,10 +1095,10 @@ public class TclArgumentMatcher {
 			TclArgument end = list.get(list.size() - 1);
 			String message = MessageFormat.format(
 					Messages.TclArgumentMatcher_Extra_Arguments,
-					new Object[] { new Integer(list.size() - argumentsUsed) })
-					+ getSynapsis();
-			collector.report(ITclErrorConstants.EXTRA_ARGUMENTS, message, begin
-					.getStart(), end.getEnd(), ITclErrorConstants.WARNING);
+					new Object[] { new Integer(list.size() - argumentsUsed) });
+			collector.report(ITclErrorConstants.EXTRA_ARGUMENTS, message,
+					getExtraArgs(), begin.getStart(), end.getEnd(),
+					ITclErrorConstants.WARNING);
 		}
 	}
 
@@ -1091,10 +1106,9 @@ public class TclArgumentMatcher {
 			int start, int end) {
 		String value = MessageFormat.format(
 				Messages.TclArgumentMatcher_Missing_Argument,
-				new Object[] { definitionToString(definitionArg) })
-				+ getSynapsis();
-		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, value, start,
-				end, ITclErrorReporter.ERROR);
+				new Object[] { definitionToString(definitionArg) });
+		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, value,
+				getExtraArgs(), start, end, ITclErrorReporter.ERROR);
 	}
 
 	private String argumentToString(TclArgument argument) {
@@ -1119,20 +1133,18 @@ public class TclArgumentMatcher {
 	private void reportGroupConstantMissing(Group group, MatchResult r) {
 		String message = MessageFormat.format(
 				Messages.TclArgumentMatcher_Missing_Group_Argument,
-				new Object[] { group.getConstant() })
-				+ getSynapsis();
+				new Object[] { group.getConstant() });
 		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, message,
-				this.command.getStart(), this.command.getEnd(),
+				getExtraArgs(), this.command.getStart(), this.command.getEnd(),
 				ITclErrorReporter.ERROR);
 	}
 
 	private void reportMissingSwitchArgument(EList<Group> groups, MatchResult r) {
 		String message = MessageFormat.format(
 				Messages.TclArgumentMatcher_Missing_Switch_Argument,
-				new Object[] { collectGroupConstants(groups) })
-				+ getSynapsis();
+				new Object[] { collectGroupConstants(groups) });
 		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, message,
-				this.command.getStart(), this.command.getEnd(),
+				getExtraArgs(), this.command.getStart(), this.command.getEnd(),
 				ITclErrorReporter.ERROR);
 	}
 

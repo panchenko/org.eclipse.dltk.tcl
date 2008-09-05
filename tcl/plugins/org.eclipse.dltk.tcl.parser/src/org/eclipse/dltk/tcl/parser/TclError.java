@@ -17,10 +17,13 @@ public class TclError {
 	private int start;
 	private int end;
 	private int errorKind;
+	private String[] extraArguments;
 
-	public TclError(int code, String message, int start, int end, int kind) {
+	public TclError(int code, String message, String[] extraArguments,
+			int start, int end, int kind) {
 		this.code = code;
 		this.message = message;
+		this.extraArguments = extraArguments;
 		this.start = start;
 		this.end = end;
 		this.errorKind = kind;
@@ -98,6 +101,14 @@ public class TclError {
 
 	public void setErrorKind(int errorKind) {
 		this.errorKind = errorKind;
+	}
+
+	public String[] getExtraArguments() {
+		return extraArguments;
+	}
+
+	public void setExtraArguments(String[] extraArguments) {
+		this.extraArguments = extraArguments;
 	}
 
 	@Override

@@ -12,5 +12,5 @@
 package org.eclipse.dltk.tcl.parser;
 
 public interface ITclErrorReporter extends ITclErrorConstants {
-	void report(int code, String message, int start, int end, int kind);
+	void report(int code, String message, String[] extraMessage, int start, int end, int kind);
 }

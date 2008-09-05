@@ -17,14 +17,15 @@ import java.util.List;
 public class TclErrorCollector implements ITclErrorReporter {
 	private List<TclError> errors = new ArrayList<TclError>();
 
-	public void report(int code, String value, int start, int end, int kind) {
-		errors.add(new TclError(code, value, start, end, kind));
+	public void report(int code, String message, String[] extraMessage,
+			int start, int end, int kind) {
+		errors.add(new TclError(code, message, extraMessage, start, end, kind));
 	}
 
 	public void addAll(TclErrorCollector collector) {
 		for (TclError e : collector.errors) {
-			report(e.getCode(), e.getMessage(), e.getStart(), e.getEnd(), e
-					.getErrorKind());
+			report(e.getCode(), e.getMessage(), e.getExtraArguments(), e
+					.getStart(), e.getEnd(), e.getErrorKind());
 		}
 	}
 
@@ -32,7 +33,8 @@ public class TclErrorCollector implements ITclErrorReporter {
 		if (reporter != null) {
 			for (TclError error : this.errors) {
 				reporter.report(error.getCode(), error.getMessage(), error
-						.getStart(), error.getEnd(), error.getErrorKind());
+						.getExtraArguments(), error.getStart(), error.getEnd(),
+						error.getErrorKind());
 			}
 		}
 	}

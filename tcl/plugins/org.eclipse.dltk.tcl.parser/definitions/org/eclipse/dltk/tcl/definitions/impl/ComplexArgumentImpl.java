@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ComplexArgumentImpl#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ComplexArgumentImpl#getUpperBound <em>Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ComplexArgumentImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ComplexArgumentImpl#getArguments <em>Arguments</em>}</li>
  * </ul>
  * </p>
@@ -86,6 +87,26 @@ public class ComplexArgumentImpl extends EObjectImpl implements ComplexArgument 
 	 * @ordered
 	 */
 	protected int upperBound = UPPER_BOUND_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' containment reference list.
@@ -163,6 +184,27 @@ public class ComplexArgumentImpl extends EObjectImpl implements ComplexArgument 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DefinitionsPackage.COMPLEX_ARGUMENT__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Argument> getArguments() {
 		if (arguments == null) {
 			arguments = new EObjectContainmentEList<Argument>(Argument.class, this, DefinitionsPackage.COMPLEX_ARGUMENT__ARGUMENTS);
@@ -196,6 +238,8 @@ public class ComplexArgumentImpl extends EObjectImpl implements ComplexArgument 
 				return new Integer(getLowerBound());
 			case DefinitionsPackage.COMPLEX_ARGUMENT__UPPER_BOUND:
 				return new Integer(getUpperBound());
+			case DefinitionsPackage.COMPLEX_ARGUMENT__NAME:
+				return getName();
 			case DefinitionsPackage.COMPLEX_ARGUMENT__ARGUMENTS:
 				return getArguments();
 		}
@@ -216,6 +260,9 @@ public class ComplexArgumentImpl extends EObjectImpl implements ComplexArgument 
 				return;
 			case DefinitionsPackage.COMPLEX_ARGUMENT__UPPER_BOUND:
 				setUpperBound(((Integer)newValue).intValue());
+				return;
+			case DefinitionsPackage.COMPLEX_ARGUMENT__NAME:
+				setName((String)newValue);
 				return;
 			case DefinitionsPackage.COMPLEX_ARGUMENT__ARGUMENTS:
 				getArguments().clear();
@@ -239,6 +286,9 @@ public class ComplexArgumentImpl extends EObjectImpl implements ComplexArgument 
 			case DefinitionsPackage.COMPLEX_ARGUMENT__UPPER_BOUND:
 				setUpperBound(UPPER_BOUND_EDEFAULT);
 				return;
+			case DefinitionsPackage.COMPLEX_ARGUMENT__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 			case DefinitionsPackage.COMPLEX_ARGUMENT__ARGUMENTS:
 				getArguments().clear();
 				return;
@@ -258,6 +308,8 @@ public class ComplexArgumentImpl extends EObjectImpl implements ComplexArgument 
 				return lowerBound != LOWER_BOUND_EDEFAULT;
 			case DefinitionsPackage.COMPLEX_ARGUMENT__UPPER_BOUND:
 				return upperBound != UPPER_BOUND_EDEFAULT;
+			case DefinitionsPackage.COMPLEX_ARGUMENT__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case DefinitionsPackage.COMPLEX_ARGUMENT__ARGUMENTS:
 				return arguments != null && !arguments.isEmpty();
 		}
@@ -278,6 +330,8 @@ public class ComplexArgumentImpl extends EObjectImpl implements ComplexArgument 
 		result.append(lowerBound);
 		result.append(", upperBound: ");
 		result.append(upperBound);
+		result.append(", name: ");
+		result.append(name);
 		result.append(')');
 		return result.toString();
 	}

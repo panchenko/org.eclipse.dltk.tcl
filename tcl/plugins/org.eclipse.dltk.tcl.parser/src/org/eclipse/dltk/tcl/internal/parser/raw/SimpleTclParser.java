@@ -32,8 +32,8 @@ public class SimpleTclParser {
 	 */
 	public boolean handleError(ErrorDescription error) {
 		if (this.reporter != null) {
-			this.reporter.report(0, error.getMessage(), error.getPosition(),
-					error.getEnd() + 1, ITclErrorConstants.ERROR);
+			this.reporter.report(0, error.getMessage(), null,
+					error.getPosition(), error.getEnd() + 1, ITclErrorConstants.ERROR);
 		}
 		return true;
 	}
