@@ -24,7 +24,7 @@ public class TestTclParserErrorReporter implements ITclErrorReporter {
 	public TestTclParserErrorReporter() {
 	}
 
-	public void report(int code, String value, int start, int end, int kind) {
+	public void report(int code, String value, String[] extraMessage, int start, int end, int kind) {
 		Integer key = new Integer(code);
 		Integer old = errors.get(key);
 		if (old == null) {

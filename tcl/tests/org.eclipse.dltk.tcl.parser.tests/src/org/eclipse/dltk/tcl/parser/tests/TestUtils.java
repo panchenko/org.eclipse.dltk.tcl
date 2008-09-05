@@ -81,8 +81,8 @@ public class TestUtils {
 		System.out.println("-----------------ERRORS----------------------\n");
 		final CodeModel model = new CodeModel(source);
 		errors.reportAll(new ITclErrorReporter() {
-			public void report(int code, String message, int start, int end,
-					int kind) {
+			public void report(int code, String message, String[] extraMessage, int start,
+					int end, int kind) {
 				System.out.println((kind == ITclErrorReporter.ERROR ? "Error:"
 						: "Warning/Info:")
 						+ code

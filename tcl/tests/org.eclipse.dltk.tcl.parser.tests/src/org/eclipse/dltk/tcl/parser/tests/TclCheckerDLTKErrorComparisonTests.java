@@ -73,8 +73,8 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 
 		System.out.println("-----------------source----------------------\n");
 		col.reportAll(new ITclErrorReporter() {
-			public void report(int code, String message, int start, int end,
-					int kind) {
+			public void report(int code, String message, String[] extraMessage, int start,
+					int end, int kind) {
 				System.out.println((kind == ITclErrorReporter.ERROR ? "Error:"
 						: "Warning/Info:")
 						+ code

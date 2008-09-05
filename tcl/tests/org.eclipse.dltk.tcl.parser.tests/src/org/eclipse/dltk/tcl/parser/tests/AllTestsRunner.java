@@ -27,6 +27,7 @@ public class AllTestsRunner {
 		suite.addTestSuite(SwitchReduceTest.class);
 		suite.addTestSuite(SetCommandParseTests.class);
 		suite.addTestSuite(SynopsisTests.class);
+		suite.addTestSuite(ShortSynopsisTests.class);
 		// suite.addTestSuite(PerfomanceTests.class);
 		suite.addTestSuite(TclComplexArgumentParseTests.class);
 		suite.addTestSuite(SwitchCommandTests.class);
