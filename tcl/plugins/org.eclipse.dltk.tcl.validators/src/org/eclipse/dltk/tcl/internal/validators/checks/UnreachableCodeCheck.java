@@ -35,28 +35,44 @@ public class UnreachableCodeCheck implements ITclCheck {
 			IScriptProject project, CodeModel codeModel) {
 		TclParserUtils.traverse(tclCommands, new TclVisitor() {
 			private boolean check = true;
-			private boolean find = false;
+			private boolean error = false;
+
+			int level = 0;
+
+			int errorLevel = -1;
 
 			@Override
 			public boolean visit(TclCommand tclCommand) {
 				if (!check)
 					return false;
-				if (find) {
+				if (error) {
+
 					reporter.report(ICheckKinds.UNREACHABLE_CODE,
 							"Unreachable code", null, tclCommand.getStart(),
-							tclCommands.get(tclCommands.size() - 1).getEnd(),
-							ITclErrorReporter.WARNING);
-					check = false;
+							tclCommand.getEnd(), ITclErrorReporter.ERROR);
+					error = check = false;
+					return false;
 				} else {
 					if (tclCommand == null
 							|| tclCommand.getDefinition() == null) {
-						return false;
+						level++;
+						return true;
 					}
 					if ("return".equals(tclCommand.getDefinition().getName())) {
-						find = true;
+						error = true;
+						errorLevel = level;
+						return false;
 					}
+					level++;
+					return true;
 				}
-				return false;
+			}
+
+			public void endVisit(TclCommand tclCommand) {
+				level--;
+				if (level != errorLevel)
+					error = false;
+				check = true;
 			}
 		});
 	}
