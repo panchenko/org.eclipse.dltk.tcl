@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.validators.tests;
 
+
+import org.eclipse.dltk.tcl.validators.internal.tests.ArgumentsDefinitionCheckTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -21,7 +24,7 @@ public class AllTests {
 				"Test for org.eclipse.dltk.tcl.validators.internal.tests");
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(ChecksProjectTest.class);
-		suite.addTestSuite(ProcArgsDefCheckTest.class);
+		suite.addTestSuite(ArgumentsDefinitionCheckTest.class);
 		// suite.addTestSuite(CheckMethodExistanceTest.class);
 		// $JUnit-END$
 		return suite;
