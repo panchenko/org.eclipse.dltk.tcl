@@ -32,20 +32,19 @@ import org.eclipse.dltk.tcl.parser.definitions.IScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 
 public class CommandRedefinitionCheck implements ITclCheck {
-
-	static IScopeProcessor processor = DefinitionManager.createProcessor();
-
 	public CommandRedefinitionCheck() {
 	}
 
 	public void checkCommands(final List<TclCommand> tclCommands,
 			final ITclErrorReporter reporter, Map<String, String> options,
 			IScriptProject project, final CodeModel codeModel) {
+		final IScopeProcessor processor = DefinitionManager.createProcessor();
 		TclParserUtils.traverse(tclCommands, new TclVisitor() {
 			Map<String, Integer> userCommands = new HashMap<String, Integer>();
 
 			@Override
 			public boolean visit(TclCommand tclCommand) {
+				processor.processCommand(tclCommand);
 				if (tclCommand == null || tclCommand.getDefinition() == null
 						|| !tclCommand.isMatched()) {
 					return true;
@@ -55,6 +54,7 @@ public class CommandRedefinitionCheck implements ITclCheck {
 					if (nameArgument instanceof StringArgument) {
 						String current = ((StringArgument) nameArgument)
 								.getValue();
+						current = processor.getQualifiedName(current);
 						Command[] definitions = processor
 								.getCommandDefinition(current);
 						if (definitions != null && definitions.length != 0)
@@ -82,7 +82,12 @@ public class CommandRedefinitionCheck implements ITclCheck {
 								start, start + 1));
 					}
 				}
-				return false;
+				return true;
+			}
+
+			@Override
+			public void endVisit(TclCommand command) {
+				processor.endProcessCommand();
 			}
 		});
 	}

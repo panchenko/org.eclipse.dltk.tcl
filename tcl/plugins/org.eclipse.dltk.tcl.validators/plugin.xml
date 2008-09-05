@@ -31,11 +31,11 @@
             id="org.eclipse.dltk.tcl.validators.unreachablecodecheck"
             title="Unreachable Code Check">
       </check-->
-      <!--check
+      <check
             class="org.eclipse.dltk.tcl.internal.validators.checks.CommandRedefinitionCheck"
             id="org.eclipse.dltk.tcl.validators.commandredefinitioncheck"
             title="Command RedefinitionCheck">
-      </check-->
+      </check>
    </extension>
 
 </plugin>
