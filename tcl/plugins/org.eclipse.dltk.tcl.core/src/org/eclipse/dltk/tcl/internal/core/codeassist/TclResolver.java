@@ -186,7 +186,11 @@ public class TclResolver {
 			int pos;
 			if ((pos = childName.indexOf("::")) != -1) {
 				nextName = childName.substring(pos + 2);
-				childName = childName.split("::")[0];
+				// childName = "";
+				String[] split = childName.split("::");
+				if (split.length > 0) {
+					childName = split[0];
+				}
 			}
 			IModelElement[] children = element.getChildren();
 			if (children != null) {
