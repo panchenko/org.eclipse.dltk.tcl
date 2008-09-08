@@ -81,15 +81,15 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 		typedCheck(source, errorCodes);
 	}
 
-	public void test009() throws Exception {
-		String source = "proc cmd {puts alpha}";
-		typedCheck(source, TclErrorCollector.INVALID_ARGUMENT_COUNT);
-	}
+	// public void test009() throws Exception {
+	// String source = "proc cmd {puts alpha}";
+	// typedCheck(source, TclErrorCollector.INVALID_ARGUMENT_COUNT);
+	// }
 
-	public void test010() throws Exception {
-		String source = "proc cmd arg1 puts alpha";
-		typedCheck(source, TclErrorCollector.EXTRA_ARGUMENTS);
-	}
+	// public void test010() throws Exception {
+	// String source = "proc cmd arg1 puts alpha";
+	// typedCheck(source, TclErrorCollector.EXTRA_ARGUMENTS);
+	// }
 
 	public void test011() throws Exception {
 		String source = "proc cmd {{{{arg1}}}} {puts alpha}";
