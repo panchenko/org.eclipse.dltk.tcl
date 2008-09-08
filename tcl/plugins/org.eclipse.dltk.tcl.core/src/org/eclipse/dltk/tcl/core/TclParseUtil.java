@@ -109,7 +109,9 @@ public class TclParseUtil {
 		int pos = name.indexOf(c1);
 		String nname = name.substring(pos + 1);
 		pos = nname.lastIndexOf(c2);
-		nname = nname.substring(0, pos);
+		if (nname.length() > pos) {
+			nname = nname.substring(0, pos);
+		}
 		return nname;
 	}
 

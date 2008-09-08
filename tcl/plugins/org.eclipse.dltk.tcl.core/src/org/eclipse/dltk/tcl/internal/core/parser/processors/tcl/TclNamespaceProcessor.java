@@ -94,10 +94,12 @@ public class TclNamespaceProcessor extends AbstractTclCommandProcessor {
 				if (expr instanceof TclBlockExpression) {
 					TclBlockExpression block = (TclBlockExpression) expr;
 					String blockContent = block.getBlock();
-					blockContent = blockContent.substring(1, blockContent
-							.length() - 1);
-					parser.parse(blockContent, block.sourceStart() + 1
-							- parser.getStartPos(), code);
+					if (blockContent.length() > 2) {
+						blockContent = blockContent.substring(1, blockContent
+								.length() - 1);
+						parser.parse(blockContent, block.sourceStart() + 1
+								- parser.getStartPos(), code);
+					}
 					// code.getStatements().addAll(bl.getStatements());
 				} else {
 					code.getStatements().add(expr);
