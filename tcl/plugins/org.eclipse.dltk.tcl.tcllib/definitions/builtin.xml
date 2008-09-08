@@ -2177,7 +2177,7 @@
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
       <arguments xsi:type="tclparse:Switch">
         <groups>
-          <arguments xsi:type="tclparse:Group" upperBound="-1">
+          <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
             <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
             <arguments xsi:type="tclparse:Switch">
               <groups constant="-"/>
@@ -2192,7 +2192,7 @@
         </groups>
         <groups>
           <arguments xsi:type="tclparse:ComplexArgument">
-            <arguments xsi:type="tclparse:Group" upperBound="-1">
+            <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
               <arguments xsi:type="tclparse:TypedArgument" name="pattern"/>
               <arguments xsi:type="tclparse:Switch">
                 <groups constant="-"/>
