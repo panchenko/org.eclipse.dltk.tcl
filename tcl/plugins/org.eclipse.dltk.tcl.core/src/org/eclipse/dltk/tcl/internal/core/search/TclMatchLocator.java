@@ -25,7 +25,6 @@ import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.internal.core.BuiltinSourceModule;
 import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.core.Openable;
-import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.tcl.core.TclMatchLocatorParser;
 import org.eclipse.dltk.tcl.core.extensions.IMatchLocatorExtension;
@@ -78,14 +77,7 @@ public class TclMatchLocator extends MatchLocator {
 			methodHandle = module.getMethod(methodName);
 		}
 
-		// TODO: make this more correctly without using SourceMethod from
-		// internal package!!!
-		if (methodHandle instanceof SourceMethod) {
-			while (this.methodHandles.contains(methodHandle)) {
-				((SourceMethod) methodHandle).occurrenceCount++;
-			}
-		}
-		this.methodHandles.add(methodHandle);
+		resolveDuplicates(methodHandle);
 		return methodHandle;
 	}
 
