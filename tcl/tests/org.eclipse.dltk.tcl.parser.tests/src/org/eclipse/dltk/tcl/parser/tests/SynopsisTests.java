@@ -1018,8 +1018,8 @@ public class SynopsisTests extends TestCase {
 
 	public void test123() throws Exception {
 		String source = "switch";
-		String synopsis = "switch ?options ...? ?--? string pattern body ?pattern body ...? ?default body?\n"
-				+ "switch ?options ...? ?--? string {pattern body ?pattern body ...? ?default body?}";
+		String synopsis = "switch ?options ...? ?--? string ?pattern body ...? ?default body?\n"
+				+ "switch ?options ...? ?--? string {?pattern body ...? ?default body?}";
 		typedCheck(source, synopsis, "8.5");
 	}
 

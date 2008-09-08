@@ -78,7 +78,7 @@ public class ProcCommandTests extends TestCase {
 
 	public void test010() throws Exception {
 		String source = "proc cmd arg1 puts alpha";
-		typedCheck(source, 1, 1);
+		typedCheck(source, 2, 1);
 	}
 
 	public void test011() throws Exception {
