@@ -36,7 +36,7 @@ public abstract class TclAssistParser implements IAssistParser {
 	protected ModuleDeclaration module;
 
 	protected ASTNode assistNodeParent = null;
-	
+
 	public TclAssistParser() {
 		this.parser = DLTKLanguageManager.getSourceParser(TclNature.NATURE_ID);
 	}
@@ -85,13 +85,14 @@ public abstract class TclAssistParser implements IAssistParser {
 
 	public ModuleDeclaration parse(ISourceModule sourceUnit) {
 		module = this.parser.parse(sourceUnit.getFileName(), sourceUnit
-						.getSourceContents().toCharArray(), null);
+				.getContentsAsCharArray(), null);
 		module.rebuild();
 
 		TclASTUtil.extendStatements(module, sourceUnit.getSourceContents());
 
 		return module;
 	}
+
 	public ModuleDeclaration getModule() {
 		return this.module;
 	}
