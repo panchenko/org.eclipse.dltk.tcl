@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.SourceElementRequestorAdaptor;
+import org.eclipse.dltk.compiler.env.MethodSourceCode;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.ICalleeProcessor;
@@ -73,18 +74,15 @@ public class TclCalleeProcessor implements ICalleeProcessor {
 
 	public Map doOperation() {
 		try {
-			String methodSource = method.getSource();
-			if (methodSource == null) {
+			if (method.getSource() != null) {
+				CaleeSourceElementRequestor requestor = new CaleeSourceElementRequestor();
+				ISourceElementParser parser = DLTKLanguageManager
+						.getSourceElementParser(TclNature.NATURE_ID);
+				parser.setRequestor(requestor);
+				parser.parseSourceModule(new MethodSourceCode(method), null);
+			} else {
 				// TODO: Report error here.
-				return fSearchResults;
 			}
-			CaleeSourceElementRequestor requestor = new CaleeSourceElementRequestor();
-			ISourceElementParser parser = DLTKLanguageManager
-					.getSourceElementParser(TclNature.NATURE_ID);
-			parser.setRequestor(requestor);
-			parser.parseSourceModule(methodSource.toCharArray(), null, method
-					.getSourceModule().getPath().toString().toCharArray());
-
 			return fSearchResults;
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
