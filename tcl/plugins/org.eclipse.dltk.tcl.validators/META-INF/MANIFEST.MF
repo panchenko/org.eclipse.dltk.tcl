@@ -14,6 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-LazyStart: true
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.dltk.tcl.internal.validators;x-friends:="org.eclipse.dltk.tcl.validators.tests",
- org.eclipse.dltk.tcl.internal.validators.checks;x-friends:="org.eclipse.dltk.tcl.validators.tests",
+Export-Package: org.eclipse.dltk.tcl.internal.validators,
+ org.eclipse.dltk.tcl.internal.validators.checks,
  org.eclipse.dltk.tcl.validators
