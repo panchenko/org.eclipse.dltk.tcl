@@ -113,7 +113,7 @@ public class TclSwitchArgumentsParseTests extends TestCase {
 					arg2.setType(ArgumentType.SCRIPT);
 					arg2.setName("gamma");
 					arg2.setLowerBound(1);
-					arg2.setUpperBound(3);
+					arg2.setUpperBound(1);
 					arg.getArguments().add(arg2);
 				}
 				sw.getGroups().add(arg);
@@ -152,88 +152,69 @@ public class TclSwitchArgumentsParseTests extends TestCase {
 		return command;
 	}
 
-	
 	public void test001() throws Exception {
 		String source = "constants -id {set a 20}";
 		check001(source, 0, 1);
 	}
 
-	
 	public void test002() throws Exception {
 		String source = "constants -id {set a 20} -id {set a 20}";
 		check001(source, 0, 2);
 	}
 
-	
 	public void test003() throws Exception {
 		String source = "constants -id {set a 20} -value {set a 20}";
 		check001(source, 0, 2);
 	}
 
-	
 	public void test004() throws Exception {
 		String source = "constants -value {set a 20} -value {set a 20}";
 		check001(source, 0, 2);
 	}
 
-	
 	public void test005() throws Exception {
 		String source = "constants -value {set a 20} -id {set a 20}";
 		check001(source, 0, 2);
 	}
 
-	
 	public void test006() throws Exception {
 		String source = "constants -value {set a 20}";
 		check001(source, 0, 1);
 	}
 
-	
 	public void test007() throws Exception {
 		String source = "constants";
 		check001(source, 1, 0);
 	}
 
-	
 	public void test008() throws Exception {
 		String source = "constants -- {set a 20}";
 		check002(source, 0, 1);
 	}
 
-	
 	public void test009() throws Exception {
 		String source = "constants -delta -- {set a 20}";
 		check002(source, 0, 1);
 	}
 
-	
 	public void test010() throws Exception {
 		String source = "constants -delta -teta -- {set a 20}";
 		check002(source, 0, 1);
 	}
 
-	
 	public void test011() throws Exception {
 		String source = "constants -id {set a 30} -teta -- {set a 20}";
 		check002(source, 0, 2);
 	}
 
-	
-	public void test012_FAILED() throws Exception {
+	public void test012() throws Exception {
 		String source = "constants -teta -value {set a 30} -- {set a 20}";
-		check002(source, 1, 0);
+		check002(source, 0, 2);
 	}
 
-	
-	public void test013_FAILED() throws Exception {
-		String source = "constants -teta -value {set a 30} {set a 30} -- {set a 20}";
-		check002(source, 1, 0);
-	}
-
-	
-	public void test014() throws Exception {
-		String source = "constants -teta -value {set a 30} {set a 30} {set a 30} -- {set a 20}";
-		check002(source, 0, 4);
+	public void test013() throws Exception {
+		String source = "constants -teta -- {set a 20}";
+		check002(source, 0, 1);
 	}
 
 	private void check001(String source, int errs, int code) throws Exception {
@@ -250,6 +231,8 @@ public class TclSwitchArgumentsParseTests extends TestCase {
 
 	private void check(String source, int errs, int code,
 			TestScopeProcessor manager) throws Exception {
+		System.out.println("TEST:"
+				+ Thread.currentThread().getStackTrace()[3].getMethodName());
 		TclParser parser = new TclParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, manager);

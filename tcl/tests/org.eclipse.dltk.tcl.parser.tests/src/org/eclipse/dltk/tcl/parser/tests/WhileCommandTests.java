@@ -29,23 +29,21 @@ import org.eclipse.emf.common.util.EList;
 public class WhileCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	
 	public void testAdvancedParse001() throws Exception {
 		String source = "while 1 {puts alpha}";
 		typedCheck(source, 0, 1);
 	}
 
 	// -----------------------------------------------------------
-	
+
 	public void testAdvancedParse002() throws Exception {
 		String source = "while 1";
 		typedCheck(source, 1, 0);
 	}
 
-	
 	public void testAdvancedParse003() throws Exception {
 		String source = "while 1 {puts alpha} {puts alpha}";
-		typedCheck(source, 1, 0);
+		typedCheck(source, 1, 1);
 	}
 
 	private void typedCheck(String source, int errs, int code) throws Exception {

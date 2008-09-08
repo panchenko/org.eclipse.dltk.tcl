@@ -71,7 +71,6 @@ public class TclTypedArgumentsParseTests extends TestCase {
 		return command;
 	}
 
-	
 	public void test001() throws Exception {
 		String source = "constants alfa {set a 20} gamma {set a 20}";
 		TclCommand cmd = typedCheck(source, 0, 2);
@@ -92,7 +91,6 @@ public class TclTypedArgumentsParseTests extends TestCase {
 
 	}
 
-	
 	public void test002() throws Exception {
 		String source = "constants alfa gamma {set a 20}";
 		TclCommand cmd = typedCheck(source, 0, 1);
@@ -112,13 +110,11 @@ public class TclTypedArgumentsParseTests extends TestCase {
 		TestCase.assertEquals(1, deltaMatch.length);
 	}
 
-	
 	public void test003() throws Exception {
 		String source = "constants alfa [alfa gamma] gamma {set a 20}";
 		typedCheck(source, 0, 1);
 	}
 
-	
 	public void test004() throws Exception {
 		String source = "constants alfa {set a 20} [gamma] {set a 20}";
 		TclCommand command = typedCheck(source, 0, 2);
@@ -140,13 +136,11 @@ public class TclTypedArgumentsParseTests extends TestCase {
 		TestCase.assertEquals(1, deltaMatch.length);
 	}
 
-	
 	public void test005() throws Exception {
 		String source = "constants alfa alfa {set a 20} [gamma] {set a 20}";
-		typedCheck(source, 1, 0);
+		typedCheck(source, 1, 1);
 	}
 
-	
 	public void test006() throws Exception {
 		String source = "constants alfa {set} [gamma] set";
 		typedCheck(source, 0, 2);

@@ -29,43 +29,36 @@ import org.eclipse.emf.common.util.EList;
 public class IfCommandTests extends TestCase {
 	TestScopeProcessor processor = new TestScopeProcessor();
 
-	
 	public void test001() throws Exception {
 		String source = "if {} {set a 20}";
 		typedCheck(source, 0, 1);
 	}
 
-	
 	public void test002() throws Exception {
 		String source = "if {} then {set a 20}";
 		typedCheck(source, 0, 1);
 	}
 
-	
 	public void test003() throws Exception {
 		String source = "if {} {set a 20} elseif {} {set a 20}";
 		typedCheck(source, 0, 2);
 	}
 
-	
 	public void test004() throws Exception {
 		String source = "if {} {set a 20} elseif {} then {set a 20}";
 		typedCheck(source, 0, 2);
 	}
 
-	
 	public void test005() throws Exception {
 		String source = "if {} {set a 20} elseif {} {set a 20} elseif {} {set a 20}";
 		typedCheck(source, 0, 3);
 	}
 
-	
 	public void test006() throws Exception {
 		String source = "if {} {set a 20} elseif {} {set a 20} else {set a 20}";
 		typedCheck(source, 0, 3);
 	}
 
-	
 	public void test007() throws Exception {
 		String source = "if {} {set a 20} elseif {} {set a 20} else {set a 20}";
 		typedCheck(source, 0, 3);
@@ -73,31 +66,26 @@ public class IfCommandTests extends TestCase {
 
 	// ----------------------------------------------------------------------
 
-	
 	public void test008() throws Exception {
 		String source = "if {} {set a 20} {set a 20}";
 		typedCheck(source, 0, 2);
 	}
 
-	
 	public void test009() throws Exception {
 		String source = "if {} {set a 20} else {set a 20} else {set a 20}";
-		typedCheck(source, 1, 0);
+		typedCheck(source, 1, 2);
 	}
 
-	
 	public void test010_FAILED() throws Exception {
 		String source = "if {} {set a 20} elseif";
 		typedCheck(source, 0, 2);
 	}
 
-	
 	public void test011() throws Exception {
 		String source = "if {} {set a 20} elseif {}";
-		typedCheck(source, 1, 0);
+		typedCheck(source, 1, 2);
 	}
 
-	
 	public void test012() throws Exception {
 		String source = "if {$a} then {} else if";
 		typedCheck(source, 1, 2);
