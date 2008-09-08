@@ -79,7 +79,6 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 			}
 
 			// Locate and execute all enabled checks
-
 			errorCollector.reportAll(new ITclErrorReporter() {
 				public void report(int code, String message,
 						String[] extraMessage, int start, int end, int kind) {

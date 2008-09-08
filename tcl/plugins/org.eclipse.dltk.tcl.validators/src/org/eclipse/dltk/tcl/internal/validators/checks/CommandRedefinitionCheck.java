@@ -61,16 +61,20 @@ public class CommandRedefinitionCheck implements ITclCheck {
 							reporter.report(
 									ICheckKinds.BUILTIN_COMMAND_REDEFINITION,
 									"Built-in command redefinition", null,
-									tclCommand.getStart(), tclCommand.getEnd(),
+									nameArgument.getStart(), nameArgument
+											.getEnd(),
 									ITclErrorReporter.WARNING);
 						Set<String> names = userCommands.keySet();
 						for (String name : names) {
+							if (current.startsWith("::")) {
+								current = current.substring(2);
+							}
 							if (name.equals(current))
 								reporter.report(
 										ICheckKinds.USER_COMMAND_REDEFINITION,
 										"A procedure of the same name already defined on line "
 												+ userCommands.get(name), null,
-										tclCommand.getStart(), tclCommand
+										nameArgument.getStart(), nameArgument
 												.getEnd(),
 										ITclErrorReporter.WARNING);
 						}
