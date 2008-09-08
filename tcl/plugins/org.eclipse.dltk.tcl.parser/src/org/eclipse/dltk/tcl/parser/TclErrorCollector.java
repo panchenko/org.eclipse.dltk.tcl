@@ -11,11 +11,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TclErrorCollector implements ITclErrorReporter {
-	private List<TclError> errors = new ArrayList<TclError>();
+	private Set<TclError> errors = new HashSet<TclError>();
 
 	public void report(int code, String message, String[] extraMessage,
 			int start, int end, int kind) {

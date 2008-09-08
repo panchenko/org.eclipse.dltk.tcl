@@ -24,6 +24,7 @@ public class Messages extends NLS {
 	public static String TclArgumentMatcher_Missing_Argument;
 	public static String TclArgumentMatcher_Missing_Group_Argument;
 	public static String TclArgumentMatcher_Missing_Switch_Argument;
+	public static String TclArgumentMatcher_Missing_Switch_Arg;
 	public static String TclArgumentMatcher_Tcl_Substitution_Display;
 	public static String TclParser_Command_Is_Deprecated;
 	public static String TclParser_Command_Name_Is_Substitution;
