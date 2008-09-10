@@ -12,23 +12,21 @@
 
 package org.eclipse.dltk.tcl.parser.tests;
 
-import java.net.URL;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceParser;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.PerformanceMonitor;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 
 public class PerfomanceTests extends TestCase {
-	
+
 	public void testBigFilePerfomance() throws Exception {
 		PerformanceMonitor.getDefault().begin("LOAD BIG FILE:");
 		String contents = BigFileGenerator.generateBigFile001();
@@ -40,13 +38,8 @@ public class PerfomanceTests extends TestCase {
 		PerformanceMonitor.getDefault().end("RAW PARSE BIG FILE:");
 
 		// Parsing with processors and matching.
-		NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
-
-		Scope scope = DefinitionLoader
-				.loadDefinitions(new URL(
-						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
-		processor.addScope(scope);
+		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
+				.createProcessor();
 		parser = new TclParser("8.5");
 		TclErrorCollector errors = new TclErrorCollector();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, true);

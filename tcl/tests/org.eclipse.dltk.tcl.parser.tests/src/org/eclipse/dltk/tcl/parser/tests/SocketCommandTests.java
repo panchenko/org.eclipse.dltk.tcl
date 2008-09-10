@@ -12,53 +12,44 @@
 
 package org.eclipse.dltk.tcl.parser.tests;
 
-import java.net.URL;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
+import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 
 public class SocketCommandTests extends TestCase {
-	TestScopeProcessor processor = new TestScopeProcessor();
+	NamespaceScopeProcessor processor;
 
-	
 	public void test001() throws Exception {
 		String source = "socket $host $port";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test002() throws Exception {
 		String source = "socket -server [list ::ftpd::PasvAccept $sock] 0";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test003() throws Exception {
 		String source = "set data(sock2a) [socket -server [list ::ftpd::PasvAccept $sock] 0]";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test004() throws Exception {
 		String source = "socket -server lala";
 		typedCheck(source, 1, 0);
 	}
 
 	private void typedCheck(String source, int errs, int code) throws Exception {
-		Scope scope = DefinitionLoader
-				.loadDefinitions(new URL(
-						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
-		processor.add(scope);
+		processor = DefinitionManager.getInstance().createProcessor();
 		TclParser parser = new TclParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);

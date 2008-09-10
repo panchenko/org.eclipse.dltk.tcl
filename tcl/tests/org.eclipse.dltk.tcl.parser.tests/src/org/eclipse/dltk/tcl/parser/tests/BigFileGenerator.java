@@ -11,28 +11,20 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser.tests;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.eclipse.dltk.tcl.definitions.Command;
-import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.PerformanceMonitor;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionUtils;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 
 public class BigFileGenerator {
 	public static String generateBigFile001() throws Exception {
 		StringBuffer buffer = new StringBuffer();
-		Scope scope = DefinitionLoader
-				.loadDefinitions(new URL(
-						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
-		NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
-		processor.addScope(scope);
+		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
+				.createProcessor();
 		Command[] commands = processor.getCommands();
 		PerformanceMonitor.getDefault().begin("Command reduction");
 		for (int i = 0; i < commands.length; i++) {

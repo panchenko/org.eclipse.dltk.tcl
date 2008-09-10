@@ -40,6 +40,7 @@ import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
 import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
@@ -48,7 +49,6 @@ import org.osgi.framework.Bundle;
 public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 	IProject project;
 
-	
 	public void test001() throws Exception {
 		String fileName = "main1.tcl";
 
@@ -64,7 +64,7 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 		CodeModel model = new CodeModel(contents);
 		List<TclCheckerProblem> list = check(fileLoc);
 		TclParser parser = new TclParser();
-		NamespaceScopeProcessor processor = TestDefinitionManager
+		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
 				.createProcessor();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, false);
 		TclErrorCollector col = new TclErrorCollector();
@@ -73,8 +73,8 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 
 		System.out.println("-----------------source----------------------\n");
 		col.reportAll(new ITclErrorReporter() {
-			public void report(int code, String message, String[] extraMessage, int start,
-					int end, int kind) {
+			public void report(int code, String message, String[] extraMessage,
+					int start, int end, int kind) {
 				System.out.println((kind == ITclErrorReporter.ERROR ? "Error:"
 						: "Warning/Info:")
 						+ code

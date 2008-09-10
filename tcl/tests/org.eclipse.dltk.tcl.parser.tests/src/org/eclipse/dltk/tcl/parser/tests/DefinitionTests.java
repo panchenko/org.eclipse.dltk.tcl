@@ -12,7 +12,6 @@
 
 package org.eclipse.dltk.tcl.parser.tests;
 
-import java.net.URL;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -22,24 +21,15 @@ import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl;
-import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.emf.common.util.EList;
 
 public class DefinitionTests extends TestCase {
-	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
-
-	public void setUp() throws Exception {
-		Scope scope = DefinitionLoader
-				.loadDefinitions(new URL(
-						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
-		processor.addScope(scope);
-	}
+	NamespaceScopeProcessor processor;
 
 	public void test001() throws Exception {
 		String source = "if { true } {" + "set a 4 5" + "} else {" + "set"
@@ -572,8 +562,35 @@ public class DefinitionTests extends TestCase {
 		typedCheck(source, 0, 0, "8.4");
 	}
 
+	public void test104() throws Exception {
+		String source = "glob [file join $dir library *.tcl]";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	// xbz
+	public void test105() throws Exception {
+		String source = "info namespace all itcl";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test106() throws Exception {
+		String source = "exec [file join $autotest install checkenv.tcl]";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test107() throws Exception {
+		String source = "puts stdout \"+$value -- \" nonewline";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test108() throws Exception {
+		String source = "regexp $compareTo $value";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
 	private void typedCheck(String source, int errs, int code, String version)
 			throws Exception {
+		processor = DefinitionManager.getInstance().createProcessor();
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2];
 		System.out.println("%%%%%%%%%%%%%%%%Test:" + element.getMethodName());
@@ -607,13 +624,6 @@ public class DefinitionTests extends TestCase {
 		if (errors.getCount() > 0) {
 			TestUtils.outErrors(source, errors);
 		}
-
-		/*
-		 * System.out.println();
-		 * System.out.println("*********************************************");
-		 * System.out.println();
-		 */
-
 		TestCase.assertEquals(code, scripts);
 		TestCase.assertEquals(errs, errors.getCount());
 	}

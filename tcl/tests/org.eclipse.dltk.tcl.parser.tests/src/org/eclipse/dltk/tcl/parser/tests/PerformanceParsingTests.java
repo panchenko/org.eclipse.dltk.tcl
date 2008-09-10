@@ -35,6 +35,7 @@ import org.eclipse.dltk.tcl.parser.PerformanceMonitor;
 import org.eclipse.dltk.tcl.parser.TclError;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
 import org.osgi.framework.Bundle;
@@ -59,10 +60,10 @@ public class PerformanceParsingTests extends TestCase {
 	}
 
 	public void testOriginalParserPerformance() throws Exception {
-		File file = new File(project.getLocation().toOSString());
-		// FileOutputStream fout = new FileOutputStream(
-		// "/home/dltk/sources/log.txt");
-		processFiles(file, null/* fout */);
+		// System.out.println(project.getLocation().toOSString());
+		File file = new File("/home/tiffany/work/ats5.0a7");
+		FileOutputStream fout = new FileOutputStream("/home/tiffany/log.txt");
+		processFiles(file, fout);
 	}
 
 	private void processFiles(File file, FileOutputStream fout)
@@ -81,8 +82,8 @@ public class PerformanceParsingTests extends TestCase {
 						index++;
 						long startTime = System.currentTimeMillis();
 						TclParser parser = new TclParser();
-						NamespaceScopeProcessor processor = TestDefinitionManager
-								.createProcessor();
+						NamespaceScopeProcessor processor = DefinitionManager
+								.getInstance().createProcessor();
 						parser.setOptionValue(
 								ITclParserOptions.REPORT_UNKNOWN_AS_ERROR,
 								false);

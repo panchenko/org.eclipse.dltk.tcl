@@ -12,7 +12,6 @@
 
 package org.eclipse.dltk.tcl.parser.tests;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,11 +21,10 @@ import org.eclipse.dltk.tcl.definitions.ArgumentType;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.definitions.DefinitionsFactory;
 import org.eclipse.dltk.tcl.definitions.Group;
-import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.definitions.Switch;
 import org.eclipse.dltk.tcl.definitions.TypedArgument;
 import org.eclipse.dltk.tcl.parser.PerformanceMonitor;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionUtils;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 
@@ -145,14 +143,10 @@ public class SwitchReduceTest extends TestCase {
 		}
 	}
 
-	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
+	NamespaceScopeProcessor processor;
 
 	public void setUp() throws Exception {
-		Scope scope = DefinitionLoader
-				.loadDefinitions(new URL(
-						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
-		processor.addScope(scope);
+		processor = DefinitionManager.getInstance().createProcessor();
 	}
 
 	public void testReplaceSwitch004() throws Exception {

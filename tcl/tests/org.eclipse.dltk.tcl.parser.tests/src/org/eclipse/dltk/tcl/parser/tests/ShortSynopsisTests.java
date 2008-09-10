@@ -19,9 +19,7 @@ public class ShortSynopsisTests extends TestCase {
 
 	public void test001() throws Exception {
 		String source = "after";
-		String synopsis = "after ms ?script ...?\n" + "after cancel id\n"
-				+ "after cancel script ?script ...?\n"
-				+ "after idle script ?script ...?\n" + "after info ?id?";
+		String synopsis = "after [ms ...|cancel ...|idle ...|info ...]";
 		typedCheck(source, synopsis, "8.5");
 	}
 
@@ -32,32 +30,50 @@ public class ShortSynopsisTests extends TestCase {
 	}
 
 	public void test003() throws Exception {
+		String source = "after c";
+		String synopsis = "after cancel [id|script ...]";
+		typedCheck(source, synopsis, "8.5");
+	}
+
+	public void test004() throws Exception {
+		String source = "after b";
+		String synopsis = "after [ms ...|cancel ...|idle ...|info ...]";
+		typedCheck(source, synopsis, "8.5");
+	}
+
+	public void test005() throws Exception {
 		String source = "append";
 		String synopsis = "append varName ?value ...?";
 		typedCheck(source, synopsis, "8.5");
 	}
 
-	public void test004() throws Exception {
+	public void test006() throws Exception {
 		String source = "array names arrayName -exact";
 		String synopsis = "array names arrayName ?[-exact|-glob|-regexp]? ?pattern?";
 		typedCheck(source, synopsis, "8.5");
 	}
 
-	public void test005() throws Exception {
+	public void test007() throws Exception {
 		String source = "chan read channelId";
 		String synopsis = "chan read channelId ?numChars?";
 		typedCheck(source, synopsis, "8.5");
 	}
 
-	public void test006() throws Exception {
+	public void test008() throws Exception {
 		String source = "apply {{a {b 4}} {puts $a;puts $b}} 3 7";
 		String synopsis = "apply {args body ?namespace?} ?arg ...?";
 		typedCheck(source, synopsis, "8.5");
 	}
 
-	public void test007() throws Exception {
+	public void test009() throws Exception {
 		String source = "chan configure channelId -blocking 1";
 		String synopsis = "chan configure channelId ?option? ?value? ?option value ...?";
+		typedCheck(source, synopsis, "8.5");
+	}
+
+	public void test010() throws Exception {
+		String source = "switch";
+		String synopsis = "switch ?options ...? ?--? string [?pattern ...|{?pattern ...]";
 		typedCheck(source, synopsis, "8.5");
 	}
 
@@ -75,7 +91,7 @@ public class ShortSynopsisTests extends TestCase {
 		TestCase.assertEquals(1, module.size());
 		TclCommand command = module.get(0);
 		SynopsisBuilder synopsis = new SynopsisBuilder(command);
-		String actual = synopsis.toString();
+		String actual = synopsis.getShortSynopsis();
 		TestCase.assertNotNull(actual);
 		System.out.println("===================" + version
 				+ "===================");

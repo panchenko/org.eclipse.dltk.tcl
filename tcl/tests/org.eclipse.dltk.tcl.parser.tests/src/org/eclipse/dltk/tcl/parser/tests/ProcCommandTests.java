@@ -12,7 +12,6 @@
 
 package org.eclipse.dltk.tcl.parser.tests;
 
-import java.net.URL;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -20,14 +19,14 @@ import junit.framework.TestCase;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
+import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.emf.common.util.EList;
 
 public class ProcCommandTests extends TestCase {
-	TestScopeProcessor processor = new TestScopeProcessor();
+	NamespaceScopeProcessor processor;
 
 	public void test001() throws Exception {
 		String source = "proc cmd arg {puts alpha}";
@@ -98,11 +97,7 @@ public class ProcCommandTests extends TestCase {
 
 	private TclCommand typedCheck(String source, int errs, int code)
 			throws Exception {
-		Scope scope = DefinitionLoader
-				.loadDefinitions(new URL(
-						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
-		processor.add(scope);
+		processor = DefinitionManager.getInstance().createProcessor();
 		TclParser parser = new TclParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
