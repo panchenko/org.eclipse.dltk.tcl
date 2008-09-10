@@ -29,6 +29,7 @@ import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclArgumentMatcher;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
@@ -54,7 +55,7 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 
 			TclParser parser = new TclParser();
 			TclErrorCollector errorCollector = new TclErrorCollector();
-			NamespaceScopeProcessor processor = DefinitionManager
+			NamespaceScopeProcessor processor = DefinitionManager.getInstance()
 					.createProcessor();
 			parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR,
 					false);

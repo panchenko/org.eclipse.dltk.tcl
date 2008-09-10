@@ -23,11 +23,11 @@ import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.definitions.Command;
-import org.eclipse.dltk.tcl.internal.validators.DefinitionManager;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.IScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 
@@ -38,7 +38,7 @@ public class CommandRedefinitionCheck implements ITclCheck {
 	public void checkCommands(final List<TclCommand> tclCommands,
 			final ITclErrorReporter reporter, Map<String, String> options,
 			IScriptProject project, final CodeModel codeModel) {
-		final IScopeProcessor processor = DefinitionManager.createProcessor();
+		final IScopeProcessor processor = DefinitionManager.getInstance().createProcessor();
 		TclParserUtils.traverse(tclCommands, new TclVisitor() {
 			Map<String, Integer> userCommands = new HashMap<String, Integer>();
 
