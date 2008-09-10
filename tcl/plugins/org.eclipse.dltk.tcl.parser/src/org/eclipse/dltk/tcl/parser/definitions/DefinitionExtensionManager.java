@@ -13,8 +13,8 @@ package org.eclipse.dltk.tcl.parser.definitions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -27,10 +27,10 @@ public class DefinitionExtensionManager {
 	private static final String EXTENSION_ID = TclParserCore.PLUGIN_ID
 			+ ".definitions";
 	private static DefinitionExtensionManager sInstance;
-	private Set<URL> locations = new HashSet<URL>();
+	private Map<URL, String> extentions = new HashMap<URL, String>();
 	private boolean initialized = false;
 
-	public DefinitionExtensionManager() {
+	private DefinitionExtensionManager() {
 	}
 
 	private void initialize() {
@@ -42,11 +42,12 @@ public class DefinitionExtensionManager {
 				.getExtensionRegistry().getConfigurationElementsFor(
 						EXTENSION_ID);
 		for (IConfigurationElement config : configurationElements) {
+			String name = config.getAttribute("name");
 			String url = config.getAttribute("url");
 			URL urlValue;
 			try {
 				urlValue = new URL(url);
-				locations.add(urlValue);
+				extentions.put(urlValue, name);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -55,7 +56,12 @@ public class DefinitionExtensionManager {
 
 	public URL[] getLocations() {
 		initialize();
-		return this.locations.toArray(new URL[this.locations.size()]);
+		return this.extentions.keySet()
+				.toArray(new URL[this.extentions.size()]);
+	}
+
+	public Map<URL, String> getExtentions() {
+		return extentions;
 	}
 
 	public static DefinitionExtensionManager getInstance() {
