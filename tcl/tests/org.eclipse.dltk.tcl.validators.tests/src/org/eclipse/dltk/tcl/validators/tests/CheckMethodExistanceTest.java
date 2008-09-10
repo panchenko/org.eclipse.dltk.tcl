@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.internal.validators.DefinitionManager;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.internal.validators.TclCheckBuildParticipant;
 import org.eclipse.dltk.tcl.internal.validators.TclValidatorTestsPlugin;
@@ -32,6 +31,7 @@ import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclError;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 
 public class CheckMethodExistanceTest extends AbstractModelTests {
@@ -69,7 +69,8 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 
 		TclParser parser = new TclParser();
 		TclErrorCollector errorCollector = new TclErrorCollector();
-		NamespaceScopeProcessor processor = DefinitionManager.createProcessor();
+		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
+				.createProcessor();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, false);
 		List<TclCommand> commands = parser.parse(module.getSource(),
 				errorCollector, processor);
@@ -90,7 +91,8 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 
 		TclParser parser = new TclParser();
 		TclErrorCollector errorCollector = new TclErrorCollector();
-		NamespaceScopeProcessor processor = DefinitionManager.createProcessor();
+		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
+				.createProcessor();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, false);
 		List<TclCommand> commands = parser.parse(module.getSource(),
 				errorCollector, processor);
