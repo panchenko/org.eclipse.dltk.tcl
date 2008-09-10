@@ -4,6 +4,7 @@
    <extension
          point="org.eclipse.dltk.tcl.parser.definitions">
       <definitions
+            name="builtin"
             url="platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml">
       </definitions>
    </extension>
