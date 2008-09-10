@@ -32,27 +32,28 @@ public class TclSearchPatternProcessor implements ISearchPatternProcessor {
 		int pos1 = patternString.lastIndexOf("::");
 		if (pos1 != -1) {
 			String p = patternString.substring(0, pos1);
-			return getLastTclNameElement(p);
+			return getLastTclNameElement(p).toCharArray();
 		}
 		return null;
 	}
 
 	public char[] extractSelector(String patternString) {
-		return getLastTclNameElement(patternString);
+		return getLastTclNameElement(patternString).toCharArray();
 	}
 
-	private char[] getLastTclNameElement(String patternString) {
+	private String getLastTclNameElement(String patternString) {
 		int pos = patternString.lastIndexOf("::");
 		if (pos != -1) {
-			return patternString.substring(pos + 2).toCharArray();
+			return patternString.substring(pos + 2);
 		}
-		return patternString.toCharArray();
+		return patternString;
 	}
+
 	public String getDelimiterReplacementString() {
 		return "::";
 	}
 
-	public char[] extractTypeChars(String patternString) {
+	public String extractTypeChars(String patternString) {
 		return getLastTclNameElement(patternString);
 	}
 
