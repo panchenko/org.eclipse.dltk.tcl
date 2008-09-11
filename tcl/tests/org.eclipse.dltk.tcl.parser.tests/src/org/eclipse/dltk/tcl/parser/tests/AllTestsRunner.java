@@ -28,6 +28,7 @@ public class AllTestsRunner {
 		suite.addTestSuite(SetCommandParseTests.class);
 		suite.addTestSuite(SynopsisTests.class);
 		suite.addTestSuite(ShortSynopsisTests.class);
+		suite.addTestSuite(CommandOutOfScopeTests.class);
 		// suite.addTestSuite(PerfomanceTests.class);
 		suite.addTestSuite(TclComplexArgumentParseTests.class);
 		suite.addTestSuite(SwitchCommandTests.class);

@@ -44,7 +44,7 @@ public class SwitchCommandTests extends TestCase {
 	}
 
 	public void test004() throws Exception {
-		String source = "switch -glob -- $some {a {puts $some} b \"puts $some\" c break}";
+		String source = "switch -glob -- $some {a {puts $some} b \"puts $some\" c history}";
 		typedCheck(source, 0, 3);
 	}
 

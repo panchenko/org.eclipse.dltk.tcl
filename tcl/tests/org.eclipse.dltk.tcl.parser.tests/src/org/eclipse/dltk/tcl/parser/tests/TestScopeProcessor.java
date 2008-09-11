@@ -77,7 +77,10 @@ public class TestScopeProcessor implements IScopeProcessor {
 	}
 
 	public ISubstitutionManager getSubstitutionManager() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean checkCommandScope(Command command) {
+		return true;
 	}
 }
