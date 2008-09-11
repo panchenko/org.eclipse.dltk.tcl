@@ -17,11 +17,14 @@ import org.eclipse.dltk.tcl.parser.ISubstitutionManager;
 
 public interface IScopeProcessor {
 	Command[] getCommandDefinition(String command);
-	
+
 	void processCommand(TclCommand command);
+
 	void endProcessCommand();
 
 	String getQualifiedName(String commandValue);
 
 	ISubstitutionManager getSubstitutionManager();
+
+	boolean checkCommandScope(Command command);
 }

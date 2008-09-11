@@ -205,6 +205,9 @@ public class TclParser implements ITclParserOptions {
 										definition);
 							}
 						}
+						if (!scopeProcessor.checkCommandScope(definition)) {
+							reportOutOfScopeError(st, commandValue, definition);
+						}
 
 						this.scopeProcessor.processCommand(st);
 						// Parse block arguments.
@@ -245,8 +248,8 @@ public class TclParser implements ITclParserOptions {
 				if (isOptionSet(REPORT_UNKNOWN_AS_ERROR)) {
 					this.reporter.report(ITclErrorReporter.UNKNOWN_COMMAND,
 							Messages.TclParser_Unknown_Command + commandValue,
-							null, commandName.getStart(),
-							commandName.getEnd(), ITclErrorReporter.WARNING);
+							null, commandName.getStart(), commandName.getEnd(),
+							ITclErrorReporter.WARNING);
 				}
 			}
 		}
@@ -375,8 +378,8 @@ public class TclParser implements ITclParserOptions {
 			tclCommand.setEnd(command.getEnd() + offset + 1);
 			return tclCommand;
 		} catch (StringIndexOutOfBoundsException bounds) {
-			reporter.report(ITclErrorReporter.UNKNOWN, bounds.getMessage(), null,
-					0, 0, ITclErrorReporter.ERROR);
+			reporter.report(ITclErrorReporter.UNKNOWN, bounds.getMessage(),
+					null, 0, 0, ITclErrorReporter.ERROR);
 			return null;
 		}
 	}
@@ -482,9 +485,9 @@ public class TclParser implements ITclParserOptions {
 		if (this.reporter != null) {
 			this.reporter.report(
 					ITclErrorReporter.COMMAND_WITH_NAME_SUBSTITUTION,
-					Messages.TclParser_Command_Name_Is_Substitution,
-					null, commandName.getStart(),
-					commandName.getEnd(), ITclErrorReporter.WARNING);
+					Messages.TclParser_Command_Name_Is_Substitution, null,
+					commandName.getStart(), commandName.getEnd(),
+					ITclErrorReporter.WARNING);
 		}
 	}
 
@@ -493,8 +496,8 @@ public class TclParser implements ITclParserOptions {
 		String message = MessageFormat.format(
 				Messages.TclParser_Command_Is_Deprecated, new Object[] {
 						commandValue, definition.getDeprecated() });
-		this.reporter.report(ITclErrorReporter.DEPRECATED_COMMAND, message, null, st
-						.getStart(), st.getEnd(), ITclErrorReporter.ERROR);
+		this.reporter.report(ITclErrorReporter.DEPRECATED_COMMAND, message,
+				null, st.getStart(), st.getEnd(), ITclErrorReporter.ERROR);
 	}
 
 	private void reportInvalidVersion(TclCommand st, String commandValue,
@@ -505,6 +508,24 @@ public class TclParser implements ITclParserOptions {
 
 						definition.getVersion() });
 		parseErrors.report(ITclErrorReporter.INVALID_COMMAND_VERSION, message,
+				null, st.getStart(), st.getEnd(), ITclErrorReporter.ERROR);
+	}
+
+	private void reportOutOfScopeError(TclCommand st, String commandValue,
+			Command definition) {
+		List<Command> scopes = definition.getScope();
+		StringBuilder scopesList = new StringBuilder();
+		for (int i = 0; i < scopes.size(); i++) {
+			if (i == scopes.size() - 1)
+				scopesList.append(" or ");
+			else if (i != 0)
+				scopesList.append(", ");
+			scopesList.append(scopes.get(i).getName());
+		}
+		String message = MessageFormat.format(
+				Messages.TclParser_Command_Out_Of_Scope, new Object[] {
+						commandValue, scopesList });
+		this.reporter.report(ITclErrorReporter.COMMAND_OUT_OF_SCOPE, message,
 				null, st.getStart(), st.getEnd(), ITclErrorReporter.ERROR);
 	}
 }

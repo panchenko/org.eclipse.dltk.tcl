@@ -177,4 +177,18 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 		}
 		return commands.toArray(new Command[commands.size()]);
 	}
+
+	public boolean checkCommandScope(Command command) {
+		List<Command> scopes = command.getScope();
+		if (scopes == null || scopes.size() == 0)
+			return true;
+		for (Command scope : scopes) {
+			String name = scope.getName();
+			for (TclCommand tclCommand : commandStack) {
+				if (name.equals(tclCommand.getQualifiedName()))
+					return true;
+			}
+		}
+		return false;
+	}
 }

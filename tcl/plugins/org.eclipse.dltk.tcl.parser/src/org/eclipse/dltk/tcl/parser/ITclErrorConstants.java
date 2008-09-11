@@ -27,6 +27,7 @@ public interface ITclErrorConstants {
 	public static final int COMMAND_WITH_NAME_SUBSTITUTION = 12;
 	public static final int INVALID_COMMAND_VERSION = 13;
 	public static final int DEPRECATED_COMMAND = 14;
+	public static final int COMMAND_OUT_OF_SCOPE = 15;
 
 	public static final int ERROR = 0;
 	public static final int WARNING = 1;
