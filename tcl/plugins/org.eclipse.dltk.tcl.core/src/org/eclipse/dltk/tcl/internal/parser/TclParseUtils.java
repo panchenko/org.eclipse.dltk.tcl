@@ -106,8 +106,8 @@ public class TclParseUtils {
 												.setInitializationExpression(initializer);
 										arguments.add(a);
 									} else if (node instanceof TclExecuteExpression) {
-										String name = ((TclBlockExpression) node)
-												.getBlock();
+										String name = ((TclExecuteExpression) node)
+												.getExpression();
 
 										Argument a = new Argument();
 										a.setStart(node.sourceStart() + 1);

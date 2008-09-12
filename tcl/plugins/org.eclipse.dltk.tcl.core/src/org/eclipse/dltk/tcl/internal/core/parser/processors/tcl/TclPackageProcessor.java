@@ -18,7 +18,7 @@ public class TclPackageProcessor extends AbstractTclCommandProcessor implements
 	public TclPackageProcessor() {
 	}
 
-	public ASTNode process(TclStatement statement, ITclParser parser, 
+	public ASTNode process(TclStatement statement, ITclParser parser,
 			ASTNode parent) {
 		if (statement.getCount() < 2) {
 			this.report(parser,
@@ -31,8 +31,11 @@ public class TclPackageProcessor extends AbstractTclCommandProcessor implements
 		}
 		Expression nameSpaceArg = statement.getAt(1);
 		if (nameSpaceArg == null || !(nameSpaceArg instanceof SimpleReference)) {
-			this.report(parser, "Syntax error: package subcommand expected.",
-					nameSpaceArg, ProblemSeverities.Error);
+			this
+					.report(parser,
+							"Syntax error: package subcommand expected.",
+							(nameSpaceArg == null ? (ASTNode) nameSpaceArg
+									: statement), ProblemSeverities.Error);
 			if (DLTKCore.DEBUG) {
 				System.err
 						.println("tcl: package argument is null or not simple reference");

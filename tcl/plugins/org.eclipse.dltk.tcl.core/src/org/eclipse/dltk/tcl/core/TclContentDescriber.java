@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.dltk.core.ScriptContentDescriber;
 
 public class TclContentDescriber extends ScriptContentDescriber {
-	protected static Pattern[] header_patterns = {
+	protected final static Pattern[] header_patterns = {
 			// Pattern.compile("#!\\s*.*tclsh", Pattern.MULTILINE),
 			// Pattern.compile("#!\\s*/usr/bin/tclsh", Pattern.MULTILINE),
 			// Pattern.compile("#!\\s*/usr/bin/expect", Pattern.MULTILINE),

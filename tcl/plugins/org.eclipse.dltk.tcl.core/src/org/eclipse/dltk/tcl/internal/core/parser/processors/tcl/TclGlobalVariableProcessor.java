@@ -58,8 +58,8 @@ public class TclGlobalVariableProcessor extends AbstractTclCommandProcessor {
 					}
 				}
 			} else {
-				report(parser, "Incorect global variable",
-						(ASTNode) variableName, ProblemSeverities.Error);
+				report(parser, "Incorect global variable", statement,
+						ProblemSeverities.Error);
 			}
 		}
 		if (ret != null) {

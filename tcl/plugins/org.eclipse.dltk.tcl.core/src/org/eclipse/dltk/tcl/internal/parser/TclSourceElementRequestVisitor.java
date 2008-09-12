@@ -496,7 +496,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 							parameterInitializers[a] = TclParseUtil
 									.nameFromBlock(name, '"', '"');
 						} else if (e instanceof TclExecuteExpression) {
-							String name = ((TclBlockExpression) e).getBlock();
+							String name = ((TclExecuteExpression) e)
+									.getExpression();
 							parameterInitializers[a] = name;
 						}
 					}

@@ -335,6 +335,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			keywords = doubleColonPrependedKeywords;
 		}
 		List k = new ArrayList();
+		if (prefix == null) {
+			prefix = "";
+		}
 		prefix = prefix.trim();
 		selectKeywords(keywords, prefix, k, requestor
 				.isContextInformationMode());

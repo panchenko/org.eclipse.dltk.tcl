@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Argument;
@@ -35,9 +34,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.internal.codeassist.select.SelectionNodeFound;
 import org.eclipse.dltk.tcl.ast.ITclStatementLookLike;
 import org.eclipse.dltk.tcl.ast.TclStatement;
@@ -510,28 +506,6 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		if (name.equals(str)) {
 			addElementFromASTNode(node);
 		}
-	}
-
-	protected void search(String patternString, int searchFor, int limitTo,
-			IDLTKSearchScope scope, SearchRequestor resultCollector)
-			throws CoreException {
-		search(patternString, searchFor, limitTo, EXACT_RULE, scope,
-				resultCollector);
-	}
-
-	protected void search(String patternString, int searchFor, int limitTo,
-			int matchRule, IDLTKSearchScope scope, SearchRequestor requestor)
-			throws CoreException {
-		if (patternString.indexOf('*') != -1
-				|| patternString.indexOf('?') != -1) {
-			matchRule |= SearchPattern.R_PATTERN_MATCH;
-		}
-		// SearchPattern pattern = SearchPattern.createPattern(patternString,
-		// searchFor, limitTo, matchRule);
-		// new SearchEngine().search(pattern,
-		// new SearchParticipant[] { SearchEngine
-		// .getDefaultSearchParticipant() }, scope, requestor,
-		// null);
 	}
 
 	protected void findLocalFunctions(String name, ASTNode parent) {

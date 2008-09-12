@@ -15,7 +15,7 @@ import org.eclipse.dltk.core.search.matching.PossibleMatch;
 
 public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 
-	protected static String[] kw = TclKeywordsManager.getKeywords();
+	final protected static String[] kw = TclKeywordsManager.getKeywords();
 	protected static Map kwMap = new HashMap();
 	static {
 		for (int q = 0; q < kw.length; ++q) {
@@ -112,8 +112,7 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 		if (methods != null) {
 			for (int i = 0; i < methods.length; i++) {
 				MethodDeclaration method = methods[i];
-				locator.match(this.processMethod(method), this
-						.getNodeSet());
+				locator.match(this.processMethod(method), this.getNodeSet());
 				this.parseBodies(method);
 			}
 		}
