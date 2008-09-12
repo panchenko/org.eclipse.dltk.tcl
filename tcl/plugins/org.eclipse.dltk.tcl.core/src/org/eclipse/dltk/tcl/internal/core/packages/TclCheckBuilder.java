@@ -261,7 +261,8 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	public DependencyResponse getDependencies(int buildType, Set localElements,
 			Set externalElements, Set oldExternalFolders, Set externalFolders) {
-		if (!oldExternalFolders.equals(externalFolders)) {
+		if (buildType != FULL_BUILD
+				&& !oldExternalFolders.equals(externalFolders)) {
 			return DependencyResponse.FULL_BUILD;
 		} else {
 			return null;
