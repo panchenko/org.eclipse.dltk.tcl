@@ -17,11 +17,10 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -31,10 +30,11 @@ import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.validators.core.IBuildParticipant;
 import org.eclipse.dltk.validators.core.IBuildParticipantExtension;
+import org.eclipse.dltk.validators.core.IBuildParticipantExtension2;
 import org.eclipse.osgi.util.NLS;
 
 public class TclCheckBuilder implements IBuildParticipant,
-		IBuildParticipantExtension {
+		IBuildParticipantExtension, IBuildParticipantExtension2 {
 
 	private final IScriptProject project;
 	private final IInterpreterInstall install;
@@ -63,8 +63,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 		if (install != null) {
 			knownPackageNames = manager.getPackageNames(install);
 			buildpath = getBuildpath(project);
-		}
-		else {
+		} else {
 			knownPackageNames = new HashSet();
 			buildpath = new HashSet();
 		}
@@ -73,7 +72,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 	private int buildType;
 
 	public void beginBuild(int buildType) {
-		if( install == null ) {
+		if (install == null) {
 			return;
 		}
 		this.buildType = buildType;
@@ -90,7 +89,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	public void build(ISourceModule module, ModuleDeclaration ast,
 			IProblemReporter reporter) throws CoreException {
-		if( install == null ) {
+		if (install == null) {
 			return;
 		}
 		packageCollector.getRequireDirectives().clear();
@@ -102,7 +101,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 	}
 
 	public void endBuild() {
-		if( install == null ) {
+		if (install == null) {
 			return;
 		}
 		// TODO re-process files with our errors
@@ -260,49 +259,13 @@ public class TclCheckBuilder implements IBuildParticipant,
 		return false;
 	}
 
-	/**
-	 * TODO integrate with the new API
-	 * 
-	 * @param elements
-	 * @return
-	 */
-	private int estimateElementsToBuild(List elements) {
-		int estimation = 0;
-		for (int i = 0; i < elements.size(); i++) {
-			IModelElement element = (IModelElement) elements.get(i);
-			if (element.getElementType() == IModelElement.SOURCE_MODULE) {
-				IProjectFragment projectFragment = (IProjectFragment) element
-						.getAncestor(IModelElement.PROJECT_FRAGMENT);
-				if (!projectFragment.isExternal())
-					estimation++;
-			}
+	public DependencyResponse getDependencies(int buildType, Set localElements,
+			Set externalElements, Set oldExternalFolders, Set externalFolders) {
+		if (!oldExternalFolders.equals(externalFolders)) {
+			return DependencyResponse.FULL_BUILD;
+		} else {
+			return null;
 		}
-		return estimation;
-	}
-
-	/**
-	 * TODO integrate with the new API
-	 * 
-	 * @param project
-	 * @param resources
-	 * @param allResources
-	 * @param oldExternalFolders
-	 * @param externalFolders
-	 * @return
-	 */
-	private Set getDependencies(IScriptProject project, Set resources,
-			Set allResources, Set oldExternalFolders, Set externalFolders) {
-		if (oldExternalFolders.size() != externalFolders.size()) {
-			// We need to rebuild all elements in this builder.
-			return allResources;
-		}
-		Set min = new HashSet();
-		min.addAll(oldExternalFolders);
-		min.removeAll(externalFolders);
-		if (min.size() != 0) {
-			return allResources;
-		}
-		return null;
 	}
 
 }
