@@ -6,9 +6,11 @@ package org.eclipse.dltk.tcl.internal.ui.text;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -23,11 +25,13 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution,
 		IAnnotationResolution {
 	private String pkgName;
 	private IScriptProject project;
+	private ISourceModule module;
 
 	public TclRequirePackageMarkerResolution(String pkgName,
-			IScriptProject scriptProject) {
+			IScriptProject scriptProject, ISourceModule module) {
 		this.pkgName = pkgName;
 		this.project = scriptProject;
+		this.module = module;
 	}
 
 	public String getLabel() {
@@ -66,6 +70,20 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution,
 	}
 
 	public boolean run(Annotation annotation, IDocument document) {
-		return resolve();
+		boolean value = resolve();
+		if (value) {
+			annotation.markDeleted(true);
+			// Clean markers with specified package name.
+			IProject prj = project.getProject();
+			// try {
+			// prj.build(IncrementalProjectBuilder.FULL_BUILD,
+			// new NullProgressMonitor());
+			// } catch (CoreException e) {
+			// if (DLTKCore.DEBUG) {
+			// e.printStackTrace();
+			// }
+			// }
+		}
+		return value;
 	}
 }

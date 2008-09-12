@@ -58,8 +58,10 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 		final ScriptEditor editor = (ScriptEditor) this.fAssistant.getEditor();
 		final IAnnotationModel model = DLTKUIPlugin.getDocumentProvider()
 				.getAnnotationModel(editor.getEditorInput());
-		final IModelElement element = editor.getInputModelElement();
-		final IScriptProject scriptProject = element.getScriptProject();
+		final ISourceModule sourceModule = (ISourceModule) editor
+				.getInputModelElement()
+				.getAncestor(IModelElement.SOURCE_MODULE);
+		final IScriptProject scriptProject = sourceModule.getScriptProject();
 		List proposals = null;
 		Set packagesProposed = new HashSet();
 		for (int i = 0; i < annotations.length; i++) {
@@ -81,7 +83,8 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 					if (packagesProposed.add(pkgName)) {
 						proposal = new AnnotationResolutionProposal(
 								new TclRequirePackageMarkerResolution(pkgName,
-										scriptProject), model, annotation);
+										scriptProject, sourceModule), model,
+								annotation);
 					}
 				}
 			}

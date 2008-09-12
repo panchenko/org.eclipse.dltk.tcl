@@ -228,6 +228,7 @@ public class FixAllDependenciesActionDelegate implements
 										names);
 					}
 				}
+
 				monitor.done();
 				return Status.OK_STATUS;
 			}

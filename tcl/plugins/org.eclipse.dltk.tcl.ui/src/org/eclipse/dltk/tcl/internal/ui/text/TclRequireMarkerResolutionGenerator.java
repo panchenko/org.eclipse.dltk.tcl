@@ -5,6 +5,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.CorrectionEngine;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
 
@@ -18,7 +19,8 @@ public class TclRequireMarkerResolutionGenerator implements
 				IProject project = marker.getResource().getProject();
 				IScriptProject scriptProject = DLTKCore.create(project);
 				return new IMarkerResolution[] { new TclRequirePackageMarkerResolution(
-						pkgName, scriptProject) };
+						pkgName, scriptProject, (ISourceModule) DLTKCore
+								.create(marker.getResource())) };
 			}
 		}
 		return new IMarkerResolution[0];
