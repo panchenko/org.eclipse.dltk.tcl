@@ -6,16 +6,14 @@ package org.eclipse.dltk.tcl.internal.ui.text;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.text.IAnnotationResolution;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.osgi.util.NLS;
@@ -25,13 +23,11 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution,
 		IAnnotationResolution {
 	private String pkgName;
 	private IScriptProject project;
-	private ISourceModule module;
 
 	public TclRequirePackageMarkerResolution(String pkgName,
-			IScriptProject scriptProject, ISourceModule module) {
+			IScriptProject scriptProject) {
 		this.pkgName = pkgName;
 		this.project = scriptProject;
-		this.module = module;
 	}
 
 	public String getLabel() {
@@ -44,12 +40,13 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution,
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 			if (install != null) {
-				Set names = InterpreterContainerHelper
+				final Set names = InterpreterContainerHelper
 						.getInterpreterContainerDependencies(project);
-				names.add(pkgName);
-				InterpreterContainerHelper.setInterpreterContainerDependencies(
-						project, names);
-				return true;
+				if (names.add(pkgName)) {
+					InterpreterContainerHelper
+							.setInterpreterContainerDependencies(project, names);
+					return true;
+				}
 			}
 		} catch (CoreException e) {
 			TclUI.error("require package resolve error", e); //$NON-NLS-1$
@@ -58,32 +55,19 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution,
 	}
 
 	public void run(final IMarker marker) {
+		resolve();
+	}
+
+	public void run(Annotation annotation, IDocument document) {
 		if (resolve()) {
-			try {
-				marker.delete();
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+			// FIXME make proper solution
+			if (document.getLength() > 0) {
+				try {
+					document.replace(0, 1, document.get(0, 1));
+				} catch (BadLocationException e) {
+					// e.printStackTrace();
 				}
 			}
 		}
-	}
-
-	public boolean run(Annotation annotation, IDocument document) {
-		boolean value = resolve();
-		if (value) {
-			annotation.markDeleted(true);
-			// Clean markers with specified package name.
-			IProject prj = project.getProject();
-			// try {
-			// prj.build(IncrementalProjectBuilder.FULL_BUILD,
-			// new NullProgressMonitor());
-			// } catch (CoreException e) {
-			// if (DLTKCore.DEBUG) {
-			// e.printStackTrace();
-			// }
-			// }
-		}
-		return value;
 	}
 }

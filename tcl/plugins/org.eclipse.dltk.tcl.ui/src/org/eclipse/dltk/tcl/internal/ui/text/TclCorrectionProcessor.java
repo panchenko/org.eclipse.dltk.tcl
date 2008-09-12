@@ -83,8 +83,7 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 					if (packagesProposed.add(pkgName)) {
 						proposal = new AnnotationResolutionProposal(
 								new TclRequirePackageMarkerResolution(pkgName,
-										scriptProject, sourceModule), model,
-								annotation);
+										scriptProject), model, annotation);
 					}
 				}
 			}
