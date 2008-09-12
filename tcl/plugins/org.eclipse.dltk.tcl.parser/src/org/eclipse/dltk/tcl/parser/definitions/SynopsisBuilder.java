@@ -327,8 +327,8 @@ public class SynopsisBuilder {
 				return synopsis;
 			}
 		}
-		prefix.append(outArgument(argument, argument.getLowerBound(),
-				argument.getUpperBound()).toString());
+		prefix.append(outArgument(argument, argument.getLowerBound(), argument
+				.getUpperBound()));
 		Synopsis synopsis = processArgument(arguments, pos + 1);
 		if (prefix != null)
 			synopsis.insert(prefix.toString());

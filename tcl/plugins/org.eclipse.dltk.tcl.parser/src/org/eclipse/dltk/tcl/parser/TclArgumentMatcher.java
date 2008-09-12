@@ -210,7 +210,7 @@ public class TclArgumentMatcher {
 		return false;
 	}
 
-	private class SubstitutedArgumentValue {
+	private static class SubstitutedArgumentValue {
 		String value;
 		int offset = 0;
 	}
@@ -626,7 +626,7 @@ public class TclArgumentMatcher {
 			MatchResult r = list.get(j);
 			if (r.isMatched() && !r.isMatchWithErrors()) {
 				List<MatchResult> ress2 = new ArrayList<MatchResult>();
-				counts.put(r, new Integer(count + 1));
+				counts.put(r, Integer.valueOf(count + 1));
 				ress.add(r);
 				if (count + 1 == upperBound) {
 					continue;
@@ -732,7 +732,7 @@ public class TclArgumentMatcher {
 			MatchResult r = matchArgument(arguments, pos, groupArguments, 0);
 			if (r.isMatched()) {
 				List<MatchResult> ress2 = new ArrayList<MatchResult>();
-				counts.put(r, new Integer(count + 1));
+				counts.put(r, Integer.valueOf(count + 1));
 				ress.add(r);
 				if (count + 1 == upperBound) {
 					continue;
@@ -821,7 +821,7 @@ public class TclArgumentMatcher {
 		switch (type.getValue()) {
 		case ArgumentType.SCRIPT_VALUE: {
 			if (!value.startsWith("-")) {
-				scriptPositions.add(new Integer(position));
+				scriptPositions.add(Integer.valueOf(position));
 				result = true;
 			}
 			break;
@@ -934,7 +934,7 @@ public class TclArgumentMatcher {
 		Map<Integer, TclErrorCollector> collectors = new HashMap<Integer, TclErrorCollector>();
 		for (int i = 0; i < arguments.size() - pos; i++) {
 			TclErrorCollector collector = new TclErrorCollector();
-			collectors.put(new Integer(i), collector);
+			collectors.put(Integer.valueOf(i), collector);
 			TclArgument a = arguments.get(pos + i);
 			if (rule.check(a, definitionArg, scriptPositions, pos + i,
 					collector, complexArguments)) {
@@ -1139,9 +1139,10 @@ public class TclArgumentMatcher {
 		if (list.size() > argumentsUsed) {
 			TclArgument begin = list.get(argumentsUsed);
 			TclArgument end = list.get(list.size() - 1);
-			String message = MessageFormat.format(
-					Messages.TclArgumentMatcher_Extra_Arguments,
-					new Object[] { new Integer(list.size() - argumentsUsed) });
+			String message = MessageFormat
+					.format(Messages.TclArgumentMatcher_Extra_Arguments,
+							new Object[] { Integer.valueOf(list.size()
+									- argumentsUsed) });
 			collector.report(ITclErrorConstants.EXTRA_ARGUMENTS, message,
 					getExtraArgs(), begin.getStart(), end.getEnd(),
 					ITclErrorConstants.WARNING);
