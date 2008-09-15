@@ -39,6 +39,8 @@ import org.eclipse.dltk.tcl.internal.ui.text.TclPartitionScanner;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider;
+import org.eclipse.dltk.ui.text.folding.DefaultElementCommentResolver;
+import org.eclipse.dltk.ui.text.folding.IElementCommentResolver;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -60,6 +62,8 @@ public class TclFoldingStructureProvider extends
 	private boolean fInitCollapseComments = true;
 	private boolean fInitCollapseHeaderComments = false;
 	private boolean fInitCollapseNamespaces = true;
+	private IElementCommentResolver fElementCommentResolver = new TclElementCommentResolver();
+	
 
 	// ~ Methods
 
@@ -408,5 +412,7 @@ public class TclFoldingStructureProvider extends
 
 		return false;
 	}
-
+	public IElementCommentResolver getElementCommentResolver() {
+		return fElementCommentResolver;
+	}
 }
