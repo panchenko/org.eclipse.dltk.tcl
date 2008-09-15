@@ -38,10 +38,6 @@ public class UnreachableCodeCheck implements ITclCheck {
 			private boolean check = true;
 			private boolean error = false;
 
-			// int level = 0;
-
-			// int errorLevel = -1;
-
 			@Override
 			public boolean visit(TclCommand tclCommand) {
 				if (!check)
@@ -56,21 +52,17 @@ public class UnreachableCodeCheck implements ITclCheck {
 				} else {
 					if (tclCommand == null
 							|| tclCommand.getDefinition() == null) {
-						// level++;
 						return true;
 					}
 					if ("return".equals(tclCommand.getDefinition().getName())) {
 						error = true;
-						// errorLevel = level;
 						return false;
 					}
-					// level++;
 					return true;
 				}
 			}
 
 			public void endVisit(TclCommand tclCommand) {
-				// level--;
 				if (tclCommand != null
 						&& tclCommand.getDefinition() != null
 						&& "return"
