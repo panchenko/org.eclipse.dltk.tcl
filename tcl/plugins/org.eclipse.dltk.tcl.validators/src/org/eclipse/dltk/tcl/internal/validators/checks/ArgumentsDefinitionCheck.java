@@ -82,13 +82,16 @@ public class ArgumentsDefinitionCheck implements ITclCheck {
 					}
 					if ("args".equals(definition.getName())) {
 						wasArgs = true;
-						if (definition.isDefaulted()) {
-							wasDef = true;
-							reporter.report(ICheckKinds.CHECK_ARGS_DEFAULT,
-									"\"args\" cannot be defaulted", null,
-									definition.getArgument().getStart(),
-									definition.getArgument().getEnd(),
-									ITclErrorReporter.WARNING);
+						if (definition.isDefaulted()
+								&& !definition.isDefaultEmtpy()) {
+							reporter
+									.report(
+											ICheckKinds.CHECK_ARGS_DEFAULT,
+											"\"args\" cannot be defaulted. Default value is ignored.",
+											null, definition.getArgument()
+													.getStart(), definition
+													.getArgument().getEnd(),
+											ITclErrorReporter.WARNING);
 						}
 					} else {
 						if (wasArgs) {

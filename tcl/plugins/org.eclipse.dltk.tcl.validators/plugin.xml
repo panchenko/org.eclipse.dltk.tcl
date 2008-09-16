@@ -26,11 +26,11 @@
             id="org.eclipse.dltk.tcl.validators.argumentsdefinitioncheck"
             title="Arguments Definition Check">
       </check>
-      <!--check
+      <check
             class="org.eclipse.dltk.tcl.internal.validators.checks.UnreachableCodeCheck"
             id="org.eclipse.dltk.tcl.validators.unreachablecodecheck"
             title="Unreachable Code Check">
-      </check-->
+      </check>
       <check
             class="org.eclipse.dltk.tcl.internal.validators.checks.CommandRedefinitionCheck"
             id="org.eclipse.dltk.tcl.validators.commandredefinitioncheck"
