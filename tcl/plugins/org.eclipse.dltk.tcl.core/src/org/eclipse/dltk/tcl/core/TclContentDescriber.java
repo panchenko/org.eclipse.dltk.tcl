@@ -13,7 +13,7 @@ public class TclContentDescriber extends ScriptContentDescriber {
 			// Pattern.compile("#!\\s*/usr/bin/tclsh", Pattern.MULTILINE),
 			// Pattern.compile("#!\\s*/usr/bin/expect", Pattern.MULTILINE),
 			// Pattern.compile("#!\\s*/usr/bin/wish", Pattern.MULTILINE),
-			Pattern.compile("#!.*(tclsh.*|wish.*|expect(k)?.*).*",
+			Pattern.compile("#!.*(tclsh.*|wish.*|expect.*).*",
 					Pattern.MULTILINE),
 			Pattern
 					.compile(
