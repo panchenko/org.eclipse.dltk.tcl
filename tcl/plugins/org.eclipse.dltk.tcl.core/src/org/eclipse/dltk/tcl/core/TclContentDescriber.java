@@ -13,7 +13,7 @@ public class TclContentDescriber extends ScriptContentDescriber {
 			// Pattern.compile("#!\\s*/usr/bin/tclsh", Pattern.MULTILINE),
 			// Pattern.compile("#!\\s*/usr/bin/expect", Pattern.MULTILINE),
 			// Pattern.compile("#!\\s*/usr/bin/wish", Pattern.MULTILINE),
-			Pattern.compile("#!.*(tclsh.*|wish.*|expect.*).*",
+			Pattern.compile("^#!.*(tclsh.*|wish.*|expect.*).*",
 					Pattern.MULTILINE),
 			Pattern
 					.compile(
@@ -21,24 +21,24 @@ public class TclContentDescriber extends ScriptContentDescriber {
 							Pattern.MULTILINE),
 			Pattern
 					.compile(
-							"#!\\s*/bin/(ba|tc)?sh\\s*\r*\n#.*\\\\s*\r*\nexec .*tclsh .*",
+							"^#!\\s*/bin/(ba|tc)?sh\\s*\r*\n#.*\\\\s*\r*\nexec .*tclsh .*",
 							Pattern.MULTILINE),
 			Pattern
 					.compile(
-							"#!\\s*/bin/(ba|tc)?sh\\s*\r*\n#.*\\\\s*\r*\nexec .*expect .*",
+							"^#!\\s*/bin/(ba|tc)?sh\\s*\r*\n#.*\\\\s*\r*\nexec .*expect .*",
 							Pattern.MULTILINE),
 			Pattern
 					.compile(
-							"#!\\s*/bin/(ba|tc)?sh\\s*\r*\n#.*\\\\s*\r*\nexec .*wish.* .*",
+							"^#!\\s*/bin/(ba|tc)?sh\\s*\r*\n#.*\\\\s*\r*\nexec .*wish.* .*",
 							Pattern.MULTILINE),
 			Pattern.compile(
-					"#!\\s*/bin/(ba|tc)?sh\\s*\r*\n\\s*exec .*wish.* .*",
+					"^#!\\s*/bin/(ba|tc)?sh\\s*\r*\n\\s*exec .*wish.* .*",
 					Pattern.MULTILINE),
 			Pattern.compile(
-					"#!\\s*/bin/(ba|tc)?sh\\s*\r*\n\\s*exec .*tclsh.* .*",
+					"^#!\\s*/bin/(ba|tc)?sh\\s*\r*\n\\s*exec .*tclsh.* .*",
 					Pattern.MULTILINE),
 			Pattern.compile(
-					"#!\\s*/bin/(ba|tc)?sh\\s*\r*\n\\s*exec .*expect.* .*",
+					"^#!\\s*/bin/(ba|tc)?sh\\s*\r*\n\\s*exec .*expect.* .*",
 					Pattern.MULTILINE) };
 
 	public int describe(Reader contents, IContentDescription description)
