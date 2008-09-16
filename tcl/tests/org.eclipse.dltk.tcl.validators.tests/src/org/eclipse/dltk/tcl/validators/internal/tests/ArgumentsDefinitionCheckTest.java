@@ -12,7 +12,6 @@
 
 package org.eclipse.dltk.tcl.validators.internal.tests;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,54 +22,60 @@ import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
-import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.internal.validators.checks.ArgumentsDefinitionCheck;
 import org.eclipse.dltk.tcl.parser.TclError;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
-import org.eclipse.dltk.tcl.parser.tests.TestScopeProcessor;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
+import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.emf.common.util.EList;
 
 public class ArgumentsDefinitionCheckTest extends TestCase {
-	TestScopeProcessor processor = new TestScopeProcessor();
+	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
 
 	public void test001() throws Exception {
 		String source = "proc cmd arg {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test002() throws Exception {
 		String source = "proc cmd {arg} {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test003() throws Exception {
 		String source = "proc cmd {arg1 arg2} {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test004() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2}} {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test005() throws Exception {
 		String source = "proc cmd {arg1 {arg2 def2} {arg3 def3} args} {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test006() throws Exception {
 		String source = "proc cmd {{arg1} {{arg2}}} {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test007() throws Exception {
 		String source = "proc cmd {} {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test008() throws Exception {
@@ -93,99 +98,119 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 
 	public void test011() throws Exception {
 		String source = "proc cmd {{{{arg1}}}} {puts alpha}";
-		typedCheck(source, ICheckKinds.CHECK_BAD_ARG_DEFINITION);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_BAD_ARG_DEFINITION);
+		typedCheck(source, errorCodes);
 	}
 
 	public void test013() throws Exception {
 		String source = "proc cmd \"arg0 {{arg1}} {{arg2} {def2}} args\" {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test016() throws Exception {
 		String source = "proc cmd10 \"arg\" {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test017() throws Exception {
 		String source = "proc cmd11 $arg {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test024() throws Exception {
 		String source = "proc cmd7 [arg0] {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test025() throws Exception {
 		String source = "proc cmd7 arg0$s {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test026() throws Exception {
 		String source = "proc cmd7 arg0[lala] {puts alpha}";
-		typedCheck(source);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
 	}
 
 	public void test027() throws Exception {
 		String source = "proc cmd {arg0 {arg1 def1} arg2} {puts alpha}";
-		typedCheck(source, ICheckKinds.CHECK_NON_DEF_AFTER_DEF);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_NON_DEF_AFTER_DEF);
+		typedCheck(source, errorCodes);
 	}
 
 	public void test028() throws Exception {
 		String source = "proc cmd {arg0 args arg2} {puts alpha}";
-		typedCheck(source, ICheckKinds.CHECK_ARG_AFTER_ARGS);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_ARG_AFTER_ARGS);
+		typedCheck(source, errorCodes);
 	}
 
 	public void test030() throws Exception {
 		String source = "proc cmd {arg0 {args def}} {puts alpha}";
-		typedCheck(source, ICheckKinds.CHECK_ARGS_DEFAULT);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_ARGS_DEFAULT);
+		typedCheck(source, errorCodes);
 	}
 
 	public void test031() throws Exception {
 		String source = "proc cmd {arg0 {{{arg1}}}} {puts alpha}";
-		typedCheck(source, ICheckKinds.CHECK_BAD_ARG_DEFINITION);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_BAD_ARG_DEFINITION);
+		typedCheck(source, errorCodes);
 	}
 
 	public void test033() throws Exception {
 		String source = "proc cmd {arg {}} {puts alpha}";
 		List<Integer> errorCodes = new ArrayList<Integer>();
-		errorCodes.add(TclErrorCollector.EXTRA_ARGUMENTS);
+		errorCodes.add(ICheckKinds.CHECK_BAD_ARG_DEFINITION);
 		errorCodes.add(ICheckKinds.CHECK_BAD_ARG_DEFINITION);
 		typedCheck(source, errorCodes);
 	}
 
 	public void test034() throws Exception {
 		String source = "proc cmd {arg {arg}} {puts alpha}";
-		typedCheck(source, ICheckKinds.CHECK_SAME_ARG_NAME);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_SAME_ARG_NAME);
+		typedCheck(source, errorCodes);
 	}
 
 	public void test035() throws Exception {
 		String source = "apply {{args arg} {puts alpha}} 1 2";
-		typedCheck(source, ICheckKinds.CHECK_ARG_AFTER_ARGS);
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_ARG_AFTER_ARGS);
+		typedCheck(source, errorCodes);
 	}
 
 	public void test036() throws Exception {
 		String source = "proc cmd {{args {}}} {puts alpha}";
-		typedCheck(source);
-	}
-
-	private void typedCheck(String source) throws Exception {
-		typedCheck(source, new ArrayList<Integer>());
-	}
-
-	private void typedCheck(String source, int errorCode) throws Exception {
 		List<Integer> errorCodes = new ArrayList<Integer>();
-		errorCodes.add(errorCode);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test037() throws Exception {
+		String source = "proc cmd {{args {value}}} {puts alpha}";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_ARGS_DEFAULT);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test038() throws Exception {
+		String source = "proc a {{a b} {c {}}} {}";
+		List<Integer> errorCodes = new ArrayList<Integer>();
 		typedCheck(source, errorCodes);
 	}
 
 	private void typedCheck(String source, List<Integer> errorCodes)
 			throws Exception {
-		Scope scope = DefinitionLoader
-				.loadDefinitions(new URL(
-						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
-		TestCase.assertNotNull(scope);
-		processor.add(scope);
+		processor = DefinitionManager.getInstance().createProcessor();
 		TclParser parser = new TclParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
@@ -214,5 +239,8 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 			}
 		}
 		TestCase.assertEquals(errorCodes.size(), count);
+		// DefinitionsBuilder db = new DefinitionsBuilder(module);
+		// SynopsisBuilder sb = new SynopsisBuilder(db.getDefinitions().get(0));
+		// System.out.println(sb.getSynopsis());
 	}
 }
