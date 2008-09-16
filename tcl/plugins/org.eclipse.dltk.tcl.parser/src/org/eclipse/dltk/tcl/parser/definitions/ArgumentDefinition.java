@@ -16,6 +16,7 @@ import org.eclipse.dltk.tcl.definitions.TypedArgument;
 public class ArgumentDefinition {
 	private String name;
 	private boolean defaulted = false;
+	private boolean isDefaultEmtpy = false;
 	private List<Argument> uses = new ArrayList<Argument>();
 	private TclArgument argument;
 
@@ -47,20 +48,23 @@ public class ArgumentDefinition {
 		} else if (argument instanceof TclArgumentList) {
 			List<TclArgument> args = ((TclArgumentList) argument)
 					.getArguments();
+			if (args.size() == 0) {
+				name = null;
+			}
+			TclArgument nameArg = args.get(0);
 			if (args.size() > 1) {
 				TclArgument def = args.get(1);
 				if (def instanceof StringArgument
 						&& "{}".equals(((StringArgument) def).getValue())) {
-					defaulted = false;
-				} else
-					defaulted = true;
+					isDefaultEmtpy = true;
+				}
+				defaulted = true;
 			}
-
-			if (argument instanceof StringArgument) {
-				name = ((StringArgument) argument).getValue();
-			} else if (args.get(0) instanceof TclArgumentList) {
-				TclArgument sub = ((TclArgumentList) args.get(0))
-						.getArguments().get(0);
+			if (nameArg instanceof StringArgument) {
+				name = ((StringArgument) nameArg).getValue();
+			} else if (nameArg instanceof TclArgumentList) {
+				TclArgument sub = ((TclArgumentList) nameArg).getArguments()
+						.get(0);
 
 				if (sub instanceof StringArgument) {
 					name = ((StringArgument) sub).getValue();
@@ -100,5 +104,9 @@ public class ArgumentDefinition {
 
 	public List<Argument> getUses() {
 		return uses;
+	}
+
+	public boolean isDefaultEmtpy() {
+		return isDefaultEmtpy;
 	}
 }
