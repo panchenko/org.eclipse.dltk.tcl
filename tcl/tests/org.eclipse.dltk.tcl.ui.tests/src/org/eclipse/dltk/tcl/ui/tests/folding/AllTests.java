@@ -17,6 +17,7 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.dltk.tcl.ui.tests.folding");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(TclFoldingTest.class);
+		suite.addTest(TclCommentElementTests.suite());
 		//$JUnit-END$
 		return suite;
 	}
