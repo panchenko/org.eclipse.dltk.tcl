@@ -504,11 +504,14 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 			}
 			IncrTclMethodDeclaration method = (IncrTclMethodDeclaration) parent;
 			TypeDeclaration type = (TypeDeclaration) method.getDeclaringType();
-			List fieldList = type.getFieldList();
-			for (Iterator iterator = fieldList.iterator(); iterator.hasNext();) {
-				FieldDeclaration field = (FieldDeclaration) iterator.next();
-				if (field.getName().equals(name)) {
-					engine.addElementFromASTNode(field);
+			if (type != null) {
+				List fieldList = type.getFieldList();
+				for (Iterator iterator = fieldList.iterator(); iterator
+						.hasNext();) {
+					FieldDeclaration field = (FieldDeclaration) iterator.next();
+					if (field.getName().equals(name)) {
+						engine.addElementFromASTNode(field);
+					}
 				}
 			}
 		}
