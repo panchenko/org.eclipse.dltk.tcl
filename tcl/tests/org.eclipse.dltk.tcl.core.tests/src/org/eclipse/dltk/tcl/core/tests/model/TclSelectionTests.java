@@ -33,6 +33,11 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		waitUntilIndexesReady();
 	}
 
+	public void tearDownSuite() throws Exception {
+		deleteProject(SELECTION_PROJECT);
+		super.tearDownSuite();
+	}
+
 	public static Test suite() {
 		return new Suite(TclSelectionTests.class);
 	}
