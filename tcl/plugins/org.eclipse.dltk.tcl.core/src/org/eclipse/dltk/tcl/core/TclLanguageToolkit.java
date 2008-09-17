@@ -9,10 +9,16 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.core;
 
+import java.io.File;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.AbstractLanguageToolkit;
 import org.eclipse.dltk.core.DLTKContentTypeManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.PreferencesLookupDelegate;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 
@@ -78,6 +84,55 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 
 	public String getLanguageContentType() {
 		return TCL_CONTENT_TYPE;
+	}
+
+	public boolean canValidateContent(IResource resource) {
+		final IProject project = resource.getProject();
+		if (project == null) { // This is workspace root.
+			return false;
+		}
+		final PreferencesLookupDelegate delegate = new PreferencesLookupDelegate(
+				project);
+		final boolean local;
+		final boolean remote;
+		if (isEmptyExtension(resource.getName())) {
+			local = delegate.getBoolean(TclPlugin.PLUGIN_ID,
+					TclCorePreferences.CHECK_CONTENT_EMPTY_EXTENSION_LOCAL);
+			remote = delegate.getBoolean(TclPlugin.PLUGIN_ID,
+					TclCorePreferences.CHECK_CONTENT_EMPTY_EXTENSION_REMOTE);
+		} else {
+			local = delegate.getBoolean(TclPlugin.PLUGIN_ID,
+					TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_LOCAL);
+			remote = delegate.getBoolean(TclPlugin.PLUGIN_ID,
+					TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_REMOTE);
+		}
+		if (local == remote) {
+			return local;
+		}
+		final IEnvironment environment = EnvironmentManager
+				.getEnvironment(project);
+		if (environment == null) {
+			return false;
+		}
+		return environment.isLocal() ? local : remote;
+	}
+
+	public boolean canValidateContent(File file) {
+		return TclPlugin
+				.getDefault()
+				.getPluginPreferences()
+				.getBoolean(
+						isEmptyExtension(file.getName()) ? TclCorePreferences.CHECK_CONTENT_EMPTY_EXTENSION_LOCAL
+								: TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_LOCAL);
+	}
+
+	public boolean canValidateContent(IFileHandle file) {
+		return TclPlugin
+				.getDefault()
+				.getPluginPreferences()
+				.getBoolean(
+						isEmptyExtension(file.getName()) ? TclCorePreferences.CHECK_CONTENT_EMPTY_EXTENSION_REMOTE
+								: TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_REMOTE);
 	}
 
 }
