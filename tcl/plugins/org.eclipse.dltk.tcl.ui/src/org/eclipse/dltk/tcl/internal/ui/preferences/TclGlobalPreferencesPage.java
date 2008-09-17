@@ -27,7 +27,7 @@ public class TclGlobalPreferencesPage extends AbstractConfigurationBlockPreferen
 	}
 
 	protected void setDescription() {
-		String description = org.eclipse.dltk.tcl.internal.ui.preferences.TclPreferencesMessages.TCLGlobalPreferencePage_description;
+		String description = TclPreferencesMessages.TCLGlobalPreferencePage_description;
 		setDescription(description);
 	}
 
