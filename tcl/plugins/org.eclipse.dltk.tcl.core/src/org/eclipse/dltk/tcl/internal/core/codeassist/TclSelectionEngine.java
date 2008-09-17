@@ -49,6 +49,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnNode;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnVariable;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
 
@@ -178,7 +179,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				if (this.selectionElements.size() > 0) {
 					return;
 				}
-				findMethodFromMixin(name, astNodeParent);
+				findMethodFromMixinNS(name);
 				// findMethodFromSearch(name);
 				if (this.selectionElements.size() > 0) {
 					return;
@@ -195,8 +196,15 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				if (fqnName != null) {
 					if (!fqnName.startsWith("::"))
 						fqnName = "::" + fqnName;
-					findMethodFromMixin(name, astNodeParent);
+					findMethodFromMixinNS(name);
 					// findMethodFromSearch(fqnName);
+				}
+				// Search in imported namespaces
+				String currentNamespace = TclParseUtil.getElementFQN(
+						astNodeParent, "::", getParser().getModule());
+				selectNamespaceImport(name, currentNamespace);
+				if (!currentNamespace.equals("")) {
+					selectNamespaceImport(name, "");
 				}
 			}
 			for (int i = 0; i < this.extensions.length; i++) {
@@ -221,7 +229,24 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 	}
 
-	protected void findMethodFromMixin(String name, ASTNode parent) {
+	private void selectNamespaceImport(String name, String currentNamespace) {
+		IMixinElement[] find = TclMixinModel.getInstance().getMixin(
+				this.getScriptProject()).find("@" + currentNamespace + "*", 0);
+		for (int i = 0; i < find.length; i++) {
+			Object[] allObjects = find[i].getAllObjects();
+			for (int j = 0; j < allObjects.length; j++) {
+				if (allObjects[j] instanceof TclNamespaceImport) {
+					TclNamespaceImport importSt = (TclNamespaceImport) allObjects[j];
+					if (importSt.getNamespace().equals(currentNamespace)) {
+						findMethodFromMixinNS(importSt.getImportNsName() + "::"
+								+ name, importSt.getImportNsName());
+					}
+				}
+			}
+		}
+	}
+
+	protected void findMethodFromMixinNS(String name) {
 		if (name.startsWith("::")) {
 			if (name.startsWith("::")) {
 				name = name.substring(2);
@@ -233,6 +258,20 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 			oName = split[split.length - 1];
 		}
 		findMethodMixin(tclNameToKey(name), oName);
+	}
+
+	protected void findMethodFromMixinNS(String name, String namespace) {
+		if (name.startsWith("::")) {
+			if (name.startsWith("::")) {
+				name = name.substring(2);
+			}
+		}
+		String oName = name;
+		if (name.indexOf("::") != -1) {
+			String[] split = name.split("::");
+			oName = split[split.length - 1];
+		}
+		findMethodMixinNS(tclNameToKey(name), oName, namespace);
 	}
 
 	public boolean checkMethodFrom(TypeDeclaration declaringType,
@@ -414,6 +453,41 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 					TclProc field = (TclProc) allObjects[j];
 					if (name.equals(field.getName())) {
 						addSelectionElement(field.getModelElement());
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	public void findMethodMixinNS(String pattern, String name, String namespace) {
+		if (!namespace.startsWith("::")) {
+			namespace = "::" + namespace;
+		}
+		if (!namespace.endsWith("::")) {
+			namespace = namespace + "::";
+		}
+		IMixinElement[] find = TclMixinModel.getInstance().getMixin(
+				this.sourceModule.getScriptProject()).find(pattern);
+		for (int i = 0; i < find.length; i++) {
+			Object[] allObjects = find[i].getAllObjects();
+			for (int j = 0; j < allObjects.length; j++) {
+				if (allObjects[j] != null && allObjects[j] instanceof TclProc) {
+					TclProc field = (TclProc) allObjects[j];
+					if (name.equals(field.getName())) {
+						IModelElement element = field.getModelElement();
+
+						String fqn = TclParseUtil.getFQNFromModelElement(
+								element, "::");
+						if (fqn.startsWith(namespace)) {
+							String substring = fqn
+									.substring(namespace.length());
+							if (substring.indexOf("::") == -1) {
+								addSelectionElement(element);
+							}
+						} else {
+							addSelectionElement(element);
+						}
 						return;
 					}
 				}

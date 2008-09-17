@@ -47,6 +47,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -67,7 +68,9 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeyw
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnVariable;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinUtils;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
 
@@ -447,7 +450,39 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 							astNodeParent,
 							IMixinRequestor.MIXIN_NAME_SEPARATOR, this.parser
 									.getModule());
-					this.findNamespaceCurrentFunctions(token, set, namespace);
+					this.findSpecificNamespaceFunctions(token, set, namespace,
+							false);
+				}
+			}
+			// Check and process imported namespaces
+			processImports(token, set, astNodeParent);
+		}
+	}
+
+	private void processImports(char[] token, Set set, ASTNode astNodeParent) {
+		String currentNamespace = TclParseUtil.getElementFQN(astNodeParent,
+				"::", getParser().getModule());
+		processFindNamespace(token, set, currentNamespace);
+		// Also empty namespace should be processed
+		if (!currentNamespace.equals("")) {
+			processFindNamespace(token, set, "");
+		}
+	}
+
+	private void processFindNamespace(char[] token, Set set,
+			String currentNamespace) {
+		IMixinElement[] find = TclMixinModel.getInstance().getMixin(
+				getSourceModule().getScriptProject()).find(
+				"@" + currentNamespace + "|*", 0);
+		for (int i = 0; i < find.length; i++) {
+			Object[] allObjects = find[i].getAllObjects();
+			for (int j = 0; j < allObjects.length; j++) {
+				if (allObjects[j] instanceof TclNamespaceImport) {
+					TclNamespaceImport importSt = (TclNamespaceImport) allObjects[j];
+					if (importSt.getNamespace().equals(currentNamespace)) {
+						this.findSpecificNamespaceFunctions(token, set,
+								importSt.getImportNsName(), true);
+					}
 				}
 			}
 		}
@@ -494,17 +529,17 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		methods.removeAll(methodNames);
 		// Remove all with same names
 		this.removeSameFrom(methodNames, methods, to_);
-		this.filterInternalAPI(methodNames, methods, this.parser.getModule());
+		this.filterInternalAPI(methods, this.parser.getModule());
 		// findTypes(token, true, toList(types));
 		this.findMethods(token, false, this.toList(methods));
 	}
 
-	protected void findNamespaceCurrentFunctions(final char[] token,
-			final Set methodNames, String namespace) {
+	protected void findSpecificNamespaceFunctions(final char[] token,
+			final Set methodNames, String namespace, boolean asImport) {
 		if (namespace.endsWith(IMixinRequestor.MIXIN_NAME_SEPARATOR)) {
 			namespace = namespace.substring(0, namespace.length() - 1);
 		}
-		final Set methods = new HashSet();
+		Set methods = new HashSet();
 		String to_ = new String(token);
 		String to = to_;
 		if (to.startsWith("::")) {
@@ -518,12 +553,42 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		// removeSameFrom(methodNames, methods, to_);
 		// filterAllPrivate(methodNames, methods, this.parser.getModule());
 		// findTypes(token, true, toList(types));
+		if (asImport) {
+			filterInternalAPI(methods, getParser().getModule());
+			methods = filterSubNamespaces(methods, namespace);
+		}
 		List list = this.toList(methods);
-		this.findMethods(token, true, list, this.removeNamespace(list,
-				namespace));
+		List mNames = this.removeNamespace(list, namespace, asImport);
+
+		this.findMethods(token, true, list, mNames);
 	}
 
-	private List removeNamespace(List methods, String namespace) {
+	private Set filterSubNamespaces(Set methods, String namespace) {
+		Set results = new HashSet();
+		if (!namespace.startsWith("::")) {
+			namespace = "::" + namespace;
+		}
+		if (!namespace.endsWith("::")) {
+			namespace = namespace + "::";
+		}
+		for (Iterator iterator = methods.iterator(); iterator.hasNext();) {
+			IModelElement element = (IMethod) iterator.next();
+
+			String fqn = TclParseUtil.getFQNFromModelElement(element, "::");
+			if (fqn.startsWith(namespace)) {
+				String substring = fqn.substring(namespace.length());
+				if (substring.indexOf("::") == -1) {
+					results.add(element);
+				}
+			} else {
+				results.add(element);
+			}
+		}
+		return results;
+	}
+
+	private List removeNamespace(List methods, String namespace,
+			boolean asImport) {
 		List names = new ArrayList();
 		if (!namespace.startsWith("::")) {
 			namespace = "::" + namespace;
@@ -535,7 +600,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			IModelElement element = (IModelElement) iterator.next();
 			String fqn = TclParseUtil.getFQNFromModelElement(element, "::");
 			if (fqn.startsWith(namespace)) {
-				names.add(fqn.substring(namespace.length()));
+				String substring = fqn.substring(namespace.length());
+				names.add(substring);
 			} else {
 				names.add(fqn);
 			}
@@ -549,8 +615,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	 * @param methodNames
 	 * @param methods
 	 */
-	private void filterInternalAPI(Set methodNames, Set methods,
-			final ModuleDeclaration module) {
+	private void filterInternalAPI(Set methods, final ModuleDeclaration module) {
 		if (!this.getRequestor().isIgnored(
 				ITclCompletionProposalTypes.FILTER_INTERNAL_API)) {
 			return;

@@ -484,6 +484,9 @@ public class TclParseUtil {
 				// module = (ModuleDeclaration) ns;
 			} else if (ns instanceof TypeDeclaration) {
 				name = ((TypeDeclaration) ns).getName();
+				if (name.endsWith("::")) {
+					name = name.substring(0, name.length() - 2);
+				}
 			} else if (ns instanceof MethodDeclaration) {
 				if (ns instanceof ExtendedTclMethodDeclaration) {
 					ExtendedTclMethodDeclaration m = (ExtendedTclMethodDeclaration) ns;
@@ -519,7 +522,7 @@ public class TclParseUtil {
 
 	public static String tclNameTo(String name, String separator) {
 		if (!separator.equals("::")) {
-			return name.replaceAll("::", separator);
+			name = name.replaceAll("::", separator);
 		}
 		return name;
 	}
