@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 
-public class TclTodoPreferenceInitializer extends AbstractPreferenceInitializer {
+public class TclCorePreferenceInitializer extends AbstractPreferenceInitializer {
 
-	public TclTodoPreferenceInitializer() {
+	public TclCorePreferenceInitializer() {
 	}
 
 	public void initializeDefaultPreferences() {
