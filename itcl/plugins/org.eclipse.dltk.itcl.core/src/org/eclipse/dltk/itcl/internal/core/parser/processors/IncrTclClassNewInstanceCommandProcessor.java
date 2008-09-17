@@ -34,7 +34,7 @@ public class IncrTclClassNewInstanceCommandProcessor extends
 		String name = extractSimpleReference(e);
 		if (name == null) {
 			this.report(parser,
-					"A instance ame expected after class name.", e,
+					"An instance name expected after class name.", e,
 					ProblemSeverities.Error);
 			return null;
 		}
