@@ -1,9 +1,11 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -56,6 +58,7 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 		final ISourceModule sourceModule = EditorUtility
 				.getEditorInputModelElement(editor, false);
 		final IScriptProject scriptProject = sourceModule.getScriptProject();
+		final Set packageNames = new HashSet();
 		List proposals = null;
 		for (int i = 0; i < annotations.length; i++) {
 			final Annotation annotation = annotations[i];
@@ -66,17 +69,21 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 				if (isFixable(marker)) {
 					final String pkgName = CorrectionEngine
 							.getProblemArguments(marker)[0];
-					proposal = new MarkerResolutionProposal(
-							new TclRequirePackageMarkerResolution(pkgName,
-									scriptProject), marker);
+					if (packageNames.add(pkgName)) {
+						proposal = new MarkerResolutionProposal(
+								new TclRequirePackageMarkerResolution(pkgName,
+										scriptProject), marker);
+					}
 				}
 			} else if (annotation instanceof IScriptAnnotation) {
-				if (isFixable((IScriptAnnotation) annotation)) {
-					final String pkgName = ((IScriptAnnotation) annotation)
-							.getArguments()[0];
-					proposal = new AnnotationResolutionProposal(
-							new TclRequirePackageMarkerResolution(pkgName,
-									scriptProject), annotation);
+				final IScriptAnnotation sa = (IScriptAnnotation) annotation;
+				if (isFixable(sa)) {
+					final String pkgName = sa.getArguments()[0];
+					if (packageNames.add(pkgName)) {
+						proposal = new AnnotationResolutionProposal(
+								new TclRequirePackageMarkerResolution(pkgName,
+										scriptProject), annotation);
+					}
 				}
 			}
 			if (proposal != null) {
