@@ -185,6 +185,11 @@
           name="%TclPreferencePage.name"/>
     <page
           category="org.eclipse.dltk.tcl.preferences"
+          class="org.eclipse.dltk.tcl.internal.ui.preferences.TclCorePreferencePage"
+          id="org.eclipse.dltk.tcl.preferences.core"
+          name="%TclCorePreferencePage.name"/>
+    <page
+          category="org.eclipse.dltk.tcl.preferences"
           class="org.eclipse.dltk.tcl.internal.ui.preferences.ManPagesPreferencePage"
           id="org.eclipse.dltk.tcl.preferences.mans"
           name="%TclManPagesPreferencePage.name"/>

@@ -13,6 +13,10 @@ public class TclPreferencesMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME,org.eclipse.dltk.tcl.internal.ui.preferences.TclPreferencesMessages.class);
 	}
+	public static String TclCorePreferencePage_checkContentWithoutExtension;
+	public static String TclCorePreferencePage_checkContentAnyExtension;
+	public static String TclCorePreferencePage_local;
+	public static String TclCorePreferencePage_remote;
 	public static String TCLGlobalPreferencePage_description;
 	public static String TCLEditorPreferencePage_general;
 	public static String TCLSmartTypingConfigurationBlock_autoclose_title;
