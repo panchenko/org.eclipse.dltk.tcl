@@ -10,8 +10,10 @@
 package org.eclipse.dltk.tcl.internal.core.codeassist;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -202,9 +204,10 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				// Search in imported namespaces
 				String currentNamespace = TclParseUtil.getElementFQN(
 						astNodeParent, "::", getParser().getModule());
-				selectNamespaceImport(name, currentNamespace);
+				Set processed = new HashSet();
+				selectNamespaceImport(name, currentNamespace, processed);
 				if (!currentNamespace.equals("")) {
-					selectNamespaceImport(name, "");
+					selectNamespaceImport(name, "", processed);
 				}
 			}
 			for (int i = 0; i < this.extensions.length; i++) {
@@ -229,15 +232,18 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 	}
 
-	private void selectNamespaceImport(String name, String currentNamespace) {
-		IMixinElement[] find = TclMixinModel.getInstance().getMixin(
-				this.getScriptProject()).find("@" + currentNamespace + "*", 0);
-		for (int i = 0; i < find.length; i++) {
-			Object[] allObjects = find[i].getAllObjects();
-			for (int j = 0; j < allObjects.length; j++) {
-				if (allObjects[j] instanceof TclNamespaceImport) {
-					TclNamespaceImport importSt = (TclNamespaceImport) allObjects[j];
-					if (importSt.getNamespace().equals(currentNamespace)) {
+	private void selectNamespaceImport(String name, String currentNamespace,
+			Set processed) {
+		String pattern = "@" + currentNamespace + "|*";
+		String[] findKeys = TclMixinModel.getInstance().getMixin(
+				getScriptProject()).findKeys(pattern);
+		Set keys = new HashSet();
+		for (int i = 0; i < findKeys.length; i++) {
+			if (keys.add(findKeys[i])) {
+				TclNamespaceImport importSt = TclNamespaceImport
+						.parseKey(findKeys[i]);
+				if (importSt.getNamespace().equals(currentNamespace)) {
+					if (processed.add(importSt.getImportNsName())) {
 						findMethodFromMixinNS(importSt.getImportNsName() + "::"
 								+ name, importSt.getImportNsName());
 					}

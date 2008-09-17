@@ -47,7 +47,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -462,30 +461,61 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	private void processImports(char[] token, Set set, ASTNode astNodeParent) {
 		String currentNamespace = TclParseUtil.getElementFQN(astNodeParent,
 				"::", getParser().getModule());
-		processFindNamespace(token, set, currentNamespace);
-		// Also empty namespace should be processed
-		if (!currentNamespace.equals("")) {
-			processFindNamespace(token, set, "");
+		if (token == null) {
+			return;
+		}
+		String t = new String(token);
+		if (t.startsWith("::")) {
+			t = t.substring(2);
+		}
+		if (t.startsWith(":")) {
+			t = t.substring(1);
+		}
+		Set processed = new HashSet();
+		if (t.length() > 0) {
+			processFindNamespace(token, set, currentNamespace, processed);
+			// Also empty namespace should be processed
+			if (!currentNamespace.equals("")) {
+				processFindNamespace(token, set, "", processed);
+			}
 		}
 	}
 
 	private void processFindNamespace(char[] token, Set set,
-			String currentNamespace) {
-		IMixinElement[] find = TclMixinModel.getInstance().getMixin(
-				getSourceModule().getScriptProject()).find(
-				"@" + currentNamespace + "|*", 0);
-		for (int i = 0; i < find.length; i++) {
-			Object[] allObjects = find[i].getAllObjects();
-			for (int j = 0; j < allObjects.length; j++) {
-				if (allObjects[j] instanceof TclNamespaceImport) {
-					TclNamespaceImport importSt = (TclNamespaceImport) allObjects[j];
-					if (importSt.getNamespace().equals(currentNamespace)) {
+			String currentNamespace, Set processed) {
+		String pattern = "@" + currentNamespace + "|*";
+		String[] findKeys = TclMixinModel.getInstance().getMixin(
+				getSourceModule().getScriptProject()).findKeys(pattern);
+		Set keys = new HashSet();
+		for (int i = 0; i < findKeys.length; i++) {
+			if (keys.add(findKeys[i])) {
+				TclNamespaceImport importSt = TclNamespaceImport
+						.parseKey(findKeys[i]);
+				if (importSt != null
+						&& importSt.getNamespace().equals(currentNamespace)) {
+					if (processed.add(importSt.getImportNsName())) {
 						this.findSpecificNamespaceFunctions(token, set,
 								importSt.getImportNsName(), true);
 					}
 				}
 			}
 		}
+		// IMixinElement[] find = TclMixinModel.getInstance().getMixin(
+		// getSourceModule().getScriptProject()).find(pattern, 0);
+		// for (int i = 0; i < find.length; i++) {
+		// Object[] allObjects = find[i].getAllObjects();
+		// for (int j = 0; j < allObjects.length; j++) {
+		// if (allObjects[j] instanceof TclNamespaceImport) {
+		// TclNamespaceImport importSt = (TclNamespaceImport) allObjects[j];
+		// if (importSt.getNamespace().equals(currentNamespace)) {
+		// if (processed.add(importSt.getImportNsName())) {
+		// this.findSpecificNamespaceFunctions(token, set,
+		// importSt.getImportNsName(), true);
+		// }
+		// }
+		// }
+		// }
+		// }
 	}
 
 	protected void processCompletionOnKeywords(

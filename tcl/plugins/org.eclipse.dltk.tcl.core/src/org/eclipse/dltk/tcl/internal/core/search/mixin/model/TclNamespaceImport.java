@@ -39,4 +39,14 @@ public class TclNamespaceImport {
 		}
 		return pattern;
 	}
+
+	public static TclNamespaceImport parseKey(String key) {
+		if (!key.startsWith("@")) {
+			return null;
+		}
+		key = key.substring(1);
+		int pos = key.indexOf("|");
+		return new TclNamespaceImport(key.substring(0, pos), key
+				.substring(pos + 1));
+	}
 }
