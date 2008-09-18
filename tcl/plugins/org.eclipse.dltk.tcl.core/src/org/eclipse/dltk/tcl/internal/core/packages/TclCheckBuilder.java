@@ -87,6 +87,15 @@ public class TclCheckBuilder implements IBuildParticipant,
 				.getPackagesRequired());
 	}
 
+	public void buildExternalModule(ISourceModule module, ModuleDeclaration ast)
+			throws CoreException {
+		if (install == null) {
+			return;
+		}
+		packageCollector.getRequireDirectives().clear();
+		packageCollector.process(ast);
+	}
+
 	public void build(ISourceModule module, ModuleDeclaration ast,
 			IProblemReporter reporter) throws CoreException {
 		if (install == null) {
@@ -104,7 +113,6 @@ public class TclCheckBuilder implements IBuildParticipant,
 		if (install == null) {
 			return;
 		}
-		// TODO re-process files with our errors
 		if (buildType != STRUCTURE_BUILD) {
 			manager.setInternalPackageNames(install, project, packageCollector
 					.getPackagesProvided());
@@ -115,17 +123,13 @@ public class TclCheckBuilder implements IBuildParticipant,
 			final ISourceModule module = (ISourceModule) entry.getKey();
 			final ModuleInfo info = (ModuleInfo) entry.getValue();
 
-			final CodeModel model = getCodeModel(module);
-			if (model == null) {
-				continue;
-			}
-
 			for (Iterator j = info.requireDirectives.iterator(); j.hasNext();) {
 				TclPackageDeclaration pkg = (TclPackageDeclaration) j.next();
 				if (pkg.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
-					checkPackage(pkg, info.reporter, model);
+					checkPackage(module, pkg, info.reporter);
 				}
 			}
+			codeModels.clear();
 		}
 	}
 
@@ -134,6 +138,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 		if (model == null) {
 			try {
 				model = new CodeModel(module.getSource());
+				codeModels.put(module, model);
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
@@ -164,17 +169,21 @@ public class TclCheckBuilder implements IBuildParticipant,
 		return buildpath;
 	}
 
-	private static void reportPackageProblem(TclPackageDeclaration pkg,
-			IProblemReporter reporter, CodeModel model, String message,
+	private void reportPackageProblem(TclPackageDeclaration pkg,
+			IProblemReporter reporter, ISourceModule module, String message,
 			String pkgName) {
+		final CodeModel model = getCodeModel(module);
+		if (model == null) {
+			return;
+		}
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_REQUIRED_PACKAGE, new String[] { pkgName },
 				ProblemSeverities.Error, pkg.sourceStart(), pkg.sourceEnd(),
 				model.getLineNumber(pkg.sourceStart(), pkg.sourceEnd())));
 	}
 
-	private void checkPackage(TclPackageDeclaration pkg,
-			IProblemReporter reporter, CodeModel model) {
+	private void checkPackage(ISourceModule module, TclPackageDeclaration pkg,
+			IProblemReporter reporter) {
 		final String packageName = pkg.getName();
 
 		if (packageCollector.getPackagesProvided().contains(packageName)) {
@@ -186,7 +195,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 		// Report unknown packages
 		if (!knownPackageNames.contains(packageName)) {
-			reportPackageProblem(pkg, reporter, model, NLS.bind(
+			reportPackageProblem(pkg, reporter, module, NLS.bind(
 					Messages.TclCheckBuilder_unknownPackage, packageName),
 					packageName);
 			return;
@@ -194,7 +203,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 		// Receive main package and it paths.
 		if (checkPackage(packageName)) {
-			reportPackageProblem(pkg, reporter, model, NLS.bind(
+			reportPackageProblem(pkg, reporter, module, NLS.bind(
 					Messages.TclCheckBuilder_unresolvedDependencies,
 					packageName), packageName);
 			return;
@@ -205,7 +214,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 		for (Iterator i = dependencies.iterator(); i.hasNext();) {
 			String pkgName = (String) i.next();
 			if (checkPackage(pkgName)) {
-				reportPackageProblem(pkg, reporter, model, NLS.bind(
+				reportPackageProblem(pkg, reporter, module, NLS.bind(
 						Messages.TclCheckBuilder_unresolvedDependencies,
 						packageName), packageName);
 				return;
@@ -261,9 +270,9 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	public DependencyResponse getDependencies(int buildType, Set localElements,
 			Set externalElements, Set oldExternalFolders, Set externalFolders) {
-		if (buildType != FULL_BUILD
-				&& !oldExternalFolders.equals(externalFolders)) {
-			return DependencyResponse.FULL_BUILD;
+		if (buildType == FULL_BUILD
+				|| !oldExternalFolders.equals(externalFolders)) {
+			return DependencyResponse.FULL_EXTERNAL_BUILD;
 		} else {
 			return null;
 		}
