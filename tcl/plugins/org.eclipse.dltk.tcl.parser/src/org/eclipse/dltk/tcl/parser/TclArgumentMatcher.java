@@ -318,6 +318,8 @@ public class TclArgumentMatcher {
 				continue;
 			} else if (result.getPriority() < sr.getPriority()) {
 				result = sr;
+			} else if (!result.isMatched() && sr.isMatched()) {
+				result = sr;
 			} else if (result.getErrors().getCount() > sr.getErrors()
 					.getCount()
 					&& result.getArgumentsUsed() > sr.getArgumentsUsed()) {
@@ -349,7 +351,7 @@ public class TclArgumentMatcher {
 		Argument definitionArg = definitionArguments.get(defPos);
 
 		List<MatchResult> list = matchDefinition(arguments, pos, definitionArg);
-
+		
 		TclErrorCollector collector = new TclErrorCollector();
 		for (MatchResult r : list) {
 			if (r.isMatched() || r.isImplicit()) {
@@ -1049,14 +1051,14 @@ public class TclArgumentMatcher {
 				results.add(r);
 			}
 		}
-		// if (lowerBound == 0) {
-		// // Add empty variant if multiplicity support it.
-		// MatchResult r = new MatchResult();
-		// r.setArgumentsUsed(0);
-		// r.setMatched(true);
-		// r.setMatchWithErrors(false);
-		// results.add(r);
-		// }
+		if (lowerBound == 0) {
+			// Add empty variant if multiplicity support it.
+			MatchResult r = new MatchResult();
+			r.setArgumentsUsed(0);
+			r.setMatched(true);
+			r.setMatchWithErrors(false);
+			results.add(r);
+		}
 		// if (count > upperBound) {
 		// for (int i = upperBound + 1; i <= count; i++) {
 		// MatchResult r = new MatchResult();
