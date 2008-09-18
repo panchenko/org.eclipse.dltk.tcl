@@ -415,9 +415,9 @@ public class DefinitionTests extends TestCase {
 		typedCheck(source, 0, 0, "8.4");
 	}
 
-	public void test075_FAILED() throws Exception {
+	public void test075() throws Exception {
 		String source = "regsub \"${schema}:\" $type {}";
-		typedCheck(source, 1, 0, "8.4");
+		typedCheck(source, 0, 0, "8.4");
 	}
 
 	public void test076() throws Exception {
@@ -564,7 +564,7 @@ public class DefinitionTests extends TestCase {
 
 	public void test104() throws Exception {
 		String source = "glob [file join $dir library *.tcl]";
-		typedCheck(source, 1, 0, "8.4");
+		typedCheck(source, 0, 0, "8.4");
 	}
 
 	// xbz
@@ -575,7 +575,7 @@ public class DefinitionTests extends TestCase {
 
 	public void test106() throws Exception {
 		String source = "exec [file join $autotest install checkenv.tcl]";
-		typedCheck(source, 1, 0, "8.4");
+		typedCheck(source, 0, 0, "8.4");
 	}
 
 	public void test107() throws Exception {
@@ -585,7 +585,7 @@ public class DefinitionTests extends TestCase {
 
 	public void test108() throws Exception {
 		String source = "regexp $compareTo $value";
-		typedCheck(source, 1, 0, "8.4");
+		typedCheck(source, 0, 0, "8.4");
 	}
 
 	private void typedCheck(String source, int errs, int code, String version)
