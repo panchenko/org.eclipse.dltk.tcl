@@ -465,7 +465,7 @@
               <arguments xsi:type="tclparse:TypedArgument" name="proc"/>
             </groups>
           </arguments>
-          <arguments xsi:type="tclparse:Group" lowerBound="0" constant="--"/>
+          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="topic"/>
         </groups>
         <groups constant="execute">
@@ -665,14 +665,14 @@
         <groups constant="-ignorestderr"/>
         <groups constant="-keepnewline"/>
       </arguments>
-      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="arg"/>
     </children>
     <children xsi:type="tclparse:Command" name="exec" version="(-;8.5)">
       <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
         <groups constant="-keepnewline"/>
       </arguments>
-      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="arg"/>
     </children>
     <children xsi:type="tclparse:Command" name="exit">
@@ -796,7 +796,7 @@
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-force"/>
           </arguments>
-          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
           <arguments xsi:type="tclparse:Switch">
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" name="source"/>
@@ -967,7 +967,7 @@
           <arguments xsi:type="tclparse:TypedArgument" name="typeList"/>
         </groups>
       </arguments>
-      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="pattern"/>
     </children>
     <children xsi:type="tclparse:Command" name="global">
@@ -1161,7 +1161,7 @@
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
             <groups constant="-safe"/>
           </arguments>
-          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="path"/>
         </groups>
         <groups constant="delete">
@@ -1193,7 +1193,7 @@
             <groups constant="-namespace"/>
             <groups constant="-global"/>
           </arguments>
-          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+          <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
           <arguments xsi:type="tclparse:TypedArgument" name="hiddenCmdName"/>
           <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="arg"/>
         </groups>
@@ -1664,7 +1664,7 @@
         </groups>
         <groups constant="-verbose"/>
       </arguments>
-      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" name="dir"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="pattern"/>
     </children>
@@ -1713,7 +1713,7 @@
           <arguments xsi:type="tclparse:TypedArgument" name="index" type="Index"/>
         </groups>
       </arguments>
-      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+      <arguments xsi:type="tclparse:Constant" lowerBound="0" name="" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" name="exp"/>
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" upperBound="-1" name="matchVar" type="VarName"/>
@@ -1781,7 +1781,7 @@
           <arguments xsi:type="tclparse:TypedArgument" name="index" type="Index"/>
         </groups>
       </arguments>
-      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" name="exp"/>
       <arguments xsi:type="tclparse:TypedArgument" name="string"/>
       <arguments xsi:type="tclparse:TypedArgument" name="subSpec"/>
@@ -2320,7 +2320,7 @@
         <groups constant="-nocomplain"/>
         <groups constant="-keeplibrary"/>
       </arguments>
-      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--"/>
+      <arguments xsi:type="tclparse:Constant" lowerBound="0" value="--" strictMatch="true"/>
       <arguments xsi:type="tclparse:TypedArgument" name="fileName"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="packageName"/>
       <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="interp"/>
