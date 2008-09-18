@@ -968,7 +968,7 @@ public class TclArgumentMatcher {
 	private void matchSinglePositionArgument(List<MatchResult> results,
 			List<TclArgument> arguments, int pos, Argument definitionArg,
 			ISinglePositionRule rule, boolean returnMaxMatchedResult) {
-		int lowBound = definitionArg.getLowerBound();
+		int lowerBound = definitionArg.getLowerBound();
 		int upperBound = definitionArg.getUpperBound();
 		if (upperBound == -1) {
 			upperBound = Integer.MAX_VALUE;
@@ -993,7 +993,7 @@ public class TclArgumentMatcher {
 				break;
 			}
 		}
-		if (count < lowBound) {
+		if (count < lowerBound) {
 			MatchResult r = new MatchResult();
 			r.setArgumentsUsed(count);
 			r.setMatched(count > 0);
@@ -1015,12 +1015,12 @@ public class TclArgumentMatcher {
 			r.getMapping().put(definitionArg, new int[] { pos, pos + count });
 			results.add(r);
 		}
-		if (count >= lowBound) {
+		if (count >= lowerBound) {
 			int up = count;
 			if (up > upperBound) {
 				up = upperBound;
 			}
-			int from = lowBound;
+			int from = lowerBound;
 			if (returnMaxMatchedResult) {
 				from = count;
 			}
@@ -1049,6 +1049,14 @@ public class TclArgumentMatcher {
 				results.add(r);
 			}
 		}
+		// if (lowerBound == 0) {
+		// // Add empty variant if multiplicity support it.
+		// MatchResult r = new MatchResult();
+		// r.setArgumentsUsed(0);
+		// r.setMatched(true);
+		// r.setMatchWithErrors(false);
+		// results.add(r);
+		// }
 		// if (count > upperBound) {
 		// for (int i = upperBound + 1; i <= count; i++) {
 		// MatchResult r = new MatchResult();
