@@ -117,10 +117,15 @@ public class TclArgumentMatcher {
 	}
 
 	private static class MatchResult {
+		public static final int POSSIBLE = 0;
+		public static final int REGULAR = 1;
+		public static final int IMPLICIT = 2;
+
 		private int argumentsUsed = 0;
 		private TclErrorCollector errors = new TclErrorCollector();
 		private boolean matched = false;
 		private boolean matchWithErrors = false;
+		private int priority = REGULAR;
 		private List<Integer> blockArguments = new ArrayList<Integer>();
 		private List<ComplexArgumentResult> complexArguments = new ArrayList<ComplexArgumentResult>();
 		// Map arguments to positions
@@ -140,6 +145,28 @@ public class TclArgumentMatcher {
 
 		public void setMatched(boolean matched) {
 			this.matched = matched;
+		}
+
+		public boolean isImplicit() {
+			return priority == IMPLICIT;
+		}
+
+		public int getPriority() {
+			return priority;
+		}
+
+		public void setPriority(int priority) {
+			this.priority = priority;
+		}
+
+		public void setSummaryPriorityOf(MatchResult r1, MatchResult r2) {
+			if (r1.getPriority() == POSSIBLE || r2.getPriority() == POSSIBLE)
+				this.priority = POSSIBLE;
+			else if (r1.getPriority() == IMPLICIT
+					|| r2.getPriority() == IMPLICIT)
+				this.priority = IMPLICIT;
+			else
+				this.priority = REGULAR;
 		}
 
 		public TclErrorCollector getErrors() {
@@ -287,6 +314,10 @@ public class TclArgumentMatcher {
 		for (MatchResult sr : results) {
 			if (result == null) {
 				result = sr;
+			} else if (result.getPriority() > sr.getPriority()) {
+				continue;
+			} else if (result.getPriority() < sr.getPriority()) {
+				result = sr;
 			} else if (result.getErrors().getCount() > sr.getErrors()
 					.getCount()
 					&& result.getArgumentsUsed() > sr.getArgumentsUsed()) {
@@ -318,16 +349,17 @@ public class TclArgumentMatcher {
 		Argument definitionArg = definitionArguments.get(defPos);
 
 		List<MatchResult> list = matchDefinition(arguments, pos, definitionArg);
+
 		TclErrorCollector collector = new TclErrorCollector();
-		for (int i = 0; i < list.size(); i++) {
-			MatchResult r = list.get(i);
-			if (r.isMatched()) {
+		for (MatchResult r : list) {
+			if (r.isMatched() || r.isImplicit()) {
 				List<MatchResult> srl = matchArgumentList(arguments, pos
 						+ r.getArgumentsUsed(), definitionArguments, defPos + 1);
 				boolean matched = false;
 				for (MatchResult sr : srl) {
 					if (sr.isMatched()) {
 						matched = true;
+						sr.setSummaryPriorityOf(r, sr);
 						sr.setMatchWithErrors(sr.isMatchWithErrors()
 								|| r.isMatchWithErrors());
 						sr.setArgumentsUsed(sr.getArgumentsUsed()
@@ -340,9 +372,20 @@ public class TclArgumentMatcher {
 						results.add(sr);
 					}
 				}
-				if (!matched || srl.size() == 1) {
+				if (!matched && srl.size() == 1) {
 					for (MatchResult sr : srl) {
 						collector.addAll(sr.getErrors());
+					}
+					MatchResult sr = srl.get(0);
+					if (results.size() == 0) {
+						MatchResult result = new MatchResult();
+						result.setMatched(false);
+						result.setSummaryPriorityOf(r, sr);
+						result.setMatchWithErrors(r.isMatched());
+						result.getErrors().addAll(sr.getErrors());
+						result.setArgumentsUsed(r.getArgumentsUsed()
+								+ sr.getArgumentsUsed());
+						results.add(result);
 					}
 				}
 
@@ -376,6 +419,9 @@ public class TclArgumentMatcher {
 		List<MatchResult> results = new ArrayList<MatchResult>();
 		if (definition instanceof Constant) {
 			matchConstant(arguments, pos, definition, results);
+			for (MatchResult result : results)
+				if (result.isMatched())
+					result.setPriority(MatchResult.IMPLICIT);
 		} else if (definition instanceof TypedArgument) {
 			matchTypedArgument(arguments, pos, definition, results);
 		} else if (definition instanceof Group) {
@@ -624,7 +670,7 @@ public class TclArgumentMatcher {
 
 		for (int j = 0; j < list.size(); j++) {
 			MatchResult r = list.get(j);
-			if (r.isMatched() && !r.isMatchWithErrors()) {
+			if (r.isMatched() || r.isImplicit()/* && !r.isMatchWithErrors() */) {
 				List<MatchResult> ress2 = new ArrayList<MatchResult>();
 				counts.put(r, Integer.valueOf(count + 1));
 				ress.add(r);
@@ -730,7 +776,7 @@ public class TclArgumentMatcher {
 		// for (MatchResult r : results) {
 		for (int i = 0; i < 1; ++i) {
 			MatchResult r = matchArgument(arguments, pos, groupArguments, 0);
-			if (r.isMatched()) {
+			if (r.isMatched() || r.isImplicit()) {
 				List<MatchResult> ress2 = new ArrayList<MatchResult>();
 				counts.put(r, Integer.valueOf(count + 1));
 				ress.add(r);
@@ -743,7 +789,7 @@ public class TclArgumentMatcher {
 							upperBound);
 					for (int k = 0; k < ress2.size(); k++) {
 						MatchResult r2 = ress2.get(k);
-						if (r2.isMatched() && !r2.isMatchWithErrors()) {
+						if (r2.isMatched()/* && !r2.isMatchWithErrors() */) {
 							r2.setArgumentsUsed(r.getArgumentsUsed()
 									+ r2.getArgumentsUsed());
 							r2.getBlockArguments()

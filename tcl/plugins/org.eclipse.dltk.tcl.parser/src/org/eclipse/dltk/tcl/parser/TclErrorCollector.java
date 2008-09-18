@@ -19,7 +19,22 @@ public class TclErrorCollector implements ITclErrorReporter {
 
 	public void report(int code, String message, String[] extraMessage,
 			int start, int end, int kind) {
-		errors.add(new TclError(code, message, extraMessage, start, end, kind));
+		boolean insertNewError = true;
+		TclError errorToReplace = null;
+		for (TclError error : errors) {
+			if (error.getStart() == start && error.getEnd() == end) {
+				if (error.getCode() < code) {
+					errorToReplace = error;
+				} else {
+					insertNewError = false;
+				}
+			}
+		}
+		if (errorToReplace != null)
+			errors.remove(errorToReplace);
+		if (insertNewError)
+			errors.add(new TclError(code, message, extraMessage, start, end,
+					kind));
 	}
 
 	public void addAll(TclErrorCollector collector) {

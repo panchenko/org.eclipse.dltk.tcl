@@ -482,17 +482,18 @@ public class TclParser implements ITclParserOptions {
 	}
 
 	private void reportCommandNameSubstitution(TclArgument commandName) {
-		if (this.reporter != null) {
-			this.reporter.report(
-					ITclErrorReporter.COMMAND_WITH_NAME_SUBSTITUTION,
-					Messages.TclParser_Command_Name_Is_Substitution, null,
-					commandName.getStart(), commandName.getEnd(),
-					ITclErrorReporter.WARNING);
-		}
+		if (this.reporter == null)
+			return;
+		this.reporter.report(ITclErrorReporter.COMMAND_WITH_NAME_SUBSTITUTION,
+				Messages.TclParser_Command_Name_Is_Substitution, null,
+				commandName.getStart(), commandName.getEnd(),
+				ITclErrorReporter.WARNING);
 	}
 
 	private void reportDeprecatedError(TclCommand st, String commandValue,
 			Command definition) {
+		if (this.reporter == null)
+			return;
 		String message = MessageFormat.format(
 				Messages.TclParser_Command_Is_Deprecated, new Object[] {
 						commandValue, definition.getDeprecated() });
@@ -513,6 +514,8 @@ public class TclParser implements ITclParserOptions {
 
 	private void reportOutOfScopeError(TclCommand st, String commandValue,
 			Command definition) {
+		if (this.reporter == null)
+			return;
 		List<Command> scopes = definition.getScope();
 		StringBuilder scopesList = new StringBuilder();
 		for (int i = 0; i < scopes.size(); i++) {
