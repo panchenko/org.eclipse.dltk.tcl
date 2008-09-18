@@ -44,52 +44,44 @@ public class IntegerTypeParseTests extends TestCase {
 		return command;
 	}
 
-	
 	public void test001() throws Exception {
 		String source = "cmd 34";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test002() throws Exception {
 		String source = "cmd -34";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test003() throws Exception {
 		String source = "cmd 34.5";
-		typedCheck(source, 2, 0);
+		typedCheck(source, 1, 0);
 	}
 
-	
 	public void test004() throws Exception {
 		String source = "cmd lalala";
-		typedCheck(source, 2, 0);
+		typedCheck(source, 1, 0);
 	}
 
-	
 	public void test005() throws Exception {
 		String source = "cmd \"34\"";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test006() throws Exception {
 		String source = "cmd \"-34\"";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test007() throws Exception {
 		String source = "cmd \"34.5\"";
-		typedCheck(source, 2, 0);
+		typedCheck(source, 1, 0);
 	}
 
-	
 	public void test008() throws Exception {
 		String source = "cmd \"lalala\"";
-		typedCheck(source, 2, 0);
+		typedCheck(source, 1, 0);
 	}
 
 	private void typedCheck(String source, int errs, int code) throws Exception {

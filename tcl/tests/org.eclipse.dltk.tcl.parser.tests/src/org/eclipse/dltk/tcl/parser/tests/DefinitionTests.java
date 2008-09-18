@@ -519,12 +519,12 @@ public class DefinitionTests extends TestCase {
 
 	public void test096() throws Exception {
 		String source = "catch {string is . .} charclasses";
-		typedCheck(source, 1, 1, "8.4");
+		typedCheck(source, 2, 1, "8.4");
 	}
 
 	public void test096_2() throws Exception {
 		String source = "string is . .";
-		typedCheck(source, 1, 0, "8.4");
+		typedCheck(source, 2, 0, "8.4");
 	}
 
 	public void test097_FAILED() throws Exception {

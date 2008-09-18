@@ -142,7 +142,7 @@ public class TclGroupArgumentsParseTests extends TestCase {
 
 	public void test010() throws Exception {
 		String source = "constants -- -- {set a 20} {set a 20}";
-		check002(source, 2, 0);
+		check002(source, 1, 0);
 	}
 
 	public void test011() throws Exception {
@@ -178,7 +178,9 @@ public class TclGroupArgumentsParseTests extends TestCase {
 		int scripts = 0;
 		for (int i = 0; i < arguments.size(); i++) {
 			if (arguments.get(i) instanceof Script) {
+				Script script = (Script) arguments.get(i);
 				scripts++;
+				TestUtils.outCode(source, script.getStart(), script.getEnd());
 			}
 		}
 		if (errors.getCount() > 0) {
