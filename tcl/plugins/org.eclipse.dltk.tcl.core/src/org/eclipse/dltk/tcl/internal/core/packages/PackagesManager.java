@@ -27,6 +27,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
@@ -428,7 +429,7 @@ public class PackagesManager {
 	}
 
 	private String getInterpreterKey(IInterpreterInstall install) {
-		if( install == null ) {
+		if (install == null) {
 			return "";
 		}
 		return install.getInstallLocation().toOSString() + ":" //$NON-NLS-1$
@@ -436,14 +437,24 @@ public class PackagesManager {
 	}
 
 	private String getInterpreterProjectKey(IInterpreterInstall install,
-			IScriptProject project) {
-		return "internal|||" + project.getElementName() + "|||" //$NON-NLS-1$ //$NON-NLS-2$
+			String projectName) {
+		return "internal|||" + projectName + "|||" //$NON-NLS-1$ //$NON-NLS-2$
 				+ getInterpreterKey(install);
 	}
 
+	public Set getInternalPackageNames(IInterpreterInstall install,
+			IScriptProject project) {
+		return getInternalPackageNames(install, project.getElementName());
+	}
+
+	public Set getInternalPackageNames(IInterpreterInstall install,
+			IProject project) {
+		return getInternalPackageNames(install, project.getName());
+	}
+
 	public synchronized Set getInternalPackageNames(
-			IInterpreterInstall install, IScriptProject project) {
-		final String key = getInterpreterProjectKey(install, project);
+			IInterpreterInstall install, String projectName) {
+		final String key = getInterpreterProjectKey(install, projectName);
 		if (this.interpreterToPackages.containsKey(key)) {
 			return (Set) this.interpreterToPackages.get(key);
 		}
@@ -452,7 +463,7 @@ public class PackagesManager {
 
 	public synchronized void setInternalPackageNames(
 			IInterpreterInstall install, IScriptProject project, Set names) {
-		String key = getInterpreterProjectKey(install, project);
+		String key = getInterpreterProjectKey(install, project.getElementName());
 		// TODO compare and save only if there are changes
 		this.interpreterToPackages.put(key, new HashSet(names));
 		save();
@@ -582,7 +593,7 @@ public class PackagesManager {
 			Set packagesSet) {
 
 		String pkey = makePKey(packagesSet);
-		if( this.packsWithDeps.containsKey(pkey)) {
+		if (this.packsWithDeps.containsKey(pkey)) {
 			return (IPath[]) this.packsWithDeps.get(pkey);
 		}
 

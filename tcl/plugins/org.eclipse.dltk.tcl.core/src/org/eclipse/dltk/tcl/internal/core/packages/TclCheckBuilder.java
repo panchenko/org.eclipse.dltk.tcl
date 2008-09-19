@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -80,11 +83,36 @@ public class TclCheckBuilder implements IBuildParticipant,
 			packageCollector.getPackagesProvided().addAll(
 					manager.getInternalPackageNames(install, project));
 		}
+		loadProvidedPackagesFromRequiredProjects();
 		// This method will populate all required paths.
 		manager.getPathsForPackages(install, packageCollector
 				.getPackagesRequired());
 		manager.getPathsForPackagesWithDeps(install, packageCollector
 				.getPackagesRequired());
+	}
+
+	private void loadProvidedPackagesFromRequiredProjects() {
+		final IBuildpathEntry[] resolvedBuildpath;
+		try {
+			resolvedBuildpath = project.getResolvedBuildpath(true);
+		} catch (ModelException e) {
+			TclPlugin.error(e);
+			return;
+		}
+		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
+				.getRoot();
+		for (int i = 0; i < resolvedBuildpath.length; i++) {
+			final IBuildpathEntry entry = resolvedBuildpath[i];
+			if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+				final IPath path = entry.getPath();
+				final IProject project = workspaceRoot.getProject(path
+						.lastSegment());
+				if (project.exists()) {
+					packageCollector.getPackagesProvided().addAll(
+							manager.getInternalPackageNames(install, project));
+				}
+			}
+		}
 	}
 
 	public void buildExternalModule(ISourceModule module, ModuleDeclaration ast)
