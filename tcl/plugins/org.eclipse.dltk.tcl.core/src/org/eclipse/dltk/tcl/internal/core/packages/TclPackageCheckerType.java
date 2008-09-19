@@ -32,7 +32,11 @@ public class TclPackageCheckerType extends AbstractBuildParticipantType {
 
 	protected IBuildParticipant createBuildParticipant(IScriptProject project)
 			throws CoreException {
-		return new TclCheckBuilder(project);
+		try {
+			return new TclCheckBuilder(project);
+		} catch (IllegalStateException e) {
+			return null;
+		}
 	}
 
 	public String getNature() {

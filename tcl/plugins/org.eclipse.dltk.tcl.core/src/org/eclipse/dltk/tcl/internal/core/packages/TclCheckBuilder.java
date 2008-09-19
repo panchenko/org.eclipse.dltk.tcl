@@ -60,24 +60,29 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	}
 
-	public TclCheckBuilder(IScriptProject project) throws CoreException {
+	/**
+	 * @param project
+	 * @throws CoreException
+	 * @throws IllegalStateException
+	 *             if associated interpreter could not be found
+	 */
+	public TclCheckBuilder(IScriptProject project) throws CoreException,
+			IllegalStateException {
 		this.project = project;
 		install = ScriptRuntime.getInterpreterInstall(project);
-		if (install != null) {
-			knownPackageNames = manager.getPackageNames(install);
-			buildpath = getBuildpath(project);
-		} else {
-			knownPackageNames = new HashSet();
-			buildpath = new HashSet();
+		if (install == null) {
+			// thrown exception is caught in the TclPackageCheckerType
+			throw new IllegalStateException(NLS.bind(
+					Messages.TclCheckBuilder_interpreterNotFound, project
+							.getElementName()));
 		}
+		knownPackageNames = manager.getPackageNames(install);
+		buildpath = getBuildpath(project);
 	}
 
 	private int buildType;
 
 	public void beginBuild(int buildType) {
-		if (install == null) {
-			return;
-		}
 		this.buildType = buildType;
 		if (buildType != FULL_BUILD) {
 			packageCollector.getPackagesProvided().addAll(
@@ -117,18 +122,12 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	public void buildExternalModule(ISourceModule module, ModuleDeclaration ast)
 			throws CoreException {
-		if (install == null) {
-			return;
-		}
 		packageCollector.getRequireDirectives().clear();
 		packageCollector.process(ast);
 	}
 
 	public void build(ISourceModule module, ModuleDeclaration ast,
 			IProblemReporter reporter) throws CoreException {
-		if (install == null) {
-			return;
-		}
 		packageCollector.getRequireDirectives().clear();
 		packageCollector.process(ast);
 		if (!packageCollector.getRequireDirectives().isEmpty()) {
@@ -138,9 +137,6 @@ public class TclCheckBuilder implements IBuildParticipant,
 	}
 
 	public void endBuild() {
-		if (install == null) {
-			return;
-		}
 		if (buildType != STRUCTURE_BUILD) {
 			manager.setInternalPackageNames(install, project, packageCollector
 					.getPackagesProvided());
