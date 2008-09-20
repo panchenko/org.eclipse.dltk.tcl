@@ -216,7 +216,7 @@ public class TclSourceViewerConfiguration extends
 			ISourceViewer sourceViewer, String contentType) {
 		// return super.getAutoEditStrategies(sourceViewer, contentType);
 		String partitioning = getConfiguredDocumentPartitioning(sourceViewer);
-		return new TclAutoEditStrategy[] { new TclAutoEditStrategy(
+		return new IAutoEditStrategy[] { new TclAutoEditStrategy(
 				fPreferenceStore, partitioning) };
 	}
 
