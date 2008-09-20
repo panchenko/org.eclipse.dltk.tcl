@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
@@ -38,10 +39,6 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 	private IDocument fDocument;
 
 	private int fOffset;
-
-	private int fStartPos;
-
-	private int fEndPos;
 
 	private int fAnchor;
 
@@ -68,7 +65,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 	public TclPairMatcher() {
 	}
 
-	private PairBlock[] computePairRanges(String contents) {
+	private PairBlock[] computePairRanges(final String contents) {
 		/*
 		 * ISourceModule returned by editor.getInputModelElement() could be
 		 * inconsistent with current editor contents so we always reparse.
@@ -98,6 +95,16 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 						if (start != 0) {
 							result.add(new PairBlock(start, be.sourceEnd() - 1,
 									'{'));
+						}
+					} else if (be instanceof TclBlockExpression) {
+						int start = be.sourceStart();
+						int end = be.sourceEnd();
+						if (start >= 0 && start < end
+								&& start < contents.length()
+								&& end <= contents.length()
+								&& contents.charAt(start) == '{'
+								&& contents.charAt(end - 1) == '}') {
+							result.add(new PairBlock(start, end - 1, '{'));
 						}
 					}
 					return super.visitGeneral(be);
@@ -192,9 +199,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 			}
 
 			updatePairs();
-
-			if (matchPairsAt() && fStartPos != fEndPos)
-				return new Region(fStartPos, fEndPos - fStartPos + 1);
+			return matchPairsAt();
 		} catch (BadLocationException e) {
 			if (DLTKCore.DEBUG_PARSER)
 				e.printStackTrace();
@@ -220,29 +225,19 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 	public void clear() {
 	}
 
-	private boolean matchPairsAt() {
-
-		fStartPos = -1;
-		fEndPos = -1;
-
-		for (int i = 0; i < cachedPairs.length; i++) {
-			PairBlock block = cachedPairs[i];
-
+	private IRegion matchPairsAt() {
+		final PairBlock[] pairs = cachedPairs;
+		for (int i = 0, size = pairs.length; i < size; i++) {
+			final PairBlock block = pairs[i];
 			if (fOffset == block.end + 1) {
-				fStartPos = block.start - 1;
-				fEndPos = block.start;
 				fAnchor = LEFT;
-				return true;
+				return new Region(block.start, 1);
 			}
 			if (fOffset == block.start + 1) {
-				fStartPos = block.end - 1;
-				fEndPos = block.end;
 				fAnchor = LEFT;
-				return true;
+				return new Region(block.end, 1);
 			}
-
 		}
-
-		return false;
+		return null;
 	}
 }
