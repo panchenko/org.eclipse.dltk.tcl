@@ -85,15 +85,11 @@ public class TclCheckBuilder implements IBuildParticipant,
 	public void beginBuild(int buildType) {
 		this.buildType = buildType;
 		if (buildType != FULL_BUILD) {
+			// retrieve packages provided by this project
 			packageCollector.getPackagesProvided().addAll(
 					manager.getInternalPackageNames(install, project));
 		}
 		loadProvidedPackagesFromRequiredProjects();
-		// This method will populate all required paths.
-		manager.getPathsForPackages(install, packageCollector
-				.getPackagesRequired());
-		manager.getPathsForPackagesWithDeps(install, packageCollector
-				.getPackagesRequired());
 	}
 
 	private void loadProvidedPackagesFromRequiredProjects() {
@@ -138,9 +134,17 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	public void endBuild() {
 		if (buildType != STRUCTURE_BUILD) {
+			// Save packages provided by the project
 			manager.setInternalPackageNames(install, project, packageCollector
 					.getPackagesProvided());
 		}
+		// initialize manager caches after they are collected
+		final Set requiredPackages = packageCollector.getPackagesRequired();
+		if (!requiredPackages.isEmpty()) {
+			manager.getPathsForPackages(install, requiredPackages);
+			manager.getPathsForPackagesWithDeps(install, requiredPackages);
+		}
+		// process all modules
 		for (Iterator i = resourceToModuleInfos.entrySet().iterator(); i
 				.hasNext();) {
 			final Map.Entry entry = (Map.Entry) i.next();
