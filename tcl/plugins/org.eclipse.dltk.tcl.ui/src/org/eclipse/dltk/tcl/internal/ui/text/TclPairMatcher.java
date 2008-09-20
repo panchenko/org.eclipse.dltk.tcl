@@ -68,7 +68,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 	public TclPairMatcher() {
 	}
 
-	private PairBlock[] computePairRanges(final int offset, String contents) {
+	private PairBlock[] computePairRanges(String contents) {
 		/*
 		 * ISourceModule returned by editor.getInputModelElement() could be
 		 * inconsistent with current editor contents so we always reparse.
@@ -83,28 +83,24 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		final List result = new ArrayList();
 		try {
 			md.traverse(new ASTVisitor() {
-				public boolean visitGeneral(ASTNode node) throws Exception {
-					if (node instanceof StringLiteral) {
-						StringLiteral be = (StringLiteral) node;
-						result.add(new PairBlock(offset + be.sourceStart(),
-								offset + be.sourceEnd() - 1, '\"'));
-					} else if (node instanceof TclExecuteExpression) {
-						TclExecuteExpression be = (TclExecuteExpression) node;
-						result.add(new PairBlock(offset + be.sourceStart(),
-								offset + be.sourceEnd() - 1, '['));
-					} else if (node instanceof TclAdvancedExecuteExpression) {
-						Block be = (Block) node;
-						result.add(new PairBlock(offset + be.sourceStart() - 1,
-								offset + be.sourceEnd(), '['));
-					} else if (node instanceof Block) {
-						Block be = (Block) node;
-						int start = offset + be.sourceStart();
+				public boolean visitGeneral(ASTNode be) throws Exception {
+					if (be instanceof StringLiteral) {
+						result.add(new PairBlock(be.sourceStart(), be
+								.sourceEnd() - 1, '\"'));
+					} else if (be instanceof TclExecuteExpression) {
+						result.add(new PairBlock(be.sourceStart(), be
+								.sourceEnd() - 1, '['));
+					} else if (be instanceof TclAdvancedExecuteExpression) {
+						result.add(new PairBlock(be.sourceStart() - 1, be
+								.sourceEnd(), '['));
+					} else if (be instanceof Block) {
+						int start = be.sourceStart();
 						if (start != 0) {
-							result.add(new PairBlock(offset + be.sourceStart(),
-									offset + be.sourceEnd() - 1, '{'));
+							result.add(new PairBlock(start, be.sourceEnd() - 1,
+									'{'));
 						}
 					}
-					return super.visitGeneral(node);
+					return super.visitGeneral(be);
 				}
 			});
 		} catch (Exception e) {
@@ -122,9 +118,8 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 	 * @param doc
 	 * @throws BadLocationException
 	 */
-	private void recalc() throws BadLocationException {
-		String content = fDocument.get(0, fDocument.getLength());
-		cachedPairs = computePairRanges(0, content);
+	private void recalc(final String content) throws BadLocationException {
+		cachedPairs = computePairRanges(content);
 
 		if (fDocument instanceof IDocumentExtension4) {
 			cachedStamp = ((IDocumentExtension4) fDocument)
@@ -144,16 +139,17 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 			if (document.getModificationStamp() == cachedStamp) {
 				return;
 			}
+			recalc(fDocument.get());
 
 		} else {
-			String content = fDocument.get(0, fDocument.getLength());
+			final String content = fDocument.get();
 
 			if (content.hashCode() == cachedHash) {
 				return;
 			}
+			recalc(content);
 		}
 
-		recalc();
 	}
 
 	private static boolean isBrace(char c) {
