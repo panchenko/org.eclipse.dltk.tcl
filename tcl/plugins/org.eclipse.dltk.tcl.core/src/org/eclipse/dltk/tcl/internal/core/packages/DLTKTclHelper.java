@@ -1,10 +1,7 @@
 package org.eclipse.dltk.tcl.internal.core.packages;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,38 +37,7 @@ public class DLTKTclHelper {
 
 	private static final String DLTK_TCL = "scripts/dltk.tcl"; //$NON-NLS-1$
 
-	public static List getScriptOutput(InputStream stream) {
-		final List elements = new ArrayList();
-		final BufferedReader input = new BufferedReader(new InputStreamReader(
-				stream));
-		Thread t = new Thread(new Runnable() {
-			public void run() {
-				try {
-					while (true) {
-						String line;
-						line = input.readLine();
-						if (line == null) {
-							break;
-						}
-						elements.add(line);
-					}
-				} catch (IOException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		t.start();
-		try {
-			t.join(50000);// No more then 50 seconds
-		} catch (InterruptedException e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
-		}
-		return elements;
-	}
+	public static final String END_OF_STREAM = "DLTK-TCL-HELPER-9E7A168E-5EEF-4a46-A86D-0C82E90686E4-END-OF-STREAM";
 
 	private static List deployExecute(IExecutionEnvironment exeEnv,
 			String installLocation, String[] arguments,
@@ -104,9 +70,7 @@ public class DLTKTclHelper {
 		if (process == null) {
 			return new ArrayList();
 		}
-		List output = getScriptOutput(process.getInputStream());
-		getScriptOutput(process.getErrorStream());
-		process.destroy();
+		List output = ProcessOutputCollector.execute(process);
 		deployment.dispose();
 		return output;
 	}
@@ -186,9 +150,7 @@ public class DLTKTclHelper {
 		if (process == null) {
 			return null;
 		}
-		List output = getScriptOutput(process.getInputStream());
-		getScriptOutput(process.getErrorStream());
-		process.destroy();
+		List output = ProcessOutputCollector.execute(process);
 		deployment.dispose();
 		return getPackagePath(output);
 	}
