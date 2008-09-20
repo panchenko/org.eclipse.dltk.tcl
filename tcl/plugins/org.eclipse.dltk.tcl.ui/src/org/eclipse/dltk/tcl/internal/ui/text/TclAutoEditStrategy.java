@@ -10,14 +10,16 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
 import java.util.Iterator;
-import java.util.Stack;
 import java.util.Vector;
 
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
 import org.eclipse.dltk.ui.PreferenceConstants;
+import org.eclipse.dltk.ui.text.util.AutoEditUtils;
+import org.eclipse.dltk.utils.CharacterStack;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
@@ -34,8 +36,8 @@ import org.eclipse.jface.text.rules.FastPartitioner;
  */
 public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 
-	private IPreferenceStore preferenceStore;
-	private String fPartitioning;
+	private final IPreferenceStore preferenceStore;
+	private final String fPartitioning;
 
 	private boolean closeStrings() {
 		return preferenceStore
@@ -211,11 +213,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			if (!getTabStyle().equals(CodeFormatterConstants.SPACE))
 				indent = "\t";
 			else {
-				indent = "";
-				int is = getIndentSize();
-				for (int i = 0; i < is; i++) {
-					indent += " ";
-				}
+				indent = AutoEditUtils.getNSpaces(getIndentSize());
 			}
 		}
 	}
@@ -249,6 +247,8 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 		return b;
 	}
 
+	private static final int MAX_BACK_SCAN_SIZE = 16384;
+
 	/**
 	 * Determines type of last opening block. For example, for such line <code>
 	 * proc () {
@@ -266,10 +266,15 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 	private TclBlock getLastOpenBlockType(IDocument d, int start)
 			throws BadLocationException {
 		// IRegion lineReg = d.getLineInformation(line);
-		Stack blocks = new Stack();
+		final CharacterStack blocks = new CharacterStack();
 		// String lineStr = d.get(lineReg.getOffset(), lineReg.getLength());
+		ITypedRegion lastRegion = null;
+		int lastLine = -1;
+		int lastLineOffset = -1;
+		String lastLineStr = Util.EMPTY_STRING;
+		final int stopPosition = Math.max(start - MAX_BACK_SCAN_SIZE, 0);
 		int offset = start;
-		while (offset > 0) {
+		while (offset > stopPosition) {
 			offset--;
 			// skip screening
 			int bslashes = 0;
@@ -282,26 +287,29 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 
 			// skip comment lines
-			int line = d.getLineOfOffset(offset);
-			String lineStr = d
-					.get(d.getLineOffset(line), d.getLineLength(line)).trim();
-			if (lineStr.startsWith("#")) {
-				offset = d.getLineOffset(line);
+			if (lastLineOffset < 0 || offset < lastLineOffset) {
+				lastLine = d.getLineOfOffset(offset);
+				lastLineOffset = d.getLineOffset(lastLine);
+				lastLineStr = d.get(lastLineOffset, d.getLineLength(lastLine))
+						.trim();
+			}
+			if (lastLineStr.length() != 0 && lastLineStr.charAt(0) == '#') {
+				offset = lastLineOffset;
 				continue;
 			}
 			// skip strings
-			ITypedRegion region = TextUtilities.getPartition(d, fPartitioning,
-					offset, true);
-			if (region.getType() == TclPartitions.TCL_STRING) {
-				offset = region.getOffset();
+			if (lastRegion == null || offset < lastRegion.getOffset()) {
+				lastRegion = TextUtilities.getPartition(d, fPartitioning,
+						offset, true);
+			}
+			if (lastRegion.getType() == TclPartitions.TCL_STRING) {
+				offset = lastRegion.getOffset();
 				offset--;
 			}
-			Character topCh;
-			char c = d.get(offset, 1).charAt(0);
+			char c = d.getChar(offset);
 
 			boolean insideFig = false;
-			if (blocks.size() > 0
-					&& ((Character) blocks.peek()).charValue() == '}')
+			if (blocks.size() > 0 && blocks.peek() == '}')
 				insideFig = true;
 
 			// ommit everything inside {}
@@ -312,28 +320,25 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			case '(':
 				if (0 == blocks.size())
 					return new RoundBracketBlock(offset);
-				topCh = (Character) blocks.pop();
-				if (!topCh.equals(new Character(')')))
+				if (blocks.pop() != ')')
 					return new RoundBracketBlock(offset);
 				break;
 			case '[':
 				if (0 == blocks.size())
 					return new BracketBlock(offset);
-				topCh = (Character) blocks.pop();
-				if (!topCh.equals(new Character(']')))
+				if (blocks.pop() != ']')
 					return new BracketBlock(offset);
 				break;
 			case '{':
 				if (0 == blocks.size())
 					return new BraceBlock(offset);
-				topCh = (Character) blocks.pop();
-				if (!topCh.equals(new Character('}')))
+				if (blocks.pop() != '}')
 					return new BraceBlock(offset);
 				break;
 			case ')':
 			case ']':
 			case '}':
-				blocks.push(new Character(c));
+				blocks.push(c);
 				break;
 			}
 		}
