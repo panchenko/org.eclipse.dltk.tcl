@@ -722,6 +722,7 @@ proc main {argv} {
 } ;# End of proc main 
 main $argv
 
+puts stdout "DLTK-TCL-HELPER-9E7A168E-5EEF-4a46-A86D-0C82E90686E4-END-OF-STREAM"
 # Exit needs to be called explicitly because some package may endup
 # invoking Tk pkg which in turn may create a GUI window and wait forever.
 ::exit-org
