@@ -297,6 +297,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		if (pairs == null) {
 			return null;
 		}
+		// TODO pairs should be sorted somehow...
 		for (int i = 0, size = pairs.length; i < size; i++) {
 			final PairBlock block = pairs[i];
 			if (offset == block.end + 1) {
