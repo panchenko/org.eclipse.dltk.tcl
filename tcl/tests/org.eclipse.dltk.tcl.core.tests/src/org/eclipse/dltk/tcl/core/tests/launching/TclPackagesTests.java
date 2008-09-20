@@ -1,6 +1,8 @@
 package org.eclipse.dltk.tcl.core.tests.launching;
 
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Test;
@@ -189,9 +191,13 @@ public class TclPackagesTests extends AbstractModelTests {
 	}
 
 	public void testPackages002() throws Exception {
-		InputStream stream = this.getClass().getResourceAsStream(
-				"packages002.txt");
-		List output = DLTKTclHelper.getScriptOutput(stream);
+		BufferedReader stream = new BufferedReader(new InputStreamReader(this
+				.getClass().getResourceAsStream("packages002.txt")));
+		final List output = new ArrayList();
+		String line;
+		while ((line = stream.readLine()) != null) {
+			output.add(line);
+		}
 		TclPackage[] packagePath = DLTKTclHelper.getPackagePath(output);
 		assertEquals(packagePath.length, 31);
 		assertEquals(packagePath[5].getName(), "ha");
