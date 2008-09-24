@@ -13,8 +13,18 @@ public class TclPreferencesMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME,org.eclipse.dltk.tcl.internal.ui.preferences.TclPreferencesMessages.class);
 	}
+	public static String TclCheckContentExcludeDialog_duplicatePatternError;
+	public static String TclCheckContentExcludeDialog_editTitle;
+	public static String TclCheckContentExcludeDialog_enterPatternError;
+	public static String TclCheckContentExcludeDialog_invalidPatternError;
+	public static String TclCheckContentExcludeDialog_newTitle;
+	public static String TclCheckContentExcludeDialog_pattern;
 	public static String TclCorePreferencePage_checkContentWithoutExtension;
+	public static String TclCorePreferencePage_checkContentAddExclude;
 	public static String TclCorePreferencePage_checkContentAnyExtension;
+	public static String TclCorePreferencePage_checkContentEditExclude;
+	public static String TclCorePreferencePage_checkContentExcludes;
+	public static String TclCorePreferencePage_checkContentRemoveExclude;
 	public static String TclCorePreferencePage_local;
 	public static String TclCorePreferencePage_remote;
 	public static String TCLGlobalPreferencePage_description;
