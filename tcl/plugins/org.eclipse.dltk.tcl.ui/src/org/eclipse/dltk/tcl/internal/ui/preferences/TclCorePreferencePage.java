@@ -92,6 +92,15 @@ public class TclCorePreferencePage extends
 
 		protected void initialize() {
 			super.initialize();
+			initExcludePatterns();
+		}
+
+		public void performDefaults() {
+			super.performDefaults();
+			initExcludePatterns();
+		}
+
+		private void initExcludePatterns() {
 			final List excludePatterns = new ArrayList();
 			final String[] patterns = TextUtils.split(getString(KEYS[4]),
 					TclCorePreferences.CHECK_CONTENT_EXCLUDE_SEPARATOR);
@@ -99,10 +108,6 @@ public class TclCorePreferencePage extends
 				excludePatterns.addAll(Arrays.asList(patterns));
 			}
 			excludeDialog.setElements(excludePatterns);
-		}
-
-		public void performDefaults() {
-			initialize();
 		}
 
 		private void updateExcludes() {
@@ -147,7 +152,7 @@ public class TclCorePreferencePage extends
 
 		protected Control createOptionsBlock(Composite parent) {
 			Composite block = SWTFactory.createComposite(parent, parent
-					.getFont(), 1, 1, GridData.FILL_HORIZONTAL);
+					.getFont(), 1, 1, GridData.FILL_BOTH);
 			SWTFactory
 					.createLabel(
 							block,
@@ -176,7 +181,7 @@ public class TclCorePreferencePage extends
 
 			final PixelConverter conv = new PixelConverter(block);
 			final Composite excludeComposite = SWTFactory.createComposite(
-					block, block.getFont(), 1, 1, GridData.FILL_HORIZONTAL);
+					block, block.getFont(), 1, 1, GridData.FILL_BOTH);
 			// ((GridData) excludeComposite.getLayoutData()).heightHint = conv
 			// .convertHeightInCharsToPixels(6);
 			final GridLayout excludeLayout = new GridLayout();
