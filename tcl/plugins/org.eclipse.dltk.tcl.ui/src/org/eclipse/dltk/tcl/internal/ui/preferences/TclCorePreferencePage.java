@@ -101,6 +101,10 @@ public class TclCorePreferencePage extends
 			excludeDialog.setElements(excludePatterns);
 		}
 
+		public void performDefaults() {
+			initialize();
+		}
+
 		private void updateExcludes() {
 			setString(KEYS[4], TextUtils.join(excludeDialog.getElements(),
 					TclCorePreferences.CHECK_CONTENT_EXCLUDE_SEPARATOR));
@@ -173,8 +177,8 @@ public class TclCorePreferencePage extends
 			final PixelConverter conv = new PixelConverter(block);
 			final Composite excludeComposite = SWTFactory.createComposite(
 					block, block.getFont(), 1, 1, GridData.FILL_HORIZONTAL);
-//			((GridData) excludeComposite.getLayoutData()).heightHint = conv
-//					.convertHeightInCharsToPixels(6);
+			// ((GridData) excludeComposite.getLayoutData()).heightHint = conv
+			// .convertHeightInCharsToPixels(6);
 			final GridLayout excludeLayout = new GridLayout();
 			excludeLayout.numColumns = 2;
 			excludeComposite.setLayout(excludeLayout);
