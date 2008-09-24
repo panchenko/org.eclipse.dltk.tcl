@@ -66,7 +66,7 @@ public class TclMixinBuildVisitor extends ASTVisitor {
 			if (name.endsWith("::")) {
 				name = name.substring(0, name.length() - 2);
 			}
-			if (ns.getName().startsWith("::")) {
+			if (name.startsWith("::")) {
 				// Remove all previous
 				prefix.delete(0, prefix.length());
 				name = name.substring(2);
