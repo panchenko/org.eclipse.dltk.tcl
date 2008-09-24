@@ -289,13 +289,18 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			if (install != null) {
 				Set packageNames = PackagesManager.getInstance()
 						.getPackageNames(install);
+				Set names = PackagesManager.getInstance()
+						.getInternalPackageNames(install, this.scriptProject);
+				packageNames.addAll(names);
 				List k = new ArrayList();
 				String prefix = new String(token);
 				for (Iterator iterator = packageNames.iterator(); iterator
 						.hasNext();) {
 					String kkw = (String) iterator.next();
-					if (kkw.startsWith(prefix)) {
-						k.add(kkw);
+					if (kkw.indexOf('$') == -1) {
+						if (kkw.startsWith(prefix)) {
+							k.add(kkw);
+						}
 					}
 				}
 				String kw[] = (String[]) k.toArray(new String[k.size()]);
