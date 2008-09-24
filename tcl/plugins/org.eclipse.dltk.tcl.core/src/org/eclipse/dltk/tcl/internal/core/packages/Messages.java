@@ -20,6 +20,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.core.packages.messages"; //$NON-NLS-1$
 	public static String TclCheckBuilder_interpreterNotFound;
+	public static String TclCheckBuilder_processing;
+	public static String TclCheckBuilder_retrievePackages;
 	public static String TclCheckBuilder_unknownPackage;
 	public static String TclCheckBuilder_unresolvedDependencies;
 	static {

@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
@@ -132,12 +133,13 @@ public class TclCheckBuilder implements IBuildParticipant,
 		}
 	}
 
-	public void endBuild() {
+	public void endBuild(IProgressMonitor monitor) {
 		if (buildType != STRUCTURE_BUILD) {
 			// Save packages provided by the project
 			manager.setInternalPackageNames(install, project, packageCollector
 					.getPackagesProvided());
 		}
+		monitor.subTask(Messages.TclCheckBuilder_retrievePackages);
 		// initialize manager caches after they are collected
 		final Set requiredPackages = packageCollector.getPackagesRequired();
 		if (!requiredPackages.isEmpty()) {
@@ -145,11 +147,14 @@ public class TclCheckBuilder implements IBuildParticipant,
 			manager.getPathsForPackagesWithDeps(install, requiredPackages);
 		}
 		// process all modules
+		int remainingWork = resourceToModuleInfos.size();
 		for (Iterator i = resourceToModuleInfos.entrySet().iterator(); i
 				.hasNext();) {
 			final Map.Entry entry = (Map.Entry) i.next();
 			final ISourceModule module = (ISourceModule) entry.getKey();
 			final ModuleInfo info = (ModuleInfo) entry.getValue();
+			monitor.subTask(NLS.bind(Messages.TclCheckBuilder_processing,
+					module.getElementName(), Integer.toString(remainingWork)));
 
 			for (Iterator j = info.requireDirectives.iterator(); j.hasNext();) {
 				TclPackageDeclaration pkg = (TclPackageDeclaration) j.next();
@@ -158,6 +163,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 				}
 			}
 			codeModels.clear();
+			--remainingWork;
 		}
 	}
 
