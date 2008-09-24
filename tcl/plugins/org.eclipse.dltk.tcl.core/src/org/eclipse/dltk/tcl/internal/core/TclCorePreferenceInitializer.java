@@ -35,8 +35,14 @@ public class TclCorePreferenceInitializer extends AbstractPreferenceInitializer 
 				TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_LOCAL, true);
 		preferences.setDefault(
 				TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_REMOTE, false);
-		preferences.setDefault(TclCorePreferences.CHECK_CONTENT_EXCLUDES,
-				"*.tar.gz;*.so;*.exe;*.msi;*.zip;lib*.a;lib*.so.*");
+
+		preferences
+				.setDefault(
+						TclCorePreferences.CHECK_CONTENT_EXCLUDES,
+						"*.tar.*;*.so;*.exe;*.dll;*.msi;*.zip;*.rar;*.a;*.la;*.so.*;"
+								+ "*.c;*.cpp;*.h;*.jp*;*.png;*.gif;*.htm*;*.txt;*.ps;"
+								+ "*.pdf;*.xsd;README;*.doc;*.xsl;*.ppt;*.odf;*.n;*.rc;"
+								+ "*.pdx;*.tap;*.pc;*.enc;*.xml");
 	}
 
 }
