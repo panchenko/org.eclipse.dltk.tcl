@@ -86,7 +86,12 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 		return TCL_CONTENT_TYPE;
 	}
 
+	private final TclCheckContentExclude contentExclude = new TclCheckContentExclude();
+
 	public boolean canValidateContent(IResource resource) {
+		if (contentExclude.isExcluded(resource.getName())) {
+			return false;
+		}
 		final IProject project = resource.getProject();
 		if (project == null) { // This is workspace root.
 			return false;
@@ -118,6 +123,9 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 	}
 
 	public boolean canValidateContent(File file) {
+		if (contentExclude.isExcluded(file.getName())) {
+			return false;
+		}
 		return TclPlugin
 				.getDefault()
 				.getPluginPreferences()
@@ -127,6 +135,9 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 	}
 
 	public boolean canValidateContent(IFileHandle file) {
+		if (contentExclude.isExcluded(file.getName())) {
+			return false;
+		}
 		return TclPlugin
 				.getDefault()
 				.getPluginPreferences()

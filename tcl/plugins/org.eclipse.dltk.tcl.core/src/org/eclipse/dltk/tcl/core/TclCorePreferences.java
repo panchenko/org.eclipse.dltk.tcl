@@ -21,4 +21,8 @@ public class TclCorePreferences {
 
 	public static final String CHECK_CONTENT_ANY_EXTENSION_REMOTE = "check_content.any_extension.remote";
 
+	public static final String CHECK_CONTENT_EXCLUDES = "check_content.excludes";
+
+	public static final char CHECK_CONTENT_EXCLUDE_SEPARATOR = ';';
+
 }
