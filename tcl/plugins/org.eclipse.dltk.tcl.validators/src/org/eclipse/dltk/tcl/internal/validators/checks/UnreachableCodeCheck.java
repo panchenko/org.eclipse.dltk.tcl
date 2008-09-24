@@ -46,7 +46,7 @@ public class UnreachableCodeCheck implements ITclCheck {
 
 					reporter.report(ICheckKinds.UNREACHABLE_CODE,
 							"Unreachable code", null, tclCommand.getStart(),
-							tclCommand.getEnd(), ITclErrorReporter.ERROR);
+							tclCommand.getEnd(), ITclErrorReporter.WARNING);
 					error = check = false;
 					return false;
 				} else {
