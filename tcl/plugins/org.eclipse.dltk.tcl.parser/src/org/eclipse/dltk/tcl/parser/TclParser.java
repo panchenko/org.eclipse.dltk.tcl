@@ -95,7 +95,7 @@ public class TclParser implements ITclParserOptions {
 
 	private void parseToBlock(List<TclCommand> block, String partSource,
 			int offset) {
-		SimpleTclParser simpleParser = new SimpleTclParser();
+		SimpleTclParser simpleParser = new SimpleTclParser(offset);
 
 		try {
 			PerformanceMonitor.getDefault().begin("RAW_PARSE_TIME");

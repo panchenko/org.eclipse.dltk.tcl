@@ -23,6 +23,16 @@ public class SimpleTclParser {
 		this.reporter = reporter;
 	}
 
+	public SimpleTclParser() {
+		this(0);
+	}
+
+	public SimpleTclParser(int sourceOffset) {
+		this.sourceOffset = sourceOffset;
+	}
+
+	private final int sourceOffset;
+
 	/**
 	 * Report an error. Should return true parser should continue work, or
 	 * false, if it should stop.
@@ -32,8 +42,9 @@ public class SimpleTclParser {
 	 */
 	public boolean handleError(ErrorDescription error) {
 		if (this.reporter != null) {
-			this.reporter.report(0, error.getMessage(), null,
-					error.getPosition(), error.getEnd() + 1, ITclErrorConstants.ERROR);
+			this.reporter.report(0, error.getMessage(), null, sourceOffset
+					+ error.getPosition(), sourceOffset + error.getEnd() + 1,
+					ITclErrorConstants.ERROR);
 		}
 		return true;
 	}
@@ -224,5 +235,4 @@ public class SimpleTclParser {
 		TclScript script = parse(scanner, false, null);
 		return script;
 	}
-
 }
