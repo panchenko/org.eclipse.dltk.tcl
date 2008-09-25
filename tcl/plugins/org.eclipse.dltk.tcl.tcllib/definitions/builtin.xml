@@ -4,7 +4,7 @@
     <children xsi:type="tclparse:Command" name="after">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="">
-          <arguments xsi:type="tclparse:TypedArgument" name="ms" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="ms" type="Integer"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0">
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
@@ -227,7 +227,7 @@
           <arguments xsi:type="tclparse:TypedArgument" name="outputChan"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
             <groups constant="-size">
-              <arguments xsi:type="tclparse:TypedArgument" name="size" type="NotNegative"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="size" type="Integer"/>
             </groups>
             <groups constant="-command">
               <arguments xsi:type="tclparse:TypedArgument" name="callback" type="CmdName"/>
@@ -282,7 +282,7 @@
           <arguments xsi:type="tclparse:Switch">
             <groups>
               <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="numChars" type="NotNegative"/>
+              <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="numChars" type="Integer"/>
             </groups>
             <groups>
               <arguments xsi:type="tclparse:Constant" lowerBound="0" name="-nonewline"/>
@@ -304,14 +304,14 @@
         </groups>
         <groups constant="truncate">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="length" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="length" type="Integer"/>
         </groups>
       </arguments>
     </children>
     <children xsi:type="tclparse:Command" name="clock" version="[8.5;-)">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
         <groups constant="add">
-          <arguments xsi:type="tclparse:TypedArgument" name="timeVal" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="timeVal" type="Integer"/>
           <arguments xsi:type="tclparse:Group" lowerBound="0" upperBound="-1">
             <arguments xsi:type="tclparse:TypedArgument" name="count" type="Index"/>
             <arguments xsi:type="tclparse:Switch" name="unit" checkPrefix="true">
@@ -343,7 +343,7 @@
           </arguments>
         </groups>
         <groups constant="format">
-          <arguments xsi:type="tclparse:TypedArgument" name="timeVal" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="timeVal" type="Integer"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
             <groups constant="-format">
               <arguments xsi:type="tclparse:TypedArgument" name="format"/>
@@ -390,7 +390,7 @@
           <arguments xsi:type="tclparse:Group" lowerBound="0" constant="-milliseconds"/>
         </groups>
         <groups constant="format">
-          <arguments xsi:type="tclparse:TypedArgument" name="clockValue" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="clockValue" type="Integer"/>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" name="options" checkPrefix="true">
             <groups constant="-format">
               <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -767,7 +767,7 @@
       <arguments xsi:type="tclparse:TypedArgument" name="outchan"/>
       <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" checkPrefix="true">
         <groups constant="-size">
-          <arguments xsi:type="tclparse:TypedArgument" name="size" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="size" type="Integer"/>
         </groups>
         <groups constant="-command">
           <arguments xsi:type="tclparse:TypedArgument" name="callback" type="CmdName"/>
@@ -1276,7 +1276,7 @@
       <arguments xsi:type="tclparse:TypedArgument" name="last" type="Index"/>
     </children>
     <children xsi:type="tclparse:Command" name="lrepeat">
-      <arguments xsi:type="tclparse:TypedArgument" name="number" type="NotNegative"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="number" type="Integer"/>
       <arguments xsi:type="tclparse:TypedArgument" upperBound="-1" name="element"/>
     </children>
     <children xsi:type="tclparse:Command" name="lreplace">
@@ -1365,7 +1365,7 @@
           <arguments xsi:type="tclparse:TypedArgument" name="file"/>
         </groups>
         <groups constant="break_on_malloc">
-          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="Integer"/>
         </groups>
         <groups constant="info"/>
         <groups constant="init">
@@ -1387,7 +1387,7 @@
           </arguments>
         </groups>
         <groups constant="trace_on_at_malloc">
-          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="Integer"/>
         </groups>
         <groups constant="validate">
           <arguments xsi:type="tclparse:Switch">
@@ -1712,7 +1712,7 @@
       <arguments xsi:type="tclparse:Switch">
         <groups>
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
-          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="numChars" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="numChars" type="Integer"/>
         </groups>
         <groups constant="-nonewline">
           <arguments xsi:type="tclparse:TypedArgument" name="channelId"/>
@@ -1744,7 +1744,7 @@
         <groups constant="broadcast">
           <arguments xsi:type="tclparse:TypedArgument" name="keyName"/>
           <arguments xsi:type="tclparse:Group" lowerBound="0" constant="-timeout">
-            <arguments xsi:type="tclparse:TypedArgument" name="milliseconds" type="NotNegative"/>
+            <arguments xsi:type="tclparse:TypedArgument" name="milliseconds" type="Integer"/>
           </arguments>
         </groups>
         <groups constant="delete">
@@ -1897,7 +1897,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="Integer"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
@@ -1909,7 +1909,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="Integer"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
@@ -1986,7 +1986,7 @@
         </groups>
         <groups constant="repeat">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="Integer"/>
         </groups>
         <groups constant="replace">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -2045,7 +2045,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="Integer"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
@@ -2057,7 +2057,7 @@
           </arguments>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
             <groups constant="-length">
-              <arguments xsi:type="tclparse:TypedArgument" name="int" type="NotNegative"/>
+              <arguments xsi:type="tclparse:TypedArgument" name="int" type="Integer"/>
             </groups>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="string1"/>
@@ -2132,7 +2132,7 @@
         </groups>
         <groups constant="repeat">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="count" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="count" type="Integer"/>
         </groups>
         <groups constant="replace">
           <arguments xsi:type="tclparse:TypedArgument" name="string"/>
@@ -2256,7 +2256,7 @@
     </children>
     <children xsi:type="tclparse:Command" name="time">
       <arguments xsi:type="tclparse:TypedArgument" name="script" type="Script"/>
-      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="count" type="NotNegative"/>
+      <arguments xsi:type="tclparse:TypedArgument" lowerBound="0" name="count" type="Integer"/>
     </children>
     <children xsi:type="tclparse:Command" name="trace">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
