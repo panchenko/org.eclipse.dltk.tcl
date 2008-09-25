@@ -1859,7 +1859,7 @@
               <arguments xsi:type="tclparse:TypedArgument" name="addr"/>
             </groups>
           </arguments>
-          <arguments xsi:type="tclparse:TypedArgument" name="port" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="port"/>
         </groups>
         <groups>
           <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1">
@@ -1872,7 +1872,7 @@
             <groups constant="-async"/>
           </arguments>
           <arguments xsi:type="tclparse:TypedArgument" name="host"/>
-          <arguments xsi:type="tclparse:TypedArgument" name="port" type="NotNegative"/>
+          <arguments xsi:type="tclparse:TypedArgument" name="port"/>
         </groups>
       </arguments>
     </children>
