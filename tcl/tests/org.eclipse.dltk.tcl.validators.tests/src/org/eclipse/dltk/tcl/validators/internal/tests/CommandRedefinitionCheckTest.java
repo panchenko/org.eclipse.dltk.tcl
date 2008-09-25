@@ -43,8 +43,8 @@ public class CommandRedefinitionCheckTest extends TestCase {
 	public void test002() throws Exception {
 		String source = "proc set {} {}; proc set {} {}; proc set {} {}";
 		List<Integer> errorCodes = new ArrayList<Integer>();
-		errorCodes.add(ICheckKinds.BUILTIN_COMMAND_REDEFINITION);
-		errorCodes.add(ICheckKinds.BUILTIN_COMMAND_REDEFINITION);
+		// errorCodes.add(ICheckKinds.BUILTIN_COMMAND_REDEFINITION);
+		// errorCodes.add(ICheckKinds.BUILTIN_COMMAND_REDEFINITION);
 		errorCodes.add(ICheckKinds.USER_COMMAND_REDEFINITION);
 		errorCodes.add(ICheckKinds.BUILTIN_COMMAND_REDEFINITION);
 		errorCodes.add(ICheckKinds.USER_COMMAND_REDEFINITION);

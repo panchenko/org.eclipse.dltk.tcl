@@ -171,7 +171,6 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 		String source = "proc cmd {arg {}} {puts alpha}";
 		List<Integer> errorCodes = new ArrayList<Integer>();
 		errorCodes.add(ICheckKinds.CHECK_BAD_ARG_DEFINITION);
-		errorCodes.add(ICheckKinds.CHECK_BAD_ARG_DEFINITION);
 		typedCheck(source, errorCodes);
 	}
 
