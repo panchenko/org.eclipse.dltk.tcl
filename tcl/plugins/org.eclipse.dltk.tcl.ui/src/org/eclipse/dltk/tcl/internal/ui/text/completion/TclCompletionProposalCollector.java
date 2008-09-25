@@ -42,6 +42,9 @@ public class TclCompletionProposalCollector extends
 		if (isIgnored(proposal.getKind())) {
 			return true;
 		}
+		if (true) {
+			return false; // FIXME something is missing below
+		}
 		String name = new String(proposal.getName());
 		String completion = new String(proposal.getCompletion());
 		// Filter duplicates, by name and model element.
