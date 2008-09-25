@@ -20,7 +20,8 @@ public class TclCatchProcessor extends AbstractTclCommandProcessor {
 	public TclCatchProcessor() {
 	}
 
-	public ASTNode process(TclStatement statement, ITclParser parser, ASTNode parent) {
+	public ASTNode process(TclStatement statement, ITclParser parser,
+			ASTNode parent) {
 		if (statement.getCount() >= 2) {
 			Expression e = statement.getAt(1);
 			TclVariableDeclaration variable = null;
@@ -73,8 +74,8 @@ public class TclCatchProcessor extends AbstractTclCommandProcessor {
 					Messages.TclProcProcessor_Wrong_Number_of_Arguments,
 					statement, ProblemSeverities.Error);
 		}
-		this.report(parser, "Parsing error.", statement,
-				ProblemSeverities.Error); // TODO appropriate message
+		// this.report(parser, "Parsing error.", statement,
+		// ProblemSeverities.Error); // TODO appropriate message
 		return null;
 	}
 }
