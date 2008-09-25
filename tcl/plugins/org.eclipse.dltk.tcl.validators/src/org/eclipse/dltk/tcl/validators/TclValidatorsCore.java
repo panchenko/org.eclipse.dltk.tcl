@@ -13,6 +13,7 @@
 package org.eclipse.dltk.tcl.validators;
 
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -41,6 +42,7 @@ public class TclValidatorsCore extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		TclPlugin.REPORT_PARSER_PROBLEMS = false;
 	}
 
 	/*
