@@ -57,6 +57,9 @@ public class CommandRedefinitionCheck implements ITclCheck {
 						String current = ((StringArgument) nameArgument)
 								.getValue();
 						current = processor.getQualifiedName(current);
+						if (current.startsWith("::")) {
+							current = current.substring(2);
+						}
 						Command[] definitions = processor
 								.getCommandDefinition(current);
 						if (definitions != null && definitions.length != 0)
@@ -68,9 +71,6 @@ public class CommandRedefinitionCheck implements ITclCheck {
 									ITclErrorReporter.WARNING);
 						Set<String> names = userCommands.keySet();
 						for (String name : names) {
-							if (current.startsWith("::")) {
-								current = current.substring(2);
-							}
 							if (name.equals(current)) {
 								final String msg = NLS
 										.bind(
