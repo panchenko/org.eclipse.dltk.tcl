@@ -27,9 +27,11 @@ public abstract class AbstractTclCommandProcessor implements
 		if (problemReporter == null) {
 			return;
 		}
-		problemReporter.reportProblem(new DefaultProblem(message, 0, null,
-				severity, start, end, parser.getCodeModel().getLineNumber(
-						start, end)));
+		if (TclPlugin.REPORT_PARSER_PROBLEMS) {
+			problemReporter.reportProblem(new DefaultProblem(message, 0, null,
+					severity, start, end, parser.getCodeModel().getLineNumber(
+							start, end)));
+		}
 	}
 
 	public void addToParent(ASTNode parent, ASTNode node) {

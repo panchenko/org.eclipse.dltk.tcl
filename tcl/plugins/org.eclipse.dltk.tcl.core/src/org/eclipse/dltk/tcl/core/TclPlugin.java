@@ -24,6 +24,8 @@ public class TclPlugin extends Plugin {
 	// The shared instance.
 	private static TclPlugin plugin;
 
+	public static boolean REPORT_PARSER_PROBLEMS = true;
+
 	/**
 	 * The constructor.
 	 */
