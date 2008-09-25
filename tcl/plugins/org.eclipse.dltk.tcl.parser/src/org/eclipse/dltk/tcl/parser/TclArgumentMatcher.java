@@ -17,22 +17,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.ISubstitution;
 import org.eclipse.dltk.tcl.ast.StringArgument;
-import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.ast.VariableReference;
 import org.eclipse.dltk.tcl.definitions.Argument;
 import org.eclipse.dltk.tcl.definitions.ArgumentType;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.definitions.ComplexArgument;
 import org.eclipse.dltk.tcl.definitions.Constant;
-import org.eclipse.dltk.tcl.definitions.DefinitionsFactory;
 import org.eclipse.dltk.tcl.definitions.Group;
 import org.eclipse.dltk.tcl.definitions.Switch;
 import org.eclipse.dltk.tcl.definitions.TypedArgument;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionUtils;
 import org.eclipse.dltk.tcl.parser.definitions.SynopsisBuilder;
 import org.eclipse.emf.common.util.EList;
 
@@ -48,6 +45,7 @@ public class TclArgumentMatcher {
 	private ISubstitutionManager substitutionManager;
 	private HashMap<Argument, int[]> mappings;
 	private Command definition;
+	private SynopsisBuilder synopsisBuilder = new SynopsisBuilder(false);
 
 	private static interface ISinglePositionRule {
 		boolean check(TclArgument argument, Argument definition,
@@ -322,7 +320,7 @@ public class TclArgumentMatcher {
 				result = sr;
 			} else if (result.getErrors().getCount() > sr.getErrors()
 					.getCount()
-					&& result.getArgumentsUsed() > sr.getArgumentsUsed()) {
+					&& result.getArgumentsUsed() >= sr.getArgumentsUsed()) {
 				result = sr;
 			} else if (result.getErrors().getCount() >= sr.getErrors()
 					.getCount()
@@ -338,9 +336,9 @@ public class TclArgumentMatcher {
 	}
 
 	private List<MatchResult> matchArgumentList(List<TclArgument> arguments,
-			int pos, List<Argument> definitionArguments, int defPos) {
+			int pos, List<Argument> definition, int defPos) {
 		List<MatchResult> results = new ArrayList<MatchResult>();
-		if (definitionArguments.size() == defPos) {
+		if (definition.size() == defPos) {
 			MatchResult result = new MatchResult();
 			result.setMatched(true);
 			result.setMatchWithErrors(false);
@@ -348,15 +346,34 @@ public class TclArgumentMatcher {
 			results.add(result);
 			return results; // End of match
 		}
-		Argument definitionArg = definitionArguments.get(defPos);
+		Argument definitionArg = definition.get(defPos);
 
 		List<MatchResult> list = matchDefinition(arguments, pos, definitionArg);
-		
+
+		if (list.size() == 0
+				|| (list.size() == 1 && !list.get(0).isMatched() && !list
+						.get(0).isImplicit())) {
+			if (arguments.size() > pos + 1) {
+				List<TclArgument> extraArgs = new ArrayList<TclArgument>();
+				extraArgs.add(arguments.get(pos));
+				List<MatchResult> srl = matchArgumentList(arguments, pos + 1,
+						definition, defPos);
+				for (MatchResult sr : srl) {
+					if (sr.isMatched()) {
+						reportExtraArguments(extraArgs, 0, sr.getErrors());
+						sr.setPriority(MatchResult.REGULAR);
+						sr.setArgumentsUsed(sr.getArgumentsUsed() + 1);
+						list.add(sr);
+					}
+				}
+			}
+		}
+
 		TclErrorCollector collector = new TclErrorCollector();
 		for (MatchResult r : list) {
 			if (r.isMatched() || r.isImplicit()) {
 				List<MatchResult> srl = matchArgumentList(arguments, pos
-						+ r.getArgumentsUsed(), definitionArguments, defPos + 1);
+						+ r.getArgumentsUsed(), definition, defPos + 1);
 				boolean matched = false;
 				for (MatchResult sr : srl) {
 					if (sr.isMatched()) {
@@ -422,8 +439,11 @@ public class TclArgumentMatcher {
 		if (definition instanceof Constant) {
 			matchConstant(arguments, pos, definition, results);
 			for (MatchResult result : results)
-				if (result.isMatched())
-					result.setPriority(MatchResult.IMPLICIT);
+				if (result.isMatched() && result.getArgumentsUsed() > 0) {
+					if (arguments.get(pos) instanceof StringArgument) {
+						result.setPriority(MatchResult.IMPLICIT);
+					}
+				}
 		} else if (definition instanceof TypedArgument) {
 			matchTypedArgument(arguments, pos, definition, results);
 		} else if (definition instanceof Group) {
@@ -492,7 +512,6 @@ public class TclArgumentMatcher {
 	private void matchSwitchArgument(List<TclArgument> arguments, int pos,
 			Argument definition, List<MatchResult> results) {
 		Switch switchDef = (Switch) definition;
-		EList<Group> groups = switchDef.getGroups();
 		int lowerBound = switchDef.getLowerBound();
 		int upperBound = switchDef.getUpperBound();
 		if (upperBound == -1) {
@@ -501,8 +520,7 @@ public class TclArgumentMatcher {
 		List<MatchResult> ress = new ArrayList<MatchResult>();
 		Map<MatchResult, Integer> counts = new HashMap<MatchResult, Integer>();
 
-		matchSwitch(arguments, pos, groups, switchDef.isCheckPrefix(), ress,
-				counts, 0, upperBound);
+		matchSwitch(arguments, pos, switchDef, ress, counts, 0, upperBound);
 
 		for (int i = 0; i < ress.size(); i++) {
 			MatchResult r = ress.get(i);
@@ -523,6 +541,23 @@ public class TclArgumentMatcher {
 			// results.add(r);
 			// }
 		}
+		if (ress.size() == 0 && arguments.size() > pos
+				&& SynopsisBuilder.isMode(switchDef)) {
+			if (arguments.get(pos) instanceof ISubstitution) {
+				MatchResult r = new MatchResult();
+				r.setArgumentsUsed(1);
+				r.setMatched(true);
+				r.setMatchWithErrors(false);
+				results.add(r);
+			} else {
+				MatchResult r = new MatchResult();
+				r.setArgumentsUsed(1);
+				r.setMatched(true);
+				reportMissingSwitch(switchDef, r, arguments.get(pos));
+				r.setMatchWithErrors(true);
+				results.add(r);
+			}
+		}
 		// Add empty variant if multiplicity support it.
 		if (ress.size() == 0 && lowerBound > 0) {
 			// We should report error if not argument are specified, but
@@ -535,7 +570,7 @@ public class TclArgumentMatcher {
 			if (arguments.size() > pos) {
 				a = arguments.get(pos);
 			}
-			reportMissingSwitchArgument(groups, r, a);
+			reportMissingSwitch(switchDef, r, a);
 			results.add(r);
 		} else if (lowerBound == 0) {
 			MatchResult r = new MatchResult();
@@ -546,127 +581,41 @@ public class TclArgumentMatcher {
 		}
 	}
 
-	private String collectGroupConstants(List<Group> groups,
-			TclArgument tclArgument) {
-		String prefix = null;
-		if (tclArgument != null && tclArgument instanceof StringArgument) {
-			prefix = ((StringArgument) tclArgument).getValue();
-		}
-		StringBuffer args = new StringBuffer();
-		for (int i = 0; i < groups.size(); i++) {
-			String cons = groups.get(i).getConstant();
-			if (cons == null || cons.length() == 0) {
-				cons = extractGroupPseudoConstant(groups.get(i));
-			}
-			boolean add = true;
-			if (prefix != null && cons != null && !cons.startsWith(prefix)) {
-				add = false;
-			}
-			if (add && cons != null && cons.length() > 0) {
-				if (args.length() == 0) {
-					args.append(cons);
-				} else {
-					args.append("," + cons);
-				}
-			}
-		}
-		return args.toString();
-	}
-
-	private String extractGroupPseudoConstant(Group group) {
-		EList<Argument> arguments = group.getArguments();
-		if (arguments.size() > 0) {
-			Argument argument = arguments.get(0);
-			if (argument instanceof Constant) {
-				return argument.getName();
-			} else if (argument instanceof TypedArgument) {
-				return argument.getName();
-			}
-		}
-		return null;
-	}
-
-	public boolean matchGroupPrefix(List<TclArgument> arguments, int pos,
-			List<Group> groups, List<Group> matchedGroups) {
-		if (pos >= arguments.size()) {
-			matchedGroups.addAll(groups);
-			return false;
-		}
-		TclArgument argument = arguments.get(pos);
-		if (argument instanceof Substitution) {
-			matchedGroups.addAll(groups);
-			return true;
-		} else if (argument instanceof VariableReference) {
-			matchedGroups.addAll(groups);
-			return true;
-		} else if (argument instanceof ComplexString) {
-			matchedGroups.addAll(groups);
-			return true;
-		} else if (argument instanceof StringArgument) {
-			List<Group> noPrefixGroups = new ArrayList<Group>();
-			List<Group> notMatchedGroups = new ArrayList<Group>();
-			String value = ((StringArgument) argument).getValue();
-			for (Group group : groups) {
-				if (group.getConstant() != null
-						&& group.getConstant().length() != 0) {
-					matchedGroups.add(group);
-					if (group.getConstant().equals(value)) {
-						matchedGroups.clear();
-						matchedGroups.add(group);
-						return true;
-					}
-				} else {
-					noPrefixGroups.add(group);
-				}
-			}
-			for (int i = 0; i < value.length(); i++) {
-				for (Group group : matchedGroups) {
-					String constant = group.getConstant();
-					if (constant.length() <= i
-							|| value.charAt(i) != constant.charAt(i)) {
-						notMatchedGroups.add(group);
-					}
-				}
-				if (notMatchedGroups.size() != 0) {
-					matchedGroups.removeAll(notMatchedGroups);
-					notMatchedGroups.clear();
-				}
-			}
-			if (matchedGroups.size() < 1) {
-				matchedGroups.addAll(noPrefixGroups);
-				return true;
-			} else if (matchedGroups.size() > 1) {
-				return false;
-			} else {
-				((StringArgument) argument).setValue(matchedGroups.get(0)
-						.getConstant());
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private void matchSwitch(List<TclArgument> arguments, int pos,
-			List<Group> groups, boolean checkPrefix, List<MatchResult> ress,
-			Map<MatchResult, Integer> counts, int count, int upperBound) {
+	private void matchSwitch(List<TclArgument> arguments, int pos, Switch sw,
+			List<MatchResult> ress, Map<MatchResult, Integer> counts,
+			int count, int upperBound) {
 		TclErrorCollector errors = new TclErrorCollector();
 		if (pos >= arguments.size()) {
 			return;
 		}
-		List<MatchResult> list = new ArrayList<MatchResult>();
-		List<Group> matchedGroups = new ArrayList<Group>();
 
-		boolean matched = true;
-		if (checkPrefix) {
-			matched = matchGroupPrefix(arguments, pos, groups, matchedGroups);
-			if (matched)
-				for (int i = 0; i < matchedGroups.size(); i++) {
-					matchGroupArgument(arguments, pos, matchedGroups.get(i),
-							list);
+		List<MatchResult> list = new ArrayList<MatchResult>();
+
+		Map<Group, Argument> fitGroupMap = getFitGroupMap(arguments, pos, sw);
+
+		Map<String, List<Group>> constFitGroupMap = new HashMap<String, List<Group>>();
+		for (Group group : fitGroupMap.keySet()) {
+			Argument selector = fitGroupMap.get(group);
+			if (selector instanceof Constant) {
+				List<Group> groups = constFitGroupMap.get(selector);
+				if (groups == null) {
+					groups = new ArrayList<Group>();
 				}
+				groups.add(group);
+				constFitGroupMap.put(selector.getName(), groups);
+				fitGroupMap.remove(fitGroupMap.get(group));
+			}
+		}
+		if (constFitGroupMap.size() == 1) {
+			for (String string : constFitGroupMap.keySet()) {
+				((StringArgument) arguments.get(pos)).setValue(string);
+				for (Group group : constFitGroupMap.get(string)) {
+					matchGroupArgument(arguments, pos, group, list);
+				}
+			}
 		} else {
-			for (int i = 0; i < groups.size(); i++) {
-				matchGroupArgument(arguments, pos, groups.get(i), list);
+			for (Group group : fitGroupMap.keySet()) {
+				matchGroupArgument(arguments, pos, group, list);
 			}
 		}
 
@@ -680,13 +629,14 @@ public class TclArgumentMatcher {
 					continue;
 				}
 				if (r.getArgumentsUsed() > 0) {
-					matchSwitch(arguments, pos + r.getArgumentsUsed(), groups,
-							checkPrefix, ress2, counts, count + 1, upperBound);
+					matchSwitch(arguments, pos + r.getArgumentsUsed(), sw,
+							ress2, counts, count + 1, upperBound);
 					for (int k = 0; k < ress2.size(); k++) {
 						MatchResult r2 = ress2.get(k);
 						if (r2.isMatched() && !r2.isMatchWithErrors()) {
 							r2.setArgumentsUsed(r.getArgumentsUsed()
 									+ r2.getArgumentsUsed());
+							r2.setSummaryPriorityOf(r, r2);
 							r2.getBlockArguments()
 									.addAll(r.getBlockArguments());
 							r2.getErrors().addAll(r.getErrors());
@@ -711,14 +661,11 @@ public class TclArgumentMatcher {
 		if (upperBound == -1) {
 			upperBound = Integer.MAX_VALUE;
 		}
+
+		Constant constant = DefinitionUtils.extractGroupPseudoConstant(group);
 		List<Argument> groupArguments = group.getArguments();
-		if (group.getConstant() != null && group.getConstant().length() != 0) {
+		if (constant != null) {
 			List<Argument> newArgs = new ArrayList<Argument>();
-			Constant constant = DefinitionsFactory.eINSTANCE.createConstant();
-			constant.setValue(group.getConstant());
-			constant.setLowerBound(1);
-			constant.setUpperBound(1);
-			constant.setStrictMatch(true);
 			newArgs.add(constant);
 			newArgs.addAll(group.getArguments());
 			groupArguments = newArgs;
@@ -752,7 +699,7 @@ public class TclArgumentMatcher {
 			r.setArgumentsUsed(0);
 			r.setMatched(false);
 			r.setMatchWithErrors(false);
-			reportGroupConstantMissing(group, r);
+			reportMissingGroup(group, r);
 			results.add(r);
 		} else if (/* ress.size() == 0 && */lowerBound == 0) {
 			// Add empty variant if multiplicity support it.
@@ -794,6 +741,7 @@ public class TclArgumentMatcher {
 						if (r2.isMatched()/* && !r2.isMatchWithErrors() */) {
 							r2.setArgumentsUsed(r.getArgumentsUsed()
 									+ r2.getArgumentsUsed());
+							r2.setSummaryPriorityOf(r, r2);
 							r2.getBlockArguments()
 									.addAll(r.getBlockArguments());
 							r2.getErrors().addAll(r.getErrors());
@@ -813,7 +761,7 @@ public class TclArgumentMatcher {
 	private void matchConstant(List<TclArgument> arguments, int pos,
 			Argument definition, List<MatchResult> results) {
 		final Constant constDefinition = (Constant) definition;
-		final String value = constDefinition.getValue();
+		final String value = constDefinition.getName();
 		matchSinglePositionArgument(results, arguments, pos, definition,
 				new ISinglePositionRule() {
 					public boolean check(TclArgument argument,
@@ -852,6 +800,138 @@ public class TclArgumentMatcher {
 					}
 
 				}, false);
+	}
+
+	private void matchSinglePositionArgument(List<MatchResult> results,
+			List<TclArgument> arguments, int pos, Argument definitionArg,
+			ISinglePositionRule rule, boolean returnMaxMatchedResult) {
+		int lowerBound = definitionArg.getLowerBound();
+		int upperBound = definitionArg.getUpperBound();
+		if (upperBound == -1) {
+			upperBound = Integer.MAX_VALUE;
+		}
+		int count = 0;
+		List<Integer> scriptPositions = new ArrayList<Integer>();
+		List<ComplexArgumentResult> complexArguments = new ArrayList<ComplexArgumentResult>();
+		// We need to check for low
+		Map<Integer, TclErrorCollector> collectors = new HashMap<Integer, TclErrorCollector>();
+		for (int i = 0; i < arguments.size() - pos; i++) {
+			TclErrorCollector collector = new TclErrorCollector();
+			collectors.put(Integer.valueOf(i), collector);
+			TclArgument a = arguments.get(pos + i);
+			if (rule.check(a, definitionArg, scriptPositions, pos + i,
+					collector, complexArguments)) {
+				count++;
+			} else {
+				break;
+			}
+			// Do not, check extra arguments
+			if (count == upperBound) {
+				break;
+			}
+		}
+		if (count < lowerBound) {
+			MatchResult r = new MatchResult();
+			r.setArgumentsUsed(count);
+			r.setMatched(count > 0);
+			r.setMatchWithErrors(true);
+			int start = this.command.getStart();
+			int end = this.command.getEnd();
+			if (arguments.size() > pos) {
+				TclArgument arg = arguments.get(pos);
+				start = arg.getStart();
+				end = arg.getEnd();
+			}
+			reportMissingArgument(definitionArg, r, start, end);
+			// Add argument errors
+			for (Integer integer : collectors.keySet()) {
+				if (integer.intValue() <= count) {
+					r.getErrors().addAll(collectors.get(integer));
+				}
+			}
+			r.getMapping().put(definitionArg, new int[] { pos, pos + count });
+			results.add(r);
+		}
+		if (count >= lowerBound) {
+			int up = count;
+			if (up > upperBound) {
+				up = upperBound;
+			}
+			int from = lowerBound;
+			if (returnMaxMatchedResult) {
+				from = count;
+			}
+			for (int i = from; i <= up; i++) {
+				MatchResult r = new MatchResult();
+				r.setArgumentsUsed(i);
+				r.setMatched(true);
+				r.setMatchWithErrors(false);
+				for (Integer integer : scriptPositions) {
+					if (integer.intValue() < pos + i) {
+						r.getBlockArguments().add(integer);
+					}
+				}
+				for (ComplexArgumentResult arg : complexArguments) {
+					if (arg.getArgumentNumber() < pos + i) {
+						r.getComplexArguments().add(arg);
+					}
+				}
+				// Add argument errors
+				for (Integer integer : collectors.keySet()) {
+					if (integer.intValue() <= i) {
+						r.getErrors().addAll(collectors.get(integer));
+					}
+				}
+				r.getMapping().put(definitionArg, new int[] { pos, pos + i });
+				results.add(r);
+			}
+		}
+		// if (lowerBound == 0) {
+		// // Add empty variant if multiplicity support it.
+		// MatchResult r = new MatchResult();
+		// r.setArgumentsUsed(0);
+		// r.setMatched(true);
+		// r.setMatchWithErrors(false);
+		// results.add(r);
+		// }
+		// if (count > upperBound) {
+		// for (int i = upperBound + 1; i <= count; i++) {
+		// MatchResult r = new MatchResult();
+		// r.setArgumentsUsed(i);
+		// r.setMatched(true);
+		// r.setMatchWithErrors(true);
+		// TclArgument begin = arguments.get(pos + upperBound);
+		// TclArgument end = begin;
+		// if (pos + count < arguments.size()) {
+		// end = arguments.get(pos + count);
+		// } else {
+		// end = arguments.get(arguments.size() - 1);
+		// }
+		// r.getErrors().report(
+		// ITclErrorReporter.INVALID_ARGUMENT_COUNT,
+		// "To many arguments:"
+		// + definitionToString(definitionArg),
+		// begin.getEnd(), end.getEnd(), ITclErrorReporter.ERROR);
+		// for (Integer integer : scriptPositions) {
+		// if (integer.intValue() < pos + i) {
+		// r.getBlockArguments().add(integer);
+		// }
+		// }
+		// for (ComplexArgumentResult arg : complexArguments) {
+		// if (arg.getArgumentNumber() < pos + i) {
+		// r.getComplexArguments().add(arg);
+		// }
+		// }
+		// // Add argument errors
+		// for (Integer integer : collectors.keySet()) {
+		// if (integer.intValue() <= i) {
+		// r.getErrors().addAll(collectors.get(integer));
+		// }
+		// }
+		// r.getMapping().put(definitionArg, new int[] { pos, pos + i });
+		// results.add(r);
+		// }
+		// }
 	}
 
 	protected boolean checkType(TclArgument argument, ArgumentType type,
@@ -967,175 +1047,117 @@ public class TclArgumentMatcher {
 		return result;
 	}
 
-	private void matchSinglePositionArgument(List<MatchResult> results,
-			List<TclArgument> arguments, int pos, Argument definitionArg,
-			ISinglePositionRule rule, boolean returnMaxMatchedResult) {
-		int lowerBound = definitionArg.getLowerBound();
-		int upperBound = definitionArg.getUpperBound();
-		if (upperBound == -1) {
-			upperBound = Integer.MAX_VALUE;
+	private Map<Group, Argument> getFitGroupMap(List<TclArgument> arguments,
+			int pos, Switch sw) {
+		// List<Group> fit = new ArrayList<Group>();
+		Map<Group, Argument> fit = new HashMap<Group, Argument>();
+		String prefix = null;
+		TclArgument tclArgument = null;
+		if (arguments != null && pos < arguments.size()) {
+			tclArgument = arguments.get(pos);
+			if (tclArgument != null) {
+				if (tclArgument instanceof StringArgument) {
+					prefix = ((StringArgument) tclArgument).getValue();
+				}
+			} else
+				return fit;
 		}
-		int count = 0;
-		List<Integer> scriptPositions = new ArrayList<Integer>();
-		List<ComplexArgumentResult> complexArguments = new ArrayList<ComplexArgumentResult>();
-		// We need to check for low
-		Map<Integer, TclErrorCollector> collectors = new HashMap<Integer, TclErrorCollector>();
-		for (int i = 0; i < arguments.size() - pos; i++) {
-			TclErrorCollector collector = new TclErrorCollector();
-			collectors.put(Integer.valueOf(i), collector);
-			TclArgument a = arguments.get(pos + i);
-			if (rule.check(a, definitionArg, scriptPositions, pos + i,
-					collector, complexArguments)) {
-				count++;
+		Map<Group, Argument> selectorsMap = getSwitchSelectorMap(sw);
+		for (Group group : selectorsMap.keySet()) {
+			Argument selector = selectorsMap.get(group);
+			if (selector instanceof Constant) {
+				if (prefix != null) {
+					if (sw.isCheckPrefix()
+							&& selector.getName().startsWith(prefix)) {
+						fit.put(group, selector);
+					}
+					if (selector.getName().equals(prefix)) {
+						fit.clear();
+						fit.put(group, selector);
+						break;
+					}
+				}
+			} else if (selector instanceof TypedArgument) {
+				List<MatchResult> ress = matchDefinition(arguments, pos,
+						selector);
+				for (MatchResult r : ress) {
+					if (r.isMatched()) {
+						fit.put(group, selector);
+						break;
+					}
+				}
 			} else {
-				break;
-			}
-			// Do not, check extra arguments
-			if (count == upperBound) {
-				break;
+				fit.put(group, selector);
 			}
 		}
-		if (count < lowerBound) {
-			MatchResult r = new MatchResult();
-			r.setArgumentsUsed(count);
-			r.setMatched(count > 0);
-			r.setMatchWithErrors(true);
-			int start = this.command.getStart();
-			int end = this.command.getEnd();
-			if (arguments.size() > pos) {
-				TclArgument arg = arguments.get(pos);
-				start = arg.getStart();
-				end = arg.getEnd();
-			}
-			reportMissingArgument(definitionArg, r, start, end);
-			// Add argument errors
-			for (Integer integer : collectors.keySet()) {
-				if (integer.intValue() <= count) {
-					r.getErrors().addAll(collectors.get(integer));
-				}
-			}
-			r.getMapping().put(definitionArg, new int[] { pos, pos + count });
-			results.add(r);
-		}
-		if (count >= lowerBound) {
-			int up = count;
-			if (up > upperBound) {
-				up = upperBound;
-			}
-			int from = lowerBound;
-			if (returnMaxMatchedResult) {
-				from = count;
-			}
-			for (int i = from; i <= up; i++) {
-				MatchResult r = new MatchResult();
-				r.setArgumentsUsed(i);
-				r.setMatched(true);
-				r.setMatchWithErrors(false);
-				for (Integer integer : scriptPositions) {
-					if (integer.intValue() < pos + i) {
-						r.getBlockArguments().add(integer);
-					}
-				}
-				for (ComplexArgumentResult arg : complexArguments) {
-					if (arg.getArgumentNumber() < pos + i) {
-						r.getComplexArguments().add(arg);
-					}
-				}
-				// Add argument errors
-				for (Integer integer : collectors.keySet()) {
-					if (integer.intValue() <= i) {
-						r.getErrors().addAll(collectors.get(integer));
-					}
-				}
-				r.getMapping().put(definitionArg, new int[] { pos, pos + i });
-				results.add(r);
-			}
-		}
-		if (lowerBound == 0) {
-			// Add empty variant if multiplicity support it.
-			MatchResult r = new MatchResult();
-			r.setArgumentsUsed(0);
-			r.setMatched(true);
-			r.setMatchWithErrors(false);
-			results.add(r);
-		}
-		// if (count > upperBound) {
-		// for (int i = upperBound + 1; i <= count; i++) {
-		// MatchResult r = new MatchResult();
-		// r.setArgumentsUsed(i);
-		// r.setMatched(true);
-		// r.setMatchWithErrors(true);
-		// TclArgument begin = arguments.get(pos + upperBound);
-		// TclArgument end = begin;
-		// if (pos + count < arguments.size()) {
-		// end = arguments.get(pos + count);
-		// } else {
-		// end = arguments.get(arguments.size() - 1);
-		// }
-		// r.getErrors().report(
-		// ITclErrorReporter.INVALID_ARGUMENT_COUNT,
-		// "To many arguments:"
-		// + definitionToString(definitionArg),
-		// begin.getEnd(), end.getEnd(), ITclErrorReporter.ERROR);
-		// for (Integer integer : scriptPositions) {
-		// if (integer.intValue() < pos + i) {
-		// r.getBlockArguments().add(integer);
-		// }
-		// }
-		// for (ComplexArgumentResult arg : complexArguments) {
-		// if (arg.getArgumentNumber() < pos + i) {
-		// r.getComplexArguments().add(arg);
-		// }
-		// }
-		// // Add argument errors
-		// for (Integer integer : collectors.keySet()) {
-		// if (integer.intValue() <= i) {
-		// r.getErrors().addAll(collectors.get(integer));
-		// }
-		// }
-		// r.getMapping().put(definitionArg, new int[] { pos, pos + i });
-		// results.add(r);
-		// }
-		// }
+		return fit;
 	}
 
-	private String definitionToString(Argument definitionArg) {
-		if (definitionArg instanceof Constant) {
-			return ((Constant) definitionArg).getValue();
-		} else if (definitionArg instanceof TypedArgument) {
-			return ((TypedArgument) definitionArg).getName();
-		} else if (definitionArg instanceof Group) {
-			Group g = (Group) definitionArg;
-			if (g.getConstant() != null) {
-				return g.getConstant();
+	public Map<Group, Argument> getSwitchSelectorMap(Switch sw) {
+		Map<Group, Argument> map = new HashMap<Group, Argument>();
+		for (Group group : sw.getGroups()) {
+			map.put(group, getFirstSelector(group));
+		}
+		return map;
+	}
+
+	public Argument getFirstSelector(Argument definition) {
+		Argument selector = null;
+		if (definition instanceof Constant
+				|| definition instanceof TypedArgument
+				|| definition instanceof ComplexArgument) {
+			selector = DefinitionUtils.copyArgument(definition);
+		} else if (definition instanceof Group) {
+			Group group = (Group) definition;
+			Constant constant = DefinitionUtils
+					.extractGroupPseudoConstant(group);
+			if (constant != null) {
+				selector = constant;
+			} else if (group.getArguments().size() > 0) {
+				for (int i = 0; i < group.getArguments().size(); i++) {
+					if (group.getArguments().get(i).getLowerBound() > 0) {
+						selector = getFirstSelector(group.getArguments().get(i));
+						break;
+					}
+				}
 			}
 		}
-		return "";
+		return selector;
+	}
+
+	public List<Argument> getFinalSelectors(Argument definition) {
+		List<Argument> selectors = new ArrayList<Argument>();
+		if (definition instanceof Constant
+				|| definition instanceof TypedArgument
+				|| definition instanceof ComplexArgument) {
+			selectors.add(DefinitionUtils.copyArgument(definition));
+		} else if (definition instanceof Group) {
+			Group group = (Group) definition;
+			Constant constant = DefinitionUtils
+					.extractGroupPseudoConstant(group);
+			if (constant != null) {
+				selectors.add(constant);
+			} else if (group.getArguments().size() > 0) {
+				for (int i = 0; i < group.getArguments().size(); i++) {
+					if (group.getArguments().get(i).getLowerBound() > 0) {
+						selectors.addAll(getFinalSelectors(group.getArguments()
+								.get(i)));
+						break;
+					}
+				}
+			}
+		} else if (definition instanceof Switch) {
+			Switch sw = (Switch) definition;
+			for (Group group : sw.getGroups()) {
+				selectors.addAll(getFinalSelectors(group));
+			}
+		}
+		return selectors;
 	}
 
 	public TclErrorCollector getErrorReporter() {
 		return this.errors;
 	}
-
-	private String getSynopsis() {
-		SynopsisBuilder synopsis = new SynopsisBuilder(this.definition);
-		String synText = synopsis.toString();
-
-		if (synText.length() > 0) {
-			return synText;
-		}
-		return "";
-	}
-
-	//
-	// private String getShortSynopsis() {
-	// SynopsisBuilder synopsis = new SynopsisBuilder(this.command);
-	// String synText = synopsis.toString();
-	// if (synText.length() > 0) {
-	// return synText;
-	// }
-	// return "";
-	// }
 
 	private String[] getExtraArgs() {
 		return null;
@@ -1171,8 +1193,11 @@ public class TclArgumentMatcher {
 							MessageFormat
 									.format(
 											Messages.TclArgumentMatcher_Argument_Of_Type_ExpectedDetail,
-											new Object[] { type.getName(),
-													argumentToString(argument),
+											new Object[] {
+													synopsisBuilder
+															.typeToString(type),
+													synopsisBuilder
+															.argumentToString(argument),
 													additional }),
 							getExtraArgs(), argument.getStart(), argument
 									.getEnd(), ITclErrorReporter.ERROR);
@@ -1183,8 +1208,11 @@ public class TclArgumentMatcher {
 							MessageFormat
 									.format(
 											Messages.TclArgumentMatcher_Argument_Of_Type_Expected,
-											new Object[] { type.getName(),
-													argumentToString(argument) }),
+											new Object[] {
+													synopsisBuilder
+															.typeToString(type),
+													synopsisBuilder
+															.argumentToString(argument) }),
 							getExtraArgs(), argument.getStart(), argument
 									.getEnd(), ITclErrorReporter.ERROR);
 		}
@@ -1207,52 +1235,97 @@ public class TclArgumentMatcher {
 
 	private void reportMissingArgument(Argument definitionArg, MatchResult r,
 			int start, int end) {
-		String value = MessageFormat.format(
-				Messages.TclArgumentMatcher_Missing_Argument,
-				new Object[] { definitionToString(definitionArg) });
+		String value;
+		String arg = synopsisBuilder.definitionToString(DefinitionUtils
+				.minimizeBounds(definitionArg));
+		if (definitionArg instanceof TypedArgument) {
+			String type = synopsisBuilder.typeToString(
+					((TypedArgument) definitionArg).getType()).toLowerCase();
+			value = MessageFormat.format(
+					Messages.TclArgumentMatcher_Missing_TypedArgument,
+					new Object[] { type, arg });
+		} else {
+			value = MessageFormat.format(
+					Messages.TclArgumentMatcher_Missing_Argument,
+					new Object[] { arg });
+		}
 		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, value,
 				getExtraArgs(), start, end, ITclErrorReporter.ERROR);
 	}
 
-	private String argumentToString(TclArgument argument) {
-		if (argument instanceof StringArgument) {
-			return ((StringArgument) argument).getValue();
-		} else if (argument instanceof ComplexString) {
-			ComplexString complexString = (ComplexString) argument;
-			StringBuffer buffer = new StringBuffer();
-			EList<TclArgument> arguments = complexString.getArguments();
-			for (TclArgument tclArgument : arguments) {
-				buffer.append(argumentToString(tclArgument));
-			}
-			return buffer.toString();
-		} else if (argument instanceof VariableReference) {
-			return ((VariableReference) argument).getName();
-		} else if (argument instanceof Substitution) {
-			return Messages.TclArgumentMatcher_Tcl_Substitution_Display;
+	private void reportMissingArguments(List<Argument> definitions,
+			MatchResult r, int start, int end) {
+		if (definitions.size() == 1) {
+			reportMissingArgument(definitions.get(0), r, start, end);
+		} else {
+			String value = MessageFormat.format(
+					Messages.TclArgumentMatcher_Missing_Argument,
+					new Object[] { synopsisBuilder
+							.definitionToString(definitions) });
+			r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, value,
+					getExtraArgs(), start, end, ITclErrorReporter.ERROR);
 		}
-		return null;
 	}
 
-	private void reportGroupConstantMissing(Group group, MatchResult r) {
+	private void reportMissingGroup(Group group, MatchResult r) {
+		Argument selector = getFirstSelector(group);
 		String message = MessageFormat.format(
-				Messages.TclArgumentMatcher_Missing_Group_Argument,
-				new Object[] { group.getConstant() });
+				Messages.TclArgumentMatcher_Missing_Argument,
+				new Object[] { synopsisBuilder.definitionToString(selector) });
 		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, message,
 				getExtraArgs(), this.command.getStart(), this.command.getEnd(),
 				ITclErrorReporter.ERROR);
 	}
 
-	private void reportMissingSwitchArgument(EList<Group> groups,
-			MatchResult r, TclArgument tclArgument) {
-		String possibly = collectGroupConstants(groups, tclArgument);
-		String message = MessageFormat.format(
-				Messages.TclArgumentMatcher_Missing_Switch_Argument,
-				new Object[] { possibly });
-		if (possibly.length() == 0) {
+	private void reportMissingSwitch(Switch sw, MatchResult r,
+			TclArgument tclArgument) {
+		List<Argument> replacable = new ArrayList<Argument>();
+		if (DefinitionUtils.isComplexScript(sw, replacable)) {
+			reportMissingArguments(replacable, r, this.command.getStart(),
+					this.command.getEnd());
+			return;
+		}
+		List<TclArgument> arguments = new ArrayList<TclArgument>();
+		arguments.add(tclArgument);
+		Map<Group, Argument> fitGroups = getFitGroupMap(arguments, 0, sw);
+		boolean matched = true;
+		List<Argument> selectors = new ArrayList<Argument>();
+		if (fitGroups.size() == 0) {
+			matched = false;
+			for (Group group : sw.getGroups()) {
+				selectors.addAll(getFinalSelectors(group));
+			}
+		} else {
+			for (Group group : sw.getGroups()) {
+				if (fitGroups.containsKey(group))
+					selectors.addAll(getFinalSelectors(group));
+			}
+		}
+		String expected = synopsisBuilder.definitionToList(DefinitionUtils
+				.minimizeBounds(selectors));
+		String message = "";
+		int code = 0;
+		if (tclArgument != null) {
+			message = MessageFormat.format(
+					Messages.TclArgumentMatcher_Invalid_Arguments_And_Expected,
+					new Object[] { expected,
+							synopsisBuilder.argumentToString(tclArgument) });
+			code = ITclErrorReporter.INVALID_ARGUMENT_VALUE;
+			r.getErrors().report(code, message, getExtraArgs(),
+					tclArgument.getStart(), tclArgument.getEnd(),
+					ITclErrorReporter.ERROR);
+			return;
+		} else {
+			message = MessageFormat.format(
+					Messages.TclArgumentMatcher_Missing_Switch_Argument,
+					new Object[] { expected });
+			code = ITclErrorReporter.MISSING_ARGUMENT;
+		}
+		if (expected.length() == 0) {
 			message = Messages.TclArgumentMatcher_Missing_Switch_Arg;
 		}
-		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, message,
-				getExtraArgs(), this.command.getStart(), this.command.getEnd(),
+		r.getErrors().report(code, message, getExtraArgs(),
+				this.command.getStart(), this.command.getEnd(),
 				ITclErrorReporter.ERROR);
 	}
 

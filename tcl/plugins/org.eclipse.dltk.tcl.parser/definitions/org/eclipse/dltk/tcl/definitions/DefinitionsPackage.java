@@ -250,22 +250,13 @@ public interface DefinitionsPackage extends EPackage {
 	int CONSTANT__NAME = ARGUMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONSTANT__VALUE = ARGUMENT_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Strict Match</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONSTANT__STRICT_MATCH = ARGUMENT_FEATURE_COUNT + 1;
+	int CONSTANT__STRICT_MATCH = ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Constant</em>' class.
@@ -274,7 +265,7 @@ public interface DefinitionsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONSTANT_FEATURE_COUNT = ARGUMENT_FEATURE_COUNT + 2;
+	int CONSTANT_FEATURE_COUNT = ARGUMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.definitions.impl.GroupImpl <em>Group</em>}' class.
@@ -702,17 +693,6 @@ public interface DefinitionsPackage extends EPackage {
 	EClass getConstant();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.definitions.Constant#getValue <em>Value</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see org.eclipse.dltk.tcl.definitions.Constant#getValue()
-	 * @see #getConstant()
-	 * @generated
-	 */
-	EAttribute getConstant_Value();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.definitions.Constant#isStrictMatch <em>Strict Match</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -993,14 +973,6 @@ public interface DefinitionsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass CONSTANT = eINSTANCE.getConstant();
-
-		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONSTANT__VALUE = eINSTANCE.getConstant_Value();
 
 		/**
 		 * The meta object literal for the '<em><b>Strict Match</b></em>' attribute feature.

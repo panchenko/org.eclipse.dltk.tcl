@@ -305,7 +305,7 @@ public class TclParserUtils implements ITclParserOptions {
 	private static List<StringBuilder> getSynopsisArgInfo(Argument arg, int pos) {
 		List<StringBuilder> list = new ArrayList<StringBuilder>();
 		if (arg instanceof Constant) {
-			list.add(new StringBuilder(((Constant) arg).getValue()));
+			list.add(new StringBuilder(((Constant) arg).getName()));
 		} else if (arg instanceof TypedArgument) {
 			list.add(new StringBuilder(((TypedArgument) arg).getName()));
 		} else if (arg instanceof Group) {
@@ -397,8 +397,8 @@ public class TclParserUtils implements ITclParserOptions {
 		return list;
 	}
 
-	private static List<StringBuilder> concatSynopsises(List<StringBuilder> prefixes,
-			List<StringBuilder> ss) {
+	private static List<StringBuilder> concatSynopsises(
+			List<StringBuilder> prefixes, List<StringBuilder> ss) {
 		List<StringBuilder> newList = new ArrayList<StringBuilder>();
 		if (prefixes.size() == 0)
 			return ss;

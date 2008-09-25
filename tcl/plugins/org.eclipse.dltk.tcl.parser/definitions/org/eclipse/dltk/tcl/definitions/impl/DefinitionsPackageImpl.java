@@ -299,17 +299,8 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConstant_Value() {
-		return (EAttribute)constantEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getConstant_StrictMatch() {
-		return (EAttribute)constantEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)constantEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -473,7 +464,6 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 		createEReference(scopeEClass, SCOPE__CHILDREN);
 
 		constantEClass = createEClass(CONSTANT);
-		createEAttribute(constantEClass, CONSTANT__VALUE);
 		createEAttribute(constantEClass, CONSTANT__STRICT_MATCH);
 
 		groupEClass = createEClass(GROUP);
@@ -550,7 +540,6 @@ public class DefinitionsPackageImpl extends EPackageImpl implements DefinitionsP
 		initEReference(getScope_Children(), this.getScope(), null, "children", null, 0, -1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(constantEClass, Constant.class, "Constant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getConstant_Value(), ecorePackage.getEString(), "value", null, 0, 1, Constant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getConstant_StrictMatch(), ecorePackage.getEBoolean(), "strictMatch", "false", 0, 1, Constant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(groupEClass, Group.class, "Group", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

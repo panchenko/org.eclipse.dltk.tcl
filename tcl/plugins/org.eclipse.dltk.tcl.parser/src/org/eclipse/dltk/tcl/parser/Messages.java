@@ -31,6 +31,9 @@ public class Messages extends NLS {
 	public static String TclParser_Command_Version_Is_Invalid;
 	public static String TclParser_Unknown_Command;
 	public static String TclParser_Command_Out_Of_Scope;
+	public static String TclArgumentMatcher_Invalid_Arguments_And_Expected;
+	public static String TclArgumentMatcher_Missing_TypedArgument;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

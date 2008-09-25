@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getUpperBound <em>Upper Bound</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#getValue <em>Value</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.definitions.impl.ConstantImpl#isStrictMatch <em>Strict Match</em>}</li>
  * </ul>
  * </p>
@@ -98,26 +97,6 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String VALUE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected String value = VALUE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isStrictMatch() <em>Strict Match</em>}' attribute.
@@ -226,27 +205,6 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setValue(String newValue) {
-		String oldValue = value;
-		value = newValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DefinitionsPackage.CONSTANT__VALUE, oldValue, value));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public boolean isStrictMatch() {
 		return strictMatch;
 	}
@@ -277,8 +235,6 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 				return new Integer(getUpperBound());
 			case DefinitionsPackage.CONSTANT__NAME:
 				return getName();
-			case DefinitionsPackage.CONSTANT__VALUE:
-				return getValue();
 			case DefinitionsPackage.CONSTANT__STRICT_MATCH:
 				return isStrictMatch() ? Boolean.TRUE : Boolean.FALSE;
 		}
@@ -301,9 +257,6 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 				return;
 			case DefinitionsPackage.CONSTANT__NAME:
 				setName((String)newValue);
-				return;
-			case DefinitionsPackage.CONSTANT__VALUE:
-				setValue((String)newValue);
 				return;
 			case DefinitionsPackage.CONSTANT__STRICT_MATCH:
 				setStrictMatch(((Boolean)newValue).booleanValue());
@@ -329,9 +282,6 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 			case DefinitionsPackage.CONSTANT__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case DefinitionsPackage.CONSTANT__VALUE:
-				setValue(VALUE_EDEFAULT);
-				return;
 			case DefinitionsPackage.CONSTANT__STRICT_MATCH:
 				setStrictMatch(STRICT_MATCH_EDEFAULT);
 				return;
@@ -353,8 +303,6 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 				return upperBound != UPPER_BOUND_EDEFAULT;
 			case DefinitionsPackage.CONSTANT__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case DefinitionsPackage.CONSTANT__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 			case DefinitionsPackage.CONSTANT__STRICT_MATCH:
 				return strictMatch != STRICT_MATCH_EDEFAULT;
 		}
@@ -377,8 +325,6 @@ public class ConstantImpl extends EObjectImpl implements Constant {
 		result.append(upperBound);
 		result.append(", name: ");
 		result.append(name);
-		result.append(", value: ");
-		result.append(value);
 		result.append(", strictMatch: ");
 		result.append(strictMatch);
 		result.append(')');

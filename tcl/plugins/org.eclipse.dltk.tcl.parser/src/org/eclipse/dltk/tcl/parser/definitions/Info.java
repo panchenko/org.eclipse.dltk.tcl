@@ -15,11 +15,20 @@ import org.eclipse.osgi.util.NLS;
 
 public class Info extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.parser.definitions.info"; //$NON-NLS-1$
-	
-	public static String CommandSynopsis_TypedArgument_Info;
-	public static String CommandSynopsis_Switches_Info;
-	public static String CommandSynopsis_EndOfSwitches_Info; 
-	public static String CommandSynopsis_Mode_Info;
+
+	public static String TclArgumentType_Any;
+	public static String TclArgumentType_Boolean;
+	public static String TclArgumentType_CmdName;
+	public static String TclArgumentType_Expression;
+	public static String TclArgumentType_Index;
+	public static String TclArgumentType_Integer;
+	public static String TclArgumentType_Level;
+	public static String TclArgumentType_Namespace;
+	public static String TclArgumentType_NotNegative;
+	public static String TclArgumentType_Package;
+	public static String TclArgumentType_Script;
+	public static String TclArgumentType_VarName;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Info.class);
