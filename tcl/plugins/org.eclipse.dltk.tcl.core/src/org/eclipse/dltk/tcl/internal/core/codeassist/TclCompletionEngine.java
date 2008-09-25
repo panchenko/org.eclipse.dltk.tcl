@@ -1285,8 +1285,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				}
 				if (nonNoneCount == 1 && tok.length() >= 2) {
 					this
-							.search(new String(mtok) + "*",
-									IDLTKSearchConstants.FIELD,
+							.search(mtok + "*", IDLTKSearchConstants.FIELD,
 									IDLTKSearchConstants.DECLARATIONS, scope,
 									requestor);
 				}
