@@ -45,7 +45,7 @@ public class GroupParseTests extends TestCase {
 				Constant arg = factory.createConstant();
 				arg.setLowerBound(1);
 				arg.setUpperBound(1);
-				arg.setValue("const");
+				arg.setName("const");
 				group.getArguments().add(arg);
 			}
 			{
@@ -69,37 +69,31 @@ public class GroupParseTests extends TestCase {
 		return command;
 	}
 
-	
 	public void test001() throws Exception {
 		String source = "group";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test002() throws Exception {
 		String source = "group const val";
 		typedCheck(source, 1, 0);
 	}
 
-	
 	public void test003() throws Exception {
 		String source = "group const val val";
 		typedCheck(source, 0, 0);
 	}
 
-	
 	public void test004() throws Exception {
 		String source = "group val val";
 		typedCheck(source, 1, 0);
 	}
 
-	
 	public void test005() throws Exception {
 		String source = "group const val val val";
 		typedCheck(source, 1, 0);
 	}
 
-	
 	public void test006() throws Exception {
 		String source = "group const val val const val val";
 		typedCheck(source, 0, 0);

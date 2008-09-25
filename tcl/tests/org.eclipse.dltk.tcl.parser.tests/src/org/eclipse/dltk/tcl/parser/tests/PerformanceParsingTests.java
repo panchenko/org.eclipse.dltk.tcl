@@ -81,7 +81,7 @@ public class PerformanceParsingTests extends TestCase {
 							|| file.getName().endsWith(".itcl")) {
 						index++;
 						long startTime = System.currentTimeMillis();
-						TclParser parser = new TclParser();
+						TclParser parser = new TclParser("8.4");
 						NamespaceScopeProcessor processor = DefinitionManager
 								.getInstance().createProcessor();
 						parser.setOptionValue(
@@ -112,6 +112,11 @@ public class PerformanceParsingTests extends TestCase {
 										+ "\n");
 							TclError[] errors = col.getErrors();
 							for (int i = 0; i < errors.length; i++) {
+								if (errors[i].getCode() == TclErrorCollector.DEPRECATED_COMMAND
+										|| errors[i].getCode() == TclErrorCollector.COMMAND_WITH_NAME_SUBSTITUTION
+										|| errors[i].getCode() == TclErrorCollector.INVALID_COMMAND_VERSION) {
+									continue;
+								}
 								if (writer != null)
 									writer
 											.write("#-------------------------------------------------\n");

@@ -75,14 +75,14 @@ public class IfCommandTests extends TestCase {
 		typedCheck(source, 1, 2);
 	}
 
-	public void test010_FAILED() throws Exception {
+	public void test010() throws Exception {
 		String source = "if {} {set a 20} elseif";
-		typedCheck(source, 0, 2);
+		typedCheck(source, 1, 1);
 	}
 
 	public void test011() throws Exception {
 		String source = "if {} {set a 20} elseif {}";
-		typedCheck(source, 1, 2);
+		typedCheck(source, 1, 1);
 	}
 
 	public void test012() throws Exception {
@@ -99,9 +99,10 @@ public class IfCommandTests extends TestCase {
 		TclCommand tclCommand = module.get(0);
 		EList<TclArgument> arguments = tclCommand.getArguments();
 		int scripts = 0;
-		for (int i = 0; i < arguments.size(); i++) {
-			if (arguments.get(i) instanceof Script) {
+		for (TclArgument a : arguments) {
+			if (a instanceof Script) {
 				scripts++;
+				TestUtils.outCode(source, a.getStart(), a.getEnd());
 			}
 		}
 		if (errors.getCount() > 0) {

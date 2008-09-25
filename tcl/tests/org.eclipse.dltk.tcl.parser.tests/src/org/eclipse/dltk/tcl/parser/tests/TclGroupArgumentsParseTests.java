@@ -79,7 +79,7 @@ public class TclGroupArgumentsParseTests extends TestCase {
 		}
 		{
 			Constant arg2 = factory.createConstant();
-			arg2.setValue("--");
+			arg2.setName("--");
 			arg2.setLowerBound(1);
 			arg2.setUpperBound(1);
 			command.getArguments().add(arg2);
@@ -142,7 +142,7 @@ public class TclGroupArgumentsParseTests extends TestCase {
 
 	public void test010() throws Exception {
 		String source = "constants -- -- {set a 20} {set a 20}";
-		check002(source, 1, 0);
+		check002(source, 2, 1);
 	}
 
 	public void test011() throws Exception {

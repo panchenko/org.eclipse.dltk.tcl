@@ -519,17 +519,17 @@ public class DefinitionTests extends TestCase {
 
 	public void test096() throws Exception {
 		String source = "catch {string is . .} charclasses";
-		typedCheck(source, 2, 1, "8.4");
+		typedCheck(source, 1, 1, "8.4");
 	}
 
 	public void test096_2() throws Exception {
 		String source = "string is . .";
-		typedCheck(source, 2, 0, "8.4");
+		typedCheck(source, 1, 0, "8.4");
 	}
 
-	public void test097_FAILED() throws Exception {
+	public void test097() throws Exception {
 		String source = "registry set $key $value $data $mod";
-		typedCheck(source, 1, 0, "8.4");
+		typedCheck(source, 0, 0, "8.4");
 	}
 
 	public void test098() throws Exception {
@@ -580,11 +580,76 @@ public class DefinitionTests extends TestCase {
 
 	public void test107() throws Exception {
 		String source = "puts stdout \"+$value -- \" nonewline";
-		typedCheck(source, 1, 0, "8.4");
+		typedCheck(source, 0, 0, "8.4");
 	}
 
 	public void test108() throws Exception {
 		String source = "regexp $compareTo $value";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test109() throws Exception {
+		String source = "switch -exact -- $keyword {proc - method {set retval {}}}";
+		typedCheck(source, 0, 1, "8.4");
+	}
+
+	public void test110() throws Exception {
+		String source = "namespace {set retval {}}";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test111() throws Exception {
+		String source = "registry set $key $value $data $mod";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test112() throws Exception {
+		String source = "switch $beta {Darwin - SunOS {puts alpha} SunOS {puts alpha}}";
+		typedCheck(source, 0, 2, "8.4");
+	}
+
+	public void test113() throws Exception {
+		String source = "switch $beta {Darwin - SunOS -}";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test114() throws Exception {
+		String source = "switch $beta {{Darwin} -}";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test115() throws Exception {
+		String source = "switch $beta {Darwin {puts alpha} SunOS {puts alpha}}";
+		typedCheck(source, 0, 2, "8.4");
+	}
+
+	public void test116() throws Exception {
+		String source = "switch $os {Darwin - FreeBSD - Linux - OSF1 - SunOS {return 0} HP-UX {return 0}}";
+		typedCheck(source, 0, 2, "8.4");
+	}
+
+	public void test117() throws Exception {
+		String source = "switch -- $option {\"-a\" {} -starttime - -stoptime {} default {}}";
+		typedCheck(source, 0, 3, "8.4");
+	}
+
+	public void test118() throws Exception {
+		String source = "switch $a {Darwin - SunOS {puts 2} Windows -}";
+		typedCheck(source, 0, 1, "8.4");
+	}
+
+	public void test119() throws Exception {
+		String source = "switch -- $beta {Darwin - SunOS {puts alpha}}";
+		typedCheck(source, 0, 1, "8.4");
+	}
+
+	public void test120() throws Exception {
+		String source = "package require $args";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test121() throws Exception {
+		String source = "package present $pkg";
 		typedCheck(source, 0, 0, "8.4");
 	}
 

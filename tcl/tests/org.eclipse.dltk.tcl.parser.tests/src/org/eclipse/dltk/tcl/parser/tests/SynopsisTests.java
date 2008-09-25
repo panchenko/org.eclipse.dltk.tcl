@@ -733,9 +733,11 @@ public class SynopsisTests extends TestCase {
 		String synopsis_8_4 = "package forget ?package ...?\n"
 				+ "package ifneeded package version ?script?\n"
 				+ "package names\n"
-				+ "package present ?-exact? package ?version?\n"
+				+ "package present package ?requirement ...?\n"
+				+ "package present -exact package ?version?\n"
 				+ "package provide package ?version?\n"
-				+ "package require ?-exact? package ?version?\n"
+				+ "package require package ?requirement ...?\n"
+				+ "package require -exact package ?version?\n"
 				+ "package unknown ?command?\n"
 				+ "package vcompare version1 version2\n"
 				+ "package versions package\n"
@@ -826,7 +828,7 @@ public class SynopsisTests extends TestCase {
 
 	public void test100() throws Exception {
 		String source = "puts";
-		String synopsis = "puts ?-nonewline? ?channelId? string";
+		String synopsis = "puts -nonewline ?channelId? string\nputs ?channelId? string ?nonewline?";
 		typedCheck(source, synopsis, "8.5");
 	}
 
@@ -839,7 +841,7 @@ public class SynopsisTests extends TestCase {
 	public void test102() throws Exception {
 		String source = "read";
 		String synopsis = "read channelId ?numChars?\n"
-				+ "read ?-nonewline? channelId";
+				+ "read -nonewline channelId";
 		typedCheck(source, synopsis, "8.5");
 	}
 
@@ -1016,8 +1018,8 @@ public class SynopsisTests extends TestCase {
 
 	public void test123() throws Exception {
 		String source = "switch";
-		String synopsis = "switch ?options ...? ?--? string ?pattern body ...? ?default body?\n"
-				+ "switch ?options ...? ?--? string {?pattern body ...? ?default body?}";
+		String synopsis = "switch ?options ...? ?--? string pattern body ?pattern body ...?\n"
+				+ "switch ?options ...? ?--? string {pattern body ?pattern body ...?}";
 		typedCheck(source, synopsis, "8.5");
 	}
 
@@ -1154,8 +1156,8 @@ public class SynopsisTests extends TestCase {
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, module.size());
 		TclCommand command = module.get(0);
-		SynopsisBuilder synopsis = new SynopsisBuilder(command);
-		String actual = synopsis.getSynopsis();
+		SynopsisBuilder synopsis = new SynopsisBuilder();
+		String actual = synopsis.getSynopsis(command.getDefinition());
 		TestCase.assertNotNull(actual);
 		System.out.println("===================" + version
 				+ "===================");

@@ -135,7 +135,7 @@ public class TclSwitchArgumentsParseTests extends TestCase {
 			command.getArguments().add(sw);
 			{
 				Constant a = factory.createConstant();
-				a.setValue("--");
+				a.setName("--");
 				a.setLowerBound(1);
 				a.setUpperBound(1);
 				command.getArguments().add(a);

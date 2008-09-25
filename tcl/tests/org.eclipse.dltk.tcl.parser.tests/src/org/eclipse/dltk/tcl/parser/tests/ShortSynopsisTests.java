@@ -73,7 +73,7 @@ public class ShortSynopsisTests extends TestCase {
 
 	public void test010() throws Exception {
 		String source = "switch";
-		String synopsis = "switch ?options ...? ?--? string [?pattern ...|{?pattern ...]";
+		String synopsis = "switch ?options ...? ?--? string [pattern ...|{pattern ...]";
 		typedCheck(source, synopsis, "8.5");
 	}
 
@@ -90,8 +90,8 @@ public class ShortSynopsisTests extends TestCase {
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, module.size());
 		TclCommand command = module.get(0);
-		SynopsisBuilder synopsis = new SynopsisBuilder(command);
-		String actual = synopsis.getShortSynopsis();
+		SynopsisBuilder synopsis = new SynopsisBuilder();
+		String actual = synopsis.getShortHint(command);
 		TestCase.assertNotNull(actual);
 		System.out.println("===================" + version
 				+ "===================");

@@ -78,17 +78,97 @@ public class ErrorReportingTests extends TestCase {
 		typedCheck(source, errorCodes);
 	}
 
-	// public void test007() throws Exception {
-	// String source = "string is . .";
+	public void test010() throws Exception {
+		String source = "read $in";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
+	}
+
+	public void test011() throws Exception {
+		String source = "string is . .";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.INVALID_ARGUMENT_VALUE);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test012() throws Exception {
+		String source = "fcopy inchan outchan -size -size 34";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.EXTRA_ARGUMENTS);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test013() throws Exception {
+		String source = "subst -nocommands -novariables $val";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
+	}
+
+	public void test014() throws Exception {
+		String source = "after";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.MISSING_ARGUMENT);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test015() throws Exception {
+		String source = "linsert list";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.MISSING_ARGUMENT);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test016() throws Exception {
+		String source = "foreach";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.MISSING_ARGUMENT);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test017() throws Exception {
+		String source = "after c";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.MISSING_ARGUMENT);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test018() throws Exception {
+		String source = "after k";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.INVALID_ARGUMENT_VALUE);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test019() throws Exception {
+		String source = "registry set $key $value $data $mod";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
+	}
+
+	public void test020() throws Exception {
+		String source = "linsert list f";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.INVALID_ARGUMENT_VALUE);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test021() throws Exception {
+		String source = "fconfigure stdin";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
+	}
+
+	// public void test021() throws Exception {
+	// String source = "proc {{arg def1 def2}} {puts $arg}";
 	// List<Integer> errorCodes = new ArrayList<Integer>();
-	// errorCodes.add(ITclErrorReporter.MISSING_ARGUMENT);
+	// errorCodes.add(ITclErrorReporter.INVALID_ARGUMENT_VALUE);
 	// typedCheck(source, errorCodes);
 	// }
 	//
-	// public void test008() throws Exception {
-	// String source = "fcopy inchan outchan -size -size 34";
+	// public void test022() throws Exception {
+	// String source = "proc {{arg def1 def2}} {{arg def1 def2}}";
 	// List<Integer> errorCodes = new ArrayList<Integer>();
-	// errorCodes.add(ITclErrorReporter.EXTRA_ARGUMENTS);
+	// errorCodes.add(ITclErrorReporter.INVALID_ARGUMENT_VALUE);
 	// typedCheck(source, errorCodes);
 	// }
 
