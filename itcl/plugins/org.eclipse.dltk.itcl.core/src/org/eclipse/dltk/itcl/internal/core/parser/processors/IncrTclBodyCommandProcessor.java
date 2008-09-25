@@ -102,7 +102,7 @@ public class IncrTclBodyCommandProcessor extends AbstractTclCommandProcessor {
 				this.report(parser, "Function " + method.getName()
 						+ " is not defined in class " + possiblyType.getName(),
 						statement.sourceStart(), statement.sourceEnd(),
-						ProblemSeverities.Error);
+						ProblemSeverities.Warning);
 			}
 		} else {
 			if (!IncrTclClassesManager.getDefault().isClass(className)) {
