@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
-import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
+import org.eclipse.dltk.tcl.parser.internal.tests.Activator;
 
 public class LoadDefinitionTests extends TestCase {
 

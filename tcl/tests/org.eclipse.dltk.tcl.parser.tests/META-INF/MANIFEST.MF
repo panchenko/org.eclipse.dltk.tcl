@@ -19,6 +19,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.dltk.core.tests
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.dltk.tcl.parser.tests,
- org.eclispe.dltk.tcl.parser.internal.tests
-Bundle-Activator: org.eclispe.dltk.tcl.parser.internal.tests.Activator
+Export-Package: org.eclipse.dltk.tcl.parser.internal.tests,
+ org.eclipse.dltk.tcl.parser.tests
+Bundle-Activator: org.eclipse.dltk.tcl.parser.internal.tests.Activator

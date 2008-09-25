@@ -1,4 +1,4 @@
-package org.eclispe.dltk.tcl.parser.internal.tests;
+package org.eclipse.dltk.tcl.parser.internal.tests;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

@@ -42,8 +42,8 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
+import org.eclipse.dltk.tcl.parser.internal.tests.Activator;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
-import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
 import org.osgi.framework.Bundle;
 
 public class TclCheckerDLTKErrorComparisonTests extends TestCase {

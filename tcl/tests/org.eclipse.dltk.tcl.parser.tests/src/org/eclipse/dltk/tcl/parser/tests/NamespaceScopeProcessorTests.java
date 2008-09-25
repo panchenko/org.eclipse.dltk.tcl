@@ -34,7 +34,7 @@ import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionLoader;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
-import org.eclispe.dltk.tcl.parser.internal.tests.Activator;
+import org.eclipse.dltk.tcl.parser.internal.tests.Activator;
 
 public class NamespaceScopeProcessorTests extends TestCase {
 
