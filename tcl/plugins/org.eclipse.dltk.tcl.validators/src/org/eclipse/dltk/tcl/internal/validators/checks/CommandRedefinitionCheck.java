@@ -30,6 +30,7 @@ import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.IScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
+import org.eclipse.osgi.util.NLS;
 
 public class CommandRedefinitionCheck implements ITclCheck {
 	public CommandRedefinitionCheck() {
@@ -38,7 +39,8 @@ public class CommandRedefinitionCheck implements ITclCheck {
 	public void checkCommands(final List<TclCommand> tclCommands,
 			final ITclErrorReporter reporter, Map<String, String> options,
 			IScriptProject project, final CodeModel codeModel) {
-		final IScopeProcessor processor = DefinitionManager.getInstance().createProcessor();
+		final IScopeProcessor processor = DefinitionManager.getInstance()
+				.createProcessor();
 		TclParserUtils.traverse(tclCommands, new TclVisitor() {
 			Map<String, Integer> userCommands = new HashMap<String, Integer>();
 
@@ -69,14 +71,17 @@ public class CommandRedefinitionCheck implements ITclCheck {
 							if (current.startsWith("::")) {
 								current = current.substring(2);
 							}
-							if (name.equals(current))
+							if (name.equals(current)) {
+								final String msg = NLS
+										.bind(
+												"Procedure {0} is already defined on line {1}",
+												name, userCommands.get(name));
 								reporter.report(
 										ICheckKinds.USER_COMMAND_REDEFINITION,
-										"A procedure of the same name already defined on line "
-												+ userCommands.get(name), null,
-										nameArgument.getStart(), nameArgument
-												.getEnd(),
+										msg, null, nameArgument.getStart(),
+										nameArgument.getEnd(),
 										ITclErrorReporter.WARNING);
+							}
 						}
 						int start = tclCommand.getStart();
 						userCommands.put(current, codeModel.getLineNumber(
