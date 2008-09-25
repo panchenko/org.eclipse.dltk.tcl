@@ -76,7 +76,7 @@ public class IndexTypeParseTests extends TestCase {
 
 	public void test007() throws Exception {
 		String source = "cmd -34";
-		typedCheck(source, 1, 0);
+		typedCheck(source, 0, 0);
 	}
 
 	public void test008() throws Exception {

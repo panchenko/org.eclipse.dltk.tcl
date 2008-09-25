@@ -653,6 +653,11 @@ public class DefinitionTests extends TestCase {
 		typedCheck(source, 0, 0, "8.4");
 	}
 
+	public void test122() throws Exception {
+		String source = "socket $host daytime";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
 	private void typedCheck(String source, int errs, int code, String version)
 			throws Exception {
 		processor = DefinitionManager.getInstance().createProcessor();
