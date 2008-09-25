@@ -990,7 +990,7 @@ public class TclArgumentMatcher {
 			result = false;
 			try {
 				int i = Integer.parseInt(value);
-				result = i >= 0;
+				result = true;
 			} catch (NumberFormatException e) {
 			}
 			if (!result) {

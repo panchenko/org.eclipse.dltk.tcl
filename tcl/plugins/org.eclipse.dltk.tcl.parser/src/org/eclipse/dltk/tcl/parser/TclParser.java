@@ -498,7 +498,7 @@ public class TclParser implements ITclParserOptions {
 				Messages.TclParser_Command_Is_Deprecated, new Object[] {
 						commandValue, definition.getDeprecated() });
 		this.reporter.report(ITclErrorReporter.DEPRECATED_COMMAND, message,
-				null, st.getStart(), st.getEnd(), ITclErrorReporter.ERROR);
+				null, st.getStart(), st.getEnd(), ITclErrorReporter.WARNING);
 	}
 
 	private void reportInvalidVersion(TclCommand st, String commandValue,
