@@ -13,20 +13,23 @@
 package org.eclipse.dltk.tcl.internal.validators;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.validators.ChecksExtensionManager.TclCheckInfo;
+import org.eclipse.dltk.tcl.internal.validators.packages.PackageRequireChecker;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
-import org.eclipse.dltk.tcl.parser.TclArgumentMatcher;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
@@ -34,11 +37,30 @@ import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.dltk.validators.core.IBuildParticipant;
+import org.eclipse.dltk.validators.core.IBuildParticipantExtension;
+import org.eclipse.dltk.validators.core.IBuildParticipantExtension2;
 
-public class TclCheckBuildParticipant implements IBuildParticipant {
-	private static final String SHORT = TclArgumentMatcher.SHORT_ARG;
+public class TclCheckBuildParticipant implements IBuildParticipant,
+		IBuildParticipantExtension, IBuildParticipantExtension2 {
+
 	public static boolean TESTING_DO_CHECKS = true;
 	public static boolean TESTING_DO_OPERATIONS = true;
+
+	private PackageRequireChecker packagesBuilder = null;
+	private final NamespaceScopeProcessor processor;
+	private final TclCheckInfo[] checks = ChecksExtensionManager.getInstance()
+			.getChecks();
+	private final CheckPreferenceManager preferences = new CheckPreferenceManager(
+			TclValidatorsCore.getDefault().getPluginPreferences());
+
+	public TclCheckBuildParticipant(IScriptProject project) {
+		processor = DefinitionManager.getInstance().createProcessor();
+		try {
+			packagesBuilder = new PackageRequireChecker(project);
+		} catch (IllegalStateException e) {
+		} catch (CoreException e) {
+		}
+	}
 
 	public void build(ISourceModule module, ModuleDeclaration ast,
 			final IProblemReporter reporter) throws CoreException {
@@ -46,22 +68,20 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 			if (!TESTING_DO_OPERATIONS) {
 				return;
 			}
-			final TclCheckInfo[] checks = ChecksExtensionManager.getInstance()
-					.getChecks();
 
-			final CheckPreferenceManager preferences = new CheckPreferenceManager(
-					TclValidatorsCore.getDefault().getPluginPreferences());
 			final String source = module.getSource();
 
 			TclParser parser = new TclParser();
 			TclErrorCollector errorCollector = new TclErrorCollector();
-			NamespaceScopeProcessor processor = DefinitionManager.getInstance()
-					.createProcessor();
+
 			parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR,
 					false);
 			List<TclCommand> commands = parser.parse(source, errorCollector,
 					processor);
 			final CodeModel codeModel = new CodeModel(source);
+			if (packagesBuilder != null) {
+				packagesBuilder.build(module, commands, reporter, codeModel);
+			}
 			if (TESTING_DO_CHECKS) {
 				// Perform all checks.
 				for (int i = 0; i < checks.length; i++) {
@@ -107,5 +127,38 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void beginBuild(int buildType) {
+		if (packagesBuilder != null) {
+			packagesBuilder.beginBuild(buildType);
+		}
+	}
+
+	@Override
+	public void endBuild(IProgressMonitor monitor) {
+		if (packagesBuilder != null) {
+			packagesBuilder.endBuild(monitor);
+		}
+	}
+
+	@Override
+	public void buildExternalModule(ISourceModule module, ModuleDeclaration ast)
+			throws CoreException {
+		if (packagesBuilder != null) {
+			packagesBuilder.buildExternalModule(module, processor);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public DependencyResponse getDependencies(int buildType, Set localElements,
+			Set externalElements, Set oldExternalFolders, Set externalFolders) {
+		if (packagesBuilder != null) {
+			return packagesBuilder.getDependencies(buildType, localElements,
+					externalElements, oldExternalFolders, externalFolders);
+		}
+		return null;
 	}
 }

@@ -88,8 +88,7 @@ public class ChecksExtensionManager {
 			try {
 				String id = config.getAttribute(ID_ATTR);
 				String title = config.getAttribute(TITLE_ATTR);
-				ITclCheck check;
-				check = (ITclCheck) config
+				ITclCheck check = (ITclCheck) config
 						.createExecutableExtension(CLASS_ATTR);
 				String commandName = config.getAttribute(COMMAND_ATTR);
 				String category = config.getAttribute(CATEGORY_ATTR);

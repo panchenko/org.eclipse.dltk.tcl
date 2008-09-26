@@ -30,7 +30,7 @@ public class TclChecksValidatorType extends AbstractBuildParticipantType {
 
 	protected IBuildParticipant createBuildParticipant(IScriptProject project)
 			throws CoreException {
-		return new TclCheckBuildParticipant();
+		return new TclCheckBuildParticipant(project);
 	}
 
 	public String getNature() {
