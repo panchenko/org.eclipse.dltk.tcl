@@ -41,7 +41,7 @@ public class ProcessOutputCollector {
 					// ignore
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				// ignore
 			}
 		}
 
@@ -100,17 +100,17 @@ public class ProcessOutputCollector {
 		try {
 			output.join(50000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			//
 		}
 		try {
 			errorStream.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//
 		}
 		try {
 			inputStream.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//
 		}
 		process.destroy();
 		return output.output;
