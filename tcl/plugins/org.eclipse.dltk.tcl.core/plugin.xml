@@ -12,7 +12,7 @@
          <run class="org.eclipse.dltk.tcl.core.TclNature"/>
       </runtime>
    </extension> 
-
+<!--
    <extension
          point="org.eclipse.dltk.validators.core.validator">
       <validatorType
@@ -29,6 +29,7 @@
             nature="org.eclipse.dltk.tcl.core.nature">
       </validatorType>
    </extension>
+-->
    <extension
          point="org.eclipse.dltk.core.language">
       <language

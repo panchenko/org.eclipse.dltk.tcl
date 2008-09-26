@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
+import org.eclipse.dltk.ast.parser.ISourceParserExtension2;
 import org.eclipse.dltk.ast.parser.ISourceParserExtension;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
@@ -33,7 +34,8 @@ import org.eclipse.dltk.tcl.internal.parsers.raw.TclParseException;
 import org.eclipse.dltk.tcl.internal.parsers.raw.TclScript;
 
 public class TclSourceParser extends AbstractSourceParser implements
-		ITclSourceParser, ITclParser, ISourceParserExtension {
+		ITclSourceParser, ITclParser, ISourceParserExtension,
+		ISourceParserExtension2 {
 	private IProblemReporter problemReporter;
 	protected CodeModel codeModel;
 	protected String content;
@@ -332,5 +334,12 @@ public class TclSourceParser extends AbstractSourceParser implements
 
 	public void setUseDetectors(boolean b) {
 		this.useDetectors = false;
+	}
+
+	/*
+	 * @see org.eclipse.dltk.ast.parser.ISourceParserExtension2#useInBuilder()
+	 */
+	public boolean useInBuilder() {
+		return TclPlugin.REPORT_PARSER_PROBLEMS;
 	}
 }
