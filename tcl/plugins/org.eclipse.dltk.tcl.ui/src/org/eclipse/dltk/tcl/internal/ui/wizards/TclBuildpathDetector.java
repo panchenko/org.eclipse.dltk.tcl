@@ -15,10 +15,12 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
 import org.eclipse.osgi.util.NLS;
 
@@ -50,10 +52,15 @@ public class TclBuildpathDetector extends BuildpathDetector {
 				final String msg = TclWizardMessages.TclBuildpathDetector_AnalysingSubTask;
 				sub.subTask(NLS.bind(msg, String.valueOf(correctFiles.size()
 						- count), file.getName()));
-				ISourceModule module = DLTKCore.createSourceModuleFrom(file);
-				if (module.exists()) {
+				ISourceModule module = (ISourceModule) DLTKCore.create(file);
+				// if (module.exists()) {
+				char[] source;
+				try {
+					source = org.eclipse.dltk.internal.core.util.Util
+							.getResourceContentsAsCharArray(file);
 					ModuleDeclaration moduleDeclaration = SourceParserUtil
-							.getModuleDeclaration(module);
+							.getModuleDeclaration(file.getName().toCharArray(),
+									source, TclNature.NATURE_ID, null, null);
 					try {
 						collector.process(moduleDeclaration);
 					} catch (Exception e) {
@@ -61,8 +68,11 @@ public class TclBuildpathDetector extends BuildpathDetector {
 							e.printStackTrace();
 						}
 					}
-					count++;
+				} catch (ModelException e1) {
+					e1.printStackTrace();
 				}
+				count++;
+				// }
 				sub.done();
 			}
 			/*
