@@ -110,16 +110,11 @@ public class TclParser implements ITclParserOptions {
 		}
 	}
 
-	private void processRawCommands(
-			List<TclCommand> block,
-			int offset,
-			List<org.eclipse.dltk.tcl.internal.parser.raw.TclCommand> TclCommands) {
-		for (Iterator<org.eclipse.dltk.tcl.internal.parser.raw.TclCommand> iter = TclCommands
-				.iterator(); iter.hasNext();) {
-			org.eclipse.dltk.tcl.internal.parser.raw.TclCommand TclCommand = (org.eclipse.dltk.tcl.internal.parser.raw.TclCommand) iter
-					.next();
+	private void processRawCommands(List<TclCommand> block, int offset,
+			List<org.eclipse.dltk.tcl.internal.parser.raw.TclCommand> commands) {
+		for (org.eclipse.dltk.tcl.internal.parser.raw.TclCommand command : commands) {
 			// Basic TclCommand
-			TclCommand st = parseTclCommand(TclCommand, offset, this.source);
+			TclCommand st = parseTclCommand(command, offset, this.source);
 			TclCommand comm = processTclCommand(st);
 			if (comm != null) {
 				block.add(comm);
@@ -245,7 +240,7 @@ public class TclParser implements ITclParserOptions {
 					return st;
 				}
 			} else {
-				if (isOptionSet(REPORT_UNKNOWN_AS_ERROR)) {
+				if (isOptionSet(REPORT_UNKNOWN_AS_ERROR) && reporter != null) {
 					this.reporter.report(ITclErrorReporter.UNKNOWN_COMMAND,
 							Messages.TclParser_Unknown_Command + commandValue,
 							null, commandName.getStart(), commandName.getEnd(),
