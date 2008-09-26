@@ -21,11 +21,17 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.compiler.task.ITaskReporter;
+import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
+import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
+import org.eclipse.dltk.compiler.task.TodoTaskSimpleParser;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
+import org.eclipse.dltk.tcl.internal.parser.TclTodoTaskAstParser;
 import org.eclipse.dltk.tcl.internal.validators.ChecksExtensionManager.TclCheckInfo;
 import org.eclipse.dltk.tcl.internal.validators.packages.PackageRequireChecker;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
@@ -53,6 +59,8 @@ public class TclCheckBuildParticipant implements IBuildParticipant,
 	private final CheckPreferenceManager preferences = new CheckPreferenceManager(
 			TclValidatorsCore.getDefault().getPluginPreferences());
 
+	private final TodoTaskSimpleParser todoParser;
+
 	public TclCheckBuildParticipant(IScriptProject project) {
 		processor = DefinitionManager.getInstance().createProcessor();
 		try {
@@ -60,6 +68,19 @@ public class TclCheckBuildParticipant implements IBuildParticipant,
 		} catch (IllegalStateException e) {
 		} catch (CoreException e) {
 		}
+		todoParser = createTodoParser();
+	}
+
+	private static TodoTaskSimpleParser createTodoParser() {
+		final ITodoTaskPreferences prefs = new TodoTaskPreferences(TclPlugin
+				.getDefault().getPluginPreferences());
+		if (prefs.isEnabled()) {
+			final TclTodoTaskAstParser parser = new TclTodoTaskAstParser(prefs);
+			if (parser.isValid()) {
+				return parser;
+			}
+		}
+		return null;
 	}
 
 	public void build(ISourceModule module, ModuleDeclaration ast,
@@ -96,6 +117,13 @@ public class TclCheckBuildParticipant implements IBuildParticipant,
 									scriptProject, codeModel);
 						}
 					}
+				}
+			}
+			if (todoParser != null) {
+				ITaskReporter taskReporter = (ITaskReporter) reporter
+						.getAdapter(ITaskReporter.class);
+				if (taskReporter != null) {
+					todoParser.parse(taskReporter, source.toCharArray());
 				}
 			}
 
