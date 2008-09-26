@@ -157,21 +157,18 @@ public class TclCheckBuildParticipant implements IBuildParticipant,
 		}
 	}
 
-	@Override
 	public void beginBuild(int buildType) {
 		if (packagesBuilder != null) {
 			packagesBuilder.beginBuild(buildType);
 		}
 	}
 
-	@Override
 	public void endBuild(IProgressMonitor monitor) {
 		if (packagesBuilder != null) {
 			packagesBuilder.endBuild(monitor);
 		}
 	}
 
-	@Override
 	public void buildExternalModule(ISourceModule module, ModuleDeclaration ast)
 			throws CoreException {
 		if (packagesBuilder != null) {
@@ -180,7 +177,6 @@ public class TclCheckBuildParticipant implements IBuildParticipant,
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public DependencyResponse getDependencies(int buildType, Set localElements,
 			Set externalElements, Set oldExternalFolders, Set externalFolders) {
 		if (packagesBuilder != null) {
