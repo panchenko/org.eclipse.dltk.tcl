@@ -12,7 +12,9 @@
 
 package org.eclipse.dltk.tcl.validators;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -22,7 +24,7 @@ import org.osgi.framework.BundleContext;
 public class TclValidatorsCore extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.validators";
+	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.validators"; //$NON-NLS-1$
 
 	// The shared instance
 	private static TclValidatorsCore plugin;
@@ -63,6 +65,14 @@ public class TclValidatorsCore extends Plugin {
 	 */
 	public static TclValidatorsCore getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * @param e
+	 */
+	public static void error(Throwable e) {
+		getDefault().getLog().log(
+				new Status(IStatus.ERROR, PLUGIN_ID, e.toString(), e));
 	}
 
 }
