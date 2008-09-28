@@ -11,15 +11,14 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.parser;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
-import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPlugin;
-import org.eclipse.dltk.validators.core.AbstractBuildParticipantType;
+import org.eclipse.dltk.validators.core.AbstractTodoTaskBuildParticipantType;
 import org.eclipse.dltk.validators.core.IBuildParticipant;
 
-public class TclTodoParserType extends AbstractBuildParticipantType {
+public class TclTodoParserType extends AbstractTodoTaskBuildParticipantType {
 
 	private static final String ID = "org.eclipse.dltk.tcl.todo"; //$NON-NLS-1$
 	private static final String NAME = "Tcl TODO task parser"; //$NON-NLS-1$
@@ -28,20 +27,16 @@ public class TclTodoParserType extends AbstractBuildParticipantType {
 		super(ID, NAME);
 	}
 
-	protected IBuildParticipant createBuildParticipant(IScriptProject project) {
-		final ITodoTaskPreferences prefs = new TodoTaskPreferences(TclPlugin
-				.getDefault().getPluginPreferences());
-		if (prefs.isEnabled()) {
-			final TclTodoTaskAstParser parser = new TclTodoTaskAstParser(prefs);
-			if (parser.isValid()) {
-				return parser;
-			}
-		}
-		return null;
-	}
-
 	public String getNature() {
 		return TclNature.NATURE_ID;
 	}
 
+	protected Preferences getPreferences() {
+		return TclPlugin.getDefault().getPluginPreferences();
+	}
+
+	protected IBuildParticipant getBuildParticipant(
+			ITodoTaskPreferences preferences) {
+		return new TclTodoTaskAstParser(preferences);
+	}
 }
