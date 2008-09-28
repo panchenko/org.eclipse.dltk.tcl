@@ -115,8 +115,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				}
 				try {
 
-					this.source = sourceModule.getSourceContents()
-							.toCharArray();
+					this.source = sourceModule.getContentsAsCharArray();
 					this.parseBlockStatements(parsedUnit,
 							this.actualCompletionPosition);
 					if (VERBOSE) {
