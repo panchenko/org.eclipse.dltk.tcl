@@ -106,11 +106,11 @@ proc my_puts_direct {args} {
 		3 {
 			set arg0 [lindex $args 0]
 			set arg1 [lindex $args 1]
-			set arg1 [lindex $args 2]
+			set arg2 [lindex $args 2]
 
 			if {$arg1 eq "stdout"} {
 				puts -nonewline "my_puts_direct: $arg2"
-				puts $out -nonewline $arg2
+				puts -nonewline $out $arg2
 				flush $out
 			} else {
 				return evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]
