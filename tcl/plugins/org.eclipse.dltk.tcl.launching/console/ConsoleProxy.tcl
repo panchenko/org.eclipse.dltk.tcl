@@ -52,11 +52,11 @@ proc my_puts {args} {
 			return
 		}
 
-		#puts stdout -nonewline "data"
+		#puts -nonewline stdout "data"
 		3 {
 			set arg0 [lindex $args 0]
 			set arg1 [lindex $args 1]
-			set arg1 [lindex $args 2]
+			set arg2 [lindex $args 2]
 
 			if {$arg1 eq "stdout"} {
 				append strStdout $arg2
@@ -102,7 +102,7 @@ proc my_puts_direct {args} {
 			return
 		}
 
-		#puts stdout -nonewline "data"
+		#puts -nonewline stdout "data"
 		3 {
 			set arg0 [lindex $args 0]
 			set arg1 [lindex $args 1]
