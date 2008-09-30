@@ -47,7 +47,7 @@ proc my_puts {args} {
 				append strStdout $arg1
 				append strStdout "\n"
 			} else {
-				return evaluate [list __dltk__puts__ $arg0 $arg1]
+				return [evaluate [list __dltk__puts__ $arg0 $arg1]]
 			}
 			return
 		}
@@ -61,7 +61,7 @@ proc my_puts {args} {
 			if {$arg1 eq "stdout"} {
 				append strStdout $arg2
 			} else {
-				return evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]
+				return [evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]]
 			}
 			return
 		}
@@ -97,7 +97,7 @@ proc my_puts_direct {args} {
 				puts "my_puts_direct:$arg1"
 				flush $out
 			} else {
-				return evaluate [list __dltk__puts__ $arg0 $arg1]
+				return [evaluate [list __dltk__puts__ $arg0 $arg1]]
 			}
 			return
 		}
@@ -113,7 +113,7 @@ proc my_puts_direct {args} {
 				puts -nonewline $out $arg2
 				flush $out
 			} else {
-				return evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]
+				return [evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]]
 			}
 			return
 		}
