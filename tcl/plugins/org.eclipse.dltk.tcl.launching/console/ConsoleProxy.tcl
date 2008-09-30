@@ -216,8 +216,8 @@ proc findCommands { {pattern "*"} } {
 	}
 	
 	return $commands	
-	
-	return $cs
+
+	#return $cs
 }
 
 proc findVars { {pattern "*"} } {
