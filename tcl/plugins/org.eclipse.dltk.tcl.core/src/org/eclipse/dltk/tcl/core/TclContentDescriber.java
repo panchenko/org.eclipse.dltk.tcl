@@ -1,11 +1,7 @@
 package org.eclipse.dltk.tcl.core;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.dltk.core.DLTKContentTypeManager;
 import org.eclipse.dltk.core.ScriptContentDescriber;
 
 public class TclContentDescriber extends ScriptContentDescriber {
@@ -42,15 +38,7 @@ public class TclContentDescriber extends ScriptContentDescriber {
 					"^#!\\s*/bin/(ba|tc)?sh\\s*\r*\n\\s*exec .*expect.* .*",
 					Pattern.MULTILINE) };
 
-	public int describe(Reader contents, IContentDescription description)
-			throws IOException {
-		if (checkPatterns(contents, header_patterns, null)) {
-			if (description != null) {
-				description.setProperty(DLTKContentTypeManager.DLTK_VALID,
-						Boolean.TRUE);
-			}
-			return VALID;
-		}
-		return INDETERMINATE;
+	protected Pattern[] getHeaderPatterns() {
+		return header_patterns;
 	}
 }
