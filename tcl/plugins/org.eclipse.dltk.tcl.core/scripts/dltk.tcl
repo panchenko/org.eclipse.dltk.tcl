@@ -54,7 +54,11 @@ proc package {subcmd args} {
                 set path [get-canonical-path $path]
                 set path_tmp $path
             }
-            add-pkg-info $name $vers $path $lcl_dir
+            set d ""
+            if {[info exists lcl_dir]} {
+				set d $lcl_dir
+			}
+            add-pkg-info $name $vers $path $d
             return [uplevel 1 "::package-org $subcmd $args"]
         }
         default {}
