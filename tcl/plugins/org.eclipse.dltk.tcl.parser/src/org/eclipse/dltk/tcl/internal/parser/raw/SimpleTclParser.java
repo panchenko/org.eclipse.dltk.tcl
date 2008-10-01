@@ -235,4 +235,10 @@ public class SimpleTclParser {
 		TclScript script = parse(scanner, false, null);
 		return script;
 	}
+
+	public static TclScript staticParse(String content)
+			throws TclParseException {
+		SimpleTclParser parser = new SimpleTclParser();
+		return parser.parse(content);
+	}
 }

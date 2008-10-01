@@ -53,12 +53,25 @@ public class DefinitionManager {
 	}
 
 	public NamespaceScopeProcessor createProcessor() {
+		return getCoreProcessor();
+	}
+
+	public NamespaceScopeProcessor createNewProcessor() {
 		NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
 		Scope[] scopes = getScopes();
 		for (Scope scope : scopes) {
 			processor.addScope(scope);
 		}
 		return processor;
+	}
+
+	private NamespaceScopeProcessor coreProcessor = null;
+
+	public NamespaceScopeProcessor getCoreProcessor() {
+		if (coreProcessor == null) {
+			coreProcessor = createNewProcessor();
+		}
+		return this.coreProcessor;
 	}
 
 	public static DefinitionManager getInstance() {
