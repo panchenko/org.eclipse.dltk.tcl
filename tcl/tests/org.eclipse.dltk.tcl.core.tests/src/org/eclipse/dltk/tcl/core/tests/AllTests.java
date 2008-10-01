@@ -13,6 +13,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.dltk.tcl.core.tests.launching.TclLaunchingTests;
+import org.eclipse.dltk.tcl.core.tests.model.PACompletionTests;
+import org.eclipse.dltk.tcl.core.tests.model.PASelectionTests;
 
 public class AllTests {
 
@@ -22,6 +24,8 @@ public class AllTests {
 		// $JUnit-BEGIN$
 		suite.addTest(org.eclipse.dltk.tcl.core.tests.model.AllTests.suite());
 		suite.addTest(org.eclipse.dltk.tcl.parser.tests.AllTests.suite());
+		suite.addTest(PACompletionTests.suite());
+		suite.addTest(PASelectionTests.suite());
 		suite.addTest(TclLaunchingTests.suite());
 		// $JUnit-END$
 		return suite;

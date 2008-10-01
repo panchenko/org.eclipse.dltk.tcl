@@ -1,0 +1,2 @@
+myglobalproc
+pkgnamespace::myproc
