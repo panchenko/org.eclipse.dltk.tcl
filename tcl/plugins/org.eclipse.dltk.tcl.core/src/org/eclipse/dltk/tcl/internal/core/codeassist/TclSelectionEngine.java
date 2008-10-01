@@ -49,6 +49,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnAST;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnKeywordOrFunction;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnNode;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnVariable;
+import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
@@ -71,6 +72,8 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 	protected IDLTKLanguageToolkit toolkit;
 
 	protected ISelectionExtension[] extensions;
+
+	private TclBuildPathPackageCollector packageCollector;
 
 	public TclSelectionEngine() {
 		this.toolkit = TclLanguageToolkit.getDefault();
@@ -109,6 +112,15 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		try {
 			ModuleDeclaration parsedUnit = (ModuleDeclaration) this.parser
 					.parse(sourceUnit);
+			packageCollector = new TclBuildPathPackageCollector();
+			try {
+				parsedUnit.traverse(packageCollector);
+			} catch (Exception e1) {
+				if (DLTKCore.DEBUG) {
+					e1.printStackTrace();
+				}
+			}
+
 			if (parsedUnit != null) {
 				try {
 					parseBlockStatements(parsedUnit, this.actualSelectionStart);
@@ -170,18 +182,14 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 			SelectionOnKeywordOrFunction key = (SelectionOnKeywordOrFunction) astNode;
 			// findKeywords(key.getToken(), key.getPossibleKeywords(),
 			// key.canCompleteEmptyToken());
-			/*
-			 * TODO: Add search for functions. Variables start with $ so it will
-			 * not be here... To all functions are possible. Functions with
-			 * ::will not be here.
-			 */
+
 			String name = key.getName();
 			if (name != null) {
 				findLocalFunctions(name, astNodeParent);
 				if (this.selectionElements.size() > 0) {
 					return;
 				}
-				findMethodFromMixinNS(name);
+				findMethodFromMixin(name);
 				// findMethodFromSearch(name);
 				if (this.selectionElements.size() > 0) {
 					return;
@@ -198,7 +206,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				if (fqnName != null) {
 					if (!fqnName.startsWith("::"))
 						fqnName = "::" + fqnName;
-					findMethodFromMixinNS(name);
+					findMethodFromMixin(name);
 					// findMethodFromSearch(fqnName);
 				}
 				// Search in imported namespaces
@@ -252,7 +260,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 	}
 
-	protected void findMethodFromMixinNS(String name) {
+	protected void findMethodFromMixin(String name) {
 		if (name.startsWith("::")) {
 			if (name.startsWith("::")) {
 				name = name.substring(2);
@@ -452,17 +460,26 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 	public void findMethodMixin(String pattern, String name) {
 		IMixinElement[] find = TclMixinModel.getInstance().getMixin(
 				this.sourceModule.getScriptProject()).find(pattern);
+		List selections = new ArrayList();
 		for (int i = 0; i < find.length; i++) {
 			Object[] allObjects = find[i].getAllObjects();
 			for (int j = 0; j < allObjects.length; j++) {
 				if (allObjects[j] != null && allObjects[j] instanceof TclProc) {
 					TclProc field = (TclProc) allObjects[j];
 					if (name.equals(field.getName())) {
-						addSelectionElement(field.getModelElement());
-						return;
+						// addSelectionElement(field.getModelElement());
+						selections.add(field.getModelElement());
+						// return;
 					}
 				}
 			}
+		}
+		IModelElement result[] = TclResolver.complexFilter(
+				(IModelElement[]) selections
+						.toArray(new IModelElement[selections.size()]), this
+						.getScriptProject(), this.packageCollector, true);
+		for (int i = 0; i < result.length; i++) {
+			addSelectionElement(result[i]);
 		}
 	}
 

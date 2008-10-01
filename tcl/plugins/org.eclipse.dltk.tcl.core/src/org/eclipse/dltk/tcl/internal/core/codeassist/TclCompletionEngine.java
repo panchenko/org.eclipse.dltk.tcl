@@ -67,6 +67,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeyw
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnVariable;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinUtils;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
@@ -79,6 +80,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	protected org.eclipse.dltk.core.ISourceModule sourceModule;
 	protected final static boolean TRACE_COMPLETION_TIME = false;
 	private ICompletionExtension[] extensions;
+	private TclBuildPathPackageCollector packageCollector;
 
 	public TclCompletionEngine() {
 		this.extensions = TclExtensionManager.getDefault()
@@ -107,6 +109,16 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			this.actualCompletionPosition = completionPosition;
 			this.offset = pos;
 			ModuleDeclaration parsedUnit = this.parser.parse(sourceModule);
+
+			// Collect all packages information.
+			packageCollector = new TclBuildPathPackageCollector();
+			try {
+				parsedUnit.traverse(packageCollector);
+			} catch (Exception e1) {
+				if (DLTKCore.DEBUG) {
+					e1.printStackTrace();
+				}
+			}
 
 			if (parsedUnit != null) {
 				if (VERBOSE) {
@@ -768,6 +780,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		IModelElement[] elements = TclMixinUtils.findModelElementsFromMixin(
 				pattern, mixinClass, this.scriptProject);
+		elements = TclResolver.complexFilter(elements, this.scriptProject,
+				this.packageCollector, false);
 		for (int i = 0; i < elements.length; i++) {
 			// We should filter external source modules with same
 			// external path.
@@ -801,11 +815,6 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected boolean moduleFilter(Set completions, IModelElement modelElement) {
-		// org.eclipse.dltk.core.ISourceModule sourceModule =
-		// (org.eclipse.dltk.core.ISourceModule) modelElement
-		// .getAncestor(IModelElement.SOURCE_MODULE);
-		// firstly lets filter member names
-
 		for (int i = 0; i < this.extensions.length; i++) {
 			if (!this.extensions[i].modelFilter(completions, modelElement)) {
 				return false;

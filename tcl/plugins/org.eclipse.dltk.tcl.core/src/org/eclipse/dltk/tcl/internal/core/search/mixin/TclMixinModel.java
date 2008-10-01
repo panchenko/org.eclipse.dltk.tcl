@@ -13,6 +13,9 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.ITclMixinElement;
 
 public class TclMixinModel {
+	public static final String NAMESPACE_PRERIX = "@";
+	public static final String PACKAGE_PRERIX = "&";
+
 	private static TclMixinModel instance;
 
 	private final Map instances = new HashMap();

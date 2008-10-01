@@ -1,9 +1,14 @@
 package org.eclipse.dltk.tcl.internal.core.codeassist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
@@ -16,10 +21,19 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IParent;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclStatement;
+import org.eclipse.dltk.tcl.core.TclParseUtil;
+import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclPackage;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
 
 public class TclResolver {
@@ -346,5 +360,159 @@ public class TclResolver {
 			}
 		}
 		return statements2;
+	}
+
+	public static List processReferenceModules(List packages,
+			IScriptProject scriptProject) {
+		Set allModules = new HashSet();
+		List orderedModules = new ArrayList();
+		IInterpreterInstall install = null;
+		try {
+			install = ScriptRuntime.getInterpreterInstall(scriptProject);
+		} catch (CoreException e1) {
+			if (DLTKCore.DEBUG) {
+				e1.printStackTrace();
+			}
+		}
+		List required = null;
+		if (install != null) {
+			required = new ArrayList();
+			Set req = new HashSet(required);
+			for (Iterator iterator = packages.iterator(); iterator.hasNext();) {
+				String pkg = (String) iterator.next();
+				required.add(pkg);
+				Set dependencies = PackagesManager.getInstance()
+						.getDependencies(pkg, install).keySet();
+				for (Iterator iterator2 = dependencies.iterator(); iterator2
+						.hasNext();) {
+					String depPkg = (String) iterator2.next();
+					if (req.add(depPkg)) {
+						required.add(depPkg);
+					}
+				}
+			}
+		} else {
+			required = packages;
+		}
+		// We need to look for all required packages from selected
+		// module
+		for (Iterator iterator2 = required.iterator(); iterator2.hasNext();) {
+			String requiredPackage = (String) iterator2.next();
+			String pattern = TclPackage.makeSearchRequest(TclPackage.PROVIDE,
+					requiredPackage);
+			org.eclipse.dltk.core.ISourceModule[] modules = TclMixinModel
+					.getInstance().getMixin(scriptProject).findModules(pattern);
+			for (int i = 0; i < modules.length; i++) {
+				String name = modules[i].getElementName();
+				if (name.equalsIgnoreCase("pkgindex.tcl")
+						|| name.equalsIgnoreCase("tclindex")) {
+					// allModules.add(modules[i]);
+					// This is package we need to add all files from it.
+					IParent parent = (IParent) modules[i].getParent();
+					try {
+						IModelElement[] children = parent.getChildren();
+						for (int j = 0; j < children.length; j++) {
+							IModelElement child = children[j];
+							if (allModules.add(child)) {
+								orderedModules.add(child);
+							}
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
+					}
+
+				} else {
+					if (allModules.add(modules[i])) {
+						orderedModules.add(modules[i]);
+					}
+				}
+			}
+		}
+		return orderedModules;
+	}
+
+	/**
+	 * Filter similar elements with "package require in current module"
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static IModelElement[] complexFilter(IModelElement[] elements,
+			IScriptProject scriptProject,
+			TclBuildPathPackageCollector packageCollector,
+			boolean allVariantsOnFailed) {
+		if (elements == null || elements.length == 0) {
+			return new IModelElement[0];
+		}
+		Map similars = new HashMap();
+		// Obtain duplicate named elements
+		for (int i = 0; i < elements.length; i++) {
+			IModelElement element = elements[i];
+			String fullyQualifiedName = TclParseUtil.getFQNFromModelElement(
+					element, "::");
+			if (similars.containsKey(fullyQualifiedName)) {
+				List similar = (List) similars.get(fullyQualifiedName);
+				similar.add(element);
+			} else {
+				List similar = new ArrayList();
+				similar.add(element);
+				similars.put(fullyQualifiedName, similar);
+			}
+		}
+		List result = new ArrayList();
+		// Filter similar elements
+		for (Iterator iterator = similars.values().iterator(); iterator
+				.hasNext();) {
+			List similar = (List) iterator.next();
+
+			if (similar.size() == 1) {
+				result.add(similar.get(0));
+			} else {
+				// if (required.size() == 0) { // Add first element
+				// }
+				// We need to choose one element.
+				List directives = packageCollector.getRequireDirectives();
+				// We need a reordered list of packages
+				List required = new ArrayList();
+				for (Iterator iterator2 = directives.iterator(); iterator2
+						.hasNext();) {
+					TclPackageDeclaration decl = (TclPackageDeclaration) iterator2
+							.next();
+					required.add(decl.getName());
+				}
+				List allModules = TclResolver.processReferenceModules(required,
+						scriptProject);
+				IModelElement found = null;
+				int index = -1;
+				for (Iterator iterator2 = similar.iterator(); iterator2
+						.hasNext();) {
+					IModelElement element = (IModelElement) iterator2.next();
+					ISourceModule module = (ISourceModule) element
+							.getAncestor(IModelElement.SOURCE_MODULE);
+					int indexOf = allModules.indexOf(module);
+					if (indexOf != -1) {
+						// Found
+						if (indexOf > index) {
+							found = element;
+							index = indexOf;
+						}
+					}
+				}
+				if (found == null) {
+					if (allVariantsOnFailed) {
+						result.addAll(similar);
+					} else {
+						result.add(similar.get(0));
+					}
+				} else {
+					result.add(found);
+				}
+			}
+		}
+
+		return (IModelElement[]) result
+				.toArray(new IModelElement[result.size()]);
 	}
 }

@@ -17,11 +17,13 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.mixin.IMixinRequestor.ElementInfo;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
+import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.IMixinBuildVisitorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespace;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
+import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclPackage;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
 
 public class TclMixinBuildVisitor extends ASTVisitor {
@@ -153,6 +155,7 @@ public class TclMixinBuildVisitor extends ASTVisitor {
 				return false;
 			}
 		}
+		processPackageStatements(s);
 		if (s instanceof TclStatement) {
 			processNamespaceImport(s);
 		}
@@ -185,6 +188,40 @@ public class TclMixinBuildVisitor extends ASTVisitor {
 		}
 
 		return super.visit(s);
+	}
+
+	static boolean isValidPackageName(String packageName) {
+		return packageName != null && packageName.length() != 0
+				&& packageName.indexOf('$') == -1
+				&& packageName.indexOf('[') == -1
+				&& packageName.indexOf(']') == -1;
+	}
+
+	private void processPackageStatements(Statement s) {
+		if (s instanceof TclPackageDeclaration) {
+			final TclPackageDeclaration pkg = (TclPackageDeclaration) s;
+			if (pkg.getStyle() == TclPackageDeclaration.STYLE_IFNEEDED
+					|| pkg.getStyle() == TclPackageDeclaration.STYLE_PROVIDE) {
+				if (isValidPackageName(pkg.getName())) {
+					ElementInfo info = new ElementInfo();
+					String version = "";
+					if (pkg.getVersion() != null
+							&& pkg.getVersion() instanceof SimpleReference) {
+						version = ((SimpleReference) pkg.getVersion())
+								.getName();
+					}
+					info.key = TclPackage.makeKey(pkg.getName(), version,
+							TclPackage.PROVIDE);
+					if (info.key != null) {
+						if (signature) {
+							info.object = new TclPackage(pkg.getName(),
+									version, TclPackage.PROVIDE);
+						}
+						this.requestor.reportElement(info);
+					}
+				}
+			}
+		}
 	}
 
 	private void processNamespaceImport(Statement s) {

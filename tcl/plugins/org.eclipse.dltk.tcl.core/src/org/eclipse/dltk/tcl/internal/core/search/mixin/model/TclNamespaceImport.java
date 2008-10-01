@@ -1,6 +1,9 @@
 package org.eclipse.dltk.tcl.internal.core.search.mixin.model;
 
+import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
+
 public class TclNamespaceImport {
+	private static final String NAMESPACE_PREFIX = TclMixinModel.NAMESPACE_PRERIX;
 	private String namespace = null;
 	private String importNsName = null;
 
@@ -22,7 +25,7 @@ public class TclNamespaceImport {
 			namespace = namespace.substring(2);
 		}
 		if (pattern != null) {
-			return "@" + namespace + "|" + pattern;
+			return NAMESPACE_PREFIX + namespace + "|" + pattern;
 		}
 		return null;
 	}
@@ -41,7 +44,7 @@ public class TclNamespaceImport {
 	}
 
 	public static TclNamespaceImport parseKey(String key) {
-		if (!key.startsWith("@")) {
+		if (!key.startsWith(NAMESPACE_PREFIX)) {
 			return null;
 		}
 		key = key.substring(1);
