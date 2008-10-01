@@ -616,4 +616,10 @@
 		class="org.eclipse.dltk.tcl.internal.ui.DefaultTclSemanticHighlightingExtension">
 	</highlightingExtension>
 </extension>
+<extension
+	point="org.eclipse.dltk.core.scriptFileConfigurator">
+	<scriptFileConfigurator nature="org.eclipse.dltk.tcl.core.nature"
+		class="org.eclipse.dltk.tcl.internal.ui.TclScriptFileConfigurator">
+	</scriptFileConfigurator>
+</extension>
 </plugin>
