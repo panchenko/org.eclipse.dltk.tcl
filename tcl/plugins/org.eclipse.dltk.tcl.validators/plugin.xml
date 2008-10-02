@@ -2,12 +2,12 @@
 <plugin>
    <extension-point id="tclCheck" name="tclCheck" schema="schema/tclCheck.exsd"/>
    <extension
-         point="org.eclipse.dltk.validators.core.validator">
-      <validatorType
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
             class="org.eclipse.dltk.tcl.validators.TclChecksValidatorType"
             id="org.eclipse.dltk.tcl.validators.checks"
             nature="org.eclipse.dltk.tcl.core.nature">
-      </validatorType>
+      </buildParticipant>
    </extension>
    <extension
          point="org.eclipse.dltk.tcl.validators.tclCheck">

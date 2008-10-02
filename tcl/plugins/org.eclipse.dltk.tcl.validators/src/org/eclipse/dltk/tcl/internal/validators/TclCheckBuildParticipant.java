@@ -27,6 +27,9 @@ import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
 import org.eclipse.dltk.compiler.task.TodoTaskSimpleParser;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
+import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
+import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclPlugin;
@@ -42,9 +45,6 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
-import org.eclipse.dltk.validators.core.IBuildParticipant;
-import org.eclipse.dltk.validators.core.IBuildParticipantExtension;
-import org.eclipse.dltk.validators.core.IBuildParticipantExtension2;
 
 public class TclCheckBuildParticipant implements IBuildParticipant,
 		IBuildParticipantExtension, IBuildParticipantExtension2 {

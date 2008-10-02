@@ -32,6 +32,7 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -45,7 +46,6 @@ import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
-import org.eclipse.dltk.validators.core.IBuildParticipantExtension;
 import org.eclipse.osgi.util.NLS;
 
 public class PackageRequireChecker {
@@ -166,7 +166,7 @@ public class PackageRequireChecker {
 	}
 
 	public void endBuild(IProgressMonitor monitor) {
-		if (buildType != IBuildParticipantExtension.STRUCTURE_BUILD) {
+		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD) {
 			// Save packages provided by the project
 			manager.setInternalPackageNames(install, project, packageCollector
 					.getPackagesProvided());
