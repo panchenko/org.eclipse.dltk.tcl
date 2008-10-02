@@ -24,6 +24,9 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
+import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
+import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -32,9 +35,6 @@ import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
-import org.eclipse.dltk.validators.core.IBuildParticipant;
-import org.eclipse.dltk.validators.core.IBuildParticipantExtension;
-import org.eclipse.dltk.validators.core.IBuildParticipantExtension2;
 import org.eclipse.osgi.util.NLS;
 
 public class TclCheckBuilder implements IBuildParticipant,
@@ -134,7 +134,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 	}
 
 	public void endBuild(IProgressMonitor monitor) {
-		if (buildType != STRUCTURE_BUILD) {
+		if (buildType != RECONCILE_BUILD) {
 			// Save packages provided by the project
 			manager.setInternalPackageNames(install, project, packageCollector
 					.getPackagesProvided());

@@ -13,9 +13,9 @@ package org.eclipse.dltk.tcl.internal.core.packages;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.validators.core.AbstractBuildParticipantType;
-import org.eclipse.dltk.validators.core.IBuildParticipant;
 
 public class TclPackageCheckerType extends AbstractBuildParticipantType {
 

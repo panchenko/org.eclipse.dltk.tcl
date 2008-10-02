@@ -13,10 +13,10 @@ package org.eclipse.dltk.tcl.internal.parser;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
+import org.eclipse.dltk.core.builder.AbstractTodoTaskBuildParticipantType;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPlugin;
-import org.eclipse.dltk.validators.core.AbstractTodoTaskBuildParticipantType;
-import org.eclipse.dltk.validators.core.IBuildParticipant;
 
 public class TclTodoParserType extends AbstractTodoTaskBuildParticipantType {
 

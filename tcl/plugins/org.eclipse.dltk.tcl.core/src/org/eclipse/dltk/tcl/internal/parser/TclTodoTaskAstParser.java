@@ -14,8 +14,8 @@ package org.eclipse.dltk.tcl.internal.parser;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
 import org.eclipse.dltk.compiler.task.TodoTaskAstParser;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
-import org.eclipse.dltk.validators.core.IBuildParticipant;
 
 public class TclTodoTaskAstParser extends TodoTaskAstParser implements
 		IBuildParticipant {
