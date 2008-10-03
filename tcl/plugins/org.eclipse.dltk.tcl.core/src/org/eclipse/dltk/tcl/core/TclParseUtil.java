@@ -53,6 +53,10 @@ public class TclParseUtil {
 		return object != null && object.getClass().equals(TclWord.class);
 	}
 
+	/**
+	 * @deprecated
+	 * @see org.eclipse.dltk.utils.TextUtils#createLineTracker(String)
+	 */
 	public static class CodeModel {
 
 		private int[] codeLineLengths;
