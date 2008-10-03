@@ -30,9 +30,12 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
+import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -40,15 +43,17 @@ import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.TclProblems;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.core.packages.Messages;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.osgi.util.NLS;
 
-public class PackageRequireChecker {
+public class PackageRequireChecker implements IBuildParticipant,
+		IBuildParticipantExtension, IBuildParticipantExtension2 {
 
 	private final IScriptProject project;
 	private final IInterpreterInstall install;
@@ -66,15 +71,15 @@ public class PackageRequireChecker {
 
 	private static class ModuleInfo {
 		final String name;
-		final CodeModel codeModel;
+		final ISourceLineTracker lineTracker;
 		final List<PackageRequireRef> requireDirectives;
 		final IProblemReporter reporter;
 
-		public ModuleInfo(String moduleName, CodeModel codeModel,
+		public ModuleInfo(String moduleName, ISourceLineTracker codeModel,
 				IProblemReporter reporter,
 				List<PackageRequireRef> requireDirectives) {
 			this.name = moduleName;
-			this.codeModel = codeModel;
+			this.lineTracker = codeModel;
 			this.reporter = reporter;
 			this.requireDirectives = requireDirectives;
 		}
@@ -141,9 +146,11 @@ public class PackageRequireChecker {
 		}
 	}
 
-	public void buildExternalModule(ISourceModule module,
-			NamespaceScopeProcessor processor) throws CoreException {
-		final String source = module.getSource();
+	private final NamespaceScopeProcessor processor = DefinitionManager
+			.getInstance().createProcessor();
+
+	public void buildExternalModule(IBuildContext context) throws CoreException {
+		final String source = new String(context.getContents());
 		if (source.indexOf(PackageCollector.PACKAGE) == -1) {
 			return;
 		}
@@ -154,14 +161,18 @@ public class PackageRequireChecker {
 		packageCollector.process(commands);
 	}
 
-	public void build(ISourceModule module, List<TclCommand> statements,
-			IProblemReporter reporter, CodeModel model) throws CoreException {
+	public void build(IBuildContext context) throws CoreException {
+		List<TclCommand> statements = TclBuildContext.getStatements(context);
+		if (statements == null) {
+			return;
+		}
 		packageCollector.getRequireRefs().clear();
 		packageCollector.process(statements);
 		if (!packageCollector.getRequireRefs().isEmpty()) {
-			modules.add(new ModuleInfo(module.getElementName(), model,
-					reporter, new ArrayList<PackageRequireRef>(packageCollector
-							.getRequireRefs())));
+			modules.add(new ModuleInfo(context.getSourceModule()
+					.getElementName(), context.getLineTracker(), context
+					.getProblemReporter(), new ArrayList<PackageRequireRef>(
+					packageCollector.getRequireRefs())));
 		}
 	}
 
@@ -185,7 +196,7 @@ public class PackageRequireChecker {
 			monitor.subTask(NLS.bind(Messages.TclCheckBuilder_processing,
 					moduleInfo.name, Integer.toString(remainingWork)));
 			for (PackageRequireRef ref : moduleInfo.requireDirectives) {
-				checkPackage(ref, moduleInfo.reporter, moduleInfo.codeModel);
+				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker);
 			}
 			--remainingWork;
 		}
@@ -213,15 +224,15 @@ public class PackageRequireChecker {
 
 	private void reportPackageProblem(PackageRequireRef pkg,
 			IProblemReporter reporter, String message, String pkgName,
-			CodeModel model) {
+			ISourceLineTracker lineTracker) {
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_REQUIRED_PACKAGE, new String[] { pkgName },
-				ProblemSeverities.Error, pkg.start, pkg.end, model
-						.getLineNumber(pkg.start, pkg.end)));
+				ProblemSeverities.Error, pkg.start, pkg.end, lineTracker
+						.getLineNumberOfOffset(pkg.start)));
 	}
 
 	private void checkPackage(PackageRequireRef pkg, IProblemReporter reporter,
-			CodeModel model) {
+			ISourceLineTracker lineTracker) {
 		final String packageName = pkg.name;
 
 		if (packageCollector.getPackagesProvided().contains(packageName)) {
@@ -235,7 +246,7 @@ public class PackageRequireChecker {
 		if (!knownPackageNames.contains(packageName)) {
 			reportPackageProblem(pkg, reporter, NLS.bind(
 					Messages.TclCheckBuilder_unknownPackage, packageName),
-					packageName, model);
+					packageName, lineTracker);
 			return;
 		}
 
@@ -243,7 +254,7 @@ public class PackageRequireChecker {
 		if (!isAvailable(packageName)) {
 			reportPackageProblem(pkg, reporter, NLS.bind(
 					Messages.TclCheckBuilder_unresolvedDependencies,
-					packageName), packageName, model);
+					packageName), packageName, lineTracker);
 			return;
 		}
 
@@ -254,7 +265,7 @@ public class PackageRequireChecker {
 			if (!isAvailable(dependencyName)) {
 				reportPackageProblem(pkg, reporter, NLS.bind(
 						Messages.TclCheckBuilder_unresolvedDependencies,
-						packageName), packageName, model);
+						packageName), packageName, lineTracker);
 				return;
 			}
 		}
@@ -325,9 +336,10 @@ public class PackageRequireChecker {
 		return true;
 	}
 
-	public DependencyResponse getDependencies(int buildType,
-			Set<?> localElements, Set<?> externalElements,
-			Set<?> oldExternalFolders, Set<?> externalFolders) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public DependencyResponse getDependencies(int buildType, Set localElements,
+			Set externalElements, Set oldExternalFolders, Set externalFolders) {
 		if (buildType == IBuildParticipantExtension.FULL_BUILD
 				|| !oldExternalFolders.equals(externalFolders)) {
 			return DependencyResponse.FULL_EXTERNAL_BUILD;

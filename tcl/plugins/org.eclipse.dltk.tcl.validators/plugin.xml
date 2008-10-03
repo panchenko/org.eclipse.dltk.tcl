@@ -6,7 +6,26 @@
       <buildParticipant
             class="org.eclipse.dltk.tcl.validators.TclChecksValidatorType"
             id="org.eclipse.dltk.tcl.validators.checks"
+            name="Tcl checks"
             nature="org.eclipse.dltk.tcl.core.nature">
+      </buildParticipant>
+      <buildParticipant
+            class="org.eclipse.dltk.tcl.internal.validators.packages.PackageRequireCheckerFactory"
+            id="org.eclipse.dltk.tcl.validators.packages"
+            name="Package Require Checker"
+            nature="org.eclipse.dltk.tcl.core.nature">
+            <requires
+                  id="org.eclipse.dltk.tcl.validators.checks">
+            </requires>
+      </buildParticipant>
+      <buildParticipant
+            class="org.eclipse.dltk.tcl.internal.validators.task.TclTodoParserFactory"
+            id="org.eclipse.dltk.tcl.validators.todo"
+            name="Tcl TODO Task Parser"
+            nature="org.eclipse.dltk.tcl.core.nature">
+            <requires
+                  id="org.eclipse.dltk.tcl.validators.checks">
+            </requires>
       </buildParticipant>
    </extension>
    <extension
