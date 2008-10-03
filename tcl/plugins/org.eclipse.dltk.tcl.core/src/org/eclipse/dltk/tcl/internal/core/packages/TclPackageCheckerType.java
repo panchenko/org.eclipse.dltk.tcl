@@ -15,32 +15,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
-import org.eclipse.dltk.tcl.core.TclNature;
 
 public class TclPackageCheckerType extends AbstractBuildParticipantType {
 
-	private static final String ID = "org.eclipse.dltk.tcl.packageChecker"; //$NON-NLS-1$
-	private static final String NAME = "Tcl Package Checker"; //$NON-NLS-1$
-
-	/**
-	 * @param id
-	 * @param name
-	 */
-	public TclPackageCheckerType() {
-		super(ID, NAME);
-	}
-
-	protected IBuildParticipant createBuildParticipant(IScriptProject project)
+	public IBuildParticipant createBuildParticipant(IScriptProject project)
 			throws CoreException {
 		try {
 			return new TclCheckBuilder(project);
 		} catch (IllegalStateException e) {
 			return null;
 		}
-	}
-
-	public String getNature() {
-		return TclNature.NATURE_ID;
 	}
 
 }

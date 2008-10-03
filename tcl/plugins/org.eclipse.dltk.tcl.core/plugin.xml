@@ -18,6 +18,7 @@
       <validatorType
             class="org.eclipse.dltk.tcl.internal.core.packages.TclPackageCheckerType"
             id="org.eclipse.dltk.tcl.packageChecker"
+            name="Tcl Package Checker"
             nature="org.eclipse.dltk.tcl.core.nature">
       </validatorType>
    </extension>
@@ -26,6 +27,7 @@
       <buildParticipant
             class="org.eclipse.dltk.tcl.internal.parser.TclTodoParserType"
             id="org.eclipse.dltk.tcl.todo"
+            name="Tcl TODO task parser"
             nature="org.eclipse.dltk.tcl.core.nature">
       </buildParticipant>
    </extension>

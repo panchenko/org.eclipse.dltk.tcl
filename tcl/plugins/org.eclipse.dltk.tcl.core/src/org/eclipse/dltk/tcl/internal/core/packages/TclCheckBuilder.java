@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
@@ -117,19 +118,27 @@ public class TclCheckBuilder implements IBuildParticipant,
 		}
 	}
 
-	public void buildExternalModule(ISourceModule module, ModuleDeclaration ast)
-			throws CoreException {
-		packageCollector.getRequireDirectives().clear();
-		packageCollector.process(ast);
+	public void buildExternalModule(IBuildContext context) throws CoreException {
+		final ModuleDeclaration ast = (ModuleDeclaration) context
+				.get(IBuildContext.ATTR_MODULE_DECLARATION);
+		if (ast != null) {
+			packageCollector.getRequireDirectives().clear();
+			packageCollector.process(ast);
+		}
 	}
 
-	public void build(ISourceModule module, ModuleDeclaration ast,
-			IProblemReporter reporter) throws CoreException {
+	public void build(IBuildContext context) throws CoreException {
+		ModuleDeclaration ast = (ModuleDeclaration) context
+				.get(ModuleDeclaration.class.getName());
+		if (ast == null) {
+			return;
+		}
 		packageCollector.getRequireDirectives().clear();
 		packageCollector.process(ast);
 		if (!packageCollector.getRequireDirectives().isEmpty()) {
-			resourceToModuleInfos.put(module, new ModuleInfo(reporter,
-					new ArrayList(packageCollector.getRequireDirectives())));
+			resourceToModuleInfos.put(context.getSourceModule(),
+					new ModuleInfo(context.getProblemReporter(), new ArrayList(
+							packageCollector.getRequireDirectives())));
 		}
 	}
 
