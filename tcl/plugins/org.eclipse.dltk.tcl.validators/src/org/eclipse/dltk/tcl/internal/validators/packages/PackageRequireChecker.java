@@ -337,7 +337,6 @@ public class PackageRequireChecker implements IBuildParticipant,
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public DependencyResponse getDependencies(int buildType, Set localElements,
 			Set externalElements, Set oldExternalFolders, Set externalFolders) {
 		if (buildType == IBuildParticipantExtension.FULL_BUILD
