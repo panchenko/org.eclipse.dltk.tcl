@@ -145,5 +145,9 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 						isEmptyExtension(file.getName()) ? TclCorePreferences.CHECK_CONTENT_EMPTY_EXTENSION_REMOTE
 								: TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_REMOTE);
 	}
+	
+	public String getPreferenceQualifier() {
+		return TclPlugin.PLUGIN_ID;
+	}
 
 }
