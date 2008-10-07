@@ -34,7 +34,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class VariableReferenceImpl extends TclArgumentImpl implements VariableReference {
+public class VariableReferenceImpl extends TclArgumentImpl implements
+		VariableReference {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -100,7 +101,8 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstPackage.VARIABLE_REFERENCE__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.VARIABLE_REFERENCE__NAME, oldName, name));
 	}
 
 	/**
@@ -110,11 +112,13 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 	 */
 	public TclArgument getIndex() {
 		if (index != null && index.eIsProxy()) {
-			InternalEObject oldIndex = (InternalEObject)index;
-			index = (TclArgument)eResolveProxy(oldIndex);
+			InternalEObject oldIndex = (InternalEObject) index;
+			index = (TclArgument) eResolveProxy(oldIndex);
 			if (index != oldIndex) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AstPackage.VARIABLE_REFERENCE__INDEX, oldIndex, index));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							AstPackage.VARIABLE_REFERENCE__INDEX, oldIndex,
+							index));
 			}
 		}
 		return index;
@@ -138,7 +142,8 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 		TclArgument oldIndex = index;
 		index = newIndex;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstPackage.VARIABLE_REFERENCE__INDEX, oldIndex, index));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.VARIABLE_REFERENCE__INDEX, oldIndex, index));
 	}
 
 	/**
@@ -149,11 +154,12 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstPackage.VARIABLE_REFERENCE__NAME:
-				return getName();
-			case AstPackage.VARIABLE_REFERENCE__INDEX:
-				if (resolve) return getIndex();
-				return basicGetIndex();
+		case AstPackage.VARIABLE_REFERENCE__NAME:
+			return getName();
+		case AstPackage.VARIABLE_REFERENCE__INDEX:
+			if (resolve)
+				return getIndex();
+			return basicGetIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -166,12 +172,12 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstPackage.VARIABLE_REFERENCE__NAME:
-				setName((String)newValue);
-				return;
-			case AstPackage.VARIABLE_REFERENCE__INDEX:
-				setIndex((TclArgument)newValue);
-				return;
+		case AstPackage.VARIABLE_REFERENCE__NAME:
+			setName((String) newValue);
+			return;
+		case AstPackage.VARIABLE_REFERENCE__INDEX:
+			setIndex((TclArgument) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -184,12 +190,12 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstPackage.VARIABLE_REFERENCE__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case AstPackage.VARIABLE_REFERENCE__INDEX:
-				setIndex((TclArgument)null);
-				return;
+		case AstPackage.VARIABLE_REFERENCE__NAME:
+			setName(NAME_EDEFAULT);
+			return;
+		case AstPackage.VARIABLE_REFERENCE__INDEX:
+			setIndex((TclArgument) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -202,10 +208,11 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstPackage.VARIABLE_REFERENCE__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case AstPackage.VARIABLE_REFERENCE__INDEX:
-				return index != null;
+		case AstPackage.VARIABLE_REFERENCE__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT
+					.equals(name);
+		case AstPackage.VARIABLE_REFERENCE__INDEX:
+			return index != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -217,7 +224,8 @@ public class VariableReferenceImpl extends TclArgumentImpl implements VariableRe
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");

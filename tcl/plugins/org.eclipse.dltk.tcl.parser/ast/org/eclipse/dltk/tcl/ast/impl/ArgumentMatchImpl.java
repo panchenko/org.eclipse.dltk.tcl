@@ -86,11 +86,13 @@ public class ArgumentMatchImpl extends EObjectImpl implements ArgumentMatch {
 	 */
 	public Argument getDefinition() {
 		if (definition != null && definition.eIsProxy()) {
-			InternalEObject oldDefinition = (InternalEObject)definition;
-			definition = (Argument)eResolveProxy(oldDefinition);
+			InternalEObject oldDefinition = (InternalEObject) definition;
+			definition = (Argument) eResolveProxy(oldDefinition);
 			if (definition != oldDefinition) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, AstPackage.ARGUMENT_MATCH__DEFINITION, oldDefinition, definition));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							AstPackage.ARGUMENT_MATCH__DEFINITION,
+							oldDefinition, definition));
 			}
 		}
 		return definition;
@@ -114,7 +116,9 @@ public class ArgumentMatchImpl extends EObjectImpl implements ArgumentMatch {
 		Argument oldDefinition = definition;
 		definition = newDefinition;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstPackage.ARGUMENT_MATCH__DEFINITION, oldDefinition, definition));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.ARGUMENT_MATCH__DEFINITION, oldDefinition,
+					definition));
 	}
 
 	/**
@@ -124,7 +128,9 @@ public class ArgumentMatchImpl extends EObjectImpl implements ArgumentMatch {
 	 */
 	public EList<TclArgument> getArguments() {
 		if (arguments == null) {
-			arguments = new EObjectResolvingEList<TclArgument>(TclArgument.class, this, AstPackage.ARGUMENT_MATCH__ARGUMENTS);
+			arguments = new EObjectResolvingEList<TclArgument>(
+					TclArgument.class, this,
+					AstPackage.ARGUMENT_MATCH__ARGUMENTS);
 		}
 		return arguments;
 	}
@@ -137,11 +143,12 @@ public class ArgumentMatchImpl extends EObjectImpl implements ArgumentMatch {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstPackage.ARGUMENT_MATCH__DEFINITION:
-				if (resolve) return getDefinition();
-				return basicGetDefinition();
-			case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
-				return getArguments();
+		case AstPackage.ARGUMENT_MATCH__DEFINITION:
+			if (resolve)
+				return getDefinition();
+			return basicGetDefinition();
+		case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
+			return getArguments();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -155,13 +162,13 @@ public class ArgumentMatchImpl extends EObjectImpl implements ArgumentMatch {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstPackage.ARGUMENT_MATCH__DEFINITION:
-				setDefinition((Argument)newValue);
-				return;
-			case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
-				getArguments().clear();
-				getArguments().addAll((Collection<? extends TclArgument>)newValue);
-				return;
+		case AstPackage.ARGUMENT_MATCH__DEFINITION:
+			setDefinition((Argument) newValue);
+			return;
+		case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
+			getArguments().clear();
+			getArguments().addAll((Collection<? extends TclArgument>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -174,12 +181,12 @@ public class ArgumentMatchImpl extends EObjectImpl implements ArgumentMatch {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstPackage.ARGUMENT_MATCH__DEFINITION:
-				setDefinition((Argument)null);
-				return;
-			case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
-				getArguments().clear();
-				return;
+		case AstPackage.ARGUMENT_MATCH__DEFINITION:
+			setDefinition((Argument) null);
+			return;
+		case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
+			getArguments().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -192,10 +199,10 @@ public class ArgumentMatchImpl extends EObjectImpl implements ArgumentMatch {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstPackage.ARGUMENT_MATCH__DEFINITION:
-				return definition != null;
-			case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
-				return arguments != null && !arguments.isEmpty();
+		case AstPackage.ARGUMENT_MATCH__DEFINITION:
+			return definition != null;
+		case AstPackage.ARGUMENT_MATCH__ARGUMENTS:
+			return arguments != null && !arguments.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

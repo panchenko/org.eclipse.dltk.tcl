@@ -36,12 +36,12 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 	 */
 	public static AstFactory init() {
 		try {
-			AstFactory theAstFactory = (AstFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org/eclipse/dltk/tcl/ast.ecore"); 
+			AstFactory theAstFactory = (AstFactory) EPackage.Registry.INSTANCE
+					.getEFactory("http:///org/eclipse/dltk/tcl/ast.ecore");
 			if (theAstFactory != null) {
 				return theAstFactory;
 			}
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new AstFactoryImpl();
@@ -65,18 +65,29 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case AstPackage.NODE: return createNode();
-			case AstPackage.SCRIPT: return createScript();
-			case AstPackage.STRING_ARGUMENT: return createStringArgument();
-			case AstPackage.SUBSTITUTION: return createSubstitution();
-			case AstPackage.TCL_ARGUMENT: return createTclArgument();
-			case AstPackage.TCL_COMMAND: return createTclCommand();
-			case AstPackage.TCL_ARGUMENT_LIST: return createTclArgumentList();
-			case AstPackage.ARGUMENT_MATCH: return createArgumentMatch();
-			case AstPackage.COMPLEX_STRING: return createComplexString();
-			case AstPackage.VARIABLE_REFERENCE: return createVariableReference();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		case AstPackage.NODE:
+			return createNode();
+		case AstPackage.SCRIPT:
+			return createScript();
+		case AstPackage.STRING_ARGUMENT:
+			return createStringArgument();
+		case AstPackage.SUBSTITUTION:
+			return createSubstitution();
+		case AstPackage.TCL_ARGUMENT:
+			return createTclArgument();
+		case AstPackage.TCL_COMMAND:
+			return createTclCommand();
+		case AstPackage.TCL_ARGUMENT_LIST:
+			return createTclArgumentList();
+		case AstPackage.ARGUMENT_MATCH:
+			return createArgumentMatch();
+		case AstPackage.COMPLEX_STRING:
+			return createComplexString();
+		case AstPackage.VARIABLE_REFERENCE:
+			return createVariableReference();
+		default:
+			throw new IllegalArgumentException("The class '" + eClass.getName()
+					+ "' is not a valid classifier");
 		}
 	}
 
@@ -186,7 +197,7 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 	 * @generated
 	 */
 	public AstPackage getAstPackage() {
-		return (AstPackage)getEPackage();
+		return (AstPackage) getEPackage();
 	}
 
 	/**

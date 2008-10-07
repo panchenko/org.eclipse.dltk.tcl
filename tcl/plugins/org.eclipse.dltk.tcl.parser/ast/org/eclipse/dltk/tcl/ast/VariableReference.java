@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.ast;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Variable Reference</b></em>'.

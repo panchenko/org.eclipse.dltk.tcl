@@ -13,7 +13,6 @@ package org.eclipse.dltk.tcl.ast;
 
 import org.eclipse.emf.common.util.EList;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Complex String</b></em>'.

@@ -10,6 +10,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Script" eSuperTypes="#//TclArgument">
     <eStructuralFeatures xsi:type="ecore:EReference" name="commands" upperBound="-1"
         eType="#//TclCommand"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contentStart" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contentEnd" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StringArgument" eSuperTypes="#//TclArgument">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

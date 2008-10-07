@@ -22,6 +22,8 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.Script#getCommands <em>Commands</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.Script#getContentStart <em>Content Start</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.Script#getContentEnd <em>Content End</em>}</li>
  * </ul>
  * </p>
  *
@@ -45,5 +47,57 @@ public interface Script extends TclArgument {
 	 * @generated
 	 */
 	EList<TclCommand> getCommands();
+
+	/**
+	 * Returns the value of the '<em><b>Content Start</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Content Start</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Content Start</em>' attribute.
+	 * @see #setContentStart(int)
+	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getScript_ContentStart()
+	 * @model
+	 * @generated
+	 */
+	int getContentStart();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.Script#getContentStart <em>Content Start</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Content Start</em>' attribute.
+	 * @see #getContentStart()
+	 * @generated
+	 */
+	void setContentStart(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Content End</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Content End</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Content End</em>' attribute.
+	 * @see #setContentEnd(int)
+	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getScript_ContentEnd()
+	 * @model
+	 * @generated
+	 */
+	int getContentEnd();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.Script#getContentEnd <em>Content End</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Content End</em>' attribute.
+	 * @see #getContentEnd()
+	 * @generated
+	 */
+	void setContentEnd(int value);
 
 } // Script

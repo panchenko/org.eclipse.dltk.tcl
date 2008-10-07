@@ -110,7 +110,8 @@ public class NodeImpl extends EObjectImpl implements Node {
 		int oldStart = start;
 		start = newStart;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstPackage.NODE__START, oldStart, start));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.NODE__START, oldStart, start));
 	}
 
 	/**
@@ -131,7 +132,8 @@ public class NodeImpl extends EObjectImpl implements Node {
 		int oldEnd = end;
 		end = newEnd;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstPackage.NODE__END, oldEnd, end));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.NODE__END, oldEnd, end));
 	}
 
 	/**
@@ -142,10 +144,10 @@ public class NodeImpl extends EObjectImpl implements Node {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstPackage.NODE__START:
-				return new Integer(getStart());
-			case AstPackage.NODE__END:
-				return new Integer(getEnd());
+		case AstPackage.NODE__START:
+			return new Integer(getStart());
+		case AstPackage.NODE__END:
+			return new Integer(getEnd());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -158,12 +160,12 @@ public class NodeImpl extends EObjectImpl implements Node {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstPackage.NODE__START:
-				setStart(((Integer)newValue).intValue());
-				return;
-			case AstPackage.NODE__END:
-				setEnd(((Integer)newValue).intValue());
-				return;
+		case AstPackage.NODE__START:
+			setStart(((Integer) newValue).intValue());
+			return;
+		case AstPackage.NODE__END:
+			setEnd(((Integer) newValue).intValue());
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -176,12 +178,12 @@ public class NodeImpl extends EObjectImpl implements Node {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstPackage.NODE__START:
-				setStart(START_EDEFAULT);
-				return;
-			case AstPackage.NODE__END:
-				setEnd(END_EDEFAULT);
-				return;
+		case AstPackage.NODE__START:
+			setStart(START_EDEFAULT);
+			return;
+		case AstPackage.NODE__END:
+			setEnd(END_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -194,10 +196,10 @@ public class NodeImpl extends EObjectImpl implements Node {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstPackage.NODE__START:
-				return start != START_EDEFAULT;
-			case AstPackage.NODE__END:
-				return end != END_EDEFAULT;
+		case AstPackage.NODE__START:
+			return start != START_EDEFAULT;
+		case AstPackage.NODE__END:
+			return end != END_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -209,7 +211,8 @@ public class NodeImpl extends EObjectImpl implements Node {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (start: ");

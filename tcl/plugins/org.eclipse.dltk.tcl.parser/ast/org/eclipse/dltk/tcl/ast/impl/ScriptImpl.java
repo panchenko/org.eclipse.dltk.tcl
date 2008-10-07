@@ -16,8 +16,10 @@ import java.util.Collection;
 import org.eclipse.dltk.tcl.ast.AstPackage;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -28,6 +30,8 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ScriptImpl#getCommands <em>Commands</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ScriptImpl#getContentStart <em>Content Start</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ScriptImpl#getContentEnd <em>Content End</em>}</li>
  * </ul>
  * </p>
  *
@@ -43,6 +47,43 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 	 * @ordered
 	 */
 	protected EList<TclCommand> commands;
+
+	/**
+	 * The default value of the '{@link #getContentStart() <em>Content Start</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getContentStart()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int CONTENT_START_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getContentStart() <em>Content Start</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getContentStart()
+	 * @generated
+	 * @ordered
+	 */
+	protected int contentStart = CONTENT_START_EDEFAULT;
+	/**
+	 * The default value of the '{@link #getContentEnd() <em>Content End</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getContentEnd()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int CONTENT_END_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getContentEnd() <em>Content End</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getContentEnd()
+	 * @generated
+	 * @ordered
+	 */
+	protected int contentEnd = CONTENT_END_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -70,9 +111,55 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 	 */
 	public EList<TclCommand> getCommands() {
 		if (commands == null) {
-			commands = new EObjectResolvingEList<TclCommand>(TclCommand.class, this, AstPackage.SCRIPT__COMMANDS);
+			commands = new EObjectResolvingEList<TclCommand>(TclCommand.class,
+					this, AstPackage.SCRIPT__COMMANDS);
 		}
 		return commands;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getContentStart() {
+		return contentStart;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setContentStart(int newContentStart) {
+		int oldContentStart = contentStart;
+		contentStart = newContentStart;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.SCRIPT__CONTENT_START, oldContentStart,
+					contentStart));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getContentEnd() {
+		return contentEnd;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setContentEnd(int newContentEnd) {
+		int oldContentEnd = contentEnd;
+		contentEnd = newContentEnd;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.SCRIPT__CONTENT_END, oldContentEnd, contentEnd));
 	}
 
 	/**
@@ -83,8 +170,12 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstPackage.SCRIPT__COMMANDS:
-				return getCommands();
+		case AstPackage.SCRIPT__COMMANDS:
+			return getCommands();
+		case AstPackage.SCRIPT__CONTENT_START:
+			return new Integer(getContentStart());
+		case AstPackage.SCRIPT__CONTENT_END:
+			return new Integer(getContentEnd());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -98,10 +189,16 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstPackage.SCRIPT__COMMANDS:
-				getCommands().clear();
-				getCommands().addAll((Collection<? extends TclCommand>)newValue);
-				return;
+		case AstPackage.SCRIPT__COMMANDS:
+			getCommands().clear();
+			getCommands().addAll((Collection<? extends TclCommand>) newValue);
+			return;
+		case AstPackage.SCRIPT__CONTENT_START:
+			setContentStart(((Integer) newValue).intValue());
+			return;
+		case AstPackage.SCRIPT__CONTENT_END:
+			setContentEnd(((Integer) newValue).intValue());
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -114,9 +211,15 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstPackage.SCRIPT__COMMANDS:
-				getCommands().clear();
-				return;
+		case AstPackage.SCRIPT__COMMANDS:
+			getCommands().clear();
+			return;
+		case AstPackage.SCRIPT__CONTENT_START:
+			setContentStart(CONTENT_START_EDEFAULT);
+			return;
+		case AstPackage.SCRIPT__CONTENT_END:
+			setContentEnd(CONTENT_END_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -129,10 +232,33 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstPackage.SCRIPT__COMMANDS:
-				return commands != null && !commands.isEmpty();
+		case AstPackage.SCRIPT__COMMANDS:
+			return commands != null && !commands.isEmpty();
+		case AstPackage.SCRIPT__CONTENT_START:
+			return contentStart != CONTENT_START_EDEFAULT;
+		case AstPackage.SCRIPT__CONTENT_END:
+			return contentEnd != CONTENT_END_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (contentStart: ");
+		result.append(contentStart);
+		result.append(", contentEnd: ");
+		result.append(contentEnd);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ScriptImpl

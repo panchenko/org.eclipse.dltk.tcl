@@ -67,7 +67,7 @@ public class AstAdapterFactory extends AdapterFactoryImpl {
 			return true;
 		}
 		if (object instanceof EObject) {
-			return ((EObject)object).eClass().getEPackage() == modelPackage;
+			return ((EObject) object).eClass().getEPackage() == modelPackage;
 		}
 		return false;
 	}
@@ -78,57 +78,67 @@ public class AstAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AstSwitch<Adapter> modelSwitch =
-		new AstSwitch<Adapter>() {
-			@Override
-			public Adapter caseNode(Node object) {
-				return createNodeAdapter();
-			}
-			@Override
-			public Adapter caseScript(Script object) {
-				return createScriptAdapter();
-			}
-			@Override
-			public Adapter caseStringArgument(StringArgument object) {
-				return createStringArgumentAdapter();
-			}
-			@Override
-			public Adapter caseSubstitution(Substitution object) {
-				return createSubstitutionAdapter();
-			}
-			@Override
-			public Adapter caseTclArgument(TclArgument object) {
-				return createTclArgumentAdapter();
-			}
-			@Override
-			public Adapter caseTclCommand(TclCommand object) {
-				return createTclCommandAdapter();
-			}
-			@Override
-			public Adapter caseTclArgumentList(TclArgumentList object) {
-				return createTclArgumentListAdapter();
-			}
-			@Override
-			public Adapter caseArgumentMatch(ArgumentMatch object) {
-				return createArgumentMatchAdapter();
-			}
-			@Override
-			public Adapter caseComplexString(ComplexString object) {
-				return createComplexStringAdapter();
-			}
-			@Override
-			public Adapter caseVariableReference(VariableReference object) {
-				return createVariableReferenceAdapter();
-			}
-			@Override
-			public Adapter caseISubstitution(ISubstitution object) {
-				return createISubstitutionAdapter();
-			}
-			@Override
-			public Adapter defaultCase(EObject object) {
-				return createEObjectAdapter();
-			}
-		};
+	protected AstSwitch<Adapter> modelSwitch = new AstSwitch<Adapter>() {
+		@Override
+		public Adapter caseNode(Node object) {
+			return createNodeAdapter();
+		}
+
+		@Override
+		public Adapter caseScript(Script object) {
+			return createScriptAdapter();
+		}
+
+		@Override
+		public Adapter caseStringArgument(StringArgument object) {
+			return createStringArgumentAdapter();
+		}
+
+		@Override
+		public Adapter caseSubstitution(Substitution object) {
+			return createSubstitutionAdapter();
+		}
+
+		@Override
+		public Adapter caseTclArgument(TclArgument object) {
+			return createTclArgumentAdapter();
+		}
+
+		@Override
+		public Adapter caseTclCommand(TclCommand object) {
+			return createTclCommandAdapter();
+		}
+
+		@Override
+		public Adapter caseTclArgumentList(TclArgumentList object) {
+			return createTclArgumentListAdapter();
+		}
+
+		@Override
+		public Adapter caseArgumentMatch(ArgumentMatch object) {
+			return createArgumentMatchAdapter();
+		}
+
+		@Override
+		public Adapter caseComplexString(ComplexString object) {
+			return createComplexStringAdapter();
+		}
+
+		@Override
+		public Adapter caseVariableReference(VariableReference object) {
+			return createVariableReferenceAdapter();
+		}
+
+		@Override
+		public Adapter caseISubstitution(ISubstitution object) {
+			return createISubstitutionAdapter();
+		}
+
+		@Override
+		public Adapter defaultCase(EObject object) {
+			return createEObjectAdapter();
+		}
+	};
 
 	/**
 	 * Creates an adapter for the <code>target</code>.
@@ -140,9 +150,8 @@ public class AstAdapterFactory extends AdapterFactoryImpl {
 	 */
 	@Override
 	public Adapter createAdapter(Notifier target) {
-		return modelSwitch.doSwitch((EObject)target);
+		return modelSwitch.doSwitch((EObject) target);
 	}
-
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.ast.Node <em>Node</em>}'.

@@ -70,7 +70,9 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	 */
 	public EList<TclArgument> getArguments() {
 		if (arguments == null) {
-			arguments = new EObjectResolvingEList<TclArgument>(TclArgument.class, this, AstPackage.COMPLEX_STRING__ARGUMENTS);
+			arguments = new EObjectResolvingEList<TclArgument>(
+					TclArgument.class, this,
+					AstPackage.COMPLEX_STRING__ARGUMENTS);
 		}
 		return arguments;
 	}
@@ -83,8 +85,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstPackage.COMPLEX_STRING__ARGUMENTS:
-				return getArguments();
+		case AstPackage.COMPLEX_STRING__ARGUMENTS:
+			return getArguments();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -98,10 +100,10 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstPackage.COMPLEX_STRING__ARGUMENTS:
-				getArguments().clear();
-				getArguments().addAll((Collection<? extends TclArgument>)newValue);
-				return;
+		case AstPackage.COMPLEX_STRING__ARGUMENTS:
+			getArguments().clear();
+			getArguments().addAll((Collection<? extends TclArgument>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -114,9 +116,9 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstPackage.COMPLEX_STRING__ARGUMENTS:
-				getArguments().clear();
-				return;
+		case AstPackage.COMPLEX_STRING__ARGUMENTS:
+			getArguments().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -129,8 +131,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstPackage.COMPLEX_STRING__ARGUMENTS:
-				return arguments != null && !arguments.isEmpty();
+		case AstPackage.COMPLEX_STRING__ARGUMENTS:
+			return arguments != null && !arguments.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

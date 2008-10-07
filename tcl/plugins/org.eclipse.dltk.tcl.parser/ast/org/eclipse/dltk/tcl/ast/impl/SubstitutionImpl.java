@@ -70,7 +70,8 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	 */
 	public EList<TclCommand> getCommands() {
 		if (commands == null) {
-			commands = new EObjectResolvingEList<TclCommand>(TclCommand.class, this, AstPackage.SUBSTITUTION__COMMANDS);
+			commands = new EObjectResolvingEList<TclCommand>(TclCommand.class,
+					this, AstPackage.SUBSTITUTION__COMMANDS);
 		}
 		return commands;
 	}
@@ -83,8 +84,8 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstPackage.SUBSTITUTION__COMMANDS:
-				return getCommands();
+		case AstPackage.SUBSTITUTION__COMMANDS:
+			return getCommands();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -98,10 +99,10 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstPackage.SUBSTITUTION__COMMANDS:
-				getCommands().clear();
-				getCommands().addAll((Collection<? extends TclCommand>)newValue);
-				return;
+		case AstPackage.SUBSTITUTION__COMMANDS:
+			getCommands().clear();
+			getCommands().addAll((Collection<? extends TclCommand>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -114,9 +115,9 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstPackage.SUBSTITUTION__COMMANDS:
-				getCommands().clear();
-				return;
+		case AstPackage.SUBSTITUTION__COMMANDS:
+			getCommands().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -129,8 +130,8 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstPackage.SUBSTITUTION__COMMANDS:
-				return commands != null && !commands.isEmpty();
+		case AstPackage.SUBSTITUTION__COMMANDS:
+			return commands != null && !commands.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

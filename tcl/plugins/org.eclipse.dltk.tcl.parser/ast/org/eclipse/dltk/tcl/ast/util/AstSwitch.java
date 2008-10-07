@@ -79,13 +79,10 @@ public class AstSwitch<T> {
 	protected T doSwitch(EClass theEClass, EObject theEObject) {
 		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		}
-		else {
+		} else {
 			List<EClass> eSuperTypes = theEClass.getESuperTypes();
-			return
-				eSuperTypes.isEmpty() ?
-					defaultCase(theEObject) :
-					doSwitch(eSuperTypes.get(0), theEObject);
+			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(
+					eSuperTypes.get(0), theEObject);
 		}
 	}
 
@@ -98,90 +95,119 @@ public class AstSwitch<T> {
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case AstPackage.NODE: {
-				Node node = (Node)theEObject;
-				T result = caseNode(node);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.SCRIPT: {
-				Script script = (Script)theEObject;
-				T result = caseScript(script);
-				if (result == null) result = caseTclArgument(script);
-				if (result == null) result = caseNode(script);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.STRING_ARGUMENT: {
-				StringArgument stringArgument = (StringArgument)theEObject;
-				T result = caseStringArgument(stringArgument);
-				if (result == null) result = caseTclArgument(stringArgument);
-				if (result == null) result = caseNode(stringArgument);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.SUBSTITUTION: {
-				Substitution substitution = (Substitution)theEObject;
-				T result = caseSubstitution(substitution);
-				if (result == null) result = caseTclArgument(substitution);
-				if (result == null) result = caseISubstitution(substitution);
-				if (result == null) result = caseNode(substitution);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.TCL_ARGUMENT: {
-				TclArgument tclArgument = (TclArgument)theEObject;
-				T result = caseTclArgument(tclArgument);
-				if (result == null) result = caseNode(tclArgument);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.TCL_COMMAND: {
-				TclCommand tclCommand = (TclCommand)theEObject;
-				T result = caseTclCommand(tclCommand);
-				if (result == null) result = caseNode(tclCommand);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.TCL_ARGUMENT_LIST: {
-				TclArgumentList tclArgumentList = (TclArgumentList)theEObject;
-				T result = caseTclArgumentList(tclArgumentList);
-				if (result == null) result = caseTclArgument(tclArgumentList);
-				if (result == null) result = caseNode(tclArgumentList);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.ARGUMENT_MATCH: {
-				ArgumentMatch argumentMatch = (ArgumentMatch)theEObject;
-				T result = caseArgumentMatch(argumentMatch);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.COMPLEX_STRING: {
-				ComplexString complexString = (ComplexString)theEObject;
-				T result = caseComplexString(complexString);
-				if (result == null) result = caseTclArgument(complexString);
-				if (result == null) result = caseISubstitution(complexString);
-				if (result == null) result = caseNode(complexString);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.VARIABLE_REFERENCE: {
-				VariableReference variableReference = (VariableReference)theEObject;
-				T result = caseVariableReference(variableReference);
-				if (result == null) result = caseTclArgument(variableReference);
-				if (result == null) result = caseISubstitution(variableReference);
-				if (result == null) result = caseNode(variableReference);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case AstPackage.ISUBSTITUTION: {
-				ISubstitution iSubstitution = (ISubstitution)theEObject;
-				T result = caseISubstitution(iSubstitution);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			default: return defaultCase(theEObject);
+		case AstPackage.NODE: {
+			Node node = (Node) theEObject;
+			T result = caseNode(node);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.SCRIPT: {
+			Script script = (Script) theEObject;
+			T result = caseScript(script);
+			if (result == null)
+				result = caseTclArgument(script);
+			if (result == null)
+				result = caseNode(script);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.STRING_ARGUMENT: {
+			StringArgument stringArgument = (StringArgument) theEObject;
+			T result = caseStringArgument(stringArgument);
+			if (result == null)
+				result = caseTclArgument(stringArgument);
+			if (result == null)
+				result = caseNode(stringArgument);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.SUBSTITUTION: {
+			Substitution substitution = (Substitution) theEObject;
+			T result = caseSubstitution(substitution);
+			if (result == null)
+				result = caseTclArgument(substitution);
+			if (result == null)
+				result = caseISubstitution(substitution);
+			if (result == null)
+				result = caseNode(substitution);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.TCL_ARGUMENT: {
+			TclArgument tclArgument = (TclArgument) theEObject;
+			T result = caseTclArgument(tclArgument);
+			if (result == null)
+				result = caseNode(tclArgument);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.TCL_COMMAND: {
+			TclCommand tclCommand = (TclCommand) theEObject;
+			T result = caseTclCommand(tclCommand);
+			if (result == null)
+				result = caseNode(tclCommand);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.TCL_ARGUMENT_LIST: {
+			TclArgumentList tclArgumentList = (TclArgumentList) theEObject;
+			T result = caseTclArgumentList(tclArgumentList);
+			if (result == null)
+				result = caseTclArgument(tclArgumentList);
+			if (result == null)
+				result = caseNode(tclArgumentList);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.ARGUMENT_MATCH: {
+			ArgumentMatch argumentMatch = (ArgumentMatch) theEObject;
+			T result = caseArgumentMatch(argumentMatch);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.COMPLEX_STRING: {
+			ComplexString complexString = (ComplexString) theEObject;
+			T result = caseComplexString(complexString);
+			if (result == null)
+				result = caseTclArgument(complexString);
+			if (result == null)
+				result = caseISubstitution(complexString);
+			if (result == null)
+				result = caseNode(complexString);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.VARIABLE_REFERENCE: {
+			VariableReference variableReference = (VariableReference) theEObject;
+			T result = caseVariableReference(variableReference);
+			if (result == null)
+				result = caseTclArgument(variableReference);
+			if (result == null)
+				result = caseISubstitution(variableReference);
+			if (result == null)
+				result = caseNode(variableReference);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.ISUBSTITUTION: {
+			ISubstitution iSubstitution = (ISubstitution) theEObject;
+			T result = caseISubstitution(iSubstitution);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		default:
+			return defaultCase(theEObject);
 		}
 	}
 

@@ -30,7 +30,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class StringArgumentImpl extends TclArgumentImpl implements StringArgument {
+public class StringArgumentImpl extends TclArgumentImpl implements
+		StringArgument {
 	/**
 	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -88,7 +89,8 @@ public class StringArgumentImpl extends TclArgumentImpl implements StringArgumen
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstPackage.STRING_ARGUMENT__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.STRING_ARGUMENT__VALUE, oldValue, value));
 	}
 
 	/**
@@ -99,8 +101,8 @@ public class StringArgumentImpl extends TclArgumentImpl implements StringArgumen
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstPackage.STRING_ARGUMENT__VALUE:
-				return getValue();
+		case AstPackage.STRING_ARGUMENT__VALUE:
+			return getValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,9 +115,9 @@ public class StringArgumentImpl extends TclArgumentImpl implements StringArgumen
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstPackage.STRING_ARGUMENT__VALUE:
-				setValue((String)newValue);
-				return;
+		case AstPackage.STRING_ARGUMENT__VALUE:
+			setValue((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -128,9 +130,9 @@ public class StringArgumentImpl extends TclArgumentImpl implements StringArgumen
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstPackage.STRING_ARGUMENT__VALUE:
-				setValue(VALUE_EDEFAULT);
-				return;
+		case AstPackage.STRING_ARGUMENT__VALUE:
+			setValue(VALUE_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -143,8 +145,9 @@ public class StringArgumentImpl extends TclArgumentImpl implements StringArgumen
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstPackage.STRING_ARGUMENT__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+		case AstPackage.STRING_ARGUMENT__VALUE:
+			return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT
+					.equals(value);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -156,7 +159,8 @@ public class StringArgumentImpl extends TclArgumentImpl implements StringArgumen
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (value: ");

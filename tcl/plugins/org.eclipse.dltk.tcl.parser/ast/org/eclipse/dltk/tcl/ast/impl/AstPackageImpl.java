@@ -251,6 +251,24 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getScript_ContentStart() {
+		return (EAttribute) scriptEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getScript_ContentEnd() {
+		return (EAttribute) scriptEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getStringArgument() {
 		return stringArgumentEClass;
 	}
@@ -502,6 +520,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 
 		scriptEClass = createEClass(SCRIPT);
 		createEReference(scriptEClass, SCRIPT__COMMANDS);
+		createEAttribute(scriptEClass, SCRIPT__CONTENT_START);
+		createEAttribute(scriptEClass, SCRIPT__CONTENT_END);
 
 		stringArgumentEClass = createEClass(STRING_ARGUMENT);
 		createEAttribute(stringArgumentEClass, STRING_ARGUMENT__VALUE);
@@ -599,6 +619,14 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				"commands", null, 0, -1, Script.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getScript_ContentStart(), ecorePackage.getEInt(),
+				"contentStart", null, 0, 1, Script.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getScript_ContentEnd(), ecorePackage.getEInt(),
+				"contentEnd", null, 0, 1, Script.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(stringArgumentEClass, StringArgument.class,
 				"StringArgument", !IS_ABSTRACT, !IS_INTERFACE,

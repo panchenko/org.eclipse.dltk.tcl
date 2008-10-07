@@ -176,13 +176,31 @@ public interface AstPackage extends EPackage {
 	int SCRIPT__COMMANDS = TCL_ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Content Start</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT__CONTENT_START = TCL_ARGUMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Content End</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT__CONTENT_END = TCL_ARGUMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Script</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 1;
+	int SCRIPT_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.StringArgumentImpl <em>String Argument</em>}' class.
@@ -633,6 +651,28 @@ public interface AstPackage extends EPackage {
 	EReference getScript_Commands();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.Script#getContentStart <em>Content Start</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Content Start</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.Script#getContentStart()
+	 * @see #getScript()
+	 * @generated
+	 */
+	EAttribute getScript_ContentStart();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.Script#getContentEnd <em>Content End</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Content End</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.Script#getContentEnd()
+	 * @see #getScript()
+	 * @generated
+	 */
+	EAttribute getScript_ContentEnd();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.StringArgument <em>String Argument</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -952,6 +992,22 @@ public interface AstPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SCRIPT__COMMANDS = eINSTANCE.getScript_Commands();
+
+		/**
+		 * The meta object literal for the '<em><b>Content Start</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCRIPT__CONTENT_START = eINSTANCE.getScript_ContentStart();
+
+		/**
+		 * The meta object literal for the '<em><b>Content End</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCRIPT__CONTENT_END = eINSTANCE.getScript_ContentEnd();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.StringArgumentImpl <em>String Argument</em>}' class.
