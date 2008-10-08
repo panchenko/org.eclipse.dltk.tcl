@@ -20,7 +20,8 @@ public class TclMixinUtils {
 				.find(pattern, delta);
 		if (TRACE_COMPLETION_TIME) {
 			System.out.println("findMethod from mixin: request model:"
-					+ Long.toString(System.currentTimeMillis() - time));
+					+ Long.toString(System.currentTimeMillis() - time) + ":"
+					+ pattern);
 		}
 		time = System.currentTimeMillis();
 		for (int i = 0; i < find.length; i++) {

@@ -461,7 +461,9 @@ public class TclResolver {
 				similars.put(fullyQualifiedName, similar);
 			}
 		}
+		boolean processRequire = false;
 		List result = new ArrayList();
+		List allModules = null;
 		// Filter similar elements
 		for (Iterator iterator = similars.values().iterator(); iterator
 				.hasNext();) {
@@ -470,20 +472,21 @@ public class TclResolver {
 			if (similar.size() == 1) {
 				result.add(similar.get(0));
 			} else {
-				// if (required.size() == 0) { // Add first element
-				// }
-				// We need to choose one element.
-				List directives = packageCollector.getRequireDirectives();
-				// We need a reordered list of packages
-				List required = new ArrayList();
-				for (Iterator iterator2 = directives.iterator(); iterator2
-						.hasNext();) {
-					TclPackageDeclaration decl = (TclPackageDeclaration) iterator2
-							.next();
-					required.add(decl.getName());
+				if (processRequire == false) {
+					processRequire = true;
+					// We need to choose one element.
+					List directives = packageCollector.getRequireDirectives();
+					// We need a reordered list of packages
+					List required = new ArrayList();
+					for (Iterator iterator2 = directives.iterator(); iterator2
+							.hasNext();) {
+						TclPackageDeclaration decl = (TclPackageDeclaration) iterator2
+								.next();
+						required.add(decl.getName());
+					}
+					allModules = TclResolver.processReferenceModules(required,
+							scriptProject);
 				}
-				List allModules = TclResolver.processReferenceModules(required,
-						scriptProject);
 				IModelElement found = null;
 				int index = -1;
 				for (Iterator iterator2 = similar.iterator(); iterator2
