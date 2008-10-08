@@ -191,9 +191,9 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				}
 				findMethodFromMixin(name);
 				// findMethodFromSearch(name);
-				if (this.selectionElements.size() > 0) {
-					return;
-				}
+				// if (this.selectionElements.size() > 0) {
+				// return;
+				// }
 				String fqnName = null;
 				if (astNodeParent instanceof TypeDeclaration) {
 					TypeDeclaration t = (TypeDeclaration) astNodeParent;
