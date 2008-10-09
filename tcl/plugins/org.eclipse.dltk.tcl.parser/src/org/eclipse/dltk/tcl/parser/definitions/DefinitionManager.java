@@ -53,7 +53,7 @@ public class DefinitionManager {
 	}
 
 	public NamespaceScopeProcessor createProcessor() {
-		return getCoreProcessor();
+		return new NamespaceScopeProcessor(getCoreProcessor());
 	}
 
 	public NamespaceScopeProcessor createNewProcessor() {

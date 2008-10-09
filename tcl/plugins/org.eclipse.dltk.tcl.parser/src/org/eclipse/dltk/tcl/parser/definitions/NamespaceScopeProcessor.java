@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Command;
@@ -42,6 +43,15 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 	private Stack<TclCommand> commandStack = new Stack<TclCommand>();
 
 	public NamespaceScopeProcessor() {
+	}
+
+	// Copy internal data.
+	public NamespaceScopeProcessor(NamespaceScopeProcessor coreProcessor) {
+		this.scopes = new HashSet(coreProcessor.scopes);
+		Map<String, Set<Command>> map = coreProcessor.commands;
+		for (Entry<String, Set<Command>> entry : map.entrySet()) {
+			commands.put(entry.getKey(), new HashSet(entry.getValue()));
+		}
 	}
 
 	public void addScope(Scope scope) {
