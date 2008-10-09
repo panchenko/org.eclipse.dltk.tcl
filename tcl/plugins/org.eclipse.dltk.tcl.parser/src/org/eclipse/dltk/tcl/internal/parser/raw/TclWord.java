@@ -34,13 +34,13 @@ public class TclWord extends TclElement {
 		if (contents.size() > 0)
 			o = contents.get(contents.size() - 1);
 		if (o != null && o instanceof String) {
-			contents.set(contents.size() - 1, (String) o + text);
+			contents.set(contents.size() - 1, ((String) o).concat(text));
 		} else
 			contents.add(text);
 	}
 
 	public void add(char c) {
-		add("" + c); //$NON-NLS-1$
+		add(String.valueOf(c));
 	}
 
 	public void add(ISubstitution s) {
@@ -77,7 +77,7 @@ public class TclWord extends TclElement {
 		}
 		return result;
 	}
-	
+
 	public String toString() {
 		return "TclWord" + contents; //$NON-NLS-1$
 	}
