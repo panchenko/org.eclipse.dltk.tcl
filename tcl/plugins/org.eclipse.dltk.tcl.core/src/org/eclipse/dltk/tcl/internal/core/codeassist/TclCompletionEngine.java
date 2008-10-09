@@ -10,9 +10,11 @@
 package org.eclipse.dltk.tcl.internal.core.codeassist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -782,11 +784,13 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				pattern, mixinClass, this.scriptProject);
 		elements = TclResolver.complexFilter(elements, this.scriptProject,
 				this.packageCollector, false);
+		final Map cachedNames = new HashMap();
 		for (int i = 0; i < elements.length; i++) {
 			// We should filter external source modules with same
 			// external path.
-			if (this.moduleFilter(completions, elements[i])) {
-				completions.add(elements[i]);
+			final IModelElement element = elements[i];
+			if (this.moduleFilter(completions, element, cachedNames)) {
+				completions.add(element);
 			}
 		}
 	}
@@ -814,15 +818,16 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		this.findMixinTclElement(methods, tok, TclProc.class);
 	}
 
-	protected boolean moduleFilter(Set completions, IModelElement modelElement) {
+	protected boolean moduleFilter(Set completions, IModelElement modelElement,
+			Map cachedNames) {
 		for (int i = 0; i < this.extensions.length; i++) {
 			if (!this.extensions[i].modelFilter(completions, modelElement)) {
 				return false;
 			}
 		}
 
-		String fullyQualifiedName = TclParseUtil.getFQNFromModelElement(
-				modelElement, "::");
+		String fullyQualifiedName = getFQNFromModelElement(cachedNames,
+				modelElement);
 
 		for (Iterator iterator = completions.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
@@ -835,12 +840,23 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				continue;
 			}
 			IModelElement element = (IModelElement) o;
-			String eName = TclParseUtil.getFQNFromModelElement(element, "::");
+			String eName = getFQNFromModelElement(cachedNames, element);
 			if (eName.equals(fullyQualifiedName)) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private static final String getFQNFromModelElement(Map cachedNames,
+			IModelElement element) {
+		String cachedName = (String) cachedNames.get(element);
+		if (cachedName != null) {
+			return cachedName;
+		}
+		cachedName = TclParseUtil.getFQNFromModelElement(element, "::");
+		cachedNames.put(element, cachedName);
+		return cachedName;
 	}
 
 	public List toList(Set types) {
