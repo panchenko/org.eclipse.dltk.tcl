@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
@@ -25,12 +24,9 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.launching.IInterpreterInstall;
-import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclPackage;
@@ -366,34 +362,35 @@ public class TclResolver {
 			IScriptProject scriptProject) {
 		Set allModules = new HashSet();
 		List orderedModules = new ArrayList();
-		IInterpreterInstall install = null;
-		try {
-			install = ScriptRuntime.getInterpreterInstall(scriptProject);
-		} catch (CoreException e1) {
-			if (DLTKCore.DEBUG) {
-				e1.printStackTrace();
-			}
-		}
-		List required = null;
-		if (install != null) {
-			required = new ArrayList();
-			Set req = new HashSet(required);
-			for (Iterator iterator = packages.iterator(); iterator.hasNext();) {
-				String pkg = (String) iterator.next();
-				required.add(pkg);
-				Set dependencies = PackagesManager.getInstance()
-						.getDependencies(pkg, install).keySet();
-				for (Iterator iterator2 = dependencies.iterator(); iterator2
-						.hasNext();) {
-					String depPkg = (String) iterator2.next();
-					if (req.add(depPkg)) {
-						required.add(depPkg);
-					}
-				}
-			}
-		} else {
-			required = packages;
-		}
+		// IInterpreterInstall install = null;
+		// try {
+		// install = ScriptRuntime.getInterpreterInstall(scriptProject);
+		// } catch (CoreException e1) {
+		// if (DLTKCore.DEBUG) {
+		// e1.printStackTrace();
+		// }
+		// }
+		// List required = null;
+		// if (install != null) {
+		// required = new ArrayList();
+		// Set req = new HashSet(required);
+		// for (Iterator iterator = packages.iterator(); iterator.hasNext();) {
+		// String pkg = (String) iterator.next();
+		// required.add(pkg);
+		// Set dependencies = PackagesManager.getInstance()
+		// .getDependencies(pkg, install).keySet();
+		// for (Iterator iterator2 = dependencies.iterator(); iterator2
+		// .hasNext();) {
+		// String depPkg = (String) iterator2.next();
+		// if (req.add(depPkg)) {
+		// required.add(depPkg);
+		// }
+		// }
+		// }
+		// } else {
+		// required = packages;
+		// }
+		List required = packages;
 		// We need to look for all required packages from selected
 		// module
 		for (Iterator iterator2 = required.iterator(); iterator2.hasNext();) {
@@ -487,30 +484,33 @@ public class TclResolver {
 					allModules = TclResolver.processReferenceModules(required,
 							scriptProject);
 				}
-				IModelElement found = null;
-				int index = -1;
-				for (Iterator iterator2 = similar.iterator(); iterator2
-						.hasNext();) {
-					IModelElement element = (IModelElement) iterator2.next();
-					ISourceModule module = (ISourceModule) element
-							.getAncestor(IModelElement.SOURCE_MODULE);
-					int indexOf = allModules.indexOf(module);
-					if (indexOf != -1) {
-						// Found
-						if (indexOf > index) {
-							found = element;
-							index = indexOf;
+				if (allModules != null) {
+					IModelElement found = null;
+					int index = -1;
+					for (Iterator iterator2 = similar.iterator(); iterator2
+							.hasNext();) {
+						IModelElement element = (IModelElement) iterator2
+								.next();
+						ISourceModule module = (ISourceModule) element
+								.getAncestor(IModelElement.SOURCE_MODULE);
+						int indexOf = allModules.indexOf(module);
+						if (indexOf != -1) {
+							// Found
+							if (indexOf > index) {
+								found = element;
+								index = indexOf;
+							}
 						}
 					}
-				}
-				if (found == null) {
-					if (allVariantsOnFailed) {
-						result.addAll(similar);
+					if (found == null) {
+						if (allVariantsOnFailed) {
+							result.addAll(similar);
+						} else {
+							result.add(similar.get(0));
+						}
 					} else {
-						result.add(similar.get(0));
+						result.add(found);
 					}
-				} else {
-					result.add(found);
 				}
 			}
 		}

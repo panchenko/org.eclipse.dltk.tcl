@@ -456,9 +456,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			char[] token, boolean canCompleteEmptyToken) {
 		if (!this.requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
 			List methodNames = new ArrayList();
-			this.findLocalFunctions(token, canCompleteEmptyToken,
-					astNodeParent, methodNames);
 			Set set = new HashSet();
+			this.findLocalFunctions(token, canCompleteEmptyToken,
+					astNodeParent, methodNames, set);
 			set.addAll(methodNames);
 			this.findNamespaceFunctions(token, set);
 			if (astNodeParent instanceof TypeDeclaration) {
@@ -887,7 +887,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	protected void findLocalFunctions(char[] token,
 			boolean canCompleteEmptyToken, ASTNode astNodeParent,
-			List methodNames) {
+			List methodNames, Set set) {
 
 		token = this.removeLastColonFromToken(token);
 		List methods = new ArrayList();
@@ -905,7 +905,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						.findModelElementFrom(method);
 				if (modelElement != null) {
 					nodeMethods.add(modelElement);
+					set.add(modelElement);
 					nodeMethodNames.add(methodNames.get(i));
+
 				} else {
 					otherMethods.add(method);
 					otherMethodNames.add(methodNames.get(i));
