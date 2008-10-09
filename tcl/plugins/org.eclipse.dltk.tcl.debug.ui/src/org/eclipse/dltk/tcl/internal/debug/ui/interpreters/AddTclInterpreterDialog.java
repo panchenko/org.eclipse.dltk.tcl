@@ -48,8 +48,12 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		// Remove all information for packages infrastructure for this
 		// interpreter.
 		IInterpreterInstall install = getLastInterpreterInstall();
-		if( install != null ) {
+		if (install != null) {
 			PackagesManager.getInstance().removeInterprterInfo(install);
 		}
+	}
+
+	protected String getDialogSettingsSectionName() {
+		return "ADD_TCL_SCRIPT_INTERPRETER_DIALOG_SECTION"; //$NON-NLS-1$
 	}
 }

@@ -16,9 +16,11 @@ import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclNature;
 
 public class TclInterpretersBlock extends InterpretersBlock {
-	protected AddScriptInterpreterDialog createInterpreterDialog(IInterpreterInstall standin) {
-		AddTclInterpreterDialog dialog = new AddTclInterpreterDialog(this, 
-				getShell(), ScriptRuntime.getInterpreterInstallTypes(getCurrentNature()), 
+	protected AddScriptInterpreterDialog createInterpreterDialog(
+			IInterpreterInstall standin) {
+		AddTclInterpreterDialog dialog = new AddTclInterpreterDialog(this,
+				getShell(), ScriptRuntime
+						.getInterpreterInstallTypes(getCurrentNature()),
 				standin);
 		return dialog;
 	}
