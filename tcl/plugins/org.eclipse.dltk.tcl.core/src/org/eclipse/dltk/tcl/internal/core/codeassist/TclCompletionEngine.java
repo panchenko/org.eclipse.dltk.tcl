@@ -743,31 +743,27 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	public void removeSameFrom(final Set methodNames, final Set elements,
 			String to_) {
+		final Set namesToRemove = new HashSet();
 		for (Iterator iterator = methodNames.iterator(); iterator.hasNext();) {
 			Object name = iterator.next();
 			if (name instanceof String) {
-				// We need to remove all elements with name from methods.
-				Object elementToRemove = null;
-				for (Iterator me = elements.iterator(); me.hasNext();) {
-					Object m = me.next();
-					if (m instanceof IMethod) {
-						IMethod method = (IMethod) m;
-						String qname = this.processMethodName(method, to_);
-						if (qname.equals(name)) {
-							elementToRemove = m;
-							break;
-						}
-					} else if (m instanceof IType) {
-						IType type = (IType) m;
-						String qname = this.processTypeName(type, to_);
-						if (qname.equals(name)) {
-							elementToRemove = m;
-							break;
-						}
+				namesToRemove.add(name);
+			}
+		}
+		if (!namesToRemove.isEmpty()) {
+			// We need to remove all elements with namesToRemove from methods.
+			for (Iterator me = elements.iterator(); me.hasNext();) {
+				Object m = me.next();
+				if (m instanceof IMethod) {
+					String qname = this.processMethodName((IMethod) m, to_);
+					if (namesToRemove.contains(qname)) {
+						me.remove();
 					}
-				}
-				if (elementToRemove != null) {
-					elements.remove(elementToRemove);
+				} else if (m instanceof IType) {
+					String qname = this.processTypeName((IType) m, to_);
+					if (namesToRemove.contains(qname)) {
+						me.remove();
+					}
 				}
 			}
 		}
