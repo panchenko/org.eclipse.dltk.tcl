@@ -26,13 +26,13 @@ import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.ast.ExtendedTclMethodDeclaration;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclASTUtil;
-import org.eclipse.dltk.tcl.internal.parsers.raw.BracesSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.CommandSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.QuotesSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.SimpleTclParser;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclCommand;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclElement;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclWord;
+import org.eclipse.dltk.tcl.internal.parser.raw.BracesSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.CommandSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.QuotesSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclElement;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclWord;
 
 public class TclParseUtil {
 	public static String extractWord(TclElement element, String content) {

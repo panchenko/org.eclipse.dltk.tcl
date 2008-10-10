@@ -4,7 +4,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclCommand;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
 
 public interface ITclParser {
 	// Used to parser inner elements

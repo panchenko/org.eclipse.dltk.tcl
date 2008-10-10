@@ -27,10 +27,10 @@ import org.eclipse.dltk.tcl.core.ITclCommandDetector.CommandInfo;
 import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 import org.eclipse.dltk.tcl.internal.parser.ext.CommandManager;
-import org.eclipse.dltk.tcl.internal.parsers.raw.SimpleTclParser;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclCommand;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclParseException;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclScript;
+import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
 
 public class TclSourceParser extends AbstractSourceParser implements
 		ITclSourceParser, ITclParser, ISourceParserExtension {
@@ -186,7 +186,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		commandToStatement.clear();
 		TclScript script = null;
 		try {
-			script = SimpleTclParser.parse(content);
+			script = SimpleTclParser.staticParse(content);
 		} catch (TclParseException e) {
 			if (DLTKCore.DEBUG_PARSER) {
 				e.printStackTrace();
