@@ -102,9 +102,9 @@ public class TclParser implements ITclParserOptions {
 			simpleParser.setProblemReporter(this.reporter);
 			TclScript script = simpleParser.parse(partSource);
 			PerformanceMonitor.getDefault().end("RAW_PARSE_TIME");
-			List<org.eclipse.dltk.tcl.internal.parser.raw.TclCommand> TclCommands = script
+			List<org.eclipse.dltk.tcl.internal.parser.raw.TclCommand> commands = script
 					.getCommands();
-			processRawCommands(block, offset, TclCommands);
+			processRawCommands(block, offset, commands);
 		} catch (TclParseException e) {
 			e.printStackTrace();
 		}
