@@ -14,10 +14,10 @@ import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
-import org.eclipse.dltk.tcl.internal.parsers.raw.SimpleTclParser;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclCommand;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclParseException;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclScript;
+import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclDocumentationNode;
 
 public class XOTclDocumentationProcessor extends AbstractTclCommandProcessor
@@ -39,7 +39,7 @@ public class XOTclDocumentationProcessor extends AbstractTclCommandProcessor
 				nodes[i] = newExpr;
 				st.setExpressions(Arrays.asList(nodes));
 				try {
-					TclScript parse = SimpleTclParser.parse(expression);
+					TclScript parse = SimpleTclParser.staticParse(expression);
 					List commands = parse.getCommands();
 					for (int j = 0; j < commands.size(); j++) {
 						if (commands.get(j) instanceof TclCommand) {
