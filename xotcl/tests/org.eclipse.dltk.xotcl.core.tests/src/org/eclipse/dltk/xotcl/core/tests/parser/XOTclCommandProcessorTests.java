@@ -11,7 +11,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ast.ExtendedTclMethodDeclaration;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclParseException;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclInstanceVariable;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclMethodCallStatement;

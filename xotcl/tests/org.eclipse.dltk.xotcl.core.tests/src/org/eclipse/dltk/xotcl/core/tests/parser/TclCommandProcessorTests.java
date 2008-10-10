@@ -32,14 +32,14 @@ import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclProcProcessor
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclSwitchCommandProcessor;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclUpvarProcessor;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclVariableProcessor;
-import org.eclipse.dltk.tcl.internal.parsers.raw.SimpleTclParser;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclCommand;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclParseException;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclScript;
+import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
 
 public class TclCommandProcessorTests extends TestCase {
 	static TclStatement toCommand(String content) throws TclParseException {
-		TclScript parse = SimpleTclParser.parse(content);
+		TclScript parse = SimpleTclParser.staticParse(content);
 		List commands = parse.getCommands();
 		assertEquals(1, commands.size());
 		assertNotNull(commands.get(0));
