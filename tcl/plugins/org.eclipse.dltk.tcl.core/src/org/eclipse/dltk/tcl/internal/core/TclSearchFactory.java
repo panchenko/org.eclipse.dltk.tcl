@@ -11,6 +11,7 @@ package org.eclipse.dltk.tcl.internal.core;
 
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.core.ISearchPatternProcessor;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.search.AbstractSearchFactory;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.IMatchLocatorParser;
@@ -30,18 +31,29 @@ public class TclSearchFactory extends AbstractSearchFactory {
 	public IMatchLocatorParser createMatchParser(MatchLocator locator) {
 		return new TclMatchLocatorParser(locator);
 	}
-	
+
 	public MatchLocator createMatchLocator(SearchPattern pattern,
 			SearchRequestor requestor, IDLTKSearchScope scope,
 			SubProgressMonitor monitor) {
 		return new TclMatchLocator(pattern, requestor, scope, monitor);
 	}
-	
+
 	public SourceIndexerRequestor createSourceRequestor() {
 		return new TclSourceIndexerRequestor();
 	}
 
 	public ISearchPatternProcessor createSearchPatternProcessor() {
 		return new TclSearchPatternProcessor();
+	}
+
+	public String getNormalizedTypeName(IType type) {
+		String otherName = type.getElementName();
+		if (otherName.startsWith("::")) {
+			otherName = otherName.substring(2);
+		}
+		if (otherName.endsWith("::")) {
+			otherName = otherName.substring(0, otherName.length() - 2);
+		}
+		return otherName;
 	}
 }
