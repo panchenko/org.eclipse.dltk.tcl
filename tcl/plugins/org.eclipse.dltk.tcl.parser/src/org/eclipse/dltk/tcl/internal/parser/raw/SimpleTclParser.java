@@ -190,7 +190,7 @@ public class SimpleTclParser {
 			}
 		}
 		if (cmd.getWords().size() > 0) {
-			TclWord w = (TclWord) cmd.getWords().get(cmd.getWords().size() - 1);
+			TclWord w = cmd.getWords().get(cmd.getWords().size() - 1);
 			cmd.setEnd(w.getEnd());
 		} else
 			cmd.setEnd(cmd.getStart());
