@@ -29,16 +29,16 @@ import junit.framework.TestCase;
 import org.eclipse.dltk.core.tests.xml.DOMSerializer;
 import org.eclipse.dltk.launching.LaunchingMessages;
 import org.eclipse.dltk.tcl.core.tests.model.Activator;
-import org.eclipse.dltk.tcl.internal.parsers.raw.BracesSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.CommandSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.MagicBackslashSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.NormalBackslashSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.QuotesSubstitution;
-import org.eclipse.dltk.tcl.internal.parsers.raw.SimpleTclParser;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclCommand;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclScript;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclWord;
-import org.eclipse.dltk.tcl.internal.parsers.raw.VariableSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.BracesSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.CommandSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.MagicBackslashSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.NormalBackslashSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.QuotesSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclWord;
+import org.eclipse.dltk.tcl.internal.parser.raw.VariableSubstitution;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -290,7 +290,7 @@ public class SimpleParserTests extends TestCase {
 			throw new Exception();
 		try {
 			String content = getContents(in);
-			TclScript s = SimpleTclParser.parse(content);
+			TclScript s = SimpleTclParser.staticParse(content);
 
 			Document docFromSource = createXMLFromSource(content, s);
 			String resultXML = serializeDocument(docFromSource);
@@ -366,7 +366,7 @@ public class SimpleParserTests extends TestCase {
 
 	public void test12() throws Exception {
 		String content = "\r\n	    puts $a ; puts \"wow!\"\r";
-		SimpleTclParser.parse(content);
+		SimpleTclParser.staticParse(content);
 	}
 
 	public void test13() throws Exception {
@@ -413,7 +413,7 @@ public class SimpleParserTests extends TestCase {
 		// URL in =
 		// TestsPlugin.getDefault().getBundle().getEntry("rawtests/all.tcl");
 		// String content = getContents(in);
-		TclScript s = SimpleTclParser.parse(content);
+		TclScript s = SimpleTclParser.staticParse(content);
 		print(s);
 		megaprint(content, s);
 	}
