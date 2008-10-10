@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.dltk.launching,
  org.eclipse.dltk.console.ui,
  org.eclipse.compare,
- org.eclipse.search
+ org.eclipse.search,
+ org.eclipse.dltk.tcl.parser
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.dltk.tcl.internal.ui,
  org.eclipse.dltk.tcl.internal.ui.documentation,

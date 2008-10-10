@@ -9,9 +9,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.rules;
 
-import org.eclipse.dltk.tcl.internal.parsers.raw.CodeScanner;
-import org.eclipse.dltk.tcl.internal.parsers.raw.TclParseException;
-import org.eclipse.dltk.tcl.internal.parsers.raw.VariableSubstitution;
+import org.eclipse.dltk.tcl.internal.parser.raw.CodeScanner;
+import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
+import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
+import org.eclipse.dltk.tcl.internal.parser.raw.VariableSubstitution;
 import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -67,7 +68,7 @@ public class TclVariableRule implements IRule
 		
 		VariableSubstitution vs = new VariableSubstitution();
 		try {
-			vs.readMe(scs);
+			vs.readMe(scs, new SimpleTclParser());
 		} catch (TclParseException e) {
 			//e.printStackTrace();
 			return Token.UNDEFINED;
