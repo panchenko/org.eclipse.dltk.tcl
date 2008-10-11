@@ -101,13 +101,13 @@ public class SimpleTclParser {
 					currentWord.setStart(input.getPosition());
 				}
 			}
-			if (BracesSubstitution.iAm(input) && currentWord.isEmpty()) {
+			if (currentWord.isEmpty() && BracesSubstitution.iAm(input)) {
 				BracesSubstitution s = new BracesSubstitution();
 				s.readMe(input, this);
 				currentWord.add(s);
 				continue;
 			}
-			if (QuotesSubstitution.iAm(input) && currentWord.isEmpty()) {
+			if (currentWord.isEmpty() && QuotesSubstitution.iAm(input)) {
 				QuotesSubstitution s = new QuotesSubstitution();
 				s.readMe(input, this);
 				currentWord.add(s);
