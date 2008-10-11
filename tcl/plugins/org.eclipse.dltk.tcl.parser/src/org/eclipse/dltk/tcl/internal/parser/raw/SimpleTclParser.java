@@ -125,10 +125,8 @@ public class SimpleTclParser {
 				}
 			} else {
 				if (ch == ']' && nest) {
-					if (currentWord != null) {
-						// currentWord.setEnd(input.getPosition() - 1);
-						cmd.addWord(currentWord);
-					}
+					// currentWord is not null here
+					cmd.addWord(currentWord);
 					break;
 				}
 			}
@@ -137,14 +135,13 @@ public class SimpleTclParser {
 			if (s != null) {
 				s.readMe(input, this);
 				if (s instanceof MagicBackslashSubstitution) {
-					if (currentWord != null) {
-						if (!currentWord.isEmpty()) {
-							currentWord.setEnd(((MagicBackslashSubstitution) s)
-									.getStart() - 1);
-							cmd.addWord(currentWord);
-						}
-						currentWord = null;
+					if (!currentWord.isEmpty()) {
+						// XXX setEnd() is called in addWord() too
+						currentWord.setEnd(((MagicBackslashSubstitution) s)
+								.getStart() - 1);
+						cmd.addWord(currentWord);
 					}
+					currentWord = null;
 				} else {
 					currentWord.add(s);
 				}
@@ -179,10 +176,8 @@ public class SimpleTclParser {
 					currentWord.add((char) ch);
 			}
 			if (cmdEnd) {
-				if (currentWord != null) {
-					// currentWord.setEnd(lastPos);
-					cmd.addWord(currentWord);
-				}
+				// currentWord is not null here
+				cmd.addWord(currentWord);
 				break;
 			}
 		}
