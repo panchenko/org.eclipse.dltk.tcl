@@ -23,10 +23,14 @@ import java.util.List;
  */
 public class TclWord extends TclElement {
 
-	private final List<Object> contents = new ArrayList<Object>();
+	private final List<Object> contents;
 
 	TclWord() {
-		// empty
+		this.contents = new ArrayList<Object>();
+	}
+
+	TclWord(List<Object> contents) {
+		this.contents = new ArrayList<Object>(contents);
 	}
 
 	public void add(String text) {
@@ -49,19 +53,6 @@ public class TclWord extends TclElement {
 
 	public List<Object> getContents() {
 		return contents;
-	}
-
-	public boolean isEmpty() {
-		for (Iterator<Object> iter = contents.iterator(); iter.hasNext();) {
-			Object o = iter.next();
-			if (o instanceof ISubstitution)
-				return false;
-			if (o instanceof String) {
-				if (((String) o).trim().length() > 0)
-					return false;
-			}
-		}
-		return true;
 	}
 
 	public int length() {

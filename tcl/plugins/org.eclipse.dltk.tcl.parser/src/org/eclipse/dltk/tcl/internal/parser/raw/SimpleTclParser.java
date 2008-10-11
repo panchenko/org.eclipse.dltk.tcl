@@ -12,6 +12,8 @@
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.tcl.parser.ITclErrorConstants;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
@@ -71,24 +73,87 @@ public class SimpleTclParser {
 		return null;
 	}
 
-	private TclCommand nextCommand(CodeScanner input, boolean nest)
-			throws TclParseException {
+	private static class TclWordBuffer {
+
+		private enum State {
+			START, CONTENT
+		}
+
+		private State state;
+		private int start;
+		private final List<Object> contents = new ArrayList<Object>();
+		private final StringBuilder string = new StringBuilder();
+
+		public State getState() {
+			return state;
+		}
+
+		public void setState(State state) {
+			this.state = state;
+		}
+
+		public void reset() {
+			state = State.START;
+			contents.clear();
+			string.setLength(0);
+		}
+
+		public boolean isEmpty() {
+			return contents.isEmpty() && string.length() == 0;
+		}
+
+		public TclWord buildWord() {
+			if (string.length() != 0) {
+				contents.add(string.toString());
+				string.setLength(0);
+			}
+			if (!isEmpty()) {
+				final TclWord word = new TclWord(contents);
+				word.setStart(start);
+				state = State.START;
+				contents.clear();
+				return word;
+			} else {
+				return null;
+			}
+		}
+
+		public void setStart(int start) {
+			this.start = start;
+		}
+
+		public void add(ISubstitution s) {
+			if (string.length() != 0) {
+				contents.add(string.toString());
+				string.setLength(0);
+			}
+			contents.add(s);
+			state = State.CONTENT;
+		}
+
+		public void add(char ch) {
+			string.append(ch);
+			state = State.CONTENT;
+		}
+
+	}
+
+	private TclCommand nextCommand(CodeScanner input, boolean nest,
+			final TclWordBuffer wordBuffer) throws TclParseException {
 		TclCommand cmd = new TclCommand();
 		cmd.setStart(input.getPosition());
-		TclWord currentWord = null;
+		wordBuffer.reset();
 
 		while (true) {
 			int ch = input.read();
 			boolean eof = (ch == CodeScanner.EOF);
-			if (eof && cmd.isEmpty()
-					&& (currentWord == null || currentWord.isEmpty())) {
+			if (eof && cmd.isEmpty() && wordBuffer.isEmpty()) {
 				return STOP_EOF;
 			}
 			if (TclTextUtils.isTrueWhitespace(ch) || eof) {
-				if (currentWord != null) {
-					// currentWord.setEnd(input.getPosition() - (eof?0:2));
-					cmd.addWord(currentWord);
-					currentWord = null;
+				final TclWord word = wordBuffer.buildWord();
+				if (word != null) {
+					cmd.addWord(word);
 				}
 				if (eof)
 					break;
@@ -96,24 +161,23 @@ public class SimpleTclParser {
 					continue;
 			} else {
 				input.unread();
-				if (currentWord == null) {
-					currentWord = new TclWord();
-					currentWord.setStart(input.getPosition());
+				if (wordBuffer.getState() != TclWordBuffer.State.CONTENT) {
+					wordBuffer.setStart(input.getPosition());
 				}
 			}
-			if (currentWord.isEmpty() && BracesSubstitution.iAm(input)) {
+			if (wordBuffer.isEmpty() && BracesSubstitution.iAm(input)) {
 				BracesSubstitution s = new BracesSubstitution();
 				s.readMe(input, this);
-				currentWord.add(s);
+				wordBuffer.add(s);
 				continue;
 			}
-			if (currentWord.isEmpty() && QuotesSubstitution.iAm(input)) {
+			if (wordBuffer.isEmpty() && QuotesSubstitution.iAm(input)) {
 				QuotesSubstitution s = new QuotesSubstitution();
 				s.readMe(input, this);
-				currentWord.add(s);
+				wordBuffer.add(s);
 				continue;
 			}
-			if (cmd.isEmpty() && currentWord.isEmpty()) {
+			if (cmd.isEmpty() && wordBuffer.isEmpty()) {
 				if (ch == '#') {
 					input.read();
 					TclTextUtils.runToLineEnd(input);
@@ -125,8 +189,10 @@ public class SimpleTclParser {
 				}
 			} else {
 				if (ch == ']' && nest) {
-					// currentWord is not null here
-					cmd.addWord(currentWord);
+					final TclWord word = wordBuffer.buildWord();
+					if (word != null) {
+						cmd.addWord(word);
+					}
 					break;
 				}
 			}
@@ -135,15 +201,16 @@ public class SimpleTclParser {
 			if (s != null) {
 				s.readMe(input, this);
 				if (s instanceof MagicBackslashSubstitution) {
-					if (!currentWord.isEmpty()) {
+					TclWord word = wordBuffer.buildWord();
+					if (word != null) {
 						// XXX setEnd() is called in addWord() too
-						currentWord.setEnd(((MagicBackslashSubstitution) s)
-								.getStart() - 1);
-						cmd.addWord(currentWord);
+						word
+								.setEnd(((MagicBackslashSubstitution) s)
+										.getStart() - 1);
+						cmd.addWord(word);
 					}
-					currentWord = null;
 				} else {
-					currentWord.add(s);
+					wordBuffer.add(s);
 				}
 				continue;
 			}
@@ -159,7 +226,7 @@ public class SimpleTclParser {
 					cmdEnd = true;
 				} else {
 					input.unread();
-					currentWord.add((char) ch);
+					wordBuffer.add((char) ch);
 				}
 				break;
 			case '\n':
@@ -172,12 +239,14 @@ public class SimpleTclParser {
 				break;
 			default:
 				input.read();
-				if (!TclTextUtils.isWhitespace(ch))
-					currentWord.add((char) ch);
+				// if (!TclTextUtils.isWhitespace(ch))
+				wordBuffer.add((char) ch);
 			}
 			if (cmdEnd) {
-				// currentWord is not null here
-				cmd.addWord(currentWord);
+				final TclWord word = wordBuffer.buildWord();
+				if (word != null) {
+					cmd.addWord(word);
+				}
 				break;
 			}
 		}
@@ -206,10 +275,11 @@ public class SimpleTclParser {
 	 */
 	public TclScript parse(CodeScanner input, boolean nest, IEOFHandler handler)
 			throws TclParseException {
+		final TclWordBuffer wordBuffer = new TclWordBuffer();
 		TclScript script = new TclScript();
 		script.setStart(input.getPosition());
 		while (true) {
-			TclCommand cmd = nextCommand(input, nest);
+			TclCommand cmd = nextCommand(input, nest, wordBuffer);
 			if (cmd == STOP) {
 				break;
 			} else if (cmd == STOP_EOF) {

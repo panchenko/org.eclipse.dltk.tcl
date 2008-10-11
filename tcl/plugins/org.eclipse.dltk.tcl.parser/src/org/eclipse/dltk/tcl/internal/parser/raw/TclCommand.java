@@ -19,9 +19,6 @@ public class TclCommand extends TclElement {
 	private final List<TclWord> words = new ArrayList<TclWord>();
 
 	public void addWord(TclWord w) {
-		if (w.isEmpty()) {
-			return;
-		}
 		w.setEnd(w.getStart() + w.length() - 1);
 		words.add(w);
 	}
