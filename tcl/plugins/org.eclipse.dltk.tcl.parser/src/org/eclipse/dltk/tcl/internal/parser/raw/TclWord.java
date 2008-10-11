@@ -23,10 +23,10 @@ import java.util.List;
  */
 public class TclWord extends TclElement {
 
-	List<Object> contents;
+	private final List<Object> contents = new ArrayList<Object>();
 
 	TclWord() {
-		contents = new ArrayList<Object>();
+		// empty
 	}
 
 	public void add(String text) {
@@ -51,7 +51,7 @@ public class TclWord extends TclElement {
 		return contents;
 	}
 
-	public boolean empty() {
+	public boolean isEmpty() {
 		for (Iterator<Object> iter = contents.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			if (o instanceof ISubstitution)

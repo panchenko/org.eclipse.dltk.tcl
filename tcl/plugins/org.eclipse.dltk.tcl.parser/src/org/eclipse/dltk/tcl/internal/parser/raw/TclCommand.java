@@ -16,14 +16,10 @@ import java.util.List;
 
 public class TclCommand extends TclElement {
 
-	private List<TclWord> words;
-
-	public TclCommand() {
-		words = new ArrayList<TclWord>();
-	}
+	private final List<TclWord> words = new ArrayList<TclWord>();
 
 	public void addWord(TclWord w) {
-		if (w.empty()) {
+		if (w.isEmpty()) {
 			return;
 		}
 		w.setEnd(w.getStart() + w.length() - 1);
@@ -32,6 +28,10 @@ public class TclCommand extends TclElement {
 
 	public List<TclWord> getWords() {
 		return words;
+	}
+
+	public boolean isEmpty() {
+		return words.isEmpty();
 	}
 
 	public String toString() {

@@ -75,22 +75,21 @@ public class SimpleTclParser {
 			throws TclParseException {
 		TclCommand cmd = new TclCommand();
 		cmd.setStart(input.getPosition());
-		int ch;
 		TclWord currentWord = null;
 
 		while (true) {
-			ch = input.read();
+			int ch = input.read();
 			boolean eof = (ch == CodeScanner.EOF);
-			if (eof && cmd.getWords().size() == 0
-					&& (currentWord == null || currentWord.empty())) {
+			if (eof && cmd.isEmpty()
+					&& (currentWord == null || currentWord.isEmpty())) {
 				return STOP_EOF;
 			}
 			if (TclTextUtils.isTrueWhitespace(ch) || eof) {
 				if (currentWord != null) {
 					// currentWord.setEnd(input.getPosition() - (eof?0:2));
 					cmd.addWord(currentWord);
+					currentWord = null;
 				}
-				currentWord = null;
 				if (eof)
 					break;
 				else
@@ -102,19 +101,19 @@ public class SimpleTclParser {
 					currentWord.setStart(input.getPosition());
 				}
 			}
-			if (BracesSubstitution.iAm(input) && currentWord.empty()) {
+			if (BracesSubstitution.iAm(input) && currentWord.isEmpty()) {
 				BracesSubstitution s = new BracesSubstitution();
 				s.readMe(input, this);
 				currentWord.add(s);
 				continue;
 			}
-			if (QuotesSubstitution.iAm(input) && currentWord.empty()) {
+			if (QuotesSubstitution.iAm(input) && currentWord.isEmpty()) {
 				QuotesSubstitution s = new QuotesSubstitution();
 				s.readMe(input, this);
 				currentWord.add(s);
 				continue;
 			}
-			if (cmd.getWords().size() == 0 && currentWord.empty()) {
+			if (cmd.isEmpty() && currentWord.isEmpty()) {
 				if (ch == '#') {
 					input.read();
 					TclTextUtils.runToLineEnd(input);
@@ -139,7 +138,7 @@ public class SimpleTclParser {
 				s.readMe(input, this);
 				if (s instanceof MagicBackslashSubstitution) {
 					if (currentWord != null) {
-						if (!currentWord.empty()) {
+						if (!currentWord.isEmpty()) {
 							currentWord.setEnd(((MagicBackslashSubstitution) s)
 									.getStart() - 1);
 							cmd.addWord(currentWord);
