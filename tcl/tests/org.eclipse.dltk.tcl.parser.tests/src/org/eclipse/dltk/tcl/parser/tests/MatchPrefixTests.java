@@ -78,7 +78,7 @@ public class MatchPrefixTests extends TestCase {
 
 	private void typedCheck(String source, int errs, int code) throws Exception {
 		processor = DefinitionManager.getInstance().createProcessor();
-		TclParser parser = new TclParser();
+		TclParser parser = new TclParser("8.4");
 		TclErrorCollector errors = new TclErrorCollector();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, true);
 		List<TclCommand> module = parser.parse(source, errors, processor);

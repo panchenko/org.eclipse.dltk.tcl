@@ -61,7 +61,7 @@ public class PerformanceParsingTests extends TestCase {
 
 	public void testOriginalParserPerformance() throws Exception {
 		// System.out.println(project.getLocation().toOSString());
-		File file = new File("/home/tiffany/work/ats5.0a7");
+		File file = new File("/home/tiffany/work/ats5.0a7_");
 		FileOutputStream fout = new FileOutputStream("/home/tiffany/log.txt");
 		processFiles(file, fout);
 	}
@@ -99,20 +99,27 @@ public class PerformanceParsingTests extends TestCase {
 									col, processor);
 							PerformanceMonitor.getDefault().end(NEW_PARSE_TIME);
 							// Write code fragments with errors
-							if (writer != null) {
-								writer
-										.write("\n#==================================================================\n");
-								writer
-										.write("\n#==================================================================\n");
-								writer
-										.write("\n#==================================================================\n");
-							}
-							if (writer != null)
-								writer.write("#file:" + file.getAbsolutePath()
-										+ "\n");
+							// if (writer != null) {
+							// writer
+							// .write(
+							// "\n#==================================================================\n"
+							// );
+							// writer
+							// .write(
+							// "\n#==================================================================\n"
+							// );
+							// writer
+							// .write(
+							// "\n#==================================================================\n"
+							// );
+							// }
+							// if (writer != null)
+							// writer.write("#file:" + file.getAbsolutePath()
+							// + "\n");
 							TclError[] errors = col.getErrors();
 							for (int i = 0; i < errors.length; i++) {
-								if (errors[i].getCode() == TclErrorCollector.DEPRECATED_COMMAND
+								if (errors[i].getErrorKind() == ITclErrorConstants.WARNING
+										|| errors[i].getCode() == TclErrorCollector.DEPRECATED_COMMAND
 										|| errors[i].getCode() == TclErrorCollector.COMMAND_WITH_NAME_SUBSTITUTION
 										|| errors[i].getCode() == TclErrorCollector.INVALID_COMMAND_VERSION) {
 									continue;

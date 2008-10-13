@@ -64,7 +64,7 @@ public class SynopsisTests extends TestCase {
 
 	public void test007() throws Exception {
 		String source = "auto_load";
-		String synopsis = "auto_load cmd";
+		String synopsis = "auto_load cmd ?namespace?";
 		typedCheck(source, synopsis, "8.5");
 	}
 
@@ -125,17 +125,15 @@ public class SynopsisTests extends TestCase {
 				+ "chan close channelId\n"
 				+ "chan configure channelId ?option? ?value? ?option value ...?\n"
 				+ "chan copy inputChan outputChan ?-size size? ?-command callback?\n"
-				+ "chan create [read|write] cmdPrefix\n"
-				+ "chan eof channelId\n"
-				+ "chan event channelId [readable|writable] ?script?\n"
+				+ "chan create mode cmdPrefix\n" + "chan eof channelId\n"
+				+ "chan event channelId event ?script?\n"
 				+ "chan flush channelId\n" + "chan gets channelId ?varName?\n"
-				+ "chan names ?pattern?\n"
-				+ "chan pending [input|output] channelId\n"
+				+ "chan names ?pattern?\n" + "chan pending mode channelId\n"
 				+ "chan postevent channelId eventSpec\n"
 				+ "chan puts ?-nonewline? ?channelId? string\n"
 				+ "chan read channelId ?numChars?\n"
 				+ "chan read ?-nonewline? channelId\n"
-				+ "chan seek channelId offset ?[start|current|end]?\n" // origin
+				+ "chan seek channelId offset ?origin?\n" // origin
 				+ "chan tell channelId\n" + "chan truncate channelId ?length?";
 		typedCheck(source, synopsis, "8.5");
 	}
@@ -143,15 +141,14 @@ public class SynopsisTests extends TestCase {
 	public void test017() throws Exception {
 		String source = "clock";
 		String synopsis_8_4 = "clock clicks ?-milliseconds?\n"
-				+ "clock format clockValue ?-format string? ?-gmt boolean?\n"
-				+ "clock scan dateString ?-base clockVal? ?-gmt boolean?\n"
+				+ "clock format clockValue ?option value ...?\n"
+				+ "clock scan dateString ?option value ...?\n"
 				+ "clock seconds";
-		String synopsis = "clock add timeVal ?count unit ...? "
-				// ?option value ...?
-				+ "?-gmt boolean? ?-locale localeName? ?-timezone zoneName?\n"
-				+ "clock clicks ?[-milliseconds|-microseconds]?\n"// option
+		String synopsis = "clock add timeVal ?count unit ...? ?option value ...?\n"
+				+ "clock clicks ?option?\n"
 				+ "clock format timeVal ?option value ...?\n"
-				+ "clock microseconds\n" + "clock milliseconds\n"
+				+ "clock microseconds\n"
+				+ "clock milliseconds\n"
 				+ "clock scan inputString ?option value ...?\n"
 				+ "clock seconds";
 		typedCheck(source, synopsis_8_4, "8.4");

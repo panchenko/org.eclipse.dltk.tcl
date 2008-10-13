@@ -121,7 +121,7 @@ public class TclConstantsParseTests extends TestCase {
 
 	public void test014() throws Exception {
 		String source = "constants [alfa] beta gamma";
-		constantsCheck(source, 0);
+		constantsCheck(source, 1);
 	}
 
 	public void test015() throws Exception {
@@ -131,7 +131,7 @@ public class TclConstantsParseTests extends TestCase {
 
 	public void test016() throws Exception {
 		String source = "constants [alfa] [beta] gamma";
-		constantsCheck(source, 0);
+		constantsCheck(source, 1);
 	}
 
 	public void test017() throws Exception {

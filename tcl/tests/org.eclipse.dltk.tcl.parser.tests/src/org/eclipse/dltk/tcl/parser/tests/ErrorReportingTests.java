@@ -158,13 +158,26 @@ public class ErrorReportingTests extends TestCase {
 		typedCheck(source, errorCodes);
 	}
 
+	public void test022() throws Exception {
+		String source = "socket $host";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ITclErrorReporter.MISSING_ARGUMENT);
+		typedCheck(source, errorCodes);
+	}
+
+	// public void test023() throws Exception {
+	// String source = "switch a {#(v {puts lala}}";
+	// List<Integer> errorCodes = new ArrayList<Integer>();
+	// typedCheck(source, errorCodes);
+	// }
+
 	// public void test021() throws Exception {
 	// String source = "proc {{arg def1 def2}} {puts $arg}";
 	// List<Integer> errorCodes = new ArrayList<Integer>();
 	// errorCodes.add(ITclErrorReporter.INVALID_ARGUMENT_VALUE);
 	// typedCheck(source, errorCodes);
 	// }
-	//
+
 	// public void test022() throws Exception {
 	// String source = "proc {{arg def1 def2}} {{arg def1 def2}}";
 	// List<Integer> errorCodes = new ArrayList<Integer>();

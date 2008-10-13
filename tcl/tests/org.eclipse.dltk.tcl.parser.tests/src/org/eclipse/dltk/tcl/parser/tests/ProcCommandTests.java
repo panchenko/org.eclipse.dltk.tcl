@@ -98,7 +98,7 @@ public class ProcCommandTests extends TestCase {
 	private TclCommand typedCheck(String source, int errs, int code)
 			throws Exception {
 		processor = DefinitionManager.getInstance().createProcessor();
-		TclParser parser = new TclParser();
+		TclParser parser = new TclParser("8.4");
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, module.size());

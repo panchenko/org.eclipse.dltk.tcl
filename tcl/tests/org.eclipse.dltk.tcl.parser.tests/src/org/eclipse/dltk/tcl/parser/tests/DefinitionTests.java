@@ -386,7 +386,7 @@ public class DefinitionTests extends TestCase {
 	public void test070() throws Exception {
 		String source = "trace add variable receiver {write unset} Track";
 		// Unknown command:Track
-		typedCheck(source, 1, 1, "8.4");
+		typedCheck(source, 0, 0, "8.4");
 	}
 
 	public void test071() throws Exception {
@@ -656,6 +656,101 @@ public class DefinitionTests extends TestCase {
 	public void test122() throws Exception {
 		String source = "socket $host daytime";
 		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test123() throws Exception {
+		String source = "return -code error \"window manager name not supported\"";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test124() throws Exception {
+		String source = "dde execute $app WWW_OpenURL $url";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test125() throws Exception {
+		String source = "http::formatQuery [string range $msg 6 end]";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test126() throws Exception {
+		String source = "namespace ensemble create -command ::clock";
+		typedCheck(source, 0, 0, "8.5");
+	}
+
+	public void test127() throws Exception {
+		String source = "return -code error -errorCode $::errorCode $result";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test128() throws Exception {
+		String source = "return -code error -errorCode $::errorCode $result";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test129() throws Exception {
+		String source = "namespace upvar ${selfns} options options";
+		typedCheck(source, 0, 0, "8.5");
+	}
+
+	public void test130() throws Exception {
+		String source = "fconfigure $chan $o $tmp($o)";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test131_FAILED() throws Exception {
+		String source = "lsort $sort [array names histogram]";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test132() throws Exception {
+		String source = "if {1} $cmd elseif {1} $cmd";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test133_FAILED() throws Exception {
+		String source = "lset result $idx {}";
+		typedCheck(source, 0, 0, "8.5");
+	}
+
+	public void test134() throws Exception {
+		String source = "package proc unknown args {namespace eval :: tcl_package $args}";
+		typedCheck(source, 2, 0, "8.4");
+	}
+
+	public void test135() throws Exception {
+		String source = "package proc verbose value {my set verbose $value}";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test136() throws Exception {
+		String source = "string range [expr {$idx+1}] end";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test137() throws Exception {
+		String source = "string compare -length b string1 string2";
+		typedCheck(source, 1, 0, "8.4");
+	}
+
+	public void test138() throws Exception {
+		String source = "string compare -length 5 string1 string2";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test139() throws Exception {
+		String source = "trace add variable var {array unset write} history";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test140() throws Exception {
+		String source = "trace variable var auw history";
+		typedCheck(source, 0, 0, "8.4");
+	}
+
+	public void test141_FAILED() throws Exception {
+		String source = "fconfigure $chan $o $tmp($o)";
+		typedCheck(source, 1, 0, "8.4");
 	}
 
 	private void typedCheck(String source, int errs, int code, String version)

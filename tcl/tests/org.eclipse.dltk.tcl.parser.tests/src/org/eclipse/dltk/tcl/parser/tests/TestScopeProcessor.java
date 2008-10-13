@@ -83,4 +83,7 @@ public class TestScopeProcessor implements IScopeProcessor {
 	public boolean checkCommandScope(Command command) {
 		return true;
 	}
+
+	public void addUserCommand(Command command) {
+	}
 }
