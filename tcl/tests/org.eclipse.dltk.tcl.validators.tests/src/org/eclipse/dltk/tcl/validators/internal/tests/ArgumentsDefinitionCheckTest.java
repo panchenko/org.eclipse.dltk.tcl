@@ -21,7 +21,6 @@ import junit.framework.TestCase;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.internal.validators.checks.ArgumentsDefinitionCheck;
 import org.eclipse.dltk.tcl.parser.TclError;
@@ -31,10 +30,12 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
+import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.emf.common.util.EList;
 
 public class ArgumentsDefinitionCheckTest extends TestCase {
-	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
+	NamespaceScopeProcessor processor = DefinitionManager.getInstance()
+			.createProcessor();
 
 	public void test001() throws Exception {
 		String source = "proc cmd arg {puts alpha}";
@@ -86,15 +87,20 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 		typedCheck(source, errorCodes);
 	}
 
-	// public void test009() throws Exception {
-	// String source = "proc cmd {puts alpha}";
-	// typedCheck(source, TclErrorCollector.INVALID_ARGUMENT_COUNT);
-	// }
+	public void test009() throws Exception {
+		String source = "proc cmd {puts alpha}";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(TclErrorCollector.MISSING_ARGUMENT);
+		typedCheck(source, errorCodes);
+	}
 
-	// public void test010() throws Exception {
-	// String source = "proc cmd arg1 puts alpha";
-	// typedCheck(source, TclErrorCollector.EXTRA_ARGUMENTS);
-	// }
+	public void test010() throws Exception {
+		String source = "proc cmd arg1 puts alpha";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(TclErrorCollector.MISSING_ARGUMENT);
+		errorCodes.add(TclErrorCollector.EXTRA_ARGUMENTS);
+		typedCheck(source, errorCodes);
+	}
 
 	public void test011() throws Exception {
 		String source = "proc cmd {{{{arg1}}}} {puts alpha}";
@@ -207,16 +213,32 @@ public class ArgumentsDefinitionCheckTest extends TestCase {
 		typedCheck(source, errorCodes);
 	}
 
+	public void test039() throws Exception {
+		String source = "apply {{{args def}} {}} {}";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_ARGS_DEFAULT);
+		typedCheck(source, errorCodes);
+	}
+
+	public void test040() throws Exception {
+		String source = "apply {{{arg1 def} arg2} {}} {}";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		errorCodes.add(ICheckKinds.CHECK_NON_DEF_AFTER_DEF);
+		typedCheck(source, errorCodes);
+	}
+
 	private void typedCheck(String source, List<Integer> errorCodes)
 			throws Exception {
-		processor = DefinitionManager.getInstance().createProcessor();
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		StackTraceElement element = stackTrace[2];
+		System.out.println("%%%%%%%%%%%%%%%%Test:" + element.getMethodName());
 		TclParser parser = new TclParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, module.size());
 		ITclCheck check = new ArgumentsDefinitionCheck();
 		check.checkCommands(module, errors, new HashMap<String, String>(),
-				null, new CodeModel(source));
+				null, TextUtils.createLineTracker(source));
 
 		TclCommand tclCommand = module.get(0);
 		EList<TclArgument> arguments = tclCommand.getArguments();

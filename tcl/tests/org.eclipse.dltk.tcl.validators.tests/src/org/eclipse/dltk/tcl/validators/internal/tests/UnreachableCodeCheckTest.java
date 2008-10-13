@@ -19,7 +19,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.internal.validators.checks.UnreachableCodeCheck;
 import org.eclipse.dltk.tcl.parser.TclError;
@@ -29,9 +28,11 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
+import org.eclipse.dltk.utils.TextUtils;
 
 public class UnreachableCodeCheckTest extends TestCase {
-	NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
+	NamespaceScopeProcessor processor = DefinitionManager.getInstance()
+			.createProcessor();
 
 	public void test001() throws Exception {
 		String source = "puts 1; return; puts 2";
@@ -135,16 +136,15 @@ public class UnreachableCodeCheckTest extends TestCase {
 
 	private void typedCheck(String source, List<Integer> errorCodes)
 			throws Exception {
-		processor = DefinitionManager.getInstance().createProcessor();
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2];
 		System.out.println("%%%%%%%%%%%%%%%%Test:" + element.getMethodName());
-		TclParser parser = new TclParser();
+		TclParser parser = new TclParser("8.4");
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		ITclCheck check = new UnreachableCodeCheck();
 		check.checkCommands(module, errors, new HashMap<String, String>(),
-				null, new CodeModel(source));
+				null, TextUtils.createLineTracker(source));
 		if (errors.getCount() > 0) {
 			TestUtils.outErrors(source, errors);
 		}
