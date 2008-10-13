@@ -23,52 +23,71 @@ import org.eclipse.dltk.tcl.parser.Messages;
 import org.eclipse.emf.common.util.EList;
 
 public class SynopsisBuilder {
-	// private TclCommand tclCommand;
-	// private Synopsis root;
+	private final static String NULL_SYNOPSIS = "";
+	private final static String NULL_LINE = "...";
+	private final static String NULL_ARG_DEFINITON_SYNOPSIS = "arg";
+	private final static String NULL_TCL_ARGUMENT_SYNOPSIS = "none";
+
+	private final static String ENDLESS_BOUNDS_END = " ...";
+	private final static String POSSIBLE_START = "?";
+	private final static String POSSIBLE_END = "?";
+	private final static String SWITCH_START = "[";
+	private final static String SWITCH_END = "]";
+	private final static String SWITCH_SEPARATOR = "|";
+	private final static String COMPLEX_ARGUMENT_START = "{";
+	private final static String COMPLEX_ARGUMENT_END = "}";
+
+	private final static String BOUNDS_START = "(";
+	private final static String BOUNDS_END = ")";
+	private final static String BOUNDS_SEPARATOR = "-";
+
+	private final static String DEFINITION_SEPARATOR = " ";
+	private final static String LINE_SEPARATOR = "\n";
+	private final static String HTML_LINE_SEPARATOR = "<br/>";
+	private final static String LIST_SEPARATOR = ",";
+
+	private final static String HTML_CONST_START = "<b>";
+	private final static String HTML_CONST_END = "</b>";
+	private final static String HTML_ARGUMENT_START = "<i>";
+	private final static String HTML_ARGUMENT_END = "</i>";
+
+	private final static String CONST_START = "";
+	private final static String CONST_END = "";
+	private final static String ARGUMENT_START = "";
+	private final static String ARGUMENT_END = "";
 
 	private class SynopsisWord {
 		private String word;
-		private boolean isBold = false;
-		private boolean isItalic = false;
+		private String start;
+		private String end;
 
-		public SynopsisWord(String word, boolean asHtml) {
+		public SynopsisWord(String word, String start, String end) {
 			this.word = word;
-		}
-
-		public SynopsisWord(String word, boolean isBold, boolean isItalic) {
-			this.word = word;
-			this.isBold = isBold;
-			this.isItalic = isItalic;
+			this.start = start;
+			this.end = end;
 		}
 
 		@Override
 		public String toString() {
-			if (asHtml) {
-				StringBuilder result = new StringBuilder();
-				if (isBold)
-					result.append("<b>");
-				if (isItalic)
-					result.append("<i>");
-				result.append(word);
-				if (isItalic)
-					result.append("</i>");
-				if (isBold)
-					result.append("</b>");
-				return result.toString();
-			}
-			return word;
+			StringBuilder result = new StringBuilder();
+			result.append(start);
+			result.append(word);
+			result.append(end);
+			return result.toString();
 		}
 	}
 
 	private class SynopsisConstant extends SynopsisWord {
 		public SynopsisConstant(String word) {
-			super(word, true, false);
+			super(word, (asHtml) ? HTML_CONST_START : CONST_START,
+					(asHtml) ? HTML_CONST_END : CONST_END);
 		}
 	}
 
 	private class SynopsisArgument extends SynopsisWord {
 		public SynopsisArgument(String word) {
-			super(word, false, true);
+			super(word, (asHtml) ? HTML_ARGUMENT_START : ARGUMENT_START,
+					(asHtml) ? HTML_ARGUMENT_END : ARGUMENT_END);
 		}
 	}
 
@@ -85,12 +104,12 @@ public class SynopsisBuilder {
 		}
 
 		public void insert(String prefix) {
-			if (prefix == null || "".equals(prefix))
+			if (prefix == null || prefix.length() == 0)
 				return;
 			if (string == null)
 				string = prefix;
 			else
-				string = prefix + " " + string;
+				string = prefix + DEFINITION_SEPARATOR + string;
 		}
 
 		private boolean matchArgument(Argument argument, Argument selector) {
@@ -104,7 +123,7 @@ public class SynopsisBuilder {
 			} else if (selector instanceof Group) {
 				Group group = ((Group) selector);
 				String cval = group.getConstant();
-				if (cval != null && !cval.equals("")) {
+				if (cval != null && cval.length() > 0) {
 					Constant c = DefinitionsFactory.eINSTANCE.createConstant();
 					c.setName(cval);
 					return DefinitionUtils
@@ -172,7 +191,7 @@ public class SynopsisBuilder {
 
 		public String getShortHint(TclCommand tclCommand, Synopsis root) {
 			if (children.size() == 0) {
-				return (string == null) ? "" : string;
+				return (string == null) ? NULL_SYNOPSIS : string;
 			}
 			List<Synopsis> synopsises = null;
 			StringBuilder result = new StringBuilder();
@@ -186,8 +205,9 @@ public class SynopsisBuilder {
 								tclCommand, root);
 						if (string != null)
 							result.append(string);
-						if (!"".equals(subResult))
-							result.append(" ").append(subResult);
+						if (subResult.length() > 0)
+							result.append(DEFINITION_SEPARATOR).append(
+									subResult);
 						return result.toString();
 					}
 					if (synopsises.size() == 0)
@@ -200,8 +220,9 @@ public class SynopsisBuilder {
 									tclCommand, root);
 							if (string != null)
 								result.append(string);
-							if (!"".equals(subResult))
-								result.append(" ").append(subResult);
+							if (subResult.length() > 0)
+								result.append(DEFINITION_SEPARATOR).append(
+										subResult);
 							return result.toString();
 						}
 					}
@@ -212,59 +233,45 @@ public class SynopsisBuilder {
 			boolean first = true;
 			for (Synopsis synopsis : synopsises) {
 				if (first) {
-					result.append(" [");
+					result.append(DEFINITION_SEPARATOR).append(SWITCH_START);
 					first = false;
 				} else
-					result.append("|");
+					result.append(SWITCH_SEPARATOR);
 				if (synopsis.string == null) {
-					result.append("...");
+					result.append(NULL_LINE);
 					continue;
 				}
-				String[] words = synopsis.string.split(" ");
+				String[] words = synopsis.string.split(DEFINITION_SEPARATOR);
 				result.append(words[0]);
 				if (synopsis.children.size() != 0 || words.length > 1)
-					result.append(" ...");
+					result.append(ENDLESS_BOUNDS_END);
 			}
-			result.append("]");
+			result.append(SWITCH_END);
 			return result.toString();
 		}
 
 		public List<String> getSynopsis() {
 			List<String> results = new ArrayList<String>();
 			if (children.size() == 0) {
-				results.add((string == null) ? "" : string);
+				results.add((string == null) ? NULL_SYNOPSIS : string);
 			}
 			for (Synopsis child : children) {
 				List<String> subResults = child.getSynopsis();
 				if (subResults.size() == 0) {
-					results.add("");
+					results.add(NULL_SYNOPSIS);
 				}
 				for (String subResult : subResults) {
 					StringBuilder result = new StringBuilder();
 					if (string != null)
 						result.append(string);
-					if (!"".equals(subResult))
-						result.append(" ").append(subResult);
+					if (subResult.length() > 0)
+						result.append(DEFINITION_SEPARATOR).append(subResult);
 					results.add(result.toString());
 				}
 			}
 			return results;
 		}
 	}
-
-	// public SynopsisBuilder(TclCommand tclCommand) {
-	// this(tclCommand, false);
-	// }
-
-	// public SynopsisBuilder(TclCommand tclCommand, boolean asHtml) {
-	// this.tclCommand = tclCommand;
-	// Command command = tclCommand.getDefinition();
-	// if (command == null || command.getName() == null
-	// || command.getName().equals("")) {
-	// throw new IllegalArgumentException();
-	// }
-	// processCommand(command);
-	// }
 
 	private boolean asHtml;
 
@@ -276,32 +283,17 @@ public class SynopsisBuilder {
 		this.asHtml = asHtml;
 	}
 
-	// public SynopsisBuilder(Command command) {
-	// this(command, false);
-	// }
-	//
-	// public SynopsisBuilder(Command command, boolean asHtml) {
-	// if (command == null || command.getName() == null
-	// || command.getName().equals("")) {
-	// throw new IllegalArgumentException();
-	// }
-	// this.asHtml = asHtml;
-	// processCommand(command);
-	// }
-
-	// @Override
-	// public String toString() {
-	// if (tclCommand == null)
-	// return join(root.getSynopsis(), asHtml ? "<br>" : "\n");
-	// return root.getShortSynopsis(tclCommand);
-	// }
-
 	public String getSynopsis(Command command) {
+		if (command == null)
+			return NULL_LINE;
 		Synopsis root = processCommand(command);
-		return join(root.getSynopsis(), asHtml ? "<br>" : "\n");
+		return join(root.getSynopsis(), asHtml ? HTML_LINE_SEPARATOR
+				: LINE_SEPARATOR);
 	}
 
 	public String getShortHint(TclCommand tclCommand) {
+		if (tclCommand == null || tclCommand.getDefinition() == null)
+			return NULL_LINE;
 		Synopsis root = processCommand(tclCommand.getDefinition());
 		return root.getShortHint(tclCommand, root);
 	}
@@ -354,9 +346,8 @@ public class SynopsisBuilder {
 
 	private Synopsis processSubCommands(List<Argument> arguments, int pos) {
 		Switch sw = (Switch) arguments.get(pos);
-		if (DefinitionUtils.isComplexScript(sw)
-				|| DefinitionUtils.isComplexOptions(sw) || isOptions(sw)
-				|| isMode(sw))
+		if (DefinitionUtils.isOptions(sw) || DefinitionUtils.isMode(sw)
+				|| (sw.getName() != null && sw.getName().length() > 0))
 			return null;
 		Synopsis synopsis = new Synopsis();
 		if (sw.getLowerBound() == 0) {
@@ -366,7 +357,7 @@ public class SynopsisBuilder {
 		for (Group group : sw.getGroups()) {
 			Synopsis child;
 			String cval = group.getConstant();
-			if (cval != null && !"".equals(cval)) {
+			if (cval != null && cval.length() > 0) {
 				Constant c = DefinitionsFactory.eINSTANCE.createConstant();
 				c.setName(cval);
 				c.setName(cval);
@@ -386,7 +377,8 @@ public class SynopsisBuilder {
 		StringBuilder result = new StringBuilder();
 		if (lower == 0) {
 			if (upper == -1) {
-				result.append("?").append(inner).append(" ...?");
+				result.append(POSSIBLE_START).append(inner).append(
+						ENDLESS_BOUNDS_END).append(POSSIBLE_END);
 			} else {
 				if (upper <= 2) {
 					boolean first = true;
@@ -394,13 +386,15 @@ public class SynopsisBuilder {
 						if (first) {
 							first = false;
 						} else {
-							result.append(" ");
+							result.append(DEFINITION_SEPARATOR);
 						}
-						result.append("?").append(inner).append("?");
+						result.append(POSSIBLE_START).append(inner).append(
+								POSSIBLE_END);
 					}
 				} else {
-					result.append(inner).append("(").append(lower).append("-")
-							.append(upper);
+					result.append(inner).append(BOUNDS_START).append(lower)
+							.append(BOUNDS_SEPARATOR).append(upper).append(
+									BOUNDS_END);
 				}
 			}
 		} else {
@@ -410,27 +404,32 @@ public class SynopsisBuilder {
 					if (first) {
 						first = false;
 					} else {
-						result.append(" ");
+						result.append(DEFINITION_SEPARATOR);
 					}
 					result.append(inner);
 				}
 				if (upper == -1) {
-					result.append(" ?").append(inner).append(" ...?");
+					result.append(DEFINITION_SEPARATOR).append(POSSIBLE_START)
+							.append(inner).append(ENDLESS_BOUNDS_END).append(
+									POSSIBLE_END);
 				} else {
 					for (int i = 0; i < upper - lower; i++) {
-						result.append(" ");
-						result.append("?").append(inner).append("?");
+						result.append(DEFINITION_SEPARATOR).append(
+								POSSIBLE_START).append(inner).append(
+								POSSIBLE_END);
 					}
 				}
 			} else {
-				result.append(inner).append("(").append(lower).append("-")
-						.append(upper).append(")");
+				result.append(inner).append(BOUNDS_START).append(lower).append(
+						BOUNDS_SEPARATOR).append(upper).append(BOUNDS_END);
 			}
 		}
 		return result.toString();
 	}
 
 	public String definitionToList(List<Argument> definitions) {
+		if (definitions == null || definitions.size() == 0)
+			return NULL_SYNOPSIS;
 		if (definitions.size() == 1)
 			return definitionToString(definitions.get(0));
 
@@ -447,7 +446,7 @@ public class SynopsisBuilder {
 			if (first) {
 				first = false;
 			} else {
-				result.append(",");
+				result.append(LIST_SEPARATOR);
 			}
 			result.append(s);
 		}
@@ -455,150 +454,107 @@ public class SynopsisBuilder {
 	}
 
 	public String definitionToString(Argument argument, int lower, int upper) {
+		if (argument == null)
+			return addBounds(new SynopsisArgument(NULL_ARG_DEFINITON_SYNOPSIS)
+					.toString(), lower, upper);
 		StringBuilder out = new StringBuilder();
-		List<Argument> replacable = new ArrayList<Argument>();
-		if (DefinitionUtils.isReplacableWithTemplates(argument, replacable)) {
-			if (replacable.size() == 1) {
-				argument = replacable.get(0);
-				lower = argument.getLowerBound();
-				upper = argument.getUpperBound();
-			} else {
-				return definitionToString(replacable);
-			}
-		}
 		if (argument instanceof Constant) {
 			out.append(new SynopsisConstant(((Constant) argument).getName())
 					.toString());
-		} else if (argument instanceof TypedArgument) {
-			out.append(new SynopsisArgument(((TypedArgument) argument)
-					.getName()).toString());
+		} else if (argument instanceof TypedArgument
+				|| (argument.getName() != null && argument.getName().length() > 0)) {
+			out.append(new SynopsisArgument(argument.getName()).toString());
 		} else if (argument instanceof Group) {
 			Group gr = (Group) argument;
 			String inner = definitionToString(gr.getArguments());
 			String cval = gr.getConstant();
-			boolean isConst = cval != null && !"".equals(cval);
-			boolean isInner = inner != null && !"".equals(inner);
+			boolean isConst = cval != null && cval.length() > 0;
+			boolean isInner = inner != null && inner.length() > 0;
 			if (isConst && isInner)
-				out.append(new SynopsisConstant(cval).toString()).append(" ")
-						.append(inner);
+				out.append(new SynopsisConstant(cval).toString()).append(
+						DEFINITION_SEPARATOR).append(inner);
 			else if (isConst)
 				out.append(new SynopsisConstant(cval).toString());
 			else if (isInner)
 				out.append(inner);
 		} else if (argument instanceof ComplexArgument) {
 			ComplexArgument ca = (ComplexArgument) argument;
-			// List<Argument> definitions = new ArrayList<Argument>();
-			// if (DefinitionUtils.isArgs(ca, definitions))
-			// out.append(definitionToString(definitions));
-			// else
-			out.append("{").append(definitionToString(ca.getArguments()))
-					.append("}");
+			out.append(COMPLEX_ARGUMENT_START).append(
+					definitionToString(ca.getArguments())).append(
+					COMPLEX_ARGUMENT_END);
 		} else if (argument instanceof Switch) {
 			Switch sw = (Switch) argument;
-			// List<Argument> definitions = new ArrayList<Argument>();
-			// if (DefinitionUtils.isComplexScript(sw, definitions)) {
-			// } else if (DefinitionUtils.isPossibleEmptyScript(sw,
-			// definitions)) {
-			// } else if (DefinitionUtils.isComplexOptions(sw, definitions)) {
-			// }
-			// if (definitions.size() > 0) {
-			// return definitionToString(definitions);
-			// } else
-			if (isOptions(sw)) {
-				String name = sw.getName();
-				if (sw.getGroups().size() <= 3) {
-					boolean first = true;
-					for (Group group : sw.getGroups()) {
-						if (first) {
-							first = false;
-						} else {
-							out.append(" ");
-						}
-						out.append("?").append(definitionToString(group, 1, 1))
-								.append("?");
-					}
-				} else {
-					boolean isThereValues = true;
-					for (Group group : sw.getGroups()) {
-						if (group.getArguments().size() == 0) {
-							isThereValues = false;
-							break;
-						}
-					}
-					out.append("?");
-					if (isThereValues) {
-						name = new SynopsisArgument((name != null && !""
-								.equals(name)) ? name : "option").toString();
-						String value = new SynopsisArgument("value").toString();
-						out.append(name).append(" ").append(value).append(
-								" ...?");
+			if (DefinitionUtils.isOptions(sw)) {
+				boolean first = true;
+				for (Group group : sw.getGroups()) {
+					if (first) {
+						first = false;
 					} else {
-						name = new SynopsisArgument((name != null && !""
-								.equals(name)) ? name : "options").toString();
-						out.append(name).append(" ...?");
+						out.append(DEFINITION_SEPARATOR);
 					}
+					out.append(POSSIBLE_START).append(
+							definitionToString(group, 1, 1)).append(
+							POSSIBLE_END);
 				}
 				return out.toString();
-			} else if (isMode(sw)) {
-				String name = sw.getName();
-				name = new SynopsisArgument(
-						(name != null && !"".equals(name)) ? name : "mode")
-						.toString();
-				if (sw.getGroups().size() <= 3) {
-					boolean first = true;
-					out.append("[");
-					for (Group group : sw.getGroups()) {
-						if (first) {
-							first = false;
-						} else {
-							out.append("|");
-						}
-						out.append(definitionToString(group, 1, 1));
+			} else if (DefinitionUtils.isMode(sw)) {
+				boolean first = true;
+				out.append(SWITCH_START);
+				for (Group group : sw.getGroups()) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(SWITCH_SEPARATOR);
 					}
-					out.append("]");
-				} else {
-					out.append(name);
+					out.append(definitionToString(group, 1, 1));
 				}
+				out.append(SWITCH_END);
 				return addBounds(out.toString(), sw.getLowerBound(), sw
 						.getUpperBound());
 			}
 			boolean first = true;
-			out.append("[");
+			out.append(SWITCH_START);
 			for (Group group : sw.getGroups()) {
 				if (first) {
 					first = false;
 				} else {
-					out.append("|");
+					out.append(SWITCH_SEPARATOR);
 				}
 				out.append(definitionToString(group, group.getLowerBound(),
 						group.getUpperBound()));
 			}
-			out.append("]");
+			out.append(SWITCH_END);
 
 		} else
 			throw new IllegalArgumentException();
 		return addBounds(out.toString(), lower, upper);
 	}
 
-	public String definitionToString(List<Argument> arguments) {
+	public String definitionToString(List<Argument> definitions) {
+		if (definitions == null || definitions.size() == 0)
+			return NULL_SYNOPSIS;
 		StringBuilder out = new StringBuilder();
 		boolean first = true;
-		for (Argument argument : arguments) {
+		for (Argument definition : definitions) {
 			if (first)
 				first = false;
 			else
-				out.append(" ");
-			out.append(definitionToString(argument));
+				out.append(DEFINITION_SEPARATOR);
+			out.append(definitionToString(definition));
 		}
 		return out.toString();
 	}
 
-	public String definitionToString(Argument argument) {
-		return definitionToString(argument, argument.getLowerBound(), argument
-				.getUpperBound());
+	public String definitionToString(Argument definition) {
+		if (definition == null)
+			return NULL_ARG_DEFINITON_SYNOPSIS;
+		return definitionToString(definition, definition.getLowerBound(),
+				definition.getUpperBound());
 	}
 
 	public String argumentToString(TclArgument argument) {
+		if (argument == null)
+			return NULL_TCL_ARGUMENT_SYNOPSIS;
 		if (argument instanceof StringArgument) {
 			return ((StringArgument) argument).getValue();
 		} else if (argument instanceof ComplexString) {
@@ -645,19 +601,5 @@ public class SynopsisBuilder {
 			return Info.TclArgumentType_VarName;
 		}
 		return null;
-	}
-
-	public static boolean isOptions(Switch sw) {
-		return sw.getLowerBound() == 0
-				&& (sw.getUpperBound() == -1 || sw.getUpperBound() == sw
-						.getGroups().size());
-	}
-
-	public static boolean isMode(Switch sw) {
-		for (Group group : sw.getGroups()) {
-			if (group.getArguments().size() != 0)
-				return false;
-		}
-		return true;
 	}
 }

@@ -545,198 +545,6 @@ public class DefinitionUtils {
 		return null;
 	}
 
-	public static boolean isReplacableWithTemplates(Argument argument) {
-		return isReplacableWithTemplates(argument, null);
-	}
-
-	public static boolean isReplacableWithTemplates(Argument argument,
-			List<Argument> replacable) {
-		boolean isReplacable = false;
-		if (argument instanceof ComplexArgument) {
-			if (isArgs((ComplexArgument) argument, replacable)) {
-				isReplacable = true;
-			}
-		} else if (argument instanceof Switch) {
-			Switch sw = (Switch) argument;
-			if (DefinitionUtils.isComplexScript(sw, replacable)) {
-				isReplacable = true;
-			} else if (DefinitionUtils.isComplexOptions(sw, replacable)) {
-				isReplacable = true;
-			} else if (DefinitionUtils.isPossibleEmptyScript(sw, replacable)) {
-				isReplacable = true;
-			}
-		}
-		return isReplacable;
-	}
-
-	public static boolean isArgs(Argument argument) {
-		return isArgs(argument, null);
-	}
-
-	public static boolean isArgs(Argument argument, List<Argument> definitions) {
-		if (!(argument instanceof ComplexArgument))
-			return false;
-		ComplexArgument argList = (ComplexArgument) argument;
-		if (argList.getLowerBound() == 1 && argList.getUpperBound() == 1
-				&& argList.getArguments().size() == 1
-				&& argList.getArguments().get(0) instanceof ComplexArgument) {
-			ComplexArgument argDef = (ComplexArgument) argList.getArguments()
-					.get(0);
-			if (argDef.getLowerBound() == 0
-					&& argDef.getUpperBound() == -1
-					&& argDef.getArguments().size() == 2
-					&& argDef.getArguments().get(0) instanceof ComplexArgument
-					&& ((ComplexArgument) argDef.getArguments().get(0))
-							.getArguments().size() == 1) {
-				Argument argName = ((ComplexArgument) argDef.getArguments()
-						.get(0)).getArguments().get(0);
-				Argument argValue = argDef.getArguments().get(1);
-				if ("arg".equals(argName.getName())
-						&& "value".equals(argValue.getName())) {
-					if (definitions != null) {
-						Argument args = DefinitionsFactory.eINSTANCE
-								.createTypedArgument();
-						args.setName("args");
-						definitions.add(args);
-					}
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	public static boolean isComplexScript(Argument argument) {
-		return isComplexScript(argument, null);
-	}
-
-	public static boolean isComplexScript(Argument argument,
-			List<Argument> definitions) {
-		if (!(argument instanceof Switch))
-			return false;
-		Switch sw = (Switch) argument;
-		if (sw.getGroups().size() == 2
-				&& sw.getGroups().get(0).getArguments().size() == 1
-				&& sw.getGroups().get(1).getArguments().size() == 1) {
-			Argument script = sw.getGroups().get(0).getArguments().get(0);
-			Argument complex = sw.getGroups().get(1).getArguments().get(0);
-			if (script instanceof TypedArgument
-					&& ((TypedArgument) script).getType().getValue() == ArgumentType.SCRIPT_VALUE
-					&& script.getLowerBound() == 1
-					&& script.getUpperBound() == 1
-					&& complex instanceof TypedArgument
-					&& ((TypedArgument) complex).getType().getValue() == ArgumentType.ANY_VALUE
-					&& complex.getLowerBound() == 2
-					&& complex.getUpperBound() == -1) {
-				String name = script.getName();
-				if (definitions != null) {
-					Argument complexScript = DefinitionsFactory.eINSTANCE
-							.createTypedArgument();
-					complexScript
-							.setName((name != null && !"".equals(name)) ? name
-									: "script");
-					complexScript.setLowerBound(sw.getLowerBound());
-					complexScript.setUpperBound(-1);
-					definitions.add(complexScript);
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static boolean isPossibleEmptyScript(Argument argument) {
-		return isPossibleEmptyScript(argument, null);
-	}
-
-	public static boolean isPossibleEmptyScript(Argument argument,
-			List<Argument> definitions) {
-		if (!(argument instanceof Switch))
-			return false;
-		Switch sw = (Switch) argument;
-		if (sw.getGroups().size() == 2
-				&& sw.getGroups().get(0).getArguments().size() == 0
-				&& "-".equals(sw.getGroups().get(0).getConstant())
-				&& sw.getGroups().get(1).getArguments().size() == 1) {
-			Argument script = sw.getGroups().get(1).getArguments().get(0);
-			if (script instanceof TypedArgument
-					&& ((TypedArgument) script).getType().getValue() == ArgumentType.SCRIPT_VALUE
-					&& script.getLowerBound() == 1
-					&& script.getUpperBound() == 1) {
-				String name = script.getName();
-				if (definitions != null) {
-					Argument possibleEmptyScript = DefinitionsFactory.eINSTANCE
-							.createTypedArgument();
-					possibleEmptyScript.setName((name != null && !""
-							.equals(name)) ? name : "script");
-					definitions.add(possibleEmptyScript);
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static boolean isComplexOptions(Argument argument) {
-		return isComplexOptions(argument, null);
-	}
-
-	public static boolean isComplexOptions(Argument argument,
-			List<Argument> definitions) {
-		if (!(argument instanceof Switch))
-			return false;
-		Switch sw = (Switch) argument;
-		if (sw.isCheckPrefix()
-				&& sw.getLowerBound() == 0
-				&& sw.getGroups().size() == 2
-				&& sw.getGroups().get(0).getArguments().size() == 1
-				&& sw.getGroups().get(1).getArguments().size() == 1
-				&& sw.getGroups().get(0).getArguments().get(0) instanceof Switch
-				&& sw.getGroups().get(1).getArguments().get(0) instanceof Switch
-				&& ((Switch) sw.getGroups().get(0).getArguments().get(0))
-						.isCheckPrefix()
-				&& ((Switch) sw.getGroups().get(1).getArguments().get(0))
-						.isCheckPrefix()
-				&& sw.getGroups().get(0).getArguments().get(0).getLowerBound() == 0
-				&& sw.getGroups().get(0).getArguments().get(0).getUpperBound() == 1
-				&& sw.getGroups().get(1).getArguments().get(0).getLowerBound() == 0
-				&& sw.getGroups().get(1).getArguments().get(0).getUpperBound() == -1) {
-			String name = sw.getGroups().get(0).getArguments().get(0).getName();
-			name = (name != null && !"".equals(name)) ? name : "option";
-
-			if (definitions != null) {
-				TypedArgument option = DefinitionsFactory.eINSTANCE
-						.createTypedArgument();
-				option.setLowerBound(0);
-				option.setName(name);
-				TypedArgument value = DefinitionsFactory.eINSTANCE
-						.createTypedArgument();
-				value.setLowerBound(0);
-				value.setName("value");
-
-				Group coGroup = DefinitionsFactory.eINSTANCE.createGroup();
-				coGroup.setLowerBound(0);
-				coGroup.setUpperBound(-1);
-
-				TypedArgument coOption = DefinitionsFactory.eINSTANCE
-						.createTypedArgument();
-				coOption.setName(name);
-				TypedArgument coValue = DefinitionsFactory.eINSTANCE
-						.createTypedArgument();
-				coValue.setName("value");
-				coGroup.getArguments().add(coOption);
-				coGroup.getArguments().add(coValue);
-
-				definitions.add(option);
-				definitions.add(value);
-				definitions.add(coGroup);
-			}
-			return true;
-		}
-		return false;
-	}
-
 	public static Argument minimizeBounds(Argument argument) {
 		Argument minArgument = copyArgument(argument);
 		minArgument.setLowerBound(1);
@@ -751,5 +559,19 @@ public class DefinitionUtils {
 		}
 		return minArguments;
 
+	}
+
+	public static boolean isOptions(Switch sw) {
+		return sw.getLowerBound() == 0
+				&& (sw.getUpperBound() == -1 || sw.getUpperBound() == sw
+						.getGroups().size());
+	}
+
+	public static boolean isMode(Switch sw) {
+		for (Group group : sw.getGroups()) {
+			if (group.getArguments().size() != 0)
+				return false;
+		}
+		return true;
 	}
 }
