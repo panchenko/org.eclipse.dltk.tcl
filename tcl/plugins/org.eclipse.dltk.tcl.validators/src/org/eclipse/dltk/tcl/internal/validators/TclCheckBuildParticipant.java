@@ -24,7 +24,6 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.validators.ChecksExtensionManager.TclCheckInfo;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
@@ -67,8 +66,7 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 			List<TclCommand> commands = parser.parse(source, errorCollector,
 					processor);
 			TclBuildContext.setStatements(context, commands);
-			final CodeModel codeModel = new CodeModel(source);
-			TclBuildContext.setCodeModel(context, codeModel);
+			final ISourceLineTracker lineTracker = context.getLineTracker();
 			if (TESTING_DO_CHECKS) {
 				// Perform all checks.
 				for (int i = 0; i < checks.length; i++) {
@@ -80,12 +78,11 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 									.getScriptProject();
 							check.checkCommands(commands, errorCollector,
 									preferences.getOptions(info),
-									scriptProject, codeModel);
+									scriptProject, lineTracker);
 						}
 					}
 				}
 			}
-			final ISourceLineTracker lineTracker = context.getLineTracker();
 			final IProblemReporter reporter = context.getProblemReporter();
 			// report errors to the build context
 			errorCollector.reportAll(new ITclErrorReporter() {

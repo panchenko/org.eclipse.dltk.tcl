@@ -15,11 +15,8 @@ import java.util.List;
 
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 
 public class TclBuildContext {
-
-	private static final String ATTR_MODEL = "CodeModel"; //$NON-NLS-1$
 
 	private static final String ATTR_NEW_AST = "NEW_AST"; //$NON-NLS-1$
 
@@ -31,14 +28,6 @@ public class TclBuildContext {
 	public static void setStatements(IBuildContext context,
 			List<TclCommand> commands) {
 		context.set(ATTR_NEW_AST, commands);
-	}
-
-	public static CodeModel getCodeModel(IBuildContext context) {
-		return (CodeModel) context.get(ATTR_MODEL);
-	}
-
-	public static void setCodeModel(IBuildContext context, CodeModel codeModel) {
-		context.set(ATTR_MODEL, codeModel);
 	}
 
 }

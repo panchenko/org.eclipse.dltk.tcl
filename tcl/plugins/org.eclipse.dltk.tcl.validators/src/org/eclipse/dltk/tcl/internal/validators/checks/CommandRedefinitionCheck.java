@@ -17,11 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
@@ -38,7 +39,7 @@ public class CommandRedefinitionCheck implements ITclCheck {
 
 	public void checkCommands(final List<TclCommand> tclCommands,
 			final ITclErrorReporter reporter, Map<String, String> options,
-			IScriptProject project, final CodeModel codeModel) {
+			IScriptProject project, final ISourceLineTracker sourceLineTracker) {
 		final IScopeProcessor processor = DefinitionManager.getInstance()
 				.createProcessor();
 		TclParserUtils.traverse(tclCommands, new TclVisitor() {
@@ -46,12 +47,14 @@ public class CommandRedefinitionCheck implements ITclCheck {
 
 			@Override
 			public boolean visit(TclCommand tclCommand) {
+				Assert.isNotNull(tclCommand);
 				processor.processCommand(tclCommand);
-				if (tclCommand == null || tclCommand.getDefinition() == null
+				if (tclCommand.getDefinition() == null
 						|| !tclCommand.isMatched()) {
 					return true;
 				}
 				if ("proc".equals(tclCommand.getDefinition().getName())) {
+					Assert.isLegal(tclCommand.getArguments().size() >= 3);
 					TclArgument nameArgument = tclCommand.getArguments().get(0);
 					if (nameArgument instanceof StringArgument) {
 						String current = ((StringArgument) nameArgument)
@@ -84,8 +87,8 @@ public class CommandRedefinitionCheck implements ITclCheck {
 							}
 						}
 						int start = tclCommand.getStart();
-						userCommands.put(current, codeModel.getLineNumber(
-								start, start + 1));
+						userCommands.put(current, sourceLineTracker
+								.getLineNumberOfOffset(start));
 					}
 				}
 				return true;

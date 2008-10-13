@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.VariableReference;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
@@ -36,7 +36,7 @@ public class UndefinedVariableCheck implements ITclCheck {
 
 	public void checkCommands(List<TclCommand> commands,
 			final ITclErrorReporter reporter, Map<String, String> options,
-			final IScriptProject project, CodeModel codeModel) {
+			final IScriptProject project, ISourceLineTracker sourceLineTracker) {
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(VariableReference ref) {

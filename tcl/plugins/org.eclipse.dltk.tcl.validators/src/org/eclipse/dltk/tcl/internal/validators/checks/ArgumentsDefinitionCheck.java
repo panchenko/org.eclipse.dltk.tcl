@@ -15,11 +15,12 @@ package org.eclipse.dltk.tcl.internal.validators.checks;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
@@ -35,20 +36,26 @@ public class ArgumentsDefinitionCheck implements ITclCheck {
 
 	public void checkCommands(List<TclCommand> commands,
 			final ITclErrorReporter reporter, Map<String, String> options,
-			IScriptProject project, CodeModel codeModel) {
+			IScriptProject project, ISourceLineTracker sourceLineTracker) {
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(TclCommand tclCommand) {
-				if (tclCommand == null || tclCommand.getDefinition() == null
+				Assert.isNotNull(tclCommand);
+				if (tclCommand.getDefinition() == null
 						|| !tclCommand.isMatched()) {
 					return true;
 				}
 				if ("proc".equals(tclCommand.getDefinition().getName())) {
+					Assert.isLegal(tclCommand.getArguments().size() >= 3);
 					return check(tclCommand.getArguments().get(1));
 				}
 				if ("apply".equals(tclCommand.getDefinition().getName())) {
-					return check(((TclArgumentList) tclCommand.getArguments()
-							.get(0)).getArguments().get(0));
+					Assert.isLegal(tclCommand.getArguments().size() >= 2);
+					TclArgument tclArgument = tclCommand.getArguments().get(0);
+					Assert.isLegal(tclArgument instanceof TclArgumentList);
+					TclArgumentList tclArgumentList = (TclArgumentList) tclArgument;
+					Assert.isLegal(tclArgumentList.getArguments().size() >= 2);
+					return check(tclArgumentList.getArguments().get(0));
 				}
 				return true;
 			}

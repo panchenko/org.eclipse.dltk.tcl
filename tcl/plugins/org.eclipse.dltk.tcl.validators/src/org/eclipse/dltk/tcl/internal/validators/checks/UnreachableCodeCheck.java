@@ -15,12 +15,13 @@ package org.eclipse.dltk.tcl.internal.validators.checks;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.Node;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.validators.ICheckKinds;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
@@ -33,13 +34,14 @@ public class UnreachableCodeCheck implements ITclCheck {
 
 	public void checkCommands(final List<TclCommand> tclCommands,
 			final ITclErrorReporter reporter, Map<String, String> options,
-			IScriptProject project, CodeModel codeModel) {
+			IScriptProject project, ISourceLineTracker sourceLineTracker) {
 		traverse(tclCommands, new TclVisitor() {
 			private boolean check = true;
 			private boolean error = false;
 
 			@Override
 			public boolean visit(TclCommand tclCommand) {
+				Assert.isNotNull(tclCommand);
 				if (!check)
 					return false;
 				if (error) {
@@ -63,6 +65,7 @@ public class UnreachableCodeCheck implements ITclCheck {
 			}
 
 			public void endVisit(TclCommand tclCommand) {
+				Assert.isNotNull(tclCommand);
 				if (tclCommand != null
 						&& tclCommand.getDefinition() != null
 						&& "return"

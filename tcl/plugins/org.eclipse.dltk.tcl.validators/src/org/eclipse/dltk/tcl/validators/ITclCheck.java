@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 
 public interface ITclCheck {
@@ -26,5 +26,5 @@ public interface ITclCheck {
 	 */
 	void checkCommands(List<TclCommand> commands, ITclErrorReporter reporter,
 			Map<String, String> options, IScriptProject project,
-			CodeModel codeModel);
+			ISourceLineTracker sourceLineTracker);
 }
