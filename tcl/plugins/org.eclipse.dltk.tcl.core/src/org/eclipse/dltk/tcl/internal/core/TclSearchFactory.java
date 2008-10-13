@@ -11,7 +11,6 @@ package org.eclipse.dltk.tcl.internal.core;
 
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.core.ISearchPatternProcessor;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.search.AbstractSearchFactory;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.IMatchLocatorParser;
@@ -46,14 +45,4 @@ public class TclSearchFactory extends AbstractSearchFactory {
 		return new TclSearchPatternProcessor();
 	}
 
-	public String getNormalizedTypeName(IType type) {
-		String otherName = type.getElementName();
-		if (otherName.startsWith("::")) {
-			otherName = otherName.substring(2);
-		}
-		if (otherName.endsWith("::")) {
-			otherName = otherName.substring(0, otherName.length() - 2);
-		}
-		return otherName;
-	}
 }
