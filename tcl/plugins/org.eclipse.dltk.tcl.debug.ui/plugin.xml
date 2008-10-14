@@ -330,6 +330,11 @@
       <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget" />
       <adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget" />
     </factory>
+    <factory
+      adaptableType="org.eclipse.dltk.debug.core.model.IScriptVariable"
+      class="org.eclipse.dltk.tcl.internal.debug.ui.TclEditorDebugAdapterFactory">
+      <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget" />
+    </factory>
   </extension>
   <extension point="org.eclipse.dltk.debug.ui.scriptDetailFormatter">
     <detailFormatter
