@@ -137,6 +137,8 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		public boolean get(BooleanOption option) {
 			if (option == DebugOption.DBGP_ASYNC) {
 				return false;
+			} else if (option == DebugOption.DBGP_BREAKPOINT_UPDATE_LINE_NUMBER) {
+				return false;
 			}
 			return super.get(option);
 		}
