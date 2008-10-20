@@ -15,4 +15,11 @@
             typeFactory="org.eclipse.dltk.tcl.internal.debug.TclTypeFactory">
       </debugModel>
    </extension>
+   <extension
+         point="org.eclipse.dltk.debug.hotCodeReplaceProvider">
+      <provider
+            class="org.eclipse.dltk.tcl.internal.debug.TclHotCodeReplaceProvider"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </provider>
+   </extension>
 </plugin>
