@@ -1,5 +1,6 @@
 package org.eclipse.dltk.tcl.internal.debug.ui;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,20 +17,26 @@ import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.debug.core.model.IScriptVariable;
 import org.eclipse.dltk.debug.core.model.IScriptWatchpoint;
+import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
 import org.eclipse.dltk.debug.ui.actions.ActionMessages;
 import org.eclipse.dltk.debug.ui.breakpoints.BreakpointUtils;
 import org.eclipse.dltk.debug.ui.breakpoints.IScriptBreakpointLineValidator;
+import org.eclipse.dltk.debug.ui.breakpoints.Messages;
 import org.eclipse.dltk.debug.ui.breakpoints.ScriptBreakpointLineValidatorFactory;
 import org.eclipse.dltk.debug.ui.breakpoints.ScriptToggleBreakpointAdapter;
 import org.eclipse.dltk.internal.debug.core.model.ScriptWatchpoint;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
+import org.eclipse.dltk.tcl.internal.debug.ui.actions.IToggleSpawnpointsTarget;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter {
+public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
+		implements IToggleSpawnpointsTarget {
 	private static final IScriptBreakpointLineValidator validator = ScriptBreakpointLineValidatorFactory
 			.createNonEmptyNoCommentValidator("#"); //$NON-NLS-1$
 
@@ -164,5 +171,82 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter {
 	public boolean canToggleBreakpoints(IWorkbenchPart part,
 			ISelection selection) {
 		return canToggleLineBreakpoints(part, selection);
+	}
+
+	public boolean canToggleSpawnpoints(IWorkbenchPart part,
+			ITextSelection selection) {
+		if (isRemote(part, selection)) {
+			return false;
+		}
+		return true;
+	}
+
+	public void toggleSpawnpoints(final IWorkbenchPart part,
+			final ITextSelection selection) throws CoreException {
+		Job job = new Job("Script Toggle Spawnpoint") { //$NON-NLS-1$
+			protected IStatus run(IProgressMonitor monitor) {
+				final ITextEditor editor = getTextEditor(part);
+				if (editor != null) {
+					if (monitor.isCanceled()) {
+						return Status.CANCEL_STATUS;
+					}
+
+					try {
+						report(null, part);
+
+						int lineNumber = selection.getStartLine() + 1;
+
+						final IBreakpoint breakpoint = BreakpointUtils
+								.findLineBreakpoint(editor, lineNumber);
+
+						if (breakpoint != null) {
+							// if breakpoint already exists, delete it
+							breakpoint.delete();
+						} else {
+							final IDocumentProvider documentProvider = editor
+									.getDocumentProvider();
+							if (documentProvider == null) {
+								return Status.CANCEL_STATUS;
+							}
+
+							final IDocument document = documentProvider
+									.getDocument(editor.getEditorInput());
+
+							lineNumber = findBreakpointLine(document,
+									lineNumber - 1, getValidator()) + 1;
+
+							if (lineNumber != BREAKPOINT_LINE_NOT_FOUND) {
+								// Check if already breakpoint set to the same
+								// location
+								if (BreakpointUtils.findLineBreakpoint(editor,
+										lineNumber) == null) {
+									BreakpointUtils.addSpawnpoint(editor,
+											lineNumber);
+								} else {
+									report(
+											MessageFormat
+													.format(
+															Messages.ScriptToggleBreakpointAdapter_breakpointAlreadySetAtLine,
+															new Object[] { new Integer(
+																	lineNumber) }),
+											part);
+								}
+							} else {
+								report(
+										Messages.ScriptToggleBreakpointAdapter_invalidBreakpointPosition,
+										part);
+							}
+						}
+					} catch (CoreException e) {
+						DLTKDebugUIPlugin.log(e);
+					}
+				}
+
+				return Status.OK_STATUS;
+			}
+
+		};
+		job.setSystem(true);
+		job.schedule();
 	}
 }

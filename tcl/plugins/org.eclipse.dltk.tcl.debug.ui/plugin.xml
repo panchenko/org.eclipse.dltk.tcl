@@ -97,6 +97,13 @@
       </action>
 
       <action
+        label="%ToggleSpawnpoint.label"
+        id="org.eclipse.dltk.tcl.ui.actions.RulerToggleSpawnpointActionDelegate"
+        class="org.eclipse.dltk.tcl.internal.debug.ui.actions.RulerToggleSpawnpointActionDelegate"
+        menubarPath="debug">
+      </action>
+
+      <action
         label="%ToggleBreakpoint.label"
         id="org.eclipse.dltk.tcl.ui.actions.RulerToggleBreakpointActionDelegate"
         class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
@@ -329,6 +336,7 @@
       class="org.eclipse.dltk.tcl.internal.debug.ui.TclEditorDebugAdapterFactory">
       <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget" />
       <adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget" />
+      <adapter type="org.eclipse.dltk.tcl.internal.debug.ui.actions.IToggleSpawnpointsTarget" />
     </factory>
     <factory
       adaptableType="org.eclipse.dltk.debug.core.model.IScriptVariable"
