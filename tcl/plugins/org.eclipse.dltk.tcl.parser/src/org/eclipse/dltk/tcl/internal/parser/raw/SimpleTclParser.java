@@ -12,8 +12,6 @@
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.dltk.tcl.parser.ITclErrorConstants;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
@@ -71,71 +69,6 @@ public class SimpleTclParser {
 			return new MagicBackslashSubstitution();
 
 		return null;
-	}
-
-	private static class TclWordBuffer {
-
-		private enum State {
-			START, CONTENT
-		}
-
-		private State state;
-		private int start;
-		private final List<Object> contents = new ArrayList<Object>();
-		private final StringBuilder string = new StringBuilder();
-
-		public State getState() {
-			return state;
-		}
-
-		public void setState(State state) {
-			this.state = state;
-		}
-
-		public void reset() {
-			state = State.START;
-			contents.clear();
-			string.setLength(0);
-		}
-
-		public boolean isEmpty() {
-			return contents.isEmpty() && string.length() == 0;
-		}
-
-		public TclWord buildWord() {
-			if (string.length() != 0) {
-				contents.add(string.toString());
-				string.setLength(0);
-			}
-			if (!isEmpty()) {
-				final TclWord word = new TclWord(contents);
-				word.setStart(start);
-				state = State.START;
-				contents.clear();
-				return word;
-			} else {
-				return null;
-			}
-		}
-
-		public void setStart(int start) {
-			this.start = start;
-		}
-
-		public void add(ISubstitution s) {
-			if (string.length() != 0) {
-				contents.add(string.toString());
-				string.setLength(0);
-			}
-			contents.add(s);
-			state = State.CONTENT;
-		}
-
-		public void add(char ch) {
-			string.append(ch);
-			state = State.CONTENT;
-		}
-
 	}
 
 	private TclCommand nextCommand(CodeScanner input, boolean nest,

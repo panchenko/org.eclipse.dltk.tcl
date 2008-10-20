@@ -16,11 +16,7 @@ import java.util.List;
 
 public class QuotesSubstitution extends TclElement implements ISubstitution {
 
-	private List<Object> contents;
-
-	public QuotesSubstitution() {
-		contents = new ArrayList<Object>();
-	}
+	private final List<Object> contents = new ArrayList<Object>();
 
 	public List<Object> getContents() {
 		return contents;
@@ -35,44 +31,34 @@ public class QuotesSubstitution extends TclElement implements ISubstitution {
 		return (c == '"');
 	}
 
-	private void append(char c) {
-		Object o = null;
-		if (contents.size() > 0)
-			o = contents.get(contents.size() - 1);
-		if (o != null && o instanceof String) {
-			contents.set(contents.size() - 1, (String) o + c);
-		} else {
-			contents.add("" + c); //$NON-NLS-1$
-		}
-	}
-
 	public boolean readMe(CodeScanner input, SimpleTclParser parser)
 			throws TclParseException {
 		if (!iAm(input))
 			return false;
 		setStart(input.getPosition());
 		input.read();
-		int c;
+		final TclWordBuffer buffer = new TclWordBuffer();
 		while (true) {
 			ISubstitution s = parser.getCVB(input);
 
 			if (s != null) {
 				s.readMe(input, parser);
-				contents.add(s);
+				buffer.add(s);
 			} else {
-				c = input.read();
+				int c = input.read();
 				if (c == -1) {
 					parser.handleError(new ErrorDescription(
 							Messages.QuotesSubstitution_1, getStart(), input
 									.getPosition(), ErrorDescription.ERROR));
 					break;
 				}
-				append((char) c);
+				buffer.add((char) c);
 				if (c == '"') {
 					break;
 				}
 			}
 		}
+		contents.addAll(buffer.getContents());
 		if (!input.isEOF()) {
 			/*
 			 * c = input.read(); if (!TclTextUtils.isWhitespace(c) && ( c !=
