@@ -22,16 +22,16 @@ public class QuotesSubstitution extends TclElement implements ISubstitution {
 		return contents;
 	}
 
-	public static boolean iAm(CodeScanner scanner) {
+	public static boolean iAm(ICodeScanner scanner) {
 		int c = scanner.read();
-		if (c == -1) {
+		if (c == ICodeScanner.EOF) {
 			return false;
 		}
 		scanner.unread();
 		return (c == '"');
 	}
 
-	public boolean readMe(CodeScanner input, SimpleTclParser parser)
+	public boolean readMe(ICodeScanner input, SimpleTclParser parser)
 			throws TclParseException {
 		if (!iAm(input))
 			return false;
@@ -46,7 +46,7 @@ public class QuotesSubstitution extends TclElement implements ISubstitution {
 				buffer.add(s);
 			} else {
 				int c = input.read();
-				if (c == -1) {
+				if (c == ICodeScanner.EOF) {
 					parser.handleError(new ErrorDescription(
 							Messages.QuotesSubstitution_1, getStart(), input
 									.getPosition(), ErrorDescription.ERROR));

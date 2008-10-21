@@ -54,7 +54,7 @@ public class SimpleTclParser {
 		return src.replaceAll(regex, " "); //$NON-NLS-1$
 	}
 
-	public ISubstitution getCVB(CodeScanner input) throws TclParseException {
+	public ISubstitution getCVB(ICodeScanner input) throws TclParseException {
 
 		if (CommandSubstitution.iAm(input))
 			return new CommandSubstitution();
@@ -71,7 +71,7 @@ public class SimpleTclParser {
 		return null;
 	}
 
-	private TclCommand nextCommand(CodeScanner input, boolean nest,
+	private TclCommand nextCommand(ICodeScanner input, boolean nest,
 			final TclWordBuffer wordBuffer) throws TclParseException {
 		TclCommand cmd = new TclCommand();
 		cmd.setStart(input.getPosition());
@@ -79,7 +79,7 @@ public class SimpleTclParser {
 
 		while (true) {
 			int ch = input.read();
-			boolean eof = (ch == CodeScanner.EOF);
+			boolean eof = (ch == ICodeScanner.EOF);
 			if (eof && cmd.isEmpty() && wordBuffer.isEmpty()) {
 				return STOP_EOF;
 			}
@@ -155,7 +155,7 @@ public class SimpleTclParser {
 				int c1 = input.read();
 				if (c1 == '\n') {
 					cmdEnd = true;
-				} else if (c1 == -1) {
+				} else if (c1 == ICodeScanner.EOF) {
 					cmdEnd = true;
 				} else {
 					input.unread();
@@ -206,7 +206,7 @@ public class SimpleTclParser {
 	 * @param nest
 	 * @throws ParseException
 	 */
-	public TclScript parse(CodeScanner input, boolean nest, IEOFHandler handler)
+	public TclScript parse(ICodeScanner input, boolean nest, IEOFHandler handler)
 			throws TclParseException {
 		final TclWordBuffer wordBuffer = new TclWordBuffer();
 		TclScript script = new TclScript();
@@ -232,7 +232,7 @@ public class SimpleTclParser {
 	}
 
 	public TclScript parse(String content) throws TclParseException {
-		CodeScanner scanner = new CodeScanner(content);
+		ICodeScanner scanner = new CodeScanner(content);
 		TclScript script = parse(scanner, false, null);
 		return script;
 	}

@@ -13,7 +13,7 @@ package org.eclipse.dltk.tcl.internal.parser.raw;
 
 public class TclTextUtils {
 
-	public static void runToLineEnd(CodeScanner scanner) {
+	public static void runToLineEnd(ICodeScanner scanner) {
 		boolean esc = false;
 		while (true) {
 			int c = scanner.read();
@@ -24,7 +24,7 @@ public class TclTextUtils {
 			case '\r':
 				break;
 			case '\n':
-			case CodeScanner.EOF:
+			case ICodeScanner.EOF:
 				if (!esc)
 					return;
 			default:
@@ -55,10 +55,10 @@ public class TclTextUtils {
 
 	public static boolean isIdentifier(int c) {
 		return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-				|| (c >= '0' && c <= '9') || (c == '-')|| (c == '_') || (c == ':'));
+				|| (c >= '0' && c <= '9') || (c == '-') || (c == '_') || (c == ':'));
 	}
 
-	public static boolean isNewLine(CodeScanner input) {
+	public static boolean isNewLine(ICodeScanner input) {
 		int c = input.read();
 		if (c == '\n') {
 			input.unread();
@@ -70,13 +70,13 @@ public class TclTextUtils {
 			if (c == '\n')
 				return true;
 		} else {
-			if (c != -1)
+			if (c != ICodeScanner.EOF)
 				input.unread();
 		}
 		return false;
 	}
 
-	public static void skipNewLine(CodeScanner input) {
+	public static void skipNewLine(ICodeScanner input) {
 		int c = input.read();
 		if (c == '\n') {
 			return;

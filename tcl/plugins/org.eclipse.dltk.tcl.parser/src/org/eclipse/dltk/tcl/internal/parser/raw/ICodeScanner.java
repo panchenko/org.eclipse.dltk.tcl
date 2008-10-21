@@ -1,24 +1,26 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.  
+ * Copyright (c) 2008 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
+ *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
-public interface ISubstitution {
-	
-	
-	/**
-	 * Reads substitution and initializes object from it. 
-	 * @param scanner
-	 * @return false if subs. doesn't fit
-	 */
-	public boolean readMe (ICodeScanner scanner, SimpleTclParser parser) throws TclParseException;
-	
+public interface ICodeScanner {
+
+	public static final int EOF = -1;
+
+	boolean isEOF();
+
+	int read();
+
+	void unread();
+
+	int getPosition();
+
 }

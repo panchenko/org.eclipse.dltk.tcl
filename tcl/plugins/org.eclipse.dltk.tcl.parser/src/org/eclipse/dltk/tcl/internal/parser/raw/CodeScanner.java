@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
-public class CodeScanner {
-
-	public static final int EOF = -1;
+public class CodeScanner implements ICodeScanner {
 
 	private char[] content;
 	private int pos;

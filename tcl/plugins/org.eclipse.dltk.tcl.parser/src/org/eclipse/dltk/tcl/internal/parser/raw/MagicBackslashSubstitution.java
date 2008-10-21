@@ -14,9 +14,9 @@ package org.eclipse.dltk.tcl.internal.parser.raw;
 public class MagicBackslashSubstitution extends TclElement implements
 		ISubstitution {
 
-	public static boolean iAm(CodeScanner input) {
+	public static boolean iAm(ICodeScanner input) {
 		int c = input.read();
-		if (c == -1)
+		if (c == ICodeScanner.EOF)
 			return false;
 		if (c != '\\') {
 			input.unread();
@@ -27,16 +27,17 @@ public class MagicBackslashSubstitution extends TclElement implements
 		return nl;
 	}
 
-	public boolean readMe(CodeScanner input, SimpleTclParser parser) throws TclParseException {
+	public boolean readMe(ICodeScanner input, SimpleTclParser parser)
+			throws TclParseException {
 		if (!iAm(input))
 			return false;
 		setStart(input.getPosition());
 		input.read();
 		TclTextUtils.skipNewLine(input);
-		int c = -1;
+		int c;
 		do {
 			c = input.read();
-		} while (c != -1 && TclTextUtils.isTrueWhitespace(c));
+		} while (c != ICodeScanner.EOF && TclTextUtils.isTrueWhitespace(c));
 		input.unread();
 		setEnd(input.getPosition() - 1);
 		return true;

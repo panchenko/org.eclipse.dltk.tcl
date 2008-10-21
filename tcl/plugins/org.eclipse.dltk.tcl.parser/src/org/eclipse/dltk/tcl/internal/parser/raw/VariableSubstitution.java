@@ -32,9 +32,9 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 		return name;
 	}
 
-	public static boolean iAm(CodeScanner scanner) {
+	public static boolean iAm(ICodeScanner scanner) {
 		int c = scanner.read();
-		if (c == -1)
+		if (c == ICodeScanner.EOF)
 			return false;
 		if (c != '$') {
 			scanner.unread();
@@ -42,7 +42,7 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 		}
 		int c2 = scanner.read();
 		scanner.unread();
-		if (c2 != -1)
+		if (c2 != ICodeScanner.EOF)
 			scanner.unread();
 		if (!TclTextUtils.isIdentifier(c2) && c2 != '(' && c2 != '{') {
 			return false;
@@ -50,7 +50,7 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 		return true;
 	}
 
-	public boolean readMe(CodeScanner input, SimpleTclParser parser)
+	public boolean readMe(ICodeScanner input, SimpleTclParser parser)
 			throws TclParseException {
 		if (!iAm(input))
 			return false;
@@ -63,7 +63,7 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 			this.kind = VAR_NAME;
 			while (true) {
 				c = input.read();
-				if (c == -1) {
+				if (c == ICodeScanner.EOF) {
 					throw new TclParseException(
 							Messages.VariableSubstitution_BracesVariableName,
 							input.getPosition());
@@ -74,7 +74,7 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 			}
 		} else {
 			do {
-				if (c == CodeScanner.EOF) {
+				if (c == ICodeScanner.EOF) {
 					break; // stop!
 				}
 				if (TclTextUtils.isIdentifier(c)) {
@@ -93,7 +93,7 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 								cvb.add(s);
 							} else {
 								ch = input.read();
-								if (ch == CodeScanner.EOF) {
+								if (ch == ICodeScanner.EOF) {
 									boolean cont = parser
 											.handleError(new ErrorDescription(
 													Messages.VariableSubstitution_VariableIndex,

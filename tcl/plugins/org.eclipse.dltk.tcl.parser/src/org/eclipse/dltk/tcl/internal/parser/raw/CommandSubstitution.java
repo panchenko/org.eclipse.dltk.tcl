@@ -21,15 +21,15 @@ public class CommandSubstitution extends TclElement implements ISubstitution {
 		return script;
 	}
 
-	public static boolean iAm(CodeScanner input) {
+	public static boolean iAm(ICodeScanner input) {
 		int c = input.read();
-		if (c == -1)
+		if (c == ICodeScanner.EOF)
 			return false;
 		input.unread();
 		return (c == '[');
 	}
 
-	public boolean readMe(final CodeScanner input, final SimpleTclParser parser)
+	public boolean readMe(final ICodeScanner input, final SimpleTclParser parser)
 			throws TclParseException {
 		if (!iAm(input))
 			return false;

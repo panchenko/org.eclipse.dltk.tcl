@@ -14,9 +14,9 @@ package org.eclipse.dltk.tcl.internal.parser.raw;
 public class NormalBackslashSubstitution extends TclElement implements
 		ISubstitution {
 
-	public static boolean iAm(CodeScanner input) {
+	public static boolean iAm(ICodeScanner input) {
 		int c = input.read();
-		if (c == -1)
+		if (c == ICodeScanner.EOF)
 			return false;
 		if (c != '\\') {
 			input.unread();
@@ -27,7 +27,8 @@ public class NormalBackslashSubstitution extends TclElement implements
 		return !nl;
 	}
 
-	public boolean readMe(CodeScanner input, SimpleTclParser parser) throws TclParseException {
+	public boolean readMe(ICodeScanner input, SimpleTclParser parser)
+			throws TclParseException {
 		if (!iAm(input))
 			return false;
 		setStart(input.getPosition());
