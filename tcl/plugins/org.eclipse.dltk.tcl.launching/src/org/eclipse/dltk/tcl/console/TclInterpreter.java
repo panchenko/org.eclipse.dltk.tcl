@@ -17,9 +17,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.dltk.console.ConsoleRequest;
+import org.eclipse.dltk.console.IScriptExecResult;
 import org.eclipse.dltk.console.IScriptConsoleIO;
 import org.eclipse.dltk.console.IScriptInterpreter;
 import org.eclipse.dltk.console.InterpreterResponse;
+import org.eclipse.dltk.console.ScriptExecResult;
 import org.eclipse.dltk.console.ShellResponse;
 
 public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
@@ -32,8 +34,6 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 
 	private IScriptConsoleIO protocol;
 
-	private String content;
-
 	private int state;
 
 	private List closeRunnables = new ArrayList();
@@ -41,19 +41,14 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 	private List initialListeners = new ArrayList();
 
 	// IScriptInterpreter
-	public void exec(String command) throws IOException {
+	public IScriptExecResult exec(String command) throws IOException {
 		InterpreterResponse response = protocol.execInterpreter(command);
-
-		content = response.getContent();
 		state = response.getState();
+		return new ScriptExecResult(response.getContent());
 	}
 
 	public boolean isValid() {
 		return protocol != null;
-	}
-
-	public String getOutput() {
-		return content;
 	}
 
 	public int getState() {
