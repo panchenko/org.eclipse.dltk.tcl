@@ -49,15 +49,7 @@ public final class TclCheckerHelper {
 		pattern = Pattern.compile(REGEX);
 	}
 
-	public static String[] makeTclCheckerCmdLine(IPreferenceStore store,
-			String path, IEnvironment environment) {
-		CommandLine cmdLine = new CommandLine();
-		passOriginalArguments(store, cmdLine, environment);
-		cmdLine.add(path);
-		return cmdLine.toArray();
-	}
-
-	public static boolean passOriginalArguments(IPreferenceStore store,
+	public static boolean buildCommandLine(IPreferenceStore store,
 			CommandLine cmdLine, IEnvironment environment) {
 		Map paths = getPaths(store);
 		String path = (String) paths.get(environment);

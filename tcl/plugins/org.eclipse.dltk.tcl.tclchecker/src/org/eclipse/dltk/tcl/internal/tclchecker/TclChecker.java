@@ -33,11 +33,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
+import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.AbstractExternalValidator;
 import org.eclipse.dltk.validators.core.CommandLine;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
@@ -99,7 +101,8 @@ public class TclChecker extends AbstractExternalValidator implements
 				if (source.length() == 0) {
 					continue;
 				}
-				CodeModel codeModel = new CodeModel(source);
+				ISourceLineTracker codeModel = TextUtils
+						.createLineTracker(source);
 				moduleToCodeModel.put(module, codeModel);
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
@@ -124,8 +127,7 @@ public class TclChecker extends AbstractExternalValidator implements
 			return;
 		}
 		CommandLine cmdLine = new CommandLine();
-		if (!TclCheckerHelper
-				.passOriginalArguments(store, cmdLine, environment)) {
+		if (!TclCheckerHelper.buildCommandLine(store, cmdLine, environment)) {
 			console.println(Messages.TclChecker_path_not_specified);
 		}
 		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
@@ -171,7 +173,7 @@ public class TclChecker extends AbstractExternalValidator implements
 					.getInputStream()));
 
 			String line;
-			CodeModel model = null;
+			ISourceLineTracker model = null;
 			while ((line = input.readLine()) != null) {
 				console.println(line);
 				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line);
@@ -199,7 +201,8 @@ public class TclChecker extends AbstractExternalValidator implements
 					if (checkingModule == null) {
 						checkingModule = findSourceModule(pathToSource, path);
 					}
-					model = (CodeModel) moduleToCodeModel.get(checkingModule);
+					model = (ISourceLineTracker) moduleToCodeModel
+							.get(checkingModule);
 
 					monitor.subTask(NLS.bind(Messages.TclChecker_checking, path
 							.lastSegment(), String.valueOf(sourceModules.size()
@@ -207,24 +210,22 @@ public class TclChecker extends AbstractExternalValidator implements
 					monitor.worked(1);
 					checked++;
 				}
-				if (problem != null && checkingModule != null) {
-					if (model != null) {
-						TclCheckerProblemDescription desc = problem
-								.getDescription();
+				if (problem != null && checkingModule != null && model != null) {
+					TclCheckerProblemDescription desc = problem
+							.getDescription();
 
-						int[] bounds = model
-								.getBounds(problem.getLineNumber() - 1);
+					ISourceRange bounds = model.getLineInformation(problem
+							.getLineNumber() - 1);
 
-						IResource res = checkingModule.getResource();
-						if (TclCheckerProblemDescription.isError(desc
-								.getCategory())) {
-							reportErrorProblem(res, problem, bounds[0],
-									bounds[1]);
-						} else if (TclCheckerProblemDescription.isWarning(desc
-								.getCategory()))
-							reportWarningProblem(res, problem, bounds[0],
-									bounds[1]);
-					}
+					IResource res = checkingModule.getResource();
+					if (TclCheckerProblemDescription
+							.isError(desc.getCategory())) {
+						reportErrorProblem(res, problem, bounds.getOffset(),
+								bounds.getOffset() + bounds.getLength());
+					} else if (TclCheckerProblemDescription.isWarning(desc
+							.getCategory()))
+						reportWarningProblem(res, problem, bounds.getOffset(),
+								bounds.getOffset() + bounds.getLength());
 				}
 			}
 			StringBuffer errorMessage = new StringBuffer();
