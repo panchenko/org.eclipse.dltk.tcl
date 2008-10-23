@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -27,7 +25,6 @@ import org.eclipse.dltk.validators.core.CommandLine;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class TclCheckerHelper {
-	private static final String REGEX = "((?:\\w:)?[^:]+):(\\d+)\\s+\\((\\w+)\\)\\s+(.*)";
 
 	// private static final String QUIET_OPTION = "-quiet";
 
@@ -42,12 +39,6 @@ public final class TclCheckerHelper {
 
 	private static final String SUPPRESS_OPTION = "-suppress";
 	private static final String CHECK_OPTION = "-check";
-
-	private static final Pattern pattern;
-
-	static {
-		pattern = Pattern.compile(REGEX);
-	}
 
 	public static boolean buildCommandLine(IPreferenceStore store,
 			CommandLine cmdLine, IEnvironment environment) {
@@ -113,20 +104,6 @@ public final class TclCheckerHelper {
 			}
 		}
 		return true;
-	}
-
-	public static TclCheckerProblem parseProblem(String problem) {
-		Matcher matcher = pattern.matcher(problem);
-
-		if (!matcher.find())
-			return null;
-
-		String file = matcher.group(1);
-		int lineNumber = Integer.parseInt(matcher.group(2));
-		String messageID = matcher.group(3);
-		String message = matcher.group(4);
-
-		return new TclCheckerProblem(file, lineNumber, messageID, message);
 	}
 
 	public static Map getPcxPaths(IPreferenceStore store) {

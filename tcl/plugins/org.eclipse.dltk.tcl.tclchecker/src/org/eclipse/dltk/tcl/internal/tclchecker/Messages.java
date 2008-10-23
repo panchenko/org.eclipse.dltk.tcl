@@ -21,6 +21,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.tclchecker.messages"; //$NON-NLS-1$
 	public static String TclChecker_cannot_be_executed;
 	public static String TclChecker_checking;
+	public static String TclChecker_errorWritingFileList;
 	public static String TclChecker_executing;
 	public static String TclChecker_execution_error;
 	public static String TclChecker_filelist_deploy_failed;

@@ -9,12 +9,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,8 +26,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
@@ -45,15 +42,10 @@ import org.eclipse.dltk.validators.core.CommandLine;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidatorOutput;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.osgi.util.NLS;
 
 public class TclChecker extends AbstractExternalValidator implements
-		ISourceModuleValidator {
+		ISourceModuleValidator, ITclCheckerReporter {
 	private static final String PATTERN_TXT = "pattern.txt"; //$NON-NLS-1$
-
-	private static final String CHECKING = "checking:"; //$NON-NLS-1$
-
-	private static final String SCANNING = "scanning:"; //$NON-NLS-1$
 
 	protected IMarker reportErrorProblem(IResource resource,
 			TclCheckerProblem problem, int start, int end) throws CoreException {
@@ -67,12 +59,15 @@ public class TclChecker extends AbstractExternalValidator implements
 				problem.getDescription().getMessage());
 	}
 
-	private ISourceModule checkingModule;
 	private final IPreferenceStore store;
 	private final IEnvironment environment;
 
 	public static final String PROBLEM_ID = TclCheckerPlugin.PLUGIN_ID
 			+ ".tclcheckerproblem"; //$NON-NLS-1$
+
+	public TclChecker(IEnvironment environment) {
+		this(TclCheckerPlugin.getDefault().getPreferenceStore(), environment);
+	}
 
 	public TclChecker(IPreferenceStore store, IEnvironment environment) {
 		Assert.isNotNull(store, "store cannot be null"); //$NON-NLS-1$
@@ -84,221 +79,102 @@ public class TclChecker extends AbstractExternalValidator implements
 		return TclCheckerHelper.canExecuteTclChecker(store, environment);
 	}
 
-	public void check(final List sourceModules, IValidatorOutput console,
-			IProgressMonitor monitor) {
+	public void check(final List<ISourceModule> sourceModules,
+			IValidatorOutput console, IProgressMonitor monitor) {
 		if (!canCheck()) {
 			throw new IllegalStateException(
 					Messages.TclChecker_cannot_be_executed);
 		}
-
-		List arguments = new ArrayList();
-		Map pathToSource = new HashMap();
-		Map moduleToCodeModel = new HashMap();
-		for (Iterator iterator = sourceModules.iterator(); iterator.hasNext();) {
-			ISourceModule module = (ISourceModule) iterator.next();
-			try {
-				String source = module.getSource();
-				if (source.length() == 0) {
-					continue;
-				}
-				ISourceLineTracker codeModel = TextUtils
-						.createLineTracker(source);
-				moduleToCodeModel.put(module, codeModel);
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-			IPath location = module.getResource().getLocation();
-			String loc = null;
-			if (location == null) {
-				URI locationURI = module.getResource().getLocationURI();
-				loc = environment.getFile(locationURI).toString();
-			} else {
-				loc = location.toString();
-			}
-			pathToSource.put(loc, module);
-			arguments.add(loc);
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
 		}
-		if (arguments.isEmpty()) {
-			if (monitor != null) {
-				monitor.done();
-			}
+
+		IOutputProcessor processor = new Checker4OutputProcessor(monitor,
+				console, this);
+		List<String> filenames = processor.initialize(environment,
+				sourceModules);
+		if (filenames.isEmpty()) {
+			monitor.done();
 			return;
 		}
-		CommandLine cmdLine = new CommandLine();
+		final CommandLine cmdLine = new CommandLine();
 		if (!TclCheckerHelper.buildCommandLine(store, cmdLine, environment)) {
 			console.println(Messages.TclChecker_path_not_specified);
-		}
-		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
-				.getAdapter(IExecutionEnvironment.class);
-		IDeployment deployment = execEnvironment.createDeployment();
-
-		final IPath pattern = deployFileList(deployment, arguments);
-		if (pattern == null) {
 			return;
 		}
-
-		cmdLine.add("-@"); //$NON-NLS-1$
-		cmdLine.add(deployment.getFile(pattern).toOSString());
-		Process process;
-		BufferedReader input = null;
-
-		int scanned = 0;
-		int checked = 0;
-
-		if (monitor == null)
-			monitor = new NullProgressMonitor();
-
 		monitor.beginTask(Messages.TclChecker_executing,
 				sourceModules.size() * 2 + 1);
+		try {
+			final IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
+					.getAdapter(IExecutionEnvironment.class);
+			final IDeployment deployment = execEnvironment.createDeployment();
+			try {
+				final IPath pattern = deployFileList(deployment, filenames);
+				if (pattern == null) {
+					console.println(Messages.TclChecker_errorWritingFileList);
+					return;
+				}
+				cmdLine.add("-@"); //$NON-NLS-1$
+				cmdLine.add(deployment.getFile(pattern).toOSString());
+				monitor.subTask(Messages.TclChecker_launching);
+				executeProcess(processor, execEnvironment, cmdLine.toArray());
+			} catch (CoreException e) {
+				TclCheckerPlugin.log(IStatus.ERROR,
+						Messages.TclChecker_cannot_be_executed, e);
+			} finally {
+				deployment.dispose();
+			}
+		} finally {
+			monitor.done();
+		}
+	}
 
-		Map map = execEnvironment.getEnvironmentVariables(false);
+	public void executeProcess(final IOutputProcessor processor,
+			final IExecutionEnvironment execEnvironment,
+			final String[] commandLine) throws CoreException {
+		final Process process = execEnvironment.exec(commandLine, null,
+				prepareEnvironment(execEnvironment));
+		try {
+			final TclCheckerErrorReader errorReader = new TclCheckerErrorReader(
+					process.getErrorStream(), processor);
+			errorReader.start();
+			final TclCheckerOutputReader outputReader = new TclCheckerOutputReader(
+					process.getInputStream(), processor);
+			outputReader.start();
+			final IProgressMonitor monitor = processor.getProgressMonitor();
+			monitor.worked(1);
+			while (outputReader.isAlive()) {
+				try {
+					outputReader.join(500);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+				if (monitor.isCanceled()) {
+					break;
+				}
+			}
+		} finally {
+			process.destroy();
+		}
+	}
 
+	private String[] prepareEnvironment(IExecutionEnvironment execEnvironment) {
+		Map<?, ?> map = execEnvironment.getEnvironmentVariables(false);
 		String[] env = new String[map.size()];
 		int i = 0;
-		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator<?> iterator = map.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			String value = (String) map.get(key);
 			env[i] = key + "=" + value; //$NON-NLS-1$
 			++i;
 		}
-		try {
-			monitor.subTask(Messages.TclChecker_launching);
-			process = execEnvironment.exec(cmdLine.toArray(), null, env);
-
-			monitor.worked(1);
-
-			input = new BufferedReader(new InputStreamReader(process
-					.getInputStream()));
-
-			String line;
-			ISourceLineTracker model = null;
-			while ((line = input.readLine()) != null) {
-				console.println(line);
-				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line);
-				if (monitor.isCanceled()) {
-					process.destroy();
-					return;
-				}
-				if (line.startsWith(SCANNING)) {
-					String fileName = line.substring(SCANNING.length() + 1)
-							.trim();
-					fileName = Path.fromOSString(fileName).lastSegment();
-					monitor.subTask(NLS.bind(Messages.TclChecker_scanning,
-							fileName, String.valueOf(sourceModules.size()
-									- scanned)));
-					monitor.worked(1);
-					scanned++;
-				}
-				if (line.startsWith(CHECKING)) {
-					String fileName = line.substring(CHECKING.length() + 1)
-							.trim();
-					final IPath path = Path.fromOSString(fileName);
-					final String checkingFile = path.toString();
-					checkingModule = (ISourceModule) pathToSource
-							.get(checkingFile);
-					if (checkingModule == null) {
-						checkingModule = findSourceModule(pathToSource, path);
-					}
-					model = (ISourceLineTracker) moduleToCodeModel
-							.get(checkingModule);
-
-					monitor.subTask(NLS.bind(Messages.TclChecker_checking, path
-							.lastSegment(), String.valueOf(sourceModules.size()
-							- checked)));
-					monitor.worked(1);
-					checked++;
-				}
-				if (problem != null && checkingModule != null && model != null) {
-					TclCheckerProblemDescription desc = problem
-							.getDescription();
-
-					ISourceRange bounds = model.getLineInformation(problem
-							.getLineNumber() - 1);
-
-					IResource res = checkingModule.getResource();
-					if (TclCheckerProblemDescription
-							.isError(desc.getCategory())) {
-						reportErrorProblem(res, problem, bounds.getOffset(),
-								bounds.getOffset() + bounds.getLength());
-					} else if (TclCheckerProblemDescription.isWarning(desc
-							.getCategory()))
-						reportWarningProblem(res, problem, bounds.getOffset(),
-								bounds.getOffset() + bounds.getLength());
-				}
-			}
-			StringBuffer errorMessage = new StringBuffer();
-			// We need also read errors.
-			input = new BufferedReader(new InputStreamReader(process
-					.getErrorStream()));
-
-			while ((line = input.readLine()) != null) {
-				console.println(line);
-				errorMessage.append(line).append('\n');
-				if (monitor.isCanceled()) {
-					process.destroy();
-					return;
-				}
-			}
-			if (errorMessage.length() > 0) {
-				TclCheckerPlugin.log(IStatus.ERROR,
-						Messages.TclChecker_execution_error
-								+ errorMessage.toString());
-			}
-		} catch (Exception e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
-		} finally {
-			monitor.done();
-			deployment.dispose();
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		return env;
 	}
 
-	/**
-	 * Finds the source module comparing short file name with names in the Map.
-	 * Returns {@link ISourceModule} if single match is found or
-	 * <code>null</code> if there are no matches or if there are multiple
-	 * matches.
-	 * 
-	 * @param pathToSource
-	 * @param path
-	 * @return
-	 */
-	private ISourceModule findSourceModule(Map pathToSource, IPath path) {
-		final String shortFileName = path.lastSegment();
-		String fullPath = null;
-		for (Iterator iterator = pathToSource.keySet().iterator(); iterator
-				.hasNext();) {
-			final String p = (String) iterator.next();
-			if (p.endsWith(shortFileName)) {
-				if (fullPath != null) {
-					return null;
-				}
-				fullPath = p;
-			}
-		}
-		if (fullPath != null) {
-			return (ISourceModule) pathToSource.get(fullPath);
-		}
-		return null;
-	}
-
-	private IPath deployFileList(IDeployment deployment, List arguments) {
+	private IPath deployFileList(IDeployment deployment, List<String> arguments) {
 		ByteArrayOutputStream baros = new ByteArrayOutputStream();
 		try {
-			for (Iterator arg = arguments.iterator(); arg.hasNext();) {
-				String path = (String) arg.next();
+			for (String path : arguments) {
 				/*
 				 * FIXME filename encoding on the remote system should be
 				 * configurable
@@ -330,7 +206,7 @@ public class TclChecker extends AbstractExternalValidator implements
 
 	public IStatus validate(ISourceModule[] modules, IValidatorOutput console,
 			IProgressMonitor monitor) {
-		final List elements = new ArrayList();
+		final List<ISourceModule> elements = new ArrayList<ISourceModule>();
 		for (int i = 0; i < modules.length; i++) {
 			final IResource resource = modules[i].getResource();
 			if (resource != null) {
@@ -343,6 +219,49 @@ public class TclChecker extends AbstractExternalValidator implements
 		}
 		check(elements, console, monitor);
 		return Status.OK_STATUS;
+	}
+
+	private final Map<ISourceModule, ISourceLineTracker> lineTrackers = new HashMap<ISourceModule, ISourceLineTracker>();
+
+	/**
+	 * @param resource
+	 * @param problem
+	 * @param start
+	 * @param end
+	 * @throws CoreException
+	 */
+	public void report(ISourceModule module, TclCheckerProblem problem)
+			throws CoreException {
+		ISourceLineTracker lineTracker = lineTrackers.get(module);
+		if (lineTracker == null) {
+			char[] source;
+			try {
+				source = module.getSourceAsCharArray();
+				if (source == null) {
+					source = CharOperation.NO_CHAR;
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+				source = CharOperation.NO_CHAR;
+			}
+			lineTracker = TextUtils.createLineTracker(source);
+			lineTrackers.put(module, lineTracker);
+		}
+		final ISourceRange bounds = lineTracker.getLineInformation(problem
+				.getLineNumber() - 1);
+		final int start = bounds.getOffset();
+		final int end = start + bounds.getLength();
+		final IResource resource = module.getResource();
+		if (resource == null) {
+			return;
+		}
+		TclCheckerProblemDescription desc = problem.getDescription();
+		if (TclCheckerProblemDescription.isError(desc.getCategory())) {
+			reportErrorProblem(resource, problem, start, end);
+		} else if (TclCheckerProblemDescription.isWarning(desc.getCategory()))
+			reportWarningProblem(resource, problem, start, end);
 	}
 
 }
