@@ -12,28 +12,25 @@
 
 package org.eclipse.dltk.tcl.parser.tests;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
-import org.eclipse.dltk.core.environment.IDeployment;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
-import org.eclipse.dltk.tcl.internal.tclchecker.Messages;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerHelper;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.internal.tclchecker.Checker4OutputProcessor;
+import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
@@ -44,6 +41,7 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.internal.tests.Activator;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
+import org.eclipse.dltk.validators.core.NullValidatorOutput;
 import org.osgi.framework.Bundle;
 
 public class TclCheckerDLTKErrorComparisonTests extends TestCase {
@@ -108,68 +106,31 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 	}
 
 	public List<TclCheckerProblem> check(String file) {
-		List<TclCheckerProblem> problems = new ArrayList<TclCheckerProblem>();
-		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) EnvironmentManager
-				.getLocalEnvironment().getAdapter(IExecutionEnvironment.class);
-		IDeployment deployment = execEnvironment.createDeployment();
-
-		Process process;
-		BufferedReader input = null;
-
-		int scanned = 0;
-		int checked = 0;
-
-		Map map = execEnvironment.getEnvironmentVariables(false);
-
-		String[] env = new String[map.size()];
-		int i = 0;
-		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
-			String value = (String) map.get(key);
-			env[i] = key + "=" + value; //$NON-NLS-1$
-			++i;
-		}
-		String[] cmdLine = new String[] { getTclChecker(), file };
+		final List<TclCheckerProblem> problems = new ArrayList<TclCheckerProblem>();
+		final IEnvironment environment = EnvironmentManager
+				.getLocalEnvironment();
+		final String[] cmdLine = new String[] { getTclChecker(), file };
 		try {
-			process = execEnvironment.exec(cmdLine, null, env);
+			final Checker4OutputProcessor processor = new Checker4OutputProcessor(
+					new NullProgressMonitor(), new NullValidatorOutput(),
+					new ITclCheckerReporter() {
+						public void report(ISourceModule module,
+								TclCheckerProblem problem) throws CoreException {
+							problems.add(problem);
+						}
+					}) {
 
-			input = new BufferedReader(new InputStreamReader(process
-					.getInputStream()));
-
-			String line;
-			while ((line = input.readLine()) != null) {
-				TclCheckerProblem problem = TclCheckerHelper.parseProblem(line);
-				if (problem != null) {
-					problems.add(problem);
+				protected boolean isValidModule() {
+					return true;
 				}
-			}
-			StringBuffer errorMessage = new StringBuffer();
-			// We need also read errors.
-			input = new BufferedReader(new InputStreamReader(process
-					.getErrorStream()));
-
-			while ((line = input.readLine()) != null) {
-				errorMessage.append(line).append('\n');
-			}
-			if (errorMessage.length() > 0) {
-				TclCheckerPlugin.log(IStatus.ERROR,
-						Messages.TclChecker_execution_error
-								+ errorMessage.toString());
-			}
+			};
+			TclChecker checker = new TclChecker(environment);
+			IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
+					.getAdapter(IExecutionEnvironment.class);
+			checker.executeProcess(processor, execEnvironment, cmdLine);
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
-			}
-		} finally {
-			deployment.dispose();
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
 			}
 		}
 		return problems;
