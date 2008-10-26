@@ -36,6 +36,8 @@ import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
+import org.eclipse.dltk.corext.SourceRange;
+import org.eclipse.dltk.tcl.internal.tclchecker.v5.Checker5OutputProcessor;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.AbstractExternalValidator;
 import org.eclipse.dltk.validators.core.CommandLine;
@@ -48,22 +50,21 @@ public class TclChecker extends AbstractExternalValidator implements
 	private static final String PATTERN_TXT = "pattern.txt"; //$NON-NLS-1$
 
 	protected IMarker reportErrorProblem(IResource resource,
-			TclCheckerProblem problem, int start, int end) throws CoreException {
+			TclCheckerProblem problem, int start, int end,
+			Map<String, Object> attributes) throws CoreException {
 		return reportError(resource, problem.getLineNumber(), start, end,
-				problem.getDescription().getMessage());
+				problem.getDescription().getMessage(), attributes);
 	}
 
 	protected IMarker reportWarningProblem(IResource resource,
-			TclCheckerProblem problem, int start, int end) throws CoreException {
+			TclCheckerProblem problem, int start, int end,
+			Map<String, Object> attributes) throws CoreException {
 		return reportWarning(resource, problem.getLineNumber(), start, end,
-				problem.getDescription().getMessage());
+				problem.getDescription().getMessage(), attributes);
 	}
 
 	private final IPreferenceStore store;
 	private final IEnvironment environment;
-
-	public static final String PROBLEM_ID = TclCheckerPlugin.PLUGIN_ID
-			+ ".tclcheckerproblem"; //$NON-NLS-1$
 
 	public TclChecker(IEnvironment environment) {
 		this(TclCheckerPlugin.getDefault().getPreferenceStore(), environment);
@@ -89,8 +90,13 @@ public class TclChecker extends AbstractExternalValidator implements
 			monitor = new NullProgressMonitor();
 		}
 
-		IOutputProcessor processor = new Checker4OutputProcessor(monitor,
-				console, this);
+		final IOutputProcessor processor;
+		if (TclCheckerConstants.VERSION_5.equals(store
+				.getString(TclCheckerConstants.PREF_VERSION))) {
+			processor = new Checker5OutputProcessor(monitor, console, this);
+		} else {
+			processor = new Checker4OutputProcessor(monitor, console, this);
+		}
 		List<String> filenames = processor.initialize(environment,
 				sourceModules);
 		if (filenames.isEmpty()) {
@@ -201,7 +207,7 @@ public class TclChecker extends AbstractExternalValidator implements
 	}
 
 	protected String getMarkerType() {
-		return PROBLEM_ID;
+		return TclCheckerMarker.TYPE;
 	}
 
 	public IStatus validate(ISourceModule[] modules, IValidatorOutput console,
@@ -249,8 +255,20 @@ public class TclChecker extends AbstractExternalValidator implements
 			lineTracker = TextUtils.createLineTracker(source);
 			lineTrackers.put(module, lineTracker);
 		}
-		final ISourceRange bounds = lineTracker.getLineInformation(problem
+		final ISourceRange lineBounds = lineTracker.getLineInformation(problem
 				.getLineNumber() - 1);
+		ISourceRange bounds = problem.getRange();
+		if (bounds == null) {
+			bounds = lineBounds;
+		} else if (!isInside(bounds, lineBounds)) {
+			ISourceRange corrected = correctRange(lineTracker, bounds, problem
+					.getLineNumber() - 1);
+			if (isInside(corrected, lineBounds)) {
+				bounds = corrected;
+			} else {
+				bounds = lineBounds;
+			}
+		}
 		final int start = bounds.getOffset();
 		final int end = start + bounds.getLength();
 		final IResource resource = module.getResource();
@@ -259,9 +277,43 @@ public class TclChecker extends AbstractExternalValidator implements
 		}
 		TclCheckerProblemDescription desc = problem.getDescription();
 		if (TclCheckerProblemDescription.isError(desc.getCategory())) {
-			reportErrorProblem(resource, problem, start, end);
+			reportErrorProblem(resource, problem, start, end, problem
+					.getAttributes());
 		} else if (TclCheckerProblemDescription.isWarning(desc.getCategory()))
-			reportWarningProblem(resource, problem, start, end);
+			reportWarningProblem(resource, problem, start, end, problem
+					.getAttributes());
+	}
+
+	/**
+	 * Corrects the specified source range. The correction is required since tcl
+	 * checker does not correctly counts windows EOL.
+	 * 
+	 * @param lineTracker
+	 * 
+	 * @param range
+	 * @param lineNumber
+	 * @return
+	 */
+	private ISourceRange correctRange(ISourceLineTracker lineTracker,
+			ISourceRange range, int lineNumber) {
+		int offset = range.getOffset();
+		for (int i = 0; i < lineNumber; ++i) {
+			final String delimiter = lineTracker.getLineDelimiter(i);
+			if (delimiter != null && delimiter.length() > 1) {
+				offset += delimiter.length() - 1;
+			}
+		}
+		if (offset != range.getOffset()) {
+			return new SourceRange(offset, range.getLength());
+		} else {
+			return range;
+		}
+	}
+
+	private boolean isInside(ISourceRange r1, ISourceRange r2) {
+		return r1.getOffset() >= r2.getOffset()
+				&& r1.getOffset() + r1.getLength() <= r2.getOffset()
+						+ r2.getLength();
 	}
 
 }

@@ -9,6 +9,9 @@
       <super type="org.eclipse.core.resources.problemmarker"/>
       <super type="org.eclipse.core.resources.textmarker"/>
       <persistent value="true"/>
+      <attribute name="org.eclipse.dltk.tcl.tclchecker.suggestedCorrections" />
+      <attribute name="org.eclipse.dltk.tcl.tclchecker.commandStart" />
+      <attribute name="org.eclipse.dltk.tcl.tclchecker.commandLength" />
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -103,4 +106,16 @@
             id="org.eclipse.dltk.tclchecker">
       </validatorConfigPage>
    </extension>
+	<extension point="org.eclipse.ui.ide.markerResolution">
+   		<markerResolutionGenerator
+			class="org.eclipse.dltk.tcl.internal.tclchecker.qfix.TclCheckerMarkerResolutionGenerator"
+			markerType="org.eclipse.dltk.tcl.tclchecker.tclcheckerproblem">
+		</markerResolutionGenerator>
+	</extension>
+	<extension point="org.eclipse.dltk.ui.correctionProcessor">
+		<correctionProcessor
+			class="org.eclipse.dltk.tcl.internal.tclchecker.qfix.TclCheckerCorrectionProcessor"
+			nature="org.eclipse.dltk.tcl.core.nature">
+		</correctionProcessor>
+	</extension>
 </plugin>

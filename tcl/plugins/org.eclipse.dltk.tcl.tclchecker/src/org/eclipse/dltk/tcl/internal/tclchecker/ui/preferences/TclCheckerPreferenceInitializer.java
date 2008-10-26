@@ -27,6 +27,8 @@ public class TclCheckerPreferenceInitializer extends
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = TclCheckerPlugin.getDefault()
 				.getPreferenceStore();
+		store.setDefault(TclCheckerConstants.PREF_VERSION,
+				TclCheckerConstants.VERSION_5);
 		store.setDefault(TclCheckerConstants.PREF_MODE,
 				TclCheckerConstants.MODE_DEFAULT);
 

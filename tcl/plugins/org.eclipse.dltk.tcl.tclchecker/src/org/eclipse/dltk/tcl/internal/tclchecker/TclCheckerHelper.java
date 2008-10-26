@@ -28,17 +28,17 @@ public final class TclCheckerHelper {
 
 	// private static final String QUIET_OPTION = "-quiet";
 
-	private static final String W1_OPTION = "-W1";
+	private static final String W1_OPTION = "-W1"; //$NON-NLS-1$
 
-	private static final String W2_OPTION = "-W2";
+	private static final String W2_OPTION = "-W2"; //$NON-NLS-1$
 
-	private static final String W3_OPTION = "-W3";
+	private static final String W3_OPTION = "-W3"; //$NON-NLS-1$
 
-	private static final String PCX_OPTION = "-pcx";
-	private static final String NO_PCX_OPTION = "-nopcx";
+	private static final String PCX_OPTION = "-pcx"; //$NON-NLS-1$
+	private static final String NO_PCX_OPTION = "-nopcx"; //$NON-NLS-1$
 
-	private static final String SUPPRESS_OPTION = "-suppress";
-	private static final String CHECK_OPTION = "-check";
+	private static final String SUPPRESS_OPTION = "-suppress"; //$NON-NLS-1$
+	private static final String CHECK_OPTION = "-check"; //$NON-NLS-1$
 
 	public static boolean buildCommandLine(IPreferenceStore store,
 			CommandLine cmdLine, IEnvironment environment) {
@@ -102,6 +102,11 @@ public final class TclCheckerHelper {
 					}
 				}
 			}
+		}
+		if (TclCheckerConstants.VERSION_5.equals(store
+				.getString(TclCheckerConstants.PREF_VERSION))) {
+			cmdLine.add("-as"); //$NON-NLS-1$
+			cmdLine.add("script"); //$NON-NLS-1$
 		}
 		return true;
 	}

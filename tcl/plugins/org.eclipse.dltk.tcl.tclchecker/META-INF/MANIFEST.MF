@@ -9,12 +9,17 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.core,
  org.eclipse.ui,
+ org.eclipse.ui.ide,
  org.eclipse.debug.core,
  org.eclipse.dltk.validators.core,
  org.eclipse.dltk.validators.ui,
  org.eclipse.dltk.ui,
- org.eclipse.dltk.tcl.core
+ org.eclipse.dltk.tcl.core,
+ org.eclipse.dltk.tcl.parser,
+ org.eclipse.ui.editors,
+ org.eclipse.jface.text
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.dltk.tcl.internal.tclchecker,
  org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy

@@ -33,6 +33,7 @@ import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.environment.IEnvironmentPathBlockListener;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
+import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.dltk.validators.ui.ValidatorConfigurationPage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -59,6 +60,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -98,6 +100,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	private Button pcxAdd;
 	private Button pcxBrowse;
 	private Button pcxRemove;
+
+	private Combo comboVersion;
 
 	public void createControl(Composite parent, int columns) {
 		Composite c = new Composite(parent, SWT.NONE);
@@ -545,6 +549,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 		top.setLayout(layout);
 
+		createVersionGroup(top, new GridData(GridData.FILL, SWT.NONE, true,
+				false));
 		createPathGroup(top, new GridData(GridData.FILL, SWT.NONE, true, false));
 		Composite ctrl = new Composite(top, SWT.NONE);
 		ctrl.setLayoutData(new GridData(GridData.FILL, SWT.NONE, true, false));
@@ -567,6 +573,25 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		return top;
 	}
 
+	/**
+	 * @param top
+	 * @param gridData
+	 */
+	private void createVersionGroup(Composite parent, GridData data) {
+		Group group = new Group(parent, SWT.NONE);
+		group.setLayoutData(data);
+
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 4;
+		layout.makeColumnsEqualWidth = true;
+		group.setLayout(layout);
+
+		SWTFactory.createLabel(group, "Version", 1); //$NON-NLS-1$
+		comboVersion = SWTFactory.createCombo(group, SWT.READ_ONLY, 1,
+				new String[] { TclCheckerConstants.VERSION_4,
+						TclCheckerConstants.VERSION_5 });
+	}
+
 	public void init(IWorkbench workbench) {
 
 	}
@@ -577,6 +602,14 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	public void initializeValues() {
 		IPreferenceStore store = doGetPreferenceStore();
+
+		// Version
+		String version = store.getString(TclCheckerConstants.PREF_VERSION);
+		if (TclCheckerConstants.VERSION_5.equals(version)) {
+			comboVersion.select(1);
+		} else {
+			comboVersion.select(0);
+		}
 
 		// Path
 		environmentPathBlock.setPaths(TclCheckerHelper.getPaths(store));
@@ -641,6 +674,13 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	public void applyChanges() {
 		IPreferenceStore store = doGetPreferenceStore();
+
+		// version
+		final int versionIndex = comboVersion.getSelectionIndex();
+		if (versionIndex >= 0 && versionIndex < comboVersion.getItemCount()) {
+			store.setValue(TclCheckerConstants.PREF_VERSION, comboVersion
+					.getItem(versionIndex));
+		}
 
 		// Path
 		TclCheckerHelper.setPaths(store, environmentPathBlock.getPaths());
