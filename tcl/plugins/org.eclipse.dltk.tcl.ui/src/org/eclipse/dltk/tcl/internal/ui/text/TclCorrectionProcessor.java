@@ -37,7 +37,7 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
 public class TclCorrectionProcessor implements IQuickAssistProcessor {
-	TclCorrectionAssistant fAssistant;
+	private final TclCorrectionAssistant fAssistant;
 
 	public TclCorrectionProcessor(TclCorrectionAssistant tclCorrectionAssistant) {
 		this.fAssistant = tclCorrectionAssistant;
