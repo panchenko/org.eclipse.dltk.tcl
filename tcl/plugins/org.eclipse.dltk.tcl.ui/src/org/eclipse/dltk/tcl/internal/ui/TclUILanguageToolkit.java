@@ -46,7 +46,7 @@ public class TclUILanguageToolkit implements IDLTKUILanguageToolkit,
 			String s = buffer.toString();
 			if (s != null && !s.startsWith(element.getElementName())) {
 				if (s.indexOf('$') != -1) {
-					s = s.replaceAll("\\$", "::");
+					s = s.replaceAll("\\$", "::"); //$NON-NLS-1$//$NON-NLS-2$
 				}
 			}
 			buf.append(s);
@@ -89,11 +89,11 @@ public class TclUILanguageToolkit implements IDLTKUILanguageToolkit,
 	}
 
 	public String getEditorId(Object inputElement) {
-		return "org.eclipse.dltk.tcl.ui.editor.TclEditor";
+		return "org.eclipse.dltk.tcl.ui.editor.TclEditor"; //$NON-NLS-1$
 	}
 
 	public String getInterpreterContainerId() {
-		return "org.eclipse.dltk.tcl.launching.INTERPRETER_CONTAINER";
+		return "org.eclipse.dltk.tcl.launching.INTERPRETER_CONTAINER"; //$NON-NLS-1$
 	}
 
 	public ScriptUILabelProvider createScriptUILabelProvider() {
@@ -114,16 +114,16 @@ public class TclUILanguageToolkit implements IDLTKUILanguageToolkit,
 				getPartitioningId(), false);
 	}
 
-	private static final String INTERPRETERS_PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.interpreters";
-	private static final String DEBUG_PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug";
+	private static final String INTERPRETERS_PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.interpreters"; //$NON-NLS-1$
+	private static final String DEBUG_PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug"; //$NON-NLS-1$
 	private static final String[] EDITOR_PREFERENCE_PAGES_IDS = {
-		"org.eclipse.dltk.tcl.preferences.editor", 
-		"org.eclipse.dltk.tcl.preferences.templates", 
-		"org.eclipse.dltk.tcl.preferences.editor.syntaxcoloring", 
-		"org.eclipse.dltk.tcl.preferences.editor.hovers", 
-		"org.eclipse.dltk.tcl.preferences.editor.smarttyping", 
-		"org.eclipse.dltk.tcl.preferences.editor.folding", 
-		"org.eclipse.dltk.tcl.ui.assistance"
+			"org.eclipse.dltk.tcl.preferences.editor", //$NON-NLS-1$
+			"org.eclipse.dltk.tcl.preferences.templates", //$NON-NLS-1$
+			"org.eclipse.dltk.tcl.preferences.editor.syntaxcoloring", //$NON-NLS-1$
+			"org.eclipse.dltk.tcl.preferences.editor.hovers", //$NON-NLS-1$
+			"org.eclipse.dltk.tcl.preferences.editor.smarttyping", //$NON-NLS-1$
+			"org.eclipse.dltk.tcl.preferences.editor.folding", //$NON-NLS-1$
+			"org.eclipse.dltk.tcl.ui.assistance" //$NON-NLS-1$
 	};
 
 	public String getInterpreterPreferencePage() {
