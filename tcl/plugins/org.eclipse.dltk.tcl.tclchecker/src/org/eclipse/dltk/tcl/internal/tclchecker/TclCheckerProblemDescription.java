@@ -91,12 +91,11 @@ public class TclCheckerProblemDescription {
 		return !isError(category);
 	}
 
-	public static List getProblemIdentifiers() {
-		List list = new ArrayList();
-		Iterator it = props.keySet().iterator();
-		while (it.hasNext()) {
-			String s = (String) it.next();
-			int index = s.indexOf("_type");
+	public static List<String> getProblemIdentifiers() {
+		List<String> list = new ArrayList<String>();
+		for (Object key : props.keySet()) {
+			String s = (String) key;
+			int index = s.indexOf("_type"); //$NON-NLS-1$
 			if (index != -1) {
 				list.add(s.substring(0, index));
 			}
