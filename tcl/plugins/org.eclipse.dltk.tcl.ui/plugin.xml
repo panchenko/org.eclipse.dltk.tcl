@@ -622,4 +622,11 @@
 		class="org.eclipse.dltk.tcl.internal.ui.TclScriptFileConfigurator">
 	</scriptFileConfigurator>
 </extension>
+<extension
+      point="org.eclipse.dltk.ui.correctionProcessor">
+      <correctionProcessor
+            class="org.eclipse.dltk.tcl.internal.ui.text.TclRequireCorrectionProcessor"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </correctionProcessor>
+</extension>
 </plugin>

@@ -19,6 +19,7 @@ import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.IColorManager;
+import org.eclipse.dltk.ui.text.ScriptAnnotationUtils;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -212,7 +213,7 @@ public class TclCorrectionAssistant extends QuickAssistAssistant {
 			int bestOffset = Integer.MAX_VALUE;
 			while (iter.hasNext()) {
 				Annotation annot = (Annotation) iter.next();
-				if (TclCorrectionProcessor.isQuickFixableType(annot)) {
+				if (ScriptAnnotationUtils.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
 					if (pos != null
 							&& isInside(pos.offset, rangeStart, rangeEnd)) { // inside
@@ -238,7 +239,7 @@ public class TclCorrectionAssistant extends QuickAssistAssistant {
 		} else {
 			while (iter.hasNext()) {
 				Annotation annot = (Annotation) iter.next();
-				 if (TclCorrectionProcessor.isQuickFixableType(annot)) {
+				 if (ScriptAnnotationUtils.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
 					if (pos != null
 							&& isInside(invocationLocation, pos.offset,

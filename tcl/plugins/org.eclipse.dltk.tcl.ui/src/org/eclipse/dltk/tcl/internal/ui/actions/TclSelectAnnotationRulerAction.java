@@ -13,9 +13,10 @@ package org.eclipse.dltk.tcl.internal.ui.actions;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
-import org.eclipse.dltk.tcl.internal.ui.text.TclCorrectionProcessor;
 import org.eclipse.dltk.ui.PreferenceConstants;
+import org.eclipse.dltk.ui.text.ScriptCorrectionProcessorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -158,8 +159,7 @@ public class TclSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension
 					&& ((ITextEditorExtension) fTextEditor)
 							.isEditorInputReadOnly();
-			if (!isReadOnly
-					&& ((TclCorrectionProcessor.hasCorrections(annotation)))) {
+			if (!isReadOnly && hasCorrections(annotation)) {
 				fPosition = position;
 				fAnnotation = annotation;
 				fHasCorrection = true;
@@ -183,5 +183,9 @@ public class TclSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 				}
 			}
 		}
+	}
+
+	private boolean hasCorrections(Annotation annotation) {
+		return ScriptCorrectionProcessorManager.canFix(TclNature.NATURE_ID, annotation);
 	}
 }

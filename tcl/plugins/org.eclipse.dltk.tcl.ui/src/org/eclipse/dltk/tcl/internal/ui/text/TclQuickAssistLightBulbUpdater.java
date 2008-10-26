@@ -15,9 +15,12 @@ import java.util.Iterator;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.text.ScriptAnnotationUtils;
+import org.eclipse.dltk.ui.text.ScriptCorrectionProcessorManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
@@ -90,9 +93,7 @@ public class TclQuickAssistLightBulbUpdater {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jface.text.source.Annotation#paint(org.eclipse.swt.graphics.GC,
-		 *      org.eclipse.swt.widgets.Canvas,
-		 *      org.eclipse.swt.graphics.Rectangle)
+		 * @see IAnnotationPresentation#paint(GC,Canvas,Rectangle)
 		 */
 		public void paint(GC gc, Canvas canvas, Rectangle r) {
 			ImageUtilities.drawImage(getImage(), gc, canvas, r, SWT.CENTER,
@@ -138,7 +139,8 @@ public class TclQuickAssistLightBulbUpdater {
 
 	private void uninstallSelectionListener() {
 		if (fListener != null) {
-			fEditor.getSelectionProvider().removeSelectionChangedListener(this.fListener);
+			fEditor.getSelectionProvider().removeSelectionChangedListener(
+					this.fListener);
 			fListener = null;
 		}
 		IAnnotationModel model = getAnnotationModel();
@@ -172,22 +174,23 @@ public class TclQuickAssistLightBulbUpdater {
 	}
 
 	protected void doPropertyChanged(String property) {
-//		if (property.equals(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB)) {
-//			if (isSetInPreferences()) {
-//				ISourceModule cu = getSourceModule();
-//				if (cu != null) {
-//					installSelectionListener();
-//					Point point = fViewer.getSelectedRange();
-//					CompilationUnit astRoot = SharedASTProvider.getAST(cu,
-//							SharedASTProvider.WAIT_ACTIVE_ONLY, null);
-//					if (astRoot != null) {
-//						doSelectionChanged(point.x, point.y, astRoot);
-//					}
-//				}
-//			} else {
-//				uninstallSelectionListener();
-//			}
-//		}
+		// if
+		// (property.equals(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB)) {
+		// if (isSetInPreferences()) {
+		// ISourceModule cu = getSourceModule();
+		// if (cu != null) {
+		// installSelectionListener();
+		// Point point = fViewer.getSelectedRange();
+		// CompilationUnit astRoot = SharedASTProvider.getAST(cu,
+		// SharedASTProvider.WAIT_ACTIVE_ONLY, null);
+		// if (astRoot != null) {
+		// doSelectionChanged(point.x, point.y, astRoot);
+		// }
+		// }
+		// } else {
+		// uninstallSelectionListener();
+		// }
+		// }
 	}
 
 	private ISourceModule getSourceModule() {
@@ -230,8 +233,8 @@ public class TclQuickAssistLightBulbUpdater {
 	/*
 	 * Needs to be called synchronized
 	 */
-	private void calculateLightBulb(IAnnotationModel model,
-			int offset, int length) {
+	private void calculateLightBulb(IAnnotationModel model, int offset,
+			int length) {
 		boolean needsAnnotation = true;
 		if (fIsAnnotationShown) {
 			model.removeAnnotation(fAnnotation);
@@ -274,7 +277,7 @@ public class TclQuickAssistLightBulbUpdater {
 			Iterator iter = model.getAnnotationIterator();
 			while (iter.hasNext()) {
 				Annotation annot = (Annotation) iter.next();
-				if (TclCorrectionProcessor.isQuickFixableType(annot)) {
+				if (ScriptAnnotationUtils.isQuickFixableType(annot)) {
 					// may throw an IndexOutOfBoundsException upon concurrent
 					// annotation model changes
 					Position pos = model.getPosition(annot);
@@ -283,9 +286,7 @@ public class TclQuickAssistLightBulbUpdater {
 						// concurrent document modification
 						int startLine = document.getLineOfOffset(pos
 								.getOffset());
-						if (startLine == currLine
-								&& TclCorrectionProcessor
-										.hasCorrections(annot)) {
+						if (startLine == currLine && hasCorrections(annot)) {
 							return true;
 						}
 					}
@@ -299,6 +300,11 @@ public class TclQuickAssistLightBulbUpdater {
 			// concurrent modification - too bad, ignore
 		}
 		return false;
+	}
+
+	private boolean hasCorrections(Annotation annot) {
+		return ScriptCorrectionProcessorManager.canFix(TclNature.NATURE_ID,
+				annot);
 	}
 
 }
