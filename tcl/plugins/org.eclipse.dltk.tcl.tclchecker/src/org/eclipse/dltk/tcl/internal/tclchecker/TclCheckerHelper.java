@@ -64,10 +64,9 @@ public final class TclCheckerHelper {
 		}
 
 		// Suppress
-		List problems = TclCheckerProblemDescription.getProblemIdentifiers();
-		Iterator it = problems.iterator();
-		while (it.hasNext()) {
-			String warningName = (String) it.next();
+		List<String> problems = TclCheckerProblemDescription
+				.getProblemIdentifiers();
+		for (String warningName : problems) {
 			int processType = store.getInt(warningName);
 			switch (processType) {
 			case TclCheckerConstants.PROCESS_TYPE_CHECK:
