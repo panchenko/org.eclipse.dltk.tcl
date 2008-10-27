@@ -43,7 +43,7 @@ public class TclCorrectionProcessor implements IQuickAssistProcessor {
 		final ISourceModule sourceModule = EditorUtility
 				.getEditorInputModelElement(editor, false);
 		final IScriptCorrectionContext context = new ScriptCorrectionContext(
-				invocationContext, sourceModule);
+				invocationContext, editor, sourceModule);
 		final Annotation[] annotations = fAssistant.getAnnotationsAtOffset();
 		for (int i = 0; i < annotations.length; i++) {
 			final Annotation annotation = annotations[i];

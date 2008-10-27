@@ -72,7 +72,7 @@ public class TclRequireCorrectionProcessor implements
 			if (addPackageName(context, pkgName)) {
 				context.addProposal(new AnnotationResolutionProposal(
 						new TclRequirePackageMarkerResolution(pkgName, context
-								.getProject()), (Annotation) annotation));
+								.getProject()), annotation));
 			}
 		}
 	}

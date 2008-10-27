@@ -12,9 +12,9 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
+import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.text.IAnnotationResolution;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IMarkerResolution;
 
@@ -57,7 +57,7 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution,
 		resolve();
 	}
 
-	public void run(Annotation annotation, IDocument document) {
+	public void run(IScriptAnnotation annotation, IDocument document) {
 		resolve();
 	}
 }
