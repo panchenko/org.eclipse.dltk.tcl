@@ -1,8 +1,20 @@
 package org.eclipse.dltk.tcl.internal.debug;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.dltk.compiler.CharOperation;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IModelElementVisitor;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.dbgp.commands.IDbgpExtendedCommands;
 import org.eclipse.dltk.dbgp.exceptions.DbgpException;
@@ -36,13 +48,76 @@ public class TclHotCodeReplaceProvider implements IHotCodeReplaceProvider {
 
 	private String getResourceReplacementCode(IResource resource)
 			throws DebugException {
+		final ISourceModule module = (ISourceModule) DLTKCore
+				.create((IFile) resource);
+		final List procList = new ArrayList();
 		try {
-			return new String(org.eclipse.dltk.internal.core.util.Util
-					.getResourceContentsAsCharArray((IFile) resource));
+			module.accept(new IModelElementVisitor() {
+
+				public boolean visit(IModelElement element) {
+					if (element.getElementType() == IModelElement.METHOD) {
+						procList.add(element);
+						return false;
+					}
+					return true;
+				}
+
+			});
+			if (procList.isEmpty()) {
+				return null;
+			}
+			final char[] input = org.eclipse.dltk.internal.core.util.Util
+					.getResourceContentsAsCharArray((IFile) resource);
+			final StringBuffer sb = new StringBuffer();
+			for (Iterator i = procList.iterator(); i.hasNext();) {
+				final IMethod method = (IMethod) i.next();
+				final String[] types = collectNamespaces(method);
+				if (types != null) {
+					for (int j = 0; j < types.length; ++j) {
+						sb.append("namespace eval " + types[j] + " {\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					sb.append("proc "); //$NON-NLS-1$
+					sb.append(method.getElementName());
+					final ISourceRange nameRange = method.getNameRange();
+					final int nameEnd = nameRange.getLength()
+							+ nameRange.getOffset();
+					final ISourceRange sourceRange = method.getSourceRange();
+					sb.append(input, nameEnd, sourceRange.getOffset()
+							+ sourceRange.getLength() - nameEnd);
+					sb.append("\n"); //$NON-NLS-1$
+					for (int j = 0; j < types.length; ++j) {
+						sb.append("}\n"); //$NON-NLS-1$
+					}
+				}
+			}
+			if (sb.length() == 0) {
+				return null;
+			}
+			return sb.toString();
 		} catch (ModelException e) {
 			TclDebugPlugin.log(e);
 			return null;
 		}
 	}
 
+	/**
+	 * @param method
+	 * @return
+	 */
+	private String[] collectNamespaces(IMethod method) {
+		final List types = new ArrayList();
+		IModelElement parent = method.getParent();
+		while (parent.getElementType() == IModelElement.TYPE) {
+			types.add(parent.getElementName());
+			parent = parent.getParent();
+		}
+		if (parent.getElementType() != IModelElement.SOURCE_MODULE) {
+			return null;
+		}
+		if (types.isEmpty()) {
+			return CharOperation.NO_STRINGS;
+		}
+		Collections.reverse(types);
+		return (String[]) types.toArray(new String[types.size()]);
+	}
 }
