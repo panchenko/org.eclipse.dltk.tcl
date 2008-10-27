@@ -54,7 +54,6 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 				.parseDictionary(buffer.toString());
 		if (tokens != null) {
 			buffer.setLength(0);
-			System.out.println(tokens);
 			if (tokens.size() == 2 && !tokens.get(0).hasChildren()) {
 				if (CMD_MESSAGE.equals(tokens.get(0).getText())
 						&& tokens.get(1).hasChildren()) {
@@ -67,10 +66,9 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 						processMessage(attributes);
 					}
 				} else if (CMD_PROGRESS.equals(tokens.get(0).getText())) {
-
+					subTask(tokens.get(1).getText());
 				}
 			}
-
 		}
 	}
 
@@ -85,9 +83,10 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 		if (module == null) {
 			return;
 		}
+		final String messageId = attributes.get(ATTR_MESSAGE_ID).getText();
 		final TclCheckerProblem problem = new TclCheckerProblem(file,
-				lineNumber, attributes.get(ATTR_MESSAGE_ID).getText(),
-				attributes.get(ATTR_MESSAGE_TEXT).getText());
+				lineNumber, messageId, attributes.get(ATTR_MESSAGE_TEXT)
+						.getText());
 		final int commandStart = parseInt(attributes.get(ATTR_COMMAND_START));
 		final int commandLength = parseInt(attributes.get(ATTR_COMMAND_LENGTH));
 		if (commandStart >= 0 && commandLength >= 0) {
@@ -118,6 +117,9 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 			problem
 					.addAttribute(TclCheckerMarker.COMMAND_LENGTH,
 							commandLength);
+			problem.addAttribute(TclCheckerMarker.MESSAGE_ID, messageId);
+			problem.addAttribute(TclCheckerMarker.TIMESTAMP, String
+					.valueOf(module.getResource().getModificationStamp()));
 		}
 		reporter.report(module, problem);
 	}

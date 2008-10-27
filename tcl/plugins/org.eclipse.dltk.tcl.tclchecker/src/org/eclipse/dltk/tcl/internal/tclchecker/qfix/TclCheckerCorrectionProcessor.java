@@ -17,7 +17,6 @@ import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.text.IScriptCorrectionContext;
 import org.eclipse.dltk.ui.text.IScriptCorrectionProcessor;
-import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
@@ -50,14 +49,14 @@ public class TclCheckerCorrectionProcessor implements
 		if (TclCheckerMarker.TYPE.equals(annotation.getMarkerType())
 				&& annotation instanceof SimpleMarkerAnnotation) {
 			computeQuickFixProposals(((SimpleMarkerAnnotation) annotation)
-					.getMarker(), context);
+					.getMarker(), annotation, context);
 		}
 	}
 
 	public void computeQuickAssistProposals(IMarker marker,
 			IScriptCorrectionContext context) {
 		if (TclCheckerMarker.TYPE.equals(MarkerUtilities.getMarkerType(marker))) {
-			computeQuickFixProposals(marker, context);
+			computeQuickFixProposals(marker, null, context);
 		}
 	}
 
@@ -66,14 +65,19 @@ public class TclCheckerCorrectionProcessor implements
 	 * @param context
 	 */
 	public static void computeQuickFixProposals(IMarker marker,
-			IScriptCorrectionContext context) {
+			IScriptAnnotation annotation, IScriptCorrectionContext context) {
 		final String[] corrections = CorrectionEngine.decodeArguments(marker
 				.getAttribute(TclCheckerMarker.SUGGESTED_CORRECTIONS, null));
 		if (corrections != null) {
 			for (int i = 0; i < corrections.length; ++i) {
-				context.addProposal(new MarkerResolutionProposal(
-						new TclCheckerMarkerResolution(i, corrections[i]),
-						marker));
+				if (annotation != null) {
+					context.addResolution(new TclCheckerAnnotationResolution(
+							corrections[i], context.getEditor(), context
+									.getModule(), marker), annotation);
+				} else {
+					context.addResolution(new TclCheckerMarkerResolution(
+							corrections[i]), marker);
+				}
 			}
 		}
 	}

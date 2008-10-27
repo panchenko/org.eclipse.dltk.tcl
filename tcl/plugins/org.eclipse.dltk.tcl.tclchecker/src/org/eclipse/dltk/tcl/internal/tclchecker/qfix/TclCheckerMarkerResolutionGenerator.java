@@ -27,7 +27,7 @@ public class TclCheckerMarkerResolutionGenerator implements
 		if (corrections != null) {
 			final IMarkerResolution[] result = new IMarkerResolution[corrections.length];
 			for (int i = 0; i < corrections.length; ++i) {
-				result[i] = new TclCheckerMarkerResolution(i, corrections[i]);
+				result[i] = new TclCheckerMarkerResolution(corrections[i]);
 			}
 			return result;
 		}

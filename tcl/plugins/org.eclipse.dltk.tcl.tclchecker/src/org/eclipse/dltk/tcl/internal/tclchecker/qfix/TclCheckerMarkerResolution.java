@@ -12,29 +12,45 @@
 package org.eclipse.dltk.tcl.internal.tclchecker.qfix;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution;
+import org.eclipse.ui.IMarkerResolution2;
 
-public class TclCheckerMarkerResolution implements IMarkerResolution {
+public class TclCheckerMarkerResolution implements IMarkerResolution,
+		IMarkerResolution2 {
 
-	private final int index;
 	private final String replacement;
 
-	/**
-	 * @param i
-	 * @param string
-	 */
-	public TclCheckerMarkerResolution(int index, String replacement) {
-		this.index = index;
+	public TclCheckerMarkerResolution(String replacement) {
 		this.replacement = replacement;
 	}
 
 	public String getLabel() {
-		return replacement;
+		return TclCheckerFixUtils.getLabel(replacement);
 	}
 
 	public void run(IMarker marker) {
-		// TODO Auto-generated method stub
-System.out.println("NOP"); //$NON-NLS-1$
+		final IMarker target = TclCheckerFixUtils.verify(marker, null);
+		if (target != null) {
+			fixMarker(target);
+		}
+	}
+
+	/**
+	 * @param marker
+	 */
+	private void fixMarker(IMarker marker) {
+		// replace
+		System.out.println("Replace [" + replacement + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+
+	}
+
+	public String getDescription() {
+		return TclCheckerFixUtils.getDescription(replacement);
+	}
+
+	public Image getImage() {
+		return null;
 	}
 
 }

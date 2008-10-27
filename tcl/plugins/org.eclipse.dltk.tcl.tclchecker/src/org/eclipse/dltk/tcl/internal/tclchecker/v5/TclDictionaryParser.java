@@ -89,19 +89,7 @@ public final class TclDictionaryParser extends SimpleTclParser {
 						&& contents.get(0) instanceof BracesSubstitution) {
 					final String substText = content.substring(offset
 							+ word.getStart() + 1, offset + word.getEnd());
-					final TclScript replaceScript = parse(substText);
-					if (replaceScript != null) {
-						final ListToken replaceTokens = convert(offset
-								+ word.getStart() + 1, content, replaceScript
-								.getCommands());
-						if (replaceTokens.getChildren().size() == 1) {
-							result.addChild(replaceTokens.getChildren().get(0));
-						} else {
-							result.addChild(replaceTokens);
-						}
-					} else {
-						result.addChild(new WordToken(substText));
-					}
+					result.addChild(new RawToken(this, substText));
 				} else {
 					boolean join = false;
 					final List<IToken> children = result.getChildren();
