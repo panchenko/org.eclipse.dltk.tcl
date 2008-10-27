@@ -30,12 +30,17 @@ import org.eclipse.dltk.validators.core.NullValidatorOutput;
 public class TclCheckerFixUtils {
 
 	public static String getLabel(String replacement) {
+		final int totalLines = TextUtils.countLines(replacement);
 		final String[] lines = TextUtils.splitLines(replacement, 3);
 		for (int i = 0; i < lines.length; ++i) {
 			lines[i] = lines[i].trim();
 		}
-		return Messages.TclCheckerMarkerResolution_replaceWith
+		String result = Messages.TclCheckerMarkerResolution_replaceWith
 				+ TextUtils.join(lines, ' ');
+		if (totalLines > lines.length) {
+			result += " ..."; //$NON-NLS-1$
+		}
+		return result;
 	}
 
 	public static String getDescription(String replacement) {
