@@ -20,6 +20,7 @@ public class TclCheckerType extends AbstractValidatorType {
 
 	private final TclCheckerImpl checker;
 
+	@SuppressWarnings("unchecked")
 	public TclCheckerType() {
 		this.checker = new TclCheckerImpl(CHECKER_ID, this);
 		this.checker.setName(CHECKER_ID);
@@ -46,6 +47,7 @@ public class TclCheckerType extends AbstractValidatorType {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean supports(Class validatorType) {
 		return ISourceModuleValidator.class.equals(validatorType);
 	}

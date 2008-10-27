@@ -26,6 +26,7 @@ public class TclCheckerImpl extends AbstractValidator {
 				getEnvrironment(project));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getValidator(IScriptProject project, Class validatorType) {
 		if (ISourceModuleValidator.class.equals(validatorType)) {
 			return new TclChecker(getPreferenceStore(),

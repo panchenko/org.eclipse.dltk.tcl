@@ -12,7 +12,6 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +20,7 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.utils.PlatformFileUtils;
+import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.CommandLine;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -42,8 +42,8 @@ public final class TclCheckerHelper {
 
 	public static boolean buildCommandLine(IPreferenceStore store,
 			CommandLine cmdLine, IEnvironment environment) {
-		Map paths = getPaths(store);
-		String path = (String) paths.get(environment);
+		Map<IEnvironment, String> paths = getPaths(store);
+		String path = paths.get(environment);
 		if (path == null || path.length() == 0) {
 			return false;
 		}
@@ -85,11 +85,10 @@ public final class TclCheckerHelper {
 			cmdLine.add(NO_PCX_OPTION);
 		} else {
 			// pcx paths
-			Map pcxPaths = getPcxPaths(store);
+			Map<IEnvironment, List<String>> pcxPaths = getPcxPaths(store);
 			if (pcxPaths.containsKey(environment)) {
-				List pcxPath = (List) pcxPaths.get(environment);
-				for (Iterator iterator = pcxPath.iterator(); iterator.hasNext();) {
-					String pcx = (String) iterator.next();
+				List<String> pcxPath = pcxPaths.get(environment);
+				for (final String pcx : pcxPath) {
 					IFileHandle handle = PlatformFileUtils
 							.findAbsoluteOrEclipseRelativeFile(environment,
 									new Path(pcx));
@@ -110,54 +109,47 @@ public final class TclCheckerHelper {
 		return true;
 	}
 
-	public static Map getPcxPaths(IPreferenceStore store) {
-		Map results = new HashMap();
+	public static Map<IEnvironment, List<String>> getPcxPaths(
+			IPreferenceStore store) {
+		Map<IEnvironment, List<String>> results = new HashMap<IEnvironment, List<String>>();
 		IEnvironment[] environments = EnvironmentManager.getEnvironments();
 		for (int i = 0; i < environments.length; i++) {
 			results.put(environments[i], getPcxPathsFrom(store,
-					TclCheckerConstants.PREF_PCX_PATH + "."
+					TclCheckerConstants.PREF_PCX_PATH + ENV_PREFIX_SEPARATOR
 							+ environments[i].getId()));
 		}
 		return results;
 	}
 
-	private static List getPcxPathsFrom(IPreferenceStore store, String key) {
-		String pcxPathsValue = store.getString(key);
-		List values = new ArrayList();
-		int start = 0;
-		for (int i = 0; i < pcxPathsValue.length(); i++) {
-			if (pcxPathsValue.charAt(i) == File.pathSeparatorChar && start < i) {
-				String path = pcxPathsValue.substring(start, i);
-				if (path.length() > 0) {
-					values.add(path);
-				}
-				start = i + 1;
-			}
-		}
-		if (start < pcxPathsValue.length()) {
-			String path = pcxPathsValue
-					.substring(start, pcxPathsValue.length());
-			if (path.length() > 0) {
-				values.add(path);
+	private static List<String> getPcxPathsFrom(IPreferenceStore store,
+			String key) {
+		final List<String> values = new ArrayList<String>();
+		final String[] parts = TextUtils.split(store.getString(key),
+				File.pathSeparatorChar);
+		for (int i = 0; i < parts.length; ++i) {
+			final String part = parts[i];
+			if (part.length() != 0) {
+				values.add(part);
 			}
 		}
 		return values;
 	}
 
-	public static void setPcxPaths(IPreferenceStore store, Map paths) {
-		for (Iterator iterator = paths.keySet().iterator(); iterator.hasNext();) {
-			IEnvironment environment = (IEnvironment) iterator.next();
-			setPcxPathsTo(store, TclCheckerConstants.PREF_PCX_PATH + "."
-					+ environment.getId(), (List) paths.get(environment));
+	public static void setPcxPaths(IPreferenceStore store,
+			Map<IEnvironment, List<String>> paths) {
+		for (Map.Entry<IEnvironment, List<String>> entry : paths.entrySet()) {
+			IEnvironment environment = entry.getKey();
+			setPcxPathsTo(store, TclCheckerConstants.PREF_PCX_PATH
+					+ ENV_PREFIX_SEPARATOR + environment.getId(), entry
+					.getValue());
 		}
 	}
 
 	private static void setPcxPathsTo(IPreferenceStore store, String key,
-			List paths) {
-		StringBuffer buffer = new StringBuffer();
+			List<String> paths) {
+		final StringBuffer buffer = new StringBuffer();
 		boolean first = true;
-		for (Iterator iterator = paths.iterator(); iterator.hasNext();) {
-			String path = (String) iterator.next();
+		for (String path : paths) {
 			if (!first) {
 				buffer.append(File.pathSeparator);
 			} else {
@@ -168,22 +160,23 @@ public final class TclCheckerHelper {
 		store.setValue(key, buffer.toString());
 	}
 
-	public static Map getPaths(IPreferenceStore store) {
+	public static Map<IEnvironment, String> getPaths(IPreferenceStore store) {
 		String prefix = TclCheckerConstants.PREF_PATH;
-		Map results = getEnvironmentValues(store, prefix);
+		Map<IEnvironment, String> results = getEnvironmentValues(store, prefix);
 		return results;
 	}
 
-	public static void setPaths(IPreferenceStore store, Map paths) {
+	public static void setPaths(IPreferenceStore store,
+			Map<IEnvironment, String> paths) {
 		String prefix = TclCheckerConstants.PREF_PATH;
 		setEnvironmentValues(store, paths, prefix);
 	}
 
 	public static boolean canExecuteTclChecker(IPreferenceStore store,
 			IEnvironment environment) {
-		Map paths = getPaths(store);
+		Map<IEnvironment, String> paths = getPaths(store);
 		if (paths.containsKey(environment)) {
-			String path = (String) paths.get(environment);
+			String path = paths.get(environment);
 			if (path.length() != 0) {
 				IFileHandle file = PlatformFileUtils
 						.findAbsoluteOrEclipseRelativeFile(environment,
@@ -196,31 +189,34 @@ public final class TclCheckerHelper {
 		return false;
 	}
 
-	public static Map getNoPCX(IPreferenceStore store) {
+	public static Map<IEnvironment, String> getNoPCX(IPreferenceStore store) {
 		return getEnvironmentValues(store, TclCheckerConstants.PREF_NO_PCX);
 	}
 
-	public static void setNoPCX(IPreferenceStore store, Map paths) {
+	public static void setNoPCX(IPreferenceStore store,
+			Map<IEnvironment, String> paths) {
 		setEnvironmentValues(store, paths, TclCheckerConstants.PREF_NO_PCX);
 	}
 
-	private static Map getEnvironmentValues(IPreferenceStore store,
-			String prefix) {
-		Map results = new HashMap();
+	private static final String ENV_PREFIX_SEPARATOR = "."; //$NON-NLS-1$
+
+	private static Map<IEnvironment, String> getEnvironmentValues(
+			IPreferenceStore store, String prefix) {
+		Map<IEnvironment, String> results = new HashMap<IEnvironment, String>();
 		IEnvironment[] environments = EnvironmentManager.getEnvironments();
 		for (int i = 0; i < environments.length; i++) {
-			results.put(environments[i], store.getString(prefix + "."
-					+ environments[i].getId()));
+			final IEnvironment environment = environments[i];
+			results.put(environment, store.getString(prefix
+					+ ENV_PREFIX_SEPARATOR + environment.getId()));
 		}
 		return results;
 	}
 
-	private static void setEnvironmentValues(IPreferenceStore store, Map paths,
-			String prefix) {
-		for (Iterator iterator = paths.keySet().iterator(); iterator.hasNext();) {
-			IEnvironment environment = (IEnvironment) iterator.next();
-			store.setValue(prefix + "." + environment.getId(), (String) paths
-					.get(environment));
+	private static void setEnvironmentValues(IPreferenceStore store,
+			Map<IEnvironment, String> paths, String prefix) {
+		for (Map.Entry<IEnvironment, String> entry : paths.entrySet()) {
+			store.setValue(prefix + ENV_PREFIX_SEPARATOR
+					+ entry.getKey().getId(), entry.getValue());
 		}
 	}
 }
