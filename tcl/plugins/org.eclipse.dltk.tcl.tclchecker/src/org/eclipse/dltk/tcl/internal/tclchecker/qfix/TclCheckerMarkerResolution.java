@@ -11,7 +11,14 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker.qfix;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolution2;
@@ -40,9 +47,31 @@ public class TclCheckerMarkerResolution implements IMarkerResolution,
 	 * @param marker
 	 */
 	private void fixMarker(IMarker marker) {
-		// replace
-		System.out.println("Replace [" + replacement + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+		final ISourceModule module = (ISourceModule) DLTKCore
+				.create((IFile) marker.getResource());
+		if (module == null) {
+			return;
+		}
+		try {
+			module.becomeWorkingCopy(null, new NullProgressMonitor());
+			try {
+				IDocument document = new Document(module.getSource());
+				TclCheckerFixUtils.updateDocument(marker, document,
+						replacement, new ITclCheckerQFixReporter() {
 
+							public void showError(String message) {
+								// NOP
+							}
+						});
+				module.getBuffer().setContents(document.get());
+			} finally {
+				module.commitWorkingCopy(true, new NullProgressMonitor());
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public String getDescription() {

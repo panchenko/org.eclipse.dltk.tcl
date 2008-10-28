@@ -26,6 +26,9 @@ import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.NullValidatorOutput;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 
 public class TclCheckerFixUtils {
 
@@ -129,6 +132,63 @@ public class TclCheckerFixUtils {
 	public static IMarkerFinder createMarkerFinder(IMarker marker) {
 		final IMarkerFinder finder = new MarkerFinder(marker);
 		return finder;
+	}
+
+	/**
+	 * @param target
+	 * @param document
+	 */
+	public static void updateDocument(IMarker marker, IDocument document,
+			String replacement, ITclCheckerQFixReporter reporter) {
+		final int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, -1);
+		int commandStart = marker.getAttribute(TclCheckerMarker.COMMAND_START,
+				-1);
+		int commandLength = marker.getAttribute(
+				TclCheckerMarker.COMMAND_LENGTH, -1);
+		if (lineNumber < 0 || commandStart < 0 || commandLength < 0) {
+			reporter
+					.showError(Messages.TclCheckerAnnotationResolution_wrongMarkerAttributes);
+			return;
+		}
+		try {
+			final IRegion lineRegion = document
+					.getLineInformation(lineNumber - 1);
+			if (commandStart < lineRegion.getOffset()) {
+				commandStart += calculateAdjustment(document, 0, lineNumber - 1);
+			}
+			if (commandStart >= lineRegion.getOffset()
+					&& commandStart < lineRegion.getOffset()
+							+ lineRegion.getLength()) {
+				document.replace(commandStart, commandLength - 1, replacement);
+				/* XXX -1 above is compensating bug in TclChecker output */
+				try {
+					marker.delete();
+				} catch (CoreException e) {
+					reporter
+							.showError(Messages.TclCheckerAnnotationResolution_markerDeleteError
+									+ e.getMessage());
+				}
+			} else {
+				reporter
+						.showError(Messages.TclCheckerAnnotationResolution_wrongCommandStart);
+			}
+		} catch (BadLocationException e) {
+			reporter
+					.showError(Messages.TclCheckerAnnotationResolution_internalError
+							+ e.getMessage());
+		}
+	}
+
+	private static int calculateAdjustment(IDocument document, int startLine,
+			int endLine) throws BadLocationException {
+		int result = 0;
+		for (int i = startLine; i < endLine; ++i) {
+			String delimiter = document.getLineDelimiter(i);
+			if (delimiter != null && delimiter.length() > 1) {
+				result += delimiter.length() - 1;
+			}
+		}
+		return result;
 	}
 
 }
