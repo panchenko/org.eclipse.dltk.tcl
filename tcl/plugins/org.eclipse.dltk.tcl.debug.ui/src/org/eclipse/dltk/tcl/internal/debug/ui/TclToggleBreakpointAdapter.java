@@ -50,7 +50,7 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
 
 	public void toggleMethodBreakpoints(IWorkbenchPart part,
 			ISelection selection) throws CoreException {
-		// Not implemented for ruby yet
+		// Not implemented for TCL yet
 	}
 
 	public boolean canToggleMethodBreakpoints(IWorkbenchPart part,
