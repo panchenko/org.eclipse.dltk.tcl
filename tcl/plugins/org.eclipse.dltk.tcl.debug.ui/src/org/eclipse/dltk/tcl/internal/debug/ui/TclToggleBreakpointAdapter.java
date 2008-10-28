@@ -1,6 +1,5 @@
 package org.eclipse.dltk.tcl.internal.debug.ui;
 
-import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,6 +30,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -67,8 +67,7 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
 			IStructuredSelection ss = (IStructuredSelection) selection;
 			return isFields(ss);
 		}
-		return (selection instanceof ITextSelection)
-				&& isField((ITextSelection) selection, part);
+		return selection instanceof ITextSelection;
 	}
 
 	public void toggleWatchpoints(final IWorkbenchPart part,
@@ -223,13 +222,9 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
 									BreakpointUtils.addSpawnpoint(editor,
 											lineNumber);
 								} else {
-									report(
-											MessageFormat
-													.format(
-															Messages.ScriptToggleBreakpointAdapter_breakpointAlreadySetAtLine,
-															new Object[] { new Integer(
-																	lineNumber) }),
-											part);
+									final String template = Messages.ScriptToggleBreakpointAdapter_breakpointAlreadySetAtLine;
+									report(NLS.bind(template, Integer
+											.toString(lineNumber)), part);
 								}
 							} else {
 								report(
