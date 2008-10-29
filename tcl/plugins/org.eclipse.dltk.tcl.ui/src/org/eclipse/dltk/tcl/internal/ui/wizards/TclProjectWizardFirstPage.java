@@ -70,7 +70,7 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 	}
 
 	protected boolean interpeterRequired() {
-		// TODO Auto-generated method stub
+		/* Specially allow to create TCL project without interpreter */
 		return false;
 	}
 
