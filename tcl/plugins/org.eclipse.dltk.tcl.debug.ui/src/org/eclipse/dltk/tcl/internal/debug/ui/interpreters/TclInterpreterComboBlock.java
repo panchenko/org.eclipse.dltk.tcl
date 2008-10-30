@@ -280,10 +280,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			}
 		} else {
 			MessageBox box = new MessageBox(this.fElements.getControl()
-					.getShell(), SWT.OK | SWT.ICON_INFORMATION
+					.getShell(), SWT.OK | SWT.ICON_WARNING
 					| SWT.APPLICATION_MODAL);
 			box.setText("Packages");
-			box.setText("Project interpreter could not be found...");
+			box.setMessage("Project interpreter could not be found...");
 			box.open();
 		}
 	}
