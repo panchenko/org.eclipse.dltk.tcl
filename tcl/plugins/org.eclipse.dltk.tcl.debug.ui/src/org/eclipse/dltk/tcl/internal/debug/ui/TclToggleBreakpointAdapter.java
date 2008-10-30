@@ -1,5 +1,6 @@
 package org.eclipse.dltk.tcl.internal.debug.ui;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,13 +25,18 @@ import org.eclipse.dltk.debug.ui.breakpoints.Messages;
 import org.eclipse.dltk.debug.ui.breakpoints.ScriptBreakpointLineValidatorFactory;
 import org.eclipse.dltk.debug.ui.breakpoints.ScriptToggleBreakpointAdapter;
 import org.eclipse.dltk.internal.debug.core.model.ScriptWatchpoint;
+import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.debug.ui.actions.IToggleSpawnpointsTarget;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -72,94 +78,99 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
 
 	public void toggleWatchpoints(final IWorkbenchPart part,
 			final ISelection finalSelection) throws CoreException {
-		Job job = new Job("Toggle Watchpoints") { //$NON-NLS-1$
-			protected IStatus run(IProgressMonitor monitor) {
-				if (monitor.isCanceled()) {
-					return Status.CANCEL_STATUS;
-				}
-				try {
-					report(null, part);
-					ISelection selection = finalSelection;
-					int lineNumber = -1;
-					IResource resource = ResourcesPlugin.getWorkspace()
-							.getRoot();
-					IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-							.getBreakpointManager().getBreakpoints(
-									getDebugModelId());
-					if (selection instanceof ITextSelection
-							&& part instanceof ITextEditor) {
-						// one based line number
-						lineNumber = ((ITextSelection) selection)
-								.getStartLine() + 1;
-						resource = BreakpointUtils
-								.getBreakpointResource((ITextEditor) part);
-					}
-					if (!(selection instanceof IStructuredSelection)) {
-						selection = translateToMembers(part, finalSelection);
-					}
-					if (selection instanceof IStructuredSelection) {
-						List fields = getFields((IStructuredSelection) selection);
-						if (fields.isEmpty()) {
-							report(ActionMessages.ToggleBreakpointAdapter_10,
-									part);
-							return Status.OK_STATUS;
-						}
-						for (Iterator i = fields.iterator(); i.hasNext();) {
-							final Object element = i.next();
-							int start = -1;
-							int end = -1;
-							final String watchExpression;
-							if (element instanceof IField) {
-								final IField field = (IField) element;
-								final ISourceRange range = field.getNameRange();
-								start = range.getOffset();
-								end = range.getOffset() + range.getLength();
-								watchExpression = field.getElementName();
-							} else if (element instanceof IScriptVariable) {
-								watchExpression = ((IScriptVariable) element)
-										.getName();
-							} else {
-								continue;
-							}
-							boolean found = false;
-							for (int j = 0; j < breakpoints.length; j++) {
-								final IBreakpoint breakpoint = breakpoints[j];
-								if (breakpoint instanceof IScriptWatchpoint
-										&& breakpoint.getMarker() != null
-										&& resource.equals(breakpoint
-												.getMarker().getResource())) {
-									IScriptWatchpoint wp = (IScriptWatchpoint) breakpoint;
-									if (wp.getLineNumber() == lineNumber
-											&& watchExpression.equals(wp
-													.getFieldName())) {
-										// delete existing breakpoint
-										breakpoint.delete();
-										found = true;
-									}
-								}
-							}
-							if (!found) {
-								new ScriptWatchpoint(
-										getDebugModelId(),
-										resource,
-										resource.getType() == IResource.FILE ? resource
-												.getLocation()
-												: null, lineNumber, start, end,
-										watchExpression);
-							}
-						}
-					} else {
-						report(ActionMessages.ToggleBreakpointAdapter_2, part);
-						return Status.OK_STATUS;
-					}
-				} catch (CoreException e) {
-					return e.getStatus();
-				}
-				return Status.OK_STATUS;
+		report(null, part);
+		ISelection selection = finalSelection;
+		int lineNumber = -1;
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot();
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+				.getBreakpointManager().getBreakpoints(getDebugModelId());
+		if (selection instanceof ITextSelection && part instanceof ITextEditor) {
+			// one based line number
+			lineNumber = ((ITextSelection) selection).getStartLine() + 1;
+			resource = BreakpointUtils
+					.getBreakpointResource((ITextEditor) part);
+		}
+		List fields;
+		if (selection instanceof IStructuredSelection) {
+			fields = getFields((IStructuredSelection) selection);
+		} else {
+			ISelection newSelection = translateToMembers(part, selection);
+			if (newSelection instanceof IStructuredSelection) {
+				fields = getFields((IStructuredSelection) newSelection);
+			} else {
+				fields = Collections.EMPTY_LIST;
 			}
-		};
-		job.setSystem(true);
-		job.schedule();
+		}
+		if (fields.isEmpty() && selection instanceof ITextSelection) {
+			ITextEditor textEditor = getTextEditor(part);
+			if (textEditor != null) {
+				IEditorInput editorInput = textEditor.getEditorInput();
+				IDocumentProvider documentProvider = textEditor
+						.getDocumentProvider();
+				if (documentProvider != null) {
+					IDocument document = documentProvider
+							.getDocument(editorInput);
+					IRegion reg = ScriptWordFinder.findWord(document,
+							((ITextSelection) selection).getOffset());
+					final TclAddWatchpointDialog dialog = new TclAddWatchpointDialog(
+							part.getSite().getShell());
+					try {
+						dialog.setExpression(document.get(reg.getOffset(), reg
+								.getLength()));
+					} catch (BadLocationException e) {
+						// ignore
+					}
+					if (dialog.open() != Window.OK) {
+						return;
+					}
+					fields = Collections.singletonList(dialog.getExpression());
+				}
+			}
+		}
+		if (fields.isEmpty()) {
+			report(ActionMessages.ToggleBreakpointAdapter_10, part);
+			return;
+		}
+		for (Iterator i = fields.iterator(); i.hasNext();) {
+			final Object element = i.next();
+			int start = -1;
+			int end = -1;
+			final String watchExpression;
+			if (element instanceof IField) {
+				final IField field = (IField) element;
+				final ISourceRange range = field.getNameRange();
+				start = range.getOffset();
+				end = range.getOffset() + range.getLength();
+				watchExpression = field.getElementName();
+			} else if (element instanceof IScriptVariable) {
+				watchExpression = ((IScriptVariable) element).getName();
+			} else if (element instanceof String) {
+				watchExpression = element.toString();
+			} else {
+				continue;
+			}
+			boolean found = false;
+			for (int j = 0; j < breakpoints.length; j++) {
+				final IBreakpoint breakpoint = breakpoints[j];
+				if (breakpoint instanceof IScriptWatchpoint
+						&& breakpoint.getMarker() != null
+						&& resource
+								.equals(breakpoint.getMarker().getResource())) {
+					IScriptWatchpoint wp = (IScriptWatchpoint) breakpoint;
+					if (wp.getLineNumber() == lineNumber
+							&& watchExpression.equals(wp.getFieldName())) {
+						// delete existing breakpoint
+						breakpoint.delete();
+						found = true;
+					}
+				}
+			}
+			if (!found) {
+				new ScriptWatchpoint(getDebugModelId(), resource, resource
+						.getType() == IResource.FILE ? resource.getLocation()
+						: null, lineNumber, start, end, watchExpression);
+			}
+		}
 	}
 
 	public void toggleBreakpoints(IWorkbenchPart part, ISelection selection)
