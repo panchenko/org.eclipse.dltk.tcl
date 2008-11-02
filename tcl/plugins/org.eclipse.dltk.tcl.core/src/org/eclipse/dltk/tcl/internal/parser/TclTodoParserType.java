@@ -13,7 +13,7 @@ package org.eclipse.dltk.tcl.internal.parser;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
-import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
+import org.eclipse.dltk.compiler.task.TodoTaskPreferencesOnPreferenceLookupDelegate;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.AbstractTodoTaskBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
@@ -23,8 +23,8 @@ import org.eclipse.dltk.tcl.core.TclPlugin;
 public class TclTodoParserType extends AbstractTodoTaskBuildParticipantType {
 
 	protected ITodoTaskPreferences getPreferences(IScriptProject project) {
-		return new TodoTaskPreferences(TclPlugin.getDefault()
-				.getPluginPreferences());
+		return new TodoTaskPreferencesOnPreferenceLookupDelegate(
+				TclPlugin.PLUGIN_ID, project);
 	}
 
 	protected IBuildParticipant getBuildParticipant(
