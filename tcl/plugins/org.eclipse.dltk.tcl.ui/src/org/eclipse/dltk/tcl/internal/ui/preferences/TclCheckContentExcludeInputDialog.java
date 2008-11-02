@@ -13,7 +13,7 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 import java.util.List;
 
-import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
+import org.eclipse.dltk.compiler.task.TaskTagUtils;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.internal.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
@@ -79,7 +79,7 @@ public class TclCheckContentExcludeInputDialog extends StatusDialog implements
 			status
 					.setError(TclPreferencesMessages.TclCheckContentExcludeDialog_enterPatternError);
 		} else {
-			if (!TodoTaskPreferences.isValidName(newText)) {
+			if (!TaskTagUtils.isValidName(newText)) {
 				status
 						.setError(TclPreferencesMessages.TclCheckContentExcludeDialog_invalidPatternError);
 			} else if (fExistingNames.contains(newText)) {
