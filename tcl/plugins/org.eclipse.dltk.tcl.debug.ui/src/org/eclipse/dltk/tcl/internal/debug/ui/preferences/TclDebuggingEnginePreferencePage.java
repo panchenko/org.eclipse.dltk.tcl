@@ -54,6 +54,10 @@ public class TclDebuggingEnginePreferencePage extends
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	protected String getNatureId() {
+		return TclNature.NATURE_ID;
+	}
 
 	/*
 	 * @see org.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage#getPreferencePageId()

@@ -3,6 +3,7 @@ package org.eclipse.dltk.tcl.internal.debug.ui.preferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.debug.core.DLTKDebugPreferenceConstants;
 import org.eclipse.dltk.debug.ui.preferences.AbstractDebuggingOptionsBlock;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 import org.eclipse.dltk.ui.PreferencesAdapter;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
@@ -49,6 +50,10 @@ public class TclDebugPreferencePage extends
 		};
 	}
 
+	protected String getNatureId() {
+		return TclNature.NATURE_ID;
+	}
+	
 	protected PreferenceKey[] getKeys() {
 		return new PreferenceKey[] { BREAK_ON_FIRST_LINE, ENABLE_DBGP_LOGGING };
 	}
