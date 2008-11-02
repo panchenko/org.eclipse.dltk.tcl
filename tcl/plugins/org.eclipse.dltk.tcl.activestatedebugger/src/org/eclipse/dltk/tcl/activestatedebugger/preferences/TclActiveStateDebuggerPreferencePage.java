@@ -17,6 +17,7 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
@@ -154,6 +155,10 @@ public class TclActiveStateDebuggerPreferencePage extends
 	 */
 	protected String getPropertyPageId() {
 		return PROPERTY_PAGE_ID;
+	}
+	
+	protected String getNatureId() {
+		return TclNature.NATURE_ID;
 	}
 
 	/*
