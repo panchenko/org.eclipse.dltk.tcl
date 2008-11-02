@@ -258,6 +258,17 @@
       <keywordReference id="org.eclipse.dltk.tcl.ui.buildpath"/>
     </page>
     <page
+          category="org.eclipse.dltk.tcl.propertyPage"
+          class="org.eclipse.dltk.tcl.internal.ui.preferences.TclTodoTaskPreferencePage"
+          id="org.eclipse.dltk.tcl.propertyPage.todo"
+          name="%TclTaskTagsPropertyPage.name">
+      <enabledWhen>
+        <adapt type="org.eclipse.core.resources.IProject">
+          <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.dltk.tcl.core.nature"/>
+        </adapt>         
+      </enabledWhen>
+    </page>    
+    <page
       name="%TclPropertyPage.name"
       class="org.eclipse.dltk.tcl.internal.ui.preferences.TclPropertyPage"
       id="org.eclipse.dltk.tcl.propertyPage">

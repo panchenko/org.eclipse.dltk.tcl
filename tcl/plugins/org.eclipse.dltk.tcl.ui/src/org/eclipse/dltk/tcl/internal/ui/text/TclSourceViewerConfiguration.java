@@ -124,11 +124,9 @@ public class TclSourceViewerConfiguration extends
 		fStringScanner = new TclStringScanner(getColorManager(),
 				fPreferenceStore);
 
-		fCommentScanner = new ScriptCommentScanner(getColorManager(),
-				fPreferenceStore, TclColorConstants.TCL_SINGLE_LINE_COMMENT,
-				TclColorConstants.TCL_TODO_TAG, new TodoTaskPreferences(
-						TclPlugin.getDefault().getPluginPreferences()));
-
+		fCommentScanner = createCommentScanner(
+				TclColorConstants.TCL_SINGLE_LINE_COMMENT,
+				TclColorConstants.TCL_TODO_TAG);
 	}
 
 	/**
