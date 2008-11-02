@@ -21,6 +21,7 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
@@ -223,6 +224,10 @@ public class TclCorePreferencePage extends
 		return null;
 	}
 
+	protected String getNatureId() {
+		return TclNature.NATURE_ID;
+	}
+	
 	protected void setDescription() {
 		// empty
 	}

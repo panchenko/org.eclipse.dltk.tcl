@@ -13,6 +13,7 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.ui.PreferencesAdapter;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
@@ -63,6 +64,10 @@ public class TclTodoTaskPreferencePage extends
 				return CASE_SENSITIVE;
 			}
 		};
+	}
+	
+	protected String getNatureId() {
+		return TclNature.NATURE_ID;
 	}
 
 	protected String getProjectHelpId() {
