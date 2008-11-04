@@ -12,26 +12,6 @@
          <run class="org.eclipse.dltk.tcl.core.TclNature"/>
       </runtime>
    </extension> 
-
-  <extension
-    point="org.eclipse.dltk.core.buildParticipant">
-    <buildParticipant
-      class="org.eclipse.dltk.core.builder.ParserBuildParticipantFactory"
-      id="org.eclipse.dltk.tcl.buildParticipant.parser"
-      name="%parserBuildParticipant.name"
-      nature="org.eclipse.dltk.tcl.core.nature">
-    </buildParticipant>
-    <buildParticipant
-      class="org.eclipse.dltk.tcl.internal.parser.TclTodoParserType"
-      id="org.eclipse.dltk.tcl.todo"
-      name="%taskTagsBuildParticipant.name"
-      nature="org.eclipse.dltk.tcl.core.nature">
-      <requires
-            id="org.eclipse.dltk.tcl.buildParticipant.parser">
-      </requires>
-    </buildParticipant>
-  </extension>
-
 <!--
    <extension
          point="org.eclipse.dltk.validators.core.validator">
@@ -41,6 +21,15 @@
             name="Tcl Package Checker"
             nature="org.eclipse.dltk.tcl.core.nature">
       </validatorType>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.validators.core.buildParticipant">
+      <buildParticipant
+            class="org.eclipse.dltk.tcl.internal.parser.TclTodoParserType"
+            id="org.eclipse.dltk.tcl.todo"
+            name="Tcl TODO task parser"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </buildParticipant>
    </extension>
 -->
 
