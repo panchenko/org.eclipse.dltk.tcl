@@ -126,7 +126,7 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 						definition);
 				if (name != null) {
 					if (name.startsWith("::")) {
-						buffer = new StringBuffer();
+						buffer.setLength(0);
 						name = name.substring(2);
 						buffer.append(name + "::");
 					} else {
