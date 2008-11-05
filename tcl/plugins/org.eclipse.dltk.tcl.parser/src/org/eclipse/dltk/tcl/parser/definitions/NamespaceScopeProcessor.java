@@ -47,10 +47,11 @@ public class NamespaceScopeProcessor implements IScopeProcessor {
 
 	// Copy internal data.
 	public NamespaceScopeProcessor(NamespaceScopeProcessor coreProcessor) {
-		this.scopes = new HashSet(coreProcessor.scopes);
+		this.scopes = new HashSet<Scope>(coreProcessor.scopes);
 		Map<String, Set<Command>> map = coreProcessor.commands;
 		for (Entry<String, Set<Command>> entry : map.entrySet()) {
-			commands.put(entry.getKey(), new HashSet(entry.getValue()));
+			commands
+					.put(entry.getKey(), new HashSet<Command>(entry.getValue()));
 		}
 	}
 
