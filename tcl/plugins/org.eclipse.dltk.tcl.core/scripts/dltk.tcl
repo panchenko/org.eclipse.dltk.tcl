@@ -56,8 +56,8 @@ proc package {subcmd args} {
             }
             set d ""
             if {[info exists lcl_dir]} {
-				set d $lcl_dir
-			}
+                set d $lcl_dir
+            }
             add-pkg-info $name $vers $path $d
             return [uplevel 1 "::package-org $subcmd $args"]
         }
