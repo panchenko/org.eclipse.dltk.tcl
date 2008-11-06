@@ -24,61 +24,58 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
-
 public class TclCodeScanner extends AbstractScriptScanner {
-	
-	private static String fgTokenProperties[] = new String[] {
-		TclColorConstants.TCL_SINGLE_LINE_COMMENT,
-		TclColorConstants.TCL_DEFAULT,
-		TclColorConstants.TCL_KEYWORD,
-		TclColorConstants.TCL_KEYWORD_RETURN,
-		TclColorConstants.TCL_NUMBER,
-		TclColorConstants.TCL_VARIABLE,
-	};
-	
-	private static String returnKeyword = "return";
-	
+
+	private static final String fgTokenProperties[] = new String[] {
+			TclColorConstants.TCL_SINGLE_LINE_COMMENT,
+			TclColorConstants.TCL_DEFAULT, // 
+			TclColorConstants.TCL_KEYWORD,
+			TclColorConstants.TCL_KEYWORD_RETURN, // 
+			TclColorConstants.TCL_NUMBER, // 
+			TclColorConstants.TCL_VARIABLE, };
+
+	private static final String RETURN_KEYWORD = "return"; //$NON-NLS-1$
+
 	public TclCodeScanner(IColorManager manager, IPreferenceStore store) {
 		super(manager, store);
 		initialize();
 	}
 
-	
 	protected String[] getTokenProperties() {
 		return fgTokenProperties;
-	}		
-	
-	protected List createRules() {		
-		List/*<IRule>*/ rules = new ArrayList/*<IRule>*/();
+	}
+
+	protected List createRules() {
+		List/* <IRule> */rules = new ArrayList/* <IRule> */();
 
 		IToken keyword = getToken(TclColorConstants.TCL_KEYWORD);
 		IToken comment = getToken(TclColorConstants.TCL_SINGLE_LINE_COMMENT);
 		IToken other = getToken(TclColorConstants.TCL_DEFAULT);
 		IToken variable = getToken(TclColorConstants.TCL_VARIABLE);
 		IToken number = getToken(TclColorConstants.TCL_NUMBER);
-		
+
 		// Add rule for single line comments.
-		//rules.add(new EndOfLineRule("#", comment));
+		// rules.add(new EndOfLineRule("#", comment));
 		rules.add(new TclCommentRule(comment));
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new TclWhitespaceDetector()));
-		rules.add(new TclVariableRule(variable));		
-		rules.add( new TclFloatNumberRule( number ) );
-		
+		rules.add(new TclVariableRule(variable));
+		rules.add(new TclFloatNumberRule(number));
+
 		// Add word rule for keywords, types, and constants.
 		WordRule wordRule = new WordRule(new TclWordDetector(), other);
 		String[] keywords = TclKeywordsManager.getKeywords();
-		for( int i = 0; i < keywords.length; i++ ) {
+		for (int i = 0; i < keywords.length; i++) {
 			wordRule.addWord(keywords[i], keyword);
 		}
-	        
+
 		IToken returnToken = getToken(TclPreferenceConstants.EDITOR_KEYWORD_RETURN_COLOR);
-	        wordRule.addWord(returnKeyword, returnToken);
-		
+		wordRule.addWord(RETURN_KEYWORD, returnToken);
+
 		rules.add(wordRule);
 
 		setDefaultReturnToken(other);
-		
+
 		return rules;
 	}
 
