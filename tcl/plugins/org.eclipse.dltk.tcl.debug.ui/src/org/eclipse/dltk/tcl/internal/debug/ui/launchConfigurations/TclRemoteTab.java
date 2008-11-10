@@ -25,6 +25,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * XXX This class is not in use.
+ */
 public class TclRemoteTab extends AbstractLaunchConfigurationTab {
 	private static final int DEFAULT_PORT = 9000;
 	private static final String DEFAULT_SESSION_ID = "tcl_debug";
@@ -60,7 +63,8 @@ public class TclRemoteTab extends AbstractLaunchConfigurationTab {
 	protected void createInstruction(Composite parent, Object data) {
 		Label instruction = new Label(parent, SWT.NONE);
 		instruction.setLayoutData(data);
-		instruction.setText("To start Tcl debugging engine use this command temlate:");
+		instruction
+				.setText("To start Tcl debugging engine use this command temlate:");
 	}
 
 	protected void createPathTemplate(Composite parent, Object data) {
