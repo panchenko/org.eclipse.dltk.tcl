@@ -109,7 +109,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 
 	private int buildType;
 
-	public void beginBuild(int buildType) {
+	public boolean beginBuild(int buildType) {
 		this.buildType = buildType;
 		if (buildType != IBuildParticipantExtension.FULL_BUILD) {
 			@SuppressWarnings("unchecked")
@@ -118,6 +118,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 			packageCollector.getPackagesProvided().addAll(projectPackages);
 		}
 		loadProvidedPackagesFromRequiredProjects();
+		return true;
 	}
 
 	private void loadProvidedPackagesFromRequiredProjects() {
