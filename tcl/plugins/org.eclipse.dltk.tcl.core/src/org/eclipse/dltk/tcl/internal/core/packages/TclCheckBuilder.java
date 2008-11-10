@@ -84,7 +84,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 
 	private int buildType;
 
-	public void beginBuild(int buildType) {
+	public boolean beginBuild(int buildType) {
 		this.buildType = buildType;
 		if (buildType != FULL_BUILD) {
 			// retrieve packages provided by this project
@@ -92,6 +92,7 @@ public class TclCheckBuilder implements IBuildParticipant,
 					manager.getInternalPackageNames(install, project));
 		}
 		loadProvidedPackagesFromRequiredProjects();
+		return true;
 	}
 
 	private void loadProvidedPackagesFromRequiredProjects() {
