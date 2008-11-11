@@ -35,28 +35,28 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class TclActiveStateDebuggerPreferencePage extends
 		AbstractConfigurationBlockPropertyAndPreferencePage {
 
-	static PreferenceKey ENGINE_PATH = new PreferenceKey(
+	static final PreferenceKey ENGINE_PATH = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY);
 
-	static PreferenceKey PDX_PATH = new PreferenceKey(
+	static final PreferenceKey PDX_PATH = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PDX_PATH_KEY);
 
-	static PreferenceKey ENABLE_LOGGING = new PreferenceKey(
+	static final PreferenceKey ENABLE_LOGGING = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.ENABLE_LOGGING);
 
-	static PreferenceKey LOG_FILE_PATH = new PreferenceKey(
+	static final PreferenceKey LOG_FILE_PATH = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.LOG_FILE_PATH);
 
-	static PreferenceKey LOG_FILE_NAME = new PreferenceKey(
+	static final PreferenceKey LOG_FILE_NAME = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.LOG_FILE_NAME);
 
-	private static String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug.activestatedebugger";
-	private static String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug.engines.activestatedebugger";
+	private static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug.activestatedebugger"; //$NON-NLS-1$
+	private static final String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug.engines.activestatedebugger"; //$NON-NLS-1$
 
 	/*
 	 * @seeorg.eclipse.dltk.ui.preferences.
@@ -92,7 +92,7 @@ public class TclActiveStateDebuggerPreferencePage extends
 						PreferenceMessages.DebuggingEnginePDXGroup, 3, 1,
 						GridData.FILL_BOTH);
 				pdxPath = new EnvironmentPathBlock(true);
-				pdxPath.createControl(group);
+				pdxPath.createControl(group, getRelevantEnvironments());
 				Map paths = EnvironmentPathUtils
 						.decodePaths(getString(PDX_PATH));
 				pdxPath.setPaths(paths);
@@ -156,7 +156,7 @@ public class TclActiveStateDebuggerPreferencePage extends
 	protected String getPropertyPageId() {
 		return PROPERTY_PAGE_ID;
 	}
-	
+
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
