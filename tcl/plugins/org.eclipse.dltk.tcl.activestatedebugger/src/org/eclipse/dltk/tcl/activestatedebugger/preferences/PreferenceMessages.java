@@ -12,7 +12,7 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
 import org.eclipse.osgi.util.NLS;
 
-public class PreferenceMessages {
+public class PreferenceMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferenceMessages"; //$NON-NLS-1$
 
 	static {
@@ -23,4 +23,20 @@ public class PreferenceMessages {
 	public static String DebuggingEngineDescription;
 	public static String DebuggingEngineDownloadPage;
 	public static String DebuggingEngineDownloadPageLink;
+	public static String instrumentation_emptyPatternMessage;
+	public static String instrumentation_errorAction_default_caption;
+	public static String instrumentation_errorAction_label;
+	public static String instrumentation_options;
+	public static String instrumentation_tab;
+	public static String instrumentation_pathSeparatorInPatten;
+	public static String instrumentation_pattern_AddButton;
+	public static String instrumentation_pattern_RemoveButton;
+	public static String instrumentation_patternDialogPromptSuffix;
+	public static String instrumentation_patternDialogTitle;
+	public static String instrumentation_patterns_excludeMessage;
+	public static String instrumentation_patterns_excludeTitle;
+	public static String instrumentation_patterns_includeMessage;
+	public static String instrumentation_patterns_includeTitle;
+	public static String instrumentation_patternsGroup;
+	public static String path_tab;
 }

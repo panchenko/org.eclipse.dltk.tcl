@@ -10,24 +10,31 @@
 
 package org.eclipse.dltk.tcl.activestatedebugger;
 
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class TclActiveStateDebuggerConstants {
 
-	public static final String DEBUGGING_ENGINE_PATH_KEY = "debugging_engine_path";
-	public static final String DEBUGGING_ENGINE_PDX_PATH_KEY = "debugging_engine_pdx_path";
+	public static final String DEBUGGING_ENGINE_PATH_KEY = "debugging_engine_path"; //$NON-NLS-1$
+	public static final String DEBUGGING_ENGINE_PDX_PATH_KEY = "debugging_engine_pdx_path"; //$NON-NLS-1$
 
-	public static final String ENABLE_LOGGING = "enable_logging";
-	public static final String LOG_FILE_PATH = "log_file_path";
-	public static final String LOG_FILE_NAME = "log_file_name";
-	
+	public static final String LOG_FILE_NAME = "log_file_name"; //$NON-NLS-1$
+
+	public static final String INSTRUMENTATION_FEATURES = "instrumentationFeatures"; //$NON-NLS-1$
+	public static final String INSTRUMENTATION_ERROR_ACTION = "instrumentationErrorAction"; //$NON-NLS-1$
+
+	public static final String INSTRUMENTATION_INCLUDE = "instrumentationInclude"; //$NON-NLS-1$
+	public static final String INSTRUMENTATION_EXCLUDE = "instrumentationExclude"; //$NON-NLS-1$
+
 	public static void initalizeDefaults(IPreferenceStore store) {
-		store.setDefault(DEBUGGING_ENGINE_PATH_KEY, "");
-		store.setDefault(DEBUGGING_ENGINE_PDX_PATH_KEY, "");
-		
-		store.setDefault(ENABLE_LOGGING, false);
-		store.setDefault(LOG_FILE_NAME, "tclDebug_{0}.log");
-		store.setDefault(LOG_FILE_PATH, "");
+		store.setDefault(DEBUGGING_ENGINE_PATH_KEY, Util.EMPTY_STRING);
+		store.setDefault(DEBUGGING_ENGINE_PDX_PATH_KEY, Util.EMPTY_STRING);
+		store.setDefault(LOG_FILE_NAME, Util.EMPTY_STRING);
+		store.setDefault(INSTRUMENTATION_FEATURES, InstrumentationFeature.ITCL
+				.name());
+		store.setDefault(INSTRUMENTATION_ERROR_ACTION, Util.EMPTY_STRING);
+		store.setDefault(INSTRUMENTATION_INCLUDE, Util.EMPTY_STRING);
+		store.setDefault(INSTRUMENTATION_EXCLUDE, Util.EMPTY_STRING);
 	}
 
 	private TclActiveStateDebuggerConstants() {

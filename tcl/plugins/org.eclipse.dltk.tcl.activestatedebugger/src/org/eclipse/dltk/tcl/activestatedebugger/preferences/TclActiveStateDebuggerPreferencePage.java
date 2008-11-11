@@ -10,23 +10,14 @@
 
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
-import java.util.Map;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
-import org.eclipse.dltk.ui.util.SWTFactory;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -43,116 +34,53 @@ public class TclActiveStateDebuggerPreferencePage extends
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PDX_PATH_KEY);
 
-	static final PreferenceKey ENABLE_LOGGING = new PreferenceKey(
-			TclActiveStateDebuggerPlugin.PLUGIN_ID,
-			TclActiveStateDebuggerConstants.ENABLE_LOGGING);
-
-	static final PreferenceKey LOG_FILE_PATH = new PreferenceKey(
-			TclActiveStateDebuggerPlugin.PLUGIN_ID,
-			TclActiveStateDebuggerConstants.LOG_FILE_PATH);
-
 	static final PreferenceKey LOG_FILE_NAME = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.LOG_FILE_NAME);
 
+	static final PreferenceKey INSTRUMENTATION_FEATURES = new PreferenceKey(
+			TclActiveStateDebuggerPlugin.PLUGIN_ID,
+			TclActiveStateDebuggerConstants.INSTRUMENTATION_FEATURES);
+
+	static final PreferenceKey INSTRUMENTATION_ERROR_ACTION = new PreferenceKey(
+			TclActiveStateDebuggerPlugin.PLUGIN_ID,
+			TclActiveStateDebuggerConstants.INSTRUMENTATION_ERROR_ACTION);
+
+	static final PreferenceKey INSTRUMENTATION_INCLUDE = new PreferenceKey(
+			TclActiveStateDebuggerPlugin.PLUGIN_ID,
+			TclActiveStateDebuggerConstants.INSTRUMENTATION_INCLUDE);
+
+	static final PreferenceKey INSTRUMENTATION_EXCLUDE = new PreferenceKey(
+			TclActiveStateDebuggerPlugin.PLUGIN_ID,
+			TclActiveStateDebuggerConstants.INSTRUMENTATION_EXCLUDE);
+
 	private static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug.activestatedebugger"; //$NON-NLS-1$
 	private static final String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug.engines.activestatedebugger"; //$NON-NLS-1$
 
-	/*
-	 * @seeorg.eclipse.dltk.ui.preferences.
-	 * AbstractConfigurationBlockPropertyAndPreferencePage
-	 * #createOptionsBlock(org.eclipse.dltk.ui.util.IStatusChangeListener,
-	 * org.eclipse.core.resources.IProject,
-	 * org.eclipse.ui.preferences.IWorkbenchPreferenceContainer)
-	 */
 	protected AbstractOptionsBlock createOptionsBlock(
 			IStatusChangeListener newStatusChangedListener, IProject project,
 			IWorkbenchPreferenceContainer container) {
-
-		return new ExternalDebuggingEngineOptionsBlock(
-				newStatusChangedListener, project, new PreferenceKey[] {
-						ENGINE_PATH, PDX_PATH, ENABLE_LOGGING, LOG_FILE_PATH,
-						LOG_FILE_NAME }, container) {
-			private EnvironmentPathBlock pdxPath;
-
-			protected void createEngineBlock(Composite parent) {
-				super.createEngineBlock(parent);
-				createPDXGroup(parent);
-			}
-
-			protected void createOtherBlock(Composite parent) {
-				addDownloadLink(parent,
-						PreferenceMessages.DebuggingEngineDownloadPage,
-						PreferenceMessages.DebuggingEngineDownloadPageLink);
-			}
-
-			private void createPDXGroup(final Composite parent) {
-
-				final Group group = SWTFactory.createGroup(parent,
-						PreferenceMessages.DebuggingEnginePDXGroup, 3, 1,
-						GridData.FILL_BOTH);
-				pdxPath = new EnvironmentPathBlock(true);
-				pdxPath.createControl(group, getRelevantEnvironments());
-				Map paths = EnvironmentPathUtils
-						.decodePaths(getString(PDX_PATH));
-				pdxPath.setPaths(paths);
-			}
-
-			protected boolean processChanges(
-					IWorkbenchPreferenceContainer container) {
-				String pdxPathKeyValue = EnvironmentPathUtils
-						.encodePaths(pdxPath.getPaths());
-				setString(PDX_PATH, pdxPathKeyValue);
-				return super.processChanges(container);
-			}
-
-			protected PreferenceKey getDebuggingEnginePathKey() {
-				return ENGINE_PATH;
-			}
-
-			protected PreferenceKey getEnableLoggingPreferenceKey() {
-				return ENABLE_LOGGING;
-			}
-
-			protected PreferenceKey getLogFileNamePreferenceKey() {
-				return LOG_FILE_NAME;
-			}
-
-			protected PreferenceKey getLogFilePathPreferenceKey() {
-				return LOG_FILE_PATH;
-			}
-		};
+		final PreferenceKey[] keys = new PreferenceKey[] { ENGINE_PATH,
+				PDX_PATH, LOG_FILE_NAME, INSTRUMENTATION_FEATURES,
+				INSTRUMENTATION_ERROR_ACTION, INSTRUMENTATION_INCLUDE,
+				INSTRUMENTATION_EXCLUDE };
+		return new TclActiveStateDebuggerBlock(newStatusChangedListener,
+				project, keys, container);
 	}
 
-	/*
-	 * @seeorg.eclipse.dltk.ui.preferences.
-	 * AbstractConfigurationBlockPropertyAndPreferencePage#getHelpId()
-	 */
 	protected String getHelpId() {
 		return null;
 	}
 
-	/*
-	 * @seeorg.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage#
-	 * getPreferencePageId()
-	 */
 	protected String getPreferencePageId() {
 		return PREFERENCE_PAGE_ID;
 	}
 
-	/*
-	 * @seeorg.eclipse.dltk.ui.preferences.
-	 * AbstractConfigurationBlockPropertyAndPreferencePage#getProjectHelpId()
-	 */
 	protected String getProjectHelpId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * @seeorg.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage#
-	 * getPropertyPageId()
-	 */
 	protected String getPropertyPageId() {
 		return PROPERTY_PAGE_ID;
 	}
@@ -161,18 +89,10 @@ public class TclActiveStateDebuggerPreferencePage extends
 		return TclNature.NATURE_ID;
 	}
 
-	/*
-	 * @seeorg.eclipse.dltk.ui.preferences.
-	 * AbstractConfigurationBlockPropertyAndPreferencePage#setDescription()
-	 */
 	protected void setDescription() {
 		setDescription(PreferenceMessages.DebuggingEngineDescription);
 	}
 
-	/*
-	 * @seeorg.eclipse.dltk.ui.preferences.
-	 * AbstractConfigurationBlockPropertyAndPreferencePage#setPreferenceStore()
-	 */
 	protected void setPreferenceStore() {
 		setPreferenceStore(TclActiveStateDebuggerPlugin.getDefault()
 				.getPreferenceStore());

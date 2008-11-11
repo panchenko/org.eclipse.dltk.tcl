@@ -10,9 +10,11 @@ package org.eclipse.dltk.tcl.activestatedebugger;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -23,6 +25,7 @@ import org.eclipse.dltk.debug.core.model.DefaultDebugOptions;
 import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
 import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
 import org.eclipse.dltk.internal.debug.core.model.ScriptDebugTarget;
+import org.eclipse.dltk.internal.launching.LaunchConfigurationUtils;
 import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -178,14 +181,6 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	}
 
 	/*
-	 * @seeorg.eclipse.dltk.launching.DebuggingEngineRunner#
-	 * getLoggingEnabledPreferenceKey()
-	 */
-	protected String getLoggingEnabledPreferenceKey() {
-		return TclActiveStateDebuggerConstants.ENABLE_LOGGING;
-	}
-
-	/*
 	 * @see
 	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getLogFileNamePreferenceKey
 	 * ()
@@ -194,17 +189,12 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		return TclActiveStateDebuggerConstants.LOG_FILE_NAME;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getLogFilePathPreferenceKey
-	 * ()
-	 */
-	protected String getLogFilePathPreferenceKey() {
-		return TclActiveStateDebuggerConstants.LOG_FILE_PATH;
-	}
-
-	protected IScriptDebugThreadConfigurator createThreadConfigurator() {
-		return new TclActiveStateDebugThreadConfigurator();
+	@Override
+	protected IScriptDebugThreadConfigurator createThreadConfigurator(
+			ILaunchConfiguration configuration) {
+		IProject project = LaunchConfigurationUtils.getProject(configuration);
+		return new TclActiveStateDebugThreadConfigurator(
+				new PreferencesLookupDelegate(project));
 	}
 
 	protected void abort(String message, Throwable exception, int code)
