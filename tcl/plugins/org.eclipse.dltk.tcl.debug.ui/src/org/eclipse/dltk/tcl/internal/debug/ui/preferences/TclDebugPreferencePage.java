@@ -26,8 +26,8 @@ public class TclDebugPreferencePage extends
 			TclDebugPlugin.PLUGIN_ID,
 			DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
 
-	private static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug";
-	private static final String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug";
+	private static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug"; //$NON-NLS-1$
+	private static final String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug"; //$NON-NLS-1$
 
 	/*
 	 * @see org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage#createOptionsBlock(org.eclipse.dltk.ui.util.IStatusChangeListener,
