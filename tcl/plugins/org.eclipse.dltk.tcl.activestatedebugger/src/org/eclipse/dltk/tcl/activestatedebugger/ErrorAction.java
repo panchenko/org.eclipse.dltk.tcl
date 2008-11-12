@@ -12,18 +12,24 @@
 package org.eclipse.dltk.tcl.activestatedebugger;
 
 public enum ErrorAction {
-	STOP_ALWAYS("stopAlways"), //$NON-NLS-1$
-	STOP_UNCAUGHT("stopUncaught"), //$NON-NLS-1$
-	STOP_NEVER("stopNever"); //$NON-NLS-1$
+	STOP_ALWAYS("stopAlways", Messages.ErrorAction_stopAlways), //$NON-NLS-1$
+	STOP_UNCAUGHT("stopUncaught", Messages.ErrorAction_stopUncaught), //$NON-NLS-1$
+	STOP_NEVER("stopNever", Messages.ErrorAction_stopNever); //$NON-NLS-1$
 
 	private final String value;
+	private final String caption;
 
-	ErrorAction(String value) {
+	ErrorAction(String value, String caption) {
 		this.value = value;
+		this.caption = caption;
 	}
 
 	public String getValue() {
 		return value;
+	}
+
+	public String getCaption() {
+		return caption;
 	}
 
 	/**

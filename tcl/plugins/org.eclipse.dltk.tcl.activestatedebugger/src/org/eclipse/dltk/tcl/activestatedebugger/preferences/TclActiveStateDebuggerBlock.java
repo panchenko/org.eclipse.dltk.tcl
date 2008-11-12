@@ -11,8 +11,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,12 +76,12 @@ public class TclActiveStateDebuggerBlock extends
 		final String[] names = new String[errorActions.length + 1];
 		names[0] = PreferenceMessages.instrumentation_errorAction_default_caption;
 		for (int i = 0; i < errorActions.length; ++i) {
-			names[i + 1] = errorActions[i].getValue();
+			names[i + 1] = errorActions[i].getCaption();
 		}
 		return names;
 	}
 
-	private Button[] instrumentationButtons;
+	private List<Button> instrumentationButtons;
 	private Combo errorActionCombo;
 	private InstrumentationPatternList includes;
 	private InstrumentationPatternList excludes;
@@ -99,21 +101,60 @@ public class TclActiveStateDebuggerBlock extends
 		Group options = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_options, 2, 1,
 				GridData.FILL_HORIZONTAL);
-		((GridLayout) options.getLayout()).makeColumnsEqualWidth = true;
-		SWTFactory.createLabel(options,
+		final GridLayout optionsLayout = (GridLayout) options.getLayout();
+		optionsLayout.marginHeight = 0;
+		optionsLayout.makeColumnsEqualWidth = true;
+		// error action
+		Composite compositeErrorAction = SWTFactory.createComposite(options,
+				options.getFont(), 2, 2, 0);
+		final GridLayout errorActionLayout = (GridLayout) compositeErrorAction
+				.getLayout();
+		errorActionLayout.marginHeight = 0;
+		errorActionLayout.marginWidth = 0;
+		SWTFactory.createLabel(compositeErrorAction,
 				PreferenceMessages.instrumentation_errorAction_label, 1);
-		errorActionCombo = SWTFactory.createCombo(options, SWT.READ_ONLY, 1,
-				createErrorActionItems());
-		InstrumentationFeature[] features = InstrumentationFeature.values();
-		instrumentationButtons = new Button[features.length];
-		for (int i = 0; i < features.length; ++i) {
-			instrumentationButtons[i] = SWTFactory.createCheckButton(options,
-					features[i].getCaption());
-		}
-
-		// TODO Auto-generated method stub
+		errorActionCombo = SWTFactory.createCombo(compositeErrorAction,
+				SWT.READ_ONLY, 1, createErrorActionItems());
+		List<InstrumentationFeature> left = new ArrayList<InstrumentationFeature>();
+		left.add(InstrumentationFeature.DYNPROC);
+		left.add(InstrumentationFeature.AUTOLOAD);
+		final List<InstrumentationFeature> right = new ArrayList<InstrumentationFeature>(
+				Arrays.asList(InstrumentationFeature.values()));
+		right.removeAll(left);
+		instrumentationButtons = new ArrayList<Button>(left.size()
+				+ right.size());
+		createButtons(instrumentationButtons, left, SWTFactory.createComposite(
+				options, options.getFont(), 1, 1,
+				GridData.VERTICAL_ALIGN_BEGINNING | GridData.FILL_HORIZONTAL));
+		createButtons(instrumentationButtons, right, SWTFactory
+				.createComposite(options, options.getFont(), 1, 1,
+						GridData.FILL_HORIZONTAL));
 		return composite;
 	}
+
+	/**
+	 * @param buttons
+	 * @param left
+	 * @param leftOptions
+	 */
+	private void createButtons(List<Button> buttons,
+			List<InstrumentationFeature> features, Composite parent) {
+		final GridLayout layout = (GridLayout) parent.getLayout();
+		layout.marginHeight = 0;
+		layout.verticalSpacing = 2;
+		layout.marginBottom = 5;
+		layout.marginWidth = 0;
+		for (InstrumentationFeature feature : features) {
+			final Button button = SWTFactory.createCheckButton(parent, feature
+					.getCaption());
+			button.setData(FEATURE_KEY, feature);
+			buttons.add(button);
+		}
+	}
+
+	private static final String FEATURE_KEY = TclActiveStateDebuggerPreferencePage.class
+			.getName()
+			+ "#FEATURE"; //$NON-NLS-1$
 
 	@Override
 	protected void initialize() {
@@ -126,10 +167,10 @@ public class TclActiveStateDebuggerBlock extends
 		// instrumentation features
 		Set<InstrumentationFeature> result = InstrumentationFeature
 				.decode(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_FEATURES));
-		InstrumentationFeature[] features = InstrumentationFeature.values();
-		for (int i = 0; i < features.length; ++i) {
-			instrumentationButtons[i]
-					.setSelection(result.contains(features[i]));
+		for (final Button button : instrumentationButtons) {
+			InstrumentationFeature feature = (InstrumentationFeature) button
+					.getData(FEATURE_KEY);
+			button.setSelection(result.contains(feature));
 		}
 		// error action
 		final ErrorAction errorAction = ErrorAction
@@ -179,10 +220,11 @@ public class TclActiveStateDebuggerBlock extends
 				excludes.getValue());
 		// Instrumentation features
 		Set<InstrumentationFeature> selectedFeatures = new HashSet<InstrumentationFeature>();
-		InstrumentationFeature[] features = InstrumentationFeature.values();
-		for (int i = 0; i < features.length; ++i) {
-			if (instrumentationButtons[i].getSelection()) {
-				selectedFeatures.add(features[i]);
+		for (final Button button : instrumentationButtons) {
+			final InstrumentationFeature feature = (InstrumentationFeature) button
+					.getData(FEATURE_KEY);
+			if (button.getSelection()) {
+				selectedFeatures.add(feature);
 			}
 		}
 		setString(

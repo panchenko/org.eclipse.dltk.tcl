@@ -15,6 +15,9 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.activestatedebugger.messages"; //$NON-NLS-1$
+	public static String ErrorAction_stopAlways;
+	public static String ErrorAction_stopNever;
+	public static String ErrorAction_stopUncaught;
 	public static String instrumentation_autoload_caption;
 	public static String instrumentation_dynproc_caption;
 	public static String instrumentation_expect_caption;
