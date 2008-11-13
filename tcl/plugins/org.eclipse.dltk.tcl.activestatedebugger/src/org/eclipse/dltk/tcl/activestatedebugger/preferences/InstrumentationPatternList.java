@@ -11,20 +11,29 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import org.eclipse.dltk.compiler.util.Util;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.SelectionDialog.SelectionDialogInput;
 import org.eclipse.dltk.ui.util.PixelConverter;
-import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.window.Window;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -38,8 +47,41 @@ import org.eclipse.swt.widgets.Label;
 
 public class InstrumentationPatternList {
 
-	private ListViewer fList;
-	private final String title;
+	private static class InstrumentPatternContentProvider implements
+			ITreeContentProvider {
+
+		public Object[] getChildren(Object parentElement) {
+			return new Object[0];
+		}
+
+		public Object getParent(Object element) {
+			return null;
+		}
+
+		public boolean hasChildren(Object element) {
+			return false;
+		}
+
+		public Object[] getElements(Object inputElement) {
+			if (inputElement instanceof List) {
+				return ((List<?>) inputElement).toArray();
+			}
+			return new Object[0];
+		}
+
+		public void dispose() {
+			// empty
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			// empty
+		}
+
+	}
+
+	private final IProject parentProject;
+	private CheckboxTableViewer fList;
+
 	private Button fAddButton;
 	private Button fRemoveButton;
 
@@ -47,9 +89,9 @@ public class InstrumentationPatternList {
 	 * @param parent
 	 * @param string
 	 */
-	public InstrumentationPatternList(Composite parent, String title,
+	public InstrumentationPatternList(IProject parentProject, Composite parent,
 			String message) {
-		this.title = title;
+		this.parentProject = parentProject;
 		createControl(parent, message);
 	}
 
@@ -64,17 +106,41 @@ public class InstrumentationPatternList {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		comp.setLayoutData(gd);
 
-		Label messageLabel = new Label(comp, SWT.NONE);
+		Label messageLabel = new Label(comp, SWT.WRAP);
 		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING
-				| GridData.HORIZONTAL_ALIGN_FILL);
+		// | GridData.HORIZONTAL_ALIGN_FILL
+		);
 		gd.horizontalSpan = 2;
 		messageLabel.setText(message);
 		messageLabel.setLayoutData(gd);
 
-		fList = new ListViewer(comp);
+		fList = CheckboxTableViewer.newCheckList(comp, SWT.TOP | SWT.BORDER
+				| SWT.MULTI);
+		fList.setContentProvider(new InstrumentPatternContentProvider());
+		fList.setLabelProvider(new InstrumentationPatternLabelProvider());
+		fList.setComparator(new InstrumentationPatternComparator());
+		fList.setInput(new ArrayList<Pattern>());
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 6;
 		fList.getControl().setLayoutData(gd);
+		fList.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				InstrumentationPatternList.this.selectionChanged(event
+						.getSelection());
+			}
+
+		});
+		fList.addCheckStateListener(new ICheckStateListener() {
+
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				if (event.getElement() instanceof Pattern) {
+					((Pattern) event.getElement()).setInclude(event
+							.getChecked());
+				}
+			}
+
+		});
 		Composite pathButtonComp = new Composite(comp, SWT.NONE);
 		GridLayout pathButtonLayout = new GridLayout();
 		pathButtonLayout.marginHeight = 0;
@@ -88,44 +154,89 @@ public class InstrumentationPatternList {
 				PreferenceMessages.instrumentation_pattern_AddButton);
 		fAddButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				IInputValidator validator = new IInputValidator() {
-					public String isValid(String newText) {
-						newText = newText.trim();
-						if (newText.length() == 0) {
-							return PreferenceMessages.instrumentation_emptyPatternMessage;
-						}
-						if (newText.indexOf(File.pathSeparator) >= 0) {
-							return NLS
-									.bind(
-											PreferenceMessages.instrumentation_pathSeparatorInPatten,
-											String.valueOf(File.pathSeparator));
-						}
-						return null;
-					}
-				};
-				InputDialog dlg = new InputDialog(
-						parent.getShell(),
-						PreferenceMessages.instrumentation_patternDialogTitle,
-						title
-								+ PreferenceMessages.instrumentation_patternDialogPromptSuffix,
-						Util.EMPTY_STRING, validator);
-				if (dlg.open() == Window.OK) {
-					fList.add(dlg.getValue());
-				}
+				onAdd();
 			}
 		});
 		fRemoveButton = createPushButton(pathButtonComp,
 				PreferenceMessages.instrumentation_pattern_RemoveButton);
 		fRemoveButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				ISelection s = fList.getSelection();
+				final ISelection s = fList.getSelection();
 				if (s instanceof IStructuredSelection) {
 					IStructuredSelection sel = (IStructuredSelection) s;
-					fList.remove(sel.toArray());
+					@SuppressWarnings("unchecked")
+					final List<Pattern> model = (List<Pattern>) fList
+							.getInput();
+					for (Object item : sel.toArray()) {
+						model.remove(item);
+					}
+					fList.refresh();
 				}
 			}
 		});
+		selectionChanged(fList.getSelection());
 		return comp;
+	}
+
+	protected void selectionChanged(ISelection selection) {
+		fRemoveButton.setEnabled(!selection.isEmpty());
+	}
+
+	protected void onAdd() {
+		if (parentProject == null) {
+			return;
+		}
+		@SuppressWarnings("unchecked")
+		final List<Pattern> model = (List<Pattern>) fList.getInput();
+		final Set<String> resourcePaths = new HashSet<String>();
+		final Set<String> externalPaths = new HashSet<String>();
+		for (Pattern pattern : model) {
+			if (pattern instanceof WorkspacePattern) {
+				resourcePaths.add(pattern.getPath());
+			} else if (pattern instanceof ExternalPattern) {
+				externalPaths.add(pattern.getPath());
+			}
+		}
+		SelectionDialog dialog = new SelectionDialog(fList.getControl()
+				.getShell());
+		dialog.setInput(new SelectionDialogInput(parentProject));
+		// TODO dialog.setExisting(new Object[0]);
+		dialog.open();
+		final Object[] result = dialog.getResult();
+		if (result != null) {
+			for (Object item : result) {
+				if (item instanceof IResource) {
+					final String path = ((IResource) item).getFullPath()
+							.toString();
+					if (resourcePaths.add(path)) {
+						final WorkspacePattern pattern = PreferencesFactory.eINSTANCE
+								.createWorkspacePattern();
+						pattern.setInclude(true);
+						pattern.setPath(path);
+						model.add(pattern);
+						fList.refresh();
+						fList.setChecked(pattern, pattern.isInclude());
+					}
+				} else if (item instanceof IModelElement) {
+					final IModelElement me = (IModelElement) item;
+					final IProjectFragment fragment = (IProjectFragment) me
+							.getAncestor(IModelElement.PROJECT_FRAGMENT);
+					if (fragment.isExternal()) {
+						final String path = EnvironmentPathUtils.getLocalPath(
+								me.getPath()).toString();
+						if (externalPaths.add(path)) {
+							final ExternalPattern pattern = PreferencesFactory.eINSTANCE
+									.createExternalPattern();
+							pattern.setInclude(true);
+							pattern.setPath(path);
+							model.add(pattern);
+							fList.refresh();
+							fList.setChecked(pattern, pattern.isInclude());
+						}
+					}
+				}
+			}
+		}
 	}
 
 	protected Button createPushButton(Composite parent, String label) {
@@ -153,30 +264,23 @@ public class InstrumentationPatternList {
 				true).x);
 	}
 
-	private String[] getEntries() {
-		return fList.getList().getItems();
-	}
-
-	private void setEntries(String items[]) {
-		fList.remove(fList.getList().getItems());
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].trim().length() > 0)
-				fList.add(items[i]);
-		}
-	}
-
 	/**
-	 * @param string
+	 * @param value
 	 */
-	public void setInput(String string) {
-		setEntries(TextUtils.split(string, File.pathSeparatorChar));
+	public void setValue(String value) {
+		List<Pattern> model = PatternListIO.decode(value);
+		fList.setInput(model);
+		for (Pattern pattern : model) {
+			fList.setChecked(pattern, pattern.isInclude());
+		}
 	}
 
 	/**
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public String getValue() {
-		return TextUtils.join(getEntries(), File.pathSeparatorChar);
+		return PatternListIO.encode((List<Pattern>) fList.getInput());
 	}
 
 }

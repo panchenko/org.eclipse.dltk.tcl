@@ -23,8 +23,7 @@ public final class TclActiveStateDebuggerConstants {
 	public static final String INSTRUMENTATION_FEATURES = "instrumentationFeatures"; //$NON-NLS-1$
 	public static final String INSTRUMENTATION_ERROR_ACTION = "instrumentationErrorAction"; //$NON-NLS-1$
 
-	public static final String INSTRUMENTATION_INCLUDE = "instrumentationInclude"; //$NON-NLS-1$
-	public static final String INSTRUMENTATION_EXCLUDE = "instrumentationExclude"; //$NON-NLS-1$
+	public static final String INSTRUMENTATION_PATTERNS = "instrumentationPatterns"; //$NON-NLS-1$
 
 	public static void initalizeDefaults(IPreferenceStore store) {
 		store.setDefault(DEBUGGING_ENGINE_PATH_KEY, Util.EMPTY_STRING);
@@ -33,8 +32,7 @@ public final class TclActiveStateDebuggerConstants {
 		store.setDefault(INSTRUMENTATION_FEATURES, InstrumentationFeature.ITCL
 				.name());
 		store.setDefault(INSTRUMENTATION_ERROR_ACTION, Util.EMPTY_STRING);
-		store.setDefault(INSTRUMENTATION_INCLUDE, Util.EMPTY_STRING);
-		store.setDefault(INSTRUMENTATION_EXCLUDE, Util.EMPTY_STRING);
+		store.setDefault(INSTRUMENTATION_PATTERNS, Util.EMPTY_STRING);
 	}
 
 	private TclActiveStateDebuggerConstants() {

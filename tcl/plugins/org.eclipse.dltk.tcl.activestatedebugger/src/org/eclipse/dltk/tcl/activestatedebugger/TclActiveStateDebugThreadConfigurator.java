@@ -11,29 +11,44 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.activestatedebugger;
 
-import java.io.File;
+import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IPreferencesLookupDelegate;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.dbgp.IDbgpFeature;
 import org.eclipse.dltk.dbgp.exceptions.DbgpException;
 import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
 import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
-import org.eclipse.dltk.utils.TextUtils;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern;
 
 public class TclActiveStateDebugThreadConfigurator implements
 		IScriptDebugThreadConfigurator {
 	private boolean initialized = false;
 
-	private IPreferencesLookupDelegate delegate;
+	private final IScriptProject project;
+	private final IPreferencesLookupDelegate delegate;
 
 	/**
+	 * @param project
 	 * @param delegate
 	 */
-	public TclActiveStateDebugThreadConfigurator(
+	public TclActiveStateDebugThreadConfigurator(IScriptProject project,
 			IPreferencesLookupDelegate delegate) {
+		this.project = project;
 		this.delegate = delegate;
 	}
 
@@ -68,23 +83,65 @@ public class TclActiveStateDebugThreadConfigurator implements
 		if (errorAction != null) {
 			commands.setErrorAction(errorAction);
 		}
-		final String[] includes = TextUtils
-				.split(
-						getString(TclActiveStateDebuggerConstants.INSTRUMENTATION_INCLUDE),
-						File.pathSeparatorChar);
-		if (includes != null && includes.length > 0) {
-			for (String pattern : includes) {
-				commands.instrumentInclude(pattern);
+		IEnvironment environment = EnvironmentManager.getEnvironment(project);
+		final List<Pattern> patterns = PatternListIO
+				.decode(getString(TclActiveStateDebuggerConstants.INSTRUMENTATION_PATTERNS));
+		if (!patterns.isEmpty()) {
+			for (Pattern pattern : patterns) {
+				if (pattern instanceof WorkspacePattern) {
+					String[] stringPatterns = resolveWorkspacePattern(
+							environment, (WorkspacePattern) pattern);
+					if (pattern.isInclude()) {
+						commands.instrumentInclude(stringPatterns);
+					} else {
+						commands.instrumentExclude(stringPatterns);
+					}
+				} else if (pattern instanceof ExternalPattern) {
+					String[] stringPatterns = resolveExternalPattern(
+							environment, (ExternalPattern) pattern);
+					if (pattern.isInclude()) {
+						commands.instrumentInclude(stringPatterns);
+					} else {
+						commands.instrumentExclude(stringPatterns);
+					}
+				}
 			}
 		}
-		final String[] excludes = TextUtils
-				.split(
-						getString(TclActiveStateDebuggerConstants.INSTRUMENTATION_EXCLUDE),
-						File.pathSeparatorChar);
-		if (excludes != null && excludes.length > 0) {
-			for (String pattern : excludes) {
-				commands.instrumentExclude(pattern);
-			}
+	}
+
+	/**
+	 * @param environment
+	 * @param pattern
+	 * @return
+	 */
+	private String[] resolveExternalPattern(IEnvironment environment,
+			ExternalPattern pattern) {
+		return resolveFileHandle(environment
+				.getFile(new Path(pattern.getPath())));
+	}
+
+	/**
+	 * @param pattern
+	 * @return
+	 */
+	private String[] resolveWorkspacePattern(IEnvironment environment,
+			WorkspacePattern pattern) {
+		final IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(new Path(pattern.getPath()));
+		if (resource != null) {
+			final URI uri = resource.getLocationURI();
+			final IFileHandle file = environment.getFile(uri);
+			return resolveFileHandle(file);
+		}
+		return CharOperation.NO_STRINGS;
+	}
+
+	private String[] resolveFileHandle(final IFileHandle file) {
+		if (file != null) {
+			final String path = new Path(file.toOSString()).toString();
+			return new String[] { !file.isDirectory() ? path : path + "/*" }; //$NON-NLS-1$
+		} else {
+			return CharOperation.NO_STRINGS;
 		}
 	}
 

@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -193,8 +194,8 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	protected IScriptDebugThreadConfigurator createThreadConfigurator(
 			ILaunchConfiguration configuration) {
 		IProject project = LaunchConfigurationUtils.getProject(configuration);
-		return new TclActiveStateDebugThreadConfigurator(
-				new PreferencesLookupDelegate(project));
+		return new TclActiveStateDebugThreadConfigurator(DLTKCore
+				.create(project), new PreferencesLookupDelegate(project));
 	}
 
 	protected void abort(String message, Throwable exception, int code)

@@ -46,13 +46,9 @@ public class TclActiveStateDebuggerPreferencePage extends
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.INSTRUMENTATION_ERROR_ACTION);
 
-	static final PreferenceKey INSTRUMENTATION_INCLUDE = new PreferenceKey(
+	static final PreferenceKey INSTRUMENTATION_PATTERNS = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
-			TclActiveStateDebuggerConstants.INSTRUMENTATION_INCLUDE);
-
-	static final PreferenceKey INSTRUMENTATION_EXCLUDE = new PreferenceKey(
-			TclActiveStateDebuggerPlugin.PLUGIN_ID,
-			TclActiveStateDebuggerConstants.INSTRUMENTATION_EXCLUDE);
+			TclActiveStateDebuggerConstants.INSTRUMENTATION_PATTERNS);
 
 	private static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug.activestatedebugger"; //$NON-NLS-1$
 	private static final String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug.engines.activestatedebugger"; //$NON-NLS-1$
@@ -62,8 +58,7 @@ public class TclActiveStateDebuggerPreferencePage extends
 			IWorkbenchPreferenceContainer container) {
 		final PreferenceKey[] keys = new PreferenceKey[] { ENGINE_PATH,
 				PDX_PATH, LOG_FILE_NAME, INSTRUMENTATION_FEATURES,
-				INSTRUMENTATION_ERROR_ACTION, INSTRUMENTATION_INCLUDE,
-				INSTRUMENTATION_EXCLUDE };
+				INSTRUMENTATION_ERROR_ACTION, INSTRUMENTATION_PATTERNS };
 		return new TclActiveStateDebuggerBlock(newStatusChangedListener,
 				project, keys, container);
 	}

@@ -55,4 +55,24 @@ public class ActiveStateInstrumentCommands extends DbgpBaseCommands {
 		request.addOption(FILE_OPTION, pattern);
 		communicate(request);
 	}
+
+	/**
+	 * @param patterns
+	 * @throws DbgpException
+	 */
+	public void instrumentInclude(String[] patterns) throws DbgpException {
+		for (String pattern : patterns) {
+			instrumentInclude(pattern);
+		}
+	}
+
+	/**
+	 * @param patterns
+	 * @throws DbgpException
+	 */
+	public void instrumentExclude(String[] patterns) throws DbgpException {
+		for (String pattern : patterns) {
+			instrumentExclude(pattern);
+		}
+	}
 }

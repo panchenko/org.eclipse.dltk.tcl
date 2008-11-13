@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2008 xored software, Inc.  &#xD;&#xA;&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html  &#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    xored software, Inc. - initial API and Implementation (Alex Panchenko)&#xD;&#xA;"
+    modelDirectory="/org.eclipse.dltk.tcl.activestatedebugger/gensrc" modelPluginID="org.eclipse.dltk.tcl.activestatedebugger"
+    templateDirectory="" redirection="" modelName="Activestatedebugger" modelPluginClass=""
+    nonNLSMarkers="true" rootImplementsInterface="" booleanFlagsField="" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false" publicConstructors="true" language="">
+  <foreignModel>activestatedebugger.ecore</foreignModel>
+  <genPackages prefix="Preferences" basePackage="org.eclipse.dltk.tcl.activestatedebugger"
+      disposableProviderFactory="true" contentTypeIdentifier="" ecorePackage="activestatedebugger.ecore#/">
+    <genClasses ecoreClass="activestatedebugger.ecore#//Pattern">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute activestatedebugger.ecore#//Pattern/include"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute activestatedebugger.ecore#//Pattern/path"/>
+    </genClasses>
+    <genClasses ecoreClass="activestatedebugger.ecore#//WorkspacePattern"/>
+    <genClasses ecoreClass="activestatedebugger.ecore#//ExternalPattern"/>
+  </genPackages>
+</genmodel:GenModel>

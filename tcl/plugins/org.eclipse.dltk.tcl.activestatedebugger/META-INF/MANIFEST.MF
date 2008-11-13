@@ -7,13 +7,15 @@ Bundle-Activator: org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebugge
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
- org.eclipse.ui.browser,
  org.eclipse.core.runtime,
+ org.eclipse.debug.core,
+ org.eclipse.ui.browser,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
  org.eclipse.dltk.core,
  org.eclipse.dltk.launching,
  org.eclipse.dltk.ui,
  org.eclipse.dltk.debug.ui,
- org.eclipse.debug.core,
  org.eclipse.dltk.tcl.debug,
  org.eclipse.dltk.debug,
  org.eclipse.dltk.tcl.core
@@ -21,3 +23,4 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.dltk.tcl.activestatedebugger,
  org.eclipse.dltk.tcl.activestatedebugger.preferences
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy

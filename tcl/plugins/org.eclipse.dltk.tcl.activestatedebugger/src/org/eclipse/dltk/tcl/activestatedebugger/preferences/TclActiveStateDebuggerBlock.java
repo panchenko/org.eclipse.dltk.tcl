@@ -83,21 +83,16 @@ public class TclActiveStateDebuggerBlock extends
 
 	private List<Button> instrumentationButtons;
 	private Combo errorActionCombo;
-	private InstrumentationPatternList includes;
-	private InstrumentationPatternList excludes;
+	private InstrumentationPatternList patterns;
 
 	private Control createInstrumentationPage(Composite parent) {
 		final Composite composite = SWTFactory.createComposite(parent, parent
 				.getFont(), 1, 1, GridData.FILL);
-		Group patterns = SWTFactory.createGroup(composite,
+		Group groupPatterns = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_patternsGroup, 1, 1,
 				GridData.FILL_BOTH);
-		includes = new InstrumentationPatternList(patterns,
-				PreferenceMessages.instrumentation_patterns_includeTitle,
-				PreferenceMessages.instrumentation_patterns_includeMessage);
-		excludes = new InstrumentationPatternList(patterns,
-				PreferenceMessages.instrumentation_patterns_excludeTitle,
-				PreferenceMessages.instrumentation_patterns_excludeMessage);
+		patterns = new InstrumentationPatternList(fProject, groupPatterns,
+				PreferenceMessages.instrumentation_patterns_message);
 		Group options = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_options, 2, 1,
 				GridData.FILL_HORIZONTAL);
@@ -160,10 +155,8 @@ public class TclActiveStateDebuggerBlock extends
 	protected void initialize() {
 		super.initialize();
 		// patterns
-		includes
-				.setInput(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_INCLUDE));
-		excludes
-				.setInput(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_EXCLUDE));
+		patterns
+				.setValue(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS));
 		// instrumentation features
 		Set<InstrumentationFeature> result = InstrumentationFeature
 				.decode(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_FEATURES));
@@ -214,10 +207,9 @@ public class TclActiveStateDebuggerBlock extends
 		setString(TclActiveStateDebuggerPreferencePage.PDX_PATH,
 				pdxPathKeyValue);
 		// patterns
-		setString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_INCLUDE,
-				includes.getValue());
-		setString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_EXCLUDE,
-				excludes.getValue());
+		setString(
+				TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS,
+				patterns.getValue());
 		// Instrumentation features
 		Set<InstrumentationFeature> selectedFeatures = new HashSet<InstrumentationFeature>();
 		for (final Button button : instrumentationButtons) {
