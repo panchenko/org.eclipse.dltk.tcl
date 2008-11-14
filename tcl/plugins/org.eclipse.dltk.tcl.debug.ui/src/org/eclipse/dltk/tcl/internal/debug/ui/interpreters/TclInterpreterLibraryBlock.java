@@ -13,8 +13,6 @@ import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibrar
 import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialog;
 import org.eclipse.dltk.internal.debug.ui.interpreters.LibraryContentProvider;
 import org.eclipse.dltk.internal.debug.ui.interpreters.LibraryLabelProvider;
-import org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPlugin;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 
 /**
@@ -28,25 +26,22 @@ public class TclInterpreterLibraryBlock extends AbstractInterpreterLibraryBlock 
 
 	protected IBaseLabelProvider getLabelProvider() {
 		return new LibraryLabelProvider();
-//		return new TclLibraryLabelProvider();
-	}
-
-	protected IDialogSettings getDialogSettions() {
-		return TclDebugUIPlugin.getDefault().getDialogSettings();
+		// return new TclLibraryLabelProvider();
 	}
 
 	protected LibraryContentProvider createLibraryContentProvider() {
 		return new LibraryContentProvider();
-//		return new TclLibraryContentProvider();
+		// return new TclLibraryContentProvider();
 	}
 
-//	protected TreeViewer createViewer(Composite comp) {
-//		return new TreeViewer(comp);
-//	}
+	// protected TreeViewer createViewer(Composite comp) {
+	// return new TreeViewer(comp);
+	// }
 
 	protected boolean isEnableButtonSupported() {
 		return false;
 	}
+
 	protected boolean isDefaultLocations() {
 		return false;
 	}
