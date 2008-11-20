@@ -52,7 +52,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.dltk.ui.tests.swtbot"
+         id="org.eclipse.dltk.tcl.ui.tests.swtbot"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
