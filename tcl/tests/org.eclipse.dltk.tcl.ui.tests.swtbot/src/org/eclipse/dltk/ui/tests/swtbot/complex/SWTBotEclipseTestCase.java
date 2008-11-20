@@ -29,6 +29,7 @@ public class SWTBotEclipseTestCase extends TestCase {
 
 	@Override
 	public void runBare() throws Throwable {
+		System.out.println("Running swtbot test:" + getName());
 		final Throwable[] exceptions = new Throwable[1];
 		Thread t = new Thread() {
 			@Override
@@ -41,11 +42,16 @@ public class SWTBotEclipseTestCase extends TestCase {
 			}
 		};
 		t.start();
+		long start = System.currentTimeMillis();
 		try {
 			while (t.isAlive() && !Display.getDefault().isDisposed()) {
 				Display.getDefault().readAndDispatch();
 				if (exceptions[0] != null)
 					throw exceptions[0];
+				long cur = System.currentTimeMillis();
+				if (cur - start > 1000) {
+					throw new RuntimeException("Timeout in test");
+				}
 			}
 		} catch (Throwable tt) {
 			// tt.printStackTrace();
