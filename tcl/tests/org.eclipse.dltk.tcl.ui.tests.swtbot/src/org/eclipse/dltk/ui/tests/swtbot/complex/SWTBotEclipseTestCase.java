@@ -39,7 +39,6 @@ public class SWTBotEclipseTestCase extends TestCase {
 					exceptions[0] = e;
 				}
 			}
-
 		};
 		t.start();
 		while (t.isAlive()) {
