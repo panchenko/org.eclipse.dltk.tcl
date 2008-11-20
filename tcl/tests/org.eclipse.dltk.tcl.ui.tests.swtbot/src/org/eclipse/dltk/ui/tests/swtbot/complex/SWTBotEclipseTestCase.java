@@ -41,10 +41,14 @@ public class SWTBotEclipseTestCase extends TestCase {
 			}
 		};
 		t.start();
-		while (t.isAlive()) {
-			Display.getDefault().readAndDispatch();
-			if (exceptions[0] != null)
-				throw exceptions[0];
+		try {
+			while (t.isAlive() && !Display.getDefault().isDisposed()) {
+				Display.getDefault().readAndDispatch();
+				if (exceptions[0] != null)
+					throw exceptions[0];
+			}
+		} catch (Throwable tt) {
+			// tt.printStackTrace();
 		}
 	}
 
