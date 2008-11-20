@@ -24,7 +24,7 @@ public class EditorTests extends SWTBotEclipseTestCase {
 
 	static {
 		String value = Platform
-				.getDebugOption("org.eclipse.dltk.ui.tests.swtbot/Editor");
+				.getDebugOption("org.eclipse.dltk.tcl.ui.tests.swtbot/Editor");
 		DEBUG = Boolean.valueOf(value).booleanValue();
 	}
 

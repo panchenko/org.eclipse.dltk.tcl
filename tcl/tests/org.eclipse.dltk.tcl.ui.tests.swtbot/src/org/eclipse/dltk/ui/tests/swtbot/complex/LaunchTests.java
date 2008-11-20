@@ -38,7 +38,7 @@ public class LaunchTests extends SWTBotEclipseTestCase {
 	private static boolean DEBUG;
 	static {
 		String value = Platform
-				.getDebugOption("org.eclipse.dltk.ui.tests.swtbot/Launch");
+				.getDebugOption("org.eclipse.dltk.tcl.ui.tests.swtbot/Launch");
 		DEBUG = Boolean.valueOf(value).booleanValue();
 	}
 

@@ -29,7 +29,7 @@ public class InterpreterTests extends SWTBotEclipseTestCase {
 
 	static {
 		String value = Platform
-				.getDebugOption("org.eclipse.dltk.ui.tests.swtbot/Interpreter");
+				.getDebugOption("org.eclipse.dltk.tcl.ui.tests.swtbot/Interpreter");
 		DEBUG = Boolean.valueOf(value).booleanValue();
 	}
 

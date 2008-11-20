@@ -25,7 +25,7 @@ public class ProjectContentTests extends SuiteOfTestCases {
 
 	static {
 		String value = Platform
-				.getDebugOption("org.eclipse.dltk.ui.tests.swtbot/ProjectContent");
+				.getDebugOption("org.eclipse.dltk.tcl.ui.tests.swtbot/ProjectContent");
 		DEBUG = Boolean.valueOf(value).booleanValue();
 	}
 
