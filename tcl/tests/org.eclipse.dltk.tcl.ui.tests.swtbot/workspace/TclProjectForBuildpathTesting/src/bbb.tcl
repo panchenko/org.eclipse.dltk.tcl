@@ -1,0 +1,3 @@
+proc bbb {} {
+	aaa
+}
