@@ -50,6 +50,8 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 		DltkTestsHelper.debug(getName() + " starting...");
 		super.setUp();
 		helper.setUpSuite();
+		// Close welcome page.
+		closeWelcome();
 		DltkTestsHelper.debug(getName() + " started");
 	}
 

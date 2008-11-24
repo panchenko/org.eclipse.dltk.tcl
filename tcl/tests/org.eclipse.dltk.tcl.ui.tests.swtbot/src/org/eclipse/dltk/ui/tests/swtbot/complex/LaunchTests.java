@@ -83,6 +83,8 @@ public class LaunchTests extends SWTBotEclipseTestCase {
 		DltkTestsHelper.debug(getName() + " starting...");
 		super.setUp();
 		helper.setUpSuite();
+		// Close welcome page.
+		closeWelcome();
 		helper.openTclPerspective();
 		helper.initOnlyDefInterpreter();
 		project = helper.setUpScriptProject(PROJECT_NAME);

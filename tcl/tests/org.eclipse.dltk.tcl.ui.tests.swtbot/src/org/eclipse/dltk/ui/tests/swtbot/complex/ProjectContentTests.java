@@ -74,6 +74,8 @@ public class ProjectContentTests extends SuiteOfTestCases {
 		DltkTestsHelper.debug(getName() + " starting...");
 		super.setUp();
 		helper.setUpSuite();
+		// Close welcome page.
+		closeWelcome();
 		helper.openTclPerspective();
 		project = helper.setUpScriptProject(PROJECT_NAME);
 		altProjectName = null;

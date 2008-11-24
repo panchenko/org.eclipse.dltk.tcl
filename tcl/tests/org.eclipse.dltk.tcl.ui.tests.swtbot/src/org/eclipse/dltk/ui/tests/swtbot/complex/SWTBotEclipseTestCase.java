@@ -11,10 +11,16 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.tests.swtbot.complex;
 
+import java.util.ConcurrentModificationException;
+
 import junit.framework.TestCase;
 import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 public class SWTBotEclipseTestCase extends TestCase {
 	protected SWTEclipseBot bot = new SWTEclipseBot();
@@ -38,27 +44,55 @@ public class SWTBotEclipseTestCase extends TestCase {
 					superRunBare();
 				} catch (Throwable e) {
 					exceptions[0] = e;
+					System.out.println("Exception catched:" + e.getMessage());
 				}
 			}
 		};
 		t.start();
 		long start = System.currentTimeMillis();
-		try {
-			while (t.isAlive() && !Display.getDefault().isDisposed()) {
-				Display.getDefault().readAndDispatch();
-				if (exceptions[0] != null)
-					throw exceptions[0];
-				long cur = System.currentTimeMillis();
-				if (cur - start > 1000) {
-					throw new RuntimeException("Timeout in test");
+		// try {
+		Display def = Display.getDefault();
+		while (t.isAlive() && !def.isDisposed()) {
+			try {
+				if (def.readAndDispatch()) {
+					def.sleep();
 				}
+			} catch (ConcurrentModificationException e) {
+				e.printStackTrace();
 			}
-		} catch (Throwable tt) {
-			// tt.printStackTrace();
+
+			if (exceptions[0] != null)
+				throw exceptions[0];
+			long cur = System.currentTimeMillis();
+			if (cur - start > 600000) {
+				throw new RuntimeException("Timeout in test");
+			}
 		}
+		// } catch (Throwable tt) {
+		// // tt.printStackTrace();
+		// }
 	}
 
 	public void superRunBare() throws Throwable {
 		super.runBare();
+	}
+
+	public static void closeWelcome() {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
+				IViewReference[] references = page.getViewReferences();
+				for (int i = 0; i < references.length; i++) {
+					if ("org.eclipse.ui.internal.introview"
+							.equals(references[i].getId())) {
+						IWorkbenchPart part = references[i].getPart(false);
+						if (part != null) {
+							part.dispose();
+						}
+					}
+				}
+			}
+		});
 	}
 }

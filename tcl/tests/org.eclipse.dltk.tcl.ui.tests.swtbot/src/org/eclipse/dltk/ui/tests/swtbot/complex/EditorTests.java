@@ -74,6 +74,8 @@ public class EditorTests extends SWTBotEclipseTestCase {
 		DltkTestsHelper.debug(getName() + " starting...");
 		super.setUp();
 		helper.setUpSuite();
+		// Close welcome page.
+		closeWelcome();
 		helper.openTclPerspective();
 		helper.setUpScriptProject(PROJECT_NAME);
 		DltkTestsHelper.debug(getName() + " started");

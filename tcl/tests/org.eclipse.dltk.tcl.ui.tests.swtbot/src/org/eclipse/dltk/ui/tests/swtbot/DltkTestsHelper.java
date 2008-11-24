@@ -150,8 +150,12 @@ public class DltkTestsHelper extends AbstractModelTests {
 			SWTBotShell[] shells = bot.shells();
 			for (int index = shells.length - 1; index > 0; index--) {
 				debug("Test finished but exist opened window. Try to close this window...");
-				Thread.sleep(100);
-				shells[index].close();
+				System.out.println("Try to close shell:"
+						+ shells[index].getText());
+				Thread.sleep(3000);
+				if (shells[index].isOpen()) {
+					shells[index].close();
+				}
 			}
 
 			bot.waitUntil(new DefaultCondition() {

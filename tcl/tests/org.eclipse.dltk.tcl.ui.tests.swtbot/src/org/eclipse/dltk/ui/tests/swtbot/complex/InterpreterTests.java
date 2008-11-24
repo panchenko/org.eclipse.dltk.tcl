@@ -48,6 +48,8 @@ public class InterpreterTests extends SWTBotEclipseTestCase {
 		DltkTestsHelper.debug(getName() + " starting...");
 		super.setUp();
 		helper.setUpSuite();
+		// Close welcome page.
+		closeWelcome();
 		helper.openTclPerspective();
 		DltkTestsHelper.debug(getName() + " started");
 	}
