@@ -129,8 +129,8 @@ public class TclActiveStateDebuggerBlock extends
 
 	/**
 	 * @param buttons
-	 * @param left
-	 * @param leftOptions
+	 * @param features
+	 * @param parent
 	 */
 	private void createButtons(List<Button> buttons,
 			List<InstrumentationFeature> features, Composite parent) {
@@ -151,9 +151,7 @@ public class TclActiveStateDebuggerBlock extends
 			.getName()
 			+ "#FEATURE"; //$NON-NLS-1$
 
-	@Override
-	protected void initialize() {
-		super.initialize();
+	private void setValues() {
 		// patterns
 		patterns
 				.setValue(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS));
@@ -176,6 +174,18 @@ public class TclActiveStateDebuggerBlock extends
 					errorAction) + 1;
 		}
 		errorActionCombo.select(errorActionIndex);
+	}
+
+	@Override
+	protected void initialize() {
+		super.initialize();
+		setValues();
+	}
+
+	@Override
+	public void performDefaults() {
+		super.performDefaults();
+		setValues();
 	}
 
 	protected void createEngineBlock(Composite parent) {
