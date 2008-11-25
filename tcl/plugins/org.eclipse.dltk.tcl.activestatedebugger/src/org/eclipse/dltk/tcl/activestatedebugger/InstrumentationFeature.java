@@ -73,4 +73,19 @@ public enum InstrumentationFeature {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * @param features
+	 * @return
+	 */
+	public static String encode(InstrumentationFeature... features) {
+		if (features == null) {
+			return Util.EMPTY_STRING;
+		}
+		final Set<InstrumentationFeature> featureSet = new HashSet<InstrumentationFeature>();
+		for (InstrumentationFeature feature : features) {
+			featureSet.add(feature);
+		}
+		return encode(featureSet);
+	}
 }

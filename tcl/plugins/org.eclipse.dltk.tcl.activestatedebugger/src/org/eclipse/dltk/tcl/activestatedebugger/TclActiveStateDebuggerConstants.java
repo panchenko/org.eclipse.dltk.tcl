@@ -29,8 +29,11 @@ public final class TclActiveStateDebuggerConstants {
 		store.setDefault(DEBUGGING_ENGINE_PATH_KEY, Util.EMPTY_STRING);
 		store.setDefault(DEBUGGING_ENGINE_PDX_PATH_KEY, Util.EMPTY_STRING);
 		store.setDefault(LOG_FILE_NAME, Util.EMPTY_STRING);
-		store.setDefault(INSTRUMENTATION_FEATURES, InstrumentationFeature.ITCL
-				.name());
+		store.setDefault(INSTRUMENTATION_FEATURES, InstrumentationFeature
+				.encode(InstrumentationFeature.DYNPROC,
+						InstrumentationFeature.TCLX,
+						InstrumentationFeature.EXPECT,
+						InstrumentationFeature.ITCL));
 		store.setDefault(INSTRUMENTATION_ERROR_ACTION, Util.EMPTY_STRING);
 		store.setDefault(INSTRUMENTATION_PATTERNS, Util.EMPTY_STRING);
 	}
