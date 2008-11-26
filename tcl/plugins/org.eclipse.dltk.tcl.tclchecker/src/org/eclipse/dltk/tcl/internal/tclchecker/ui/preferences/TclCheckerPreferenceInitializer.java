@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
@@ -32,14 +31,16 @@ public class TclCheckerPreferenceInitializer extends
 		store.setDefault(TclCheckerConstants.PREF_MODE,
 				TclCheckerConstants.MODE_DEFAULT);
 
-		List problems = TclCheckerProblemDescription.getProblemIdentifiers();
-		Iterator it = problems.iterator();
-		while (it.hasNext()) {
-			store.setDefault((String) it.next(), false);
+		List<String> problems = TclCheckerProblemDescription
+				.getProblemIdentifiers();
+		for (String problemId : problems) {
+			store.setDefault(problemId,
+					TclCheckerConstants.PROCESS_TYPE_DEFAULT);
 		}
-		store.setDefault("warnUndefinedUpvar", TclCheckerConstants.PROCESS_TYPE_CHECK);
-		store.setDefault("warnUndefinedVar", TclCheckerConstants.PROCESS_TYPE_CHECK);
-		store.setDefault("warnUndefFunc", TclCheckerConstants.PROCESS_TYPE_CHECK);
-		store.setDefault("warnUndefProc", TclCheckerConstants.PROCESS_TYPE_CHECK);
+		final String[] checkedByDefaultProblems = { "warnUndefinedUpvar", //$NON-NLS-1$
+				"warnUndefinedVar", "warnUndefFunc", "warnUndefProc" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		for (String problemId : checkedByDefaultProblems) {
+			store.setDefault(problemId, TclCheckerConstants.PROCESS_TYPE_CHECK);
+		}
 	}
 }
