@@ -240,10 +240,10 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	private void setMessage(String group, IEnvironment env, String message,
 			int type) {
-		String pattern = PreferencesMessages.TclChecker_path_msgPattern;
-		message = MessageFormat.format(pattern, new String[] { group,
-				env.getName(), message });
-		setMessage(message, type);
+		final String formattedMessage = MessageFormat.format(
+				PreferencesMessages.TclChecker_path_msgPattern, new Object[] {
+						group, env.getName(), message });
+		setMessage(formattedMessage, type);
 	}
 
 	private void resetMessage() {
