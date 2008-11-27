@@ -87,7 +87,7 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 	 * 
 	 */
 	public void testCreateTclProject001() {
-		new ProjectOperations(bot).createPromptPerspective(PROJECT_NAME, true);
+		new ProjectOperations(bot).createPromptPerspective(PROJECT_NAME);
 		helper.assertTclProject(PROJECT_NAME);
 		helper.assertPerspective(DltkTestsHelper.TCL_PERSPECTIVE_ID);
 	}

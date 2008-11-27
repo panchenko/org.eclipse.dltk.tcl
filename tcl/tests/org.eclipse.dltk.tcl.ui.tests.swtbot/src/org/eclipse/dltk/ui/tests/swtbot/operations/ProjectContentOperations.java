@@ -145,7 +145,6 @@ public class ProjectContentOperations extends Operations {
 		try {
 			SWTBotTreeItem treeBot = navigateToProjectElement(projectName,
 					folderPath);
-			// treeBot.contextMenu(MENU_NEW).menu(MENU_NEW_SOURCE_FOLDER).click();
 			clickContextSubMenu(treeBot, MENU_NEW, MENU_NEW_SOURCE_FOLDER);
 			internalCreateSourceFolder(projectName, folderName, exclusion);
 		} catch (WidgetNotFoundException ex) {
@@ -542,7 +541,8 @@ public class ProjectContentOperations extends Operations {
 	// /////////////////////////////////////////////////////////////////////
 	private void internalCreateFolder(String project, String path, String name)
 			throws WidgetNotFoundException, TimeoutException {
-		getBot().shell(DLG_NEW_FOLDER).activate();
+		getBot().waitUntil(Conditions.shellIsActive(DLG_NEW_FOLDER));
+		SWTBotShell shell = getBot().shell(DLG_NEW_FOLDER);
 
 		SWTBotTreeItem treeBot = null;
 		if (project != null) {
@@ -557,13 +557,15 @@ public class ProjectContentOperations extends Operations {
 		SWTBotText folderName = getBot().textWithLabel("Folder name:");
 		folderName.setText(name);
 
-		waitEnableAndClick(WIZARD_FINISH);
+		getBot().button(WIZARD_FINISH).click();
+		getBot().waitUntil(Conditions.shellCloses(shell));
 	}
 
 	private void internalCreateSourceFolder(String projectName,
 			String folderPath, boolean exclusion)
 			throws WidgetNotFoundException, TimeoutException {
-		getBot().shell(DLG_NEW_SOURCE_FOLDER).activate();
+		getBot().waitUntil(Conditions.shellIsActive(DLG_NEW_SOURCE_FOLDER));
+		SWTBotShell shell = getBot().shell(DLG_NEW_SOURCE_FOLDER);
 
 		SWTBotText txtProjectName = getBot().textWithLabel("Project name:");
 		SWTBotTestCase.assertText(projectName, txtProjectName);
@@ -581,11 +583,13 @@ public class ProjectContentOperations extends Operations {
 				check.click();
 		}
 		getBot().button(WIZARD_FINISH).click();
+		getBot().waitUntil(Conditions.shellCloses(shell));
 	}
 
 	private void internalCreateFile(String project, String path, String name)
 			throws WidgetNotFoundException, TimeoutException {
-		getBot().shell(DLG_NEW_FILE).activate();
+		getBot().waitUntil(Conditions.shellIsActive(DLG_NEW_FILE));
+		SWTBotShell shell = getBot().shell(DLG_NEW_FILE);
 
 		SWTBotTreeItem treeBot = null;
 		if (project != null) {
@@ -599,33 +603,36 @@ public class ProjectContentOperations extends Operations {
 
 		SWTBotText fileName = getBot().textWithLabel("File name:");
 		fileName.setText(name);
-
-		waitEnableAndClick(WIZARD_FINISH);
+		getBot().button(WIZARD_FINISH).click();
+		getBot().waitUntil(Conditions.shellCloses(shell));
 	}
 
 	private void internalCreateScript(String scriptName)
 			throws WidgetNotFoundException, TimeoutException {
-		getBot().shell(DLG_CREATE_TCL_FILE).activate();
+		getBot().waitUntil(Conditions.shellIsActive(DLG_CREATE_TCL_FILE));
+		SWTBotShell shell = getBot().shell(DLG_CREATE_TCL_FILE);
 
 		SWTBotText fileName = getBot().textWithLabel(FLD_FILE);
 		fileName.setText(scriptName);
-
-		waitEnableAndClick(WIZARD_FINISH);
+		getBot().button(WIZARD_FINISH).click();
+		getBot().waitUntil(Conditions.shellCloses(shell));
 	}
 
 	private void internalRename(String dialogName, String newName)
 			throws WidgetNotFoundException, TimeoutException {
-		SWTBotShell renameShell = getBot().shell(dialogName);
-		renameShell.activate();
+		getBot().waitUntil(Conditions.shellIsActive(dialogName));
+		SWTBotShell shell = getBot().shell(dialogName);
 		SWTBotText fileName = getBot().textWithLabel("New name:");
 		fileName.setText(newName);
 		getBot().button("OK").click();
-		getBot().waitUntil(Conditions.shellCloses(renameShell));
+		getBot().waitUntil(Conditions.shellCloses(shell));
 	}
 
 	private void internalDeleteElement() throws WidgetNotFoundException,
 			TimeoutException {
-		getBot().shell(DLG_CONFIRM_DELETE).activate();
+		getBot().waitUntil(Conditions.shellIsActive(DLG_CONFIRM_DELETE));
+		SWTBotShell shell = getBot().shell(DLG_CONFIRM_DELETE);
 		getBot().button("Yes").click();
+		getBot().waitUntil(Conditions.shellCloses(shell));
 	}
 }

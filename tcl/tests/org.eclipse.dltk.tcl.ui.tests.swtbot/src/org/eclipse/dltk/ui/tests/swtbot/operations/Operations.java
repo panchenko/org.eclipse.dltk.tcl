@@ -17,17 +17,15 @@ import java.util.StringTokenizer;
 import net.sf.swtbot.SWTBotTestCase;
 import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
 import net.sf.swtbot.eclipse.finder.widgets.SWTBotView;
-import net.sf.swtbot.finder.ControlFinder;
 import net.sf.swtbot.finder.MenuFinder;
 import net.sf.swtbot.finder.UIThreadRunnable;
 import net.sf.swtbot.finder.results.WidgetResult;
 import net.sf.swtbot.matcher.WidgetMatcherFactory;
-import net.sf.swtbot.matcher.WidgetOfType;
+import net.sf.swtbot.wait.Conditions;
 import net.sf.swtbot.wait.DefaultCondition;
 import net.sf.swtbot.widgets.AbstractSWTBot;
 import net.sf.swtbot.widgets.SWTBotButton;
 import net.sf.swtbot.widgets.SWTBotCheckBox;
-import net.sf.swtbot.widgets.SWTBotCombo;
 import net.sf.swtbot.widgets.SWTBotMenu;
 import net.sf.swtbot.widgets.SWTBotRadio;
 import net.sf.swtbot.widgets.SWTBotShell;
@@ -39,8 +37,6 @@ import net.sf.swtbot.widgets.WidgetNotFoundException;
 
 import org.eclipse.dltk.ui.tests.swtbot.ErrorMessages;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -140,49 +136,24 @@ public class Operations {
 	protected SWTBotShell openPreferences() throws WidgetNotFoundException,
 			TimeoutException {
 		getBot().menu(MENU_WINDOW).menu(MENU_PREFERENCES).click();
+		getBot().waitUntil(Conditions.shellIsActive(DLG_PREFERENCES));
 		SWTBotShell result = getBot().shell(DLG_PREFERENCES);
-		result.activate();
 		return result;
 	}
 
-	protected void openInterpreters() throws WidgetNotFoundException,
+	protected SWTBotShell openInterpreters() throws WidgetNotFoundException,
 			TimeoutException {
-		openPreferences();
+		SWTBotShell shell = openPreferences();
 		expandTree(PREFERENCES_TCL, "Interpreters"); //$NON-NLS-1$
+		return shell;
 	}
 
-	protected void openProperties(SWTBotTreeItem projectTree)
+	protected SWTBotShell openProperties(SWTBotTreeItem projectTree)
 			throws WidgetNotFoundException, TimeoutException {
 		projectTree.contextMenu(SCRIPT_POPUP_PROPERTIES).click();
 		String dlgProp = DLG_PRJ_PROPERTIES + projectTree.getText();
-		waitActivateShell(dlgProp);
-	}
-
-	protected void waitActivateShell(final String shellName)
-			throws WidgetNotFoundException, TimeoutException {
-		bot.waitUntil(new DefaultCondition() {
-			public String getFailureMessage() {
-				return null;
-			}
-
-			public boolean test() throws Exception {
-				SWTBotShell activeShell = getBot().activeShell();
-				return activeShell.getText().equals(shellName);
-			}
-		});
-	}
-
-	protected void waitCloseAllDialog() throws WidgetNotFoundException,
-			TimeoutException {
-		bot.waitUntil(new DefaultCondition() {
-			public String getFailureMessage() {
-				return "Opened dialog exist."; //$NON-NLS-1$
-			}
-
-			public boolean test() throws Exception {
-				return (getBot().shells().length == 1);
-			}
-		});
+		getBot().waitUntil(Conditions.shellIsActive(dlgProp));
+		return getBot().shell(dlgProp);
 	}
 
 	protected SWTBotTreeItem expandTree(String item, String subitem)
@@ -191,15 +162,14 @@ public class Operations {
 		SWTBotTreeItem result = treeBot.getTreeItem(item).expand().expandNode(
 				subitem);
 		result.select();
-
 		return result;
 	}
 
 	protected SWTBotStyledText getConsole() throws WidgetNotFoundException,
 			TimeoutException {
 		SWTBotView viewBot = getBot().view(VIEW_CONSOLE);
-		getBot().waitUntil(new ViewFocusCondition(viewBot));
-		return styledTextBoxWithoutLabel(0);
+		viewBot.setFocus();
+		return getBot().styledText(0);
 	}
 
 	protected void closeConsole() throws WidgetNotFoundException,
@@ -211,9 +181,8 @@ public class Operations {
 	protected SWTBotTreeItem getProjectItem(String name)
 			throws WidgetNotFoundException, TimeoutException {
 		SWTBotView viewBot = getBot().view(VIEW_SCRIPT_EXPLORER);
-		getBot().waitUntil(new ViewFocusCondition(viewBot));
+		viewBot.setFocus();
 		final SWTBotTree treeBot = getBot().tree();
-		getBot().waitUntil(new WidgetFocusCondition(treeBot));
 		SWTBotTreeItem result = treeBot.getTreeItem(name);
 		result.select();
 		return result;
@@ -242,90 +211,12 @@ public class Operations {
 		item.select();
 		return item;
 	}
-
-	// //////////////////////////////////////////////////////////////////////////
-	//
-	// ICondition classes
-	//
-	// //////////////////////////////////////////////////////////////////////////
-	public class WidgetFocusCondition extends DefaultCondition {
-
-		private AbstractSWTBot abstractBot;
-
-		public WidgetFocusCondition(AbstractSWTBot abstractBot) {
-			this.abstractBot = abstractBot;
-		}
-
-		public String getFailureMessage() {
-			return ErrorMessages.Common_errSetFocus;
-		}
-
-		public boolean test() throws Exception {
-			try {
-				abstractBot.setFocus();
-				return true;
-			} catch (Throwable th) {
-				return false;
-			}
-		}
-	}
-
-	public class ViewFocusCondition extends DefaultCondition {
-
-		private SWTBotView botView;
-
-		public ViewFocusCondition(SWTBotView botView) {
-			this.botView = botView;
-		}
-
-		public String getFailureMessage() {
-			return ErrorMessages.Common_errSetFocus;
-		}
-
-		public boolean test() throws Exception {
-			try {
-				botView.setFocus();
-				return true;
-			} catch (Throwable th) {
-				return false;
-			}
-		}
-	}
-
-	// //////////////////////////////////////////////////////////////////////////
-	//
-	// SWTBot
-	//
-	// //////////////////////////////////////////////////////////////////////////
-	protected SWTBotCombo comboBoxWithoutLabel(int index)
-			throws WidgetNotFoundException {
-		List findControls = new ControlFinder()
-				.findControls(new WidgetOfType<Combo>(Combo.class));
-		if (findControls.size() < index) {
-			throw new WidgetNotFoundException(
-					"Could not find combo with index " + index); //$NON-NLS-1$
-		}
-
-		return new SWTBotCombo((Combo) findControls.get(index));
-	}
-
-	protected SWTBotStyledText styledTextBoxWithoutLabel(int index)
-			throws WidgetNotFoundException {
-		List findControls = new ControlFinder()
-				.findControls(new WidgetOfType<StyledText>(StyledText.class));
-		if (findControls.size() < index) {
-			throw new WidgetNotFoundException(
-					"Could not find styled text with index " + index); //$NON-NLS-1$
-		}
-
-		return new SWTBotStyledText((StyledText) findControls.get(index));
-	}
-
-	// //////////////////////////////////////////////////////////////////////////
+	
+	////////////////////////////////////////////////////////////////////////////
 	//
 	// Asserts
 	//
-	// //////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
 	protected void assertNotEnabled(AbstractSWTBot widget) {
 		String errMessage = ErrorMessages.Common_errEnabled;

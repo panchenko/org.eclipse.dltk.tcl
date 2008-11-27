@@ -19,9 +19,11 @@ import net.sf.swtbot.eclipse.finder.widgets.SWTBotView;
 import net.sf.swtbot.finder.ControlFinder;
 import net.sf.swtbot.matcher.WidgetOfType;
 import net.sf.swtbot.utils.SWTUtils;
+import net.sf.swtbot.wait.Conditions;
 import net.sf.swtbot.wait.DefaultCondition;
 import net.sf.swtbot.widgets.SWTBotCheckBox;
 import net.sf.swtbot.widgets.SWTBotRadio;
+import net.sf.swtbot.widgets.SWTBotShell;
 import net.sf.swtbot.widgets.SWTBotText;
 import net.sf.swtbot.widgets.SWTBotTree;
 import net.sf.swtbot.widgets.SWTBotTreeItem;
@@ -56,23 +58,22 @@ public class ProjectOperations extends Operations {
 	 * @param name
 	 * @param promptPerspective
 	 */
-	public void createPromptPerspective(final String name,
-			boolean promptPerspective) {
+	public void createPromptPerspective(final String name) {
 		try {
 			getBot().menu(MENU_FILE).menu(MENU_NEW).menu(MENU_NEW_PROJECT)
 					.click();
-			getBot().shell(DLG_NEW_PROJECT).activate();
+			getBot().waitUntil(Conditions.shellIsActive(DLG_NEW_PROJECT));
 			expandTree("Tcl", "Tcl Project");
 			getBot().button(WIZARD_NEXT).click();
-
-			getBot().shell(DLG_CREATE_TCL_PROJECT).activate();
-
-			internalCreate(name);
-			if (promptPerspective) {
-				getBot().shell("Open Associated Perspective?");
-				getBot().button("Yes").click();
-			}
-
+			getBot()
+					.waitUntil(Conditions.shellIsActive(DLG_CREATE_TCL_PROJECT));
+			getBot().textWithLabel("Project name:").setText(name);
+			getBot().button(WIZARD_FINISH).click();
+			getBot().waitUntil(
+					Conditions.shellIsActive("Open Associated Perspective?"));
+			SWTBotShell shell = getBot().shell("Open Associated Perspective?");
+			getBot().button("Yes").click();
+			getBot().waitUntil(Conditions.shellCloses(shell));
 			getProjectItem(name);
 		} catch (WidgetNotFoundException ex) {
 			SWTBotTestCase.fail(ex.getLocalizedMessage());
@@ -91,17 +92,16 @@ public class ProjectOperations extends Operations {
 	 */
 	public void createFromScriptExplorer(final String name) {
 		try {
-			openInterpreters();
+			SWTBotShell shell = openInterpreters();
 			getBot().button("OK").click();
+			getBot().waitUntil(Conditions.shellCloses(shell));
 
 			SWTBotView viewBot = getBot().view(VIEW_SCRIPT_EXPLORER);
-			getBot().waitUntil(new ViewFocusCondition(viewBot));
+			viewBot.setFocus();
 			final SWTBotTree treeBot = getBot().tree();
-			getBot().waitUntil(new WidgetFocusCondition(treeBot));
-
-			// treeBot.contextMenu(MENU_NEW).menu(MENU_TCL_PROJECT).click();
 			clickContextSubMenu(treeBot, MENU_NEW, MENU_TCL_PROJECT);
-			getBot().shell(DLG_CREATE_TCL_PROJECT).activate();
+			getBot()
+					.waitUntil(Conditions.shellIsActive(DLG_CREATE_TCL_PROJECT));
 			internalCreate(name);
 
 			getProjectItem(name);
@@ -161,12 +161,13 @@ public class ProjectOperations extends Operations {
 	 */
 	public void createWithAltInterpr(final String name) {
 		try {
-			openInterpreters();
+			SWTBotShell shell = openInterpreters();
 			getBot().button("OK").click();
+			getBot().waitUntil(Conditions.shellCloses(shell));
 
 			openNewTclProject();
 			getBot().radio(RADIO_USE_ALT_INTERPR).click();
-			comboBoxWithoutLabel(1).setSelection(1);
+			getBot().comboBox(1).setSelection(1);
 			internalCreate(name);
 
 			getProjectItem(name);
@@ -179,8 +180,9 @@ public class ProjectOperations extends Operations {
 
 	public void create(final String name) {
 		try {
-			openInterpreters();
+			SWTBotShell shell = openInterpreters();
 			getBot().button("OK").click();
+			getBot().waitUntil(Conditions.shellCloses(shell));
 
 			openNewTclProject();
 			internalCreate(name);
@@ -195,8 +197,10 @@ public class ProjectOperations extends Operations {
 
 	protected void internalCreate(final String name)
 			throws WidgetNotFoundException, TimeoutException {
+		SWTBotShell shell = getBot().shell(DLG_CREATE_TCL_PROJECT);
 		getBot().textWithLabel("Project name:").setText(name);
 		getBot().button(WIZARD_FINISH).click();
+		getBot().waitUntil(Conditions.shellCloses(shell));
 	}
 
 	/**
@@ -210,12 +214,14 @@ public class ProjectOperations extends Operations {
 		try {
 			getProjectItem(name);
 			getBot().menu(MENU_EDIT).menu(MENU_DELETE).click();
-			getBot().shell(OperationMessages.Operations_dlg_delete_resource)
-					.activate();
 			getBot()
-					.button(OperationMessages.ProjectOperations_dlg_btn_dlt_prj)
-					.click();
-			getBot().activeShell().activate();
+					.waitUntil(
+							Conditions
+									.shellIsActive(OperationMessages.Operations_dlg_delete_resource));
+			SWTBotShell shell = getBot().shell(
+					OperationMessages.Operations_dlg_delete_resource);
+			getBot().button("OK").click();
+			getBot().waitUntil(Conditions.shellCloses(shell));
 
 			assertProjectNotExist(name);
 		} catch (WidgetNotFoundException ex) {
@@ -239,8 +245,13 @@ public class ProjectOperations extends Operations {
 		try {
 			SWTBotTreeItem projectBot = getProjectItem(name);
 			projectBot.contextMenu(MENU_DELETE).click();
-			getBot().shell(OperationMessages.Operations_dlg_delete_resource)
-					.activate();
+			getBot()
+					.waitUntil(
+							Conditions
+									.shellIsActive(OperationMessages.Operations_dlg_delete_resource));
+			SWTBotShell shell = getBot().shell(
+					OperationMessages.Operations_dlg_delete_resource);
+
 			List findControls = new ControlFinder()
 					.findControls(new WidgetOfType<Button>(Button.class));
 			if (SWTUtils.getText(findControls.get(0)).equals(
@@ -270,11 +281,8 @@ public class ProjectOperations extends Operations {
 				}
 			}
 
-			getBot()
-					.button(OperationMessages.ProjectOperations_dlg_btn_dlt_prj)
-					.click();
-			getBot().activeShell().activate();
-
+			getBot().button("OK").click();
+			getBot().waitUntil(Conditions.shellCloses(shell));//
 			assertProjectNotExist(name);
 		} catch (WidgetNotFoundException ex) {
 			SWTBotTestCase.fail(ex.getLocalizedMessage());
@@ -347,10 +355,11 @@ public class ProjectOperations extends Operations {
 		}
 	}
 
-	protected void openNewTclProject() throws WidgetNotFoundException,
+	protected SWTBotShell openNewTclProject() throws WidgetNotFoundException,
 			TimeoutException {
 		getBot().menu(MENU_FILE).menu(MENU_NEW).menu(MENU_TCL_PROJECT).click();
-		getBot().shell(DLG_CREATE_TCL_PROJECT).activate();
+		getBot().waitUntil(Conditions.shellIsActive(DLG_CREATE_TCL_PROJECT));
+		return getBot().shell(DLG_CREATE_TCL_PROJECT);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////
@@ -360,6 +369,7 @@ public class ProjectOperations extends Operations {
 	// /////////////////////////////////////////////////////////////////////////
 	protected boolean isOpenProject(SWTBotTreeItem projectItem)
 			throws WidgetNotFoundException, TimeoutException {
+		// TODO
 		return projectItem.contextMenu(SCRIPT_POPUP_CLOSE_PRJ) != null;
 	}
 

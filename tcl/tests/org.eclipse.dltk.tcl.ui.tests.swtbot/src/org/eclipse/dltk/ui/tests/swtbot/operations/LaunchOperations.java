@@ -124,7 +124,7 @@ public class LaunchOperations extends Operations {
 				}
 			});
 			SWTBotView debugViewBot = getBot().view("Debug");
-			getBot().waitUntil(new ViewFocusCondition(debugViewBot));
+			debugViewBot.setFocus();
 			getBot().waitUntil(new DefaultCondition() {
 				public String getFailureMessage() {
 					return null;
