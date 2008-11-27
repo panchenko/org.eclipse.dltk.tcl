@@ -13,28 +13,30 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.tcl.core.TclNature;
 
 public class TclLaunchConfigurationDelegate extends
 		AbstractScriptLaunchConfigurationDelegate {
-	
-	private static final String TCLLIBPATH_ENV_VAR = "TCLLIBPATH";
+
+	private static final String TCLLIBPATH_ENV_VAR = "TCLLIBPATH"; //$NON-NLS-1$
 
 	public String getLanguageId() {
 		return TclNature.NATURE_ID;
 	}
+
 	protected InterpreterConfig createInterpreterConfig(
 			ILaunchConfiguration configuration, ILaunch launch)
-	throws CoreException {
-		InterpreterConfig config = super.createInterpreterConfig(
-				configuration, launch);
-		if( config != null ) {
+			throws CoreException {
+		InterpreterConfig config = super.createInterpreterConfig(configuration,
+				launch);
+		if (config != null) {
 			addLibpathEnvVar(config, configuration);
 			checkEnvVars(config, configuration);
 		}
-		
+
 		return config;
 	}
 
@@ -46,11 +48,14 @@ public class TclLaunchConfigurationDelegate extends
 
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < paths.length; ++i) {
-			sb.append('{');
-			sb.append(paths[i].toOSString());
-			sb.append('}');
-			if (i < paths.length - 1) {
-				sb.append(' ');
+			final IFileHandle file = config.getEnvironment().getFile(paths[i]);
+			if (file != null) {
+				if (sb.length() != 0) {
+					sb.append(' ');
+				}
+				sb.append('{');
+				sb.append(file.toOSString());
+				sb.append('}');
 			}
 		}
 
