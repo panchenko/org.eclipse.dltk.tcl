@@ -68,7 +68,7 @@ public class TclActiveStateDebuggerEnvironment implements
 				.getDefault().getPreferenceStore();
 		final Map<?, ?> paths = EnvironmentPathUtils.decodePaths(store
 				.getString(key));
-		return (String) paths.get(environment.getId());
+		return (String) paths.get(environment);
 	}
 
 	/**
@@ -81,17 +81,17 @@ public class TclActiveStateDebuggerEnvironment implements
 		final Map paths = EnvironmentPathUtils
 				.decodePaths(store
 						.getString(TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY));
-		final String oldPath = (String) paths.get(environment.getId());
+		final String oldPath = (String) paths.get(environment);
 		if (path != null) {
 			if (path.equals(oldPath)) {
 				return;
 			}
-			paths.put(environment.getId(), path);
+			paths.put(environment, path);
 		} else {
 			if (oldPath == null) {
 				return;
 			}
-			paths.remove(environment.getId());
+			paths.remove(environment);
 		}
 		store.setValue(
 				TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY,
