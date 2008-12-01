@@ -21,6 +21,7 @@ public final class TclCheckerConstants {
 	public static final String PREF_NO_PCX = "tclchecker.no_pcx"; //$NON-NLS-1$
 
 	public static final String PREF_VERSION = "tclchecker.version"; //$NON-NLS-1$
+	public static final String CLI_OPTIONS = "tclchecker.cli.options"; //$NON-NLS-1$
 
 	public static final String VERSION_4 = "4"; //$NON-NLS-1$
 	public static final String VERSION_5 = "5"; //$NON-NLS-1$

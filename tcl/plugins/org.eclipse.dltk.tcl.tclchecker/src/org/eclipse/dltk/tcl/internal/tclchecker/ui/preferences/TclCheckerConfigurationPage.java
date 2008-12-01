@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
@@ -67,6 +68,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 
 public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
@@ -102,6 +104,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	private Button pcxRemove;
 
 	private Combo comboVersion;
+	private Text cliOptions;
 
 	public void createControl(Composite parent, int columns) {
 		Composite c = new Composite(parent, SWT.NONE);
@@ -590,6 +593,9 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		comboVersion = SWTFactory.createCombo(group, SWT.READ_ONLY, 1,
 				new String[] { TclCheckerConstants.VERSION_4,
 						TclCheckerConstants.VERSION_5 });
+		SWTFactory.createLabel(group, "CLI option(s)", 1); //$NON-NLS-1$
+		cliOptions = SWTFactory.createText(group, SWT.BORDER, 1,
+				Util.EMPTY_STRING);
 	}
 
 	public void init(IWorkbench workbench) {
@@ -610,6 +616,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		} else {
 			comboVersion.select(0);
 		}
+		cliOptions.setText(store.getString(TclCheckerConstants.CLI_OPTIONS));
 
 		// Path
 		environmentPathBlock.setPaths(TclCheckerHelper.getPaths(store));
@@ -681,6 +688,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 			store.setValue(TclCheckerConstants.PREF_VERSION, comboVersion
 					.getItem(versionIndex));
 		}
+		store.setValue(TclCheckerConstants.CLI_OPTIONS, cliOptions.getText()
+				.trim());
 
 		// Path
 		TclCheckerHelper.setPaths(store, environmentPathBlock.getPaths());

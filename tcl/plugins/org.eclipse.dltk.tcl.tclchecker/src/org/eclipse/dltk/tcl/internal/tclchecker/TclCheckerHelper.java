@@ -101,6 +101,10 @@ public final class TclCheckerHelper {
 				}
 			}
 		}
+		String cliOptions = store.getString(TclCheckerConstants.CLI_OPTIONS);
+		if (cliOptions != null && cliOptions.length() != 0) {
+			cmdLine.add(new CommandLine(cliOptions));
+		}
 		if (TclCheckerConstants.VERSION_5.equals(store
 				.getString(TclCheckerConstants.PREF_VERSION))) {
 			cmdLine.add("-as"); //$NON-NLS-1$

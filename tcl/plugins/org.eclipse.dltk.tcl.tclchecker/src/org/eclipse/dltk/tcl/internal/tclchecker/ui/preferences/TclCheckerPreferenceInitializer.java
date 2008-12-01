@@ -12,6 +12,7 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 import java.util.List;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
@@ -28,6 +29,7 @@ public class TclCheckerPreferenceInitializer extends
 				.getPreferenceStore();
 		store.setDefault(TclCheckerConstants.PREF_VERSION,
 				TclCheckerConstants.VERSION_5);
+		store.setDefault(TclCheckerConstants.CLI_OPTIONS, Util.EMPTY_STRING);
 		store.setDefault(TclCheckerConstants.PREF_MODE,
 				TclCheckerConstants.MODE_DEFAULT);
 
