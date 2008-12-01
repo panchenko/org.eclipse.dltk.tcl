@@ -10,6 +10,9 @@
 
 package org.eclipse.dltk.tcl.activestatedebugger;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.TclActiveStateDebuggerEnvironment;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -44,5 +47,15 @@ public class TclActiveStateDebuggerPlugin extends AbstractUIPlugin {
 	 */
 	public static TclActiveStateDebuggerPlugin getDefault() {
 		return plugin;
+	}
+
+	/**
+	 * @param environment
+	 * @return
+	 */
+	public static ITclActiveStateDebuggerEnvironment getEnvironmentPreferences(
+			IEnvironment environment) {
+		Assert.isNotNull(environment);
+		return new TclActiveStateDebuggerEnvironment(environment);
 	}
 }
