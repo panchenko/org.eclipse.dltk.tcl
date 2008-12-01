@@ -9,7 +9,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.tcl.internal.tclchecker.impl.TclCheckerEnvironment;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -59,6 +62,12 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 	public static void log(int severity, String message, Throwable throwable) {
 		getDefault().getLog().log(
 				new Status(severity, PLUGIN_ID, message, throwable));
+	}
+
+	public static ITclCheckerEnvironment getEnvironmentPreferences(
+			IEnvironment environment) {
+		Assert.isNotNull(environment);
+		return new TclCheckerEnvironment(environment);
 	}
 
 	// private IPreferenceStore preferenceStore;
