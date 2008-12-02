@@ -1,7 +1,6 @@
 package org.eclipse.dltk.tcl.core.ast;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 
@@ -15,10 +14,6 @@ public class ExtendedTclMethodDeclaration extends MethodDeclaration {
 	public static final int KIND_PROC = 0;
 	public static final int KIND_INSTPROC = 1;
 	private int methodKind = KIND_PROC;
-
-	public ExtendedTclMethodDeclaration(DLTKToken function_t, DLTKToken name) {
-		super(function_t, name);
-	}
 
 	public ExtendedTclMethodDeclaration(String name, int nameStart,
 			int nameEnd, int declStart, int declEnd) {
