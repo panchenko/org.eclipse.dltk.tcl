@@ -21,7 +21,7 @@ import org.eclipse.ui.progress.IProgressConstants;
 
 public class TclPerspective implements IPerspectiveFactory {
 	// TODO: move to general class like ScriptPerspective
-	public static final String SCRIPT_EXPLORER = "org.eclipse.dltk.ui.ScriptExplorer";
+	public static final String SCRIPT_EXPLORER = "org.eclipse.dltk.ui.ScriptExplorer"; //$NON-NLS-1$
 
 	public static final String NEW_FOLDER_WIZARD = "org.eclipse.ui.wizards.new.folder"; //$NON-NLS-1$ 
 
@@ -29,9 +29,9 @@ public class TclPerspective implements IPerspectiveFactory {
 
 	public static final String NEW_UNTITLED_TEXT_FILE_WIZARD = "org.eclipse.ui.editors.wizards.UntitledTextFileWizard"; //$NON-NLS-1$
 
-	public static final String ID_NEW_SOURCE_WIZARD = "org.eclipse.dltk.tcl.ui.wizards.NewSourceFolderCreationWizard";
+	public static final String ID_NEW_SOURCE_WIZARD = "org.eclipse.dltk.tcl.ui.wizards.NewSourceFolderCreationWizard"; //$NON-NLS-1$
 
-	public static final String ID_NEW_PACKAGE_WIZARD = "org.eclipse.dltk.tcl.ui.wizards.NewPackageCreationWizard";
+	public static final String ID_NEW_PACKAGE_WIZARD = "org.eclipse.dltk.tcl.ui.wizards.NewPackageCreationWizard"; //$NON-NLS-1$
 
 	protected void addNewWizardShortcuts(IPageLayout layout) {
 		layout.addNewWizardShortcut(TclProjectCreationWizard.ID_WIZARD);
@@ -63,12 +63,12 @@ public class TclPerspective implements IPerspectiveFactory {
 
 	protected void addViews(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
-		IFolderLayout folder = layout.createFolder("right", IPageLayout.RIGHT,
+		IFolderLayout folder = layout.createFolder("right", IPageLayout.RIGHT, //$NON-NLS-1$
 				(float) 0.75, editorArea);
 
 		folder.addView(IPageLayout.ID_OUTLINE);
-//		folder
-//				.addView("org.eclipse.dltk.tcl.internal.ui.navigation.PackagesView");
+		// folder
+		// .addView("org.eclipse.dltk.tcl.internal.ui.navigation.PackagesView");
 	}
 
 	protected void createFolders(IPageLayout layout) {
@@ -79,6 +79,7 @@ public class TclPerspective implements IPerspectiveFactory {
 				"left", IPageLayout.LEFT, (float) 0.2, editorArea); //$NON-NLS-1$		
 
 		folder.addView(SCRIPT_EXPLORER);
+		folder.addView("org.eclipse.dltk.ui.TypeHierarchy"); //$NON-NLS-1$
 		folder.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
 		// Output folder
@@ -88,6 +89,7 @@ public class TclPerspective implements IPerspectiveFactory {
 		outputFolder.addView(IPageLayout.ID_PROBLEM_VIEW);
 		outputFolder.addView(IPageLayout.ID_TASK_LIST);
 		outputFolder.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+		outputFolder.addView("org.eclipse.dltk.tcl.ui.TclDocumentationView"); //$NON-NLS-1$
 
 		outputFolder.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 		outputFolder.addPlaceholder(IPageLayout.ID_BOOKMARKS);
@@ -95,7 +97,7 @@ public class TclPerspective implements IPerspectiveFactory {
 	}
 
 	protected void addPerspectiveShotcuts(IPageLayout layout) {
-		layout.addPerspectiveShortcut("org.eclipse.debug.ui.DebugPerspective");
+		layout.addPerspectiveShortcut("org.eclipse.debug.ui.DebugPerspective"); //$NON-NLS-1$
 	}
 
 	public void createInitialLayout(IPageLayout layout) {
