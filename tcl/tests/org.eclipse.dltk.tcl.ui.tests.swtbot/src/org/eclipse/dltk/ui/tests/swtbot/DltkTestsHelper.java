@@ -270,6 +270,25 @@ public class DltkTestsHelper extends AbstractModelTests {
 		assertTrue(ErrorMessages.Common_errOpenPerspective, error);
 	}
 
+	public void openJavaPerspective() {
+		BoolResult result = new BoolResult() {
+			public Boolean run() {
+				IWorkbenchWindow[] ww = PlatformUI.getWorkbench()
+						.getWorkbenchWindows();
+				try {
+					PlatformUI.getWorkbench().showPerspective(
+							"org.eclipse.jdt.ui.JavaPerspective", ww[0]);
+					return true;
+				} catch (Throwable th) {
+					return false;
+				}
+			}
+		};
+
+		boolean error = UIThreadRunnable.syncExec(bot.getDisplay(), result);
+		assertTrue(ErrorMessages.Common_errOpenPerspective, error);
+	}
+
 	public List<IInterpreterInstall> getInterpreters() {
 		List<IInterpreterInstall> result = new ArrayList<IInterpreterInstall>();
 		IInterpreterInstallType[] types = getInterpreterTypes();
