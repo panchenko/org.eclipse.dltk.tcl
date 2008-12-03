@@ -11,15 +11,13 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.tests.swtbot.complex;
 
-import java.util.ConcurrentModificationException;
-
 import junit.framework.TestCase;
 import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
 
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 public class SWTBotEclipseTestCase extends TestCase {
@@ -35,9 +33,9 @@ public class SWTBotEclipseTestCase extends TestCase {
 
 	@Override
 	public void runBare() throws Throwable {
-		System.out.println("Running swtbot test:" + getName());
+		System.out.println("Running swtbot test: " + getName());
 		final Throwable[] exceptions = new Throwable[1];
-		Thread t = new Thread() {
+		final Thread t = new Thread() {
 			@Override
 			public void run() {
 				try {
@@ -49,28 +47,36 @@ public class SWTBotEclipseTestCase extends TestCase {
 			}
 		};
 		t.start();
-		long start = System.currentTimeMillis();
-		// try {
-		Display def = Display.getDefault();
-		while (t.isAlive() && !def.isDisposed()) {
-			try {
-				if (def.readAndDispatch()) {
-					def.sleep();
+		final long start = System.currentTimeMillis();
+		final Display display = Display.getDefault();
+		final Runnable timerRunnable = new Runnable() {
+			public void run() {
+				// EMPTY
+			}
+		};
+		display.timerExec(50, timerRunnable);
+		try {
+			while (t.isAlive() && !display.isDisposed()) {
+				try {
+					if (!display.readAndDispatch()) {
+						display.sleep();
+					}
+				} catch (SWTException e) {
+					e.printStackTrace();
 				}
-			} catch (ConcurrentModificationException e) {
-				e.printStackTrace();
+				long cur = System.currentTimeMillis();
+				if (cur - start > 600000) {
+					throw new RuntimeException("Timeout in test");
+				}
 			}
-
-			if (exceptions[0] != null)
-				throw exceptions[0];
-			long cur = System.currentTimeMillis();
-			if (cur - start > 600000) {
-				throw new RuntimeException("Timeout in test");
-			}
+		} finally {
+			display.timerExec(-1, timerRunnable);
 		}
-		// } catch (Throwable tt) {
-		// // tt.printStackTrace();
-		// }
+		while (display.readAndDispatch()) {
+			// NOP
+		}
+		if (exceptions[0] != null)
+			throw exceptions[0];
 	}
 
 	public void superRunBare() throws Throwable {
@@ -79,16 +85,19 @@ public class SWTBotEclipseTestCase extends TestCase {
 
 	public static void closeWelcome() {
 		Display.getDefault().syncExec(new Runnable() {
+
+			final String introId = "org.eclipse.ui.internal.introview"; //$NON-NLS-1$
+
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage();
 				IViewReference[] references = page.getViewReferences();
 				for (int i = 0; i < references.length; i++) {
-					if ("org.eclipse.ui.internal.introview"
-							.equals(references[i].getId())) {
-						IWorkbenchPart part = references[i].getPart(false);
-						if (part != null) {
-							part.dispose();
+					final IViewReference reference = references[i];
+					if (introId.equals(reference.getId())) {
+						IWorkbenchPage p = reference.getPage();
+						if (p != null) {
+							p.hideView(reference);
 						}
 					}
 				}
