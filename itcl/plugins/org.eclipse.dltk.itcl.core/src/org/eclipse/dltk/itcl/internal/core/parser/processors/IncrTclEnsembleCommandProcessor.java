@@ -21,7 +21,7 @@ public class IncrTclEnsembleCommandProcessor extends
 	public IncrTclEnsembleCommandProcessor() {
 	}
 
-	public ASTNode process(TclStatement statement, ITclParser parser, 
+	public ASTNode process(TclStatement statement, ITclParser parser,
 			ASTNode parent) {
 		if (statement == null
 				|| (statement != null && statement.getCount() == 0)) {
@@ -110,9 +110,12 @@ public class IncrTclEnsembleCommandProcessor extends
 		part.setNameEnd(procName.sourceEnd());
 		part.acceptArguments(arguments);
 		part.setModifier(IIncrTclModifiers.AccIncrTcl);
-		Block block = new Block(procCode.sourceStart(), procCode.sourceEnd());
-		part.acceptBody(block);
-		IncrTclUtils.parseAddToBlock(parser, procCode, block);
+		if (procCode != null) {
+			Block block = new Block(procCode.sourceStart(), procCode
+					.sourceEnd());
+			part.acceptBody(block);
+			IncrTclUtils.parseAddToBlock(parser, procCode, block);
+		}
 		this.addToParent(ensamble, part);
 	}
 
