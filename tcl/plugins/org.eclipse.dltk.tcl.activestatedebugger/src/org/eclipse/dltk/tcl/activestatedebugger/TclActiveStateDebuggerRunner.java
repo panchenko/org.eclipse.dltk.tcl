@@ -143,6 +143,8 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 				return false;
 			} else if (option == DebugOption.DBGP_BREAKPOINT_UPDATE_LINE_NUMBER) {
 				return false;
+			} else if (option == DebugOption.ENGINE_SUPPORT_DATATYPES) {
+				return false;
 			}
 			return super.get(option);
 		}
