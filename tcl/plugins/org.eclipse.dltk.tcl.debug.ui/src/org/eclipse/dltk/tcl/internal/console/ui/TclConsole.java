@@ -11,13 +11,13 @@ package org.eclipse.dltk.tcl.internal.console.ui;
 
 import org.eclipse.dltk.console.ui.ScriptConsole;
 import org.eclipse.dltk.tcl.console.TclInterpreter;
+import org.eclipse.osgi.util.NLS;
 
 public class TclConsole extends ScriptConsole {
-	public static final String CONSOLE_TYPE = "tcl_console";
+	public static final String CONSOLE_TYPE = "tcl_console"; //$NON-NLS-1$
 
-	public static final String CONSOLE_NAME = "Tcl Console";
 	public TclConsole(TclInterpreter interpreter, String id) {
-		super(CONSOLE_NAME + " [" + id + "]", CONSOLE_TYPE);
+		super(NLS.bind(Messages.TclConsole_Name, id), CONSOLE_TYPE);
 
 		setInterpreter(interpreter);
 		setTextHover(new TclConsoleTextHover(interpreter));
