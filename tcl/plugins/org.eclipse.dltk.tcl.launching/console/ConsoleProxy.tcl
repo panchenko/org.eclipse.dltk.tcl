@@ -23,115 +23,26 @@ set varPattern {\$[_0-9a-zA-Z]*}
 set procPattern {[_0-9a-zA-Z]+}
 
 set strStdout ""
+set evaluateError 0
 
-proc my_puts {args} {
-	global strStdout
-
-	switch -exact -- [llength $args] {
-		#puts "data"
-		1 {
-			set arg0 [lindex $args 0]
-			append strStdout $arg0
-			append strStdout "\n"
-			return
-		}
-
-		#puts -nonewline "data"
-		#puts stdout "data"
-		2 {
-			set arg0 [lindex $args 0]
-			set arg1 [lindex $args 1]
-			if {$arg0 eq "-nonewline"} {
-				append strStdout $arg1
-			} elseif {$arg0 eq "stdout" } {
-				append strStdout $arg1
-				append strStdout "\n"
-			} else {
-				return [evaluate [list __dltk__puts__ $arg0 $arg1]]
-			}
-			return
-		}
-
-		#puts -nonewline stdout "data"
-		3 {
-			set arg0 [lindex $args 0]
-			set arg1 [lindex $args 1]
-			set arg2 [lindex $args 2]
-
-			if {$arg1 eq "stdout"} {
-				append strStdout $arg2
-			} else {
-				return [evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]]
-			}
-			return
-		}
-	}
-
-	append strStdout "wrong # args: should be \"puts ?-nonewline? ?channelId? string\"\n"
+proc log_puts {args} {
+  #puts -nonewline "\["; foreach item $args { puts -nonewline $item }; puts "]"
 }
-proc my_puts_direct {args} {
-	global in
-	global out
 
-	switch -exact -- [llength $args] {
-		#puts "data"
-		1 {
-			set arg0 [lindex $args 0]
-			puts "my_puts_direct:$arg0"
-			puts $out $arg0
-			flush $out
-			return
-		}
-
-		#puts -nonewline "data"
-		#puts stdout "data"
-		2 {
-			set arg0 [lindex $args 0]
-			set arg1 [lindex $args 1]
-			if {$arg0 eq "-nonewline"} {
-				puts "my_puts_direct:$arg1"
-				puts $out $arg1
-				flush $out
-			} elseif {$arg0 eq "stdout" } {
-				puts $out $arg1
-				puts "my_puts_direct:$arg1"
-				flush $out
-			} else {
-				return [evaluate [list __dltk__puts__ $arg0 $arg1]]
-			}
-			return
-		}
-
-		#puts -nonewline stdout "data"
-		3 {
-			set arg0 [lindex $args 0]
-			set arg1 [lindex $args 1]
-			set arg2 [lindex $args 2]
-
-			if {$arg1 eq "stdout"} {
-				puts -nonewline "my_puts_direct: $arg2"
-				puts -nonewline $out $arg2
-				flush $out
-			} else {
-				return [evaluate [list __dltk__puts__ $arg0 $arg1 $arg2]]
-			}
-			return
-		}
-	}
-
-	append strStdout "wrong # args: should be \"puts ?-nonewline? ?channelId? string\"\n"
+proc err_puts {str} {
+  global strStdout
+  append strStdout $str
 }
 
 # Internal interpreter
 proc my_gets {args} {
-	global strStdout
 
 	switch -exact -- [llength $args] {
 		1 {
 			set arg0 [lindex $args 0]
 
 			if {$arg0 eq "stdin"} {
-				append strStdout "Input from 'stdin' not supported\n"
+				err_puts "Input from 'stdin' not supported\n"
 			} else {
 				return [evaluate "::__dltk__gets__ $arg0"]
 			}
@@ -144,7 +55,7 @@ proc my_gets {args} {
 			set arg1 [lindex $args 1]
 
 			if {$arg0 eq "stdin"} {
-				append strStdout "Input from 'stdin' not supported\n"
+				err_puts "Input from 'stdin' not supported\n"
 			} else {
 				return [evaluate "::__dltk__gets__ $arg0 $arg1"]
 			}
@@ -153,12 +64,11 @@ proc my_gets {args} {
 		}
 	}
 
-	append strStdout "wrong # args: should be \"gets channelId ?varName?\"\n"
+	err_puts "wrong # args: should be \"gets channelId ?varName?\"\n"
 }
 
 proc my_exit {args} {
-	global strStdout
-	append strStdout "'exit' command not supported, please close console from Eclipse\n"
+	err_puts "'exit' command not supported, please close console from Eclipse\n"
 	return 0
 }
 
@@ -182,20 +92,16 @@ proc getInput { {clear 1} } {
 interp create foo
 
 proc evaluate {statement} {
-	global foo
-
-	catch {
-		foo eval $statement
-	} res
-	foo alias exit my_exit
-	return $res
+        global foo
+        global evaluateError 
+        set evaluateError [catch { foo eval $statement } res]
+        foo alias exit my_exit
+        return $res
 }
 
-#evaluate "rename puts ::__dltk__puts__"
 evaluate "rename gets ::__dltk__gets__"
 evaluate "rename exit ::__dltk__exit__"
 
-#foo alias puts my_puts
 foo alias gets my_gets
 foo alias exit my_exit
 
@@ -362,8 +268,8 @@ proc makeDescriptionNode {body} {
 	return "<description><$body></description>"
 }
 
-proc makeInterpreterNode {state body} {
-	return "<interpreter state=\"$state\"><!\[CDATA\[$body\]\]></interpreter>"
+proc makeInterpreterNode {state stream body} {
+	return "<interpreter state=\"$state\" stream=\"$stream\"><!\[CDATA\[$body\]\]></interpreter>"
 }
 
 proc makeCompletionNode {body} {
@@ -401,7 +307,7 @@ proc makeCompletion { commandLine cursorPos } {
 	proc completeProc { prefix } {
 		set pattern $prefix
 		append pattern "*"
-		puts "Proc: |$pattern|"
+		log_puts "Proc: |$pattern|"
 		set commands [findCommands $pattern]
         return [generateCompletions $prefix $commands "proc"]
 
@@ -410,7 +316,7 @@ proc makeCompletion { commandLine cursorPos } {
 	proc completeVar { prefix } {
 		set pattern $prefix
 		append pattern "*"
-		puts "Var: |$pattern|"
+		log_puts "Var: |$pattern|"
 		set vars [findVars $pattern]
 
                 return [generateCompletions $prefix $vars "var"]
@@ -428,7 +334,7 @@ proc makeCompletion { commandLine cursorPos } {
 		if {$varNamePrefix != 0} {
 			append xml [completeVar $varNamePrefix]
 		} else {
-			puts "No var name"
+			log_puts "No var name"
 		}
 	} else {
 		set loc [matchPattern $commandLine $cursorPos $procPattern]
@@ -437,10 +343,10 @@ proc makeCompletion { commandLine cursorPos } {
 			if {$procNamePrefix != 0} {
 				append xml [completeProc $procNamePrefix]
 			} else {
-				puts "No proc name"
+				log_puts "No proc name"
 			}
 		} else {
-			puts "Generate default list"
+			log_puts "Generate default list"
 			append xml [completeProc ""]
 			append xml [completeVar ""]
 		}
@@ -531,11 +437,11 @@ set closeFlag 0
 proc shellHandler {input} {
 	global closeFlag
 
-	puts "Invoking shellHandler..."
+	log_puts "Invoking shellHandler..."
 
 	gets $input command
 
-	puts "Command is $command"
+	log_puts "Command is $command"
 
 	switch -exact -- $command {
 		"close" {
@@ -545,24 +451,24 @@ proc shellHandler {input} {
 
 		"complete" {
 			gets $input commandLine
-			puts "Command line: $commandLine"
+			log_puts "Command line: $commandLine"
 			gets $input cursorPosition
-			puts "Position: $cursorPosition"
+			log_puts "Position: $cursorPosition"
 
 			return [makeShellNode [makeCompletion $commandLine $cursorPosition]]
 		}
 
 		"describe" {
 			gets $input commandLine
-			puts "Command line: $commandLine"
+			log_puts "Command line: $commandLine"
 			gets $input cursorPosition
-			puts "Position: $cursorPosition"
+			log_puts "Position: $cursorPosition"
 
 			return [makeShellNode [makeDescription $commandLine $cursorPosition]]
 		}
 
 		default {
-			puts "Invalid shell command..."
+			log_puts "Invalid shell command..."
 		}
 	}
 }
@@ -571,34 +477,40 @@ proc shellHandler {input} {
 set command ""
 
 proc interpreterHandler {input} {
-	global command
+        global command
 
-	puts "Invoking interpreterHandler..."
+        log_puts "Invoking interpreterHandler..."
 
-	gets $input str
+        gets $input str
 
-	append str "\n"
-	append command $str
+        append str "\n"
+        append command $str
 
-	if {[info complete $command]} {
-		set res [evaluate $command]
-		set command ""
+        if {[info complete $command]} {
+                set res [evaluate $command]
+                set command ""
 
-		set output [getOutput]
+                set output [getOutput]
 
-		if {$output ne ""} {
-			set node [makeInterpreterNode "new" $output]
-		} elseif { $res ne "" } {
-			append res "\n"
-			set node [makeInterpreterNode "new" $res]
-		} else {
-			set node [makeInterpreterNode "new" ""]
-		}
+                if {$output ne ""} {
+                        set node [makeInterpreterNode "new" "stderr" $output]
+                } elseif { $res ne "" } {
+                        append res "\n"
+                        global evaluateError
+                        if $evaluateError {
+                                set stream "stderr"
+                        } else {
+                                set stream "stdout"                      
+                        }
+                        set node [makeInterpreterNode "new" $stream $res]
+                } else {
+                        set node [makeInterpreterNode "new" "" ""]
+                }
 
-		return $node
-	}
+                return $node
+        }
 
-	return [makeInterpreterNode "continue" ""]
+        return [makeInterpreterNode "continue" "" ""]
 }
 
 # Reading command line args
@@ -606,7 +518,7 @@ set host [lindex $argv 0]
 set port [lindex $argv 1]
 set id   [lindex $argv 2]
 
-puts "Host: $host Port: $port ID: $id"
+log_puts "Host: $host Port: $port ID: $id"
 
 # Testing
 #set in stdin
@@ -622,29 +534,25 @@ sendResponse $out [makeConsoleNode [makeInfoNode $id]]
 
 # Execute script with output
 if {[llength $argv] > 3} {
-	puts "Sourcing script..."
+	log_puts "Sourcing script..."
 
 	set script [lindex $argv 3]
 	if {$script != "--noscript" } {
-		puts "Script args: "
+		log_puts "Script args: "
 		set scriptArgs {}
 		for {set i 4} {$i < $argc} {incr i} {
 			lappend scriptArgs [lindex $argv $i]
 		}
 		evaluate [list set argc [llength $scriptArgs]]
 		evaluate [list set argv $scriptArgs]
-	
+
 		#puts "Script: $script"
-		# Use direct put command
-		#foo alias puts my_puts_direct
 		set res [evaluate [list source $script]]
-		#foo alias puts my_puts
 	}
 }
-puts "before: $out"
+# END OF INITIAL RESPONSE - part of protocol for now
 puts -nonewline $out "\0"
 flush $out
-puts "after: $out"
 
 # Handle commands and send responses
 proc localHandler {} {
