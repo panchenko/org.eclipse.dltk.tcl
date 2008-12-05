@@ -191,11 +191,11 @@ proc evaluate {statement} {
 	return $res
 }
 
-evaluate "rename puts ::__dltk__puts__"
+#evaluate "rename puts ::__dltk__puts__"
 evaluate "rename gets ::__dltk__gets__"
 evaluate "rename exit ::__dltk__exit__"
 
-foo alias puts my_puts
+#foo alias puts my_puts
 foo alias gets my_gets
 foo alias exit my_exit
 
@@ -636,9 +636,9 @@ if {[llength $argv] > 3} {
 	
 		#puts "Script: $script"
 		# Use direct put command
-		foo alias puts my_puts_direct
+		#foo alias puts my_puts_direct
 		set res [evaluate [list source $script]]
-		foo alias puts my_puts
+		#foo alias puts my_puts
 	}
 }
 puts "before: $out"
