@@ -265,7 +265,7 @@ proc makeCloseNode {} {
 }
 
 proc makeDescriptionNode {body} {
-	return "<description><$body></description>"
+	return "<description>$body</description>"
 }
 
 proc makeInterpreterNode {state stream body} {
