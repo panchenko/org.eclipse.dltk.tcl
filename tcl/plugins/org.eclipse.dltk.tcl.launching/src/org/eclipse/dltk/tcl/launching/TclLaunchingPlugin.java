@@ -20,7 +20,7 @@ import org.osgi.framework.BundleContext;
 public class TclLaunchingPlugin extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.launching";
+	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.launching"; //$NON-NLS-1$
 
 	// The shared instance
 	private static TclLaunchingPlugin plugin;
@@ -69,6 +69,6 @@ public class TclLaunchingPlugin extends Plugin {
 	}
 
 	public String getConsoleProxy() {
-		return "console/ConsoleProxy.tcl";
+		return "console/ConsoleProxy.tcl"; //$NON-NLS-1$
 	}
 }
