@@ -50,8 +50,13 @@ public class PackagesManager {
 	private static final String INTERPRETER_TAG = "interpreter"; //$NON-NLS-1$
 	private static final String VALUE_ATTR = "value"; //$NON-NLS-1$
 	private static final String PACKAGES_FILE = "packages.txt"; //$NON-NLS-1$
+
 	private static final String PACKAGES_TAG = "packages"; //$NON-NLS-1$
+	private static final String PACKAGES_VERSION_ATTR = "version"; //$NON-NLS-1$
+	private static final String PACKAGES_VERSION_NUMBER = "20081208T1911"; //$NON-NLS-1$
+
 	private static final String PACKAGE_TAG = "package"; //$NON-NLS-1$
+	private static final String PACKAGE_VERSION_ATTR = "version"; //$NON-NLS-1$
 
 	private static final String INTERPRETER_ATTR = INTERPRETER_TAG;
 	private static final String NAME_ATTR = "name"; //$NON-NLS-1$
@@ -138,6 +143,7 @@ public class PackagesManager {
 	public static class PackageInformation {
 		private final Set paths = new HashSet();
 		private final Set dependencies = new HashSet();
+		private String version;
 
 		public Set getPaths() {
 			return paths;
@@ -146,6 +152,15 @@ public class PackagesManager {
 		public Set getDependencies() {
 			return dependencies;
 		}
+
+		public String getVersion() {
+			return version;
+		}
+
+		public void setVersion(String version) {
+			this.version = version;
+		}
+
 	}
 
 	private void initialize() {
@@ -227,6 +242,8 @@ public class PackagesManager {
 
 	private synchronized void save(Document doc) {
 		Element packagesElement = doc.createElement(PACKAGES_TAG);
+		packagesElement.setAttribute(PACKAGES_VERSION_ATTR,
+				PACKAGES_VERSION_NUMBER);
 		doc.appendChild(packagesElement);
 		for (Iterator iterator = this.packages.keySet().iterator(); iterator
 				.hasNext();) {
@@ -239,6 +256,10 @@ public class PackagesManager {
 
 			PackageInformation info = (PackageInformation) this.packages
 					.get(key);
+			if (info.getVersion() != null && info.getVersion().length() != 0) {
+				packageElement.setAttribute(PACKAGE_VERSION_ATTR, info
+						.getVersion());
+			}
 			Set paths = info.getPaths();
 			for (Iterator iterator2 = paths.iterator(); iterator2.hasNext();) {
 				IPath path = (IPath) iterator2.next();
@@ -273,6 +294,13 @@ public class PackagesManager {
 	}
 
 	private synchronized void populate(Element documentElement) {
+		if (!PACKAGES_TAG.equals(documentElement.getNodeName())) {
+			return;
+		}
+		if (!PACKAGES_VERSION_NUMBER.equals(documentElement
+				.getAttribute(PACKAGES_VERSION_ATTR))) {
+			return;
+		}
 		NodeList childNodes = documentElement.getChildNodes();
 		int length = childNodes.getLength();
 		for (int i = 0; i < length; i++) {
@@ -283,6 +311,10 @@ public class PackagesManager {
 					String packageName = e.getAttribute(NAME_ATTR);
 					String interpreter = e.getAttribute(INTERPRETER_ATTR);
 					PackageInformation packageInfo = new PackageInformation();
+					final String version = e.getAttribute(PACKAGE_VERSION_ATTR);
+					if (version != null && version.length() != 0) {
+						packageInfo.setVersion(version);
+					}
 					NodeList childrens = e.getChildNodes();
 					for (int j = 0; j < childrens.getLength(); j++) {
 						Node path = childrens.item(j);
@@ -359,6 +391,7 @@ public class PackagesManager {
 			} else {
 				info = new PackageInformation();
 			}
+			info.setVersion(srcs[i].getVersion());
 			info.getPaths().addAll(paths2);
 			info.getDependencies().addAll(srcs[i].getDependencies());
 			this.packages.put(okey, info);
@@ -377,6 +410,18 @@ public class PackagesManager {
 
 		save();
 		return (IPath[]) resultPaths.toArray(new IPath[resultPaths.size()]);
+	}
+
+	public synchronized String getPackageVersion(IInterpreterInstall install,
+			String packageName) {
+		getPathsForPackage(install, packageName);
+		final PackageInformation info = (PackageInformation) this.packages
+				.get(makeKey(packageName, getInterpreterKey(install)));
+		if (info != null) {
+			return info.getVersion();
+		} else {
+			return null;
+		}
 	}
 
 	public synchronized Map getDependencies(String pkgName,
@@ -508,6 +553,7 @@ public class PackagesManager {
 				info = new PackageInformation();
 			}
 			result.addAll(paths2);
+			info.setVersion(srcs[i].getVersion());
 			info.getPaths().addAll(paths2);
 			info.getDependencies().addAll(srcs[i].getDependencies());
 			this.packages.put(okey, info);

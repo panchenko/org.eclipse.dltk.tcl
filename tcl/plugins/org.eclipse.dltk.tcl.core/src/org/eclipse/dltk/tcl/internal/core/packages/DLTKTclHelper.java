@@ -191,34 +191,28 @@ public class DLTKTclHelper {
 
 	public static class TclPackage {
 		private String name;
+		private String version;
+
+		/**
+		 * @return the version
+		 */
+		public String getVersion() {
+			return version;
+		}
+
+		/**
+		 * @param version
+		 *            the version to set
+		 */
+		public void setVersion(String version) {
+			this.version = version;
+		}
+
 		private Set paths = new HashSet();
 		private Set dependencies = new HashSet();
 
 		public TclPackage(String name) {
 			this.name = name;
-		}
-
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((name == null) ? 0 : name.hashCode());
-			return result;
-		}
-
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			TclPackage other = (TclPackage) obj;
-			if (name == null) {
-				if (other.name != null)
-					return false;
-			} else if (!name.equals(other.name))
-				return false;
-			return true;
 		}
 
 		public String getName() {
@@ -288,13 +282,18 @@ public class DLTKTclHelper {
 
 	private static void populatePackage(Map packages, Node pkgNde) {
 		Element pkg = (Element) pkgNde;
-		String pkgName = pkg.getAttribute("name"); //$NON-NLS-1$
-		TclPackage tclPackage = new TclPackage(pkgName);
-		if (packages.containsKey(tclPackage)) {
-			tclPackage = (TclPackage) packages.get(tclPackage);
-		} else {
-			packages.put(tclPackage, tclPackage);
+		final String pkgName = pkg.getAttribute("name"); //$NON-NLS-1$
+		if (pkgName == null || pkgName.length() == 0) {
+			return;
 		}
+		final TclPackage tclPackage;
+		if (packages.containsKey(pkgName)) {
+			tclPackage = (TclPackage) packages.get(pkgName);
+		} else {
+			tclPackage = new TclPackage(pkgName);
+			packages.put(pkgName, tclPackage);
+		}
+		tclPackage.setVersion(pkg.getAttribute("version"));
 		NodeList childs = pkg.getChildNodes();
 		for (int i = 0; i < childs.getLength(); i++) {
 			Node nde = childs.item(i);
