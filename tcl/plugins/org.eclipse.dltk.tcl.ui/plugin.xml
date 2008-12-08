@@ -384,22 +384,26 @@
  
  <extension
          point="org.eclipse.ui.decorators">
-      <decorator
-            adaptable="false"
+   <decorator
+            adaptable="true"
             location="TOP_LEFT"
             lightweight="true"
             label="%TclProjectDecorator.name"
             state="true"
-            class="org.eclipse.dltk.tcl.internal.ui.TclProjectDecorator"
+            class="org.eclipse.dltk.ui.DeclarativeLightweightLabelDecorator:/icons/ovr16/tcl_ovr.gif"
             id="org.eclipse.dltk.tcl.decorators.projectdecorator">
          <enablement>
-           <or>
-            <objectClass name="org.eclipse.core.resources.IProject"/>
-            <objectClass name="org.eclipse.dltk.core.IScriptProject"/>
-           </or>
+            <and>
+            	<objectClass name="org.eclipse.core.resources.IProject"/>
+             <objectState
+                   name="nature"
+                   value="org.eclipse.dltk.tcl.core.nature">
+             </objectState>
+            </and>
          </enablement>
       </decorator>
-   </extension>
+ </extension>
+   
  <extension
        point="org.eclipse.ui.commands">
        <command
