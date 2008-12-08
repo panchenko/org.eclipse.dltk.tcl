@@ -363,8 +363,8 @@ proc makeDescription { commandLine cursorPos } {
 		}
 
 		if {[hasVar $name]} {
-			set value [evaluate "puts -nonewline \$$name"]
-			return  "$name = [getOutput]"
+			set value [evaluate "expr \$$name"]
+			return  "$name = $value"
 		} else {
 			return ""
 		}
