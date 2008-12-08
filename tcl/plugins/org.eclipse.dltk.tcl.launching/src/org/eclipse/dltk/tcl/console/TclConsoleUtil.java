@@ -29,7 +29,7 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 public class TclConsoleUtil {
-	public static void runDefaultTclInterpreter(TclInterpreter interpreter)
+	public static ILaunch runDefaultTclInterpreter(TclInterpreter interpreter)
 			throws CoreException, IOException {
 		ScriptConsoleServer server = ScriptConsoleServer.getInstance();
 
@@ -47,7 +47,7 @@ public class TclConsoleUtil {
 				TclLaunchingPlugin.getDefault().getBundle(), TclLaunchingPlugin
 						.getDefault().getConsoleProxy());
 		IFileHandle scriptFile = deployment.getFile(path);
-		
+
 		final ILaunch launch = ScriptLaunchUtil.runScript(TclNature.NATURE_ID,
 				scriptFile, null, null, args, null);
 		DeploymentManager.getInstance().addDeployment(launch, deployment);
@@ -69,5 +69,6 @@ public class TclConsoleUtil {
 				}
 			});
 		}
+		return launch;
 	}
 }

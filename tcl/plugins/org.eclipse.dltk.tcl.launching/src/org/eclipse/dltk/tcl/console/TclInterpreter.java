@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.dltk.compiler.CharOperation;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.console.ConsoleRequest;
 import org.eclipse.dltk.console.IScriptExecResult;
 import org.eclipse.dltk.console.IScriptConsoleIO;
@@ -26,11 +28,11 @@ import org.eclipse.dltk.console.ShellResponse;
 
 public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 
-	private static final String COMPLETE_COMMAND = "complete";
+	private static final String COMPLETE_COMMAND = "complete"; //$NON-NLS-1$
 
-	private static final String DESCRIBE_COMMAND = "describe";
+	private static final String DESCRIBE_COMMAND = "describe"; //$NON-NLS-1$
 
-	private static final String CLOSE_COMMAND = "close";
+	private static final String CLOSE_COMMAND = "close"; //$NON-NLS-1$
 
 	private IScriptConsoleIO protocol;
 
@@ -43,8 +45,13 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 	// IScriptInterpreter
 	public IScriptExecResult exec(String command) throws IOException {
 		InterpreterResponse response = protocol.execInterpreter(command);
-		state = response.getState();
-		return new ScriptExecResult(response.getContent());
+		if (response != null) {
+			state = response.getState();
+			return new ScriptExecResult(response.getContent(), response
+					.isError());
+		} else {
+			return null;
+		}
 	}
 
 	public boolean isValid() {
@@ -72,7 +79,7 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 
 		ShellResponse response = protocol.execShell(DESCRIBE_COMMAND, args);
 
-		return response.getDescription();
+		return response != null ? response.getDescription() : Util.EMPTY_STRING;
 	}
 
 	public String[] getNames(String type) throws IOException {
@@ -83,7 +90,7 @@ public class TclInterpreter implements IScriptInterpreter, ConsoleRequest {
 	public void close() throws IOException {
 		try {
 			if (protocol != null) {
-				protocol.execShell(CLOSE_COMMAND, new String[] {});
+				protocol.execShell(CLOSE_COMMAND, CharOperation.NO_STRINGS);
 				protocol.close();
 			}
 			// run all close runnables.
