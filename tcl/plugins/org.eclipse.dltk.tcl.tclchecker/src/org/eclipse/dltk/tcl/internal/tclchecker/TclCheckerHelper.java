@@ -15,10 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.CommandLine;
@@ -41,7 +47,8 @@ public final class TclCheckerHelper {
 	private static final String CHECK_OPTION = "-check"; //$NON-NLS-1$
 
 	public static boolean buildCommandLine(IPreferenceStore store,
-			CommandLine cmdLine, IEnvironment environment) {
+			CommandLine cmdLine, IEnvironment environment,
+			IScriptProject project) {
 		Map<IEnvironment, String> paths = getPaths(store);
 		String path = paths.get(environment);
 		if (path == null || path.length() == 0) {
@@ -52,6 +59,32 @@ public final class TclCheckerHelper {
 		cmdLine.add(validatorFile.toOSString());
 
 		// cmdLine.add(QUIET_OPTION);
+
+		if (project != null) {
+			try {
+				final IInterpreterInstall install = ScriptRuntime
+						.getInterpreterInstall(project);
+				if (install != null) {
+					final String version = PackagesManager.getInstance()
+							.getPackageVersion(install, "Tcl"); //$NON-NLS-1$
+					if (version != null && version.length() != 0) {
+						if (version.startsWith("8.")) { //$NON-NLS-1$
+							int pos = version.indexOf('.', 2);
+							if (pos < 0) {
+								pos = version.length();
+							}
+							cmdLine.add("-use"); //$NON-NLS-1$
+							cmdLine
+									.add("\"Tcl" + version.substring(0, pos) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+					}
+				}
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 		int mode = store.getInt(TclCheckerConstants.PREF_MODE);
 
