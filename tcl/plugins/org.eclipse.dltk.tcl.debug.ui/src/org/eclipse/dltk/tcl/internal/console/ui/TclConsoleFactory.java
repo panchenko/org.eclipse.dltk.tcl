@@ -10,6 +10,8 @@
 package org.eclipse.dltk.tcl.internal.console.ui;
 
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.dltk.console.IScriptInterpreter;
 import org.eclipse.dltk.console.ScriptConsolePrompt;
 import org.eclipse.dltk.console.ui.IScriptConsoleFactory;
@@ -84,9 +86,10 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 
 	private TclConsole createConsoleInstance(IScriptInterpreter interpreter,
 			String id) {
+		ILaunch launch = null;
 		if (interpreter == null) {
 			try {
-				id = "default";
+				id = "default"; //$NON-NLS-1$
 				interpreter = new TclInterpreter();
 
 				if (ScriptRuntime
@@ -101,14 +104,24 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 						return null;
 					}
 				}
-				TclConsoleUtil
+				launch = TclConsoleUtil
 						.runDefaultTclInterpreter((TclInterpreter) interpreter);
 			} catch (Exception e) {
 				return null;
 			}
 		}
 
-		return makeConsole((TclInterpreter) interpreter, id);
+		final TclConsole console = makeConsole((TclInterpreter) interpreter, id);
+		if (launch != null) {
+			final IProcess[] processes = launch.getProcesses();
+			for (int i = 0; i < processes.length; ++i) {
+				final IStreamsProxy proxy = processes[i].getStreamsProxy();
+				if (proxy != null) {
+					console.connect(proxy);
+				}
+			}
+		}
+		return console;
 	}
 
 	protected ScriptConsole createConsoleInstance() {
@@ -118,7 +131,8 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 	public TclConsoleFactory() {
 	}
 
-	public void openConsole(IScriptInterpreter interpreter, String id, ILaunch launch) {
+	public void openConsole(IScriptInterpreter interpreter, String id,
+			ILaunch launch) {
 		TclConsole tclConsole = createConsoleInstance(interpreter, id);
 		tclConsole.setLaunch(launch);
 		registerAndOpenConsole(tclConsole);
