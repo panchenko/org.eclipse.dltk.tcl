@@ -180,11 +180,8 @@ public class TclCorePreferencePage extends
 							TclPreferencesMessages.TclCorePreferencePage_checkContentExcludes,
 							1);
 
-			final PixelConverter conv = new PixelConverter(block);
 			final Composite excludeComposite = SWTFactory.createComposite(
 					block, block.getFont(), 1, 1, GridData.FILL_BOTH);
-			// ((GridData) excludeComposite.getLayoutData()).heightHint = conv
-			// .convertHeightInCharsToPixels(6);
 			final GridLayout excludeLayout = new GridLayout();
 			excludeLayout.numColumns = 2;
 			excludeComposite.setLayout(excludeLayout);
@@ -200,8 +197,13 @@ public class TclCorePreferencePage extends
 			excludeDialog.setRemoveButtonIndex(IDX_REMOVE);
 
 			excludeDialog.setViewerSorter(new ViewerSorter());
-			excludeDialog.getListControl(excludeComposite).setLayoutData(
-					new GridData(GridData.FILL_BOTH));
+			final Control listControl = excludeDialog
+					.getListControl(excludeComposite);
+			final GridData listControlLayoutData = new GridData(
+					GridData.FILL_BOTH);
+			listControlLayoutData.heightHint = new PixelConverter(listControl)
+					.convertHeightInCharsToPixels(6);
+			listControl.setLayoutData(listControlLayoutData);
 			excludeDialog.getButtonBox(excludeComposite).setLayoutData(
 					new GridData(GridData.HORIZONTAL_ALIGN_FILL
 							| GridData.VERTICAL_ALIGN_BEGINNING));
@@ -227,7 +229,7 @@ public class TclCorePreferencePage extends
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
-	
+
 	protected void setDescription() {
 		// empty
 	}
