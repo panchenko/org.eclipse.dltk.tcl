@@ -215,10 +215,11 @@ public class TclChecker extends AbstractExternalValidator implements
 			IProgressMonitor monitor) {
 		final List<ISourceModule> elements = new ArrayList<ISourceModule>();
 		for (int i = 0; i < modules.length; i++) {
-			final IResource resource = modules[i].getResource();
+			final ISourceModule module = modules[i];
+			final IResource resource = module.getResource();
 			if (resource != null) {
 				clean(resource);
-				elements.add(modules[i]);
+				elements.add(module);
 			}
 		}
 		if (elements.isEmpty()) {
