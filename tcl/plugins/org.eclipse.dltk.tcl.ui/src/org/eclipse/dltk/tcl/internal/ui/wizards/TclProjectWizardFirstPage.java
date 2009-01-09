@@ -34,6 +34,11 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 	private Group packagesGroup;
 	private Label labelElement;
 
+	public TclProjectWizardFirstPage() {
+		setTitle(TclWizardMessages.ProjectCreationWizardFirstPage_title);
+		setDescription(TclWizardMessages.ProjectCreationWizardFirstPage_description);
+	}
+
 	final class TclInterpreterGroup extends AbstractInterpreterGroup {
 
 		public TclInterpreterGroup(Composite composite) {
@@ -45,7 +50,7 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		}
 
 		protected String getIntereprtersPreferencePageId() {
-			return "org.eclipse.dltk.tcl.preferences.interpreters";
+			return "org.eclipse.dltk.tcl.preferences.interpreters"; //$NON-NLS-1$
 		}
 	}
 
@@ -82,13 +87,15 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		gridData.widthHint = convertWidthInCharsToPixels(50);
 		packagesGroup.setLayoutData(gridData);
 		packagesGroup.setLayout(new GridLayout(1, false));
-		packagesGroup.setText("Packages detector");
+		packagesGroup
+				.setText(TclWizardMessages.TclProjectWizardFirstPage_packageDetector);
 		this.useAnalysis = new Button(packagesGroup, SWT.CHECK);
-		this.useAnalysis.setText("Detect packages from source code");
+		this.useAnalysis
+				.setText(TclWizardMessages.TclProjectWizardFirstPage_packageDetector_checkbox);
 		this.useAnalysis.setSelection(true);
 		labelElement = new Label(packagesGroup, SWT.NONE);
 		labelElement
-				.setText("Enable package detection for Remote Projects could be realy slow...");
+				.setText(TclWizardMessages.TclProjectWizardFirstPage_packageDetector_description);
 		Observer o = new Observer() {
 			public void update(Observable o, Object arg) {
 				boolean inWorkspace = fLocationGroup.isInWorkspace();

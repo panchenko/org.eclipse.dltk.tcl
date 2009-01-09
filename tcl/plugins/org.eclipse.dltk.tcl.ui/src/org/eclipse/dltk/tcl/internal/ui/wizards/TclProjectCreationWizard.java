@@ -40,10 +40,6 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 	public void addPages() {
 		super.addPages();
 		fFirstPage = new TclProjectWizardFirstPage();
-		fFirstPage
-				.setTitle(TclWizardMessages.ProjectCreationWizardFirstPage_title);
-		fFirstPage
-				.setDescription(TclWizardMessages.ProjectCreationWizardFirstPage_description);
 		addPage(fFirstPage);
 		fSecondPage = new TclProjectWizardSecondPage(fFirstPage);
 		addPage(fSecondPage);

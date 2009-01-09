@@ -19,15 +19,17 @@ public class TclWizardMessages extends NLS {
 	}
 
 	public static String ProjectCreationWizard_title;
-	
+
 	public static String ProjectCreationWizardFirstPage_title;
 	public static String ProjectCreationWizardFirstPage_description;
-
 
 	public static String TclBuildpathDetector_AnalysingSubTask;
 
 	public static String TclBuildpathDetector_AnalysingTask;
 
+	public static String TclProjectWizardFirstPage_packageDetector;
+	public static String TclProjectWizardFirstPage_packageDetector_checkbox;
+	public static String TclProjectWizardFirstPage_packageDetector_description;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, TclWizardMessages.class);
