@@ -15,9 +15,15 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.wizards.IProjectWizardLastPage;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
+import org.eclipse.dltk.ui.wizards.ProjectWizardConfigureLinkedFoldersPage;
+import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
+import org.eclipse.dltk.ui.wizards.ProjectWizardSelectLinkedFoldersPage;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
@@ -27,6 +33,8 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 	public static final String ID_WIZARD = "org.eclipse.dltk.tcl.internal.ui.wizards.TclProjectWizard"; //$NON-NLS-1$
 
 	private TclProjectWizardFirstPage fFirstPage;
+	private ProjectWizardSelectLinkedFoldersPage fLinkedSourcePage;
+	private ProjectWizardConfigureLinkedFoldersPage fConfigureFoldersPage;
 	private TclProjectWizardSecondPage fSecondPage;
 
 	private IConfigurationElement fConfigElement;
@@ -41,22 +49,38 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 		super.addPages();
 		fFirstPage = new TclProjectWizardFirstPage();
 		addPage(fFirstPage);
+		if (ProjectWizardFirstPage.ENABLED_LINKED_PROJECT) {
+			fLinkedSourcePage = new ProjectWizardSelectLinkedFoldersPage(
+					fFirstPage);
+			addPage(fLinkedSourcePage);
+			fConfigureFoldersPage = new ProjectWizardConfigureLinkedFoldersPage(
+					TclNature.NATURE_ID, fFirstPage, fLinkedSourcePage);
+		}
+		addPage(fConfigureFoldersPage);
 		fSecondPage = new TclProjectWizardSecondPage(fFirstPage);
 		addPage(fSecondPage);
 	}
 
 	protected void finishPage(IProgressMonitor monitor)
 			throws InterruptedException, CoreException {
-		fSecondPage.performFinish(monitor); // use the full progress monitor
+		getLastPage().performFinish(monitor); // use the full progress monitor
 	}
 
 	public boolean performFinish() {
 		boolean res = super.performFinish();
 		if (res) {
 			BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
-			selectAndReveal(fSecondPage.getScriptProject().getProject());
+			selectAndReveal(getLastPage().getScriptProject().getProject());
 		}
 		return res;
+	}
+
+	private IProjectWizardLastPage getLastPage() {
+		if (!fFirstPage.isExternalLinked()) {
+			return fSecondPage;
+		} else {
+			return fConfigureFoldersPage;
+		}
 	}
 
 	/*
@@ -69,11 +93,54 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 	}
 
 	public boolean performCancel() {
-		fSecondPage.performCancel();
+		getLastPage().performCancel();
 		return super.performCancel();
 	}
 
 	public IModelElement getCreatedElement() {
 		return DLTKCore.create(fFirstPage.getProjectHandle());
+	}
+
+	public IWizardPage getNextPage(IWizardPage page) {
+		IWizardPage nextPage = super.getNextPage(page);
+		while (nextPage != null && !isEnabledPage(nextPage)) {
+			nextPage = super.getNextPage(nextPage);
+		}
+		return nextPage;
+	}
+
+	public IWizardPage getPreviousPage(IWizardPage page) {
+		IWizardPage prevPage = super.getPreviousPage(page);
+		while (prevPage != null && !isEnabledPage(prevPage)) {
+			prevPage = super.getPreviousPage(prevPage);
+		}
+		return prevPage;
+	}
+
+	public boolean canFinish() {
+		final IWizardPage[] pages = getPages();
+		for (int i = 0; i < pages.length; ++i) {
+			final IWizardPage page = pages[i];
+			if (isEnabledPage(page)) {
+				if (!page.isPageComplete()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean isEnabledPage(IWizardPage page) {
+		if (!fFirstPage.isExternalLinked()) {
+			if (page instanceof ProjectWizardSelectLinkedFoldersPage
+					|| page instanceof ProjectWizardConfigureLinkedFoldersPage) {
+				return false;
+			}
+		} else {
+			if (page instanceof TclProjectWizardSecondPage) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
