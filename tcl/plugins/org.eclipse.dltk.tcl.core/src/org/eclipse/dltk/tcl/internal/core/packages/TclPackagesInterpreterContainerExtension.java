@@ -57,6 +57,9 @@ public class TclPackagesInterpreterContainerExtension implements
 				return;
 			}
 			IEnvironment env = EnvironmentManager.getEnvironment(project);
+			if (env == null) {
+				return;
+			}
 			// This is very slow if no information is available.
 			Set allPaths = new HashSet();
 			// for (Iterator iterator = packages.iterator();
