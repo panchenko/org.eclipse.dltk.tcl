@@ -21,7 +21,6 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.wizards.IProjectWizardLastPage;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.dltk.ui.wizards.ProjectWizardConfigureLinkedFoldersPage;
-import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.dltk.ui.wizards.ProjectWizardSelectLinkedFoldersPage;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.INewWizard;
@@ -49,7 +48,7 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 		super.addPages();
 		fFirstPage = new TclProjectWizardFirstPage();
 		addPage(fFirstPage);
-		if (ProjectWizardFirstPage.ENABLED_LINKED_PROJECT) {
+		if (true) {
 			fLinkedSourcePage = new ProjectWizardSelectLinkedFoldersPage(
 					fFirstPage);
 			addPage(fLinkedSourcePage);

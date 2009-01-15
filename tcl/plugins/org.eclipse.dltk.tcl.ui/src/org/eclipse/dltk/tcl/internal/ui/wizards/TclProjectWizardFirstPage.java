@@ -117,4 +117,8 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		});
 		return result[0];
 	}
+
+	protected boolean isEnableLinkedProject() {
+		return true;
+	}
 }
