@@ -291,11 +291,10 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		errorsAndWarningsExceptUpgrade = new Button(radioGroup, SWT.RADIO);
 		errorsAndWarningsExceptUpgrade
 				.setText(PreferencesMessages.TclChecker_mode_errorsAndWarningsExceptUpgrade);
-		errorsAndWarningsExceptUpgrade
-				.setToolTipText(PreferencesMessages.TclChecker_mode_errorsAndWarningsExceptUpgrade_tooltip);
 
 		allMode = new Button(radioGroup, SWT.RADIO);
 		allMode.setText(PreferencesMessages.TclChecker_mode_all);
+		allMode.setToolTipText(PreferencesMessages.TclChecker_mode_all_tooltip);
 	}
 
 	protected void createPathGroup(final Composite parent, Object data) {
