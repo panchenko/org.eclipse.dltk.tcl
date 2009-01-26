@@ -16,6 +16,7 @@ public final class TclCheckerConstants {
 	public static final String PREF_PATH = "tclchecker.path"; //$NON-NLS-1$
 
 	public static final String PREF_MODE = "tclchecker.mode"; //$NON-NLS-1$
+	public static final String PREF_SUMMARY = "tclchecker.summary"; //$NON-NLS-1$
 
 	public static final String PREF_PCX_PATH = "tclchecker.pcx.path"; //$NON-NLS-1$
 	public static final String PREF_NO_PCX = "tclchecker.no_pcx"; //$NON-NLS-1$

@@ -107,6 +107,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	private Combo comboVersion;
 	private Text cliOptions;
+	private Button checkSummary;
 
 	public void createControl(Composite parent, int columns) {
 		Composite c = new Composite(parent, SWT.NONE);
@@ -601,7 +602,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		group.setLayoutData(data);
 
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 4;
+		layout.numColumns = 5;
 		layout.makeColumnsEqualWidth = true;
 		group.setLayout(layout);
 
@@ -612,6 +613,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		SWTFactory.createLabel(group, "CLI option(s)", 1); //$NON-NLS-1$
 		cliOptions = SWTFactory.createText(group, SWT.BORDER, 1,
 				Util.EMPTY_STRING);
+		checkSummary = SWTFactory.createCheckButton(group, "Summary"); //$NON-NLS-1$
 	}
 
 	public void init(IWorkbench workbench) {
@@ -633,6 +635,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 			comboVersion.select(0);
 		}
 		cliOptions.setText(store.getString(TclCheckerConstants.CLI_OPTIONS));
+		checkSummary.setSelection(store
+				.getBoolean(TclCheckerConstants.PREF_SUMMARY));
 
 		// Path
 		environmentPathBlock.setPaths(TclCheckerHelper.getPaths(store));
@@ -706,6 +710,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		}
 		store.setValue(TclCheckerConstants.CLI_OPTIONS, cliOptions.getText()
 				.trim());
+		store.setValue(TclCheckerConstants.PREF_SUMMARY, checkSummary
+				.getSelection());
 
 		// Path
 		TclCheckerHelper.setPaths(store, environmentPathBlock.getPaths());

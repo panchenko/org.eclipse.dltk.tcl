@@ -28,6 +28,7 @@ import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.CommandLine;
+import org.eclipse.dltk.validators.core.IValidatorOutput;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class TclCheckerHelper {
@@ -50,7 +51,7 @@ public final class TclCheckerHelper {
 
 	public static boolean buildCommandLine(IPreferenceStore store,
 			CommandLine cmdLine, IEnvironment environment,
-			IScriptProject project) {
+			IScriptProject project, IValidatorOutput console) {
 		Map<IEnvironment, String> paths = getPaths(store);
 		String path = paths.get(environment);
 		if (path == null || path.length() == 0) {
@@ -59,6 +60,12 @@ public final class TclCheckerHelper {
 		IFileHandle validatorFile = PlatformFileUtils
 				.findAbsoluteOrEclipseRelativeFile(environment, new Path(path));
 		cmdLine.add(validatorFile.toOSString());
+
+		if (console.isEnabled()
+				&& store.getBoolean(TclCheckerConstants.PREF_SUMMARY)) {
+			cmdLine.add("-summary"); //$NON-NLS-1$
+			cmdLine.add("-verbose"); //$NON-NLS-1$
+		}
 
 		// cmdLine.add(QUIET_OPTION);
 

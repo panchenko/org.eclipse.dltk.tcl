@@ -30,6 +30,7 @@ public class TclCheckerPreferenceInitializer extends
 		store.setDefault(TclCheckerConstants.PREF_VERSION,
 				TclCheckerConstants.VERSION_5);
 		store.setDefault(TclCheckerConstants.CLI_OPTIONS, Util.EMPTY_STRING);
+		store.setDefault(TclCheckerConstants.PREF_SUMMARY, false);
 		store.setDefault(TclCheckerConstants.PREF_MODE,
 				TclCheckerConstants.MODE_DEFAULT);
 

@@ -105,7 +105,7 @@ public class TclChecker extends AbstractExternalValidator implements
 		}
 		final CommandLine cmdLine = new CommandLine();
 		if (!TclCheckerHelper.buildCommandLine(store, cmdLine, environment,
-				sourceModules.get(0).getScriptProject())) {
+				sourceModules.get(0).getScriptProject(), console)) {
 			console.println(Messages.TclChecker_path_not_specified);
 			return;
 		}
