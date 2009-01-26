@@ -27,9 +27,11 @@ import org.eclipse.dltk.tcl.internal.tclchecker.Coord;
 import org.eclipse.dltk.tcl.internal.tclchecker.CoordRange;
 import org.eclipse.dltk.tcl.internal.tclchecker.ILineTrackerFactory;
 import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
+import org.eclipse.dltk.tcl.internal.tclchecker.Messages;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
 import org.eclipse.dltk.validators.core.IValidatorOutput;
+import org.eclipse.osgi.util.NLS;
 
 public class Checker5OutputProcessor extends AbstractOutputProcessor {
 
@@ -52,6 +54,9 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 
 	private final StringBuilder buffer = new StringBuilder();
 
+	private int scanned = 0;
+	private int checked = 0;
+
 	public void processLine(String line) throws CoreException {
 		console.println(line);
 		buffer.append(line);
@@ -60,7 +65,7 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 				.parseDictionary(buffer.toString());
 		if (tokens != null) {
 			buffer.setLength(0);
-			if (tokens.size() == 2 && !tokens.get(0).hasChildren()) {
+			if (tokens.size() >= 2 && !tokens.get(0).hasChildren()) {
 				if (CMD_MESSAGE.equals(tokens.get(0).getText())
 						&& tokens.get(1).hasChildren()) {
 					final Map<String, IToken> attributes = parseAttributes(tokens
@@ -71,8 +76,20 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 							&& attributes.containsKey(ATTR_MESSAGE_TEXT)) {
 						processMessage(attributes);
 					}
-				} else if (CMD_PROGRESS.equals(tokens.get(0).getText())) {
-					subTask(tokens.get(1).getText());
+				} else if (tokens.size() == 3
+						&& CMD_PROGRESS.equals(tokens.get(0).getText())) {
+					final String progressSubCmd = tokens.get(1).getText();
+					if (PROGRESS_SCANNING.equals(progressSubCmd)) {
+						subTask(NLS.bind(Messages.TclChecker_scanning, tokens
+								.get(2).getText(), String
+								.valueOf(getModuleCount() - scanned)));
+						scanned++;
+					} else if (PROGRESS_CHECKING.equals(progressSubCmd)) {
+						subTask(NLS.bind(Messages.TclChecker_checking, tokens
+								.get(2).getText(), String
+								.valueOf(getModuleCount() - checked)));
+						++checked;
+					}
 				}
 			}
 		}
@@ -176,6 +193,9 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 
 	private static final String CMD_MESSAGE = "message"; //$NON-NLS-1$
 	private static final String CMD_PROGRESS = "progress"; //$NON-NLS-1$
+
+	private static final String PROGRESS_SCANNING = "scanning"; //$NON-NLS-1$
+	private static final String PROGRESS_CHECKING = "checking"; //$NON-NLS-1$
 
 	private static final String ATTR_FILE = "file"; //$NON-NLS-1$
 	private static final String ATTR_LINE = "line"; //$NON-NLS-1$
