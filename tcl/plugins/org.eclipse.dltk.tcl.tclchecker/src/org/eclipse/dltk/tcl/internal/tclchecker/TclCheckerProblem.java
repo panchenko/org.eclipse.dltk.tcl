@@ -12,14 +12,13 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dltk.core.ISourceRange;
 
 public class TclCheckerProblem {
 	private final String file;
 	private final int lineNumber;
 	private final TclCheckerProblemDescription description;
-	private ISourceRange range;
-	private ISourceRange errorRange;
+	private CoordRange range;
+	private CoordRange errorRange;
 	private Map<String, Object> attributes = null;
 
 	public TclCheckerProblem(String source, int lineNumber, String messageID,
@@ -46,19 +45,19 @@ public class TclCheckerProblem {
 		return file + ":" + lineNumber + " " + description; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public ISourceRange getRange() {
+	public CoordRange getRange() {
 		return range;
 	}
 
-	public void setRange(ISourceRange range) {
+	public void setRange(CoordRange range) {
 		this.range = range;
 	}
 
-	public ISourceRange getErrorRange() {
+	public CoordRange getErrorRange() {
 		return errorRange;
 	}
 
-	public void setErrorRange(ISourceRange range) {
+	public void setErrorRange(CoordRange range) {
 		this.errorRange = range;
 	}
 

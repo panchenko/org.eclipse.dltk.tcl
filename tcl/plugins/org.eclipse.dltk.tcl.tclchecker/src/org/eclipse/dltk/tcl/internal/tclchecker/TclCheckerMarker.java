@@ -22,8 +22,8 @@ public class TclCheckerMarker {
 	public static final String COMMAND_START = TclCheckerPlugin.PLUGIN_ID
 			+ ".commandStart"; //$NON-NLS-1$
 
-	public static final String COMMAND_LENGTH = TclCheckerPlugin.PLUGIN_ID
-			+ ".commandLength"; //$NON-NLS-1$
+	public static final String COMMAND_END = TclCheckerPlugin.PLUGIN_ID
+			+ ".commandEnd"; //$NON-NLS-1$
 
 	public static final String MESSAGE_ID = TclCheckerPlugin.PLUGIN_ID
 			+ ".messageId"; //$NON-NLS-1$

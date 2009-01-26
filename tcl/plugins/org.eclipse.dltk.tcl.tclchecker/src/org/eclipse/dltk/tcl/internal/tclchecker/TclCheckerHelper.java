@@ -32,13 +32,15 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public final class TclCheckerHelper {
 
-	// private static final String QUIET_OPTION = "-quiet";
+	private static final String W0_OPTION = "-W0"; //$NON-NLS-1$
 
 	private static final String W1_OPTION = "-W1"; //$NON-NLS-1$
 
 	private static final String W2_OPTION = "-W2"; //$NON-NLS-1$
 
 	private static final String W3_OPTION = "-W3"; //$NON-NLS-1$
+
+	private static final String W4_OPTION = "-W4"; //$NON-NLS-1$
 
 	private static final String PCX_OPTION = "-pcx"; //$NON-NLS-1$
 	private static final String NO_PCX_OPTION = "-nopcx"; //$NON-NLS-1$
@@ -87,13 +89,22 @@ public final class TclCheckerHelper {
 		}
 
 		int mode = store.getInt(TclCheckerConstants.PREF_MODE);
-
-		if (mode == TclCheckerConstants.MODE_ERRORS) {
+		switch (mode) {
+		case TclCheckerConstants.MODE_NONE:
+			cmdLine.add(W0_OPTION);
+			break;
+		case TclCheckerConstants.MODE_ERRORS:
 			cmdLine.add(W1_OPTION);
-		} else if (mode == TclCheckerConstants.MODE_ERRORS_AND_USAGE_WARNINGS) {
+			break;
+		case TclCheckerConstants.MODE_ERRORS_AND_USAGE_WARNINGS:
 			cmdLine.add(W2_OPTION);
-		} else if (mode == TclCheckerConstants.MODE_ALL) {
+			break;
+		case TclCheckerConstants.MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE:
 			cmdLine.add(W3_OPTION);
+			break;
+		case TclCheckerConstants.MODE_ALL:
+			cmdLine.add(W4_OPTION);
+			break;
 		}
 
 		// Suppress

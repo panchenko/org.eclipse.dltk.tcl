@@ -26,13 +26,17 @@ public final class TclCheckerConstants {
 	public static final String VERSION_4 = "4"; //$NON-NLS-1$
 	public static final String VERSION_5 = "5"; //$NON-NLS-1$
 
+	public static final int MODE_NONE = -1;
+
 	public static final int MODE_ERRORS = 0;
 
 	public static final int MODE_ERRORS_AND_USAGE_WARNINGS = 1;
 
-	public static final int MODE_ALL = 2;
+	public static final int MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE = 2;
 
-	public static final int MODE_DEFAULT = MODE_ALL;
+	public static final int MODE_ALL = 3;
+
+	public static final int MODE_DEFAULT = MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE;
 
 	public static final String TCL_DEVKIT_LOCAL_VARIABLE = "TCLDEVKIT_LOCAL"; //$NON-NLS-1$
 

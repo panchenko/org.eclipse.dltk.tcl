@@ -55,9 +55,11 @@ public class PreferencesMessages extends NLS {
 
 	public static String TclChecker_mode;
 
+	public static String TclChecker_mode_none;
 	public static String TclChecker_mode_errors;
-
 	public static String TclChecker_mode_errorsAndUsageWarnings;
+	public static String TclChecker_mode_errorsAndWarningsExceptUpgrade;
+	public static String TclChecker_mode_errorsAndWarningsExceptUpgrade_tooltip;
 
 	public static String TclChecker_mode_all;
 

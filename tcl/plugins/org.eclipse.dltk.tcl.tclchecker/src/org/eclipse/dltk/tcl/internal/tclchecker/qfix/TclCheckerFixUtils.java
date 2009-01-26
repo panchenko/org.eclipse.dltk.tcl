@@ -143,9 +143,8 @@ public class TclCheckerFixUtils {
 		final int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, -1);
 		int commandStart = marker.getAttribute(TclCheckerMarker.COMMAND_START,
 				-1);
-		int commandLength = marker.getAttribute(
-				TclCheckerMarker.COMMAND_LENGTH, -1);
-		if (lineNumber < 0 || commandStart < 0 || commandLength < 0) {
+		int commandEnd = marker.getAttribute(TclCheckerMarker.COMMAND_END, -1);
+		if (lineNumber < 0 || commandStart < 0 || commandEnd < 0) {
 			reporter
 					.showError(Messages.TclCheckerAnnotationResolution_wrongMarkerAttributes);
 			return;
@@ -159,8 +158,8 @@ public class TclCheckerFixUtils {
 			if (commandStart >= lineRegion.getOffset()
 					&& commandStart < lineRegion.getOffset()
 							+ lineRegion.getLength()) {
-				document.replace(commandStart, commandLength - 1, replacement);
-				/* XXX -1 above is compensating bug in TclChecker output */
+				document.replace(commandStart, commandEnd - commandStart,
+						replacement);
 				try {
 					marker.delete();
 				} catch (CoreException e) {

@@ -11,7 +11,7 @@
       <persistent value="true"/>
       <attribute name="org.eclipse.dltk.tcl.tclchecker.suggestedCorrections" />
       <attribute name="org.eclipse.dltk.tcl.tclchecker.commandStart" />
-      <attribute name="org.eclipse.dltk.tcl.tclchecker.commandLength" />
+      <attribute name="org.eclipse.dltk.tcl.tclchecker.commandEnd" />
       <attribute name="org.eclipse.dltk.tcl.tclchecker.messageId" />
       <attribute name="org.eclipse.dltk.tcl.tclchecker.timestamp" />
    </extension>

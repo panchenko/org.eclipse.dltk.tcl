@@ -21,8 +21,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.CorrectionEngine;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.corext.SourceRange;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.internal.tclchecker.AbstractOutputProcessor;
+import org.eclipse.dltk.tcl.internal.tclchecker.Coord;
+import org.eclipse.dltk.tcl.internal.tclchecker.CoordRange;
+import org.eclipse.dltk.tcl.internal.tclchecker.ILineTrackerFactory;
 import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
@@ -32,12 +35,15 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 
 	private final IValidatorOutput console;
 	private final ITclCheckerReporter reporter;
+	private final ILineTrackerFactory lineTrackerFactory;
 
 	public Checker5OutputProcessor(IProgressMonitor monitor,
-			IValidatorOutput console, ITclCheckerReporter reporter) {
+			IValidatorOutput console, ITclCheckerReporter reporter,
+			ILineTrackerFactory lineTrackerFactory) {
 		super(monitor);
 		this.console = console;
 		this.reporter = reporter;
+		this.lineTrackerFactory = lineTrackerFactory;
 	}
 
 	public void processErrorLine(String line) {
@@ -87,39 +93,43 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 		final TclCheckerProblem problem = new TclCheckerProblem(file,
 				lineNumber, messageId, attributes.get(ATTR_MESSAGE_TEXT)
 						.getText());
-		final int commandStart = parseInt(attributes.get(ATTR_COMMAND_START));
-		final int commandLength = parseInt(attributes.get(ATTR_COMMAND_LENGTH));
-		if (commandStart >= 0 && commandLength >= 0) {
-			problem.setRange(new SourceRange(commandStart, commandLength));
-		}
-		final int errorStart = parseInt(attributes.get(ATTR_ERROR_START));
-		final int errorLength = parseInt(attributes.get(ATTR_ERROR_LENGTH));
-		if (errorStart >= 0 && errorLength >= 0) {
-			problem.setErrorRange(new SourceRange(errorStart, errorLength));
-		}
-		if (attributes.containsKey(ATTR_SUGGESTED_CORRECTIONS)
-				&& problem.getRange() != null) {
-			final List<IToken> correctionList;
-			final IToken corrections = attributes
-					.get(ATTR_SUGGESTED_CORRECTIONS);
-			if (corrections.hasChildren()) {
-				correctionList = corrections.getChildren();
-			} else {
-				correctionList = Collections.singletonList(corrections);
+		final Coord commandStart = parseCoord(attributes
+				.get(ATTR_COMMAND_START));
+		final Coord commandEnd = parseCoord(attributes.get(ATTR_COMMAND_END));
+		if (commandStart != null && commandEnd != null) {
+			problem.setRange(new CoordRange(commandStart, commandEnd));
+			if (attributes.containsKey(ATTR_SUGGESTED_CORRECTIONS)) {
+				final List<IToken> correctionList;
+				final IToken corrections = attributes
+						.get(ATTR_SUGGESTED_CORRECTIONS);
+				if (corrections.hasChildren()) {
+					correctionList = corrections.getChildren();
+				} else {
+					correctionList = Collections.singletonList(corrections);
+				}
+				final String[] suggestions = new String[correctionList.size()];
+				for (int i = 0; i < correctionList.size(); ++i) {
+					suggestions[i] = correctionList.get(i).getText();
+				}
+				final ISourceLineTracker lineTracker = lineTrackerFactory
+						.getLineTracker(module);
+				problem.addAttribute(TclCheckerMarker.SUGGESTED_CORRECTIONS,
+						CorrectionEngine.encodeArguments(suggestions));
+				problem.addAttribute(TclCheckerMarker.COMMAND_START,
+						lineTrackerFactory.calculateOffset(lineTracker,
+								commandStart));
+				problem.addAttribute(TclCheckerMarker.COMMAND_END,
+						lineTrackerFactory.calculateOffset(lineTracker,
+								commandEnd));
+				problem.addAttribute(TclCheckerMarker.MESSAGE_ID, messageId);
+				problem.addAttribute(TclCheckerMarker.TIMESTAMP, String
+						.valueOf(module.getResource().getModificationStamp()));
 			}
-			final String[] suggestions = new String[correctionList.size()];
-			for (int i = 0; i < correctionList.size(); ++i) {
-				suggestions[i] = correctionList.get(i).getText();
-			}
-			problem.addAttribute(TclCheckerMarker.SUGGESTED_CORRECTIONS,
-					CorrectionEngine.encodeArguments(suggestions));
-			problem.addAttribute(TclCheckerMarker.COMMAND_START, commandStart);
-			problem
-					.addAttribute(TclCheckerMarker.COMMAND_LENGTH,
-							commandLength);
-			problem.addAttribute(TclCheckerMarker.MESSAGE_ID, messageId);
-			problem.addAttribute(TclCheckerMarker.TIMESTAMP, String
-					.valueOf(module.getResource().getModificationStamp()));
+		}
+		final Coord errorStart = parseCoord(attributes.get(ATTR_ERROR_START));
+		final Coord errorEnd = parseCoord(attributes.get(ATTR_ERROR_END));
+		if (errorStart != null && errorEnd != null) {
+			problem.setErrorRange(new CoordRange(errorStart, errorEnd));
 		}
 		reporter.report(module, problem);
 	}
@@ -130,6 +140,22 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 		} catch (NumberFormatException e) {
 			return -1;
 		}
+	}
+
+	private Coord parseCoord(final IToken token) {
+		if (token != null) {
+			final String s = token.getText();
+			final int pos = s.indexOf(' ');
+			if (pos > 0) {
+				try {
+					return new Coord(Integer.parseInt(s.substring(0, pos)),
+							Integer.parseInt(s.substring(pos + 1)));
+				} catch (NumberFormatException e) {
+					// fall through
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -156,10 +182,10 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 	private static final String ATTR_MESSAGE_ID = "messageID"; //$NON-NLS-1$
 	private static final String ATTR_MESSAGE_TEXT = "messageText"; //$NON-NLS-1$
 
-	private static final String ATTR_COMMAND_START = "commandStart"; //$NON-NLS-1$
-	private static final String ATTR_COMMAND_LENGTH = "commandLength"; //$NON-NLS-1$
-	private static final String ATTR_ERROR_START = "errorStart"; //$NON-NLS-1$
-	private static final String ATTR_ERROR_LENGTH = "errorLength"; //$NON-NLS-1$
+	private static final String ATTR_COMMAND_START = "commandStart,portable"; //$NON-NLS-1$
+	private static final String ATTR_COMMAND_END = "commandEnd,portable"; //$NON-NLS-1$
+	private static final String ATTR_ERROR_START = "errorStart,portable"; //$NON-NLS-1$
+	private static final String ATTR_ERROR_END = "errorEnd,portable"; //$NON-NLS-1$
 
 	private static final String ATTR_SUGGESTED_CORRECTIONS = "suggestedCorrections"; //$NON-NLS-1$
 

@@ -81,8 +81,10 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	EnvironmentPathBlock environmentPathBlock;
 	private Map pcxPaths;
 
+	private Button errorsNone;
 	private Button errorsMode;
 	private Button errorsAndUsageWarningsMode;
+	private Button errorsAndWarningsExceptUpgrade;
 	private Button allMode;
 
 	private Table problemsTable;
@@ -120,17 +122,24 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	}
 
 	protected void setModeSelection(int mode) {
+		errorsNone.setSelection(mode == TclCheckerConstants.MODE_NONE);
 		errorsMode.setSelection(mode == TclCheckerConstants.MODE_ERRORS);
 		errorsAndUsageWarningsMode
 				.setSelection(mode == TclCheckerConstants.MODE_ERRORS_AND_USAGE_WARNINGS);
+		errorsAndWarningsExceptUpgrade
+				.setSelection(mode == TclCheckerConstants.MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE);
 		allMode.setSelection(mode == TclCheckerConstants.MODE_ALL);
 	}
 
 	protected int getModeSelection() {
-		if (errorsMode.getSelection()) {
+		if (errorsNone.getSelection()) {
+			return TclCheckerConstants.MODE_NONE;
+		} else if (errorsMode.getSelection()) {
 			return TclCheckerConstants.MODE_ERRORS;
 		} else if (errorsAndUsageWarningsMode.getSelection()) {
 			return TclCheckerConstants.MODE_ERRORS_AND_USAGE_WARNINGS;
+		} else if (errorsAndWarningsExceptUpgrade.getSelection()) {
+			return TclCheckerConstants.MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE;
 		} else if (allMode.getSelection()) {
 			return TclCheckerConstants.MODE_ALL;
 		}
@@ -270,12 +279,20 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		layout.numColumns = 1;
 		radioGroup.setLayout(layout);
 
+		errorsNone = new Button(radioGroup, SWT.RADIO);
+		errorsNone.setText(PreferencesMessages.TclChecker_mode_none);
 		errorsMode = new Button(radioGroup, SWT.RADIO);
 		errorsMode.setText(PreferencesMessages.TclChecker_mode_errors);
 
 		errorsAndUsageWarningsMode = new Button(radioGroup, SWT.RADIO);
 		errorsAndUsageWarningsMode
 				.setText(PreferencesMessages.TclChecker_mode_errorsAndUsageWarnings);
+
+		errorsAndWarningsExceptUpgrade = new Button(radioGroup, SWT.RADIO);
+		errorsAndWarningsExceptUpgrade
+				.setText(PreferencesMessages.TclChecker_mode_errorsAndWarningsExceptUpgrade);
+		errorsAndWarningsExceptUpgrade
+				.setToolTipText(PreferencesMessages.TclChecker_mode_errorsAndWarningsExceptUpgrade_tooltip);
 
 		allMode = new Button(radioGroup, SWT.RADIO);
 		allMode.setText(PreferencesMessages.TclChecker_mode_all);
@@ -675,7 +692,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	}
 
 	protected void performDefaults() {
-		setModeSelection(TclCheckerConstants.MODE_ALL);
+		setModeSelection(TclCheckerConstants.MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE);
 		setProcessType(TclCheckerConstants.PROCESS_TYPE_DEFAULT);
 	}
 

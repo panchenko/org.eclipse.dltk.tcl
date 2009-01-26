@@ -13,7 +13,6 @@ package org.eclipse.dltk.tcl.internal.tclchecker.v5;
 
 import java.util.List;
 
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.internal.parser.raw.BracesSubstitution;
 import org.eclipse.dltk.tcl.internal.parser.raw.CodeScanner;
 import org.eclipse.dltk.tcl.internal.parser.raw.ErrorDescription;
@@ -55,14 +54,10 @@ public final class TclDictionaryParser extends SimpleTclParser {
 		try {
 			return parse(new CodeScanner(content), false, null);
 		} catch (UnexpectedError e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
+			// e.printStackTrace();
 			return null;
 		} catch (TclParseException e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
+			// e.printStackTrace();
 			return null;
 		}
 	}
