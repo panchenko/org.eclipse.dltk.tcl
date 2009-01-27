@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.dltk.tcl.tclchecker/src"
+    modelPluginID="org.eclipse.dltk.tcl.tclchecker" modelName="Tclchecker" nonNLSMarkers="true"
+    rootImplementsInterface="" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
+    copyrightFields="false" language="">
+  <foreignModel>tclchecker.ecore</foreignModel>
+  <genPackages prefix="Messages" basePackage="org.eclipse.dltk.tcl.tclchecker.model"
+      resource="XMI" disposableProviderFactory="true" ecorePackage="tclchecker.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="tclchecker.ecore#//MessageCategory">
+      <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//MessageCategory/ERROR"/>
+      <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//MessageCategory/WARNING"/>
+      <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//MessageCategory/UPGRADE_ERROR"/>
+      <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//MessageCategory/UPGRADE_WARNING"/>
+      <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//MessageCategory/NON_PORTABLE_WARNING"/>
+      <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//MessageCategory/PERFORMANCE_WARNING"/>
+      <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//MessageCategory/USAGE_WARNING"/>
+    </genEnums>
+    <genClasses ecoreClass="tclchecker.ecore#//CheckerMessage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//CheckerMessage/messageId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//CheckerMessage/explanation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//CheckerMessage/category"/>
+    </genClasses>
+    <genClasses ecoreClass="tclchecker.ecore#//MessageGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//MessageGroup/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//MessageGroup/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tclchecker.ecore#//MessageGroup/messages"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

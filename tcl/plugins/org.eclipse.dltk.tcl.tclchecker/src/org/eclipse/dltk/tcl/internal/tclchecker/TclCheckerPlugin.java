@@ -10,6 +10,7 @@
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.TclCheckerEnvironment;
@@ -53,6 +54,18 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 	 */
 	public static TclCheckerPlugin getDefault() {
 		return plugin;
+	}
+
+	public static void error(Throwable t) {
+		log(IStatus.ERROR, t.toString(), t);
+	}
+
+	public static void error(String message) {
+		log(IStatus.ERROR, message);
+	}
+
+	public static void error(String message, Throwable t) {
+		log(IStatus.ERROR, message, t);
 	}
 
 	public static void log(int severity, String message) {

@@ -12,11 +12,14 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 
 public class TclCheckerProblem {
 	private final String file;
 	private final int lineNumber;
-	private final TclCheckerProblemDescription description;
+	private final CheckerMessage description;
+	private final String messageId;
+	private final String messageText;
 	private CoordRange range;
 	private CoordRange errorRange;
 	private Map<String, Object> attributes = null;
@@ -25,8 +28,9 @@ public class TclCheckerProblem {
 			String message) {
 		this.file = source;
 		this.lineNumber = lineNumber;
-		this.description = TclCheckerProblemDescription.getProblemDescription(
-				messageID, message);
+		this.description = TclCheckerProblemDescription.getProblem(messageID);
+		this.messageId = messageID;
+		this.messageText = message;
 	}
 
 	public String getFile() {
@@ -37,8 +41,8 @@ public class TclCheckerProblem {
 		return lineNumber;
 	}
 
-	public TclCheckerProblemDescription getDescription() {
-		return description;
+	public String getMessage() {
+		return "(" + messageId + ") " + messageText; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public String toString() {
@@ -92,4 +96,26 @@ public class TclCheckerProblem {
 		}
 		attributes.put(name, value);
 	}
+
+	/**
+	 * @return
+	 */
+	public boolean isError() {
+		return description.getCategory().isError();
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isWarning() {
+		return description.getCategory().isWarning();
+	}
+
+	/**
+	 * @return
+	 */
+	public String getExplanation() {
+		return description.getExplanation();
+	}
+
 }

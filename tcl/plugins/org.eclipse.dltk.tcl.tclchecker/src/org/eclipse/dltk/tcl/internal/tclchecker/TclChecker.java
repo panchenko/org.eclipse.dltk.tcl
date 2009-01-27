@@ -52,14 +52,14 @@ public class TclChecker extends AbstractExternalValidator implements
 			TclCheckerProblem problem, int start, int end,
 			Map<String, Object> attributes) throws CoreException {
 		return reportError(resource, problem.getLineNumber(), start, end,
-				problem.getDescription().getMessage(), attributes);
+				problem.getMessage(), attributes);
 	}
 
 	protected IMarker reportWarningProblem(IResource resource,
 			TclCheckerProblem problem, int start, int end,
 			Map<String, Object> attributes) throws CoreException {
 		return reportWarning(resource, problem.getLineNumber(), start, end,
-				problem.getDescription().getMessage(), attributes);
+				problem.getMessage(), attributes);
 	}
 
 	private final IPreferenceStore store;
@@ -260,11 +260,10 @@ public class TclChecker extends AbstractExternalValidator implements
 		if (resource == null) {
 			return;
 		}
-		TclCheckerProblemDescription desc = problem.getDescription();
-		if (TclCheckerProblemDescription.isError(desc.getCategory())) {
+		if (problem.isError()) {
 			reportErrorProblem(resource, problem, start, end, problem
 					.getAttributes());
-		} else if (TclCheckerProblemDescription.isWarning(desc.getCategory()))
+		} else if (problem.isWarning())
 			reportWarningProblem(resource, problem, start, end, problem
 					.getAttributes());
 	}

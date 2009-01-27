@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="messages"
+    nsURI="http://www.eclipse.org/dltk/tcl/tclchecker.ecore" nsPrefix="org.eclipse.dltk.tcl.tclchecker">
+  <eClassifiers xsi:type="ecore:EClass" name="CheckerMessage">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="message"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messageId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="explanation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="#//MessageCategory"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="MessageCategory">
+    <eLiterals name="ERROR"/>
+    <eLiterals name="WARNING" value="1"/>
+    <eLiterals name="UPGRADE_ERROR" value="2"/>
+    <eLiterals name="UPGRADE_WARNING" value="3"/>
+    <eLiterals name="NON_PORTABLE_WARNING" value="4"/>
+    <eLiterals name="PERFORMANCE_WARNING" value="5"/>
+    <eLiterals name="USAGE_WARNING" value="6" literal="USAGE_WARNING"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MessageGroup">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messages" upperBound="-1"
+        eType="#//CheckerMessage" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="message"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+</ecore:EPackage>

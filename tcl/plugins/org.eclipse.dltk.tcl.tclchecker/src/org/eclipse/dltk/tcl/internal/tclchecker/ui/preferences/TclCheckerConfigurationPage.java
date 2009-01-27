@@ -31,6 +31,7 @@ import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerHelper;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
+import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.environment.IEnvironmentPathBlockListener;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
@@ -809,15 +810,14 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		}
 
 		private String getType(String problemId) {
-			String type = TclCheckerProblemDescription
-					.getProblemType(problemId);
-			int category = TclCheckerProblemDescription
-					.matchProblemCategory(type);
-
-			if (TclCheckerProblemDescription.isError(category)) {
-				return PreferencesMessages.TclChecker_error;
-			} else if (TclCheckerProblemDescription.isWarning(category)) {
-				return PreferencesMessages.TclChecker_warning;
+			CheckerMessage checkerMessage = TclCheckerProblemDescription
+					.getProblem(problemId);
+			if (checkerMessage != null) {
+				if (checkerMessage.getCategory().isError()) {
+					return PreferencesMessages.TclChecker_error;
+				} else if (checkerMessage.getCategory().isWarning()) {
+					return PreferencesMessages.TclChecker_warning;
+				}
 			}
 			return null;
 		}

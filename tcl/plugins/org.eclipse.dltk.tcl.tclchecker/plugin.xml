@@ -120,4 +120,10 @@
 			nature="org.eclipse.dltk.tcl.core.nature">
 		</correctionProcessor>
 	</extension>
+	<extension point="org.eclipse.emf.ecore.generated_package">
+		<package
+            uri="http://www.eclipse.org/dltk/tcl/tclchecker.ecore"
+            class="org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage"
+            genModel="models/tclchecker.genmodel"/>
+	</extension>
 </plugin>
