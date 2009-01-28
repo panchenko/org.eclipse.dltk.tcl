@@ -152,13 +152,10 @@ public class TclCheckerFixUtils {
 		try {
 			final IRegion lineRegion = document
 					.getLineInformation(lineNumber - 1);
-			if (commandStart < lineRegion.getOffset()) {
-				commandStart += calculateAdjustment(document, 0, lineNumber - 1);
-			}
 			if (commandStart >= lineRegion.getOffset()
 					&& commandStart < lineRegion.getOffset()
 							+ lineRegion.getLength()) {
-				document.replace(commandStart, commandEnd - commandStart,
+				document.replace(commandStart, commandEnd - commandStart + 1,
 						replacement);
 				try {
 					marker.delete();
@@ -176,18 +173,6 @@ public class TclCheckerFixUtils {
 					.showError(Messages.TclCheckerAnnotationResolution_internalError
 							+ e.getMessage());
 		}
-	}
-
-	private static int calculateAdjustment(IDocument document, int startLine,
-			int endLine) throws BadLocationException {
-		int result = 0;
-		for (int i = startLine; i < endLine; ++i) {
-			String delimiter = document.getLineDelimiter(i);
-			if (delimiter != null && delimiter.length() > 1) {
-				result += delimiter.length() - 1;
-			}
-		}
-		return result;
 	}
 
 }
