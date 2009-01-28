@@ -32,7 +32,6 @@ import org.eclipse.dltk.tcl.internal.tclchecker.Checker4OutputProcessor;
 import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
@@ -87,20 +86,17 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 		System.out.println("=============================================");
 		for (TclCheckerProblem tclCheckerProblem : list) {
 			System.out.println();
-			TclCheckerProblemDescription descr = tclCheckerProblem
-					.getDescription();
 			int[] bounds = model
 					.getBounds(tclCheckerProblem.getLineNumber() - 1);
 			System.out
-					.println(((descr.getCategory() == TclCheckerProblemDescription.ERROR) ? "Error:"
-							: "Warning/Info:")
-							+ descr.getMessage()
+					.println((tclCheckerProblem.isError() ? "Error:" : "Warning/Info:")
+							+ tclCheckerProblem.getMessage()
 							+ " ("
 							+ bounds[0]
 							+ ","
 							+ bounds[1]
 							+ ") message:"
-							+ descr.getExplanation()
+							+ tclCheckerProblem.getExplanation()
 							+ "\n" + contents.substring(bounds[0], bounds[1]));
 		}
 	}
