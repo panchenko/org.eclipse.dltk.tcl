@@ -69,7 +69,8 @@ public final class TclCheckerHelper {
 
 		// cmdLine.add(QUIET_OPTION);
 
-		if (project != null) {
+		if (project != null
+				&& store.getBoolean(TclCheckerConstants.PREF_USE_TCL_VER)) {
 			try {
 				final IInterpreterInstall install = ScriptRuntime
 						.getInterpreterInstall(project);

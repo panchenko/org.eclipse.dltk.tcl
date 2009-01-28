@@ -109,6 +109,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	private Combo comboVersion;
 	private Text cliOptions;
 	private Button checkSummary;
+	private Button checkUseTclVer;
 
 	public void createControl(Composite parent, int columns) {
 		Composite c = new Composite(parent, SWT.NONE);
@@ -602,9 +603,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		Group group = new Group(parent, SWT.NONE);
 		group.setLayoutData(data);
 
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 5;
-		layout.makeColumnsEqualWidth = true;
+		GridLayout layout = new GridLayout(6, false);
 		group.setLayout(layout);
 
 		SWTFactory.createLabel(group, "Version", 1); //$NON-NLS-1$
@@ -615,6 +614,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		cliOptions = SWTFactory.createText(group, SWT.BORDER, 1,
 				Util.EMPTY_STRING);
 		checkSummary = SWTFactory.createCheckButton(group, "Summary"); //$NON-NLS-1$
+		checkUseTclVer = SWTFactory.createCheckButton(group, "-use Tcl<ver>"); //$NON-NLS-1$
 	}
 
 	public void init(IWorkbench workbench) {
@@ -638,6 +638,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		cliOptions.setText(store.getString(TclCheckerConstants.CLI_OPTIONS));
 		checkSummary.setSelection(store
 				.getBoolean(TclCheckerConstants.PREF_SUMMARY));
+		checkUseTclVer.setSelection(store
+				.getBoolean(TclCheckerConstants.PREF_USE_TCL_VER));
 
 		// Path
 		environmentPathBlock.setPaths(TclCheckerHelper.getPaths(store));
@@ -712,6 +714,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		store.setValue(TclCheckerConstants.CLI_OPTIONS, cliOptions.getText()
 				.trim());
 		store.setValue(TclCheckerConstants.PREF_SUMMARY, checkSummary
+				.getSelection());
+		store.setValue(TclCheckerConstants.PREF_USE_TCL_VER, checkUseTclVer
 				.getSelection());
 
 		// Path
