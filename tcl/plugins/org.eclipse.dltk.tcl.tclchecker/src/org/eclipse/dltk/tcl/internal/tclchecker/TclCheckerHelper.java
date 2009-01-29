@@ -123,11 +123,11 @@ public final class TclCheckerHelper {
 			switch (processType) {
 			case TclCheckerConstants.PROCESS_TYPE_CHECK:
 				cmdLine.add(CHECK_OPTION);
-				cmdLine.add(warningName);
+				cmdLine.add(shortMessageId(warningName));
 				break;
 			case TclCheckerConstants.PROCESS_TYPE_SUPPRESS:
 				cmdLine.add(SUPPRESS_OPTION);
-				cmdLine.add(warningName);
+				cmdLine.add(shortMessageId(warningName));
 				break;
 			}
 		}
@@ -163,6 +163,22 @@ public final class TclCheckerHelper {
 			cmdLine.add("script"); //$NON-NLS-1$
 		}
 		return true;
+	}
+
+	/**
+	 * @param messageId
+	 * @return
+	 */
+	private static String shortMessageId(String messageId) {
+		final int index = messageId
+				.indexOf(TclCheckerProblemDescription.MESSAGE_ID_SEPARATOR);
+		if (index >= 0) {
+			return messageId.substring(index
+					+ TclCheckerProblemDescription.MESSAGE_ID_SEPARATOR
+							.length());
+		} else {
+			return messageId;
+		}
 	}
 
 	public static Map<IEnvironment, List<String>> getPcxPaths(

@@ -29,7 +29,10 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 public class TclCheckerProblemDescription {
 
+	public static final String MESSAGE_ID_SEPARATOR = "::"; //$NON-NLS-1$
+
 	private static final Map<String, CheckerMessage> messageDefinitions = new HashMap<String, CheckerMessage>();
+	private static final Map<String, CheckerMessage> altDefinitions = new HashMap<String, CheckerMessage>();
 
 	private static CheckerMessage defaultMessage = null;
 
@@ -41,14 +44,17 @@ public class TclCheckerProblemDescription {
 		loadIfNeeded();
 		CheckerMessage message = messageDefinitions.get(problemId);
 		if (message == null) {
-			if (defaultMessage == null) {
-				defaultMessage = MessagesFactory.eINSTANCE
-						.createCheckerMessage();
-				defaultMessage.setCategory(MessageCategory.ERROR);
-				defaultMessage.setExplanation("Unknown problem"); //$NON-NLS-1$
-				defaultMessage.setMessageId("Unknown"); //$NON-NLS-1$
+			message = altDefinitions.get(problemId);
+			if (message == null) {
+				if (defaultMessage == null) {
+					defaultMessage = MessagesFactory.eINSTANCE
+							.createCheckerMessage();
+					defaultMessage.setCategory(MessageCategory.ERROR);
+					defaultMessage.setExplanation("Unknown problem"); //$NON-NLS-1$
+					defaultMessage.setMessageId("Unknown"); //$NON-NLS-1$
+				}
+				message = defaultMessage;
 			}
-			message = defaultMessage;
 		}
 		return message;
 	}
@@ -78,24 +84,29 @@ public class TclCheckerProblemDescription {
 					for (CheckerMessage message : ((MessageGroup) e)
 							.getMessages()) {
 						final String id = message.getMessageId();
-						if (DLTKCore.DEBUG) {
-							if (messageDefinitions.containsKey(id)) {
-								TclCheckerPlugin.error("Duplicate message id " //$NON-NLS-1$
-										+ id);
-							}
+						if (DLTKCore.DEBUG
+								&& messageDefinitions.containsKey(id)) {
+							TclCheckerPlugin.error("Duplicate message id " //$NON-NLS-1$
+									+ id);
+						} else {
+							messageDefinitions.put(id, message);
 						}
-						messageDefinitions.put(id, message);
-						final int index = id.indexOf("::"); //$NON-NLS-1$
-						if (index >= 0) {
-							final String otherId = id.substring(index + 2);
-							if (DLTKCore.DEBUG) {
-								if (messageDefinitions.containsKey(otherId)) {
-									TclCheckerPlugin
-											.error("Duplicate message id " //$NON-NLS-1$
-													+ otherId);
-								}
-							}
-							messageDefinitions.put(otherId, message);
+					}
+				}
+			}
+			for (CheckerMessage message : messageDefinitions.values()) {
+				final String id = message.getMessageId();
+				final int index = id.indexOf(MESSAGE_ID_SEPARATOR);
+				if (index >= 0) {
+					final String shortId = id.substring(index
+							+ MESSAGE_ID_SEPARATOR.length());
+					if (!messageDefinitions.containsKey(shortId)) {
+						if (DLTKCore.DEBUG
+								&& altDefinitions.containsKey(shortId)) {
+							TclCheckerPlugin.error("Duplicate message id " //$NON-NLS-1$
+									+ shortId);
+						} else {
+							altDefinitions.put(shortId, message);
 						}
 					}
 				}
