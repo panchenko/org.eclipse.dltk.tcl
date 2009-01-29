@@ -588,7 +588,7 @@ proc print-pkg-info {output} {
 } ;# End of proc print-pkg-info
 
 proc help {{usermsg ""}} {
-    set msg "usermsg"
+    set msg $usermsg
     append msg {
 USAGE:  dltk.tcl [subcmd] [options] ?-output <file>?
 
@@ -608,11 +608,13 @@ USAGE:  dltk.tcl [subcmd] [options] ?-output <file>?
         using -paths option.
 
   > dltk.tcl get-pkgs ?-paths "<p1> .."? ?-pkgs "<pkg1> .."? ?-output <file>? \
+                      ?-fpkgs <file-with-list>? \
                       ?-loglevel error|warn|notice|info|debug?
         Print pkg paths and associated package names. Specify -paths and/or
         -pkgs option to display limited number of paths and pkgs.
 
   > dltk.tcl get-srcs ?-paths "<p1> .."? ?-pkgs "<pkg1> .."? ?-output <file>? \
+                      ?-fpkgs <file-with-list>? \
                       ?-loglevel error|warn|notice|info|debug?
         Print pkg paths, pkg names/versions and corresponding library 
         source files. Limit output to specified packages or paths using
