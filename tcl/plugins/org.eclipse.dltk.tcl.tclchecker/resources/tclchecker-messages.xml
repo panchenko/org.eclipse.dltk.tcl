@@ -124,6 +124,7 @@
 <messages messageId="coreTcl::warnQuoteChar" explanation="The new regular expression package introduced in Tcl 8.1 changed the semantics of the backslash character inside of bracket expressions. Previously they were treated as literal characters. Now they are treated as a quote character. To maintain the behavior of previous versions of Tcl, add another backslash before the existing backslash (for example, [*-\] becomes [*-\\]). (This warning is displayed only if you specify the -use option with Tcl 8.0 or earlier.)" category="UPGRADE_WARNING"/>
 <messages messageId="coreTcl::warnTkCmd" explanation="The &quot;tk&quot; command is internal; its functionality may change between Tcl versions." category="WARNING"/>
 <messages messageId="coreTcl::warnY2K" explanation="To avoid possible Y2K errors, use the &quot;%Y&quot; field descriptor to generate years with centuries (for example, &quot;1999&quot; instead of &quot;99&quot;)." category="WARNING"/>
+<messages messageId="coreTcl::pkgUnchecked" explanation="Will not check commands provided by this package" category="WARNING"/>
 </org.eclipse.dltk.tcl.tclchecker:MessageGroup>
 <org.eclipse.dltk.tcl.tclchecker:MessageGroup id="coreTk" name="coreTk">
 <messages messageId="coreTk::badBindSubst" explanation="This error indicates that a placeholder character specified with the &quot;bind&quot; command is invalid. Refer to the ActiveTcl User Guide for &quot;bind&quot; command specifications." category="ERROR"/>
