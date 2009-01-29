@@ -64,7 +64,6 @@
 <messages messageId="numListElts" explanation="Some commands expect lists with a fixed number of elements. This error indicates that an incorrect number of elements has been specified. See the documentation for the specific command in the ActiveTcl User Guide." category="ERROR"/>
 <messages messageId="obsoleteCmd" explanation="The specified command, option or variable does not exist and is no longer supported in the version of the system you are checking. Use the suggested alternative command, option, or variable to upgrade the script." category="ERROR"/>
 <messages messageId="parse" explanation="The Tcl Dev Kit TclChecker could not parse the script completely due to a parsing error. The reason for the parsing error is displayed in the message associated with the error." category="ERROR"/>
-<messages messageId="pkgUnchecked" explanation="Will not check commands provided by the package" category="WARNING"/>
 <messages messageId="pragmaBad" explanation="Bad pragma &quot;%1$s&quot; before command: %2$s" category="WARNING"/>
 <messages messageId="pragmaNotComplete" explanation="Incomplete pragma &quot;%1$s&quot; before command" category="WARNING"/>
 <messages messageId="procNumArgs" explanation="You are using the wrong number of arguments to call the Tcl procedure procName . Compare the number of arguments used to call the procedure to the number of arguments in the definition of procName." category="ERROR"/>
@@ -124,7 +123,7 @@
 <messages messageId="coreTcl::warnQuoteChar" explanation="The new regular expression package introduced in Tcl 8.1 changed the semantics of the backslash character inside of bracket expressions. Previously they were treated as literal characters. Now they are treated as a quote character. To maintain the behavior of previous versions of Tcl, add another backslash before the existing backslash (for example, [*-\] becomes [*-\\]). (This warning is displayed only if you specify the -use option with Tcl 8.0 or earlier.)" category="UPGRADE_WARNING"/>
 <messages messageId="coreTcl::warnTkCmd" explanation="The &quot;tk&quot; command is internal; its functionality may change between Tcl versions." category="WARNING"/>
 <messages messageId="coreTcl::warnY2K" explanation="To avoid possible Y2K errors, use the &quot;%Y&quot; field descriptor to generate years with centuries (for example, &quot;1999&quot; instead of &quot;99&quot;)." category="WARNING"/>
-<messages messageId="coreTcl::pkgUnchecked" explanation="Will not check commands provided by this package" category="WARNING"/>
+<messages messageId="coreTcl::pkgUnchecked" explanation="Will not check commands provided by the package" category="WARNING"/>
 </org.eclipse.dltk.tcl.tclchecker:MessageGroup>
 <org.eclipse.dltk.tcl.tclchecker:MessageGroup id="coreTk" name="coreTk">
 <messages messageId="coreTk::badBindSubst" explanation="This error indicates that a placeholder character specified with the &quot;bind&quot; command is invalid. Refer to the ActiveTcl User Guide for &quot;bind&quot; command specifications." category="ERROR"/>
