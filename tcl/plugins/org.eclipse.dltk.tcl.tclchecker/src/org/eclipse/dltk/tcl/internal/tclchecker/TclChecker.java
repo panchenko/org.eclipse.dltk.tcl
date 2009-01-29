@@ -124,6 +124,8 @@ public class TclChecker extends AbstractExternalValidator implements
 				cmdLine.add("-@"); //$NON-NLS-1$
 				cmdLine.add(deployment.getFile(pattern).toOSString());
 				monitor.subTask(Messages.TclChecker_launching);
+				console.setAttribute(IValidatorOutput.COMMAND_LINE, cmdLine
+						.toString());
 				executeProcess(processor, execEnvironment, cmdLine.toArray());
 			} catch (CoreException e) {
 				TclCheckerPlugin.log(IStatus.ERROR,
