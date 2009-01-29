@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup;
@@ -76,7 +77,26 @@ public class TclCheckerProblemDescription {
 				if (e instanceof MessageGroup) {
 					for (CheckerMessage message : ((MessageGroup) e)
 							.getMessages()) {
-						messageDefinitions.put(message.getMessageId(), message);
+						final String id = message.getMessageId();
+						if (DLTKCore.DEBUG) {
+							if (messageDefinitions.containsKey(id)) {
+								TclCheckerPlugin.error("Duplicate message id " //$NON-NLS-1$
+										+ id);
+							}
+						}
+						messageDefinitions.put(id, message);
+						final int index = id.indexOf("::"); //$NON-NLS-1$
+						if (index >= 0) {
+							final String otherId = id.substring(index + 2);
+							if (DLTKCore.DEBUG) {
+								if (messageDefinitions.containsKey(otherId)) {
+									TclCheckerPlugin
+											.error("Duplicate message id " //$NON-NLS-1$
+													+ otherId);
+								}
+							}
+							messageDefinitions.put(otherId, message);
+						}
 					}
 				}
 			}
