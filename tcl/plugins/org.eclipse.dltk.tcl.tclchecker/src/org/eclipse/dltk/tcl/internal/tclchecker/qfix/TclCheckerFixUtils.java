@@ -155,7 +155,7 @@ public class TclCheckerFixUtils {
 			if (commandStart >= lineRegion.getOffset()
 					&& commandStart < lineRegion.getOffset()
 							+ lineRegion.getLength()) {
-				document.replace(commandStart, commandEnd - commandStart + 1,
+				document.replace(commandStart, commandEnd - commandStart,
 						replacement);
 				try {
 					marker.delete();
