@@ -84,8 +84,13 @@ public final class TclCheckerHelper {
 								pos = version.length();
 							}
 							cmdLine.add("-use"); //$NON-NLS-1$
-							cmdLine
-									.add("\"Tcl" + version.substring(0, pos) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+							/*
+							 * Initially the Tcl<ver> argument was surrounded
+							 * with double quotes, but on Linux this command if
+							 * started from Eclipse work with errors [DLTK-839]
+							 * (but from shell the same command work fine).
+							 */
+							cmdLine.add("Tcl" + version.substring(0, pos)); //$NON-NLS-1$
 						}
 					}
 				}
