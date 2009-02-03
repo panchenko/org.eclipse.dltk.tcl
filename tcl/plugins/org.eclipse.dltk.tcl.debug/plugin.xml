@@ -22,4 +22,20 @@
             nature="org.eclipse.dltk.tcl.core.nature">
       </provider>
    </extension>
+   <extension
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="org.eclipse.dltk.tcl.internal.debug.spawnpoint.TclSpawnpointBuildParticipantFactory"
+            id="org.eclipse.dltk.tcl.debug.spawnpoint.builder"
+            name="Tcl Spawnpoint Builder"
+            nature="org.eclipse.dltk.tcl.core.nature">
+            <requires
+                  id="org.eclipse.dltk.tcl.validators.checks">
+            </requires>
+      </buildParticipant>
+   </extension>
+   <extension id="spawnpoint" point="org.eclipse.core.resources.markers">
+     <super type="org.eclipse.core.resources.textmarker"/>
+     <persistent value="true"/>
+   </extension>
 </plugin>

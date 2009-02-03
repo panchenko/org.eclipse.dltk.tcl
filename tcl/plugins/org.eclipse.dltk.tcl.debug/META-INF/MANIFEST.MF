@@ -7,6 +7,8 @@ Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.dltk.debug,
  org.eclipse.dltk.core,
+ org.eclipse.dltk.tcl.parser,
+ org.eclipse.dltk.tcl.validators,
  org.eclipse.debug.ui,
  org.eclipse.core.runtime
 Bundle-Activator: org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin
