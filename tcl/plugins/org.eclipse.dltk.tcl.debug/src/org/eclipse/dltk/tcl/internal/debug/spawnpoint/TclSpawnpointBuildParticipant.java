@@ -15,15 +15,12 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
+import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 
 public class TclSpawnpointBuildParticipant implements IBuildParticipant {
-
-	public static final String MARKER_TYPE = TclDebugPlugin.PLUGIN_ID
-			+ ".spawnpoint";
 
 	private final Set<String> spawnCommands = new HashSet<String>();
 
@@ -108,12 +105,12 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 				spawnCommands);
 		TclParserUtils.traverse(commands, collector);
 		if (!collector.spawnpoints.isEmpty()) {
-			file.deleteMarkers(MARKER_TYPE, true, IResource.DEPTH_ZERO);
+			file.deleteMarkers(TclDebugConstants.SPAWNPOINT_MARKER_TYPE, true, IResource.DEPTH_ZERO);
 			for (Map.Entry<Integer, SpawnpointInfo> entry : collector.spawnpoints
 					.entrySet()) {
 				System.out.println(entry.getKey() + ":"
 						+ entry.getValue().commands.toString());
-				IMarker marker = file.createMarker(MARKER_TYPE);
+				IMarker marker = file.createMarker(TclDebugConstants.SPAWNPOINT_MARKER_TYPE);
 				marker.setAttributes(
 						new String[] { IMarker.LINE_NUMBER, IMarker.CHAR_START,
 								IMarker.CHAR_END, IMarker.MESSAGE },

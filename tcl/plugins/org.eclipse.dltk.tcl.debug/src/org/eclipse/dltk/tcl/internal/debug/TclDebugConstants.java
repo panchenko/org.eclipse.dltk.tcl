@@ -7,4 +7,8 @@ public final class TclDebugConstants {
 	public static final String DEBUG_MODEL_ID = "org.eclipse.dltk.debug.tclModel";
 
 	public static final String DEBUGGING_ENGINE_ID_KEY = "debugging_engine_id";
+
+	public static final String SPAWNPOINT_MARKER_TYPE = TclDebugPlugin.PLUGIN_ID
+			+ ".spawnpoint";
+
 }
