@@ -15,8 +15,10 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.DLTKCore;
@@ -26,14 +28,23 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.dbgp.IDbgpFeature;
+import org.eclipse.dltk.dbgp.IDbgpSession;
+import org.eclipse.dltk.dbgp.IDbgpSpawnpoint;
+import org.eclipse.dltk.dbgp.commands.IDbgpSpawnpointCommands;
 import org.eclipse.dltk.dbgp.exceptions.DbgpException;
+import org.eclipse.dltk.debug.core.model.IScriptBreakpointPathMapper;
+import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
 import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
+import org.eclipse.dltk.debug.core.model.IScriptThread;
+import org.eclipse.dltk.internal.debug.core.model.IScriptThreadManager;
+import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern;
+import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 
 public class TclActiveStateDebugThreadConfigurator implements
 		IScriptDebugThreadConfigurator {
@@ -147,5 +158,36 @@ public class TclActiveStateDebugThreadConfigurator implements
 
 	private String getString(final String key) {
 		return delegate.getString(TclActiveStateDebuggerPlugin.PLUGIN_ID, key);
+	}
+
+	public void initializeBreakpoints(IScriptThread thread) {
+		try {
+			final IMarker[] spawnpoints = ResourcesPlugin.getWorkspace()
+					.getRoot().findMarkers(
+							TclDebugConstants.SPAWNPOINT_MARKER_TYPE, true,
+							IResource.DEPTH_INFINITE);
+			final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) thread
+					.getDbgpSession().get(IDbgpSpawnpointCommands.class);
+			final IScriptBreakpointPathMapper pathMapper = ((IScriptDebugTarget) thread
+					.getDebugTarget()).getPathMapper();
+			for (int i = 0; i < spawnpoints.length; ++i) {
+				final IMarker spawnpoint = spawnpoints[i];
+				final URI uri = ScriptLineBreakpoint.makeUri(new Path(
+						spawnpoint.getResource().getLocationURI().getPath()));
+				try {
+					final int lineNumber = spawnpoint.getAttribute(
+							IMarker.LINE_NUMBER, 0) + 1;
+					final IDbgpSpawnpoint p = commands.setSpawnpoint(pathMapper
+							.map(uri), lineNumber, true);
+					// TODO save spawnpoint id - need SpawnpointManager?
+				} catch (DbgpException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
