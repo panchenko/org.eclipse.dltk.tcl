@@ -96,12 +96,14 @@
         menubarPath="debug">
       </action>
 
+<!--
       <action
         label="%ToggleSpawnpoint.label"
         id="org.eclipse.dltk.tcl.ui.actions.RulerToggleSpawnpointActionDelegate"
         class="org.eclipse.dltk.tcl.internal.debug.ui.actions.RulerToggleSpawnpointActionDelegate"
         menubarPath="debug">
       </action>
+-->
 
       <action
         label="%ToggleBreakpoint.label"
@@ -397,4 +399,25 @@
       nature="org.eclipse.dltk.tcl.core.nature"/>
   </extension>
 
+   <extension point="org.eclipse.ui.editors.annotationTypes">
+      <type
+         name="org.eclipse.dltk.tcl.debug.ui.spawnpoint"
+         markerType="org.eclipse.dltk.tcl.debug.spawnpoint">
+      </type>
+   </extension>
+   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="org.eclipse.dltk.tcl.debug.ui.spawnpoint"
+            label="%spawnpoint.annotation.label"
+            textPreferenceKey="org.eclipse.dltk.tcl.debug.ui.spawnpoint.text"
+            colorPreferenceKey="org.eclipse.dltk.tcl.debug.ui.spawnpoint.color"
+            colorPreferenceValue="255,0,255"
+            verticalRulerPreferenceKey="org.eclipse.dltk.tcl.debug.ui.spawnpoint.vertical"
+            verticalRulerPreferenceValue="true"
+            overviewRulerPreferenceKey="org.eclipse.dltk.tcl.debug.ui.spawnpoint.overview"           
+            overviewRulerPreferenceValue="false"
+            icon="/icons/obj16/spawnpoint.gif"
+            includeOnPreferencePage="true">
+      </specification>
+   </extension>
 </plugin>
