@@ -2,7 +2,6 @@ package org.eclipse.dltk.tcl.internal.debug;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -50,13 +49,13 @@ public class TclHotCodeReplaceProvider implements IHotCodeReplaceProvider {
 			throws DebugException {
 		final ISourceModule module = (ISourceModule) DLTKCore
 				.create((IFile) resource);
-		final List procList = new ArrayList();
+		final List<IMethod> procList = new ArrayList<IMethod>();
 		try {
 			module.accept(new IModelElementVisitor() {
 
 				public boolean visit(IModelElement element) {
 					if (element.getElementType() == IModelElement.METHOD) {
-						procList.add(element);
+						procList.add((IMethod) element);
 						return false;
 					}
 					return true;
@@ -69,8 +68,7 @@ public class TclHotCodeReplaceProvider implements IHotCodeReplaceProvider {
 			final char[] input = org.eclipse.dltk.internal.core.util.Util
 					.getResourceContentsAsCharArray((IFile) resource);
 			final StringBuffer sb = new StringBuffer();
-			for (Iterator i = procList.iterator(); i.hasNext();) {
-				final IMethod method = (IMethod) i.next();
+			for (final IMethod method : procList) {
 				final String[] types = collectNamespaces(method);
 				if (types != null) {
 					for (int j = 0; j < types.length; ++j) {
@@ -105,7 +103,7 @@ public class TclHotCodeReplaceProvider implements IHotCodeReplaceProvider {
 	 * @return
 	 */
 	private String[] collectNamespaces(IMethod method) {
-		final List types = new ArrayList();
+		final List<String> types = new ArrayList<String>();
 		IModelElement parent = method.getParent();
 		while (parent.getElementType() == IModelElement.TYPE) {
 			types.add(parent.getElementName());
@@ -118,6 +116,6 @@ public class TclHotCodeReplaceProvider implements IHotCodeReplaceProvider {
 			return CharOperation.NO_STRINGS;
 		}
 		Collections.reverse(types);
-		return (String[]) types.toArray(new String[types.size()]);
+		return types.toArray(new String[types.size()]);
 	}
 }
