@@ -88,7 +88,6 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 		}
 	}
 
-	@Override
 	public void build(IBuildContext context) throws CoreException {
 		if (context.getBuildType() == IBuildContext.RECONCILE_BUILD) {
 			return;
