@@ -41,7 +41,6 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.internal.core.packages.Messages;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
@@ -50,6 +49,7 @@ import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
+import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.osgi.util.NLS;
 
 public class PackageRequireChecker implements IBuildParticipant,
@@ -126,7 +126,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		try {
 			resolvedBuildpath = project.getResolvedBuildpath(true);
 		} catch (ModelException e) {
-			TclPlugin.error(e);
+			TclValidatorsCore.error(e);
 			return;
 		}
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
@@ -208,7 +208,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		try {
 			resolvedBuildpath = project.getResolvedBuildpath(true);
 		} catch (ModelException e1) {
-			TclPlugin.error(e1);
+			TclValidatorsCore.error(e1);
 			return Collections.emptySet();
 		}
 		final Set<IPath> buildpath = new HashSet<IPath>();
