@@ -98,7 +98,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		this.project = project;
 		install = ScriptRuntime.getInterpreterInstall(project);
 		if (install == null) {
-			// thrown exception is caught in the TclPackageCheckerType
+			// thrown exception is caught in the PackageRequireCheckerFactory
 			throw new IllegalStateException(NLS.bind(
 					Messages.TclCheckBuilder_interpreterNotFound, project
 							.getElementName()));
