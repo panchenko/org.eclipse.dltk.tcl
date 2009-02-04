@@ -20,6 +20,7 @@ import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Command;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
@@ -85,7 +86,7 @@ public class PackageCollector extends TclVisitor {
 				}
 				packageName = pkgName.getValue();
 			}
-			if (isValidPackageName(packageName)) {
+			if (PackagesManager.isValidPackageName(packageName)) {
 				requireRefs.add(new PackageRequireRef(packageName, command
 						.getStart(), command.getEnd()));
 				requirePackages.add(packageName);
@@ -97,7 +98,7 @@ public class PackageCollector extends TclVisitor {
 				return;
 			}
 			String pkg = pkgName.getValue();
-			if (isValidPackageName(pkg)) {
+			if (PackagesManager.isValidPackageName(pkg)) {
 				packagesProvided.add(pkg);
 			}
 		}
@@ -122,12 +123,5 @@ public class PackageCollector extends TclVisitor {
 	 */
 	public Set<String> getPackagesProvided() {
 		return packagesProvided;
-	}
-
-	private static boolean isValidPackageName(String packageName) {
-		return packageName != null && packageName.length() != 0
-				&& packageName.indexOf('$') == -1
-				&& packageName.indexOf('[') == -1
-				&& packageName.indexOf(']') == -1;
 	}
 }
