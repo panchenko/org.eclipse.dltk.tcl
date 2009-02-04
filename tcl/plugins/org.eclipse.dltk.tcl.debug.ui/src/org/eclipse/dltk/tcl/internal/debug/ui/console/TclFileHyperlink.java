@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.console;
 
-import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +25,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -101,8 +101,8 @@ public class TclFileHyperlink implements IHyperlink {
 					.openInformation(
 							DLTKDebugUIPlugin.getActiveWorkbenchShell(),
 							ConsoleMessages.TclFileHyperlink_Information_1,
-							MessageFormat
-									.format(
+							NLS
+									.bind(
 											ConsoleMessages.TclFileHyperlink_Source_not_found_for__0__2,
 											new String[] { fileName }));
 		} catch (CoreException e) {
