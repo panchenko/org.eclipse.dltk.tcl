@@ -673,4 +673,17 @@ public class PackagesManager {
 		}
 		return buffer.toString();
 	}
+
+	/**
+	 * Tests if the specified packageName has correct syntax.
+	 * 
+	 * @param packageName
+	 * @return
+	 */
+	public static boolean isValidPackageName(String packageName) {
+		return packageName != null && packageName.length() != 0
+				&& packageName.indexOf('$') == -1
+				&& packageName.indexOf('[') == -1
+				&& packageName.indexOf(']') == -1;
+	}
 }
