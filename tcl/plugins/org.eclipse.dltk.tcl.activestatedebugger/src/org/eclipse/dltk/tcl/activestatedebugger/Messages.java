@@ -23,6 +23,7 @@ public class Messages extends NLS {
 	public static String instrumentation_expect_caption;
 	public static String instrumentation_itcl_caption;
 	public static String instrumentation_tclx_caption;
+	public static String TclActiveStateDebuggerRunner_errorEngineNotConfigured;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

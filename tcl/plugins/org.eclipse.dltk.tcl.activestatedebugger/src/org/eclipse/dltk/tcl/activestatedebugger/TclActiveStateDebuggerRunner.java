@@ -45,15 +45,15 @@ import org.eclipse.dltk.utils.PlatformFileUtils;
  * </p>
  */
 public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner {
-	public static final String ENGINE_ID = "org.eclipse.dltk.tcl.activestatedebugger";
+	public static final String ENGINE_ID = "org.eclipse.dltk.tcl.activestatedebugger"; //$NON-NLS-1$
 
-	private static final String ADDRESS_KEY = "-dbgp";
-	private static final String SHELL_KEY = "-app-shell";
-	private static final String IDE_KEY = "-ide-key";
-	private static final String SCRIPT_KEY = "-app-file";
-	private static final String LOG_KEY = "-log";
-	private static final String LOG_FILE_KEY = "-logfile";
-	private static final String ARGS_SEPARATOR = "--";
+	private static final String ADDRESS_KEY = "-dbgp"; //$NON-NLS-1$
+	private static final String SHELL_KEY = "-app-shell"; //$NON-NLS-1$
+	private static final String IDE_KEY = "-ide-key"; //$NON-NLS-1$
+	private static final String SCRIPT_KEY = "-app-file"; //$NON-NLS-1$
+	private static final String LOG_KEY = "-log"; //$NON-NLS-1$
+	private static final String LOG_FILE_KEY = "-logfile"; //$NON-NLS-1$
+	private static final String ARGS_SEPARATOR = "--"; //$NON-NLS-1$
 
 	public TclActiveStateDebuggerRunner(IInterpreterInstall install) {
 		super(install);
@@ -92,7 +92,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 					.findAbsoluteOrEclipseRelativeFile(env, new Path(path));
 
 			if (pdxFiles.exists()) {
-				newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles.toOSString());
+				newConfig.addEnvVar("TCLDEVKIT_LOCAL", pdxFiles.toOSString()); //$NON-NLS-1$
 			}
 		}
 
@@ -207,7 +207,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		if (code == ScriptLaunchConfigurationConstants.ERR_DEBUGGING_ENGINE_NOT_CONFIGURED) {
 			super
 					.abort(
-							"Tcl Debugging Engine is not correctly configured. Path is not specified or not valid. Please configure Tcl Debugging Engine...",
+							Messages.TclActiveStateDebuggerRunner_errorEngineNotConfigured,
 							exception, code);
 		}
 		super.abort(message, exception, code);
