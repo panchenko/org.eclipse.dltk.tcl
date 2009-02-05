@@ -12,11 +12,18 @@
 package org.eclipse.dltk.tcl.activestatedebugger;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -28,7 +35,6 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.dbgp.IDbgpFeature;
-import org.eclipse.dltk.dbgp.IDbgpSession;
 import org.eclipse.dltk.dbgp.IDbgpSpawnpoint;
 import org.eclipse.dltk.dbgp.commands.IDbgpSpawnpointCommands;
 import org.eclipse.dltk.dbgp.exceptions.DbgpException;
@@ -36,7 +42,6 @@ import org.eclipse.dltk.debug.core.model.IScriptBreakpointPathMapper;
 import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
 import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
 import org.eclipse.dltk.debug.core.model.IScriptThread;
-import org.eclipse.dltk.internal.debug.core.model.IScriptThreadManager;
 import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
@@ -160,18 +165,48 @@ public class TclActiveStateDebugThreadConfigurator implements
 		return delegate.getString(TclActiveStateDebuggerPlugin.PLUGIN_ID, key);
 	}
 
+	private List<IMarker> loadSpawnpoints() throws CoreException {
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		final IMarker[] markers = root.findMarkers(
+				TclDebugConstants.SPAWNPOINT_MARKER_TYPE, true,
+				IResource.DEPTH_INFINITE);
+		if (markers.length == 0) {
+			return Collections.emptyList();
+		}
+		final IEnvironment environment = EnvironmentManager
+				.getEnvironment(project);
+		if (environment == null) {
+			return Arrays.asList(markers);
+		}
+		final Map<IProject, Boolean> projectStatus = new HashMap<IProject, Boolean>();
+		final List<IMarker> result = new ArrayList<IMarker>();
+		for (IMarker marker : markers) {
+			final IProject project = marker.getResource().getProject();
+			Boolean status = projectStatus.get(project);
+			if (status == null) {
+				if (environment.equals(EnvironmentManager
+						.getEnvironment(project))) {
+					status = Boolean.TRUE;
+				} else {
+					status = Boolean.FALSE;
+				}
+				projectStatus.put(project, status);
+			}
+			if (status.booleanValue()) {
+				result.add(marker);
+			}
+		}
+		return result;
+	}
+
 	public void initializeBreakpoints(IScriptThread thread) {
 		try {
-			final IMarker[] spawnpoints = ResourcesPlugin.getWorkspace()
-					.getRoot().findMarkers(
-							TclDebugConstants.SPAWNPOINT_MARKER_TYPE, true,
-							IResource.DEPTH_INFINITE);
+			final List<IMarker> spawnpoints = loadSpawnpoints();
 			final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) thread
 					.getDbgpSession().get(IDbgpSpawnpointCommands.class);
 			final IScriptBreakpointPathMapper pathMapper = ((IScriptDebugTarget) thread
 					.getDebugTarget()).getPathMapper();
-			for (int i = 0; i < spawnpoints.length; ++i) {
-				final IMarker spawnpoint = spawnpoints[i];
+			for (final IMarker spawnpoint : spawnpoints) {
 				final URI uri = ScriptLineBreakpoint.makeUri(new Path(
 						spawnpoint.getResource().getLocationURI().getPath()));
 				try {
