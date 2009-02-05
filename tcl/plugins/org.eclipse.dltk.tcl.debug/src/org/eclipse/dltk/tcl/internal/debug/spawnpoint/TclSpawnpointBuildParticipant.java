@@ -19,13 +19,16 @@ import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
+import org.eclipse.dltk.utils.TextUtils;
+import org.eclipse.osgi.util.NLS;
 
 public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 
 	private final Set<String> spawnCommands = new HashSet<String>();
 
 	public TclSpawnpointBuildParticipant() {
-		spawnCommands.add("spawn");
+		spawnCommands.addAll(SpawnpointCommandManager.loadFromPreferences()
+				.getSelectedCommands());
 	}
 
 	private static class SpawnpointInfo {
@@ -74,10 +77,12 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 				info.charEnd = end;
 				spawnpoints.put(lineObj, info);
 			} else {
-				final Set<String> commandNames = new HashSet<String>();
-				commandNames.addAll(info.commands);
-				commandNames.add(commandName);
-				info.commands = commandNames;
+				if (!info.commands.contains(commandName)) {
+					final Set<String> commandNames = new HashSet<String>();
+					commandNames.addAll(info.commands);
+					commandNames.add(commandName);
+					info.commands = commandNames;
+				}
 				if (start < info.charStart) {
 					info.charStart = start;
 				}
@@ -103,21 +108,33 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 		SpawnpointCollector collector = new SpawnpointCollector(context,
 				spawnCommands);
 		TclParserUtils.traverse(commands, collector);
+		file.deleteMarkers(TclDebugConstants.SPAWNPOINT_MARKER_TYPE, true,
+				IResource.DEPTH_ZERO);
 		if (!collector.spawnpoints.isEmpty()) {
-			file.deleteMarkers(TclDebugConstants.SPAWNPOINT_MARKER_TYPE, true, IResource.DEPTH_ZERO);
 			for (Map.Entry<Integer, SpawnpointInfo> entry : collector.spawnpoints
 					.entrySet()) {
-				System.out.println(entry.getKey() + ":"
-						+ entry.getValue().commands.toString());
-				IMarker marker = file.createMarker(TclDebugConstants.SPAWNPOINT_MARKER_TYPE);
+				final IMarker marker = file
+						.createMarker(TclDebugConstants.SPAWNPOINT_MARKER_TYPE);
+				final SpawnpointInfo info = entry.getValue();
 				marker.setAttributes(
 						new String[] { IMarker.LINE_NUMBER, IMarker.CHAR_START,
 								IMarker.CHAR_END, IMarker.MESSAGE },
-						new Object[] { entry.getKey(),
-								entry.getValue().charStart,
-								entry.getValue().charEnd,
-								entry.getValue().commands.toString() });
+						new Object[] { entry.getKey(), info.charStart,
+								info.charEnd, buildMessage(info) });
 			}
 		}
+	}
+
+	/**
+	 * @param info
+	 * @return
+	 */
+	private String buildMessage(SpawnpointInfo info) {
+		return NLS
+				.bind(
+						TclSpawnpointMessages.participantMarkerMessage_template,
+						TextUtils.join(info.commands, ','),
+						info.commands.size() == 1 ? TclSpawnpointMessages.participantMarkerMessage_commandSingular
+								: TclSpawnpointMessages.participantMarkerMessage_commandPlurar);
 	}
 }

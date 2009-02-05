@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   
+	<extension-point id="spawnpointCommand" name="%extension-point.name.spawnpointCommand" schema="schema/spawnpointCommand.exsd"/>
+
   <extension point="org.eclipse.core.runtime.preferences">
     <initializer 
       class="org.eclipse.dltk.tcl.internal.debug.TclDebugPreferenceInitializer"/>
@@ -37,5 +38,11 @@
    <extension id="spawnpoint" point="org.eclipse.core.resources.markers">
      <super type="org.eclipse.core.resources.textmarker"/>
      <persistent value="true"/>
+   </extension>
+   <extension point="org.eclipse.dltk.tcl.debug.spawnpointCommand">
+      <command name="spawn" />
+      <command name="exec" />
+      <command name="open" />
+      <command name="thread::create" />
    </extension>
 </plugin>
