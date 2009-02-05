@@ -2,21 +2,21 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessagesPackageImpl.java,v 1.1 2009/01/27 18:43:46 apanchenk Exp $
+ * $Id: MessagesPackageImpl.java,v 1.2 2009/02/05 18:41:39 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages.impl;
 
+import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesFactory;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
@@ -104,11 +104,16 @@ public class MessagesPackageImpl extends EPackageImpl implements MessagesPackage
 
 		isInited = true;
 
+		// Obtain or create and register interdependencies
+		ConfigsPackageImpl theConfigsPackage = (ConfigsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigsPackage.eNS_URI) instanceof ConfigsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigsPackage.eNS_URI) : ConfigsPackage.eINSTANCE);
+
 		// Create package meta-data objects
 		theMessagesPackage.createPackageContents();
+		theConfigsPackage.createPackageContents();
 
 		// Initialize created meta-data
 		theMessagesPackage.initializePackageContents();
+		theConfigsPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
 		theMessagesPackage.freeze();

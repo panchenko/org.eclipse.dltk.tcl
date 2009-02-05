@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessagesPackage.java,v 1.1 2009/01/27 18:43:47 apanchenk Exp $
+ * $Id: MessagesPackage.java,v 1.2 2009/02/05 18:41:39 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages;
 
@@ -42,7 +42,7 @@ public interface MessagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/dltk/tcl/tclchecker.ecore"; //$NON-NLS-1$
+	String eNS_URI = "http://www.eclipse.org/dltk/tcl/tclchecker/messages"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
@@ -50,7 +50,7 @@ public interface MessagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "org.eclipse.dltk.tcl.tclchecker"; //$NON-NLS-1$
+	String eNS_PREFIX = "messages"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.

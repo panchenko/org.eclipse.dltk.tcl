@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessagesFactoryImpl.java,v 1.1 2009/01/27 18:43:46 apanchenk Exp $
+ * $Id: MessagesFactoryImpl.java,v 1.2 2009/02/05 18:41:39 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages.impl;
 
@@ -32,7 +32,7 @@ public class MessagesFactoryImpl extends EFactoryImpl implements MessagesFactory
 	 */
 	public static MessagesFactory init() {
 		try {
-			MessagesFactory theMessagesFactory = (MessagesFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/dltk/tcl/tclchecker.ecore"); //$NON-NLS-1$ 
+			MessagesFactory theMessagesFactory = (MessagesFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/dltk/tcl/tclchecker/messages"); //$NON-NLS-1$ 
 			if (theMessagesFactory != null) {
 				return theMessagesFactory;
 			}
