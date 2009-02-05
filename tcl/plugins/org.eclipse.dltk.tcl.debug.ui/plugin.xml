@@ -203,6 +203,11 @@
       class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.eclipse.dltk.tcl.core.nature"
       id="org.eclipse.dltk.tcl.preferences.debug.detailFormatters"
       name="%DetailFormattersPreferencePage.name" />      
+    <page
+      category="org.eclipse.dltk.tcl.preferences.debug"
+      class="org.eclipse.dltk.tcl.internal.debug.ui.spawnpoints.TclSpawnpointPreferencePage"
+      id="org.eclipse.dltk.tcl.preferences.debug.spawnpoints"
+      name="%SpawnpointsPreferencePage.name" />      
   </extension>
 
   <extension point="org.eclipse.ui.editorActions">
