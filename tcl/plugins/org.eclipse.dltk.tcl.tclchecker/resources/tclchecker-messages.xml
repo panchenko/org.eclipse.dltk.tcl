@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.dltk.tcl.tclchecker="http://www.eclipse.org/dltk/tcl/tclchecker.ecore">
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="Generic" name="Generic">
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:msg="http://www.eclipse.org/dltk/tcl/tclchecker/messages">
+<msg:MessageGroup id="Generic" name="Generic">
 <messages messageId="argAfterArgs" explanation="An argument has been specified after the args keyword in a procedure argument list. The args argument is treated like a normal parameter and does not collect the remaining parameters into a single list." category="ERROR"/>
 <messages messageId="argsNotDefault" explanation="The args keyword cannot be initialized to contain a default value. Although the Tcl interpreter does not complain about this usage, the default value is ignored." category="ERROR"/>
 <messages messageId="arrayReadAsScalar" explanation="You cannot assign an array variable to a scalar variable. The Tcl Dev Kit TclChecker is aware of the internal variables tcl_platform and Tk::priv, and will generate this error when you attempt to assign these variables to a scalar." category="ERROR"/>
@@ -97,13 +97,13 @@
 <messages messageId="winAlpha" explanation="The window name for any Tcl widget cannot begin with a capital letter." category="ERROR"/>
 <messages messageId="winBeginDot" explanation="The path name for any Tcl widget must begin with a period (&quot;.&quot;)" category="ERROR"/>
 <messages messageId="winNotNull" explanation="A window name or path cannot be an empty string." category="ERROR"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="blt" name="blt">
+</msg:MessageGroup>
+<msg:MessageGroup id="blt" name="blt">
 <messages messageId="blt::badIntRange" explanation="In some cases, legal integer ranges are defined as part of the command. This error indicates that an integer value outside the legal range has been used." category="ERROR"/>
 <messages messageId="blt::badSignal" explanation="The bgexec command has an option &quot;-killsignal&quot; (Unix only), which accepts a valid mnemonic value. See the blt man pages for command specifications." category="ERROR"/>
 <messages messageId="blt::badSignalInt" explanation="The bgexec command has an option &quot;-killsignal&quot; (Unix only), which accepts a valid signal integer value. See the blt man pages for command specifications." category="ERROR"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="coreTcl" name="coreTcl">
+</msg:MessageGroup>
+<msg:MessageGroup id="coreTcl" name="coreTcl">
 <messages messageId="coreTcl::badBinaryFmt" explanation="This error indicates that the string provided for the binary command's format switch is invalid. See the documentation for the &quot;binary&quot; command in the ActiveTcl User Guide." category="ERROR"/>
 <messages messageId="coreTcl::badCharMap" explanation="The map list must have an even number of elements." category="ERROR"/>
 <messages messageId="coreTcl::badFormatFmt" explanation="This error indicates that the string provided for the format or scan command's format switch is invalid. See the documentation for the &quot;format&quot; or &quot;scan&quot; command in the ActiveTcl User Guide." category="ERROR"/>
@@ -122,8 +122,8 @@
 <messages messageId="coreTcl::warnTkCmd" explanation="The &quot;tk&quot; command is internal; its functionality may change between Tcl versions." category="WARNING"/>
 <messages messageId="coreTcl::warnY2K" explanation="To avoid possible Y2K errors, use the &quot;%Y&quot; field descriptor to generate years with centuries (for example, &quot;1999&quot; instead of &quot;99&quot;)." category="WARNING"/>
 <messages messageId="coreTcl::pkgUnchecked" explanation="Will not check commands provided by the package" category="WARNING"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="coreTk" name="coreTk">
+</msg:MessageGroup>
+<msg:MessageGroup id="coreTk" name="coreTk">
 <messages messageId="coreTk::badBindSubst" explanation="This error indicates that a placeholder character specified with the &quot;bind&quot; command is invalid. Refer to the ActiveTcl User Guide for &quot;bind&quot; command specifications." category="ERROR"/>
 <messages messageId="coreTk::badColormap" explanation="The command expects the string to specify a colormap to use. If the string is &quot;new&quot;, a new colormap is created. Otherwise, the string should be a valid window path name." category="ERROR"/>
 <messages messageId="coreTk::badEvent" explanation="The command expects the string to specify an event type. If the string is not composed of a valid event and one or more related modifiers, an error is reported." category="ERROR"/>
@@ -149,11 +149,11 @@
 <messages messageId="coreTk::nonPortBitmap" explanation="A bitmap was specified that is not supported on all platforms." category="NON_PORTABLE_WARNING"/>
 <messages messageId="coreTk::nonPortKeysym" explanation="A keysym was specified that is not supported on all platforms." category="NON_PORTABLE_WARNING"/>
 <messages messageId="coreTk::warnConsoleCmd" explanation="The &quot;console&quot; command is internal; its functionality may change between Tcl versions." category="WARNING"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="expect" name="expect">
+</msg:MessageGroup>
+<msg:MessageGroup id="expect" name="expect">
 <messages messageId="expect::warnAmbiguous" explanation="The word being checked starts with a &quot;-&quot; but does not match any of the known switches. Use delimiter to explicitly declare the end of the switch pattern." category="USAGE_WARNING"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="incrTcl" name="incrTcl">
+</msg:MessageGroup>
+<msg:MessageGroup id="incrTcl" name="incrTcl">
 <messages messageId="incrTcl::badMemberName" explanation="An [incr Tcl] member name was not correctly qualified. When defining the body for a class procedure, class method, or class variable, it is necessary to reference the procedure or variable with the fully qualified name." category="ERROR"/>
 <messages messageId="incrTcl::classNumArgs" explanation="The wrong number of arguments are being used to instantiate the [incr Tcl] class className . Compare the number of arguments used to instantiate the class to the number of arguments in the constructor defined by className." category="ERROR"/>
 <messages messageId="incrTcl::classOnly" explanation="The specified command is only valid in the context of an [incr Tcl] class body." category="ERROR"/>
@@ -162,20 +162,20 @@
 <messages messageId="incrTcl::procOutScope" explanation="An [incr Tcl] class procedure is being called from the wrong scope, or is improperly qualified. This commonly occurs when calling inherited procedures." category="ERROR"/>
 <messages messageId="incrTcl::procProtected" explanation="You are calling an inaccessible procedure with a protection level of protectionLevel. This error is flagged when the procedure being called does not have permission to call this procedure." category="ERROR"/>
 <messages messageId="incrTcl::warnUnsupported" explanation="The incrTcl command is not supported in the current version of Tcl." category="ERROR"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="oratcl" name="oratcl">
+</msg:MessageGroup>
+<msg:MessageGroup id="oratcl" name="oratcl">
 <messages messageId="oratcl::badConnectStr" explanation="Refer to the &quot;oratcl&quot; manpages or the Oracle documentation for information about connect string syntax." category="ERROR"/>
 <messages messageId="oratcl::badOnOff" explanation="The &quot;oraautocom&quot; command requires a literal &quot;on&quot; or &quot;off&quot; value. Refer to the &quot;oratcl&quot; manpages or the Oracle documentation for more information." category="ERROR"/>
 <messages messageId="oratcl::badSubstChar" explanation="An invalid substitution character has been passed with the &quot;orafetch&quot; command. Refer to the &quot;oratcl&quot; manpages or the Oracle documentation for more information." category="ERROR"/>
 <messages messageId="oratcl::missingColon" explanation="Variable names must begin with colons. Refer to the &quot;oratcl&quot; manpages or the Oracle documentation for more information." category="ERROR"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="tclX" name="tclX">
+</msg:MessageGroup>
+<msg:MessageGroup id="tclX" name="tclX">
 <messages messageId="tclX::badLIndex" explanation="The command expects the string to specify an index value. The string can be an integer, &quot;len&quot;, or &quot;end&quot;." category="ERROR"/>
 <messages messageId="tclX::badProfileOpt" explanation="Using the TclX profiling tools, option is not valid. Most likely the option is valid only when turning on profiling." category="ERROR"/>
 <messages messageId="tclX::badTlibFile" explanation="The command expected a filename with a .tlib suffix. The word should be changed to match the pattern filename.tlib." category="ERROR"/>
 <messages messageId="tclX::optionRequired" explanation="A specific option was expected, but the following option was found." category="ERROR"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
-<org.eclipse.dltk.tcl.tclchecker:MessageGroup id="xmlAct" name="xmlAct">
+</msg:MessageGroup>
+<msg:MessageGroup id="xmlAct" name="xmlAct">
 <messages messageId="xmlAct::badXMLaction" explanation="" category="ERROR"/>
-</org.eclipse.dltk.tcl.tclchecker:MessageGroup>
+</msg:MessageGroup>
 </xmi:XMI>
