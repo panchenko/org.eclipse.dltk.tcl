@@ -166,11 +166,11 @@ public class TclSpawnpointPreferenceBlock extends AbstractOptionsBlock
 	public TclSpawnpointPreferenceBlock(IStatusChangeListener context,
 			IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, KEYS, container);
-		this.commands = SpawnpointCommandManager.decode(getString(KEYS[0]));
 		this.contributed = SpawnpointCommandManager.getContributedCommands();
 	}
 
 	private SpawnpointCommands commands;
+	private ListDialogField listDialogField;
 
 	protected Control createOptionsBlock(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
@@ -180,8 +180,8 @@ public class TclSpawnpointPreferenceBlock extends AbstractOptionsBlock
 				TclSpawnpointMessages.button_Add,
 				TclSpawnpointMessages.button_Edit,
 				TclSpawnpointMessages.button_Delete };
-		final ListDialogField listDialogField = new ListDialogField(this,
-				buttons, new TclSpawnpointLabelProvider()) {
+		listDialogField = new ListDialogField(this, buttons,
+				new TclSpawnpointLabelProvider()) {
 
 			protected TableViewer createTableViewer(Composite parent) {
 				Table table = new Table(parent, getListStyle() | SWT.CHECK);
@@ -191,16 +191,18 @@ public class TclSpawnpointPreferenceBlock extends AbstractOptionsBlock
 
 		};
 		listDialogField.doFillIntoGrid(control, 3);
-		listDialogField.setElements(commands.getCommands());
-		final CheckboxTableViewer checkboxViewer = getCheckboxTableViewer(listDialogField);
-		checkboxViewer.setCheckedElements(commands.getSelectedCommands()
-				.toArray());
-		checkboxViewer.addCheckStateListener(this);
+		getCheckboxTableViewer().addCheckStateListener(this);
 		return control;
 	}
 
+	@Override
+	protected void initialize() {
+		super.initialize();
+		initValues();
+	}
+
 	public void customButtonPressed(ListDialogField field, int index) {
-		final CheckboxTableViewer viewer = getCheckboxTableViewer(field);
+		final CheckboxTableViewer viewer = getCheckboxTableViewer();
 		switch (index) {
 		case IDX_ADD: {
 			final String newValue = doEdit(null);
@@ -248,8 +250,8 @@ public class TclSpawnpointPreferenceBlock extends AbstractOptionsBlock
 		}
 	}
 
-	private CheckboxTableViewer getCheckboxTableViewer(ListDialogField field) {
-		return (CheckboxTableViewer) field.getTableViewer();
+	private CheckboxTableViewer getCheckboxTableViewer() {
+		return (CheckboxTableViewer) listDialogField.getTableViewer();
 	}
 
 	/**
@@ -304,6 +306,19 @@ public class TclSpawnpointPreferenceBlock extends AbstractOptionsBlock
 
 	private void saveCommands() {
 		setString(KEYS[0], SpawnpointCommandManager.encode(commands));
+	}
+
+	@Override
+	public void performDefaults() {
+		super.performDefaults();
+		initValues();
+	}
+
+	private void initValues() {
+		this.commands = SpawnpointCommandManager.decode(getString(KEYS[0]));
+		listDialogField.setElements(commands.getCommands());
+		getCheckboxTableViewer().setCheckedElements(
+				commands.getSelectedCommands().toArray());
 	}
 
 	@Override
