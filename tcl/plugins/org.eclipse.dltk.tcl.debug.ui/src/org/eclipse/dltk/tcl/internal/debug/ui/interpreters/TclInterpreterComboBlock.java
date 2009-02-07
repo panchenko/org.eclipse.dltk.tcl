@@ -9,8 +9,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -252,8 +255,9 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 							LocalEnvironment.ENVIRONMENT_ID));
 		}
 		if (install != null) {
-			final Set names = PackagesManager.getInstance().getPackageNames(
-					install);
+			final List names = new ArrayList(PackagesManager.getInstance()
+					.getPackageNames(install));
+			Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
 			ListDialog dialog = new ListDialog(this.fElements.getControl()
 					.getShell());
 			dialog.setContentProvider(new IStructuredContentProvider() {
