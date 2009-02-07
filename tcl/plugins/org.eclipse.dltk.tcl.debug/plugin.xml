@@ -40,9 +40,9 @@
      <persistent value="true"/>
    </extension>
    <extension point="org.eclipse.dltk.tcl.debug.spawnpointCommand">
-      <command name="spawn" />
-      <command name="exec" />
-      <command name="open" />
+      <command name="spawn" enabled="false" />
+      <command name="exec" enabled="false" />
+      <command name="open" enabled="false" />
       <command name="thread::create" />
    </extension>
 </plugin>
