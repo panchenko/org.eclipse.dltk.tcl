@@ -14,6 +14,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
+import org.eclipse.dltk.tcl.ast.StringArgument;
+import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
@@ -50,9 +52,26 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 
 		private ISourceLineTracker lineTracker;
 
+		private StringArgument getStringArgument(TclCommand command, int index) {
+			if (index < command.getArguments().size()) {
+				TclArgument argument = command.getArguments().get(index);
+				if (argument instanceof StringArgument) {
+					return (StringArgument) argument;
+				}
+			}
+			return null;
+		}
+
 		@Override
 		public boolean visit(TclCommand command) {
-			if (spawnCommands.contains(command.getQualifiedName())) {
+			if ("proc".equals(command.getQualifiedName())
+					&& command.getArguments().size() == 3) {
+				final StringArgument procName = getStringArgument(command, 0);
+				if (procName != null
+						&& spawnCommands.contains(procName.getValue())) {
+					return false;
+				}
+			} else if (spawnCommands.contains(command.getQualifiedName())) {
 				if (lineTracker == null) {
 					lineTracker = buildContext.getLineTracker();
 				}
