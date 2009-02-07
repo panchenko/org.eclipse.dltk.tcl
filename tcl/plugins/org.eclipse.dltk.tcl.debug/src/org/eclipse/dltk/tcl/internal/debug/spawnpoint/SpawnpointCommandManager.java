@@ -14,8 +14,10 @@ package org.eclipse.dltk.tcl.internal.debug.spawnpoint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -34,28 +36,41 @@ public class SpawnpointCommandManager {
 		// hidden constructor
 	}
 
-	private static Set<String> commands = null;
+	private static Map<String, Boolean> commands = null;
+
+	public static Set<String> getContributedCommands() {
+		return getContributedCommandMap().keySet();
+	}
 
 	/**
 	 * Returns the names of the commands contributed by the extension points
 	 * 
 	 * @return
 	 */
-	public static Set<String> getContributedCommands() {
+	public static Map<String, Boolean> getContributedCommandMap() {
 		if (commands == null) {
-			final Set<String> names = new HashSet<String>();
+			final Map<String, Boolean> names = new HashMap<String, Boolean>();
 			final IConfigurationElement[] elements = Platform
 					.getExtensionRegistry().getConfigurationElementsFor(
 							EXTENSION_POINT);
 			for (IConfigurationElement element : elements) {
 				final String name = element.getAttribute("name"); //$NON-NLS-1$
 				if (isValidCommandName(name)) {
-					names.add(name);
+					names.put(name, Boolean.valueOf(toBoolean(element
+							.getAttribute("enabled"), true)));
 				}
 			}
-			commands = Collections.unmodifiableSet(names);
+			commands = Collections.unmodifiableMap(names);
 		}
 		return commands;
+	}
+
+	private static boolean toBoolean(String value, boolean defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		} else {
+			return Boolean.parseBoolean(value);
+		}
 	}
 
 	private static final Pattern COMMAND_PATTERN = Pattern
@@ -105,17 +120,19 @@ public class SpawnpointCommandManager {
 				}
 			}
 		}
-		final Set<String> contributed = getContributedCommands();
-		for (String commandName : contributed) {
-			if (!commandNames.contains(commandName)) {
-				commandNames.add(commandName);
-				selected.add(commandName);
+		final Map<String, Boolean> contributed = getContributedCommandMap();
+		for (Map.Entry<String, Boolean> commandName : contributed.entrySet()) {
+			if (!commandNames.contains(commandName.getKey())) {
+				commandNames.add(commandName.getKey());
+				if (commandName.getValue().booleanValue()) {
+					selected.add(commandName.getKey());
+				}
 			}
 		}
 		Collections.sort(commandNames, new Comparator<String>() {
 			public int compare(String o1, String o2) {
-				boolean contributed1 = contributed.contains(o1);
-				boolean contributed2 = contributed.contains(o2);
+				boolean contributed1 = contributed.containsKey(o1);
+				boolean contributed2 = contributed.containsKey(o2);
 				if (contributed1 != contributed2) {
 					return contributed1 ? -1 : +1;
 				}
@@ -132,11 +149,13 @@ public class SpawnpointCommandManager {
 	}
 
 	public static String encode(SpawnpointCommands commandNames) {
-		final Set<String> contributed = getContributedCommands();
+		final Map<String, Boolean> contributed = getContributedCommandMap();
 		final StringBuffer buffer = new StringBuffer();
 		for (String commandName : commandNames.getCommands()) {
-			if (contributed.contains(commandName)
-					&& commandNames.isSelected(commandName)) {
+			final Boolean contributedEnabled = contributed.get(commandName);
+			if (contributedEnabled != null
+					&& commandNames.isSelected(commandName) == contributedEnabled
+							.booleanValue()) {
 				continue;
 			}
 			if (buffer.length() != 0) {
