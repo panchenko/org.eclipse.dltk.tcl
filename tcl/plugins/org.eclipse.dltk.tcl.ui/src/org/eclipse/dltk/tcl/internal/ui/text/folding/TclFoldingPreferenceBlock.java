@@ -292,7 +292,7 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock
 
 		addCheckBox(commentFolding,
 				TclFoldingMessages.TclFoldingPreferenceBlock_15,
-				PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED, 0);
+				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES, 0);
 
 		Composite initialFolding = createSubsection(inner, null,
 				TclFoldingMessages.TclFoldingPreferenceBlock_16);
