@@ -240,9 +240,7 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock
 
 	public Control createControl(Composite composite) {
 		Composite inner = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		inner.setLayout(layout);
+		inner.setLayout(new GridLayout());
 
 		Composite blockFolding = createSubsection(inner, null,
 				TclFoldingMessages.TclFoldingPreferenceBlock_10);
