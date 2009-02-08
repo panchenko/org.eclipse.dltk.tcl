@@ -39,6 +39,7 @@ import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclProblems;
@@ -192,14 +193,26 @@ public class PackageRequireChecker implements IBuildParticipant,
 			manager.getPathsForPackagesWithDeps(install, requiredPackages);
 		}
 		// process all modules
+		final Set<String> newDependencies = new HashSet<String>();
 		int remainingWork = modules.size();
 		for (ModuleInfo moduleInfo : modules) {
 			monitor.subTask(NLS.bind(Messages.TclCheckBuilder_processing,
 					moduleInfo.name, Integer.toString(remainingWork)));
 			for (PackageRequireRef ref : moduleInfo.requireDirectives) {
-				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker);
+				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker,
+						newDependencies);
 			}
 			--remainingWork;
+		}
+		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
+				&& isAutoAddPackages() && !newDependencies.isEmpty()) {
+			@SuppressWarnings("unchecked")
+			final Set<String> names = InterpreterContainerHelper
+					.getInterpreterContainerDependencies(project);
+			if (names.addAll(newDependencies)) {
+				InterpreterContainerHelper.setInterpreterContainerDependencies(
+						project, names);
+			}
 		}
 	}
 
@@ -233,7 +246,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 	}
 
 	private void checkPackage(PackageRequireRef pkg, IProblemReporter reporter,
-			ISourceLineTracker lineTracker) {
+			ISourceLineTracker lineTracker, Set<String> newDependencies) {
 		final String packageName = pkg.name;
 
 		if (packageCollector.getPackagesProvided().contains(packageName)) {
@@ -253,10 +266,13 @@ public class PackageRequireChecker implements IBuildParticipant,
 
 		// Receive main package and it paths.
 		if (!isAvailable(packageName)) {
-			reportPackageProblem(pkg, reporter, NLS.bind(
-					Messages.TclCheckBuilder_unresolvedDependencies,
-					packageName), packageName, lineTracker);
-			return;
+			if (!isAutoAddPackages()) {
+				reportPackageProblem(pkg, reporter, NLS.bind(
+						Messages.TclCheckBuilder_unresolvedDependencies,
+						packageName), packageName, lineTracker);
+				return;
+			}
+			newDependencies.add(packageName);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -264,12 +280,19 @@ public class PackageRequireChecker implements IBuildParticipant,
 				install).keySet();
 		for (String dependencyName : dependencies) {
 			if (!isAvailable(dependencyName)) {
-				reportPackageProblem(pkg, reporter, NLS.bind(
-						Messages.TclCheckBuilder_unresolvedDependencies,
-						packageName), packageName, lineTracker);
-				return;
+				if (!isAutoAddPackages()) {
+					reportPackageProblem(pkg, reporter, NLS.bind(
+							Messages.TclCheckBuilder_unresolvedDependencies,
+							packageName), packageName, lineTracker);
+					return;
+				}
+				newDependencies.add(dependencyName);
 			}
 		}
+	}
+
+	private final boolean isAutoAddPackages() {
+		return true;
 	}
 
 	/**
