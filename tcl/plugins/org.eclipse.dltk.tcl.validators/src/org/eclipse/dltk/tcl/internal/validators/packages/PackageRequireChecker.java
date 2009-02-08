@@ -25,6 +25,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
@@ -151,14 +152,18 @@ public class PackageRequireChecker implements IBuildParticipant,
 	private final NamespaceScopeProcessor processor = DefinitionManager
 			.getInstance().createProcessor();
 
+	private static final char[] PACKAGE_CHARS = PackageCollector.PACKAGE
+			.toCharArray();
+
 	public void buildExternalModule(IBuildContext context) throws CoreException {
-		final String source = new String(context.getContents());
-		if (source.indexOf(PackageCollector.PACKAGE) == -1) {
+		final char[] contents = context.getContents();
+		if (CharOperation.indexOf(PACKAGE_CHARS, contents, false) == -1) {
 			return;
 		}
 		final TclParser parser = new TclParser();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, false);
-		final List<TclCommand> commands = parser.parse(source, null, processor);
+		final List<TclCommand> commands = parser.parse(new String(contents),
+				null, processor);
 		packageCollector.getRequireRefs().clear();
 		packageCollector.process(commands);
 	}
