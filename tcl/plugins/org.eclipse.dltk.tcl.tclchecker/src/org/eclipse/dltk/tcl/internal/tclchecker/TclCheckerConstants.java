@@ -28,6 +28,11 @@ public final class TclCheckerConstants {
 	public static final String VERSION_4 = "4"; //$NON-NLS-1$
 	public static final String VERSION_5 = "5"; //$NON-NLS-1$
 
+	/**
+	 * XMI representation of the configuration data
+	 */
+	public static final String PREF_CONFIGURATION = "tclchecker.configuration"; //$NON-NLS-1$
+
 	public static final int MODE_NONE = -1;
 
 	public static final int MODE_ERRORS = 0;

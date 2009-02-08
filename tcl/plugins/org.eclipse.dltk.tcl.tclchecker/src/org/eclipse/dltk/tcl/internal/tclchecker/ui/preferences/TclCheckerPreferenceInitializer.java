@@ -34,6 +34,8 @@ public class TclCheckerPreferenceInitializer extends
 		store.setDefault(TclCheckerConstants.PREF_USE_TCL_VER, true);
 		store.setDefault(TclCheckerConstants.PREF_MODE,
 				TclCheckerConstants.MODE_DEFAULT);
+		store.setDefault(TclCheckerConstants.PREF_CONFIGURATION,
+				Util.EMPTY_STRING);
 
 		List<String> problems = TclCheckerProblemDescription
 				.getProblemIdentifiers();

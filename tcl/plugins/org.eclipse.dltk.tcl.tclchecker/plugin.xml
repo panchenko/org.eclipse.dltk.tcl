@@ -132,4 +132,12 @@
             class="org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage"
             genModel="models/tclchecker.genmodel"/>
 	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.TclCheckerPreferencePage"
+          id="org.eclipse.dltk.tcl.tclchecker.configuration"
+          category="org.eclipse.dltk.tcl.preferences"
+          name="%TclCheckerPreferencePage.name">
+    </page>
+	</extension>
 </plugin>
