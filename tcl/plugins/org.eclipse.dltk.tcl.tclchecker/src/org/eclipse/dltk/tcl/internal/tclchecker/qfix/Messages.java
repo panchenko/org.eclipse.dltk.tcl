@@ -21,6 +21,7 @@ public class Messages extends NLS {
 	public static String TclCheckerAnnotationResolution_revalidationError;
 	public static String TclCheckerAnnotationResolution_wrongCommandStart;
 	public static String TclCheckerAnnotationResolution_wrongMarkerAttributes;
+	public static String TclCheckerFixUtils_errorLineLengthOverrun;
 	public static String TclCheckerMarkerResolution_replaceWith;
 	static {
 		// initialize resource bundle

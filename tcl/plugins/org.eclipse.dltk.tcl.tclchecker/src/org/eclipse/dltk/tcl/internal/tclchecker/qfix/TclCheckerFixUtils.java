@@ -155,6 +155,14 @@ public class TclCheckerFixUtils {
 			if (commandStart >= lineRegion.getOffset()
 					&& commandStart < lineRegion.getOffset()
 							+ lineRegion.getLength()) {
+				if (TextUtils.countLines(replacement) == 1
+						&& commandEnd >= lineRegion.getOffset()
+								+ lineRegion.getLength()) {
+					reporter
+							.showError(Messages.TclCheckerFixUtils_errorLineLengthOverrun);
+					commandEnd = lineRegion.getOffset()
+							+ lineRegion.getLength() - 1;
+				}
 				document.replace(commandStart, commandEnd - commandStart + 1,
 						replacement);
 				try {
