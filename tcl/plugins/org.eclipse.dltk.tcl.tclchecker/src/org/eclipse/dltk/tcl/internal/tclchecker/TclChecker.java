@@ -256,7 +256,7 @@ public class TclChecker extends AbstractExternalValidator implements
 			end = start + lineBounds.getLength();
 		} else {
 			start = calculateOffset(lineTracker, bounds.getStart());
-			end = calculateOffset(lineTracker, bounds.getEnd());
+			end = calculateOffset(lineTracker, bounds.getEnd()) + 1;
 		}
 		final IResource resource = module.getResource();
 		if (resource == null) {
