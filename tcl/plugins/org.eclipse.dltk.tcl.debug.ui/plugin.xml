@@ -203,11 +203,6 @@
       class="org.eclipse.dltk.debug.ui.preferences.ScriptDetailFormattersPreferencePage:org.eclipse.dltk.tcl.core.nature"
       id="org.eclipse.dltk.tcl.preferences.debug.detailFormatters"
       name="%DetailFormattersPreferencePage.name" />      
-    <page
-      category="org.eclipse.dltk.tcl.preferences.debug"
-      class="org.eclipse.dltk.tcl.internal.debug.ui.spawnpoints.TclSpawnpointPreferencePage"
-      id="org.eclipse.dltk.tcl.preferences.debug.spawnpoints"
-      name="%SpawnpointsPreferencePage.name" />      
   </extension>
 
   <extension point="org.eclipse.ui.editorActions">
@@ -404,16 +399,10 @@
       nature="org.eclipse.dltk.tcl.core.nature"/>
   </extension>
 
-   <extension point="org.eclipse.ui.editors.annotationTypes">
-      <type
-         name="org.eclipse.dltk.tcl.debug.ui.spawnpoint"
-         markerType="org.eclipse.dltk.tcl.debug.spawnpoint">
-      </type>
-   </extension>
    <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
       <specification
             annotationType="org.eclipse.dltk.tcl.debug.ui.spawnpoint"
-            label="%spawnpoint.annotation.label"
+            label="DLTK Tcl Spawnpoint (not shown)"
             textPreferenceKey="org.eclipse.dltk.tcl.debug.ui.spawnpoint.text"
             colorPreferenceKey="org.eclipse.dltk.tcl.debug.ui.spawnpoint.color"
             colorPreferenceValue="255,0,255"
