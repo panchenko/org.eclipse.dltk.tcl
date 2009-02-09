@@ -28,6 +28,7 @@ import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.util.SWTFactory;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
@@ -56,6 +58,8 @@ public class TclActiveStateDebuggerBlock extends
 		super(context, project, allKeys, container);
 	}
 
+	private TclSpawnpointPreferenceBlock spawnpointBlock;
+
 	@Override
 	protected Control createOptionsBlock(Composite parent) {
 		final TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
@@ -65,6 +69,15 @@ public class TclActiveStateDebuggerBlock extends
 		final TabItem instrTab = new TabItem(tabFolder, SWT.NONE);
 		instrTab.setText(PreferenceMessages.instrumentation_tab);
 		instrTab.setControl(createInstrumentationPage(tabFolder));
+		final TabItem spawnpointTab = new TabItem(tabFolder, SWT.NONE);
+		spawnpointTab.setText(PreferenceMessages.spawnpoints_tab);
+		spawnpointBlock = new TclSpawnpointPreferenceBlock(
+				new IShellProvider() {
+					public Shell getShell() {
+						return TclActiveStateDebuggerBlock.this.getShell();
+					}
+				}, this);
+		spawnpointTab.setControl(spawnpointBlock.createControl(tabFolder));
 		return tabFolder;
 	}
 
@@ -174,6 +187,8 @@ public class TclActiveStateDebuggerBlock extends
 					errorAction) + 1;
 		}
 		errorActionCombo.select(errorActionIndex);
+		// spawnpoints
+		spawnpointBlock.initValues();
 	}
 
 	@Override

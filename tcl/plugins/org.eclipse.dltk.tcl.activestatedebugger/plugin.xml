@@ -46,4 +46,32 @@
     </page>
   </extension>
 
+   <extension
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="org.eclipse.dltk.tcl.activestatedebugger.spawnpoint.TclSpawnpointBuildParticipantFactory"
+            id="org.eclipse.dltk.tcl.debug.spawnpoint.builder"
+            name="Tcl Spawnpoint Builder"
+            nature="org.eclipse.dltk.tcl.core.nature">
+            <requires
+                  id="org.eclipse.dltk.tcl.validators.checks">
+            </requires>
+      </buildParticipant>
+   </extension>
+   <extension id="spawnpoint" point="org.eclipse.core.resources.markers">
+     <super type="org.eclipse.core.resources.textmarker"/>
+     <persistent value="true"/>
+   </extension>
+   <extension point="org.eclipse.dltk.tcl.debug.spawnpointCommand">
+      <command name="spawn" enabled="false" />
+      <command name="exec" enabled="false" />
+      <command name="open" enabled="false" />
+      <command name="thread::create" />
+   </extension>
+   <extension point="org.eclipse.ui.editors.annotationTypes">
+      <type
+         name="org.eclipse.dltk.tcl.debug.ui.spawnpoint"
+         markerType="org.eclipse.dltk.tcl.activestatedebugger.spawnpoint">
+      </type>
+   </extension>
 </plugin>

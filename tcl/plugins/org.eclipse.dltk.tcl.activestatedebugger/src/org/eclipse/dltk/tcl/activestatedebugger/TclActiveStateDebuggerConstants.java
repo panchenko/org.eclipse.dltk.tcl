@@ -25,6 +25,11 @@ public final class TclActiveStateDebuggerConstants {
 
 	public static final String INSTRUMENTATION_PATTERNS = "instrumentationPatterns"; //$NON-NLS-1$
 
+	public static final String PREF_SPAWNPOINT_COMMANDS = "tcl.debug.spawnpoints"; //$NON-NLS-1$
+
+	public static final String SPAWNPOINT_MARKER_TYPE = TclActiveStateDebuggerPlugin.PLUGIN_ID
+			+ ".spawnpoint"; //$NON-NLS-1$
+
 	public static void initalizeDefaults(IPreferenceStore store) {
 		store.setDefault(DEBUGGING_ENGINE_PATH_KEY, Util.EMPTY_STRING);
 		store.setDefault(DEBUGGING_ENGINE_PDX_PATH_KEY, Util.EMPTY_STRING);
@@ -36,6 +41,7 @@ public final class TclActiveStateDebuggerConstants {
 						InstrumentationFeature.ITCL));
 		store.setDefault(INSTRUMENTATION_ERROR_ACTION, Util.EMPTY_STRING);
 		store.setDefault(INSTRUMENTATION_PATTERNS, Util.EMPTY_STRING);
+		store.setDefault(PREF_SPAWNPOINT_COMMANDS, Util.EMPTY_STRING);
 	}
 
 	private TclActiveStateDebuggerConstants() {

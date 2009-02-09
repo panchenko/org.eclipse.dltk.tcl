@@ -168,7 +168,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 	private List<IMarker> loadSpawnpoints() throws CoreException {
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		final IMarker[] markers = root.findMarkers(
-				TclDebugConstants.SPAWNPOINT_MARKER_TYPE, true,
+				TclActiveStateDebuggerConstants.SPAWNPOINT_MARKER_TYPE, true,
 				IResource.DEPTH_INFINITE);
 		if (markers.length == 0) {
 			return Collections.emptyList();

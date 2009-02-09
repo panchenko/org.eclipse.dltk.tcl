@@ -36,4 +36,16 @@ public class PreferenceMessages extends NLS {
 	public static String instrumentation_patterns_message;
 	public static String instrumentation_patternsGroup;
 	public static String path_tab;
+	public static String spawnpoints_tab;
+	public static String Spawnpoint_Button_Add;
+	public static String Spawnpoint_Button_Delete;
+	public static String Spawnpoint_Button_Edit;
+	public static String Spawnpoint_InputDialog_commandLabel;
+	public static String Spawnpoint_InputDialog_editTitle;
+	public static String Spawnpoint_InputDialog_errorDuplicateCommandName;
+	public static String Spawnpoint_InputDialog_errorEmptyCommandName;
+	public static String Spawnpoint_InputDialog_errorInvalidCommandName;
+	public static String Spawnpoint_InputDialog_newTitle;
+	public static String Spawnpoint_PreferenceBlock_rebuildMessage;
+	public static String Spawnpoint_PreferenceBlock_rebuildTitle;
 }

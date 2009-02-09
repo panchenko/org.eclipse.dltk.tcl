@@ -50,6 +50,10 @@ public class TclActiveStateDebuggerPreferencePage extends
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.INSTRUMENTATION_PATTERNS);
 
+	static final PreferenceKey PREF_SPAWNPOINTS = new PreferenceKey(
+			TclActiveStateDebuggerPlugin.PLUGIN_ID,
+			TclActiveStateDebuggerConstants.PREF_SPAWNPOINT_COMMANDS);
+
 	private static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug.activestatedebugger"; //$NON-NLS-1$
 	private static final String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug.engines.activestatedebugger"; //$NON-NLS-1$
 
@@ -58,7 +62,8 @@ public class TclActiveStateDebuggerPreferencePage extends
 			IWorkbenchPreferenceContainer container) {
 		final PreferenceKey[] keys = new PreferenceKey[] { ENGINE_PATH,
 				PDX_PATH, LOG_FILE_NAME, INSTRUMENTATION_FEATURES,
-				INSTRUMENTATION_ERROR_ACTION, INSTRUMENTATION_PATTERNS };
+				INSTRUMENTATION_ERROR_ACTION, INSTRUMENTATION_PATTERNS,
+				PREF_SPAWNPOINTS };
 		return new TclActiveStateDebuggerBlock(newStatusChangedListener,
 				project, keys, container);
 	}
