@@ -14,9 +14,6 @@ public class TclDebugPreferenceInitializer extends
 		store.setDefault(TclDebugConstants.DEBUGGING_ENGINE_ID_KEY,
 				Util.EMPTY_STRING);
 
-		store.setDefault(TclDebugConstants.PREF_SPAWNPOINT_COMMANDS,
-				Util.EMPTY_STRING);
-
 		store.setDefault(
 				DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE,
 				false);
