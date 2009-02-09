@@ -57,7 +57,7 @@ public class SpawnpointCommandManager {
 				final String name = element.getAttribute("name"); //$NON-NLS-1$
 				if (isValidCommandName(name)) {
 					names.put(name, Boolean.valueOf(toBoolean(element
-							.getAttribute("enabled"), true)));
+							.getAttribute("enabled"), true))); //$NON-NLS-1$
 				}
 			}
 			commands = Collections.unmodifiableMap(names);

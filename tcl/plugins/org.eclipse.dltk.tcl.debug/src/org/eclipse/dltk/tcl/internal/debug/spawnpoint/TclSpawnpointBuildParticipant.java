@@ -41,6 +41,8 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 
 	private static class SpawnpointCollector extends TclVisitor {
 
+		private static final String PROC_COMMAND = "proc"; //$NON-NLS-1$
+
 		private final IBuildContext buildContext;
 		private final Set<String> spawnCommands;
 
@@ -64,7 +66,7 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 
 		@Override
 		public boolean visit(TclCommand command) {
-			if ("proc".equals(command.getQualifiedName())
+			if (PROC_COMMAND.equals(command.getQualifiedName())
 					&& command.getArguments().size() == 3) {
 				final StringArgument procName = getStringArgument(command, 0);
 				if (procName != null
