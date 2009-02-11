@@ -13,11 +13,13 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.dltk.tcl.internal.ui.text.TclPartitionScanner;
 import org.eclipse.dltk.tcl.internal.ui.text.folding.TclFoldingStructureProvider;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.tests.TclUITestsPlugin;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
+import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -25,6 +27,10 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 
 public class TclFoldingTest extends TestCase {
+
+//	public TclFoldingTest(String name) {
+//		super(TclUITestsPlugin.PLUGIN_NAME, name);
+//	}
 
 	private class MyTclASTFoldingStructureProvider extends
 			TclFoldingStructureProvider {
@@ -117,7 +123,7 @@ public class TclFoldingTest extends TestCase {
 		installDocumentStuff(document);
 		provider.setDocument(document);
 		fStore.setValue(
-				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
+				PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES,
 				false);
 		Map result = provider.testComputeFoldingStructure(content, provider
 				.createInitialContext());
@@ -131,7 +137,7 @@ public class TclFoldingTest extends TestCase {
 		installDocumentStuff(document);
 		provider.setDocument(document);
 		fStore.setValue(
-				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
+				PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES,
 				true);
 		Map result = provider.testComputeFoldingStructure(content, provider
 				.createInitialContext());
@@ -150,7 +156,7 @@ public class TclFoldingTest extends TestCase {
 		installDocumentStuff(document);
 		provider.setDocument(document);
 		fStore.setValue(
-				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
+				PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES,
 				true);
 		fStore.setValue(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
 				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_EXCLUDE);
@@ -171,7 +177,7 @@ public class TclFoldingTest extends TestCase {
 		installDocumentStuff(document);
 		provider.setDocument(document);
 		fStore.setValue(
-				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
+				PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES,
 				true);
 		fStore.setValue(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
 				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_INCLUDE);
