@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstance.java,v 1.1 2009/02/05 18:41:36 apanchenk Exp $
+ * $Id: CheckerInstance.java,v 1.2 2009/02/11 16:17:06 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -20,10 +20,12 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironmentId <em>Environment Id</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getExecutablePath <em>Executable Path</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFiles <em>Pcx Files</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFileFolders <em>Pcx File Folders</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getVersion <em>Version</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isUsePcxFiles <em>Use Pcx Files</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getCommandLineOptions <em>Command Line Options</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfiguration <em>Configuration</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic <em>Automatic</em>}</li>
  * </ul>
  * </p>
  *
@@ -85,20 +87,20 @@ public interface CheckerInstance extends EObject {
 	void setExecutablePath(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Pcx Files</b></em>' attribute list.
+	 * Returns the value of the '<em><b>Pcx File Folders</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Pcx Files</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Pcx File Folders</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pcx Files</em>' attribute list.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_PcxFiles()
+	 * @return the value of the '<em>Pcx File Folders</em>' attribute list.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_PcxFileFolders()
 	 * @model
 	 * @generated
 	 */
-	EList<String> getPcxFiles();
+	EList<String> getPcxFileFolders();
 
 	/**
 	 * Returns the value of the '<em><b>Version</b></em>' attribute.
@@ -181,5 +183,57 @@ public interface CheckerInstance extends EObject {
 	 * @generated
 	 */
 	void setCommandLineOptions(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Configuration</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Configuration</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Configuration</em>' reference.
+	 * @see #setConfiguration(ConfigInstance)
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Configuration()
+	 * @model
+	 * @generated
+	 */
+	ConfigInstance getConfiguration();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfiguration <em>Configuration</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Configuration</em>' reference.
+	 * @see #getConfiguration()
+	 * @generated
+	 */
+	void setConfiguration(ConfigInstance value);
+
+	/**
+	 * Returns the value of the '<em><b>Automatic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Automatic</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Automatic</em>' attribute.
+	 * @see #setAutomatic(boolean)
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Automatic()
+	 * @model
+	 * @generated
+	 */
+	boolean isAutomatic();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic <em>Automatic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Automatic</em>' attribute.
+	 * @see #isAutomatic()
+	 * @generated
+	 */
+	void setAutomatic(boolean value);
 
 } // CheckerInstance

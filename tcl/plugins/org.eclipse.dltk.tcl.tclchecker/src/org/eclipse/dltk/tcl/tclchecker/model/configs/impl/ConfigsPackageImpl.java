@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackageImpl.java,v 1.2 2009/02/11 10:32:26 apanchenk Exp $
+ * $Id: ConfigsPackageImpl.java,v 1.3 2009/02/11 16:17:06 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -281,7 +281,7 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getCheckerInstance_PcxFiles() {
+	public EAttribute getCheckerInstance_PcxFileFolders() {
 		return (EAttribute)checkerInstanceEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -310,6 +310,24 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 */
 	public EAttribute getCheckerInstance_CommandLineOptions() {
 		return (EAttribute)checkerInstanceEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCheckerInstance_Configuration() {
+		return (EReference)checkerInstanceEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCheckerInstance_Automatic() {
+		return (EAttribute)checkerInstanceEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -383,10 +401,12 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		checkerInstanceEClass = createEClass(CHECKER_INSTANCE);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__ENVIRONMENT_ID);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__EXECUTABLE_PATH);
-		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__PCX_FILES);
+		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__PCX_FILE_FOLDERS);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__VERSION);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__USE_PCX_FILES);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__COMMAND_LINE_OPTIONS);
+		createEReference(checkerInstanceEClass, CHECKER_INSTANCE__CONFIGURATION);
+		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__AUTOMATIC);
 
 		// Create enums
 		checkerModeEEnum = createEEnum(CHECKER_MODE);
@@ -440,10 +460,12 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		initEClass(checkerInstanceEClass, CheckerInstance.class, "CheckerInstance", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_EnvironmentId(), ecorePackage.getEString(), "environmentId", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_ExecutablePath(), ecorePackage.getEString(), "executablePath", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getCheckerInstance_PcxFiles(), ecorePackage.getEString(), "pcxFiles", null, 0, -1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCheckerInstance_PcxFileFolders(), ecorePackage.getEString(), "pcxFileFolders", null, 0, -1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_Version(), this.getCheckerVersion(), "version", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_UsePcxFiles(), ecorePackage.getEBoolean(), "usePcxFiles", "true", 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 		initEAttribute(getCheckerInstance_CommandLineOptions(), ecorePackage.getEString(), "commandLineOptions", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCheckerInstance_Configuration(), this.getConfigInstance(), null, "configuration", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCheckerInstance_Automatic(), ecorePackage.getEBoolean(), "automatic", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(checkerModeEEnum, CheckerMode.class, "CheckerMode"); //$NON-NLS-1$

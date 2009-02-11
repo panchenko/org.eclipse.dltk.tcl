@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackage.java,v 1.2 2009/02/11 10:32:20 apanchenk Exp $
+ * $Id: ConfigsPackage.java,v 1.3 2009/02/11 16:17:06 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -208,13 +208,13 @@ public interface ConfigsPackage extends EPackage {
 	int CHECKER_INSTANCE__EXECUTABLE_PATH = 1;
 
 	/**
-	 * The feature id for the '<em><b>Pcx Files</b></em>' attribute list.
+	 * The feature id for the '<em><b>Pcx File Folders</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_INSTANCE__PCX_FILES = 2;
+	int CHECKER_INSTANCE__PCX_FILE_FOLDERS = 2;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -244,13 +244,31 @@ public interface ConfigsPackage extends EPackage {
 	int CHECKER_INSTANCE__COMMAND_LINE_OPTIONS = 5;
 
 	/**
+	 * The feature id for the '<em><b>Configuration</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__CONFIGURATION = 6;
+
+	/**
+	 * The feature id for the '<em><b>Automatic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__AUTOMATIC = 7;
+
+	/**
 	 * The number of structural features of the '<em>Checker Instance</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_INSTANCE_FEATURE_COUNT = 6;
+	int CHECKER_INSTANCE_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode <em>Checker Mode</em>}' enum.
@@ -437,15 +455,15 @@ public interface ConfigsPackage extends EPackage {
 	EAttribute getCheckerInstance_ExecutablePath();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFiles <em>Pcx Files</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFileFolders <em>Pcx File Folders</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Pcx Files</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFiles()
+	 * @return the meta object for the attribute list '<em>Pcx File Folders</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFileFolders()
 	 * @see #getCheckerInstance()
 	 * @generated
 	 */
-	EAttribute getCheckerInstance_PcxFiles();
+	EAttribute getCheckerInstance_PcxFileFolders();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getVersion <em>Version</em>}'.
@@ -479,6 +497,28 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getCheckerInstance_CommandLineOptions();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfiguration <em>Configuration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Configuration</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfiguration()
+	 * @see #getCheckerInstance()
+	 * @generated
+	 */
+	EReference getCheckerInstance_Configuration();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic <em>Automatic</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Automatic</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic()
+	 * @see #getCheckerInstance()
+	 * @generated
+	 */
+	EAttribute getCheckerInstance_Automatic();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode <em>Checker Mode</em>}'.
@@ -651,12 +691,12 @@ public interface ConfigsPackage extends EPackage {
 		EAttribute CHECKER_INSTANCE__EXECUTABLE_PATH = eINSTANCE.getCheckerInstance_ExecutablePath();
 
 		/**
-		 * The meta object literal for the '<em><b>Pcx Files</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Pcx File Folders</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CHECKER_INSTANCE__PCX_FILES = eINSTANCE.getCheckerInstance_PcxFiles();
+		EAttribute CHECKER_INSTANCE__PCX_FILE_FOLDERS = eINSTANCE.getCheckerInstance_PcxFileFolders();
 
 		/**
 		 * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
@@ -681,6 +721,22 @@ public interface ConfigsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CHECKER_INSTANCE__COMMAND_LINE_OPTIONS = eINSTANCE.getCheckerInstance_CommandLineOptions();
+
+		/**
+		 * The meta object literal for the '<em><b>Configuration</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CHECKER_INSTANCE__CONFIGURATION = eINSTANCE.getCheckerInstance_Configuration();
+
+		/**
+		 * The meta object literal for the '<em><b>Automatic</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CHECKER_INSTANCE__AUTOMATIC = eINSTANCE.getCheckerInstance_Automatic();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode <em>Checker Mode</em>}' enum.
