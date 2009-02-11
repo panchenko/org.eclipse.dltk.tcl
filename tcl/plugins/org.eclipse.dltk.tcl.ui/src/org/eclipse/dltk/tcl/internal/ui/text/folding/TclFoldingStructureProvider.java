@@ -41,7 +41,6 @@ import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider;
 import org.eclipse.dltk.ui.text.folding.IElementCommentResolver;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
@@ -50,21 +49,17 @@ import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 public class TclFoldingStructureProvider extends
 		AbstractASTFoldingStructureProvider {
 
-	// ~ Instance fields
-
-	private List fBlockExcludeList = new ArrayList();
-
 	/* preferences */
 	private int fBlockFolding = 0;
 	private List fBlockIncludeList = new ArrayList();
-	private boolean fInitCollapseBlocks = true;
-	private boolean fInitCollapseComments = true;
-	private boolean fInitCollapseHeaderComments = false;
-	private boolean fInitCollapseNamespaces = true;
-	private IElementCommentResolver fElementCommentResolver = new TclElementCommentResolver();
-	
+	private List fBlockExcludeList = new ArrayList();
 
-	// ~ Methods
+	private IElementCommentResolver fElementCommentResolver = new TclElementCommentResolver();
+	private boolean fInitCollapseOtherBlocks;
+
+	public IElementCommentResolver getElementCommentResolver() {
+		return fElementCommentResolver;
+	}
 
 	protected CodeBlock[] getCodeBlocks(String code, int offset) {
 		/*
@@ -205,103 +200,54 @@ public class TclFoldingStructureProvider extends
 		}
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * getCommentPartition()
-	 */
 	protected String getCommentPartition() {
 		return TclPartitions.TCL_COMMENT;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * getLog()
-	 */
 	protected ILog getLog() {
 		return TclUI.getDefault().getLog();
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * getPartition()
-	 */
 	protected String getPartition() {
 		return TclPartitions.TCL_PARTITIONING;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * getPartitionScanner()
-	 */
 	protected IPartitionTokenScanner getPartitionScanner() {
 		return new TclPartitionScanner();
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * getPartitionTypes()
-	 */
 	protected String[] getPartitionTypes() {
 		return TclPartitions.TCL_PARTITION_TYPES;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * getNatureId()
-	 */
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * initializePreferences(org.eclipse.jface.preference.IPreferenceStore)
-	 */
 	protected void initializePreferences(IPreferenceStore store) {
 		super.initializePreferences(store);
+
+		fInitCollapseOtherBlocks = store
+				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_OTHER);
+
 		fBlockFolding = store
 				.getInt(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS);
 
-		String t = store
-				.getString(TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST);
-		String[] items = t.split(",");
-		fBlockExcludeList.clear();
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].trim().length() > 0) {
-				fBlockExcludeList.add(items[i]);
-			}
-		}
-
-		t = store.getString(TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
-		items = t.split(",");
-		fBlockIncludeList.clear();
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].trim().length() > 0) {
-				fBlockIncludeList.add(items[i]);
-			}
-		}
-
-		fFoldNewLines = store
-				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES);
-		fInitCollapseBlocks = store
-				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS);
-		fInitCollapseComments = store
-				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS);
-		fInitCollapseHeaderComments = store
-				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS);
-		fInitCollapseNamespaces = store
-				.getBoolean(TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES);
+		fBlockExcludeList = initializeList(store,
+				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST);
+		fBlockIncludeList = initializeList(store,
+				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
 	}
 
-	protected boolean initiallyCollapse(ASTNode s,
-			FoldingStructureComputationContext ctx) {
+	protected String getInitiallyFoldClassesKey() {
+		return TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES;
+	}
+
+	protected String getInitiallyFoldMethodsKey() {
+		return TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS;
+	}
+
+	protected boolean initiallyCollapse(ASTNode s) {
 		if (s instanceof TclStatement || s instanceof ITclStatementLookLike) {
 			TclStatement statement = null;
 			if (s instanceof ITclStatementLookLike) {
@@ -319,38 +265,18 @@ public class TclFoldingStructureProvider extends
 			String name = null;
 			name = ((SimpleReference) statement.getAt(0)).getName();
 			if (name.equals("namespace")) {
-				return ctx.allowCollapsing() && fInitCollapseNamespaces;
+				return fInitCollapseClasses;
 			}
-
-			return ctx.allowCollapsing() && fInitCollapseBlocks;
 		}
-
-		return false;
+		
+		if (mayCollapse(s))
+		{
+			return fInitCollapseOtherBlocks;
+		}
+		
+		return super.initiallyCollapse(s);
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * initiallyCollapseComments
-	 * (org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider
-	 * .FoldingStructureComputationContext)
-	 */
-	protected boolean initiallyCollapseComments(IRegion commentRegion,
-			FoldingStructureComputationContext ctx) {
-		if (ctx.allowCollapsing()) {
-			return isHeaderRegion(commentRegion, ctx) ? fInitCollapseHeaderComments
-					: fInitCollapseComments;
-		}
-		return false;
-	}
-
-	/*
-	 * @see
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider#
-	 * mayCollapse(org.eclipse.dltk.ast.statements.Statement,
-	 * org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider.
-	 * FoldingStructureComputationContext)
-	 */
 	protected boolean canFold(String name) {
 		switch (fBlockFolding) {
 		case TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF: {
@@ -377,9 +303,13 @@ public class TclFoldingStructureProvider extends
 		}
 		return false;
 	}
-
+	
 	protected boolean mayCollapse(ASTNode s,
 			FoldingStructureComputationContext ctx) {
+		return mayCollapse(s);
+	}
+
+	protected boolean mayCollapse(ASTNode s) {
 		if (s instanceof TypeDeclaration) {
 			return canFold("namespace");
 		} else if (s instanceof MethodDeclaration) {
@@ -411,7 +341,19 @@ public class TclFoldingStructureProvider extends
 
 		return false;
 	}
-	public IElementCommentResolver getElementCommentResolver() {
-		return fElementCommentResolver;
+
+	private List initializeList(IPreferenceStore store, String key) {
+		String t = store.getString(key);
+		String[] items = t.split(",");
+
+		ArrayList list = new ArrayList(items.length);
+		for (int i = 0; i < items.length; i++) {
+			if (items[i].trim().length() > 0) {
+				list.add(items[i]);
+			}
+		}
+
+		return list;
 	}
+
 }

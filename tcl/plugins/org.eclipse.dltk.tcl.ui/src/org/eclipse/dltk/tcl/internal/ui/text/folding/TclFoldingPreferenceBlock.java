@@ -9,16 +9,13 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.text.folding;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
-import org.eclipse.dltk.ui.PreferenceConstants;
-import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlock;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
-import org.eclipse.dltk.ui.preferences.PreferencesMessages;
-import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore.OverlayKey;
-import org.eclipse.dltk.ui.text.folding.IFoldingPreferenceBlock;
+import org.eclipse.dltk.ui.text.folding.SourceCodeFoldingPreferenceBlock;
 import org.eclipse.dltk.ui.util.PixelConverter;
+import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -36,12 +33,109 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 
 /**
- * Script default folding preferences.
+ * Tcl source code folding preferences.
  */
-public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock
-		implements IFoldingPreferenceBlock {
+public class TclFoldingPreferenceBlock extends SourceCodeFoldingPreferenceBlock {
+
+	private Button fFoldOtherEnabled;
+	private Button fInitFoldOtherBlocks;
+	
+	private ListBlock fExcludePatterns;
+	private ListBlock fIncludePatterns;
+
+	public TclFoldingPreferenceBlock(OverlayPreferenceStore store,
+			PreferencePage page) {
+		super(store, page);
+	}
+	
+	public Control createControl(Composite parent) {
+		Control control = super.createControl(parent);
+		
+		SWTFactory.setUseSelectionInverse(fFoldOtherEnabled);
+		createDependency(fFoldOtherEnabled, new Control[] {fInitFoldOtherBlocks});
+		
+		return control;
+	}
+
+	protected void addInitiallyFoldOptions(Group group) {
+		super.addInitiallyFoldOptions(group);
+
+		fInitFoldOtherBlocks = createCheckBox(group,
+				TclFoldingMessages.DefaultFoldingPreferenceBlock_other,
+				TclPreferenceConstants.EDITOR_FOLDING_INIT_OTHER);
+	}
+
+	protected void addOverlayKeys(List keys) {
+		super.addOverlayKeys(keys);
+
+		keys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.INT,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS));
+
+		keys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
+				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST));
+
+		keys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
+				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST));
+
+		keys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
+				TclPreferenceConstants.EDITOR_FOLDING_INIT_OTHER));
+	}
+
+	protected void createOptionsControl(Composite composite) {
+		Group group = SWTFactory.createGroup(composite,
+				TclFoldingMessages.TclFoldingPreferenceBlock_10, 1, 1,
+				GridData.FILL_HORIZONTAL);
+
+		fFoldOtherEnabled = createRadioButton(
+				group,
+				TclFoldingMessages.TclFoldingPreferenceBlock_11,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
+				Integer
+						.valueOf(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF));
+
+		createRadioButton(
+				group,
+				TclFoldingMessages.TclFoldingPreferenceBlock_12,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
+				Integer
+						.valueOf(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_EXCLUDE));
+
+		fExcludePatterns = new ListBlock(group,
+				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST);
+
+		createRadioButton(
+				group,
+				TclFoldingMessages.TclFoldingPreferenceBlock_13,
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
+				Integer
+						.valueOf(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_INCLUDE));
+
+		fIncludePatterns = new ListBlock(group,
+				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
+	}
+
+	protected String getInitiallyFoldClassesKey() {
+		return TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES;
+	}
+
+	protected String getInitiallyFoldMethodsKey() {
+		return TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS;
+	}
+
+	protected String getInitiallyFoldClassesText() {
+		return TclFoldingMessages.DefaultFoldingPreferenceBlock_innerTypes;
+	}
+
+	protected String getInitiallyFoldMethodsText() {
+		return TclFoldingMessages.DefaultFoldingPreferenceBlock_methods;
+	}
 
 	protected class ListBlock {
 		private ListViewer fList;
@@ -184,134 +278,6 @@ public class TclFoldingPreferenceBlock extends AbstractConfigurationBlock
 				setEntries(items);
 			}
 		}
-	}
-
-	private ListBlock fExcludePatterns;
-	private ListBlock fIncludePatterns;
-
-	private OverlayPreferenceStore fOverlayStore;
-	private OverlayKey[] fKeys;
-
-	public TclFoldingPreferenceBlock(OverlayPreferenceStore store,
-			PreferencePage mainPreferencePage) {
-		super(store, mainPreferencePage);
-		fOverlayStore = store;
-		fKeys = createKeys();
-		fOverlayStore.addKeys(fKeys);
-	}
-
-	private OverlayKey[] createKeys() {
-		ArrayList overlayKeys = new ArrayList();
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.INT,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.INT,
-				PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
-				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
-				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
-				PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
-				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES));
-		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
-				.size()];
-		overlayKeys.toArray(keys);
-		return keys;
-	}
-
-	public Control createControl(Composite composite) {
-		Composite inner = new Composite(composite, SWT.NONE);
-		inner.setLayout(new GridLayout());
-
-		Composite blockFolding = createSubsection(inner, null,
-				TclFoldingMessages.TclFoldingPreferenceBlock_10);
-		blockFolding.setLayout(new GridLayout());
-
-		addRadioButton(blockFolding,
-				TclFoldingMessages.TclFoldingPreferenceBlock_11,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF);
-		addRadioButton(blockFolding,
-				TclFoldingMessages.TclFoldingPreferenceBlock_12,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_EXCLUDE);
-		fExcludePatterns = new ListBlock(blockFolding,
-				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST);
-		addRadioButton(blockFolding,
-				TclFoldingMessages.TclFoldingPreferenceBlock_13,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_INCLUDE);
-		fIncludePatterns = new ListBlock(blockFolding,
-				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
-
-		IInputValidator val = new IInputValidator() {
-
-			public String isValid(String number) {
-				if (number.length() == 0) {
-					return PreferencesMessages.DLTKEditorPreferencePage_empty_input;
-				} else {
-					try {
-						int value = Integer.parseInt(number);
-						if (value < 2)
-							return "You may input numbers >= 2.";
-					} catch (NumberFormatException e) {
-						return "Input is not a number";
-					}
-				}
-				return null;
-			}
-
-		};
-
-		addLabelledTextField(blockFolding,
-				"Minimal amount of lines to be folded(>=2):",
-				PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT, 3, 1, true, val);
-
-		Composite commentFolding = createSubsection(inner, null,
-				TclFoldingMessages.TclFoldingPreferenceBlock_14);
-		commentFolding.setLayout(new GridLayout());
-
-		addCheckBox(commentFolding,
-				TclFoldingMessages.TclFoldingPreferenceBlock_15,
-				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES, 0);
-
-		Composite initialFolding = createSubsection(inner, null,
-				TclFoldingMessages.TclFoldingPreferenceBlock_16);
-		initialFolding.setLayout(new GridLayout());
-
-		addCheckBox(initialFolding,
-				TclFoldingMessages.DefaultFoldingPreferenceBlock_comments,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS, 0);
-		addCheckBox(initialFolding,
-				TclFoldingMessages.DefaultFoldingPreferenceBlock_headers,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS, 0);
-		addCheckBox(initialFolding,
-				TclFoldingMessages.DefaultFoldingPreferenceBlock_innerTypes,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES, 0);
-		addCheckBox(initialFolding,
-				TclFoldingMessages.DefaultFoldingPreferenceBlock_methods,
-				TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS, 0);
-
-		return inner;
 	}
 
 	public void initialize() {

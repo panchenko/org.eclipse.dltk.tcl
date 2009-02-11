@@ -12,12 +12,13 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
+import org.eclipse.dltk.tcl.internal.ui.text.folding.TclFoldingPreferenceBlock;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPreferencePage;
 import org.eclipse.dltk.ui.preferences.IPreferenceConfigurationBlock;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
-import org.eclipse.dltk.ui.preferences.PreferencesMessages;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.dltk.ui.text.folding.DefaultFoldingPreferenceConfigurationBlock;
+import org.eclipse.dltk.ui.text.folding.IFoldingPreferenceBlock;
+import org.eclipse.jface.preference.PreferencePage;
 
 
 /**
@@ -37,8 +38,7 @@ public final class TclFoldingPreferencePage extends AbstractConfigurationBlockPr
 	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage#setDescription()
 	 */
 	protected void setDescription() {
-		String description= PreferencesMessages.EditorPreferencePage_folding_title; 
-		setDescription(description);
+		// setDescription(PreferencesMessages.EditorPreferencePage_folding_title);
 	}
 	
 	/*
@@ -47,16 +47,17 @@ public final class TclFoldingPreferencePage extends AbstractConfigurationBlockPr
 	protected void setPreferenceStore() {
 		setPreferenceStore(TclUI.getDefault().getPreferenceStore());
 	}
-	
-	
-	protected Label createDescriptionLabel(Composite parent) {
-		return null; // no description for new look.
-	}
 
 	/*
 	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigureationBlockPreferencePage#createConfigurationBlock(org.eclipse.ui.internal.editors.text.OverlayPreferenceStore)
 	 */
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
-		return new TclFoldingConfigurationBlock(overlayPreferenceStore, this);
+		return new DefaultFoldingPreferenceConfigurationBlock(
+				overlayPreferenceStore, this) {
+			protected IFoldingPreferenceBlock createSourceCodeBlock(
+					OverlayPreferenceStore store, PreferencePage page) {
+				return new TclFoldingPreferenceBlock(store, page);
+			}
+		};
 	}
 }

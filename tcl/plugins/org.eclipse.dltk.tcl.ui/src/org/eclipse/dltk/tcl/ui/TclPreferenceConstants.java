@@ -433,19 +433,13 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 	public static final String EDITOR_FOLDING_EXCLUDE_LIST = "editor_folding_exclude_list"; //$NON-NLS-1$
 
-	public static final String EDITOR_FOLDING_INIT_COMMENTS = "editor_folding_init_comments"; //$NON-NLS-1$
-
-	public static final String EDITOR_FOLDING_INIT_HEADER_COMMENTS = "editor_folding_init_header_comments"; //$NON-NLS-1$
-
 	public static final String EDITOR_FOLDING_INIT_NAMESPACES = "editor_folding_init_namespaces"; //$NON-NLS-1$
 
 	public static final String EDITOR_FOLDING_INIT_BLOCKS = "editor_folding_init_blocks"; //$NON-NLS-1$
 
-	public static final String EDITOR_FOLDING_COMMENTS_WITH_NEWLINES = "editor_folding_comments_lines"; //$NON-NLS-1$
-
+	public static final String EDITOR_FOLDING_INIT_OTHER = "editor_folding_init_other_blocks"; //$NON-NLS-1$
+	
 	public static final String DOC_MAN_PAGES_LOCATIONS = "doc_man_pages_locations";
-
-	public static final String EDITOR_FOLDING_COMMENTS_FOLDING = "editor_folding_comments";
 
 	public static final String CODEASSIST_FILTER_INTERNAL_API = "tcl_filter_internal_api";
 
@@ -531,9 +525,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 				"proc,namespace,catch,switch,if,while,for,foreach");
 		store.setDefault(TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST,
 				"variable,global");
-		store.setDefault(
-				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
-				true);
+//		store.setDefault(
+//				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
+//				true);
 		store.setDefault(
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS,
 				true);

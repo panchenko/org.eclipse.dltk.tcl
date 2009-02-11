@@ -20,7 +20,6 @@ import org.eclipse.dltk.tcl.internal.ui.text.TclPairMatcher;
 import org.eclipse.dltk.tcl.internal.ui.text.folding.TclFoldingStructureProvider;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
-import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.actions.GenerateActionGroup;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
@@ -31,8 +30,6 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -65,29 +62,12 @@ public class TclEditor extends ScriptEditor {
 
 	final static String[] properties = new String[] {
 			TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
-			TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
 			TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST,
 			TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST,
-			PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT };
+	};
 
-	protected void handlePreferenceStoreChanged(PropertyChangeEvent event) {
-		String property = event.getProperty();
-		try {
-			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer == null) {
-				return;
-			}
-			for (int i = 0; i < properties.length; i++) {
-				if (properties[i].equals(property)) {
-					if (sourceViewer instanceof ProjectionViewer) {
-						fProjectionModelUpdater.initialize();
-					}
-					return;
-				}
-			}
-		} finally {
-			super.handlePreferenceStoreChanged(event);
-		}
+	protected String[] getFoldingEventPreferenceKeys() {
+		return properties;
 	}
 
 	protected IPreferenceStore getScriptPreferenceStore() {
