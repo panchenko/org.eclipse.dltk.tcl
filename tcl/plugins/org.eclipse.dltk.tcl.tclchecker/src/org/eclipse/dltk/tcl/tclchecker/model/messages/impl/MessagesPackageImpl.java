@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessagesPackageImpl.java,v 1.2 2009/02/05 18:41:39 apanchenk Exp $
+ * $Id: MessagesPackageImpl.java,v 1.3 2009/02/11 10:32:26 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages.impl;
 
@@ -162,6 +162,15 @@ public class MessagesPackageImpl extends EPackageImpl implements MessagesPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getCheckerMessage_Group() {
+		return (EReference)checkerMessageEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessageGroup() {
 		return messageGroupEClass;
 	}
@@ -191,6 +200,15 @@ public class MessagesPackageImpl extends EPackageImpl implements MessagesPackage
 	 */
 	public EReference getMessageGroup_Messages() {
 		return (EReference)messageGroupEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMessageGroup_Priority() {
+		return (EAttribute)messageGroupEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -234,11 +252,13 @@ public class MessagesPackageImpl extends EPackageImpl implements MessagesPackage
 		createEAttribute(checkerMessageEClass, CHECKER_MESSAGE__MESSAGE_ID);
 		createEAttribute(checkerMessageEClass, CHECKER_MESSAGE__EXPLANATION);
 		createEAttribute(checkerMessageEClass, CHECKER_MESSAGE__CATEGORY);
+		createEReference(checkerMessageEClass, CHECKER_MESSAGE__GROUP);
 
 		messageGroupEClass = createEClass(MESSAGE_GROUP);
 		createEAttribute(messageGroupEClass, MESSAGE_GROUP__ID);
 		createEAttribute(messageGroupEClass, MESSAGE_GROUP__NAME);
 		createEReference(messageGroupEClass, MESSAGE_GROUP__MESSAGES);
+		createEAttribute(messageGroupEClass, MESSAGE_GROUP__PRIORITY);
 
 		// Create enums
 		messageCategoryEEnum = createEEnum(MESSAGE_CATEGORY);
@@ -278,11 +298,13 @@ public class MessagesPackageImpl extends EPackageImpl implements MessagesPackage
 		initEAttribute(getCheckerMessage_MessageId(), ecorePackage.getEString(), "messageId", null, 0, 1, CheckerMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerMessage_Explanation(), ecorePackage.getEString(), "explanation", null, 0, 1, CheckerMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerMessage_Category(), this.getMessageCategory(), "category", null, 0, 1, CheckerMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCheckerMessage_Group(), this.getMessageGroup(), this.getMessageGroup_Messages(), "group", null, 0, 1, CheckerMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(messageGroupEClass, MessageGroup.class, "MessageGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getMessageGroup_Id(), ecorePackage.getEString(), "id", null, 0, 1, MessageGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getMessageGroup_Name(), ecorePackage.getEString(), "name", null, 0, 1, MessageGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getMessageGroup_Messages(), this.getCheckerMessage(), null, "messages", null, 0, -1, MessageGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getMessageGroup_Messages(), this.getCheckerMessage(), this.getCheckerMessage_Group(), "messages", null, 0, -1, MessageGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getMessageGroup_Priority(), ecorePackage.getEInt(), "priority", "0", 0, 1, MessageGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// Initialize enums and add enum literals
 		initEEnum(messageCategoryEEnum, MessageCategory.class, "MessageCategory"); //$NON-NLS-1$

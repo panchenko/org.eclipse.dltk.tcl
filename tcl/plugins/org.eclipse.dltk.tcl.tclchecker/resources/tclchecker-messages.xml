@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:msg="http://www.eclipse.org/dltk/tcl/tclchecker/messages">
-<msg:MessageGroup id="Generic" name="Generic">
+<msg:MessageGroup id="Generic" name="Generic" priority="10">
 <messages messageId="argAfterArgs" explanation="An argument has been specified after the args keyword in a procedure argument list. The args argument is treated like a normal parameter and does not collect the remaining parameters into a single list." category="ERROR"/>
 <messages messageId="argsNotDefault" explanation="The args keyword cannot be initialized to contain a default value. Although the Tcl interpreter does not complain about this usage, the default value is ignored." category="ERROR"/>
 <messages messageId="arrayReadAsScalar" explanation="You cannot assign an array variable to a scalar variable. The Tcl Dev Kit TclChecker is aware of the internal variables tcl_platform and Tk::priv, and will generate this error when you attempt to assign these variables to a scalar." category="ERROR"/>

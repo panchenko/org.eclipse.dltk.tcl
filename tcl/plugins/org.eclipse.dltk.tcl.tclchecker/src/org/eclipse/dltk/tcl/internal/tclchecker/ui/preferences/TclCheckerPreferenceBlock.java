@@ -1,10 +1,13 @@
 package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
@@ -18,27 +21,28 @@ import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.change.ChangeDescription;
+import org.eclipse.emf.ecore.change.FeatureChange;
+import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
@@ -57,11 +61,59 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 		public void customButtonPressed(ListDialogField field, int index) {
 			if (index == IDX_ADD) {
-				ConfigInstance instance = editConfiguration(field, null);
-				if (instance != null) {
-					field.addElement(instance);
+				doAdd(field);
+			} else if (index == IDX_EDIT) {
+				doEdit(field);
+			} else if (index == IDX_REMOVE) {
+				doRemove(field);
+			}
+		}
+
+		private void doAdd(ListDialogField field) {
+			final ConfigInstance instance = editConfiguration(null);
+			if (instance != null) {
+				resource.getContents().add(instance);
+				saveResource();
+				field.addElement(instance);
+			}
+		}
+
+		private void doEdit(ListDialogField field) {
+			List selection = field.getSelectedElements();
+			if (canEdit(selection)) {
+				final ConfigInstance instance = (ConfigInstance) selection
+						.get(0);
+				if (editConfiguration(instance) != null) {
+					saveResource();
+					field.refresh();
+					field.selectElements(new StructuredSelection(selection));
 				}
 			}
+		}
+
+		private void doRemove(ListDialogField field) {
+			List selection = field.getSelectedElements();
+			if (canRemove(selection)) {
+				resource.getContents().removeAll(selection);
+				saveResource();
+				field.removeElements(selection);
+			}
+		}
+
+		/**
+		 * @param selection
+		 * @return
+		 */
+		private boolean canEdit(List selection) {
+			return selection.size() == 1;
+		}
+
+		/**
+		 * @param selection
+		 * @return
+		 */
+		private boolean canRemove(List selection) {
+			return !selection.isEmpty();
 		}
 
 		public void doubleClicked(ListDialogField field) {
@@ -69,45 +121,52 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 
 		public void selectionChanged(ListDialogField field) {
-			// TODO Auto-generated method stub
-
+			List selection = field.getSelectedElements();
+			field.enableButton(IDX_EDIT, canEdit(selection));
+			field.enableButton(IDX_REMOVE, canRemove(selection));
 		}
 
 	}
 
 	private static class TclCheckerConfigurationLabelProvider extends
-			LabelProvider {
+			LabelProvider implements ITableLabelProvider {
+
+		public String getColumnText(Object element, int columnIndex) {
+			if (element instanceof ConfigInstance) {
+				final ConfigInstance config = (ConfigInstance) element;
+				switch (columnIndex) {
+				case 0:
+					return config.getName();
+				}
+			}
+			return Util.EMPTY_STRING;
+		}
+
+		public Image getColumnImage(Object element, int columnIndex) {
+			return null;
+		}
+
+		@Override
+		public String getText(Object element) {
+			return getColumnText(element, 0);
+		}
 
 	}
 
 	private static class TclCheckerConfigurationViewerSorter extends
 			ViewerSorter {
-
-		@Override
-		public int compare(Viewer viewer, Object e1, Object e2) {
-			ConfigInstance config1 = (ConfigInstance) e1;
-			ConfigInstance config2 = (ConfigInstance) e2;
-			return config1.getName().compareToIgnoreCase(config2.getName());
-		}
-
-	}
-
-	private class TclCheckerConfigurationCheckStateListener implements
-			ICheckStateListener {
-
-		public void checkStateChanged(CheckStateChangedEvent event) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_COPY = 2;
+	private static final int IDX_REMOVE = 3;
 
-	private static final String[] CONFIGURATION_BUTTONS = { "Add...",
-			"Edit...", "Copy..." };
+	private static final String[] CONFIGURATION_BUTTONS = {
+			PreferencesMessages.TclChecker_button_Add,
+			PreferencesMessages.TclChecker_button_Edit,
+			PreferencesMessages.TclChecker_button_Copy,
+			PreferencesMessages.TclChecker_button_Remove };
 
 	private ListDialogField configurationField;
 
@@ -115,23 +174,17 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	protected Control createOptionsBlock(Composite parent) {
 		CTabFolder folder = new CTabFolder(parent, SWT.NONE);
 		CTabItem tabConfigs = new CTabItem(folder, SWT.NONE);
-		tabConfigs.setText("Configurations");
+		tabConfigs.setText(PreferencesMessages.TclChecker_tab_Configurations);
 		configurationField = new ListDialogField(
 				new TclCheckerConfigurationListAdapter(),
 				CONFIGURATION_BUTTONS,
-				new TclCheckerConfigurationLabelProvider()) {
-
-			@Override
-			protected TableViewer createTableViewer(Composite parent) {
-				Table table = new Table(parent, SWT.CHECK | getListStyle());
-				table.setFont(parent.getFont());
-				return new CheckboxTableViewer(table);
-			}
-
-		};
+				new TclCheckerConfigurationLabelProvider());
 		configurationField
 				.setTableColumns(new ListDialogField.ColumnsDescription(
-						new String[] { "Name", "Type" }, true));
+						new String[] {
+								PreferencesMessages.TclChecker_column_ConfigurationName,
+								PreferencesMessages.TclChecker_column_ConfigurationType },
+						true));
 		configurationField
 				.setViewerSorter(new TclCheckerConfigurationViewerSorter());
 		Composite configurationComposite = new Composite(folder, SWT.NONE);
@@ -141,8 +194,6 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		((GridData) configurationField.getListControl(configurationComposite)
 				.getLayoutData()).grabExcessHorizontalSpace = true;
 		tabConfigs.setControl(configurationComposite);
-		((CheckboxTableViewer) configurationField.getTableViewer())
-				.addCheckStateListener(new TclCheckerConfigurationCheckStateListener());
 
 		// TabItem tabInstances = new TabItem(folder, SWT.NONE);
 		// tabInstances.setText("Instances");
@@ -153,18 +204,39 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		return folder;
 	}
 
-	protected ConfigInstance editConfiguration(ListDialogField field,
-			ConfigInstance input) {
-		TclCheckerConfigurationDialog dialog = new TclCheckerConfigurationDialog(
-				getShell(), input);
-		dialog.setTitle(input == null ? "Add TclChecker Configuration"
-				: "Edit TclChecker Configuration");
+	protected ConfigInstance editConfiguration(final ConfigInstance input) {
+		final ConfigInstance workingCopy;
+		if (input != null) {
+			workingCopy = (ConfigInstance) EcoreUtil.copy(input);
+		} else {
+			workingCopy = ConfigsFactory.eINSTANCE.createConfigInstance();
+		}
+		final ChangeRecorder changeRecorder = input != null ? new ChangeRecorder(
+				workingCopy)
+				: null;
+		final TclCheckerConfigurationDialog dialog = new TclCheckerConfigurationDialog(
+				getShell(), workingCopy);
+		dialog
+				.setTitle(input == null ? PreferencesMessages.TclChecker_add_Configuration_Title
+						: PreferencesMessages.TclChecker_edit_Configuration_Title);
 		if (dialog.open() == Window.OK) {
-			if (input == null) {
-				input = ConfigsFactory.eINSTANCE.createConfigInstance();
+			if (input != null) {
+				final ChangeDescription changeDescription = changeRecorder
+						.endRecording();
+				if (changeDescription != null) {
+					changeDescription.applyAndReverse();
+					final List<FeatureChange> featureChanges = changeDescription
+							.getObjectChanges().get(workingCopy);
+					if (featureChanges != null) {
+						for (FeatureChange featureChange : featureChanges) {
+							featureChange.apply(input);
+						}
+					}
+				}
+				return input;
+			} else {
+				return workingCopy;
 			}
-			dialog.setObjectData(input);
-			return input;
 		}
 		return null;
 	}
@@ -181,18 +253,25 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		initValues();
 	}
 
-	private static final String ENCODING = "UTF-8";
+	private Resource resource;
+
+	private static final String ENCODING = "UTF-8"; //$NON-NLS-1$
 
 	private void initValues() {
-		ResourceSet resourceSet = new ResourceSetImpl();
+		loadResource();
+		initConfigurations();
+	}
+
+	private void loadResource() {
+		final ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
 						new XMIResourceFactoryImpl());
 		resourceSet.getPackageRegistry().put(ConfigsPackage.eNS_URI,
 				ConfigsPackage.eINSTANCE);
-		Resource resource = resourceSet.createResource(URI
+		this.resource = resourceSet.createResource(URI
 				.createURI(ConfigsPackage.eNS_URI));
-		String value = getString(KEY_CONFIGURATION);
+		final String value = getString(KEY_CONFIGURATION);
 		if (value != null && value.length() != 0) {
 			try {
 				resource.load(new URIConverter.ReadableInputStream(value,
@@ -203,6 +282,26 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				}
 			}
 		}
+		if (!resource.isLoaded()) {
+			resource.getContents().clear();
+		}
+	}
+
+	protected void saveResource() {
+		try {
+			final StringWriter writer = new StringWriter();
+			resource.save(new URIConverter.WriteableOutputStream(writer,
+					ENCODING), null);
+			setString(KEY_CONFIGURATION, writer.toString());
+		} catch (IOException e) {
+			// FIXME show error
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void initConfigurations() {
 		final List<ConfigInstance> instances = new ArrayList<ConfigInstance>();
 		for (EObject object : resource.getContents()) {
 			if (object instanceof ConfigInstance) {
@@ -210,6 +309,12 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			}
 		}
 		configurationField.setElements(instances);
+		if (!instances.isEmpty()) {
+			configurationField.selectFirstElement();
+		} else {
+			configurationField.selectElements(new StructuredSelection(
+					Collections.EMPTY_LIST));
+		}
 	}
 
 }

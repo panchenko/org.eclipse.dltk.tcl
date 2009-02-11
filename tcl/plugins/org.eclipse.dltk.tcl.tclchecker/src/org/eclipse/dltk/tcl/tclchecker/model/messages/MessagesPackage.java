@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessagesPackage.java,v 1.2 2009/02/05 18:41:39 apanchenk Exp $
+ * $Id: MessagesPackage.java,v 1.3 2009/02/11 10:32:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages;
 
@@ -98,13 +98,22 @@ public interface MessagesPackage extends EPackage {
 	int CHECKER_MESSAGE__CATEGORY = 2;
 
 	/**
+	 * The feature id for the '<em><b>Group</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_MESSAGE__GROUP = 3;
+
+	/**
 	 * The number of structural features of the '<em>Checker Message</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_MESSAGE_FEATURE_COUNT = 3;
+	int CHECKER_MESSAGE_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.MessageGroupImpl <em>Message Group</em>}' class.
@@ -144,13 +153,22 @@ public interface MessagesPackage extends EPackage {
 	int MESSAGE_GROUP__MESSAGES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_GROUP__PRIORITY = 3;
+
+	/**
 	 * The number of structural features of the '<em>Message Group</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE_GROUP_FEATURE_COUNT = 3;
+	int MESSAGE_GROUP_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory <em>Message Category</em>}' enum.
@@ -207,6 +225,17 @@ public interface MessagesPackage extends EPackage {
 	EAttribute getCheckerMessage_Category();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Group</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getGroup()
+	 * @see #getCheckerMessage()
+	 * @generated
+	 */
+	EReference getCheckerMessage_Group();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup <em>Message Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -248,6 +277,17 @@ public interface MessagesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getMessageGroup_Messages();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getPriority <em>Priority</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Priority</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getPriority()
+	 * @see #getMessageGroup()
+	 * @generated
+	 */
+	EAttribute getMessageGroup_Priority();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory <em>Message Category</em>}'.
@@ -316,6 +356,14 @@ public interface MessagesPackage extends EPackage {
 		EAttribute CHECKER_MESSAGE__CATEGORY = eINSTANCE.getCheckerMessage_Category();
 
 		/**
+		 * The meta object literal for the '<em><b>Group</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CHECKER_MESSAGE__GROUP = eINSTANCE.getCheckerMessage_Group();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.MessageGroupImpl <em>Message Group</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -348,6 +396,14 @@ public interface MessagesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MESSAGE_GROUP__MESSAGES = eINSTANCE.getMessageGroup_Messages();
+
+		/**
+		 * The meta object literal for the '<em><b>Priority</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MESSAGE_GROUP__PRIORITY = eINSTANCE.getMessageGroup_Priority();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory <em>Message Category</em>}' enum.

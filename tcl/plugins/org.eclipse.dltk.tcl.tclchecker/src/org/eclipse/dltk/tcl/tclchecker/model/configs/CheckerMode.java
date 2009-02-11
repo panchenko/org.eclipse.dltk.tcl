@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerMode.java,v 1.1 2009/02/05 18:41:36 apanchenk Exp $
+ * $Id: CheckerMode.java,v 1.2 2009/02/11 10:32:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -22,6 +22,16 @@ import org.eclipse.emf.common.util.Enumerator;
  * @generated
  */
 public enum CheckerMode implements Enumerator {
+	/**
+	 * The '<em><b>DEFAULT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DEFAULT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	DEFAULT(-1, "DEFAULT", "DEFAULT"), //$NON-NLS-1$ //$NON-NLS-2$
+
 	/**
 	 * The '<em><b>W0</b></em>' literal object.
 	 * <!-- begin-user-doc -->
@@ -71,6 +81,21 @@ public enum CheckerMode implements Enumerator {
 	 * @ordered
 	 */
 	W4(4, "W4", "W4"); //$NON-NLS-1$ //$NON-NLS-2$
+
+	/**
+	 * The '<em><b>DEFAULT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>DEFAULT</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #DEFAULT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DEFAULT_VALUE = -1;
 
 	/**
 	 * The '<em><b>W0</b></em>' literal value.
@@ -155,6 +180,7 @@ public enum CheckerMode implements Enumerator {
 	 */
 	private static final CheckerMode[] VALUES_ARRAY =
 		new CheckerMode[] {
+			DEFAULT,
 			W0,
 			W1,
 			W2,
@@ -210,6 +236,7 @@ public enum CheckerMode implements Enumerator {
 	 */
 	public static CheckerMode get(int value) {
 		switch (value) {
+			case DEFAULT_VALUE: return DEFAULT;
 			case W0_VALUE: return W0;
 			case W1_VALUE: return W1;
 			case W2_VALUE: return W2;

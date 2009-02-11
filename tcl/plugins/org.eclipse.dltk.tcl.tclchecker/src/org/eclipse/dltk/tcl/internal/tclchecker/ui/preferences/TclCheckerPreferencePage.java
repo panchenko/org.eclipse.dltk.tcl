@@ -9,6 +9,10 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class TclCheckerPreferencePage extends
 		AbstractConfigurationBlockPropertyAndPreferencePage {
 
+	public TclCheckerPreferencePage() {
+		noDefaultAndApplyButton();
+	}
+
 	@Override
 	protected AbstractOptionsBlock createOptionsBlock(
 			IStatusChangeListener newStatusChangedListener, IProject project,

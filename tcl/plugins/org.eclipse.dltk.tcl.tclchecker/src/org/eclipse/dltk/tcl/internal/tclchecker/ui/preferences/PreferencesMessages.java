@@ -14,6 +14,8 @@ import org.eclipse.osgi.util.NLS;
 public class PreferencesMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.messages"; //$NON-NLS-1$
 
+	public static String TclChecker_add_Configuration_Title;
+
 	public static String TclChecker_path;
 	public static String TclChecker_pcxPath;
 
@@ -53,8 +55,18 @@ public class PreferencesMessages extends NLS {
 
 	public static String TclChecker_browse;
 
+	public static String TclChecker_button_Add;
+	public static String TclChecker_button_Edit;
+	public static String TclChecker_button_Copy;
+	public static String TclChecker_button_Remove;
+
+	public static String TclChecker_column_ConfigurationName;
+
+	public static String TclChecker_column_ConfigurationType;
+
 	public static String TclChecker_mode;
 
+	public static String TclChecker_mode_default;
 	public static String TclChecker_mode_none;
 	public static String TclChecker_mode_errors;
 	public static String TclChecker_mode_errorsAndUsageWarnings;
@@ -64,7 +76,11 @@ public class PreferencesMessages extends NLS {
 
 	public static String TclChecker_work_name;
 
+	public static String TclChecker_edit_Configuration_Title;
+
 	public static String TclChecker_error;
+
+	public static String TclChecker_tab_Configurations;
 
 	public static String TclChecker_warning;
 

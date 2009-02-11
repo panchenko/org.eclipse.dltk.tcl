@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigInstance.java,v 1.1 2009/02/05 18:41:36 apanchenk Exp $
+ * $Id: ConfigInstance.java,v 1.2 2009/02/11 10:32:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMode <em>Mode</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMessageStates <em>Message States</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer <em>Use Tcl Ver</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates <em>Individual Message States</em>}</li>
  * </ul>
  * </p>
  *
@@ -154,5 +156,59 @@ public interface ConfigInstance extends EObject {
 	 * @generated
 	 */
 	EMap<String, MessageState> getMessageStates();
+
+	/**
+	 * Returns the value of the '<em><b>Use Tcl Ver</b></em>' attribute.
+	 * The default value is <code>"true"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Use Tcl Ver</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Use Tcl Ver</em>' attribute.
+	 * @see #setUseTclVer(boolean)
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_UseTclVer()
+	 * @model default="true"
+	 * @generated
+	 */
+	boolean isUseTclVer();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer <em>Use Tcl Ver</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Use Tcl Ver</em>' attribute.
+	 * @see #isUseTclVer()
+	 * @generated
+	 */
+	void setUseTclVer(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Individual Message States</b></em>' attribute.
+	 * The default value is <code>"true"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Individual Message States</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Individual Message States</em>' attribute.
+	 * @see #setIndividualMessageStates(boolean)
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_IndividualMessageStates()
+	 * @model default="true"
+	 * @generated
+	 */
+	boolean isIndividualMessageStates();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates <em>Individual Message States</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Individual Message States</em>' attribute.
+	 * @see #isIndividualMessageStates()
+	 * @generated
+	 */
+	void setIndividualMessageStates(boolean value);
 
 } // ConfigInstance

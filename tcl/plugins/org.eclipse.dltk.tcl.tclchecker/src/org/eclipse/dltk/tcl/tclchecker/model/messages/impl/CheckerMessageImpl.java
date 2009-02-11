@@ -2,20 +2,24 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerMessageImpl.java,v 1.1 2009/01/27 18:43:46 apanchenk Exp $
+ * $Id: CheckerMessageImpl.java,v 1.2 2009/02/11 10:32:26 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages.impl;
 
 import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory;
+import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,6 +31,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.CheckerMessageImpl#getMessageId <em>Message Id</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.CheckerMessageImpl#getExplanation <em>Explanation</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.CheckerMessageImpl#getCategory <em>Category</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.CheckerMessageImpl#getGroup <em>Group</em>}</li>
  * </ul>
  * </p>
  *
@@ -180,6 +185,91 @@ public class CheckerMessageImpl extends EObjectImpl implements CheckerMessage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public MessageGroup getGroup() {
+		if (eContainerFeatureID != MessagesPackage.CHECKER_MESSAGE__GROUP) return null;
+		return (MessageGroup)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetGroup(MessageGroup newGroup, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newGroup, MessagesPackage.CHECKER_MESSAGE__GROUP, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setGroup(MessageGroup newGroup) {
+		if (newGroup != eInternalContainer() || (eContainerFeatureID != MessagesPackage.CHECKER_MESSAGE__GROUP && newGroup != null)) {
+			if (EcoreUtil.isAncestor(this, newGroup))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newGroup != null)
+				msgs = ((InternalEObject)newGroup).eInverseAdd(this, MessagesPackage.MESSAGE_GROUP__MESSAGES, MessageGroup.class, msgs);
+			msgs = basicSetGroup(newGroup, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MessagesPackage.CHECKER_MESSAGE__GROUP, newGroup, newGroup));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MessagesPackage.CHECKER_MESSAGE__GROUP:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetGroup((MessageGroup)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MessagesPackage.CHECKER_MESSAGE__GROUP:
+				return basicSetGroup(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID) {
+			case MessagesPackage.CHECKER_MESSAGE__GROUP:
+				return eInternalContainer().eInverseRemove(this, MessagesPackage.MESSAGE_GROUP__MESSAGES, MessageGroup.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -189,6 +279,8 @@ public class CheckerMessageImpl extends EObjectImpl implements CheckerMessage {
 				return getExplanation();
 			case MessagesPackage.CHECKER_MESSAGE__CATEGORY:
 				return getCategory();
+			case MessagesPackage.CHECKER_MESSAGE__GROUP:
+				return getGroup();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -209,6 +301,9 @@ public class CheckerMessageImpl extends EObjectImpl implements CheckerMessage {
 				return;
 			case MessagesPackage.CHECKER_MESSAGE__CATEGORY:
 				setCategory((MessageCategory)newValue);
+				return;
+			case MessagesPackage.CHECKER_MESSAGE__GROUP:
+				setGroup((MessageGroup)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -231,6 +326,9 @@ public class CheckerMessageImpl extends EObjectImpl implements CheckerMessage {
 			case MessagesPackage.CHECKER_MESSAGE__CATEGORY:
 				setCategory(CATEGORY_EDEFAULT);
 				return;
+			case MessagesPackage.CHECKER_MESSAGE__GROUP:
+				setGroup((MessageGroup)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -249,6 +347,8 @@ public class CheckerMessageImpl extends EObjectImpl implements CheckerMessage {
 				return EXPLANATION_EDEFAULT == null ? explanation != null : !EXPLANATION_EDEFAULT.equals(explanation);
 			case MessagesPackage.CHECKER_MESSAGE__CATEGORY:
 				return category != CATEGORY_EDEFAULT;
+			case MessagesPackage.CHECKER_MESSAGE__GROUP:
+				return getGroup() != null;
 		}
 		return super.eIsSet(featureID);
 	}

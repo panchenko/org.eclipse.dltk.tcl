@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigInstanceImpl.java,v 1.1 2009/02/05 18:41:37 apanchenk Exp $
+ * $Id: ConfigInstanceImpl.java,v 1.2 2009/02/11 10:32:26 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -38,6 +38,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getMode <em>Mode</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getMessageStates <em>Message States</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isUseTclVer <em>Use Tcl Ver</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isIndividualMessageStates <em>Individual Message States</em>}</li>
  * </ul>
  * </p>
  *
@@ -112,7 +114,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final CheckerMode MODE_EDEFAULT = CheckerMode.W0;
+	protected static final CheckerMode MODE_EDEFAULT = CheckerMode.DEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getMode() <em>Mode</em>}' attribute.
@@ -133,6 +135,46 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 * @ordered
 	 */
 	protected EMap<String, MessageState> messageStates;
+
+	/**
+	 * The default value of the '{@link #isUseTclVer() <em>Use Tcl Ver</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUseTclVer()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean USE_TCL_VER_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isUseTclVer() <em>Use Tcl Ver</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUseTclVer()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean useTclVer = USE_TCL_VER_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isIndividualMessageStates() <em>Individual Message States</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIndividualMessageStates()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean INDIVIDUAL_MESSAGE_STATES_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isIndividualMessageStates() <em>Individual Message States</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIndividualMessageStates()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean individualMessageStates = INDIVIDUAL_MESSAGE_STATES_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -254,6 +296,48 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isUseTclVer() {
+		return useTclVer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUseTclVer(boolean newUseTclVer) {
+		boolean oldUseTclVer = useTclVer;
+		useTclVer = newUseTclVer;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER, oldUseTclVer, useTclVer));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isIndividualMessageStates() {
+		return individualMessageStates;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIndividualMessageStates(boolean newIndividualMessageStates) {
+		boolean oldIndividualMessageStates = individualMessageStates;
+		individualMessageStates = newIndividualMessageStates;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES, oldIndividualMessageStates, individualMessageStates));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -282,6 +366,10 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
 				if (coreType) return getMessageStates();
 				else return getMessageStates().map();
+			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+				return isUseTclVer() ? Boolean.TRUE : Boolean.FALSE;
+			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+				return isIndividualMessageStates() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -308,6 +396,12 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 				return;
 			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
 				((EStructuralFeature.Setting)getMessageStates()).set(newValue);
+				return;
+			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+				setUseTclVer(((Boolean)newValue).booleanValue());
+				return;
+			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+				setIndividualMessageStates(((Boolean)newValue).booleanValue());
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -336,6 +430,12 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
 				getMessageStates().clear();
 				return;
+			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+				setUseTclVer(USE_TCL_VER_EDEFAULT);
+				return;
+			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+				setIndividualMessageStates(INDIVIDUAL_MESSAGE_STATES_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -358,6 +458,10 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 				return mode != MODE_EDEFAULT;
 			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
 				return messageStates != null && !messageStates.isEmpty();
+			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+				return useTclVer != USE_TCL_VER_EDEFAULT;
+			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+				return individualMessageStates != INDIVIDUAL_MESSAGE_STATES_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -380,6 +484,10 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		result.append(name);
 		result.append(", mode: "); //$NON-NLS-1$
 		result.append(mode);
+		result.append(", useTclVer: "); //$NON-NLS-1$
+		result.append(useTclVer);
+		result.append(", individualMessageStates: "); //$NON-NLS-1$
+		result.append(individualMessageStates);
 		result.append(')');
 		return result.toString();
 	}

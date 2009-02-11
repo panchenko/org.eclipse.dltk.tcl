@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackage.java,v 1.1 2009/02/05 18:41:37 apanchenk Exp $
+ * $Id: ConfigsPackage.java,v 1.2 2009/02/11 10:32:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -116,13 +116,31 @@ public interface ConfigsPackage extends EPackage {
 	int CONFIG_INSTANCE__MESSAGE_STATES = 4;
 
 	/**
+	 * The feature id for the '<em><b>Use Tcl Ver</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG_INSTANCE__USE_TCL_VER = 5;
+
+	/**
+	 * The feature id for the '<em><b>Individual Message States</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES = 6;
+
+	/**
 	 * The number of structural features of the '<em>Config Instance</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE_FEATURE_COUNT = 5;
+	int CONFIG_INSTANCE_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.
@@ -329,6 +347,28 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getConfigInstance_MessageStates();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer <em>Use Tcl Ver</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Use Tcl Ver</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer()
+	 * @see #getConfigInstance()
+	 * @generated
+	 */
+	EAttribute getConfigInstance_UseTclVer();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates <em>Individual Message States</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Individual Message States</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates()
+	 * @see #getConfigInstance()
+	 * @generated
+	 */
+	EAttribute getConfigInstance_IndividualMessageStates();
 
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Message State Map</em>}'.
@@ -541,6 +581,22 @@ public interface ConfigsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CONFIG_INSTANCE__MESSAGE_STATES = eINSTANCE.getConfigInstance_MessageStates();
+
+		/**
+		 * The meta object literal for the '<em><b>Use Tcl Ver</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFIG_INSTANCE__USE_TCL_VER = eINSTANCE.getConfigInstance_UseTclVer();
+
+		/**
+		 * The meta object literal for the '<em><b>Individual Message States</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES = eINSTANCE.getConfigInstance_IndividualMessageStates();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.

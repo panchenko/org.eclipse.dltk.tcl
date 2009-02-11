@@ -10,6 +10,7 @@
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class TclCheckerProblemDescription {
 
 	private static final Map<String, CheckerMessage> messageDefinitions = new HashMap<String, CheckerMessage>();
 	private static final Map<String, CheckerMessage> altDefinitions = new HashMap<String, CheckerMessage>();
+	private static final List<MessageGroup> messageGroups = new ArrayList<MessageGroup>();
 
 	private static CheckerMessage defaultMessage = null;
 
@@ -81,8 +83,9 @@ public class TclCheckerProblemDescription {
 													+ "/resources/tclchecker-messages.xml", true), true); //$NON-NLS-1$
 			for (EObject e : r.getContents()) {
 				if (e instanceof MessageGroup) {
-					for (CheckerMessage message : ((MessageGroup) e)
-							.getMessages()) {
+					final MessageGroup messageGroup = (MessageGroup) e;
+					messageGroups.add(messageGroup);
+					for (CheckerMessage message : messageGroup.getMessages()) {
 						final String id = message.getMessageId();
 						if (DLTKCore.DEBUG
 								&& messageDefinitions.containsKey(id)) {
@@ -119,6 +122,14 @@ public class TclCheckerProblemDescription {
 	public static List<String> getProblemIdentifiers() {
 		loadIfNeeded();
 		return new ArrayList<String>(messageDefinitions.keySet());
+	}
+
+	/**
+	 * @return
+	 */
+	public static List<MessageGroup> getProblemGroups() {
+		loadIfNeeded();
+		return Collections.unmodifiableList(messageGroups);
 	}
 
 }

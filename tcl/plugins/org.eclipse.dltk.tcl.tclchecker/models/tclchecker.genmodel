@@ -7,20 +7,7 @@
     copyrightFields="false" language="">
   <foreignModel>tclchecker.ecore</foreignModel>
   <genPackages prefix="Model" basePackage="org.eclipse.dltk.tcl.tclchecker" disposableProviderFactory="true"
-      ecorePackage="tclchecker.ecore#/">
-    <nestedGenPackages prefix="Instances" basePackage="org.eclipse.dltk.tcl.tclchecker.model"
-        disposableProviderFactory="true" ecorePackage="tclchecker.ecore#//instances">
-      <genEnums typeSafeEnumCompatible="false" ecoreEnum="tclchecker.ecore#//instances/CheckerVersion">
-        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//instances/CheckerVersion/VERSION4"/>
-        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//instances/CheckerVersion/VERSION5"/>
-      </genEnums>
-      <genClasses ecoreClass="tclchecker.ecore#//instances/CheckerInstance">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//instances/CheckerInstance/environmentId"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//instances/CheckerInstance/executablePath"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//instances/CheckerInstance/pdxFiles"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//instances/CheckerInstance/version"/>
-      </genClasses>
-    </nestedGenPackages>
+      loadInitialization="true" ecorePackage="tclchecker.ecore#/">
     <nestedGenPackages prefix="Messages" basePackage="org.eclipse.dltk.tcl.tclchecker.model"
         resource="XMI" disposableProviderFactory="true" ecorePackage="tclchecker.ecore#//messages">
       <genEnums typeSafeEnumCompatible="false" ecoreEnum="tclchecker.ecore#//messages/MessageCategory">
@@ -36,11 +23,51 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//messages/CheckerMessage/messageId"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//messages/CheckerMessage/explanation"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//messages/CheckerMessage/category"/>
+        <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference tclchecker.ecore#//messages/CheckerMessage/group"/>
       </genClasses>
       <genClasses ecoreClass="tclchecker.ecore#//messages/MessageGroup">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//messages/MessageGroup/id"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//messages/MessageGroup/name"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tclchecker.ecore#//messages/MessageGroup/messages"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Configs" disposableProviderFactory="true" ecorePackage="tclchecker.ecore#//configs">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="tclchecker.ecore#//configs/CheckerMode">
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerMode/DEFAULT"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerMode/W0"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerMode/W1"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerMode/W2"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerMode/W3"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerMode/W4"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="tclchecker.ecore#//configs/MessageState">
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/MessageState/DEFAULT"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/MessageState/CHECK"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/MessageState/SUPPRESS"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="tclchecker.ecore#//configs/CheckerVersion">
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerVersion/VERSION4"/>
+        <genEnumLiterals ecoreEnumLiteral="tclchecker.ecore#//configs/CheckerVersion/VERSION5"/>
+      </genEnums>
+      <genClasses ecoreClass="tclchecker.ecore#//configs/ConfigInstance">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/ConfigInstance/summary"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/ConfigInstance/commandLineOptions"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/ConfigInstance/name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/ConfigInstance/mode"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tclchecker.ecore#//configs/ConfigInstance/messageStates"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/ConfigInstance/useTclVer"/>
+      </genClasses>
+      <genClasses ecoreClass="tclchecker.ecore#//configs/MessageStateMap">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/MessageStateMap/key"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/MessageStateMap/value"/>
+      </genClasses>
+      <genClasses ecoreClass="tclchecker.ecore#//configs/CheckerInstance">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/CheckerInstance/environmentId"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/CheckerInstance/executablePath"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/CheckerInstance/pcxFiles"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/CheckerInstance/version"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/CheckerInstance/usePcxFiles"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tclchecker.ecore#//configs/CheckerInstance/commandLineOptions"/>
       </genClasses>
     </nestedGenPackages>
   </genPackages>

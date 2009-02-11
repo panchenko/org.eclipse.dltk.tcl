@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerMessage.java,v 1.1 2009/01/27 18:43:47 apanchenk Exp $
+ * $Id: CheckerMessage.java,v 1.2 2009/02/11 10:32:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages;
 
@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getMessageId <em>Message Id</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getExplanation <em>Explanation</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getCategory <em>Category</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getGroup <em>Group</em>}</li>
  * </ul>
  * </p>
  *
@@ -107,5 +108,33 @@ public interface CheckerMessage extends EObject {
 	 * @generated
 	 */
 	void setCategory(MessageCategory value);
+
+	/**
+	 * Returns the value of the '<em><b>Group</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getMessages <em>Messages</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' container reference.
+	 * @see #setGroup(MessageGroup)
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage#getCheckerMessage_Group()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getMessages
+	 * @model opposite="messages" transient="false"
+	 * @generated
+	 */
+	MessageGroup getGroup();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getGroup <em>Group</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Group</em>' container reference.
+	 * @see #getGroup()
+	 * @generated
+	 */
+	void setGroup(MessageGroup value);
 
 } // CheckerMessage

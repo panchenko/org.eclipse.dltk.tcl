@@ -12,6 +12,8 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="messageId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="explanation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="#//messages/MessageCategory"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//messages/MessageGroup"
+          eOpposite="#//messages/MessageGroup/messages"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EEnum" name="MessageCategory">
       <eLiterals name="ERROR"/>
@@ -27,11 +29,13 @@
           iD="true"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="messages" upperBound="-1"
-          eType="#//messages/CheckerMessage" containment="true">
+          eType="#//messages/CheckerMessage" containment="true" eOpposite="#//messages/CheckerMessage/group">
         <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
           <details key="name" value="message"/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+          defaultValueLiteral="0"/>
     </eClassifiers>
   </eSubpackages>
   <eSubpackages name="configs" nsURI="http://www.eclipse.org/dltk/tcl/tclchecker/configs"
@@ -43,8 +47,14 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" eType="#//configs/CheckerMode"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="messageStates" upperBound="-1"
           eType="#//configs/MessageStateMap" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="useTclVer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+          defaultValueLiteral="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="individualMessageStates"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+          defaultValueLiteral="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EEnum" name="CheckerMode">
+      <eLiterals name="DEFAULT" value="-1"/>
       <eLiterals name="W0"/>
       <eLiterals name="W1" value="1"/>
       <eLiterals name="W2" value="2"/>

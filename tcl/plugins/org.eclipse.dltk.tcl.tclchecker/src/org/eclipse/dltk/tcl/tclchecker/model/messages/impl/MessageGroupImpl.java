@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessageGroupImpl.java,v 1.1 2009/01/27 18:43:46 apanchenk Exp $
+ * $Id: MessageGroupImpl.java,v 1.2 2009/02/11 10:32:26 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages.impl;
 
@@ -11,19 +11,14 @@ import java.util.Collection;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -36,6 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.MessageGroupImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.MessageGroupImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.MessageGroupImpl#getMessages <em>Messages</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.impl.MessageGroupImpl#getPriority <em>Priority</em>}</li>
  * </ul>
  * </p>
  *
@@ -91,6 +87,26 @@ public class MessageGroupImpl extends EObjectImpl implements MessageGroup {
 	 * @ordered
 	 */
 	protected EList<CheckerMessage> messages;
+
+	/**
+	 * The default value of the '{@link #getPriority() <em>Priority</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPriority()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int PRIORITY_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getPriority() <em>Priority</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPriority()
+	 * @generated
+	 * @ordered
+	 */
+	protected int priority = PRIORITY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -160,9 +176,45 @@ public class MessageGroupImpl extends EObjectImpl implements MessageGroup {
 	 */
 	public EList<CheckerMessage> getMessages() {
 		if (messages == null) {
-			messages = new EObjectContainmentEList<CheckerMessage>(CheckerMessage.class, this, MessagesPackage.MESSAGE_GROUP__MESSAGES);
+			messages = new EObjectContainmentWithInverseEList<CheckerMessage>(CheckerMessage.class, this, MessagesPackage.MESSAGE_GROUP__MESSAGES, MessagesPackage.CHECKER_MESSAGE__GROUP);
 		}
 		return messages;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getPriority() {
+		return priority;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPriority(int newPriority) {
+		int oldPriority = priority;
+		priority = newPriority;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MessagesPackage.MESSAGE_GROUP__PRIORITY, oldPriority, priority));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MessagesPackage.MESSAGE_GROUP__MESSAGES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getMessages()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -193,6 +245,8 @@ public class MessageGroupImpl extends EObjectImpl implements MessageGroup {
 				return getName();
 			case MessagesPackage.MESSAGE_GROUP__MESSAGES:
 				return getMessages();
+			case MessagesPackage.MESSAGE_GROUP__PRIORITY:
+				return new Integer(getPriority());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -216,6 +270,9 @@ public class MessageGroupImpl extends EObjectImpl implements MessageGroup {
 				getMessages().clear();
 				getMessages().addAll((Collection<? extends CheckerMessage>)newValue);
 				return;
+			case MessagesPackage.MESSAGE_GROUP__PRIORITY:
+				setPriority(((Integer)newValue).intValue());
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -237,6 +294,9 @@ public class MessageGroupImpl extends EObjectImpl implements MessageGroup {
 			case MessagesPackage.MESSAGE_GROUP__MESSAGES:
 				getMessages().clear();
 				return;
+			case MessagesPackage.MESSAGE_GROUP__PRIORITY:
+				setPriority(PRIORITY_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -255,6 +315,8 @@ public class MessageGroupImpl extends EObjectImpl implements MessageGroup {
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case MessagesPackage.MESSAGE_GROUP__MESSAGES:
 				return messages != null && !messages.isEmpty();
+			case MessagesPackage.MESSAGE_GROUP__PRIORITY:
+				return priority != PRIORITY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -273,6 +335,8 @@ public class MessageGroupImpl extends EObjectImpl implements MessageGroup {
 		result.append(id);
 		result.append(", name: "); //$NON-NLS-1$
 		result.append(name);
+		result.append(", priority: "); //$NON-NLS-1$
+		result.append(priority);
 		result.append(')');
 		return result.toString();
 	}

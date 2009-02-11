@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackageImpl.java,v 1.1 2009/02/05 18:41:37 apanchenk Exp $
+ * $Id: ConfigsPackageImpl.java,v 1.2 2009/02/11 10:32:26 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -209,6 +209,24 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getConfigInstance_UseTclVer() {
+		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConfigInstance_IndividualMessageStates() {
+		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessageStateMap() {
 		return messageStateMapEClass;
 	}
@@ -355,6 +373,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__NAME);
 		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__MODE);
 		createEReference(configInstanceEClass, CONFIG_INSTANCE__MESSAGE_STATES);
+		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__USE_TCL_VER);
+		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES);
 
 		messageStateMapEClass = createEClass(MESSAGE_STATE_MAP);
 		createEAttribute(messageStateMapEClass, MESSAGE_STATE_MAP__KEY);
@@ -410,6 +430,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		initEAttribute(getConfigInstance_Name(), ecorePackage.getEString(), "name", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getConfigInstance_Mode(), this.getCheckerMode(), "mode", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getConfigInstance_MessageStates(), this.getMessageStateMap(), null, "messageStates", null, 0, -1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getConfigInstance_UseTclVer(), ecorePackage.getEBoolean(), "useTclVer", "true", 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(getConfigInstance_IndividualMessageStates(), ecorePackage.getEBoolean(), "individualMessageStates", "true", 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
 		initEClass(messageStateMapEClass, Map.Entry.class, "MessageStateMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getMessageStateMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -425,6 +447,7 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 
 		// Initialize enums and add enum literals
 		initEEnum(checkerModeEEnum, CheckerMode.class, "CheckerMode"); //$NON-NLS-1$
+		addEEnumLiteral(checkerModeEEnum, CheckerMode.DEFAULT);
 		addEEnumLiteral(checkerModeEEnum, CheckerMode.W0);
 		addEEnumLiteral(checkerModeEEnum, CheckerMode.W1);
 		addEEnumLiteral(checkerModeEEnum, CheckerMode.W2);

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessageGroup.java,v 1.1 2009/01/27 18:43:47 apanchenk Exp $
+ * $Id: MessageGroup.java,v 1.2 2009/02/11 10:32:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages;
 
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getId <em>Id</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getMessages <em>Messages</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getPriority <em>Priority</em>}</li>
  * </ul>
  * </p>
  *
@@ -84,6 +85,7 @@ public interface MessageGroup extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Messages</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getGroup <em>Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Messages</em>' containment reference list isn't clear,
@@ -92,10 +94,38 @@ public interface MessageGroup extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Messages</em>' containment reference list.
 	 * @see org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage#getMessageGroup_Messages()
-	 * @model containment="true"
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage#getGroup
+	 * @model opposite="group" containment="true"
 	 *        extendedMetaData="name='message'"
 	 * @generated
 	 */
 	EList<CheckerMessage> getMessages();
+
+	/**
+	 * Returns the value of the '<em><b>Priority</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Priority</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Priority</em>' attribute.
+	 * @see #setPriority(int)
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage#getMessageGroup_Priority()
+	 * @model default="0"
+	 * @generated
+	 */
+	int getPriority();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup#getPriority <em>Priority</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Priority</em>' attribute.
+	 * @see #getPriority()
+	 * @generated
+	 */
+	void setPriority(int value);
 
 } // MessageGroup
