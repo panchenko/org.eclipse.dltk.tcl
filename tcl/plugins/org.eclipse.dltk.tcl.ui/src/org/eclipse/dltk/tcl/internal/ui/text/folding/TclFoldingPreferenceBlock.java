@@ -11,7 +11,9 @@ package org.eclipse.dltk.tcl.internal.ui.text.folding;
 
 import java.util.List;
 
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
+import org.eclipse.dltk.ui.preferences.ControlBindingManager;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
 import org.eclipse.dltk.ui.text.folding.SourceCodeFoldingPreferenceBlock;
 import org.eclipse.dltk.ui.util.PixelConverter;
@@ -42,7 +44,7 @@ public class TclFoldingPreferenceBlock extends SourceCodeFoldingPreferenceBlock 
 
 	private Button fFoldOtherEnabled;
 	private Button fInitFoldOtherBlocks;
-	
+
 	private ListBlock fExcludePatterns;
 	private ListBlock fIncludePatterns;
 
@@ -50,13 +52,14 @@ public class TclFoldingPreferenceBlock extends SourceCodeFoldingPreferenceBlock 
 			PreferencePage page) {
 		super(store, page);
 	}
-	
+
 	public Control createControl(Composite parent) {
 		Control control = super.createControl(parent);
-		
-		SWTFactory.setUseSelectionInverse(fFoldOtherEnabled);
-		createDependency(fFoldOtherEnabled, new Control[] {fInitFoldOtherBlocks});
-		
+
+		createDependency(fFoldOtherEnabled,
+				new Control[] { fInitFoldOtherBlocks },
+				ControlBindingManager.DEPENDENCY_INVERSE_SELECTION);
+
 		return control;
 	}
 
@@ -189,7 +192,7 @@ public class TclFoldingPreferenceBlock extends SourceCodeFoldingPreferenceBlock 
 					InputDialog dlg = new InputDialog(null,
 							TclFoldingMessages.TclFoldingPreferenceBlock_3,
 							TclFoldingMessages.TclFoldingPreferenceBlock_4,
-							"", validator); //$NON-NLS-3$
+							Util.EMPTY_STRING, validator);
 					if (dlg.open() == InputDialog.OK) {
 						fList.add(dlg.getValue());
 						save();
