@@ -11,12 +11,13 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
-import org.eclipse.dltk.internal.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringDialogField;
+import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.dltk.validators.core.IValidatorType;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -27,7 +28,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class PathDialog extends StatusDialog {
@@ -36,18 +36,11 @@ public class PathDialog extends StatusDialog {
 
 	private StringDialogField fPath;
 	private IEnvironment environment;
-	private IStatus[] fStati;
-	private int fPrevIndex = -1;
 
 	public PathDialog(Shell shell, IEnvironment environment) {
 		super(shell);
 		this.environment = environment;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		// fRequestor= requestor;
-		fStati = new IStatus[5];
-		for (int i = 0; i < fStati.length; i++) {
-			fStati[i] = new StatusInfo();
-		}
 	}
 
 	/**
@@ -60,7 +53,6 @@ public class PathDialog extends StatusDialog {
 	}
 
 	protected void createDialogFields() {
-
 		fPath = new StringDialogField();
 		fPath.setLabelText("Path");
 	}
@@ -69,24 +61,9 @@ public class PathDialog extends StatusDialog {
 
 		fPath.setDialogFieldListener(new IDialogFieldListener() {
 			public void dialogFieldChanged(DialogField field) {
-				setPatternStatus(validate());
-				updateStatusLine();
+				updateStatus(validate());
 			}
 		});
-	}
-
-	protected String getPattern() {
-		return fPath.getText();
-	}
-
-	private void createLabel(Composite parent, String content, int columns) {
-		Label l = new Label(parent, SWT.None);
-		l.setText(content);
-		GridData gd = new GridData();
-		gd.horizontalAlignment = GridData.FILL;
-		gd.grabExcessHorizontalSpace = true;
-		gd.horizontalSpan = columns;
-		l.setLayoutData(gd);
 	}
 
 	protected Control createDialogArea(Composite ancestor) {
@@ -109,9 +86,8 @@ public class PathDialog extends StatusDialog {
 	}
 
 	private void initializeFields() {
-		fPath.setText(""); //$NON-NLS-1$
-		setPatternStatus(validate());
-		updateStatusLine();
+		fPath.setText(Util.EMPTY_STRING);
+		updateStatus(validate());
 	}
 
 	private IStatus validate() {
@@ -119,51 +95,17 @@ public class PathDialog extends StatusDialog {
 		StatusInfo info = new StatusInfo();
 		if (path.length() == 0) {
 			info.setError("Path is empty");
-			return info;
-		}
-		IFileHandle file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(
-				this.environment, new Path(path));
-		if (!file.exists()) {
-			info.setError("File does not exists");
-		} else if (!file.isDirectory()) {
-			info.setError("File is not a directory");
+		} else if (this.environment != null) {
+			IFileHandle file = PlatformFileUtils
+					.findAbsoluteOrEclipseRelativeFile(this.environment,
+							new Path(path));
+			if (!file.exists()) {
+				info.setError("File does not exists");
+			} else if (!file.isDirectory()) {
+				info.setError("File is not a directory");
+			}
 		}
 		return info;
-	}
-
-	public void updateStatusLine() {
-		IStatus max = null;
-		for (int i = 0; i < fStati.length; i++) {
-			IStatus curr = fStati[i];
-			if (curr.matches(IStatus.ERROR)) {
-				updateStatus(curr);
-				return;
-			}
-			if (max == null || curr.getSeverity() > max.getSeverity()) {
-				max = curr;
-			}
-		}
-		updateStatus(max);
-	}
-
-	protected void okPressed() {
-		doOkPressed();
-		super.okPressed();
-	}
-
-	private void doOkPressed() {
-	}
-
-	private void setPatternStatus(IStatus status) {
-		fStati[0] = status;
-	}
-
-	protected IStatus getSystemLibraryStatus() {
-		return fStati[3];
-	}
-
-	public void setSystemLibraryStatus(IStatus status) {
-		fStati[3] = status;
 	}
 
 	/**
@@ -180,18 +122,12 @@ public class PathDialog extends StatusDialog {
 	}
 
 	/**
-	 * @see org.eclipse.jface.dialogs.Dialog#setButtonLayoutData(org.eclipse.swt.widgets.Button)
-	 */
-	public void setButtonLayoutData(Button button) {
-		super.setButtonLayoutData(button);
-	}
-
-	/**
 	 * Returns the name of the section that this dialog stores its settings in
 	 * 
 	 * @return String
 	 */
 	protected String getDialogSettingsSectionName() {
+		// FIXME not used
 		return "ADD_PATH_TCLCHECKER_DIALOG"; //$NON-NLS-1$
 	}
 
