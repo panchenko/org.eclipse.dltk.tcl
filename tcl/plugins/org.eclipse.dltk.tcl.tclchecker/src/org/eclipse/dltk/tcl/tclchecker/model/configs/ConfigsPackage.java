@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackage.java,v 1.3 2009/02/11 16:17:06 apanchenk Exp $
+ * $Id: ConfigsPackage.java,v 1.4 2009/02/16 09:32:33 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -134,13 +134,22 @@ public interface ConfigsPackage extends EPackage {
 	int CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES = 6;
 
 	/**
+	 * The feature id for the '<em><b>Read Only</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG_INSTANCE__READ_ONLY = 7;
+
+	/**
 	 * The number of structural features of the '<em>Config Instance</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE_FEATURE_COUNT = 7;
+	int CONFIG_INSTANCE_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.
@@ -387,6 +396,17 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getConfigInstance_IndividualMessageStates();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isReadOnly <em>Read Only</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Read Only</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isReadOnly()
+	 * @see #getConfigInstance()
+	 * @generated
+	 */
+	EAttribute getConfigInstance_ReadOnly();
 
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Message State Map</em>}'.
@@ -637,6 +657,14 @@ public interface ConfigsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES = eINSTANCE.getConfigInstance_IndividualMessageStates();
+
+		/**
+		 * The meta object literal for the '<em><b>Read Only</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFIG_INSTANCE__READ_ONLY = eINSTANCE.getConfigInstance_ReadOnly();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.

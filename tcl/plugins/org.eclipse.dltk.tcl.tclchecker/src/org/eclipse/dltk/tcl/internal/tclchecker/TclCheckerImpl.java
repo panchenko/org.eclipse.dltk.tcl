@@ -13,7 +13,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.validators.core.AbstractValidator;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidatorType;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclCheckerImpl extends AbstractValidator {
 
@@ -22,21 +21,16 @@ public class TclCheckerImpl extends AbstractValidator {
 	}
 
 	public boolean isValidatorValid(IScriptProject project) {
-		return TclCheckerHelper.canExecuteTclChecker(getPreferenceStore(),
-				getEnvrironment(project));
+		return TclCheckerHelper.canExecuteTclChecker(TclCheckerConfigUtils
+				.getConfiguration(project), getEnvrironment(project));
 	}
 
 	@SuppressWarnings("unchecked")
 	public Object getValidator(IScriptProject project, Class validatorType) {
 		if (ISourceModuleValidator.class.equals(validatorType)) {
-			return new TclChecker(getPreferenceStore(),
+			return new TclChecker(TclCheckerConfigUtils.getConfiguration(project),
 					getEnvrironment(project));
 		}
 		return null;
 	}
-
-	private IPreferenceStore getPreferenceStore() {
-		return TclCheckerPlugin.getDefault().getPreferenceStore();
-	}
-
 }

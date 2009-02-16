@@ -47,6 +47,11 @@ public class TclCheckerType extends AbstractValidatorType {
 		return true;
 	}
 
+	@Override
+	public boolean isConfigurable() {
+		return false;
+	}
+
 	@SuppressWarnings("unchecked")
 	public boolean supports(Class validatorType) {
 		return ISourceModuleValidator.class.equals(validatorType);

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerVersion.java,v 1.1 2009/02/05 18:41:36 apanchenk Exp $
+ * $Id: CheckerVersion.java,v 1.2 2009/02/16 09:32:33 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -207,6 +207,19 @@ public enum CheckerVersion implements Enumerator {
 	@Override
 	public String toString() {
 		return literal;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getDescription() {
+		if (value == VERSION4_VALUE) {
+			return org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.Messages.TclChecker_Version4;
+		} else if (value == VERSION5_VALUE) {
+			return org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.Messages.TclChecker_Version5;
+		} else {
+			return toString();
+		}
 	}
 	
 } //CheckerVersion

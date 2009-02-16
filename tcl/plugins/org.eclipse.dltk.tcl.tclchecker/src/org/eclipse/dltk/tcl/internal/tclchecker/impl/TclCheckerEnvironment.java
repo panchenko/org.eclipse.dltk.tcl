@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerEnvironment;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerHelper;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMigration;
+import org.eclipse.dltk.tcl.tclchecker.ITclCheckerEnvironment;
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclCheckerEnvironment implements ITclCheckerEnvironment {
@@ -39,22 +39,22 @@ public class TclCheckerEnvironment implements ITclCheckerEnvironment {
 	}
 
 	public String getExecutablePath() {
-		return TclCheckerHelper.getPaths(getStore()).get(environment);
+		return TclCheckerMigration.getPaths(getStore()).get(environment);
 	}
 
 	public List<String> getPCXPaths() {
-		return TclCheckerHelper.getPcxPaths(getStore()).get(environment);
+		return TclCheckerMigration.getPcxPaths(getStore()).get(environment);
 	}
 
 	public boolean isUsePCXPaths() {
-		final Map<IEnvironment, String> values = TclCheckerHelper
+		final Map<IEnvironment, String> values = TclCheckerMigration
 				.getNoPCX(getStore());
 		return !Boolean.valueOf(values.get(environment));
 	}
 
 	public void setExecutablePath(String path) {
 		final IPreferenceStore store = getStore();
-		Map<IEnvironment, String> paths = TclCheckerHelper.getPaths(store);
+		Map<IEnvironment, String> paths = TclCheckerMigration.getPaths(store);
 		final String oldPath = paths.get(environment);
 		if (path != null) {
 			if (path.equals(oldPath)) {
@@ -67,23 +67,23 @@ public class TclCheckerEnvironment implements ITclCheckerEnvironment {
 			}
 			paths.remove(environment);
 		}
-		TclCheckerHelper.setPaths(store, paths);
+		TclCheckerMigration.setPaths(store, paths);
 	}
 
 	public void setPCXPaths(List<String> paths) {
 		final IPreferenceStore store = getStore();
-		final Map<IEnvironment, List<String>> allPaths = TclCheckerHelper
+		final Map<IEnvironment, List<String>> allPaths = TclCheckerMigration
 				.getPcxPaths(store);
 		allPaths.put(environment, paths);
-		TclCheckerHelper.setPcxPaths(store, allPaths);
+		TclCheckerMigration.setPcxPaths(store, allPaths);
 	}
 
 	public void setUsePCXPaths(boolean value) {
 		final IPreferenceStore store = getStore();
-		final Map<IEnvironment, String> values = TclCheckerHelper
+		final Map<IEnvironment, String> values = TclCheckerMigration
 				.getNoPCX(store);
 		values.put(environment, Boolean.valueOf(!value).toString());
-		TclCheckerHelper.setNoPCX(store, values);
+		TclCheckerMigration.setNoPCX(store, values);
 	}
 
 }

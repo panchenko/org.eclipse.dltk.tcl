@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessageCategory.java,v 1.1 2009/01/27 18:43:47 apanchenk Exp $
+ * $Id: MessageCategory.java,v 1.2 2009/02/16 09:32:33 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages;
 
@@ -90,7 +90,17 @@ public enum MessageCategory implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	USAGE_WARNING(6, "USAGE_WARNING", "USAGE_WARNING"); //$NON-NLS-1$ //$NON-NLS-2$
+	USAGE_WARNING(6, "USAGE_WARNING", "USAGE_WARNING"), //$NON-NLS-1$ //$NON-NLS-2$ 
+
+	/**
+	 * The '<em><b>STYLE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #STYLE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	STYLE(7, "STYLE", "STYLE"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * The '<em><b>ERROR</b></em>' literal value.
@@ -198,6 +208,21 @@ public enum MessageCategory implements Enumerator {
 	public static final int USAGE_WARNING_VALUE = 6;
 
 	/**
+	 * The '<em><b>STYLE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>STYLE</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #STYLE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STYLE_VALUE = 7;
+
+	/**
 	 * An array of all the '<em><b>Message Category</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -212,6 +237,7 @@ public enum MessageCategory implements Enumerator {
 			NON_PORTABLE_WARNING,
 			PERFORMANCE_WARNING,
 			USAGE_WARNING,
+			STYLE,
 		};
 
 	/**
@@ -269,6 +295,7 @@ public enum MessageCategory implements Enumerator {
 			case NON_PORTABLE_WARNING_VALUE: return NON_PORTABLE_WARNING;
 			case PERFORMANCE_WARNING_VALUE: return PERFORMANCE_WARNING;
 			case USAGE_WARNING_VALUE: return USAGE_WARNING;
+			case STYLE_VALUE: return STYLE;
 		}
 		return null;
 	}
@@ -349,9 +376,7 @@ public enum MessageCategory implements Enumerator {
 	}
 
 	public boolean isWarning() {
-		return this == WARNING || this == NON_PORTABLE_WARNING
-				|| this == PERFORMANCE_WARNING || this == UPGRADE_WARNING
-				|| this == USAGE_WARNING;
+		return !isError();
 	}
 
 } //MessageCategory

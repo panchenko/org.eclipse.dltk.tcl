@@ -97,13 +97,26 @@
 <messages messageId="winAlpha" explanation="The window name for any Tcl widget cannot begin with a capital letter." category="ERROR"/>
 <messages messageId="winBeginDot" explanation="The path name for any Tcl widget must begin with a period (&quot;.&quot;)" category="ERROR"/>
 <messages messageId="winNotNull" explanation="A window name or path cannot be an empty string." category="ERROR"/>
+<messages messageId="warnStyleIndentCommand" explanation="The actual indentation of the command does not match our expectations based on the nesting level" category="STYLE"/>
+<messages messageId="warnStylePlainWord" explanation="A simple word not containing variable references or subcommands should be quoted with double-apostrophes, if any" category="STYLE"/>
+<messages messageId="warnStyleNameProcedure" explanation="The procedure name violates the specified pattern" category="STYLE"/>
+<messages messageId="warnStyleNameNamespace" explanation="The namespace name violates the specified pattern" category="STYLE"/>
+<messages messageId="warnStyleExprBoolEquality" explanation="The expression uses == and/or != to compare against a boolean constant. A == can be removed, a != replaced by a plain !, given that the expression is already a boolean for this to work" category="STYLE"/>
+<messages messageId="warnStyleCodeblockTooFar" explanation="Two commands in a script have been separated by more than a single empty line, i.e. leading to an overly large gap between them" category="STYLE"/>
+<messages messageId="warnStyleNameVariableTooShort" explanation="The variable name is considered to be too short for good code" category="STYLE"/>
+<messages messageId="warnStyleNameVariableTooLong" explanation="The variable name is considered to be overly long for good code" category="STYLE"/>
+<messages messageId="warnStyleNameVariable" explanation="The variable name is considered to be too short for good code" category="STYLE"/>
+<messages messageId="warnStyleIndentBlock" explanation="The indentation at the end of the code block does not match our expectations" category="STYLE"/>
+<!--
+<messages messageId="" explanation="" category="STYLE"/>
+-->
 </msg:MessageGroup>
 <msg:MessageGroup id="blt" name="blt">
 <messages messageId="blt::badIntRange" explanation="In some cases, legal integer ranges are defined as part of the command. This error indicates that an integer value outside the legal range has been used." category="ERROR"/>
 <messages messageId="blt::badSignal" explanation="The bgexec command has an option &quot;-killsignal&quot; (Unix only), which accepts a valid mnemonic value. See the blt man pages for command specifications." category="ERROR"/>
 <messages messageId="blt::badSignalInt" explanation="The bgexec command has an option &quot;-killsignal&quot; (Unix only), which accepts a valid signal integer value. See the blt man pages for command specifications." category="ERROR"/>
 </msg:MessageGroup>
-<msg:MessageGroup id="coreTcl" name="coreTcl">
+<msg:MessageGroup id="coreTcl" name="coreTcl" priority="9">
 <messages messageId="coreTcl::badBinaryFmt" explanation="This error indicates that the string provided for the binary command's format switch is invalid. See the documentation for the &quot;binary&quot; command in the ActiveTcl User Guide." category="ERROR"/>
 <messages messageId="coreTcl::badCharMap" explanation="The map list must have an even number of elements." category="ERROR"/>
 <messages messageId="coreTcl::badFormatFmt" explanation="This error indicates that the string provided for the format or scan command's format switch is invalid. See the documentation for the &quot;format&quot; or &quot;scan&quot; command in the ActiveTcl User Guide." category="ERROR"/>
@@ -123,7 +136,7 @@
 <messages messageId="coreTcl::warnY2K" explanation="To avoid possible Y2K errors, use the &quot;%Y&quot; field descriptor to generate years with centuries (for example, &quot;1999&quot; instead of &quot;99&quot;)." category="WARNING"/>
 <messages messageId="coreTcl::pkgUnchecked" explanation="Will not check commands provided by the package" category="WARNING"/>
 </msg:MessageGroup>
-<msg:MessageGroup id="coreTk" name="coreTk">
+<msg:MessageGroup id="coreTk" name="coreTk" priority="8">
 <messages messageId="coreTk::badBindSubst" explanation="This error indicates that a placeholder character specified with the &quot;bind&quot; command is invalid. Refer to the ActiveTcl User Guide for &quot;bind&quot; command specifications." category="ERROR"/>
 <messages messageId="coreTk::badColormap" explanation="The command expects the string to specify a colormap to use. If the string is &quot;new&quot;, a new colormap is created. Otherwise, the string should be a valid window path name." category="ERROR"/>
 <messages messageId="coreTk::badEvent" explanation="The command expects the string to specify an event type. If the string is not composed of a valid event and one or more related modifiers, an error is reported." category="ERROR"/>

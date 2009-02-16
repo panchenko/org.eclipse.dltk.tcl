@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessagesPackageImpl.java,v 1.3 2009/02/11 10:32:26 apanchenk Exp $
+ * $Id: MessagesPackageImpl.java,v 1.4 2009/02/16 09:32:34 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages.impl;
 
@@ -315,6 +315,7 @@ public class MessagesPackageImpl extends EPackageImpl implements MessagesPackage
 		addEEnumLiteral(messageCategoryEEnum, MessageCategory.NON_PORTABLE_WARNING);
 		addEEnumLiteral(messageCategoryEEnum, MessageCategory.PERFORMANCE_WARNING);
 		addEEnumLiteral(messageCategoryEEnum, MessageCategory.USAGE_WARNING);
+		addEEnumLiteral(messageCategoryEEnum, MessageCategory.STYLE);
 
 		// Create resource
 		createResource(eNS_URI);

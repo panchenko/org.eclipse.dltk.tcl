@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigInstanceImpl.java,v 1.2 2009/02/11 10:32:26 apanchenk Exp $
+ * $Id: ConfigInstanceImpl.java,v 1.3 2009/02/16 09:32:32 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -15,6 +15,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.common.util.URI;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -40,6 +42,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getMessageStates <em>Message States</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isUseTclVer <em>Use Tcl Ver</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isIndividualMessageStates <em>Individual Message States</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isReadOnly <em>Read Only</em>}</li>
  * </ul>
  * </p>
  *
@@ -164,7 +167,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean INDIVIDUAL_MESSAGE_STATES_EDEFAULT = true;
+	protected static final boolean INDIVIDUAL_MESSAGE_STATES_EDEFAULT = false;
 
 	/**
 	 * The cached value of the '{@link #isIndividualMessageStates() <em>Individual Message States</em>}' attribute.
@@ -175,6 +178,16 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 * @ordered
 	 */
 	protected boolean individualMessageStates = INDIVIDUAL_MESSAGE_STATES_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isReadOnly() <em>Read Only</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReadOnly()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean READ_ONLY_EDEFAULT = false;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -336,6 +349,22 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isReadOnly() {
+		final Resource r = eResource();
+		if (r != null) {
+			final URI uri = r.getURI();
+			if (uri != null) {
+				return uri.isPlatformPlugin();
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -370,6 +399,8 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 				return isUseTclVer() ? Boolean.TRUE : Boolean.FALSE;
 			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
 				return isIndividualMessageStates() ? Boolean.TRUE : Boolean.FALSE;
+			case ConfigsPackage.CONFIG_INSTANCE__READ_ONLY:
+				return isReadOnly() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -462,6 +493,8 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 				return useTclVer != USE_TCL_VER_EDEFAULT;
 			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
 				return individualMessageStates != INDIVIDUAL_MESSAGE_STATES_EDEFAULT;
+			case ConfigsPackage.CONFIG_INSTANCE__READ_ONLY:
+				return isReadOnly() != READ_ONLY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

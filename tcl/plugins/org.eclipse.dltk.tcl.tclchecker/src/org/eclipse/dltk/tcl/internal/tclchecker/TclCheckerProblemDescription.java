@@ -12,10 +12,13 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup;
@@ -38,6 +41,8 @@ public class TclCheckerProblemDescription {
 
 	private static CheckerMessage defaultMessage = null;
 
+	private static final Set<String> reportedIds = new HashSet<String>();
+
 	/**
 	 * @param problemId
 	 * @return
@@ -48,10 +53,13 @@ public class TclCheckerProblemDescription {
 		if (message == null) {
 			message = altDefinitions.get(problemId);
 			if (message == null) {
+				if (reportedIds.add(problemId)) {
+					TclCheckerPlugin.warn("Unknown messageId " + problemId); //$NON-NLS-1$
+				}
 				if (defaultMessage == null) {
 					defaultMessage = MessagesFactory.eINSTANCE
 							.createCheckerMessage();
-					defaultMessage.setCategory(MessageCategory.ERROR);
+					defaultMessage.setCategory(MessageCategory.WARNING);
 					defaultMessage.setExplanation("Unknown problem"); //$NON-NLS-1$
 					defaultMessage.setMessageId("Unknown"); //$NON-NLS-1$
 				}

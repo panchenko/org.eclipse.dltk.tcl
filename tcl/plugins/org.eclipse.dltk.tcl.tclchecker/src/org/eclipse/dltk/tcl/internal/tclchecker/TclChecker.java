@@ -37,12 +37,14 @@ import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.v5.Checker5OutputProcessor;
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.AbstractExternalValidator;
 import org.eclipse.dltk.validators.core.CommandLine;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidatorOutput;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclChecker extends AbstractExternalValidator implements
 		ISourceModuleValidator, ITclCheckerReporter, ILineTrackerFactory {
@@ -62,21 +64,17 @@ public class TclChecker extends AbstractExternalValidator implements
 				problem.getMessage(), attributes);
 	}
 
-	private final IPreferenceStore store;
+	private final CheckerInstance instance;
 	private final IEnvironment environment;
 
-	public TclChecker(IEnvironment environment) {
-		this(TclCheckerPlugin.getDefault().getPreferenceStore(), environment);
-	}
-
-	public TclChecker(IPreferenceStore store, IEnvironment environment) {
-		Assert.isNotNull(store, "store cannot be null"); //$NON-NLS-1$
-		this.store = store;
+	public TclChecker(CheckerInstance instance, IEnvironment environment) {
+		Assert.isNotNull(instance, "CheckerInstance cannot be null"); //$NON-NLS-1$
+		this.instance = instance;
 		this.environment = environment;
 	}
 
 	private boolean canCheck() {
-		return TclCheckerHelper.canExecuteTclChecker(store, environment);
+		return TclCheckerHelper.canExecuteTclChecker(instance, environment);
 	}
 
 	public void check(final List<ISourceModule> sourceModules,
@@ -90,8 +88,7 @@ public class TclChecker extends AbstractExternalValidator implements
 		}
 
 		final IOutputProcessor processor;
-		if (TclCheckerConstants.VERSION_5.equals(store
-				.getString(TclCheckerConstants.PREF_VERSION))) {
+		if (CheckerVersion.VERSION5.equals(instance.getVersion())) {
 			processor = new Checker5OutputProcessor(monitor, console, this,
 					this);
 		} else {
@@ -104,7 +101,7 @@ public class TclChecker extends AbstractExternalValidator implements
 			return;
 		}
 		final CommandLine cmdLine = new CommandLine();
-		if (!TclCheckerHelper.buildCommandLine(store, cmdLine, environment,
+		if (!TclCheckerHelper.buildCommandLine(instance, cmdLine, environment,
 				sourceModules.get(0).getScriptProject(), console)) {
 			console.println(Messages.TclChecker_path_not_specified);
 			return;

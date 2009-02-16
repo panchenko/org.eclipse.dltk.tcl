@@ -96,9 +96,9 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 				case 1: {
 					final MessageCategory category = message.getCategory();
 					if (category.isError()) {
-						return PreferencesMessages.TclChecker_error;
+						return Messages.TclChecker_error;
 					} else if (category.isWarning()) {
-						return PreferencesMessages.TclChecker_warning;
+						return Messages.TclChecker_warning;
 					}
 				}
 				case 2:
@@ -116,13 +116,12 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 
 	static {
 		stateToString.put(MessageState.DEFAULT,
-				PreferencesMessages.TclChecker_processType_default);
-		stateToString.put(null,
-				PreferencesMessages.TclChecker_processType_default);
+				Messages.TclChecker_processType_default);
+		stateToString.put(null, Messages.TclChecker_processType_default);
 		stateToString.put(MessageState.CHECK,
-				PreferencesMessages.TclChecker_processType_check);
+				Messages.TclChecker_processType_check);
 		stateToString.put(MessageState.SUPPRESS,
-				PreferencesMessages.TclChecker_processType_suppress);
+				Messages.TclChecker_processType_suppress);
 	}
 
 	private static class MessageContentProvider implements ITreeContentProvider {
@@ -277,7 +276,8 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 
 	protected void initNameGroup(Composite parent) {
 		Label nameLabel = new Label(parent, SWT.NONE);
-		nameLabel.setText("Configuration Name");
+		nameLabel
+				.setText(Messages.TclCheckerConfigurationDialog_ConfigurationName);
 		name = new Text(parent, SWT.BORDER);
 		name.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		bindingContext.bindValue(SWTObservables.observeText(name, SWT.Modify),
@@ -288,7 +288,7 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 
 	protected void initModeGroup(Composite parent, Object layoutData) {
 		workingMode = new Group(parent, SWT.NONE);
-		workingMode.setText(PreferencesMessages.TclChecker_mode);
+		workingMode.setText(Messages.TclChecker_mode);
 		workingMode.setLayoutData(layoutData);
 
 		GridLayout layout = new GridLayout();
@@ -297,22 +297,19 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 		workingMode.setLayout(layout);
 
 		Map<Button, CheckerMode> modeOptions = new HashMap<Button, CheckerMode>();
-		createModeOption(workingMode,
-				PreferencesMessages.TclChecker_mode_default, modeOptions,
-				CheckerMode.DEFAULT);
-		createModeOption(workingMode, PreferencesMessages.TclChecker_mode_none,
+		createModeOption(workingMode, Messages.TclChecker_mode_default,
+				modeOptions, CheckerMode.DEFAULT);
+		createModeOption(workingMode, Messages.TclChecker_mode_none,
 				modeOptions, CheckerMode.W0);
+		createModeOption(workingMode, Messages.TclChecker_mode_errors,
+				modeOptions, CheckerMode.W1);
 		createModeOption(workingMode,
-				PreferencesMessages.TclChecker_mode_errors, modeOptions,
-				CheckerMode.W1);
+				Messages.TclChecker_mode_errorsAndUsageWarnings, modeOptions,
+				CheckerMode.W2);
 		createModeOption(workingMode,
-				PreferencesMessages.TclChecker_mode_errorsAndUsageWarnings,
-				modeOptions, CheckerMode.W2);
-		createModeOption(
-				workingMode,
-				PreferencesMessages.TclChecker_mode_errorsAndWarningsExceptUpgrade,
+				Messages.TclChecker_mode_errorsAndWarningsExceptUpgrade,
 				modeOptions, CheckerMode.W3);
-		createModeOption(workingMode, PreferencesMessages.TclChecker_mode_all,
+		createModeOption(workingMode, Messages.TclChecker_mode_all,
 				modeOptions, CheckerMode.W4);
 		bindingContext.bindValue(new RadioButtonListValue<CheckerMode>(
 				CheckerMode.class, modeOptions), EMFObservables.observeValue(
@@ -328,10 +325,12 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 	}
 
 	protected void initOptions(Composite parent) {
-		Group group = SWTFactory.createGroup(parent, "Options", 2, 2,
+		Group group = SWTFactory.createGroup(parent,
+				Messages.TclCheckerConfigurationDialog_Options, 2, 2,
 				GridData.FILL_HORIZONTAL);
 		Label nameLabel = new Label(group, SWT.NONE);
-		nameLabel.setText("Command Line Options");
+		nameLabel
+				.setText(Messages.TclCheckerConfigurationDialog_CommandLineOptions);
 		commandLineOptions = new Text(group, SWT.BORDER);
 		commandLineOptions
 				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -339,14 +338,15 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 				SWT.Modify), EMFObservables.observeValue(instance,
 				ConfigsPackage.Literals.CONFIG_INSTANCE__COMMAND_LINE_OPTIONS),
 				null, null);
-		summary = SWTFactory
-				.createCheckButton(group, "Summary", null, false, 2);
+		summary = SWTFactory.createCheckButton(group,
+				Messages.TclCheckerConfigurationDialog_Summary, null, false, 2);
 		bindingContext.bindValue(SWTObservables.observeSelection(summary),
 				EMFObservables.observeValue(instance,
 						ConfigsPackage.Literals.CONFIG_INSTANCE__SUMMARY),
 				null, null);
-		useTclVer = SWTFactory.createCheckButton(group, "-use Tcl<ver>", null,
-				false, 2);
+		useTclVer = SWTFactory.createCheckButton(group,
+				Messages.TclCheckerConfigurationDialog_UseTclVer, null, false,
+				2);
 		bindingContext.bindValue(SWTObservables.observeSelection(useTclVer),
 				EMFObservables.observeValue(instance,
 						ConfigsPackage.Literals.CONFIG_INSTANCE__USE_TCL_VER),
@@ -355,10 +355,11 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 
 	private void initMessageOptions(Composite parent) {
 		final Group group = SWTFactory.createGroup(parent,
-				PreferencesMessages.TclChecker_suppressProblems, 2, 2,
-				GridData.FILL_BOTH);
+				Messages.TclChecker_suppressProblems, 2, 2, GridData.FILL_BOTH);
 		final Button individualMessageConfiguration = SWTFactory
-				.createCheckButton(group, "Individual Message Configuration",
+				.createCheckButton(
+						group,
+						Messages.TclCheckerConfigurationDialog_MessageConfiguration,
 						null, false, 2);
 		bindingContext
 				.bindValue(
@@ -388,13 +389,13 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 		messageTree.setHeaderVisible(true);
 		messageTree.setLinesVisible(true);
 		final TreeColumn nameColumn = new TreeColumn(messageTree, SWT.LEFT);
-		nameColumn.setText(PreferencesMessages.TclChecker_problems_name);
+		nameColumn.setText(Messages.TclChecker_problems_name);
 		messageTreeLayout.setColumnData(nameColumn, new ColumnWeightData(60));
 		final TreeColumn typeColumn = new TreeColumn(messageTree, SWT.LEFT);
-		typeColumn.setText(PreferencesMessages.TclChecker_problems_type);
+		typeColumn.setText(Messages.TclChecker_problems_type);
 		messageTreeLayout.setColumnData(typeColumn, new ColumnWeightData(20));
 		final TreeColumn actionColumn = new TreeColumn(messageTree, SWT.LEFT);
-		actionColumn.setText(PreferencesMessages.TclChecker_problems_action);
+		actionColumn.setText(Messages.TclChecker_problems_action);
 		messageTreeLayout.setColumnData(actionColumn, new ColumnWeightData(20));
 		messageViewer = new TreeViewer(messageTree);
 		new TreeViewerColumn(messageViewer, actionColumn)
@@ -418,7 +419,7 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 				SWT.BEGINNING, false, true);
 		buttonContainer.setLayoutData(buttonContainerLayoutData);
 		SWTFactory.createPushButton(buttonContainer,
-				PreferencesMessages.TclChecker_processType_defaultAll, null)
+				Messages.TclChecker_processType_defaultAll, null)
 				.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
@@ -427,15 +428,15 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 					}
 				});
 		SWTFactory.createPushButton(buttonContainer,
-				PreferencesMessages.TclChecker_processType_checkAll)
-				.addSelectionListener(new SelectionAdapter() {
+				Messages.TclChecker_processType_checkAll).addSelectionListener(
+				new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						fillMessageState(MessageState.CHECK);
 					}
 				});
 		SWTFactory.createPushButton(buttonContainer,
-				PreferencesMessages.TclChecker_processType_suppressAll)
+				Messages.TclChecker_processType_suppressAll)
 				.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
@@ -488,7 +489,9 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 	protected IStatus validate() {
 		final String configurationName = instance.getName();
 		if (configurationName == null || configurationName.trim().length() == 0) {
-			return new StatusInfo(IStatus.ERROR, "Enter configuration name");
+			return new StatusInfo(
+					IStatus.ERROR,
+					Messages.TclCheckerConfigurationDialog_errorEmptyConfigurationName);
 		}
 		return StatusInfo.OK_STATUS;
 	}

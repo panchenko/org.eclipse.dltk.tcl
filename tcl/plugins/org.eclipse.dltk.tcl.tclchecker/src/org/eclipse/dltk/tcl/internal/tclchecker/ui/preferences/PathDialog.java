@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.util.Util;
@@ -18,8 +19,8 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringDialogField;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
+import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.utils.PlatformFileUtils;
-import org.eclipse.dltk.validators.core.IValidatorType;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.swt.SWT;
@@ -31,8 +32,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 public class PathDialog extends StatusDialog {
-
-	private IValidatorType fSelectedValidatorType;
 
 	private StringDialogField fPath;
 	private IEnvironment environment;
@@ -54,11 +53,10 @@ public class PathDialog extends StatusDialog {
 
 	protected void createDialogFields() {
 		fPath = new StringDialogField();
-		fPath.setLabelText("Path");
+		fPath.setLabelText(Messages.PathDialog_PathLabel);
 	}
 
 	protected void createFieldListeners() {
-
 		fPath.setDialogFieldListener(new IDialogFieldListener() {
 			public void dialogFieldChanged(DialogField field) {
 				updateStatus(validate());
@@ -72,7 +70,11 @@ public class PathDialog extends StatusDialog {
 		((GridLayout) parent.getLayout()).numColumns = 3;
 
 		fPath.doFillIntoGrid(parent, 3);
-		((GridData) fPath.getTextControl(null).getLayoutData()).grabExcessHorizontalSpace = true;
+		final GridData pathGridData = (GridData) fPath.getTextControl(null)
+				.getLayoutData();
+		pathGridData.grabExcessHorizontalSpace = true;
+		pathGridData.widthHint = new PixelConverter(ancestor)
+				.convertWidthInCharsToPixels(64);
 
 		initializeFields();
 		createFieldListeners();
@@ -91,18 +93,19 @@ public class PathDialog extends StatusDialog {
 	}
 
 	private IStatus validate() {
-		String path = fPath.getText();
+		IPath path = new Path(fPath.getText());
 		StatusInfo info = new StatusInfo();
-		if (path.length() == 0) {
-			info.setError("Path is empty");
+		if (path.isEmpty()) {
+			info.setError(Messages.PathDialog_error_EmptyPath);
 		} else if (this.environment != null) {
 			IFileHandle file = PlatformFileUtils
-					.findAbsoluteOrEclipseRelativeFile(this.environment,
-							new Path(path));
+					.findAbsoluteOrEclipseRelativeFile(this.environment, path);
 			if (!file.exists()) {
-				info.setError("File does not exists");
+				info
+						.setError(Messages.PathDialog_error_FileNotExists);
 			} else if (!file.isDirectory()) {
-				info.setError("File is not a directory");
+				info
+						.setError(Messages.PathDialog_error_NotDirectory);
 			}
 		}
 		return info;

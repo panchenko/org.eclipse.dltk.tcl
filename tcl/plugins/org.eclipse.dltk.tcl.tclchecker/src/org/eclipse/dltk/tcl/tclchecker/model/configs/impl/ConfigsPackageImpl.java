@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackageImpl.java,v 1.3 2009/02/11 16:17:06 apanchenk Exp $
+ * $Id: ConfigsPackageImpl.java,v 1.4 2009/02/16 09:32:32 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -227,6 +227,15 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getConfigInstance_ReadOnly() {
+		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessageStateMap() {
 		return messageStateMapEClass;
 	}
@@ -393,6 +402,7 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		createEReference(configInstanceEClass, CONFIG_INSTANCE__MESSAGE_STATES);
 		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__USE_TCL_VER);
 		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES);
+		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__READ_ONLY);
 
 		messageStateMapEClass = createEClass(MESSAGE_STATE_MAP);
 		createEAttribute(messageStateMapEClass, MESSAGE_STATE_MAP__KEY);
@@ -451,7 +461,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		initEAttribute(getConfigInstance_Mode(), this.getCheckerMode(), "mode", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getConfigInstance_MessageStates(), this.getMessageStateMap(), null, "messageStates", null, 0, -1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getConfigInstance_UseTclVer(), ecorePackage.getEBoolean(), "useTclVer", "true", 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEAttribute(getConfigInstance_IndividualMessageStates(), ecorePackage.getEBoolean(), "individualMessageStates", "true", 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(getConfigInstance_IndividualMessageStates(), ecorePackage.getEBoolean(), "individualMessageStates", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getConfigInstance_ReadOnly(), ecorePackage.getEBoolean(), "readOnly", null, 0, 1, ConfigInstance.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(messageStateMapEClass, Map.Entry.class, "MessageStateMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getMessageStateMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$

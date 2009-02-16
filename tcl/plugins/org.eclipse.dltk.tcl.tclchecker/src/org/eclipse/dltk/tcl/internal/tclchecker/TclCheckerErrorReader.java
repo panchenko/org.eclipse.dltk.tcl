@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 
 public class TclCheckerErrorReader extends Thread {
 

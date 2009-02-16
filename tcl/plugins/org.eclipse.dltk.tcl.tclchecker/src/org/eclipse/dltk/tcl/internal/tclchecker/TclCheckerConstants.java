@@ -9,45 +9,19 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+
 public final class TclCheckerConstants {
 	private TclCheckerConstants() {
 	}
-
-	public static final String PREF_PATH = "tclchecker.path"; //$NON-NLS-1$
-
-	public static final String PREF_MODE = "tclchecker.mode"; //$NON-NLS-1$
-	public static final String PREF_SUMMARY = "tclchecker.summary"; //$NON-NLS-1$
-	public static final String PREF_USE_TCL_VER = "tclchecker.use_tcl_ver"; //$NON-NLS-1$
-
-	public static final String PREF_PCX_PATH = "tclchecker.pcx.path"; //$NON-NLS-1$
-	public static final String PREF_NO_PCX = "tclchecker.no_pcx"; //$NON-NLS-1$
-
-	public static final String PREF_VERSION = "tclchecker.version"; //$NON-NLS-1$
-	public static final String CLI_OPTIONS = "tclchecker.cli.options"; //$NON-NLS-1$
-
-	public static final String VERSION_4 = "4"; //$NON-NLS-1$
-	public static final String VERSION_5 = "5"; //$NON-NLS-1$
 
 	/**
 	 * XMI representation of the configuration data
 	 */
 	public static final String PREF_CONFIGURATION = "tclchecker.configuration"; //$NON-NLS-1$
 
-	public static final int MODE_NONE = -1;
-
-	public static final int MODE_ERRORS = 0;
-
-	public static final int MODE_ERRORS_AND_USAGE_WARNINGS = 1;
-
-	public static final int MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE = 2;
-
-	public static final int MODE_ALL = 3;
-
-	public static final int MODE_DEFAULT = MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE;
-
 	public static final String TCL_DEVKIT_LOCAL_VARIABLE = "TCLDEVKIT_LOCAL"; //$NON-NLS-1$
 
-	public static final int PROCESS_TYPE_DEFAULT = 0;
-	public static final int PROCESS_TYPE_SUPPRESS = 1;
-	public static final int PROCESS_TYPE_CHECK = 2;
+	public static final String CONFIGURATION_EXTENSION_POINT_NAME = TclCheckerPlugin.PLUGIN_ID
+			+ ".configuration"; //$NON-NLS-1$
 }

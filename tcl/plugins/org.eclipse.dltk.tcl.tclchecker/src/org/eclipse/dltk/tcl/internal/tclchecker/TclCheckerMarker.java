@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+
 public class TclCheckerMarker {
 
 	public static final String TYPE = TclCheckerPlugin.PLUGIN_ID

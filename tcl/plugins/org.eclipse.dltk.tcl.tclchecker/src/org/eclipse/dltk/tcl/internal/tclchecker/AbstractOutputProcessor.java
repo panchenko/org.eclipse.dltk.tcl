@@ -108,6 +108,13 @@ public abstract class AbstractOutputProcessor implements IOutputProcessor {
 	protected void subTask(String subTask) {
 		monitor.subTask(subTask);
 		monitor.worked(1);
+		if (false) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

@@ -14,13 +14,14 @@ package org.eclipse.dltk.internal.databinging;
 import java.util.Map;
 
 import org.eclipse.core.databinding.observable.Diffs;
-import org.eclipse.jface.internal.databinding.provisional.swt.AbstractSWTObservableValue;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-public class RadioButtonListValue<V> extends AbstractSWTObservableValue {
+public class RadioButtonListValue<V> extends AbstractObservableValue {
 
 	private final Class<V> valueType;
 	private final Map<Button, V> buttons;
@@ -31,6 +32,12 @@ public class RadioButtonListValue<V> extends AbstractSWTObservableValue {
 			V oldSelectionValue = selectionValue;
 			selectionValue = getSelection();
 			notifyIfChanged(oldSelectionValue, selectionValue);
+		}
+	};
+
+	private Listener disposeListener = new Listener() {
+		public void handleEvent(Event e) {
+			RadioButtonListValue.this.dispose();
 		}
 	};
 
@@ -47,7 +54,8 @@ public class RadioButtonListValue<V> extends AbstractSWTObservableValue {
 	 * @param button
 	 */
 	public RadioButtonListValue(Class<V> valueType, Map<Button, V> buttons) {
-		super(buttons.keySet().iterator().next());
+		super(SWTObservables.getRealm(buttons.keySet().iterator().next()
+				.getDisplay()));
 		this.valueType = valueType;
 		this.buttons = buttons;
 		init();
@@ -57,6 +65,7 @@ public class RadioButtonListValue<V> extends AbstractSWTObservableValue {
 		for (Button button : buttons.keySet()) {
 			button.addListener(SWT.Selection, updateListener);
 			button.addListener(SWT.DefaultSelection, updateListener);
+			button.addListener(SWT.Dispose, disposeListener);
 		}
 	}
 
@@ -89,11 +98,7 @@ public class RadioButtonListValue<V> extends AbstractSWTObservableValue {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.core.databinding.observable.value.AbstractObservableValue
-	 * #dispose()
+	 * @see AbstractObservableValue #dispose()
 	 */
 	public synchronized void dispose() {
 		super.dispose();

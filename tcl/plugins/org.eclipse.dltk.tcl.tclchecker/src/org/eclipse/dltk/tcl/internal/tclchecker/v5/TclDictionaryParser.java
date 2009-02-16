@@ -88,6 +88,7 @@ public final class TclDictionaryParser extends SimpleTclParser {
 				} else {
 					boolean join = false;
 					final List<IToken> children = result.getChildren();
+					final int startChildrentCount = children.size();
 					for (Object item : contents) {
 						if (item instanceof String) {
 							if (join) {
@@ -104,7 +105,8 @@ public final class TclDictionaryParser extends SimpleTclParser {
 									+ element.getStart(), offset
 									+ element.getEnd() + 1);
 							if (element instanceof NormalBackslashSubstitution) {
-								if (!children.isEmpty()) {
+								if (!children.isEmpty()
+										&& children.size() > startChildrentCount) {
 									IToken prev = children
 											.get(children.size() - 1);
 									if (prev instanceof WordToken) {

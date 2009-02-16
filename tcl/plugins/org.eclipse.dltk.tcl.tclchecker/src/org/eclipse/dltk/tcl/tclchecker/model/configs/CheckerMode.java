@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerMode.java,v 1.2 2009/02/11 10:32:20 apanchenk Exp $
+ * $Id: CheckerMode.java,v 1.3 2009/02/16 09:32:33 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
@@ -315,6 +316,18 @@ public enum CheckerMode implements Enumerator {
 	@Override
 	public String toString() {
 		return literal;
+	}
+
+	/**
+	 * Returns the command line options for this mode.
+	 * @return
+	 */
+	public String[] getOptions() {
+		if (this == DEFAULT) {
+			return CharOperation.NO_STRINGS;
+		} else {
+			return new String[] { "-" + getLiteral() }; //$NON-NLS-1$
+		}
 	}
 	
 } //CheckerMode
