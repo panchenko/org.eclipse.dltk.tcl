@@ -107,6 +107,9 @@
 <messages messageId="warnStyleNameVariableTooLong" explanation="The variable name is considered to be overly long for good code" category="STYLE"/>
 <messages messageId="warnStyleNameVariable" explanation="The variable name is considered to be too short for good code" category="STYLE"/>
 <messages messageId="warnStyleIndentBlock" explanation="The indentation at the end of the code block does not match our expectations" category="STYLE"/>
+<messages messageId="warnStylePlainVar" explanation="A single variable reference doesn't need any quoting" category="STYLE"/>
+<messages messageId="warnStyleCodeBlockShort" explanation="For readability the code in a braced script should start and end on separate lines, i.e. the enclosing braces should on their own lines" category="STYLE"/>
+<messages messageId="warnStyleExprOperatorParens" explanation="Be cautious with sub-expressions, use parentheses" category="STYLE"/>
 <!--
 <messages messageId="" explanation="" category="STYLE"/>
 -->
