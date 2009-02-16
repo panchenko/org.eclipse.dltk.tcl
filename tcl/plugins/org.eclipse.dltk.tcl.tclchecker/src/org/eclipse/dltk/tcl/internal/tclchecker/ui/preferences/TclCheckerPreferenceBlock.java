@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.CheckedListDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
@@ -665,7 +666,45 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 	}
 
+	private static interface IEnvironmentPredicate {
+		boolean evaluate(String environmentId);
+	}
+
+	private static class AllEnvironments implements IEnvironmentPredicate {
+		public boolean evaluate(String environmentId) {
+			return true;
+		}
+	}
+
+	private static class SingleEnvironment implements IEnvironmentPredicate {
+
+		public SingleEnvironment(String environmentId) {
+			this.environmentId = environmentId;
+		}
+
+		private final String environmentId;
+
+		public boolean evaluate(String environmentId) {
+			return this.environmentId.equals(environmentId);
+		}
+	}
+
+	private IEnvironmentPredicate buildEnvironmentPredicate() {
+		if (isProjectPreferencePage()) {
+			final IProject project = getProject();
+			if (project != null) {
+				final String environmentId = EnvironmentManager
+						.getEnvironmentId(project);
+				if (environmentId != null) {
+					return new SingleEnvironment(environmentId);
+				}
+			}
+		}
+		return new AllEnvironments();
+	}
+
 	private void initInstances() {
+		final IEnvironmentPredicate ePredicate = buildEnvironmentPredicate();
 		final Set<String> processedEnvironments = new HashSet<String>();
 		final List<InstanceHandle> handles = new ArrayList<InstanceHandle>();
 		final List<InstanceHandle> selected = new ArrayList<InstanceHandle>();
@@ -673,19 +712,22 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		for (EObject object : resource.getContents()) {
 			if (object instanceof CheckerInstance) {
 				final CheckerInstance instance = (CheckerInstance) object;
-				final InstanceHandle handle = new InstanceHandle(instance
-						.getEnvironmentId(), instance);
-				handles.add(handle);
-				if (instance.getConfiguration() == null) {
-					grayed.add(handle);
-				} else if (instance.isAutomatic()) {
-					selected.add(handle);
+				if (ePredicate.evaluate(instance.getEnvironmentId())) {
+					final InstanceHandle handle = new InstanceHandle(instance
+							.getEnvironmentId(), instance);
+					handles.add(handle);
+					if (instance.getConfiguration() == null) {
+						grayed.add(handle);
+					} else if (instance.isAutomatic()) {
+						selected.add(handle);
+					}
+					processedEnvironments.add(instance.getEnvironmentId());
 				}
-				processedEnvironments.add(instance.getEnvironmentId());
 			}
 		}
 		for (String environmentId : environments.getEnvironmentIds()) {
-			if (!processedEnvironments.contains(environmentId)) {
+			if (ePredicate.evaluate(environmentId)
+					&& !processedEnvironments.contains(environmentId)) {
 				final InstanceHandle handle = new InstanceHandle(environmentId,
 						null);
 				handles.add(handle);
