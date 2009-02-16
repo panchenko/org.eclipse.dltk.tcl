@@ -43,14 +43,12 @@ public class TclCheckerPreferencePage extends
 
 	@Override
 	protected String getPreferencePageId() {
-		// TODO Auto-generated method stub
-		return null;
+		return "org.eclipse.dltk.tcl.tclchecker.configuration"; //$NON-NLS-1$
 	}
 
 	@Override
 	protected String getPropertyPageId() {
-		// TODO Auto-generated method stub
-		return null;
+		return "org.eclipse.dltk.tcl.propertypage.tclchecker"; //$NON-NLS-1$
 	}
 
 }
