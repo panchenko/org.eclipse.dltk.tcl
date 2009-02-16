@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.dltk.compiler.util.Util;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.CheckedListDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
@@ -32,7 +33,6 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 
 public class TclSpawnpointPreferenceBlock implements IListAdapter,
 		ICheckStateListener {
@@ -164,7 +163,7 @@ public class TclSpawnpointPreferenceBlock implements IListAdapter,
 	}
 
 	private SpawnpointCommands commands;
-	private ListDialogField listDialogField;
+	private CheckedListDialogField listDialogField;
 
 	public Control createControl(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
@@ -174,29 +173,22 @@ public class TclSpawnpointPreferenceBlock implements IListAdapter,
 				PreferenceMessages.Spawnpoint_Button_Add,
 				PreferenceMessages.Spawnpoint_Button_Edit,
 				PreferenceMessages.Spawnpoint_Button_Delete };
-		listDialogField = new ListDialogField(this, buttons,
-				new TclSpawnpointLabelProvider()) {
-
-			protected TableViewer createTableViewer(Composite parent) {
-				Table table = new Table(parent, getListStyle() | SWT.CHECK);
-				table.setFont(parent.getFont());
-				return new CheckboxTableViewer(table);
-			}
-
-		};
+		listDialogField = new CheckedListDialogField(this, buttons,
+				new TclSpawnpointLabelProvider());
+		listDialogField.setUseLabel(false);
+		listDialogField.setListGrabExcessHorizontalSpace(true);
 		listDialogField.doFillIntoGrid(control, 3);
-		getCheckboxTableViewer().addCheckStateListener(this);
+		listDialogField.addCheckStateListener(this);
 		return control;
 	}
 
 	public void customButtonPressed(ListDialogField field, int index) {
-		final CheckboxTableViewer viewer = getCheckboxTableViewer();
 		switch (index) {
 		case IDX_ADD: {
 			final String newValue = doEdit(null);
 			if (newValue != null) {
 				field.addElement(newValue);
-				viewer.setChecked(newValue, true);
+				listDialogField.setChecked(newValue, true);
 				commands.getCommands().add(newValue);
 				commands.getSelectedCommands().add(newValue);
 				saveCommands();
@@ -210,9 +202,10 @@ public class TclSpawnpointPreferenceBlock implements IListAdapter,
 				final String oldValue = selection.get(0);
 				final String newValue = doEdit(oldValue);
 				if (newValue != null && !newValue.equals(oldValue)) {
-					final boolean wasChecked = viewer.getChecked(oldValue);
+					final boolean wasChecked = listDialogField
+							.isChecked(oldValue);
 					field.replaceElement(oldValue, newValue);
-					viewer.setChecked(newValue, wasChecked);
+					listDialogField.setChecked(newValue, wasChecked);
 					commands.getCommands().remove(oldValue);
 					commands.getCommands().add(newValue);
 					if (wasChecked) {
@@ -236,10 +229,6 @@ public class TclSpawnpointPreferenceBlock implements IListAdapter,
 			break;
 		}
 		}
-	}
-
-	private CheckboxTableViewer getCheckboxTableViewer() {
-		return (CheckboxTableViewer) listDialogField.getTableViewer();
 	}
 
 	/**
@@ -303,8 +292,7 @@ public class TclSpawnpointPreferenceBlock implements IListAdapter,
 				.decode(delegate
 						.getString(TclActiveStateDebuggerPreferencePage.PREF_SPAWNPOINTS));
 		listDialogField.setElements(commands.getCommands());
-		getCheckboxTableViewer().setCheckedElements(
-				commands.getSelectedCommands().toArray());
+		listDialogField.setCheckedElements(commands.getSelectedCommands());
 	}
 
 	// @Override
