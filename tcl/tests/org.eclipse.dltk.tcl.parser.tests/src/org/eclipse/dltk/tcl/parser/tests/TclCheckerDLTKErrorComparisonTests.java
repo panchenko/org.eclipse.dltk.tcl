@@ -31,6 +31,7 @@ import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.Checker4OutputProcessor;
 import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
@@ -40,6 +41,7 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.internal.tests.Activator;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.validators.core.NullValidatorOutput;
 import org.osgi.framework.Bundle;
 
@@ -88,16 +90,17 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 			System.out.println();
 			int[] bounds = model
 					.getBounds(tclCheckerProblem.getLineNumber() - 1);
-			System.out
-					.println((tclCheckerProblem.isError() ? "Error:" : "Warning/Info:")
-							+ tclCheckerProblem.getMessage()
-							+ " ("
-							+ bounds[0]
-							+ ","
-							+ bounds[1]
-							+ ") message:"
-							+ tclCheckerProblem.getExplanation()
-							+ "\n" + contents.substring(bounds[0], bounds[1]));
+			System.out.println((tclCheckerProblem.isError() ? "Error:"
+					: "Warning/Info:")
+					+ tclCheckerProblem.getMessage()
+					+ " ("
+					+ bounds[0]
+					+ ","
+					+ bounds[1]
+					+ ") message:"
+					+ tclCheckerProblem.getExplanation()
+					+ "\n"
+					+ contents.substring(bounds[0], bounds[1]));
 		}
 	}
 
@@ -120,10 +123,14 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 					return true;
 				}
 			};
-			TclChecker checker = new TclChecker(environment);
-			IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
-					.getAdapter(IExecutionEnvironment.class);
-			checker.executeProcess(processor, execEnvironment, cmdLine);
+			final CheckerInstance instance = TclCheckerConfigUtils
+					.getConfiguration(environment);
+			if (instance != null) {
+				TclChecker checker = new TclChecker(instance, environment);
+				IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
+						.getAdapter(IExecutionEnvironment.class);
+				checker.executeProcess(processor, execEnvironment, cmdLine);
+			}
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
