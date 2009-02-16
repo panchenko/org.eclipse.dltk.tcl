@@ -9,7 +9,7 @@
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  *******************************************************************************/
-package org.eclipse.dltk.tcl.internal.tclchecker;
+package org.eclipse.dltk.tcl.tclchecker;
 
 import java.util.List;
 

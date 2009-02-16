@@ -11,7 +11,7 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
 import org.eclipse.osgi.util.NLS;
 
-public class PreferencesMessages extends NLS {
+public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.messages"; //$NON-NLS-1$
 
 	public static String TclChecker_path;
@@ -87,7 +87,61 @@ public class PreferencesMessages extends NLS {
 
 	public static String TclChecker_warning;
 
+	public static String TclCheckerConfigurationDialog_CommandLineOptions;
+
+	public static String TclCheckerConfigurationDialog_ConfigurationName;
+
+	public static String TclCheckerConfigurationDialog_errorEmptyConfigurationName;
+
+	public static String TclCheckerConfigurationDialog_MessageConfiguration;
+
+	public static String TclCheckerConfigurationDialog_Options;
+
+	public static String TclCheckerConfigurationDialog_Summary;
+
+	public static String TclCheckerConfigurationDialog_UseTclVer;
+
+	public static String TclCheckerInstanceDialog_automaticCheckbox;
+
+	public static String TclCheckerInstanceDialog_Browse;
+
+	public static String TclCheckerInstanceDialog_CommandLineOptions;
+
+	public static String TclCheckerInstanceDialog_Configuration;
+
+	public static String TclCheckerInstanceDialog_DisablePCX;
+
+	public static String TclCheckerInstanceDialog_Environment;
+
+	public static String TclCheckerInstanceDialog_ExecutablePath;
+
+	public static String TclCheckerInstanceDialog_None;
+
+	public static String TclCheckerInstanceDialog_pcxAdd;
+
+	public static String TclCheckerInstanceDialog_pcxAddTitle;
+
+	public static String TclCheckerInstanceDialog_pcxBrowse;
+
+	public static String TclCheckerInstanceDialog_pcxRemove;
+
+	public static String TclCheckerInstanceDialog_Version;
+
+	public static String TclCheckerPreferenceBlock_BuiltIn;
+
+	public static String TclCheckerPreferenceBlock_environmentTabDescription;
+
+	public static String TclCheckerPreferenceBlock_UserDefined;
+
+	public static String TclChecker_Version4;
+	public static String TclChecker_Version5;
+
+	public static String PathDialog_PathLabel;
+	public static String PathDialog_error_EmptyPath;
+	public static String PathDialog_error_FileNotExists;
+	public static String PathDialog_error_NotDirectory;
+
 	static {
-		NLS.initializeMessages(BUNDLE_NAME, PreferencesMessages.class);
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 }

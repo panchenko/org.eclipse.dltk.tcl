@@ -7,7 +7,7 @@
  *
  
  *******************************************************************************/
-package org.eclipse.dltk.tcl.internal.tclchecker;
+package org.eclipse.dltk.tcl.tclchecker;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -83,14 +83,11 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 		return new TclCheckerEnvironment(environment);
 	}
 
-	// private IPreferenceStore preferenceStore;
-	//	
-	// public IPreferenceStore getPreferenceStore() {
-	// if (preferenceStore == null) {
-	// preferenceStore = new ScopedPreferenceStore(new
-	// InstanceScope(),getBundle().getSymbolicName());
-	//
-	// }
-	// return preferenceStore;
-	// }
+	/**
+	 * @param string
+	 */
+	public static void warn(String message) {
+		log(IStatus.WARNING, message);
+	}
+
 }

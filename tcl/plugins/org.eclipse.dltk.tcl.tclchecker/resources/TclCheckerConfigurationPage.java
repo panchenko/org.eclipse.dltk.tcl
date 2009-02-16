@@ -75,9 +75,9 @@ import org.eclipse.ui.IWorkbench;
 public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	private static final String[] processTypes = new String[] {
-			PreferencesMessages.TclChecker_processType_default,
-			PreferencesMessages.TclChecker_processType_suppress,
-			PreferencesMessages.TclChecker_processType_check };
+			Messages.TclChecker_processType_default,
+			Messages.TclChecker_processType_suppress,
+			Messages.TclChecker_processType_check };
 
 	EnvironmentPathBlock environmentPathBlock;
 	private Map pcxPaths;
@@ -177,18 +177,18 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 					.findAbsoluteOrEclipseRelativeFile(env, path);
 
 			if (file == null) {
-				setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-						PreferencesMessages.TclChecker_path_isinvalid,
+				setMessage(Messages.TclChecker_pcxPath, env,
+						Messages.TclChecker_path_isinvalid,
 						IStatus.ERROR);
 				continue;
 			} else if (!file.isFile()) {
-				setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-						PreferencesMessages.TclChecker_path_notexists,
+				setMessage(Messages.TclChecker_pcxPath, env,
+						Messages.TclChecker_path_notexists,
 						IStatus.ERROR);
 				continue;
 			} else if (!file.exists()) {
-				setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-						PreferencesMessages.TclChecker_path_notexists,
+				setMessage(Messages.TclChecker_pcxPath, env,
+						Messages.TclChecker_path_notexists,
 						IStatus.ERROR);
 				continue;
 			} /*
@@ -223,8 +223,8 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 				txtPath = txtPath.trim();
 
 				if ("".equals(txtPath)) {
-					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-							PreferencesMessages.TclChecker_path_isempty,
+					setMessage(Messages.TclChecker_pcxPath, env,
+							Messages.TclChecker_path_isempty,
 							IStatus.INFO);
 					continue;
 				}
@@ -234,18 +234,18 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 						.findAbsoluteOrEclipseRelativeFile(env, path);
 
 				if (file == null) {
-					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-							PreferencesMessages.TclChecker_path_isinvalid + ":"
+					setMessage(Messages.TclChecker_pcxPath, env,
+							Messages.TclChecker_path_isinvalid + ":"
 									+ path.toOSString(), IStatus.WARNING);
 					continue;
 				} else if (!file.isDirectory()) {
-					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-							PreferencesMessages.TclChecker_path_notexists + ":"
+					setMessage(Messages.TclChecker_pcxPath, env,
+							Messages.TclChecker_path_notexists + ":"
 									+ path.toOSString(), IStatus.WARNING);
 					continue;
 				} else if (!file.exists()) {
-					setMessage(PreferencesMessages.TclChecker_pcxPath, env,
-							PreferencesMessages.TclChecker_path_notexists + ":"
+					setMessage(Messages.TclChecker_pcxPath, env,
+							Messages.TclChecker_path_notexists + ":"
 									+ path.toOSString(), IStatus.WARNING);
 					continue;
 				}
@@ -256,7 +256,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 	private void setMessage(String group, IEnvironment env, String message,
 			int type) {
 		final String formattedMessage = MessageFormat.format(
-				PreferencesMessages.TclChecker_path_msgPattern, new Object[] {
+				Messages.TclChecker_path_msgPattern, new Object[] {
 						group, env.getName(), message });
 		setMessage(formattedMessage, type);
 	}
@@ -275,7 +275,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	protected void createModeGroup(Composite parent, Object data) {
 		Group radioGroup = new Group(parent, SWT.NONE);
-		radioGroup.setText(PreferencesMessages.TclChecker_mode);
+		radioGroup.setText(Messages.TclChecker_mode);
 		radioGroup.setLayoutData(data);
 
 		GridLayout layout = new GridLayout();
@@ -283,26 +283,26 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		radioGroup.setLayout(layout);
 
 		errorsNone = new Button(radioGroup, SWT.RADIO);
-		errorsNone.setText(PreferencesMessages.TclChecker_mode_none);
+		errorsNone.setText(Messages.TclChecker_mode_none);
 		errorsMode = new Button(radioGroup, SWT.RADIO);
-		errorsMode.setText(PreferencesMessages.TclChecker_mode_errors);
+		errorsMode.setText(Messages.TclChecker_mode_errors);
 
 		errorsAndUsageWarningsMode = new Button(radioGroup, SWT.RADIO);
 		errorsAndUsageWarningsMode
-				.setText(PreferencesMessages.TclChecker_mode_errorsAndUsageWarnings);
+				.setText(Messages.TclChecker_mode_errorsAndUsageWarnings);
 
 		errorsAndWarningsExceptUpgrade = new Button(radioGroup, SWT.RADIO);
 		errorsAndWarningsExceptUpgrade
-				.setText(PreferencesMessages.TclChecker_mode_errorsAndWarningsExceptUpgrade);
+				.setText(Messages.TclChecker_mode_errorsAndWarningsExceptUpgrade);
 
 		allMode = new Button(radioGroup, SWT.RADIO);
-		allMode.setText(PreferencesMessages.TclChecker_mode_all);
-		allMode.setToolTipText(PreferencesMessages.TclChecker_mode_all_tooltip);
+		allMode.setText(Messages.TclChecker_mode_all);
+		allMode.setToolTipText(Messages.TclChecker_mode_all_tooltip);
 	}
 
 	protected void createPathGroup(final Composite parent, Object data) {
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(PreferencesMessages.TclChecker_path);
+		group.setText(Messages.TclChecker_path);
 		group.setLayoutData(data);
 
 		GridLayout layout = new GridLayout();
@@ -334,7 +334,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	protected void createPCXPathGroup(final Composite parent, Object data) {
 		pcxGroup = new Group(parent, SWT.NONE);
-		pcxGroup.setText(PreferencesMessages.TclChecker_pcxPath);
+		pcxGroup.setText(Messages.TclChecker_pcxPath);
 		pcxGroup.setLayoutData(data);
 
 		GridLayout layout = new GridLayout();
@@ -470,7 +470,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 	protected void createSuppressProblemsGroup(Composite parent, Object data) {
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(PreferencesMessages.TclChecker_suppressProblems);
+		group.setText(Messages.TclChecker_suppressProblems);
 		group.setLayoutData(data);
 
 		GridLayout layout = new GridLayout();
@@ -490,15 +490,15 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 		// Columns
 		TableColumn problemsColumn = new TableColumn(problemsTable, SWT.LEFT);
-		problemsColumn.setText(PreferencesMessages.TclChecker_problems_name);
+		problemsColumn.setText(Messages.TclChecker_problems_name);
 		problemsColumn.setWidth(140);
 
 		TableColumn typesColumn = new TableColumn(problemsTable, SWT.LEFT);
-		typesColumn.setText(PreferencesMessages.TclChecker_problems_type);
+		typesColumn.setText(Messages.TclChecker_problems_type);
 		typesColumn.setWidth(70);
 
 		TableColumn actionColumn = new TableColumn(problemsTable, SWT.LEFT);
-		actionColumn.setText(PreferencesMessages.TclChecker_problems_action);
+		actionColumn.setText(Messages.TclChecker_problems_action);
 		actionColumn.setWidth(70);
 
 		// TableViewer
@@ -538,7 +538,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 		Button defaultAll = new Button(buttonsComposite, SWT.PUSH);
 		defaultAll
-				.setText(PreferencesMessages.TclChecker_processType_defaultAll);
+				.setText(Messages.TclChecker_processType_defaultAll);
 		defaultAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				setProcessType(TclCheckerConstants.PROCESS_TYPE_DEFAULT);
@@ -547,7 +547,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 
 		Button suppressAll = new Button(buttonsComposite, SWT.PUSH);
 		suppressAll
-				.setText(PreferencesMessages.TclChecker_processType_suppressAll);
+				.setText(Messages.TclChecker_processType_suppressAll);
 		suppressAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				setProcessType(TclCheckerConstants.PROCESS_TYPE_SUPPRESS);
@@ -555,7 +555,7 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 		});
 
 		Button checkAll = new Button(buttonsComposite, SWT.PUSH);
-		checkAll.setText(PreferencesMessages.TclChecker_processType_checkAll);
+		checkAll.setText(Messages.TclChecker_processType_checkAll);
 		checkAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				setProcessType(TclCheckerConstants.PROCESS_TYPE_CHECK);
@@ -818,9 +818,9 @@ public class TclCheckerConfigurationPage extends ValidatorConfigurationPage {
 					.getProblem(problemId);
 			if (checkerMessage != null) {
 				if (checkerMessage.getCategory().isError()) {
-					return PreferencesMessages.TclChecker_error;
+					return Messages.TclChecker_error;
 				} else if (checkerMessage.getCategory().isWarning()) {
-					return PreferencesMessages.TclChecker_warning;
+					return Messages.TclChecker_warning;
 				}
 			}
 			return null;
