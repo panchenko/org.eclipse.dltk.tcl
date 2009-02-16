@@ -9,13 +9,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerPlugin;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TclCheckerPreferenceInitializer extends
@@ -25,28 +22,9 @@ public class TclCheckerPreferenceInitializer extends
 	}
 
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = TclCheckerPlugin.getDefault()
+		final IPreferenceStore store = TclCheckerPlugin.getDefault()
 				.getPreferenceStore();
-		store.setDefault(TclCheckerConstants.PREF_VERSION,
-				TclCheckerConstants.VERSION_5);
-		store.setDefault(TclCheckerConstants.CLI_OPTIONS, Util.EMPTY_STRING);
-		store.setDefault(TclCheckerConstants.PREF_SUMMARY, false);
-		store.setDefault(TclCheckerConstants.PREF_USE_TCL_VER, true);
-		store.setDefault(TclCheckerConstants.PREF_MODE,
-				TclCheckerConstants.MODE_DEFAULT);
 		store.setDefault(TclCheckerConstants.PREF_CONFIGURATION,
 				Util.EMPTY_STRING);
-
-		List<String> problems = TclCheckerProblemDescription
-				.getProblemIdentifiers();
-		for (String problemId : problems) {
-			store.setDefault(problemId,
-					TclCheckerConstants.PROCESS_TYPE_DEFAULT);
-		}
-		final String[] checkedByDefaultProblems = { "warnUndefinedUpvar", //$NON-NLS-1$
-				"warnUndefinedVar", "warnUndefFunc", "warnUndefProc" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		for (String problemId : checkedByDefaultProblems) {
-			store.setDefault(problemId, TclCheckerConstants.PROCESS_TYPE_CHECK);
-		}
 	}
 }
