@@ -131,7 +131,7 @@ public class TclCheckerConfigUtils {
 		return resource;
 	}
 
-	private static final String ENCODING = "UTF-8"; //$NON-NLS-1$
+	public static final String ENCODING = "UTF-8"; //$NON-NLS-1$
 
 	public static String saveConfiguration(Resource resource)
 			throws IOException {

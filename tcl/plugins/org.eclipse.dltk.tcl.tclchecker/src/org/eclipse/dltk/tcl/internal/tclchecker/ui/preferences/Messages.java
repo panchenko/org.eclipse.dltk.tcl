@@ -57,6 +57,8 @@ public class Messages extends NLS {
 	public static String TclChecker_button_Edit;
 	public static String TclChecker_button_Copy;
 	public static String TclChecker_button_Remove;
+	public static String TclChecker_button_Import;
+	public static String TclChecker_button_Export;
 
 	public static String TclChecker_column_ConfigurationName;
 	public static String TclChecker_column_ConfigurationType;
@@ -81,6 +83,12 @@ public class Messages extends NLS {
 	public static String TclChecker_edit_Environment_Title;
 
 	public static String TclChecker_error;
+
+	public static String TclChecker_export_Title;
+	public static String TclChecker_export_ErrorTitle;
+
+	public static String TclChecker_import_Title;
+	public static String TclChecker_import_ErrorTitle;
 
 	public static String TclChecker_tab_Instances;
 	public static String TclChecker_tab_Configurations;

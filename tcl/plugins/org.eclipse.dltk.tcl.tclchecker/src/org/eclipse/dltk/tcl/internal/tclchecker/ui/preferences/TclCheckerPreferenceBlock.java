@@ -1,5 +1,6 @@
 package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -28,12 +31,16 @@ import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.util.SWTFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -49,6 +56,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
@@ -71,6 +79,8 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		private static final int IDX_EDIT = 1;
 		private static final int IDX_COPY = 2;
 		private static final int IDX_REMOVE = 3;
+		private static final int IDX_IMPORT = 5;
+		private static final int IDX_EXPORT = 6;
 
 		public void customButtonPressed(ListDialogField field, int index) {
 			if (index == IDX_ADD) {
@@ -79,6 +89,10 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				doEdit(field);
 			} else if (index == IDX_REMOVE) {
 				doRemove(field);
+			} else if (index == IDX_EXPORT) {
+				doExport(field);
+			} else if (index == IDX_IMPORT) {
+				doImport();
 			}
 		}
 
@@ -133,6 +147,77 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			}
 		}
 
+		private static final String FILTER_EXTENSIONS = "*.xml"; //$NON-NLS-1$
+
+		private void doExport(ListDialogField field) {
+			final List<?> selection = field.getSelectedElements();
+			if (selection.size() == 1) {
+				final FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
+				dialog.setText(Messages.TclChecker_export_Title);
+				dialog.setOverwrite(true);
+				dialog.setFilterExtensions(new String[] { FILTER_EXTENSIONS });
+				final String exportPath = dialog.open();
+				if (exportPath != null) {
+					final Resource resource = new XMIResourceImpl();
+					resource.getContents().add(
+							EcoreUtil.copy((EObject) selection.get(0)));
+					try {
+						final FileWriter writer = new FileWriter(exportPath);
+						try {
+							resource.save(
+									new URIConverter.WriteableOutputStream(
+											writer,
+											TclCheckerConfigUtils.ENCODING),
+									null);
+						} finally {
+							try {
+								writer.close();
+							} catch (IOException e) {
+								// ignore
+							}
+						}
+					} catch (IOException e) {
+						ErrorDialog.openError(getShell(),
+								Messages.TclChecker_export_ErrorTitle, e
+										.getMessage(), new Status(
+										IStatus.ERROR,
+										TclCheckerPlugin.PLUGIN_ID, e
+												.getMessage(), e));
+					}
+				}
+			}
+		}
+
+		private void doImport() {
+			final FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
+			dialog.setText(Messages.TclChecker_import_Title);
+			dialog.setFilterExtensions(new String[] { FILTER_EXTENSIONS });
+			final String importPath = dialog.open();
+			if (importPath != null) {
+				try {
+					final Resource importResource = new XMIResourceImpl(URI
+							.createFileURI(importPath));
+					importResource.load(null);
+					int importedCount = 0;
+					for (EObject object : importResource.getContents()) {
+						if (object instanceof ConfigInstance) {
+							resource.getContents().add(EcoreUtil.copy(object));
+							++importedCount;
+						}
+					}
+					if (importedCount != 0) {
+						initConfigurations();
+					}
+				} catch (Exception e) {
+					ErrorDialog.openError(getShell(),
+							Messages.TclChecker_import_ErrorTitle, e
+									.getMessage(), new Status(IStatus.ERROR,
+									TclCheckerPlugin.PLUGIN_ID, e.getMessage(),
+									e));
+				}
+			}
+		}
+
 		/**
 		 * @param selection
 		 * @return
@@ -168,6 +253,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			field.enableButton(IDX_EDIT, canEdit(selection));
 			field.enableButton(IDX_REMOVE, canRemove(selection));
 			field.enableButton(IDX_COPY, false); // TODO
+			field.enableButton(IDX_EXPORT, selection.size() == 1);
 		}
 
 	}
@@ -409,7 +495,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 	private static final String[] CONFIGURATION_BUTTONS = {
 			Messages.TclChecker_button_Add, Messages.TclChecker_button_Edit,
-			Messages.TclChecker_button_Copy, Messages.TclChecker_button_Remove };
+			Messages.TclChecker_button_Copy, Messages.TclChecker_button_Remove,
+			null, Messages.TclChecker_button_Import,
+			Messages.TclChecker_button_Export };
 
 	private static final String[] INSTANCE_BUTTONS = { Messages.TclChecker_button_Edit };
 
