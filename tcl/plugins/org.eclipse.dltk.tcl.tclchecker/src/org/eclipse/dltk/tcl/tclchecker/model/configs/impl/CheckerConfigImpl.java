@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerConfigImpl.java,v 1.1 2009/02/17 11:52:10 apanchenk Exp $
+ * $Id: CheckerConfigImpl.java,v 1.2 2009/02/17 11:57:11 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -10,19 +10,16 @@ import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EMap;
-
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -347,12 +344,17 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public boolean isReadOnly() {
-		// TODO: implement this method to return the 'Read Only' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		final Resource r = eResource();
+		if (r != null) {
+			final URI uri = r.getURI();
+			if (uri != null) {
+				return uri.isPlatformPlugin();
+			}
+		}
+		return false;
 	}
 
 	/**
