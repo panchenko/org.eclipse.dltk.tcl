@@ -20,6 +20,8 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMigration;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.IEnvironmentPredicate;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.SingleEnvironmentPredicate;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
@@ -682,6 +684,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	}
 
 	private void loadResource() {
+		if (!isProjectPreferencePage()) {
+			TclCheckerMigration.migratePreferences();
+		}
 		this.resource = TclCheckerConfigUtils
 				.loadConfiguration(getString(KEY_CONFIGURATION));
 		if (contributedResources == null) {

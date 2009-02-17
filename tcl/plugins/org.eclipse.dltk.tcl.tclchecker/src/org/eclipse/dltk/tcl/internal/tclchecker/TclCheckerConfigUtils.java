@@ -51,6 +51,7 @@ public class TclCheckerConfigUtils {
 	 * @return
 	 */
 	public static CheckerInstance getConfiguration(IScriptProject project) {
+		TclCheckerMigration.migratePreferences();
 		if (project != null && project.getProject() != null) {
 			return getConfiguration(project.getProject());
 		} else {
@@ -67,6 +68,7 @@ public class TclCheckerConfigUtils {
 	 * @return
 	 */
 	public static CheckerInstance getConfiguration(IProject project) {
+		TclCheckerMigration.migratePreferences();
 		final String environmentId;
 		if (project != null) {
 			environmentId = EnvironmentManager.getEnvironmentId(project);
@@ -97,6 +99,7 @@ public class TclCheckerConfigUtils {
 	}
 
 	public static CheckerInstance getConfiguration(IEnvironment environment) {
+		TclCheckerMigration.migratePreferences();
 		if (environment == null) {
 			return null;
 		}

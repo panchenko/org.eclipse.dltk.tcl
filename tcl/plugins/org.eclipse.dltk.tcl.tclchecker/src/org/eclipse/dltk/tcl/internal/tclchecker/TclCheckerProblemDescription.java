@@ -43,16 +43,20 @@ public class TclCheckerProblemDescription {
 
 	private static final Set<String> reportedIds = new HashSet<String>();
 
+	public static CheckerMessage getProblem(String problemId) {
+		return getProblem(problemId, true);
+	}
+
 	/**
 	 * @param problemId
 	 * @return
 	 */
-	public static CheckerMessage getProblem(String problemId) {
+	public static CheckerMessage getProblem(String problemId, boolean useDefault) {
 		loadIfNeeded();
 		CheckerMessage message = messageDefinitions.get(problemId);
 		if (message == null) {
 			message = altDefinitions.get(problemId);
-			if (message == null) {
+			if (message == null && useDefault) {
 				if (reportedIds.add(problemId)) {
 					TclCheckerPlugin.warn("Unknown messageId " + problemId); //$NON-NLS-1$
 				}
@@ -130,6 +134,11 @@ public class TclCheckerProblemDescription {
 	public static List<String> getProblemIdentifiers() {
 		loadIfNeeded();
 		return new ArrayList<String>(messageDefinitions.keySet());
+	}
+
+	public static List<String> getAltProblemIdentifiers() {
+		loadIfNeeded();
+		return new ArrayList<String>(altDefinitions.keySet());
 	}
 
 	/**

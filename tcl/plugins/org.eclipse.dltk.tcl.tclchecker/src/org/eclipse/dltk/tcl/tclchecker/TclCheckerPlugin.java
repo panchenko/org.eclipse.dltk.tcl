@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMigration;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.ProjectTclCheckerPreferences;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.SystemTclCheckerPreferences;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -80,10 +81,12 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 
 	public static ITclCheckerPreferences getProjectPreferences(IProject project) {
 		Assert.isNotNull(project);
+		TclCheckerMigration.migratePreferences();
 		return new ProjectTclCheckerPreferences(project);
 	}
 
 	public static ITclCheckerPreferences getPreferences() {
+		TclCheckerMigration.migratePreferences();
 		return new SystemTclCheckerPreferences();
 	}
 

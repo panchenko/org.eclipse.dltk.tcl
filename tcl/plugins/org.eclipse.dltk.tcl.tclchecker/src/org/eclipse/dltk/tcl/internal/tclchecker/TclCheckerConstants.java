@@ -20,6 +20,11 @@ public final class TclCheckerConstants {
 	 */
 	public static final String PREF_CONFIGURATION = "tclchecker.configuration"; //$NON-NLS-1$
 
+	/**
+	 * Version of the TclChecker preferences
+	 */
+	public static final String PREF_VERSION = "tclchecker.preferences.version"; //$NON-NLS-1$
+
 	public static final String TCL_DEVKIT_LOCAL_VARIABLE = "TCLDEVKIT_LOCAL"; //$NON-NLS-1$
 
 	public static final String CONFIGURATION_EXTENSION_POINT_NAME = TclCheckerPlugin.PLUGIN_ID

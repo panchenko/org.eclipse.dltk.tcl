@@ -14,11 +14,25 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.compiler.util.Util;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.tcl.internal.tclchecker.impl.SystemTclCheckerPreferences;
+import org.eclipse.dltk.tcl.tclchecker.ITclCheckerPreferences;
+import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
+import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -152,4 +166,150 @@ public class TclCheckerMigration {
 	@Deprecated
 	public static final int PROCESS_TYPE_CHECK = 2;
 
+	private static final int VERSION_EMF = 1;
+
+	public static void migratePreferences() {
+		final IPreferenceStore store = TclCheckerPlugin.getDefault()
+				.getPreferenceStore();
+		if (store.getInt(TclCheckerConstants.PREF_VERSION) == VERSION_EMF) {
+			return;
+		}
+		if (!DLTKCore.DEBUG) {
+			final String newConfiguration = store
+					.getString(TclCheckerConstants.PREF_CONFIGURATION);
+			if (newConfiguration != null && newConfiguration.length() != 0) {
+				return;
+			}
+		}
+		final Set<String> removeKeys = new HashSet<String>();
+		try {
+			final ITclCheckerPreferences preferences = new SystemTclCheckerPreferences() {
+				@Override
+				protected String readConfiguration() {
+					return Util.EMPTY_STRING;
+				}
+			};
+			migrate(store, preferences, removeKeys);
+			preferences.save();
+		} catch (Exception e) {
+			TclCheckerPlugin.error("TclChecker preferences upgrade problem", e); //$NON-NLS-1$
+		}
+		store.setValue(TclCheckerConstants.PREF_VERSION, VERSION_EMF);
+		for (String key : removeKeys) {
+			store.setToDefault(key);
+		}
+	}
+
+	private static void migrate(IPreferenceStore store,
+			ITclCheckerPreferences preferences, final Set<String> removeKeys) {
+		final String cliOptions = store.getString(CLI_OPTIONS);
+		removeKeys.add(CLI_OPTIONS);
+		final String version = store.getString(PREF_VERSION);
+		removeKeys.add(PREF_VERSION);
+		final Set<String> environmentIds = new HashSet<String>();
+		for (Map.Entry<IEnvironment, String> entry : getPaths(store).entrySet()) {
+			final String envId = entry.getKey().getId();
+			if (entry.getValue() != null && entry.getValue().length() != 0) {
+				environmentIds.add(envId);
+				final CheckerInstance instance = preferences
+						.getEnvironment(envId);
+				instance.setExecutablePath(entry.getValue());
+				instance.setAutomatic(entry.getKey().isLocal());
+				if (cliOptions != null && cliOptions.length() != 0) {
+					instance.setCommandLineOptions(cliOptions);
+				}
+				if (VERSION_5.equals(version)) {
+					instance.setVersion(CheckerVersion.VERSION5);
+				} else {
+					instance.setVersion(CheckerVersion.VERSION4);
+				}
+			}
+			removeKeys.add(PREF_PATH + ENV_PREFIX_SEPARATOR + envId);
+		}
+		for (Map.Entry<IEnvironment, List<String>> entry : getPcxPaths(store)
+				.entrySet()) {
+			final String envId = entry.getKey().getId();
+			if (environmentIds.contains(envId) && !entry.getValue().isEmpty()) {
+				preferences.getEnvironment(envId).getPcxFileFolders().addAll(
+						entry.getValue());
+			}
+			removeKeys.add(PREF_PCX_PATH + ENV_PREFIX_SEPARATOR + envId);
+		}
+		for (Map.Entry<IEnvironment, String> entry : getNoPCX(store).entrySet()) {
+			final String envId = entry.getKey().getId();
+			if (environmentIds.contains(envId)) {
+				preferences.getEnvironment(envId).setUsePcxFiles(
+						!Boolean.valueOf(entry.getValue()).booleanValue());
+			}
+			removeKeys.add(PREF_NO_PCX + ENV_PREFIX_SEPARATOR + envId);
+		}
+		final ConfigInstance config = preferences.newConfiguration();
+		config.setName("Workspace configuration"); //$NON-NLS-1$
+		switch (store.getInt(PREF_MODE)) {
+		case MODE_NONE:
+			config.setMode(CheckerMode.W0);
+			break;
+		case MODE_ERRORS:
+			config.setMode(CheckerMode.W1);
+			break;
+		case MODE_ERRORS_AND_USAGE_WARNINGS:
+			config.setMode(CheckerMode.W2);
+			break;
+		case MODE_ERRORS_AND_WARNINGS_EXCEPT_UPGRADE:
+			config.setMode(CheckerMode.W3);
+			break;
+		case MODE_ALL:
+			config.setMode(CheckerMode.W4);
+			break;
+		}
+		removeKeys.add(PREF_MODE);
+		config.setSummary(store.getBoolean(PREF_SUMMARY));
+		removeKeys.add(PREF_SUMMARY);
+		config.setUseTclVer(store.getBoolean(PREF_USE_TCL_VER));
+		removeKeys.add(PREF_USE_TCL_VER);
+
+		final Map<String, Integer> oldDefaults = new HashMap<String, Integer>();
+		oldDefaults.put("warnUndefinedUpvar", PROCESS_TYPE_CHECK); //$NON-NLS-1$
+		oldDefaults.put("warnUndefinedVar", PROCESS_TYPE_CHECK); //$NON-NLS-1$
+		oldDefaults.put("warnUndefFunc", PROCESS_TYPE_CHECK); //$NON-NLS-1$
+		oldDefaults.put("warnUndefProc", PROCESS_TYPE_CHECK); //$NON-NLS-1$
+		for (String messageId : TclCheckerProblemDescription
+				.getProblemIdentifiers()) {
+			int action = store.getInt(messageId);
+			if (action == PROCESS_TYPE_DEFAULT && !store.isDefault(messageId)
+					&& oldDefaults.containsKey(messageId)) {
+				action = oldDefaults.get(messageId);
+			}
+			if (action == PROCESS_TYPE_CHECK) {
+				config.getMessageStates().put(messageId, MessageState.CHECK);
+			} else if (action == PROCESS_TYPE_SUPPRESS) {
+				config.getMessageStates().put(messageId, MessageState.SUPPRESS);
+			}
+			removeKeys.add(messageId);
+		}
+		for (String messageId : TclCheckerProblemDescription
+				.getAltProblemIdentifiers()) {
+			int action = store.getInt(messageId);
+			if (action == PROCESS_TYPE_DEFAULT && !store.isDefault(messageId)
+					&& oldDefaults.containsKey(messageId)) {
+				action = oldDefaults.get(messageId);
+			}
+			final CheckerMessage message = TclCheckerProblemDescription
+					.getProblem(messageId, false);
+			Assert.isNotNull(message);
+			if (action == PROCESS_TYPE_CHECK) {
+				config.getMessageStates().put(message.getMessageId(),
+						MessageState.CHECK);
+			} else if (action == PROCESS_TYPE_SUPPRESS) {
+				config.getMessageStates().put(message.getMessageId(),
+						MessageState.SUPPRESS);
+			}
+			removeKeys.add(messageId);
+		}
+		config.setIndividualMessageStates(!config.getMessageStates().isEmpty());
+		for (String envId : environmentIds) {
+			final CheckerInstance instance = preferences.getEnvironment(envId);
+			instance.setConfiguration(config);
+		}
+	}
 }
