@@ -141,6 +141,8 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 				problem.addAttribute(TclCheckerMarker.MESSAGE_ID, messageId);
 				problem.addAttribute(TclCheckerMarker.TIMESTAMP, String
 						.valueOf(module.getResource().getModificationStamp()));
+				problem.addAttribute(TclCheckerMarker.AUTO_CORRECTABLE,
+						attributes.get(ATTR_AUTO_CORRECTABLE).getText());
 			}
 		}
 		final Coord errorStart = parseCoord(attributes.get(ATTR_ERROR_START));
@@ -208,5 +210,6 @@ public class Checker5OutputProcessor extends AbstractOutputProcessor {
 	private static final String ATTR_ERROR_END = "errorEnd,portable"; //$NON-NLS-1$
 
 	private static final String ATTR_SUGGESTED_CORRECTIONS = "suggestedCorrections"; //$NON-NLS-1$
+	private static final String ATTR_AUTO_CORRECTABLE = "autoCorrectable"; //$NON-NLS-1$
 
 }

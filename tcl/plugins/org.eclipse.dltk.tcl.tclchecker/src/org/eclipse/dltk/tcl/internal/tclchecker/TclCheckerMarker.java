@@ -33,4 +33,7 @@ public class TclCheckerMarker {
 	public static final String TIMESTAMP = TclCheckerPlugin.PLUGIN_ID
 			+ ".timestamp"; //$NON-NLS-1$
 
+	public static final String AUTO_CORRECTABLE = TclCheckerPlugin.PLUGIN_ID
+			+ ".autoCorrectable"; //$NON-NLS-1$
+
 }

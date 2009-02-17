@@ -64,8 +64,9 @@ public class TclCheckerMarkerResolution implements IMarkerResolution,
 							}
 						});
 				module.getBuffer().setContents(document.get());
-			} finally {
 				module.commitWorkingCopy(true, new NullProgressMonitor());
+			} finally {
+				module.discardWorkingCopy();
 			}
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {

@@ -19,6 +19,7 @@
       <attribute name="org.eclipse.dltk.tcl.tclchecker.commandEnd" />
       <attribute name="org.eclipse.dltk.tcl.tclchecker.messageId" />
       <attribute name="org.eclipse.dltk.tcl.tclchecker.timestamp" />
+      <attribute name="org.eclipse.dltk.tcl.tclchecker.autoCorrectable" />
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -76,6 +77,21 @@
 			</enabledWhen>
 		</page>
 	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution adaptable="false"
+			id="org.eclipse.dltk.tcl.tclchecker.autoCorrect"
+			objectClass="org.eclipse.dltk.core.IModelElement">
+			<filter name="org.eclipse.dltk.ui.nature" value="org.eclipse.dltk.tcl.core.nature"/>
+			<action
+				class="org.eclipse.dltk.tcl.internal.tclchecker.ui.AutoCorrectTclCheckerProblemsActionDelegate"
+				id="org.eclipse.dltk.tcl.tclchecker.autoCorrect"
+				label="Auto Correct TclChecker problems"
+				menubarPath="org.eclipse.dltk.ui.refactoring.menu"
+				style="push">
+				<!-- icon="icons/etool16/newpack_wiz.gif" -->
+			</action>
+		</objectContribution>
+	</extension>
 <!--
 	<extension point="org.eclipse.ui.propertyPages">
 		<page class="org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.TclCheckerProblemPropertyPage"
@@ -87,6 +103,7 @@
 					property="org.eclipse.dltk.markerType"
 					value="org.eclipse.dltk.tcl.tclchecker.tclcheckerproblem">
 				</test>
+				<!- - TODO test extended attributes - ->
 				</adapt>
 			</enabledWhen>
 		</page>

@@ -83,7 +83,11 @@ public class TclCheckerProblem {
 		if (attributes == null) {
 			attributes = new HashMap<String, Object>();
 		}
-		attributes.put(name, value);
+		if (value != null) {
+			attributes.put(name, value);
+		} else {
+			attributes.remove(name);
+		}
 	}
 
 	/**

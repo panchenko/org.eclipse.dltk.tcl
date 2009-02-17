@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker.qfix;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -92,25 +96,55 @@ public class TclCheckerFixUtils {
 
 	}
 
-	public static IMarker verify(IMarker marker, ISourceModule module) {
-		final IResource resource = marker.getResource();
-		if (resource.getType() != IResource.FILE) {
-			return null;
-		}
-		final String savedStamp = marker.getAttribute(
-				TclCheckerMarker.TIMESTAMP, null);
-		if (savedStamp != null
-				&& savedStamp.equals(String.valueOf(resource
-						.getModificationStamp()))) {
-			return marker;
-		} else {
-			final IMarkerFinder finder = createMarkerFinder(marker);
-			if (revalidate(resource, module)) {
-				return finder.find(resource);
-			} else {
-				return null;
+	private static boolean isValidTimestamp(IResource resource,
+			List<IMarker> markers) {
+		final String resourceTimestamp = String.valueOf(resource
+				.getModificationStamp());
+		for (IMarker marker : markers) {
+			final String savedStamp = marker.getAttribute(
+					TclCheckerMarker.TIMESTAMP, null);
+			if (savedStamp == null || !savedStamp.equals(resourceTimestamp)) {
+				return false;
 			}
 		}
+		return true;
+	}
+
+	public static IMarker verify(IMarker marker, ISourceModule module) {
+		final List<IMarker> result = verify(Collections.singletonList(marker),
+				module);
+		return !result.isEmpty() ? result.get(0) : null;
+	}
+
+	public static List<IMarker> verify(List<IMarker> markers,
+			ISourceModule module) {
+		final IResource resource = markers.get(0).getResource();
+		if (resource.getType() != IResource.FILE) {
+			return Collections.emptyList();
+		}
+		for (IMarker marker : markers) {
+			if (!resource.equals(marker.getResource())) {
+				return Collections.emptyList();
+			}
+		}
+		if (isValidTimestamp(resource, markers)) {
+			return markers;
+		}
+		final List<IMarkerFinder> finders = new ArrayList<IMarkerFinder>();
+		for (IMarker marker : markers) {
+			finders.add(createMarkerFinder(marker));
+		}
+		if (revalidate(resource, module)) {
+			final List<IMarker> result = new ArrayList<IMarker>();
+			for (IMarkerFinder finder : finders) {
+				final IMarker marker = finder.find(resource);
+				if (marker != null) {
+					result.add(marker);
+				}
+			}
+			return result;
+		}
+		return Collections.emptyList();
 	}
 
 	public static boolean revalidate(final IResource resource,
