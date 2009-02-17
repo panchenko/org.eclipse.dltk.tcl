@@ -13,10 +13,15 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
@@ -24,6 +29,7 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -135,6 +141,41 @@ public class TclCheckerConfigUtils {
 		resource.save(new URIConverter.WriteableOutputStream(writer, ENCODING),
 				saveOptions);
 		return writer.toString();
+	}
+
+	public static List<Resource> loadContributedConfigurations(
+			ResourceSet resourceSet) {
+		final IConfigurationElement[] elements = Platform
+				.getExtensionRegistry().getConfigurationElementsFor(
+						TclCheckerConstants.CONFIGURATION_EXTENSION_POINT_NAME);
+		if (elements.length != 0) {
+			final List<Resource> result = new ArrayList<Resource>();
+			for (IConfigurationElement element : elements) {
+				final String pathName = "/" + element.getContributor().getName() //$NON-NLS-1$
+						+ "/" + element.getAttribute("resource"); //$NON-NLS-1$ //$NON-NLS-2$
+				final URI uri = URI.createPlatformPluginURI(pathName, true);
+				final Resource r = resourceSet.createResource(uri);
+				try {
+					r.load(null);
+					result.add(r);
+				} catch (IOException e) {
+					// TODO log error
+					resourceSet.getResources().remove(r);
+				}
+			}
+			return result;
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	public static void collectConfigurations(List<ConfigInstance> instances,
+			Resource r) {
+		for (EObject object : r.getContents()) {
+			if (object instanceof ConfigInstance) {
+				instances.add((ConfigInstance) object);
+			}
+		}
 	}
 
 }

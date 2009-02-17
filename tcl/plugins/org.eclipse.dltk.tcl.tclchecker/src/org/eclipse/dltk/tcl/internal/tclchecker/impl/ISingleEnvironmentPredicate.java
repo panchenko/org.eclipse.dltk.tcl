@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2009 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,22 +9,10 @@
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  *******************************************************************************/
-package org.eclipse.dltk.tcl.tclchecker;
+package org.eclipse.dltk.tcl.internal.tclchecker.impl;
 
-import java.util.List;
+public interface ISingleEnvironmentPredicate extends IEnvironmentPredicate {
 
-public interface ITclCheckerEnvironment {
-
-	String getExecutablePath();
-
-	void setExecutablePath(String path);
-
-	List<String> getPCXPaths();
-
-	void setPCXPaths(List<String> paths);
-
-	boolean isUsePCXPaths();
-
-	void setUsePCXPaths(boolean value);
+	String getEnvironmentId();
 
 }

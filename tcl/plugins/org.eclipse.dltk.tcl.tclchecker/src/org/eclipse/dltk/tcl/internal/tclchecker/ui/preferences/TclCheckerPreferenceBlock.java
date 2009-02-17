@@ -2,15 +2,12 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -20,6 +17,8 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
+import org.eclipse.dltk.tcl.internal.tclchecker.impl.IEnvironmentPredicate;
+import org.eclipse.dltk.tcl.internal.tclchecker.impl.SingleEnvironmentPredicate;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
@@ -29,13 +28,11 @@ import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.util.SWTFactory;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ColumnLayoutData;
@@ -600,29 +597,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		this.resource = TclCheckerConfigUtils
 				.loadConfiguration(getString(KEY_CONFIGURATION));
 		if (contributedResources == null) {
-			final IConfigurationElement[] elements = Platform
-					.getExtensionRegistry()
-					.getConfigurationElementsFor(
-							TclCheckerConstants.CONFIGURATION_EXTENSION_POINT_NAME);
-			if (elements.length != 0) {
-				final ResourceSet resourceSet = this.resource.getResourceSet();
-				contributedResources = new ArrayList<Resource>();
-				for (IConfigurationElement element : elements) {
-					final String pathName = "/" + element.getContributor().getName() //$NON-NLS-1$
-							+ "/" + element.getAttribute("resource"); //$NON-NLS-1$ //$NON-NLS-2$
-					final URI uri = URI.createPlatformPluginURI(pathName, true);
-					final Resource r = resourceSet.createResource(uri);
-					try {
-						r.load(null);
-						contributedResources.add(r);
-					} catch (IOException e) {
-						// TODO log error
-						resourceSet.getResources().remove(r);
-					}
-				}
-			} else {
-				contributedResources = Collections.emptyList();
-			}
+			contributedResources = TclCheckerConfigUtils
+					.loadContributedConfigurations(this.resource
+							.getResourceSet());
 		}
 	}
 
@@ -650,42 +627,16 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 	private List<ConfigInstance> collectConfugurations() {
 		final List<ConfigInstance> instances = new ArrayList<ConfigInstance>();
-		collectConfigurations(instances, resource);
+		TclCheckerConfigUtils.collectConfigurations(instances, resource);
 		for (Resource r : contributedResources) {
-			collectConfigurations(instances, r);
+			TclCheckerConfigUtils.collectConfigurations(instances, r);
 		}
 		return instances;
-	}
-
-	private void collectConfigurations(List<ConfigInstance> instances,
-			Resource r) {
-		for (EObject object : r.getContents()) {
-			if (object instanceof ConfigInstance) {
-				instances.add((ConfigInstance) object);
-			}
-		}
-	}
-
-	private static interface IEnvironmentPredicate {
-		boolean evaluate(String environmentId);
 	}
 
 	private static class AllEnvironments implements IEnvironmentPredicate {
 		public boolean evaluate(String environmentId) {
 			return true;
-		}
-	}
-
-	private static class SingleEnvironment implements IEnvironmentPredicate {
-
-		public SingleEnvironment(String environmentId) {
-			this.environmentId = environmentId;
-		}
-
-		private final String environmentId;
-
-		public boolean evaluate(String environmentId) {
-			return this.environmentId.equals(environmentId);
 		}
 	}
 
@@ -696,7 +647,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				final String environmentId = EnvironmentManager
 						.getEnvironmentId(project);
 				if (environmentId != null) {
-					return new SingleEnvironment(environmentId);
+					return new SingleEnvironmentPredicate(environmentId);
 				}
 			}
 		}

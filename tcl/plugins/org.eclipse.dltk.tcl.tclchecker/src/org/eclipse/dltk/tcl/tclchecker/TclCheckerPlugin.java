@@ -9,11 +9,12 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.tclchecker;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.tcl.internal.tclchecker.impl.TclCheckerEnvironment;
+import org.eclipse.dltk.tcl.internal.tclchecker.impl.ProjectTclCheckerPreferences;
+import org.eclipse.dltk.tcl.internal.tclchecker.impl.SystemTclCheckerPreferences;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -77,10 +78,13 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 				new Status(severity, PLUGIN_ID, message, throwable));
 	}
 
-	public static ITclCheckerEnvironment getEnvironmentPreferences(
-			IEnvironment environment) {
-		Assert.isNotNull(environment);
-		return new TclCheckerEnvironment(environment);
+	public static ITclCheckerPreferences getProjectPreferences(IProject project) {
+		Assert.isNotNull(project);
+		return new ProjectTclCheckerPreferences(project);
+	}
+
+	public static ITclCheckerPreferences getPreferences() {
+		return new SystemTclCheckerPreferences();
 	}
 
 	/**
