@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackage.java,v 1.4 2009/02/16 09:32:33 apanchenk Exp $
+ * $Id: ConfigsPackage.java,v 1.5 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -61,14 +61,14 @@ public interface ConfigsPackage extends EPackage {
 	ConfigsPackage eINSTANCE = org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl <em>Config Instance</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl <em>Checker Config</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerConfig()
 	 * @generated
 	 */
-	int CONFIG_INSTANCE = 0;
+	int CHECKER_CONFIG = 0;
 
 	/**
 	 * The feature id for the '<em><b>Summary</b></em>' attribute.
@@ -77,7 +77,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__SUMMARY = 0;
+	int CHECKER_CONFIG__SUMMARY = 0;
 
 	/**
 	 * The feature id for the '<em><b>Command Line Options</b></em>' attribute.
@@ -86,7 +86,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__COMMAND_LINE_OPTIONS = 1;
+	int CHECKER_CONFIG__COMMAND_LINE_OPTIONS = 1;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -95,7 +95,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__NAME = 2;
+	int CHECKER_CONFIG__NAME = 2;
 
 	/**
 	 * The feature id for the '<em><b>Mode</b></em>' attribute.
@@ -104,7 +104,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__MODE = 3;
+	int CHECKER_CONFIG__MODE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Message States</b></em>' map.
@@ -113,7 +113,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__MESSAGE_STATES = 4;
+	int CHECKER_CONFIG__MESSAGE_STATES = 4;
 
 	/**
 	 * The feature id for the '<em><b>Use Tcl Ver</b></em>' attribute.
@@ -122,7 +122,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__USE_TCL_VER = 5;
+	int CHECKER_CONFIG__USE_TCL_VER = 5;
 
 	/**
 	 * The feature id for the '<em><b>Individual Message States</b></em>' attribute.
@@ -131,7 +131,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES = 6;
+	int CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES = 6;
 
 	/**
 	 * The feature id for the '<em><b>Read Only</b></em>' attribute.
@@ -140,16 +140,16 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE__READ_ONLY = 7;
+	int CHECKER_CONFIG__READ_ONLY = 7;
 
 	/**
-	 * The number of structural features of the '<em>Config Instance</em>' class.
+	 * The number of structural features of the '<em>Checker Config</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_INSTANCE_FEATURE_COUNT = 8;
+	int CHECKER_CONFIG_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.
@@ -311,102 +311,102 @@ public interface ConfigsPackage extends EPackage {
 
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance <em>Config Instance</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig <em>Checker Config</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Config Instance</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance
+	 * @return the meta object for class '<em>Checker Config</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig
 	 * @generated
 	 */
-	EClass getConfigInstance();
+	EClass getCheckerConfig();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isSummary <em>Summary</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isSummary <em>Summary</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Summary</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isSummary()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isSummary()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EAttribute getConfigInstance_Summary();
+	EAttribute getCheckerConfig_Summary();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getCommandLineOptions <em>Command Line Options</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions <em>Command Line Options</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Command Line Options</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getCommandLineOptions()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EAttribute getConfigInstance_CommandLineOptions();
+	EAttribute getCheckerConfig_CommandLineOptions();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getName()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EAttribute getConfigInstance_Name();
+	EAttribute getCheckerConfig_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMode <em>Mode</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMode <em>Mode</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Mode</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMode()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMode()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EAttribute getConfigInstance_Mode();
+	EAttribute getCheckerConfig_Mode();
 
 	/**
-	 * Returns the meta object for the map '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMessageStates <em>Message States</em>}'.
+	 * Returns the meta object for the map '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMessageStates <em>Message States</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the map '<em>Message States</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMessageStates()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMessageStates()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EReference getConfigInstance_MessageStates();
+	EReference getCheckerConfig_MessageStates();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer <em>Use Tcl Ver</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isUseTclVer <em>Use Tcl Ver</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Use Tcl Ver</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isUseTclVer()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EAttribute getConfigInstance_UseTclVer();
+	EAttribute getCheckerConfig_UseTclVer();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates <em>Individual Message States</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isIndividualMessageStates <em>Individual Message States</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Individual Message States</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isIndividualMessageStates()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EAttribute getConfigInstance_IndividualMessageStates();
+	EAttribute getCheckerConfig_IndividualMessageStates();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isReadOnly <em>Read Only</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isReadOnly <em>Read Only</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Read Only</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isReadOnly()
-	 * @see #getConfigInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isReadOnly()
+	 * @see #getCheckerConfig()
 	 * @generated
 	 */
-	EAttribute getConfigInstance_ReadOnly();
+	EAttribute getCheckerConfig_ReadOnly();
 
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Message State Map</em>}'.
@@ -593,14 +593,14 @@ public interface ConfigsPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl <em>Config Instance</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl <em>Checker Config</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl
-		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getConfigInstance()
+		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl
+		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerConfig()
 		 * @generated
 		 */
-		EClass CONFIG_INSTANCE = eINSTANCE.getConfigInstance();
+		EClass CHECKER_CONFIG = eINSTANCE.getCheckerConfig();
 
 		/**
 		 * The meta object literal for the '<em><b>Summary</b></em>' attribute feature.
@@ -608,7 +608,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONFIG_INSTANCE__SUMMARY = eINSTANCE.getConfigInstance_Summary();
+		EAttribute CHECKER_CONFIG__SUMMARY = eINSTANCE.getCheckerConfig_Summary();
 
 		/**
 		 * The meta object literal for the '<em><b>Command Line Options</b></em>' attribute feature.
@@ -616,7 +616,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONFIG_INSTANCE__COMMAND_LINE_OPTIONS = eINSTANCE.getConfigInstance_CommandLineOptions();
+		EAttribute CHECKER_CONFIG__COMMAND_LINE_OPTIONS = eINSTANCE.getCheckerConfig_CommandLineOptions();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -624,7 +624,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONFIG_INSTANCE__NAME = eINSTANCE.getConfigInstance_Name();
+		EAttribute CHECKER_CONFIG__NAME = eINSTANCE.getCheckerConfig_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Mode</b></em>' attribute feature.
@@ -632,7 +632,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONFIG_INSTANCE__MODE = eINSTANCE.getConfigInstance_Mode();
+		EAttribute CHECKER_CONFIG__MODE = eINSTANCE.getCheckerConfig_Mode();
 
 		/**
 		 * The meta object literal for the '<em><b>Message States</b></em>' map feature.
@@ -640,7 +640,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONFIG_INSTANCE__MESSAGE_STATES = eINSTANCE.getConfigInstance_MessageStates();
+		EReference CHECKER_CONFIG__MESSAGE_STATES = eINSTANCE.getCheckerConfig_MessageStates();
 
 		/**
 		 * The meta object literal for the '<em><b>Use Tcl Ver</b></em>' attribute feature.
@@ -648,7 +648,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONFIG_INSTANCE__USE_TCL_VER = eINSTANCE.getConfigInstance_UseTclVer();
+		EAttribute CHECKER_CONFIG__USE_TCL_VER = eINSTANCE.getCheckerConfig_UseTclVer();
 
 		/**
 		 * The meta object literal for the '<em><b>Individual Message States</b></em>' attribute feature.
@@ -656,7 +656,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES = eINSTANCE.getConfigInstance_IndividualMessageStates();
+		EAttribute CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES = eINSTANCE.getCheckerConfig_IndividualMessageStates();
 
 		/**
 		 * The meta object literal for the '<em><b>Read Only</b></em>' attribute feature.
@@ -664,7 +664,7 @@ public interface ConfigsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONFIG_INSTANCE__READ_ONLY = eINSTANCE.getConfigInstance_ReadOnly();
+		EAttribute CHECKER_CONFIG__READ_ONLY = eINSTANCE.getCheckerConfig_ReadOnly();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.

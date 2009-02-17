@@ -2,30 +2,26 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackageImpl.java,v 1.4 2009/02/16 09:32:32 apanchenk Exp $
+ * $Id: ConfigsPackageImpl.java,v 1.5 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
 import java.util.Map;
 
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsFactory;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
-
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage;
-
 import org.eclipse.dltk.tcl.tclchecker.model.messages.impl.MessagesPackageImpl;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -40,7 +36,7 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass configInstanceEClass = null;
+	private EClass checkerConfigEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -155,8 +151,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getConfigInstance() {
-		return configInstanceEClass;
+	public EClass getCheckerConfig() {
+		return checkerConfigEClass;
 	}
 
 	/**
@@ -164,8 +160,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConfigInstance_Summary() {
-		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(0);
+	public EAttribute getCheckerConfig_Summary() {
+		return (EAttribute)checkerConfigEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -173,8 +169,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConfigInstance_CommandLineOptions() {
-		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(1);
+	public EAttribute getCheckerConfig_CommandLineOptions() {
+		return (EAttribute)checkerConfigEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -182,8 +178,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConfigInstance_Name() {
-		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(2);
+	public EAttribute getCheckerConfig_Name() {
+		return (EAttribute)checkerConfigEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -191,8 +187,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConfigInstance_Mode() {
-		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(3);
+	public EAttribute getCheckerConfig_Mode() {
+		return (EAttribute)checkerConfigEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -200,8 +196,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConfigInstance_MessageStates() {
-		return (EReference)configInstanceEClass.getEStructuralFeatures().get(4);
+	public EReference getCheckerConfig_MessageStates() {
+		return (EReference)checkerConfigEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -209,8 +205,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConfigInstance_UseTclVer() {
-		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(5);
+	public EAttribute getCheckerConfig_UseTclVer() {
+		return (EAttribute)checkerConfigEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -218,8 +214,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConfigInstance_IndividualMessageStates() {
-		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(6);
+	public EAttribute getCheckerConfig_IndividualMessageStates() {
+		return (EAttribute)checkerConfigEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -227,8 +223,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getConfigInstance_ReadOnly() {
-		return (EAttribute)configInstanceEClass.getEStructuralFeatures().get(7);
+	public EAttribute getCheckerConfig_ReadOnly() {
+		return (EAttribute)checkerConfigEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -394,15 +390,15 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		isCreated = true;
 
 		// Create classes and their features
-		configInstanceEClass = createEClass(CONFIG_INSTANCE);
-		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__SUMMARY);
-		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__COMMAND_LINE_OPTIONS);
-		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__NAME);
-		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__MODE);
-		createEReference(configInstanceEClass, CONFIG_INSTANCE__MESSAGE_STATES);
-		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__USE_TCL_VER);
-		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES);
-		createEAttribute(configInstanceEClass, CONFIG_INSTANCE__READ_ONLY);
+		checkerConfigEClass = createEClass(CHECKER_CONFIG);
+		createEAttribute(checkerConfigEClass, CHECKER_CONFIG__SUMMARY);
+		createEAttribute(checkerConfigEClass, CHECKER_CONFIG__COMMAND_LINE_OPTIONS);
+		createEAttribute(checkerConfigEClass, CHECKER_CONFIG__NAME);
+		createEAttribute(checkerConfigEClass, CHECKER_CONFIG__MODE);
+		createEReference(checkerConfigEClass, CHECKER_CONFIG__MESSAGE_STATES);
+		createEAttribute(checkerConfigEClass, CHECKER_CONFIG__USE_TCL_VER);
+		createEAttribute(checkerConfigEClass, CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES);
+		createEAttribute(checkerConfigEClass, CHECKER_CONFIG__READ_ONLY);
 
 		messageStateMapEClass = createEClass(MESSAGE_STATE_MAP);
 		createEAttribute(messageStateMapEClass, MESSAGE_STATE_MAP__KEY);
@@ -454,15 +450,15 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		// Add supertypes to classes
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(configInstanceEClass, ConfigInstance.class, "ConfigInstance", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getConfigInstance_Summary(), ecorePackage.getEBoolean(), "summary", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getConfigInstance_CommandLineOptions(), ecorePackage.getEString(), "commandLineOptions", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getConfigInstance_Name(), ecorePackage.getEString(), "name", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getConfigInstance_Mode(), this.getCheckerMode(), "mode", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getConfigInstance_MessageStates(), this.getMessageStateMap(), null, "messageStates", null, 0, -1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getConfigInstance_UseTclVer(), ecorePackage.getEBoolean(), "useTclVer", "true", 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
-		initEAttribute(getConfigInstance_IndividualMessageStates(), ecorePackage.getEBoolean(), "individualMessageStates", null, 0, 1, ConfigInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getConfigInstance_ReadOnly(), ecorePackage.getEBoolean(), "readOnly", null, 0, 1, ConfigInstance.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(checkerConfigEClass, CheckerConfig.class, "CheckerConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getCheckerConfig_Summary(), ecorePackage.getEBoolean(), "summary", null, 0, 1, CheckerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCheckerConfig_CommandLineOptions(), ecorePackage.getEString(), "commandLineOptions", null, 0, 1, CheckerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCheckerConfig_Name(), ecorePackage.getEString(), "name", null, 0, 1, CheckerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCheckerConfig_Mode(), this.getCheckerMode(), "mode", null, 0, 1, CheckerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCheckerConfig_MessageStates(), this.getMessageStateMap(), null, "messageStates", null, 0, -1, CheckerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCheckerConfig_UseTclVer(), ecorePackage.getEBoolean(), "useTclVer", "true", 0, 1, CheckerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(getCheckerConfig_IndividualMessageStates(), ecorePackage.getEBoolean(), "individualMessageStates", null, 0, 1, CheckerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getCheckerConfig_ReadOnly(), ecorePackage.getEBoolean(), "readOnly", null, 0, 1, CheckerConfig.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(messageStateMapEClass, Map.Entry.class, "MessageStateMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getMessageStateMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
@@ -475,7 +471,7 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		initEAttribute(getCheckerInstance_Version(), this.getCheckerVersion(), "version", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_UsePcxFiles(), ecorePackage.getEBoolean(), "usePcxFiles", "true", 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 		initEAttribute(getCheckerInstance_CommandLineOptions(), ecorePackage.getEString(), "commandLineOptions", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getCheckerInstance_Configuration(), this.getConfigInstance(), null, "configuration", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCheckerInstance_Configuration(), this.getCheckerConfig(), null, "configuration", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_Automatic(), ecorePackage.getEBoolean(), "automatic", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals

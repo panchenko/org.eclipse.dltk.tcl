@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsAdapterFactory.java,v 1.1 2009/02/05 18:41:37 apanchenk Exp $
+ * $Id: ConfigsAdapterFactory.java,v 1.2 2009/02/17 11:52:11 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.util;
 
@@ -74,8 +74,8 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 	protected ConfigsSwitch<Adapter> modelSwitch =
 		new ConfigsSwitch<Adapter>() {
 			@Override
-			public Adapter caseConfigInstance(ConfigInstance object) {
-				return createConfigInstanceAdapter();
+			public Adapter caseCheckerConfig(CheckerConfig object) {
+				return createCheckerConfigAdapter();
 			}
 			@Override
 			public Adapter caseMessageStateMap(Map.Entry<String, MessageState> object) {
@@ -106,16 +106,16 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance <em>Config Instance</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig <em>Checker Config</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig
 	 * @generated
 	 */
-	public Adapter createConfigInstanceAdapter() {
+	public Adapter createCheckerConfigAdapter() {
 		return null;
 	}
 

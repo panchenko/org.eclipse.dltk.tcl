@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.tclchecker.ITclCheckerPreferences;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -54,8 +54,8 @@ public abstract class AbstractTclCheckerPreferences implements
 	/*
 	 * @see ITclCheckerPreferences#getConfigurations()
 	 */
-	public List<ConfigInstance> getConfigurations() {
-		final List<ConfigInstance> instances = new ArrayList<ConfigInstance>();
+	public List<CheckerConfig> getConfigurations() {
+		final List<CheckerConfig> instances = new ArrayList<CheckerConfig>();
 		TclCheckerConfigUtils.collectConfigurations(instances, resource);
 		for (Resource r : contributedResources) {
 			TclCheckerConfigUtils.collectConfigurations(instances, r);
@@ -86,9 +86,9 @@ public abstract class AbstractTclCheckerPreferences implements
 	/*
 	 * @see ITclCheckerPreferences#newConfiguration()
 	 */
-	public ConfigInstance newConfiguration() {
-		final ConfigInstance instance = ConfigsFactory.eINSTANCE
-				.createConfigInstance();
+	public CheckerConfig newConfiguration() {
+		final CheckerConfig instance = ConfigsFactory.eINSTANCE
+				.createCheckerConfig();
 		resource.getContents().add(instance);
 		return instance;
 	}
@@ -96,7 +96,7 @@ public abstract class AbstractTclCheckerPreferences implements
 	/*
 	 * @see ITclCheckerPreferences#removeConfiguration(ConfigInstance)
 	 */
-	public boolean removeConfiguration(ConfigInstance config) {
+	public boolean removeConfiguration(CheckerConfig config) {
 		return resource.getContents().remove(config);
 
 	}

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsSwitch.java,v 1.1 2009/02/05 18:41:37 apanchenk Exp $
+ * $Id: ConfigsSwitch.java,v 1.2 2009/02/17 11:52:11 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.util;
 
@@ -88,9 +88,9 @@ public class ConfigsSwitch<T> {
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case ConfigsPackage.CONFIG_INSTANCE: {
-				ConfigInstance configInstance = (ConfigInstance)theEObject;
-				T result = caseConfigInstance(configInstance);
+			case ConfigsPackage.CHECKER_CONFIG: {
+				CheckerConfig checkerConfig = (CheckerConfig)theEObject;
+				T result = caseCheckerConfig(checkerConfig);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -111,17 +111,17 @@ public class ConfigsSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Config Instance</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Checker Config</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Config Instance</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Checker Config</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseConfigInstance(ConfigInstance object) {
+	public T caseCheckerConfig(CheckerConfig object) {
 		return null;
 	}
 

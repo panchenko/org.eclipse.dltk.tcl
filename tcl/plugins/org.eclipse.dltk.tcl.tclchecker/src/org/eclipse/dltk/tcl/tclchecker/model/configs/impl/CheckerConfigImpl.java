@@ -2,12 +2,12 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigInstanceImpl.java,v 1.3 2009/02/16 09:32:32 apanchenk Exp $
+ * $Id: CheckerConfigImpl.java,v 1.1 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
 
@@ -15,7 +15,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.common.util.URI;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -24,31 +23,30 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Config Instance</b></em>'.
+ * An implementation of the model object '<em><b>Checker Config</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isSummary <em>Summary</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getCommandLineOptions <em>Command Line Options</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getMode <em>Mode</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#getMessageStates <em>Message States</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isUseTclVer <em>Use Tcl Ver</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isIndividualMessageStates <em>Individual Message States</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigInstanceImpl#isReadOnly <em>Read Only</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isSummary <em>Summary</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getCommandLineOptions <em>Command Line Options</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getMode <em>Mode</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getMessageStates <em>Message States</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isUseTclVer <em>Use Tcl Ver</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isIndividualMessageStates <em>Individual Message States</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isReadOnly <em>Read Only</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
+public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 	/**
 	 * The default value of the '{@link #isSummary() <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -194,7 +192,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ConfigInstanceImpl() {
+	protected CheckerConfigImpl() {
 		super();
 	}
 
@@ -205,7 +203,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ConfigsPackage.Literals.CONFIG_INSTANCE;
+		return ConfigsPackage.Literals.CHECKER_CONFIG;
 	}
 
 	/**
@@ -226,7 +224,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		boolean oldSummary = summary;
 		summary = newSummary;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__SUMMARY, oldSummary, summary));
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__SUMMARY, oldSummary, summary));
 	}
 
 	/**
@@ -247,7 +245,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		String oldCommandLineOptions = commandLineOptions;
 		commandLineOptions = newCommandLineOptions;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__COMMAND_LINE_OPTIONS, oldCommandLineOptions, commandLineOptions));
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS, oldCommandLineOptions, commandLineOptions));
 	}
 
 	/**
@@ -268,7 +266,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__NAME, oldName, name));
 	}
 
 	/**
@@ -289,7 +287,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		CheckerMode oldMode = mode;
 		mode = newMode == null ? MODE_EDEFAULT : newMode;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__MODE, oldMode, mode));
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__MODE, oldMode, mode));
 	}
 
 	/**
@@ -299,7 +297,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	 */
 	public EMap<String, MessageState> getMessageStates() {
 		if (messageStates == null) {
-			messageStates = new EcoreEMap<String,MessageState>(ConfigsPackage.Literals.MESSAGE_STATE_MAP, MessageStateMapImpl.class, this, ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES);
+			messageStates = new EcoreEMap<String,MessageState>(ConfigsPackage.Literals.MESSAGE_STATE_MAP, MessageStateMapImpl.class, this, ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES);
 		}
 		return messageStates;
 	}
@@ -322,7 +320,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		boolean oldUseTclVer = useTclVer;
 		useTclVer = newUseTclVer;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER, oldUseTclVer, useTclVer));
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__USE_TCL_VER, oldUseTclVer, useTclVer));
 	}
 
 	/**
@@ -343,23 +341,18 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		boolean oldIndividualMessageStates = individualMessageStates;
 		individualMessageStates = newIndividualMessageStates;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES, oldIndividualMessageStates, individualMessageStates));
+			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES, oldIndividualMessageStates, individualMessageStates));
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public boolean isReadOnly() {
-		final Resource r = eResource();
-		if (r != null) {
-			final URI uri = r.getURI();
-			if (uri != null) {
-				return uri.isPlatformPlugin();
-			}
-		}
-		return false;
+		// TODO: implement this method to return the 'Read Only' attribute
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -370,7 +363,7 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES:
 				return ((InternalEList<?>)getMessageStates()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -384,22 +377,22 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ConfigsPackage.CONFIG_INSTANCE__SUMMARY:
+			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				return isSummary() ? Boolean.TRUE : Boolean.FALSE;
-			case ConfigsPackage.CONFIG_INSTANCE__COMMAND_LINE_OPTIONS:
+			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
 				return getCommandLineOptions();
-			case ConfigsPackage.CONFIG_INSTANCE__NAME:
+			case ConfigsPackage.CHECKER_CONFIG__NAME:
 				return getName();
-			case ConfigsPackage.CONFIG_INSTANCE__MODE:
+			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				return getMode();
-			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES:
 				if (coreType) return getMessageStates();
 				else return getMessageStates().map();
-			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+			case ConfigsPackage.CHECKER_CONFIG__USE_TCL_VER:
 				return isUseTclVer() ? Boolean.TRUE : Boolean.FALSE;
-			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES:
 				return isIndividualMessageStates() ? Boolean.TRUE : Boolean.FALSE;
-			case ConfigsPackage.CONFIG_INSTANCE__READ_ONLY:
+			case ConfigsPackage.CHECKER_CONFIG__READ_ONLY:
 				return isReadOnly() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -413,25 +406,25 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ConfigsPackage.CONFIG_INSTANCE__SUMMARY:
+			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				setSummary(((Boolean)newValue).booleanValue());
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__COMMAND_LINE_OPTIONS:
+			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
 				setCommandLineOptions((String)newValue);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__NAME:
+			case ConfigsPackage.CHECKER_CONFIG__NAME:
 				setName((String)newValue);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__MODE:
+			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				setMode((CheckerMode)newValue);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES:
 				((EStructuralFeature.Setting)getMessageStates()).set(newValue);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+			case ConfigsPackage.CHECKER_CONFIG__USE_TCL_VER:
 				setUseTclVer(((Boolean)newValue).booleanValue());
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES:
 				setIndividualMessageStates(((Boolean)newValue).booleanValue());
 				return;
 		}
@@ -446,25 +439,25 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ConfigsPackage.CONFIG_INSTANCE__SUMMARY:
+			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				setSummary(SUMMARY_EDEFAULT);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__COMMAND_LINE_OPTIONS:
+			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
 				setCommandLineOptions(COMMAND_LINE_OPTIONS_EDEFAULT);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__NAME:
+			case ConfigsPackage.CHECKER_CONFIG__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__MODE:
+			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				setMode(MODE_EDEFAULT);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES:
 				getMessageStates().clear();
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+			case ConfigsPackage.CHECKER_CONFIG__USE_TCL_VER:
 				setUseTclVer(USE_TCL_VER_EDEFAULT);
 				return;
-			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES:
 				setIndividualMessageStates(INDIVIDUAL_MESSAGE_STATES_EDEFAULT);
 				return;
 		}
@@ -479,21 +472,21 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ConfigsPackage.CONFIG_INSTANCE__SUMMARY:
+			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				return summary != SUMMARY_EDEFAULT;
-			case ConfigsPackage.CONFIG_INSTANCE__COMMAND_LINE_OPTIONS:
+			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
 				return COMMAND_LINE_OPTIONS_EDEFAULT == null ? commandLineOptions != null : !COMMAND_LINE_OPTIONS_EDEFAULT.equals(commandLineOptions);
-			case ConfigsPackage.CONFIG_INSTANCE__NAME:
+			case ConfigsPackage.CHECKER_CONFIG__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ConfigsPackage.CONFIG_INSTANCE__MODE:
+			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				return mode != MODE_EDEFAULT;
-			case ConfigsPackage.CONFIG_INSTANCE__MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES:
 				return messageStates != null && !messageStates.isEmpty();
-			case ConfigsPackage.CONFIG_INSTANCE__USE_TCL_VER:
+			case ConfigsPackage.CHECKER_CONFIG__USE_TCL_VER:
 				return useTclVer != USE_TCL_VER_EDEFAULT;
-			case ConfigsPackage.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES:
+			case ConfigsPackage.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES:
 				return individualMessageStates != INDIVIDUAL_MESSAGE_STATES_EDEFAULT;
-			case ConfigsPackage.CONFIG_INSTANCE__READ_ONLY:
+			case ConfigsPackage.CHECKER_CONFIG__READ_ONLY:
 				return isReadOnly() != READ_ONLY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
@@ -525,4 +518,4 @@ public class ConfigInstanceImpl extends EObjectImpl implements ConfigInstance {
 		return result.toString();
 	}
 
-} //ConfigInstanceImpl
+} //CheckerConfigImpl

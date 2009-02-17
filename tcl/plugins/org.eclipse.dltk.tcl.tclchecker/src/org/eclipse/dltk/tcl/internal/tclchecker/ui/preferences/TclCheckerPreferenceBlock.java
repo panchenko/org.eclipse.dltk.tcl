@@ -20,13 +20,12 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMigration;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.IEnvironmentPredicate;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.SingleEnvironmentPredicate;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsFactory;
 import org.eclipse.dltk.ui.environment.EnvironmentContainer;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
@@ -99,7 +98,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 
 		private void doAdd(ListDialogField field) {
-			final ConfigInstance instance = editConfiguration(null);
+			final CheckerConfig instance = editConfiguration(null);
 			if (instance != null) {
 				resource.getContents().add(instance);
 				saveResource();
@@ -110,8 +109,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		private void doEdit(ListDialogField field) {
 			List<?> selection = field.getSelectedElements();
 			if (canEdit(selection)) {
-				final ConfigInstance instance = (ConfigInstance) selection
-						.get(0);
+				final CheckerConfig instance = (CheckerConfig) selection.get(0);
 				if (editConfiguration(instance) != null) {
 					saveResource();
 					// refresh configuration name column here
@@ -126,7 +124,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			List<?> selection = field.getSelectedElements();
 			if (canRemove(selection)) {
 				resource.getContents().removeAll(selection);
-				final List<ConfigInstance> configurations = collectConfugurations();
+				final List<CheckerConfig> configurations = collectConfugurations();
 				boolean instancesChanged = false;
 				for (Iterator<?> i = instanceField.getElements().iterator(); i
 						.hasNext();) {
@@ -202,7 +200,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 					importResource.load(null);
 					int importedCount = 0;
 					for (EObject object : importResource.getContents()) {
-						if (object instanceof ConfigInstance) {
+						if (object instanceof CheckerConfig) {
 							resource.getContents().add(EcoreUtil.copy(object));
 							++importedCount;
 						}
@@ -226,7 +224,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		 */
 		private boolean canEdit(List<?> selection) {
 			return selection.size() == 1
-					&& !((ConfigInstance) selection.get(0)).isReadOnly();
+					&& !((CheckerConfig) selection.get(0)).isReadOnly();
 		}
 
 		/**
@@ -238,7 +236,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				return false;
 			}
 			for (Iterator<?> i = selection.iterator(); i.hasNext();) {
-				ConfigInstance instance = (ConfigInstance) i.next();
+				CheckerConfig instance = (CheckerConfig) i.next();
 				if (instance.isReadOnly()) {
 					return false;
 				}
@@ -264,8 +262,8 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			LabelProvider implements ITableLabelProvider {
 
 		public String getColumnText(Object element, int columnIndex) {
-			if (element instanceof ConfigInstance) {
-				final ConfigInstance config = (ConfigInstance) element;
+			if (element instanceof CheckerConfig) {
+				final CheckerConfig config = (CheckerConfig) element;
 				switch (columnIndex) {
 				case 0:
 					return config.getName();
@@ -299,8 +297,8 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 		@Override
 		public int category(Object element) {
-			if (element instanceof ConfigInstance) {
-				return ((ConfigInstance) element).isReadOnly() ? BUILTIN_CATEGORY
+			if (element instanceof CheckerConfig) {
+				return ((CheckerConfig) element).isReadOnly() ? BUILTIN_CATEGORY
 						: USER_CATEGORY;
 			}
 			return super.category(element);
@@ -579,12 +577,12 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		return composite;
 	}
 
-	protected ConfigInstance editConfiguration(final ConfigInstance input) {
-		final ConfigInstance workingCopy;
+	protected CheckerConfig editConfiguration(final CheckerConfig input) {
+		final CheckerConfig workingCopy;
 		if (input != null) {
-			workingCopy = (ConfigInstance) EcoreUtil.copy(input);
+			workingCopy = (CheckerConfig) EcoreUtil.copy(input);
 		} else {
-			workingCopy = ConfigsFactory.eINSTANCE.createConfigInstance();
+			workingCopy = ConfigsFactory.eINSTANCE.createCheckerConfig();
 		}
 		final ChangeRecorder changeRecorder = input != null ? new ChangeRecorder(
 				workingCopy)
@@ -628,7 +626,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				workingCopy)
 				: null;
 		@SuppressWarnings("unchecked")
-		final List<ConfigInstance> configurations = configurationField
+		final List<CheckerConfig> configurations = configurationField
 				.getElements();
 		final TclCheckerInstanceDialog dialog = new TclCheckerInstanceDialog(
 				getShell(), environments, configurations, workingCopy);
@@ -709,7 +707,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	}
 
 	private void initConfigurations() {
-		final List<ConfigInstance> instances = collectConfugurations();
+		final List<CheckerConfig> instances = collectConfugurations();
 		configurationField.setElements(instances);
 		if (!instances.isEmpty()) {
 			configurationField.selectFirstElement();
@@ -718,8 +716,8 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 	}
 
-	private List<ConfigInstance> collectConfugurations() {
-		final List<ConfigInstance> instances = new ArrayList<ConfigInstance>();
+	private List<CheckerConfig> collectConfugurations() {
+		final List<CheckerConfig> instances = new ArrayList<CheckerConfig>();
 		TclCheckerConfigUtils.collectConfigurations(instances, resource);
 		for (Resource r : contributedResources) {
 			TclCheckerConfigUtils.collectConfigurations(instances, r);

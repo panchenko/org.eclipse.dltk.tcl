@@ -16,9 +16,9 @@ import java.util.List;
 
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.ui.environment.EnvironmentContainer;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.dltk.ui.util.PixelConverter;
@@ -53,14 +53,14 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 
 	private final CheckerInstance instance;
 	private final EnvironmentContainer environments;
-	private final List<ConfigInstance> configs;
+	private final List<CheckerConfig> configs;
 
 	/**
 	 * @param parent
 	 * @param instance
 	 */
 	public TclCheckerInstanceDialog(Shell parent,
-			EnvironmentContainer environments, List<ConfigInstance> configs,
+			EnvironmentContainer environments, List<CheckerConfig> configs,
 			CheckerInstance instance) {
 		super(parent);
 		this.environments = environments;

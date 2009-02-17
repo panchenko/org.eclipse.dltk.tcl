@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstance.java,v 1.2 2009/02/11 16:17:06 apanchenk Exp $
+ * $Id: CheckerInstance.java,v 1.3 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -193,12 +193,12 @@ public interface CheckerInstance extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Configuration</em>' reference.
-	 * @see #setConfiguration(ConfigInstance)
+	 * @see #setConfiguration(CheckerConfig)
 	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Configuration()
 	 * @model
 	 * @generated
 	 */
-	ConfigInstance getConfiguration();
+	CheckerConfig getConfiguration();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfiguration <em>Configuration</em>}' reference.
@@ -208,7 +208,7 @@ public interface CheckerInstance extends EObject {
 	 * @see #getConfiguration()
 	 * @generated
 	 */
-	void setConfiguration(ConfigInstance value);
+	void setConfiguration(CheckerConfig value);
 
 	/**
 	 * Returns the value of the '<em><b>Automatic</b></em>' attribute.

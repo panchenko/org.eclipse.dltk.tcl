@@ -13,8 +13,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.internal.databinging.RadioButtonListValue;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblemDescription;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
@@ -232,10 +232,10 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 		}
 	}
 
-	private final ConfigInstance instance;
+	private final CheckerConfig instance;
 	private final DataBindingContext bindingContext;
 
-	public TclCheckerConfigurationDialog(Shell parent, ConfigInstance instance) {
+	public TclCheckerConfigurationDialog(Shell parent, CheckerConfig instance) {
 		super(parent);
 		Assert.isNotNull(instance);
 		this.instance = instance;
@@ -282,7 +282,7 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 		name.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		bindingContext.bindValue(SWTObservables.observeText(name, SWT.Modify),
 				EMFObservables.observeValue(instance,
-						ConfigsPackage.Literals.CONFIG_INSTANCE__NAME), null,
+						ConfigsPackage.Literals.CHECKER_CONFIG__NAME), null,
 				null);
 	}
 
@@ -313,7 +313,7 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 				modeOptions, CheckerMode.W4);
 		bindingContext.bindValue(new RadioButtonListValue<CheckerMode>(
 				CheckerMode.class, modeOptions), EMFObservables.observeValue(
-				instance, ConfigsPackage.Literals.CONFIG_INSTANCE__MODE), null,
+				instance, ConfigsPackage.Literals.CHECKER_CONFIG__MODE), null,
 				null);
 	}
 
@@ -336,20 +336,20 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		bindingContext.bindValue(SWTObservables.observeText(commandLineOptions,
 				SWT.Modify), EMFObservables.observeValue(instance,
-				ConfigsPackage.Literals.CONFIG_INSTANCE__COMMAND_LINE_OPTIONS),
+				ConfigsPackage.Literals.CHECKER_CONFIG__COMMAND_LINE_OPTIONS),
 				null, null);
 		summary = SWTFactory.createCheckButton(group,
 				Messages.TclCheckerConfigurationDialog_Summary, null, false, 2);
 		bindingContext.bindValue(SWTObservables.observeSelection(summary),
 				EMFObservables.observeValue(instance,
-						ConfigsPackage.Literals.CONFIG_INSTANCE__SUMMARY),
-				null, null);
+						ConfigsPackage.Literals.CHECKER_CONFIG__SUMMARY), null,
+				null);
 		useTclVer = SWTFactory.createCheckButton(group,
 				Messages.TclCheckerConfigurationDialog_UseTclVer, null, false,
 				2);
 		bindingContext.bindValue(SWTObservables.observeSelection(useTclVer),
 				EMFObservables.observeValue(instance,
-						ConfigsPackage.Literals.CONFIG_INSTANCE__USE_TCL_VER),
+						ConfigsPackage.Literals.CHECKER_CONFIG__USE_TCL_VER),
 				null, null);
 	}
 
@@ -368,7 +368,7 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 						EMFObservables
 								.observeValue(
 										instance,
-										ConfigsPackage.Literals.CONFIG_INSTANCE__INDIVIDUAL_MESSAGE_STATES),
+										ConfigsPackage.Literals.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES),
 						null, null);
 		final Composite messageContainer = new Composite(group, SWT.NONE);
 		final GridLayout messageContainerLayout = new GridLayout(2, false);

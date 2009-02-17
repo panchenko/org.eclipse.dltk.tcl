@@ -2,27 +2,22 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstanceImpl.java,v 1.2 2009/02/11 16:17:06 apanchenk Exp $
+ * $Id: CheckerInstanceImpl.java,v 1.3 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
 import java.util.Collection;
 
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
@@ -164,7 +159,7 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 	 * @generated
 	 * @ordered
 	 */
-	protected ConfigInstance configuration;
+	protected CheckerConfig configuration;
 
 	/**
 	 * The default value of the '{@link #isAutomatic() <em>Automatic</em>}' attribute.
@@ -327,10 +322,10 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ConfigInstance getConfiguration() {
+	public CheckerConfig getConfiguration() {
 		if (configuration != null && configuration.eIsProxy()) {
 			InternalEObject oldConfiguration = (InternalEObject)configuration;
-			configuration = (ConfigInstance)eResolveProxy(oldConfiguration);
+			configuration = (CheckerConfig)eResolveProxy(oldConfiguration);
 			if (configuration != oldConfiguration) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION, oldConfiguration, configuration));
@@ -344,7 +339,7 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ConfigInstance basicGetConfiguration() {
+	public CheckerConfig basicGetConfiguration() {
 		return configuration;
 	}
 
@@ -353,8 +348,8 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setConfiguration(ConfigInstance newConfiguration) {
-		ConfigInstance oldConfiguration = configuration;
+	public void setConfiguration(CheckerConfig newConfiguration) {
+		CheckerConfig oldConfiguration = configuration;
 		configuration = newConfiguration;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION, oldConfiguration, configuration));
@@ -439,7 +434,7 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 				setCommandLineOptions((String)newValue);
 				return;
 			case ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION:
-				setConfiguration((ConfigInstance)newValue);
+				setConfiguration((CheckerConfig)newValue);
 				return;
 			case ConfigsPackage.CHECKER_INSTANCE__AUTOMATIC:
 				setAutomatic(((Boolean)newValue).booleanValue());
@@ -475,7 +470,7 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 				setCommandLineOptions(COMMAND_LINE_OPTIONS_EDEFAULT);
 				return;
 			case ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION:
-				setConfiguration((ConfigInstance)null);
+				setConfiguration((CheckerConfig)null);
 				return;
 			case ConfigsPackage.CHECKER_INSTANCE__AUTOMATIC:
 				setAutomatic(AUTOMATIC_EDEFAULT);

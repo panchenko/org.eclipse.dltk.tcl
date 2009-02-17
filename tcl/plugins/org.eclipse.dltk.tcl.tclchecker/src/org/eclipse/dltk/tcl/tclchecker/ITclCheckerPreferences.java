@@ -14,8 +14,8 @@ package org.eclipse.dltk.tcl.tclchecker;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 
 /**
  * Represents the system or project-specific TclChecker preferences.
@@ -27,14 +27,14 @@ public interface ITclCheckerPreferences {
 	 * 
 	 * @return
 	 */
-	List<ConfigInstance> getConfigurations();
+	List<CheckerConfig> getConfigurations();
 
 	/**
 	 * Creates new configuration
 	 * 
 	 * @return
 	 */
-	ConfigInstance newConfiguration();
+	CheckerConfig newConfiguration();
 
 	/**
 	 * Removes the specified configuration
@@ -43,7 +43,7 @@ public interface ITclCheckerPreferences {
 	 * @return <code>true</code> if the specified <code>config</code> was
 	 *         removed from preferences, <code>false</code> otherwise.
 	 */
-	boolean removeConfiguration(ConfigInstance config);
+	boolean removeConfiguration(CheckerConfig config);
 
 	/**
 	 * Returns the environment specific configuration. For system preferences

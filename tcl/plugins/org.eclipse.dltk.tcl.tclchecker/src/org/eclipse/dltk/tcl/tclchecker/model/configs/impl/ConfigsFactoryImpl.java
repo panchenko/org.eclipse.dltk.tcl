@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsFactoryImpl.java,v 1.1 2009/02/05 18:41:37 apanchenk Exp $
+ * $Id: ConfigsFactoryImpl.java,v 1.2 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -63,7 +63,7 @@ public class ConfigsFactoryImpl extends EFactoryImpl implements ConfigsFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case ConfigsPackage.CONFIG_INSTANCE: return createConfigInstance();
+			case ConfigsPackage.CHECKER_CONFIG: return createCheckerConfig();
 			case ConfigsPackage.MESSAGE_STATE_MAP: return (EObject)createMessageStateMap();
 			case ConfigsPackage.CHECKER_INSTANCE: return createCheckerInstance();
 			default:
@@ -114,9 +114,9 @@ public class ConfigsFactoryImpl extends EFactoryImpl implements ConfigsFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ConfigInstance createConfigInstance() {
-		ConfigInstanceImpl configInstance = new ConfigInstanceImpl();
-		return configInstance;
+	public CheckerConfig createCheckerConfig() {
+		CheckerConfigImpl checkerConfig = new CheckerConfigImpl();
+		return checkerConfig;
 	}
 
 	/**

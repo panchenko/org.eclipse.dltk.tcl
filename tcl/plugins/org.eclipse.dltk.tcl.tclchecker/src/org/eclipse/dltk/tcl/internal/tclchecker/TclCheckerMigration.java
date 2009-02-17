@@ -27,10 +27,10 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.SystemTclCheckerPreferences;
 import org.eclipse.dltk.tcl.tclchecker.ITclCheckerPreferences;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.CheckerMessage;
 import org.eclipse.dltk.utils.TextUtils;
@@ -243,7 +243,7 @@ public class TclCheckerMigration {
 			}
 			removeKeys.add(PREF_NO_PCX + ENV_PREFIX_SEPARATOR + envId);
 		}
-		final ConfigInstance config = preferences.newConfiguration();
+		final CheckerConfig config = preferences.newConfiguration();
 		config.setName("Workspace configuration"); //$NON-NLS-1$
 		switch (store.getInt(PREF_MODE)) {
 		case MODE_NONE:

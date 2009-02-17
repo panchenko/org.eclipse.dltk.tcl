@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigInstance.java,v 1.3 2009/02/16 09:32:33 apanchenk Exp $
+ * $Id: CheckerConfig.java,v 1.1 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -12,28 +12,28 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Config Instance</b></em>'.
+ * A representation of the model object '<em><b>Checker Config</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isSummary <em>Summary</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getCommandLineOptions <em>Command Line Options</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMode <em>Mode</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMessageStates <em>Message States</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer <em>Use Tcl Ver</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates <em>Individual Message States</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isReadOnly <em>Read Only</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isSummary <em>Summary</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions <em>Command Line Options</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMode <em>Mode</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMessageStates <em>Message States</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isUseTclVer <em>Use Tcl Ver</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isIndividualMessageStates <em>Individual Message States</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isReadOnly <em>Read Only</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance()
+ * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig()
  * @model
  * @generated
  */
-public interface ConfigInstance extends EObject {
+public interface CheckerConfig extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Summary</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -44,14 +44,14 @@ public interface ConfigInstance extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Summary</em>' attribute.
 	 * @see #setSummary(boolean)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_Summary()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_Summary()
 	 * @model
 	 * @generated
 	 */
 	boolean isSummary();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isSummary <em>Summary</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isSummary <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Summary</em>' attribute.
@@ -70,14 +70,14 @@ public interface ConfigInstance extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Command Line Options</em>' attribute.
 	 * @see #setCommandLineOptions(String)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_CommandLineOptions()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_CommandLineOptions()
 	 * @model
 	 * @generated
 	 */
 	String getCommandLineOptions();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getCommandLineOptions <em>Command Line Options</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions <em>Command Line Options</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Command Line Options</em>' attribute.
@@ -96,14 +96,14 @@ public interface ConfigInstance extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_Name()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_Name()
 	 * @model
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -124,14 +124,14 @@ public interface ConfigInstance extends EObject {
 	 * @return the value of the '<em>Mode</em>' attribute.
 	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode
 	 * @see #setMode(CheckerMode)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_Mode()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_Mode()
 	 * @model
 	 * @generated
 	 */
 	CheckerMode getMode();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#getMode <em>Mode</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMode <em>Mode</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Mode</em>' attribute.
@@ -152,7 +152,7 @@ public interface ConfigInstance extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Message States</em>' map.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_MessageStates()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_MessageStates()
 	 * @model mapType="org.eclipse.dltk.tcl.tclchecker.model.configs.MessageStateMap<org.eclipse.emf.ecore.EString, org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState>"
 	 * @generated
 	 */
@@ -169,14 +169,14 @@ public interface ConfigInstance extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Use Tcl Ver</em>' attribute.
 	 * @see #setUseTclVer(boolean)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_UseTclVer()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_UseTclVer()
 	 * @model default="true"
 	 * @generated
 	 */
 	boolean isUseTclVer();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isUseTclVer <em>Use Tcl Ver</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isUseTclVer <em>Use Tcl Ver</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Use Tcl Ver</em>' attribute.
@@ -195,14 +195,14 @@ public interface ConfigInstance extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Individual Message States</em>' attribute.
 	 * @see #setIndividualMessageStates(boolean)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_IndividualMessageStates()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_IndividualMessageStates()
 	 * @model
 	 * @generated
 	 */
 	boolean isIndividualMessageStates();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance#isIndividualMessageStates <em>Individual Message States</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isIndividualMessageStates <em>Individual Message States</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Individual Message States</em>' attribute.
@@ -220,10 +220,10 @@ public interface ConfigInstance extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Read Only</em>' attribute.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getConfigInstance_ReadOnly()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_ReadOnly()
 	 * @model transient="true" changeable="false" volatile="true" derived="true"
 	 * @generated
 	 */
 	boolean isReadOnly();
 
-} // ConfigInstance
+} // CheckerConfig

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsFactory.java,v 1.1 2009/02/05 18:41:37 apanchenk Exp $
+ * $Id: ConfigsFactory.java,v 1.2 2009/02/17 11:52:10 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -26,13 +26,13 @@ public interface ConfigsFactory extends EFactory {
 	ConfigsFactory eINSTANCE = org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Config Instance</em>'.
+	 * Returns a new object of class '<em>Checker Config</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Config Instance</em>'.
+	 * @return a new object of class '<em>Checker Config</em>'.
 	 * @generated
 	 */
-	ConfigInstance createConfigInstance();
+	CheckerConfig createCheckerConfig();
 
 	/**
 	 * Returns a new object of class '<em>Checker Instance</em>'.

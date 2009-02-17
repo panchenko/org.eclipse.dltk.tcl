@@ -28,8 +28,8 @@ import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -172,11 +172,11 @@ public class TclCheckerConfigUtils {
 		}
 	}
 
-	public static void collectConfigurations(List<ConfigInstance> instances,
+	public static void collectConfigurations(List<CheckerConfig> instances,
 			Resource r) {
 		for (EObject object : r.getContents()) {
-			if (object instanceof ConfigInstance) {
-				instances.add((ConfigInstance) object);
+			if (object instanceof CheckerConfig) {
+				instances.add((CheckerConfig) object);
 			}
 		}
 	}
