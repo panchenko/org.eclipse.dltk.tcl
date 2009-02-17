@@ -96,29 +96,23 @@ public class TclFoldingPreferenceBlock extends SourceCodeFoldingPreferenceBlock 
 				TclFoldingMessages.TclFoldingPreferenceBlock_10, 1, 1,
 				GridData.FILL_HORIZONTAL);
 
-		fFoldOtherEnabled = createRadioButton(
-				group,
+		fFoldOtherEnabled = createRadioButton(group,
 				TclFoldingMessages.TclFoldingPreferenceBlock_11,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
-				Integer
-						.valueOf(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF));
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS, new Integer(
+						TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_OFF));
 
-		createRadioButton(
-				group,
+		createRadioButton(group,
 				TclFoldingMessages.TclFoldingPreferenceBlock_12,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
-				Integer
-						.valueOf(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_EXCLUDE));
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS, new Integer(
+						TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_EXCLUDE));
 
 		fExcludePatterns = new ListBlock(group,
 				TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST);
 
-		createRadioButton(
-				group,
+		createRadioButton(group,
 				TclFoldingMessages.TclFoldingPreferenceBlock_13,
-				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
-				Integer
-						.valueOf(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_INCLUDE));
+				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS, new Integer(
+						TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_INCLUDE));
 
 		fIncludePatterns = new ListBlock(group,
 				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
