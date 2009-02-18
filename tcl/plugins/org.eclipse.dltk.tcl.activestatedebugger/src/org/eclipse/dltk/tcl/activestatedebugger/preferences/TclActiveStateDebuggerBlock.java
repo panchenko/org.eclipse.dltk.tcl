@@ -104,7 +104,7 @@ public class TclActiveStateDebuggerBlock extends
 		Group groupPatterns = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_patternsGroup, 1, 1,
 				GridData.FILL_BOTH);
-		patterns = new InstrumentationPatternList(fProject, groupPatterns,
+		patterns = new InstrumentationPatternList(getProject(), groupPatterns,
 				PreferenceMessages.instrumentation_patterns_message);
 		Group options = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_options, 2, 1,
@@ -220,7 +220,7 @@ public class TclActiveStateDebuggerBlock extends
 				GridData.FILL_BOTH);
 		pdxPath = new EnvironmentPathBlock(true);
 		pdxPath.createControl(group, getRelevantEnvironments());
-		Map paths = EnvironmentPathUtils
+		Map<?, ?> paths = EnvironmentPathUtils
 				.decodePaths(getString(TclActiveStateDebuggerPreferencePage.PDX_PATH));
 		pdxPath.setPaths(paths);
 	}

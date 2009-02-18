@@ -78,9 +78,10 @@ public class TclActiveStateDebuggerEnvironment implements
 	private void setEnvironmentPath(String key, String path) {
 		final IPreferenceStore store = TclActiveStateDebuggerPlugin
 				.getDefault().getPreferenceStore();
-		final Map paths = EnvironmentPathUtils
+		@SuppressWarnings("unchecked")
+		final Map<IEnvironment, String> paths = EnvironmentPathUtils
 				.decodePaths(store.getString(key));
-		final String oldPath = (String) paths.get(environment);
+		final String oldPath = paths.get(environment);
 		if (path != null) {
 			if (path.equals(oldPath)) {
 				return;
