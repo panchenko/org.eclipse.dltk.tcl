@@ -110,6 +110,7 @@
 <messages messageId="warnStylePlainVar" explanation="A single variable reference doesn't need any quoting" category="STYLE"/>
 <messages messageId="warnStyleCodeBlockShort" explanation="For readability the code in a braced script should start and end on separate lines, i.e. the enclosing braces should on their own lines" category="STYLE"/>
 <messages messageId="warnStyleExprOperatorParens" explanation="Be cautious with sub-expressions, use parentheses" category="STYLE"/>
+<messages messageId="warnStyleCodeBlock" explanation="Code blocks quoted with double-apostrophes are subject to a second round of substitution. That is almost always not wanted. Use quoting with curly braces to prevent that" category="STYLE"/>
 <!--
 <messages messageId="" explanation="" category="STYLE"/>
 -->
