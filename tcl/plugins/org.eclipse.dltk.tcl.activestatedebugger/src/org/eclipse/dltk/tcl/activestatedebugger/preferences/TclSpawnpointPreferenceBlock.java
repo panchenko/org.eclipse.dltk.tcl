@@ -29,7 +29,6 @@ import org.eclipse.dltk.ui.preferences.IPreferenceDelegate;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
