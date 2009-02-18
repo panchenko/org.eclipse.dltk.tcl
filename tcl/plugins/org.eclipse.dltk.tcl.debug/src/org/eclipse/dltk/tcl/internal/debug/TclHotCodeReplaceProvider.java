@@ -49,6 +49,9 @@ public class TclHotCodeReplaceProvider implements IHotCodeReplaceProvider {
 			throws DebugException {
 		final ISourceModule module = (ISourceModule) DLTKCore
 				.create((IFile) resource);
+		if (module == null) {
+			return null;
+		}
 		final List<IMethod> procList = new ArrayList<IMethod>();
 		try {
 			module.accept(new IModelElementVisitor() {
