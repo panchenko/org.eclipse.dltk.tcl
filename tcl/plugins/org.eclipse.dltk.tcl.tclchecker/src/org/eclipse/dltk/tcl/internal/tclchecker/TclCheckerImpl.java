@@ -10,6 +10,7 @@
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.validators.core.AbstractValidator;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidatorType;
@@ -20,6 +21,13 @@ public class TclCheckerImpl extends AbstractValidator {
 		super(id, null, type);
 	}
 
+	@Override
+	public boolean isAutomatic(IScriptProject project) {
+		final CheckerInstance instance = TclCheckerConfigUtils
+				.getConfiguration(project);
+		return instance != null && instance.isAutomatic();
+	}
+
 	public boolean isValidatorValid(IScriptProject project) {
 		return TclCheckerHelper.canExecuteTclChecker(TclCheckerConfigUtils
 				.getConfiguration(project), getEnvrironment(project));
@@ -28,8 +36,8 @@ public class TclCheckerImpl extends AbstractValidator {
 	@SuppressWarnings("unchecked")
 	public Object getValidator(IScriptProject project, Class validatorType) {
 		if (ISourceModuleValidator.class.equals(validatorType)) {
-			return new TclChecker(TclCheckerConfigUtils.getConfiguration(project),
-					getEnvrironment(project));
+			return new TclChecker(TclCheckerConfigUtils
+					.getConfiguration(project), getEnvrironment(project));
 		}
 		return null;
 	}
