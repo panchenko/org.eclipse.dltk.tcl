@@ -21,7 +21,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.SelectionDialog.SelectionDialogInput;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.SelectionDialog.ProjectSelectionDialogInput;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.SelectionDialog.WorkspaceSelectionDialogInput;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
@@ -183,9 +184,6 @@ public class InstrumentationPatternList {
 	}
 
 	protected void onAdd() {
-		if (parentProject == null) {
-			return;
-		}
 		@SuppressWarnings("unchecked")
 		final List<Pattern> model = (List<Pattern>) fList.getInput();
 		final Set<String> resourcePaths = new HashSet<String>();
@@ -199,7 +197,11 @@ public class InstrumentationPatternList {
 		}
 		SelectionDialog dialog = new SelectionDialog(fList.getControl()
 				.getShell());
-		dialog.setInput(new SelectionDialogInput(parentProject));
+		dialog
+				.setTitle(PreferenceMessages.InstrumentationPatternList_SelectionDialog_Title);
+		dialog
+				.setInput(parentProject == null ? new WorkspaceSelectionDialogInput()
+						: new ProjectSelectionDialogInput(parentProject));
 		// TODO dialog.setExisting(new Object[0]);
 		dialog.open();
 		final Object[] result = dialog.getResult();

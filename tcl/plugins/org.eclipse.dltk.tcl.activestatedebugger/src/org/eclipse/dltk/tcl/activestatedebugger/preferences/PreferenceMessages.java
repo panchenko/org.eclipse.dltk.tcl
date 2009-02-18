@@ -35,6 +35,7 @@ public class PreferenceMessages extends NLS {
 	public static String instrumentation_patternDialogTitle;
 	public static String instrumentation_patterns_message;
 	public static String instrumentation_patternsGroup;
+	public static String InstrumentationPatternList_SelectionDialog_Title;
 	public static String path_tab;
 	public static String spawnpoints_tab;
 	public static String Spawnpoint_Button_Add;

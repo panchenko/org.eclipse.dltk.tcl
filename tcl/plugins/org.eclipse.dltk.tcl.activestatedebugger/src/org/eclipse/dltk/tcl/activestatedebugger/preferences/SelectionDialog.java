@@ -31,6 +31,7 @@ import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -55,23 +56,78 @@ import org.eclipse.ui.dialogs.SelectionStatusDialog;
 public class SelectionDialog extends SelectionStatusDialog implements
 		ISelectionChangedListener {
 
-	static class SelectionDialogInput {
-		final IScriptProject project;
+	static abstract class SelectionDialogInput {
+
+		public abstract Set<IScriptProject> collectProjects();
 
 		/**
+		 * @param model
+		 * @param projects
 		 * @param project
 		 */
-		public SelectionDialogInput(IScriptProject project) {
-			this.project = project;
+		protected void collectProjects(IScriptModel model,
+				Set<IScriptProject> projects, IScriptProject project) {
+			if (projects.add(project)) {
+				final IBuildpathEntry[] entries;
+				try {
+					entries = project.getResolvedBuildpath(true);
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+					return;
+				}
+				for (IBuildpathEntry entry : entries) {
+					if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+						collectProjects(model, projects, model
+								.getScriptProject(entry.getPath().segment(0)));
+					}
+				}
+			}
 		}
+
+	}
+
+	static class ProjectSelectionDialogInput extends SelectionDialogInput {
+
+		final IScriptProject project;
 
 		/**
 		 * @param parentProject
 		 */
-		public SelectionDialogInput(IProject project) {
+		public ProjectSelectionDialogInput(IProject project) {
 			this.project = DLTKCore.create(project);
 		}
 
+		public Set<IScriptProject> collectProjects() {
+			final Set<IScriptProject> projects = new HashSet<IScriptProject>();
+			final IScriptModel model = DLTKCore.create(ResourcesPlugin
+					.getWorkspace().getRoot());
+			collectProjects(model, projects, project);
+			return projects;
+		}
+
+	}
+
+	static class WorkspaceSelectionDialogInput extends SelectionDialogInput {
+
+		@Override
+		public Set<IScriptProject> collectProjects() {
+			final Set<IScriptProject> projects = new HashSet<IScriptProject>();
+			final IScriptModel model = DLTKCore.create(ResourcesPlugin
+					.getWorkspace().getRoot());
+			try {
+				for (IScriptProject project : model
+						.getScriptProjects(TclNature.NATURE_ID)) {
+					collectProjects(model, projects, project);
+				}
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+			return projects;
+		}
 	}
 
 	private static class SelectionDialogComparator extends ViewerComparator {
@@ -152,12 +208,9 @@ public class SelectionDialog extends SelectionStatusDialog implements
 
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof SelectionDialogInput) {
-				final Set<IScriptProject> projects = new HashSet<IScriptProject>();
-				final IScriptModel model = DLTKCore.create(ResourcesPlugin
-						.getWorkspace().getRoot());
 				final Set<IProjectFragment> libraries = new HashSet<IProjectFragment>();
-				collectProjects(model, projects,
-						((SelectionDialogInput) inputElement).project);
+				final Set<IScriptProject> projects = ((SelectionDialogInput) inputElement)
+						.collectProjects();
 				for (IScriptProject project : projects) {
 					try {
 						for (IProjectFragment fragment : project
@@ -191,32 +244,6 @@ public class SelectionDialog extends SelectionStatusDialog implements
 				return result.toArray();
 			}
 			return new Object[0];
-		}
-
-		/**
-		 * @param model
-		 * @param projects
-		 * @param project
-		 */
-		private void collectProjects(IScriptModel model,
-				Set<IScriptProject> projects, IScriptProject project) {
-			if (projects.add(project)) {
-				final IBuildpathEntry[] entries;
-				try {
-					entries = project.getResolvedBuildpath(true);
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-					return;
-				}
-				for (IBuildpathEntry entry : entries) {
-					if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						collectProjects(model, projects, model
-								.getScriptProject(entry.getPath().segment(0)));
-					}
-				}
-			}
 		}
 
 		public void dispose() {
