@@ -33,6 +33,7 @@ import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.InstanceConfigPair;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
@@ -41,7 +42,6 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.internal.tests.Activator;
 import org.eclipse.dltk.tcl.parser.tests.TestUtils.CodeModel;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.validators.core.NullValidatorOutput;
 import org.osgi.framework.Bundle;
 
@@ -123,10 +123,11 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 					return true;
 				}
 			};
-			final CheckerInstance instance = TclCheckerConfigUtils
+			final InstanceConfigPair pair = TclCheckerConfigUtils
 					.getConfiguration(environment);
-			if (instance != null) {
-				TclChecker checker = new TclChecker(instance, environment);
+			if (pair != null) {
+				TclChecker checker = new TclChecker(pair.instance, pair.config,
+						environment);
 				IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 						.getAdapter(IExecutionEnvironment.class);
 				checker.executeProcess(processor, execEnvironment, cmdLine);
