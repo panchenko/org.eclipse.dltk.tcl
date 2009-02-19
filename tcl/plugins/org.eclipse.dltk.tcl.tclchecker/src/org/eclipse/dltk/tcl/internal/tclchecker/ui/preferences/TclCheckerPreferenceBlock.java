@@ -3,10 +3,8 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
@@ -20,7 +18,6 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMigration;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.IEnvironmentPredicate;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.SingleEnvironmentPredicate;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
@@ -112,10 +109,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				final CheckerConfig instance = (CheckerConfig) selection.get(0);
 				if (editConfiguration(instance) != null) {
 					saveResource();
-					// refresh configuration name column here
-					instanceField.getTableViewer().refresh();
 					field.refresh();
-					field.selectElements(new StructuredSelection(selection));
 				}
 			}
 		}
@@ -124,26 +118,8 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			List<?> selection = field.getSelectedElements();
 			if (canRemove(selection)) {
 				resource.getContents().removeAll(selection);
-				final List<CheckerConfig> configurations = collectConfugurations();
-				boolean instancesChanged = false;
-				for (Iterator<?> i = instanceField.getElements().iterator(); i
-						.hasNext();) {
-					final InstanceHandle handle = (InstanceHandle) i.next();
-					if (handle.instance != null
-							&& handle.instance.getConfiguration() != null
-							&& !configurations.contains(handle.instance
-									.getConfiguration())) {
-						handle.instance.setConfiguration(null);
-						instanceField.setGrayedWithoutUpdate(handle, true);
-						instanceField.setCheckedWithoutUpdate(handle, false);
-						instancesChanged = true;
-					}
-				}
 				saveResource();
 				field.removeElements(selection);
-				if (instancesChanged) {
-					instanceField.getTableViewer().refresh();
-				}
 			}
 		}
 
@@ -307,11 +283,15 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 	private class TclCheckerInstanceListAdapter implements IListAdapter {
 
-		private static final int IDX_EDIT = 0;
-		private static final int IDX_REMOVE = 1;
+		private static final int IDX_ADD = 0;
+		private static final int IDX_EDIT = 1;
+		private static final int IDX_REMOVE = 2;
 
 		public void customButtonPressed(ListDialogField field, int index) {
 			switch (index) {
+			case IDX_ADD:
+				doAdd(field);
+				break;
 			case IDX_EDIT:
 				doEdit(field.getSelectedElements());
 				break;
@@ -321,22 +301,27 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			}
 		}
 
+		private void doAdd(ListDialogField field) {
+			final CheckerInstance instance = editInstance(null);
+			if (instance != null) {
+				resource.getContents().add(instance);
+				saveResource();
+				field.addElement(instance);
+			}
+		}
+
 		/**
 		 * @param selection
 		 */
 		private void doEdit(List<?> selection) {
 			if (canEdit(selection)) {
-				final InstanceHandle handle = (InstanceHandle) selection.get(0);
-				final CheckerInstance result = editInstance(handle);
-				if (result != null) {
-					if (handle.instance == null) {
-						handle.instance = result;
-						resource.getContents().add(result);
-					}
-					instanceField.setGrayedWithoutUpdate(handle, !handle
-							.canBeAutomatic());
-					instanceField.setChecked(handle, handle.canBeAutomatic()
-							&& handle.instance.isAutomatic());
+				final CheckerInstance instance = (CheckerInstance) selection
+						.get(0);
+				if (editInstance(instance) != null) {
+					instanceField.setGrayedWithoutUpdate(instance,
+							!canBeAutomatic(instance));
+					instanceField.setChecked(instance, canBeAutomatic(instance)
+							&& instance.isAutomatic());
 					instanceField.getTableViewer().refresh();
 					saveResource();
 				}
@@ -347,15 +332,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		 * @param selection
 		 */
 		private void doRemove(List<?> selection) {
-			for (Iterator<?> i = selection.iterator(); i.hasNext();) {
-				InstanceHandle handle = (InstanceHandle) i.next();
-				handle.instance.setConfiguration(null);
-				handle.instance.setAutomatic(false);
-				instanceField.setGrayedWithoutUpdate(handle, true);
-				instanceField.setChecked(handle, false);
-			}
-			instanceField.getTableViewer().refresh();
+			resource.getContents().removeAll(selection);
 			saveResource();
+			instanceField.removeElements(selection);
 		}
 
 		public void doubleClicked(ListDialogField field) {
@@ -365,7 +344,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		public void selectionChanged(ListDialogField field) {
 			final List<?> selection = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, canEdit(selection));
-			// field.enableButton(IDX_REMOVE, canRemove(selection));
+			field.enableButton(IDX_REMOVE, canRemove(selection));
 		}
 
 		/**
@@ -373,13 +352,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		 * @return
 		 */
 		private boolean canRemove(List<?> selection) {
-			for (Iterator<?> i = selection.iterator(); i.hasNext();) {
-				final InstanceHandle handle = (InstanceHandle) i.next();
-				if (handle.instance != null) {
-					return true;
-				}
-			}
-			return false;
+			return !selection.isEmpty();
 		}
 
 		/**
@@ -400,16 +373,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
-			if (element instanceof InstanceHandle) {
-				final InstanceHandle handle = (InstanceHandle) element;
+			if (element instanceof CheckerInstance) {
+				final CheckerInstance instance = (CheckerInstance) element;
 				switch (columnIndex) {
 				case 0:
-					return environments.getName(handle.environmentId);
-				case 1:
-					if (handle.instance != null
-							&& handle.instance.getConfiguration() != null) {
-						return handle.instance.getConfiguration().getName();
-					}
+					return environments.getName(instance.getEnvironmentId());
 				}
 			}
 			return Util.EMPTY_STRING;
@@ -430,9 +398,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 		@Override
 		public int category(Object element) {
-			if (element instanceof InstanceHandle) {
+			if (element instanceof CheckerInstance) {
 				final IEnvironment environment = environments
-						.get(((InstanceHandle) element).environmentId);
+						.get(((CheckerInstance) element).getEnvironmentId());
 				if (environment != null) {
 					return environment.isLocal() ? LOCAL_CATEGORY
 							: REMOTE_CATEGORY;
@@ -451,10 +419,10 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		 * @see ICheckStateListener#checkStateChanged(CheckStateChangedEvent)
 		 */
 		public void checkStateChanged(CheckStateChangedEvent event) {
-			InstanceHandle handle = (InstanceHandle) event.getElement();
-			if (handle.canBeAutomatic()) {
-				if (handle.instance.isAutomatic() != event.getChecked()) {
-					handle.instance.setAutomatic(event.getChecked());
+			CheckerInstance instance = (CheckerInstance) event.getElement();
+			if (canBeAutomatic(instance)) {
+				if (instance.isAutomatic() != event.getChecked()) {
+					instance.setAutomatic(event.getChecked());
 					saveResource();
 				}
 			}
@@ -462,35 +430,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 	}
 
-	private static class InstanceHandle {
-		public InstanceHandle(String environmentId, CheckerInstance instance) {
-			this.environmentId = environmentId;
-			this.instance = instance;
-		}
-
-		/**
-		 * @return
-		 */
-		public boolean canBeAutomatic() {
-			return instance != null && instance.getConfiguration() != null;
-		}
-
-		final String environmentId;
-		CheckerInstance instance;
-
-		@Override
-		public int hashCode() {
-			return environmentId.hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof InstanceHandle) {
-				return environmentId
-						.equals(((InstanceHandle) obj).environmentId);
-			}
-			return false;
-		}
+	private static boolean canBeAutomatic(CheckerInstance instance) {
+		return instance.getExecutablePath() != null
+				&& instance.getExecutablePath().length() != 0;
 	}
 
 	private static final String[] CONFIGURATION_BUTTONS = {
@@ -499,7 +441,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			null, Messages.TclChecker_button_Import,
 			Messages.TclChecker_button_Export };
 
-	private static final String[] INSTANCE_BUTTONS = { Messages.TclChecker_button_Edit };
+	private static final String[] INSTANCE_BUTTONS = {
+			Messages.TclChecker_button_Add, Messages.TclChecker_button_Edit,
+			Messages.TclChecker_button_Remove };
 
 	private ListDialogField configurationField;
 	private CheckedListDialogField instanceField;
@@ -519,8 +463,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		folder.setSelection(folder.getItem(0));
 		environments.addChangeListener(new Runnable() {
 			public void run() {
-				// TODO preserve selection
-				initInstances();
+				instanceField.getTableViewer().refresh();
 			}
 		});
 		return folder;
@@ -614,25 +557,22 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		return null;
 	}
 
-	protected CheckerInstance editInstance(final InstanceHandle input) {
+	protected CheckerInstance editInstance(final CheckerInstance input) {
 		final CheckerInstance workingCopy;
-		if (input.instance != null) {
-			workingCopy = (CheckerInstance) EcoreUtil.copy(input.instance);
+		if (input != null) {
+			workingCopy = (CheckerInstance) EcoreUtil.copy(input);
 		} else {
 			workingCopy = ConfigsFactory.eINSTANCE.createCheckerInstance();
-			workingCopy.setEnvironmentId(input.environmentId);
+			// FIXME workingCopy.setEnvironmentId(input.environmentId);
 		}
-		final ChangeRecorder changeRecorder = input.instance != null ? new ChangeRecorder(
+		final ChangeRecorder changeRecorder = input != null ? new ChangeRecorder(
 				workingCopy)
 				: null;
-		@SuppressWarnings("unchecked")
-		final List<CheckerConfig> configurations = configurationField
-				.getElements();
 		final TclCheckerInstanceDialog dialog = new TclCheckerInstanceDialog(
-				getShell(), environments, configurations, workingCopy);
+				getShell(), environments, workingCopy);
 		dialog.setTitle(Messages.TclChecker_edit_Environment_Title);
 		if (dialog.open() == Window.OK) {
-			if (input.instance != null) {
+			if (input != null) {
 				final ChangeDescription changeDescription = changeRecorder
 						.endRecording();
 				if (changeDescription != null) {
@@ -641,11 +581,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 							.getObjectChanges().get(workingCopy);
 					if (featureChanges != null) {
 						for (FeatureChange featureChange : featureChanges) {
-							featureChange.apply(input.instance);
+							featureChange.apply(input);
 						}
 					}
 				}
-				return input.instance;
+				return input;
 			} else {
 				return workingCopy;
 			}
@@ -682,9 +622,6 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	}
 
 	private void loadResource() {
-		if (!isProjectPreferencePage()) {
-			TclCheckerMigration.migratePreferences();
-		}
 		this.resource = TclCheckerConfigUtils
 				.loadConfiguration(getString(KEY_CONFIGURATION));
 		if (contributedResources == null) {
@@ -747,33 +684,20 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 	private void initInstances() {
 		final IEnvironmentPredicate ePredicate = buildEnvironmentPredicate();
-		final Set<String> processedEnvironments = new HashSet<String>();
-		final List<InstanceHandle> handles = new ArrayList<InstanceHandle>();
-		final List<InstanceHandle> selected = new ArrayList<InstanceHandle>();
-		final List<InstanceHandle> grayed = new ArrayList<InstanceHandle>();
+		final List<CheckerInstance> handles = new ArrayList<CheckerInstance>();
+		final List<CheckerInstance> selected = new ArrayList<CheckerInstance>();
+		final List<CheckerInstance> grayed = new ArrayList<CheckerInstance>();
 		for (EObject object : resource.getContents()) {
 			if (object instanceof CheckerInstance) {
 				final CheckerInstance instance = (CheckerInstance) object;
 				if (ePredicate.evaluate(instance.getEnvironmentId())) {
-					final InstanceHandle handle = new InstanceHandle(instance
-							.getEnvironmentId(), instance);
-					handles.add(handle);
-					if (instance.getConfiguration() == null) {
-						grayed.add(handle);
+					handles.add(instance);
+					if (!canBeAutomatic(instance)) {
+						grayed.add(instance);
 					} else if (instance.isAutomatic()) {
-						selected.add(handle);
+						selected.add(instance);
 					}
-					processedEnvironments.add(instance.getEnvironmentId());
 				}
-			}
-		}
-		for (String environmentId : environments.getEnvironmentIds()) {
-			if (ePredicate.evaluate(environmentId)
-					&& !processedEnvironments.contains(environmentId)) {
-				final InstanceHandle handle = new InstanceHandle(environmentId,
-						null);
-				handles.add(handle);
-				grayed.add(handle);
 			}
 		}
 		instanceField.setElements(handles);

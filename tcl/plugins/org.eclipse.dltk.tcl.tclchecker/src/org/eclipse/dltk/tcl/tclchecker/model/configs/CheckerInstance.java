@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstance.java,v 1.3 2009/02/17 11:52:10 apanchenk Exp $
+ * $Id: CheckerInstance.java,v 1.4 2009/02/19 10:41:52 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getVersion <em>Version</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isUsePcxFiles <em>Use Pcx Files</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getCommandLineOptions <em>Command Line Options</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfiguration <em>Configuration</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic <em>Automatic</em>}</li>
  * </ul>
  * </p>
@@ -183,32 +182,6 @@ public interface CheckerInstance extends EObject {
 	 * @generated
 	 */
 	void setCommandLineOptions(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Configuration</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Configuration</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Configuration</em>' reference.
-	 * @see #setConfiguration(CheckerConfig)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Configuration()
-	 * @model
-	 * @generated
-	 */
-	CheckerConfig getConfiguration();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfiguration <em>Configuration</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Configuration</em>' reference.
-	 * @see #getConfiguration()
-	 * @generated
-	 */
-	void setConfiguration(CheckerConfig value);
 
 	/**
 	 * Returns the value of the '<em><b>Automatic</b></em>' attribute.

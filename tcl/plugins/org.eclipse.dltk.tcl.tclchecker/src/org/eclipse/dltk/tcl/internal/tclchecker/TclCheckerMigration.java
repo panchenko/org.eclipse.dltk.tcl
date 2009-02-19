@@ -307,9 +307,5 @@ public class TclCheckerMigration {
 			removeKeys.add(messageId);
 		}
 		config.setIndividualMessageStates(!config.getMessageStates().isEmpty());
-		for (String envId : environmentIds) {
-			final CheckerInstance instance = preferences.getEnvironment(envId);
-			instance.setConfiguration(config);
-		}
 	}
 }

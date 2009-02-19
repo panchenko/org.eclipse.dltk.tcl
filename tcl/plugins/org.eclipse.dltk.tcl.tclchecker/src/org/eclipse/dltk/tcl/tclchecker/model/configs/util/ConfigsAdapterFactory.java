@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsAdapterFactory.java,v 1.2 2009/02/17 11:52:11 apanchenk Exp $
+ * $Id: ConfigsAdapterFactory.java,v 1.3 2009/02/19 10:41:54 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.util;
 
@@ -86,6 +86,14 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 				return createCheckerInstanceAdapter();
 			}
 			@Override
+			public Adapter caseCheckerFavorite(CheckerFavorite object) {
+				return createCheckerFavoriteAdapter();
+			}
+			@Override
+			public Adapter caseEnvironmentInstanceMap(Map.Entry<String, CheckerInstance> object) {
+				return createEnvironmentInstanceMapAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -144,6 +152,34 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createCheckerInstanceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite <em>Checker Favorite</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite
+	 * @generated
+	 */
+	public Adapter createCheckerFavoriteAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Environment Instance Map</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see java.util.Map.Entry
+	 * @generated
+	 */
+	public Adapter createEnvironmentInstanceMapAdapter() {
 		return null;
 	}
 

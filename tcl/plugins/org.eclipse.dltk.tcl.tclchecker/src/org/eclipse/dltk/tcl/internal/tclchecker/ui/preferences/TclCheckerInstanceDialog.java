@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
 import org.eclipse.dltk.ui.environment.EnvironmentContainer;
@@ -53,18 +52,15 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 
 	private final CheckerInstance instance;
 	private final EnvironmentContainer environments;
-	private final List<CheckerConfig> configs;
 
 	/**
 	 * @param parent
 	 * @param instance
 	 */
 	public TclCheckerInstanceDialog(Shell parent,
-			EnvironmentContainer environments, List<CheckerConfig> configs,
-			CheckerInstance instance) {
+			EnvironmentContainer environments, CheckerInstance instance) {
 		super(parent);
 		this.environments = environments;
-		this.configs = configs;
 		this.instance = instance;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
@@ -79,7 +75,6 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 	private Button pcxBrowse;
 	private Button pcxRemove;
 	private Button automaticField;
-	private Combo configField;
 
 	protected IEnvironment getEnvironment() {
 		return environments.get(instance.getEnvironmentId());
@@ -99,7 +94,6 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 		createVersion(content);
 		createCommandLineOptions(content);
 		createAuto(content);
-		createConfig(content);
 		createPCXGroup(content);
 		return dialogArea;
 	}
@@ -268,18 +262,6 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 				Messages.TclCheckerInstanceDialog_automaticCheckbox, 2);
 	}
 
-	private void createConfig(Composite parent) {
-		SWTFactory.createLabel(parent,
-				Messages.TclCheckerInstanceDialog_Configuration, 1);
-		String[] configNames = new String[configs.size() + 1];
-		configNames[0] = Messages.TclCheckerInstanceDialog_None;
-		for (int i = 0; i < configs.size(); ++i) {
-			configNames[i + 1] = configs.get(i).getName();
-		}
-		configField = SWTFactory.createCombo(parent,
-				SWT.BORDER | SWT.READ_ONLY, 2, configNames);
-	}
-
 	/**
 	 * 
 	 */
@@ -312,8 +294,6 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 		pcxList.setInput(instance.getPcxFileFolders());
 		noPCX.setSelection(!instance.isUsePcxFiles());
 		automaticField.setSelection(instance.isAutomatic());
-		int configIndex = configs.indexOf(instance.getConfiguration());
-		configField.select(configIndex >= 0 ? configIndex + 1 : 0);
 		updatePcxGroupEnablement(!instance.isUsePcxFiles(), pcxList
 				.getSelection());
 	}
@@ -327,9 +307,6 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 		instance.setCommandLineOptions(cliField.getText());
 		instance.setUsePcxFiles(!noPCX.getSelection());
 		instance.setAutomatic(automaticField.getSelection());
-		int configIndex = configField.getSelectionIndex();
-		instance.setConfiguration(configIndex > 0 ? configs
-				.get(configIndex - 1) : null);
 		super.okPressed();
 	}
 }

@@ -2,13 +2,14 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackageImpl.java,v 1.5 2009/02/17 11:52:10 apanchenk Exp $
+ * $Id: ConfigsPackageImpl.java,v 1.6 2009/02/19 10:41:53 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
 import java.util.Map;
 
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
@@ -51,6 +52,20 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * @generated
 	 */
 	private EClass checkerInstanceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass checkerFavoriteEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass environmentInstanceMapEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -322,8 +337,8 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCheckerInstance_Configuration() {
-		return (EReference)checkerInstanceEClass.getEStructuralFeatures().get(6);
+	public EAttribute getCheckerInstance_Automatic() {
+		return (EAttribute)checkerInstanceEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -331,8 +346,53 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getCheckerInstance_Automatic() {
-		return (EAttribute)checkerInstanceEClass.getEStructuralFeatures().get(7);
+	public EClass getCheckerFavorite() {
+		return checkerFavoriteEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCheckerFavorite_Config() {
+		return (EReference)checkerFavoriteEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCheckerFavorite_Environments() {
+		return (EReference)checkerFavoriteEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEnvironmentInstanceMap() {
+		return environmentInstanceMapEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEnvironmentInstanceMap_Key() {
+		return (EAttribute)environmentInstanceMapEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEnvironmentInstanceMap_Value() {
+		return (EReference)environmentInstanceMapEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -411,8 +471,15 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__VERSION);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__USE_PCX_FILES);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__COMMAND_LINE_OPTIONS);
-		createEReference(checkerInstanceEClass, CHECKER_INSTANCE__CONFIGURATION);
 		createEAttribute(checkerInstanceEClass, CHECKER_INSTANCE__AUTOMATIC);
+
+		checkerFavoriteEClass = createEClass(CHECKER_FAVORITE);
+		createEReference(checkerFavoriteEClass, CHECKER_FAVORITE__CONFIG);
+		createEReference(checkerFavoriteEClass, CHECKER_FAVORITE__ENVIRONMENTS);
+
+		environmentInstanceMapEClass = createEClass(ENVIRONMENT_INSTANCE_MAP);
+		createEAttribute(environmentInstanceMapEClass, ENVIRONMENT_INSTANCE_MAP__KEY);
+		createEReference(environmentInstanceMapEClass, ENVIRONMENT_INSTANCE_MAP__VALUE);
 
 		// Create enums
 		checkerModeEEnum = createEEnum(CHECKER_MODE);
@@ -471,8 +538,15 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		initEAttribute(getCheckerInstance_Version(), this.getCheckerVersion(), "version", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_UsePcxFiles(), ecorePackage.getEBoolean(), "usePcxFiles", "true", 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 		initEAttribute(getCheckerInstance_CommandLineOptions(), ecorePackage.getEString(), "commandLineOptions", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(getCheckerInstance_Configuration(), this.getCheckerConfig(), null, "configuration", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getCheckerInstance_Automatic(), ecorePackage.getEBoolean(), "automatic", null, 0, 1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(checkerFavoriteEClass, CheckerFavorite.class, "CheckerFavorite", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getCheckerFavorite_Config(), this.getCheckerConfig(), null, "config", null, 0, 1, CheckerFavorite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getCheckerFavorite_Environments(), this.getEnvironmentInstanceMap(), null, "environments", null, 0, -1, CheckerFavorite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(environmentInstanceMapEClass, Map.Entry.class, "EnvironmentInstanceMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getEnvironmentInstanceMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getEnvironmentInstanceMap_Value(), this.getCheckerInstance(), null, "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(checkerModeEEnum, CheckerMode.class, "CheckerMode"); //$NON-NLS-1$

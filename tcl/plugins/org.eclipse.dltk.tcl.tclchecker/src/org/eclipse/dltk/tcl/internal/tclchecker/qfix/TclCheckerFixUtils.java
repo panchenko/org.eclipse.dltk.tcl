@@ -28,8 +28,8 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.InstanceConfigPair;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.NullValidatorOutput;
 import org.eclipse.jface.text.BadLocationException;
@@ -160,12 +160,12 @@ public class TclCheckerFixUtils {
 		if (environment == null) {
 			return false;
 		}
-		final CheckerInstance instance = TclCheckerConfigUtils
+		final InstanceConfigPair pair = TclCheckerConfigUtils
 				.getConfiguration(resource.getProject());
-		if (instance == null) {
+		if (pair == null) {
 			return false;
 		}
-		new TclChecker(instance, environment).validate(
+		new TclChecker(pair.instance, pair.config, environment).validate(
 				new ISourceModule[] { module }, new NullValidatorOutput(),
 				new NullProgressMonitor());
 		return true;

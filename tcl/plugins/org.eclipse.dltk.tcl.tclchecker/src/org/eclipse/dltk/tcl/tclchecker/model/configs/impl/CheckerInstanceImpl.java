@@ -2,20 +2,18 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstanceImpl.java,v 1.3 2009/02/17 11:52:10 apanchenk Exp $
+ * $Id: CheckerInstanceImpl.java,v 1.4 2009/02/19 10:41:53 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
 import java.util.Collection;
 
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
@@ -33,7 +31,6 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl#getVersion <em>Version</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl#isUsePcxFiles <em>Use Pcx Files</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl#getCommandLineOptions <em>Command Line Options</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl#getConfiguration <em>Configuration</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl#isAutomatic <em>Automatic</em>}</li>
  * </ul>
  * </p>
@@ -150,16 +147,6 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 	 * @ordered
 	 */
 	protected String commandLineOptions = COMMAND_LINE_OPTIONS_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getConfiguration() <em>Configuration</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getConfiguration()
-	 * @generated
-	 * @ordered
-	 */
-	protected CheckerConfig configuration;
 
 	/**
 	 * The default value of the '{@link #isAutomatic() <em>Automatic</em>}' attribute.
@@ -322,44 +309,6 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CheckerConfig getConfiguration() {
-		if (configuration != null && configuration.eIsProxy()) {
-			InternalEObject oldConfiguration = (InternalEObject)configuration;
-			configuration = (CheckerConfig)eResolveProxy(oldConfiguration);
-			if (configuration != oldConfiguration) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION, oldConfiguration, configuration));
-			}
-		}
-		return configuration;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public CheckerConfig basicGetConfiguration() {
-		return configuration;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setConfiguration(CheckerConfig newConfiguration) {
-		CheckerConfig oldConfiguration = configuration;
-		configuration = newConfiguration;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION, oldConfiguration, configuration));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public boolean isAutomatic() {
 		return automatic;
 	}
@@ -396,9 +345,6 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 				return isUsePcxFiles() ? Boolean.TRUE : Boolean.FALSE;
 			case ConfigsPackage.CHECKER_INSTANCE__COMMAND_LINE_OPTIONS:
 				return getCommandLineOptions();
-			case ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION:
-				if (resolve) return getConfiguration();
-				return basicGetConfiguration();
 			case ConfigsPackage.CHECKER_INSTANCE__AUTOMATIC:
 				return isAutomatic() ? Boolean.TRUE : Boolean.FALSE;
 		}
@@ -433,9 +379,6 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 			case ConfigsPackage.CHECKER_INSTANCE__COMMAND_LINE_OPTIONS:
 				setCommandLineOptions((String)newValue);
 				return;
-			case ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION:
-				setConfiguration((CheckerConfig)newValue);
-				return;
 			case ConfigsPackage.CHECKER_INSTANCE__AUTOMATIC:
 				setAutomatic(((Boolean)newValue).booleanValue());
 				return;
@@ -469,9 +412,6 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 			case ConfigsPackage.CHECKER_INSTANCE__COMMAND_LINE_OPTIONS:
 				setCommandLineOptions(COMMAND_LINE_OPTIONS_EDEFAULT);
 				return;
-			case ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION:
-				setConfiguration((CheckerConfig)null);
-				return;
 			case ConfigsPackage.CHECKER_INSTANCE__AUTOMATIC:
 				setAutomatic(AUTOMATIC_EDEFAULT);
 				return;
@@ -499,8 +439,6 @@ public class CheckerInstanceImpl extends EObjectImpl implements CheckerInstance 
 				return usePcxFiles != USE_PCX_FILES_EDEFAULT;
 			case ConfigsPackage.CHECKER_INSTANCE__COMMAND_LINE_OPTIONS:
 				return COMMAND_LINE_OPTIONS_EDEFAULT == null ? commandLineOptions != null : !COMMAND_LINE_OPTIONS_EDEFAULT.equals(commandLineOptions);
-			case ConfigsPackage.CHECKER_INSTANCE__CONFIGURATION:
-				return configuration != null;
 			case ConfigsPackage.CHECKER_INSTANCE__AUTOMATIC:
 				return automatic != AUTOMATIC_EDEFAULT;
 		}

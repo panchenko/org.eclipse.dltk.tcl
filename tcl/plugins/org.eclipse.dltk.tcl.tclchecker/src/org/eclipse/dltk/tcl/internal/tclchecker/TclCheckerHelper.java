@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
@@ -39,21 +40,22 @@ public final class TclCheckerHelper {
 	private static final String VERBOSE_OPTION = "-verbose"; //$NON-NLS-1$
 
 	public static boolean buildCommandLine(CheckerInstance instance,
-			CommandLine cmdLine, IEnvironment environment,
-			IScriptProject project, IValidatorOutput console) {
+			CheckerConfig config, CommandLine cmdLine,
+			IEnvironment environment, IScriptProject project,
+			IValidatorOutput console) {
 		IFileHandle validatorFile = PlatformFileUtils
 				.findAbsoluteOrEclipseRelativeFile(environment, new Path(
 						instance.getExecutablePath()));
 		cmdLine.add(validatorFile.toOSString());
 
-		if (console.isEnabled() && instance.getConfiguration().isSummary()) {
+		if (console.isEnabled() && config.isSummary()) {
 			cmdLine.add(SUMMARY_OPTION);
 			cmdLine.add(VERBOSE_OPTION);
 		}
 
 		// cmdLine.add(QUIET_OPTION);
 
-		if (project != null && instance.getConfiguration().isUseTclVer()) {
+		if (project != null && config.isUseTclVer()) {
 			try {
 				final IInterpreterInstall install = ScriptRuntime
 						.getInterpreterInstall(project);
@@ -84,18 +86,17 @@ public final class TclCheckerHelper {
 			}
 		}
 
-		if (instance.getConfiguration().getMode() != null) {
-			final String[] options = instance.getConfiguration().getMode()
-					.getOptions();
+		if (config.getMode() != null) {
+			final String[] options = config.getMode().getOptions();
 			if (options.length != 0) {
 				cmdLine.add(options);
 			}
 		}
 
 		// Suppress
-		if (instance.getConfiguration().isIndividualMessageStates()) {
-			for (Map.Entry<String, MessageState> entry : instance
-					.getConfiguration().getMessageStates()) {
+		if (config.isIndividualMessageStates()) {
+			for (Map.Entry<String, MessageState> entry : config
+					.getMessageStates()) {
 				if (MessageState.CHECK.equals(entry.getValue())) {
 					cmdLine.add(CHECK_OPTION);
 					cmdLine.add(shortMessageId(entry.getKey()));
@@ -126,7 +127,7 @@ public final class TclCheckerHelper {
 		if (cliOptions != null && cliOptions.length() != 0) {
 			cmdLine.add(new CommandLine(cliOptions));
 		}
-		cliOptions = instance.getConfiguration().getCommandLineOptions();
+		cliOptions = config.getCommandLineOptions();
 		if (cliOptions != null && cliOptions.length() != 0) {
 			cmdLine.add(new CommandLine(cliOptions));
 		}
@@ -167,7 +168,6 @@ public final class TclCheckerHelper {
 
 	public static boolean canExecuteTclChecker(CheckerInstance instance,
 			IEnvironment environment) {
-		return isValidPath(environment, instance.getExecutablePath())
-				&& instance.getConfiguration() != null;
+		return isValidPath(environment, instance.getExecutablePath());
 	}
 }

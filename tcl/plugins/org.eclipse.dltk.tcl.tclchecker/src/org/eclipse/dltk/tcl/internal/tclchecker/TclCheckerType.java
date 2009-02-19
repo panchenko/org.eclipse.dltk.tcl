@@ -16,6 +16,8 @@ import org.eclipse.dltk.validators.core.IValidator;
 
 public class TclCheckerType extends AbstractValidatorType {
 
+	public static final String TYPE_ID = "org.eclipse.dltk.tclchecker"; //$NON-NLS-1$
+
 	private static final String CHECKER_ID = "Tcl Checker"; //$NON-NLS-1$
 
 	private final TclCheckerImpl checker;
@@ -32,7 +34,7 @@ public class TclCheckerType extends AbstractValidatorType {
 	}
 
 	public String getID() {
-		return "org.eclipse.dltk.tclchecker"; //$NON-NLS-1$
+		return TYPE_ID;
 	}
 
 	public String getName() {

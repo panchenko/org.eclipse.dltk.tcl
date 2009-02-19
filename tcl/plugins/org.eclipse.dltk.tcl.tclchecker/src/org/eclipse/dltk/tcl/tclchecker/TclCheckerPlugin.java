@@ -41,6 +41,7 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		TclCheckerMigration.migratePreferences();
 	}
 
 	/**
@@ -81,12 +82,10 @@ public class TclCheckerPlugin extends AbstractUIPlugin {
 
 	public static ITclCheckerPreferences getProjectPreferences(IProject project) {
 		Assert.isNotNull(project);
-		TclCheckerMigration.migratePreferences();
 		return new ProjectTclCheckerPreferences(project);
 	}
 
 	public static ITclCheckerPreferences getPreferences() {
-		TclCheckerMigration.migratePreferences();
 		return new SystemTclCheckerPreferences();
 	}
 

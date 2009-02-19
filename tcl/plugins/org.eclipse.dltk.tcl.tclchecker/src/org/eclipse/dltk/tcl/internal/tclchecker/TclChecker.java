@@ -38,6 +38,7 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.v5.Checker5OutputProcessor;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
 import org.eclipse.dltk.utils.TextUtils;
@@ -65,11 +66,15 @@ public class TclChecker extends AbstractExternalValidator implements
 	}
 
 	private final CheckerInstance instance;
+	private final CheckerConfig config;
 	private final IEnvironment environment;
 
-	public TclChecker(CheckerInstance instance, IEnvironment environment) {
-		Assert.isNotNull(instance, "CheckerInstance cannot be null"); //$NON-NLS-1$
+	public TclChecker(CheckerInstance instance, CheckerConfig config,
+			IEnvironment environment) {
+		Assert.isNotNull(instance, "CheckerInstance can't be null"); //$NON-NLS-1$
+		Assert.isNotNull(config, "CheckerConfig can't be null"); //$NON-NLS-1$
 		this.instance = instance;
+		this.config = config;
 		this.environment = environment;
 	}
 
@@ -101,8 +106,8 @@ public class TclChecker extends AbstractExternalValidator implements
 			return;
 		}
 		final CommandLine cmdLine = new CommandLine();
-		if (!TclCheckerHelper.buildCommandLine(instance, cmdLine, environment,
-				sourceModules.get(0).getScriptProject(), console)) {
+		if (!TclCheckerHelper.buildCommandLine(instance, config, cmdLine,
+				environment, sourceModules.get(0).getScriptProject(), console)) {
 			console.println(Messages.TclChecker_path_not_specified);
 			return;
 		}

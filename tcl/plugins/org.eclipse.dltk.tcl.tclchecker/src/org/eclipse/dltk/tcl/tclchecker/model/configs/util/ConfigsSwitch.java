@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsSwitch.java,v 1.2 2009/02/17 11:52:11 apanchenk Exp $
+ * $Id: ConfigsSwitch.java,v 1.3 2009/02/19 10:41:54 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.util;
 
@@ -106,6 +106,18 @@ public class ConfigsSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ConfigsPackage.CHECKER_FAVORITE: {
+				CheckerFavorite checkerFavorite = (CheckerFavorite)theEObject;
+				T result = caseCheckerFavorite(checkerFavorite);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ConfigsPackage.ENVIRONMENT_INSTANCE_MAP: {
+				@SuppressWarnings("unchecked") Map.Entry<String, CheckerInstance> environmentInstanceMap = (Map.Entry<String, CheckerInstance>)theEObject;
+				T result = caseEnvironmentInstanceMap(environmentInstanceMap);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -152,6 +164,36 @@ public class ConfigsSwitch<T> {
 	 * @generated
 	 */
 	public T caseCheckerInstance(CheckerInstance object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Checker Favorite</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Checker Favorite</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCheckerFavorite(CheckerFavorite object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Environment Instance Map</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Environment Instance Map</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEnvironmentInstanceMap(Map.Entry<String, CheckerInstance> object) {
 		return null;
 	}
 

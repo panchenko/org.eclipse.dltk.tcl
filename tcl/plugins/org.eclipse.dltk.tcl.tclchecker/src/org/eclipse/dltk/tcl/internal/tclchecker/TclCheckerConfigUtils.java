@@ -29,6 +29,7 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.emf.common.util.URI;
@@ -42,6 +43,17 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class TclCheckerConfigUtils {
 
+	public static class InstanceConfigPair {
+		public final CheckerInstance instance;
+		public final CheckerConfig config;
+
+		private InstanceConfigPair(CheckerInstance instance,
+				CheckerConfig config) {
+			this.instance = instance;
+			this.config = config;
+		}
+	}
+
 	/**
 	 * Retrieves the TclChecker configuration for the specified project or
 	 * <code>null</code> if not found (not configured) for the environment of
@@ -50,8 +62,7 @@ public class TclCheckerConfigUtils {
 	 * @param project
 	 * @return
 	 */
-	public static CheckerInstance getConfiguration(IScriptProject project) {
-		TclCheckerMigration.migratePreferences();
+	public static InstanceConfigPair getConfiguration(IScriptProject project) {
 		if (project != null && project.getProject() != null) {
 			return getConfiguration(project.getProject());
 		} else {
@@ -67,8 +78,7 @@ public class TclCheckerConfigUtils {
 	 * @param project
 	 * @return
 	 */
-	public static CheckerInstance getConfiguration(IProject project) {
-		TclCheckerMigration.migratePreferences();
+	public static InstanceConfigPair getConfiguration(IProject project) {
 		final String environmentId;
 		if (project != null) {
 			environmentId = EnvironmentManager.getEnvironmentId(project);
@@ -85,21 +95,64 @@ public class TclCheckerConfigUtils {
 		return findConfiguration(resource, environmentId);
 	}
 
-	private static CheckerInstance findConfiguration(final Resource resource,
+	private static CheckerInstance findInstance(final Resource resource,
 			final String environmentId) {
+		final List<CheckerInstance> instances = new ArrayList<CheckerInstance>();
+		CheckerInstance favorite = null;
 		for (EObject object : resource.getContents()) {
 			if (object instanceof CheckerInstance) {
 				final CheckerInstance instance = (CheckerInstance) object;
 				if (environmentId.equals(instance.getEnvironmentId())) {
-					return instance;
+					instances.add(instance);
 				}
+			} else if (object instanceof CheckerFavorite) {
+				favorite = ((CheckerFavorite) object).getEnvironments().get(
+						environmentId);
+			}
+		}
+		if (!instances.isEmpty()) {
+			if (instances.size() > 1 && favorite != null
+					&& instances.contains(favorite)) {
+				return favorite;
+			}
+			return instances.get(0);
+		}
+		return null;
+	}
+
+	private static CheckerConfig findConfig(final Resource resource) {
+		final List<CheckerConfig> configs = new ArrayList<CheckerConfig>();
+		CheckerConfig favorite = null;
+		for (EObject object : resource.getContents()) {
+			if (object instanceof CheckerConfig) {
+				configs.add((CheckerConfig) object);
+			} else if (object instanceof CheckerFavorite) {
+				favorite = ((CheckerFavorite) object).getConfig();
+			}
+		}
+		if (!configs.isEmpty()) {
+			if (configs.size() > 1 && favorite != null
+					&& configs.contains(favorite)) {
+				return favorite;
+			}
+			return configs.get(0);
+		}
+		return null;
+	}
+
+	private static InstanceConfigPair findConfiguration(
+			final Resource resource, final String environmentId) {
+		final CheckerInstance instance = findInstance(resource, environmentId);
+		if (instance != null) {
+			final CheckerConfig config = findConfig(resource);
+			if (config != null) {
+				return new InstanceConfigPair(instance, config);
 			}
 		}
 		return null;
 	}
 
-	public static CheckerInstance getConfiguration(IEnvironment environment) {
-		TclCheckerMigration.migratePreferences();
+	public static InstanceConfigPair getConfiguration(IEnvironment environment) {
 		if (environment == null) {
 			return null;
 		}
