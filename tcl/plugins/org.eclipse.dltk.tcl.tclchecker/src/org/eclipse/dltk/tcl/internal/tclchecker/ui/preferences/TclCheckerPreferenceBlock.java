@@ -3,6 +3,8 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import org.eclipse.dltk.tcl.internal.tclchecker.impl.IEnvironmentPredicate;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.SingleEnvironmentPredicate;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsFactory;
 import org.eclipse.dltk.ui.environment.EnvironmentContainer;
@@ -116,9 +119,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 
 		private void doRemove(ListDialogField field) {
-			List<?> selection = field.getSelectedElements();
+			@SuppressWarnings("unchecked")
+			final List<CheckerConfig> selection = field.getSelectedElements();
 			if (canRemove(selection)) {
 				resource.getContents().removeAll(selection);
+				removeFavoriteConfigs(selection);
 				saveResource();
 				field.removeElements(selection);
 			}
@@ -282,6 +287,81 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			}
 			return super.category(element);
 		}
+	}
+
+	private class TclCheckerConfigFieldListener implements ICheckStateListener {
+
+		public void checkStateChanged(CheckStateChangedEvent event) {
+			if (event.getChecked()) {
+				@SuppressWarnings("unchecked")
+				final List<CheckerConfig> configs = configurationField
+						.getElements();
+				for (CheckerConfig config : configs) {
+					if (config != event.getElement()
+							&& configurationField.isChecked(config)) {
+						configurationField.setCheckedWithoutUpdate(config,
+								false);
+					}
+				}
+				updateFavoriteConfig((CheckerConfig) event.getElement());
+			} else {
+				updateFavoriteConfig(null);
+			}
+			saveResource();
+		}
+
+	}
+
+	/**
+	 * @param config
+	 */
+	private void updateFavoriteConfig(CheckerConfig config) {
+		boolean updated = false;
+		List<CheckerFavorite> duplicates = null;
+		for (EObject object : resource.getContents()) {
+			if (object instanceof CheckerFavorite) {
+				final CheckerFavorite favorite = (CheckerFavorite) object;
+				if (!updated) {
+					favorite.setConfig(config);
+					updated = true;
+				} else {
+					if (duplicates == null) {
+						duplicates = new ArrayList<CheckerFavorite>();
+					}
+					duplicates.add(favorite);
+				}
+			}
+		}
+		if (!updated) {
+			final CheckerFavorite favorite = ConfigsFactory.eINSTANCE
+					.createCheckerFavorite();
+			favorite.setConfig(config);
+			resource.getContents().add(favorite);
+		} else if (duplicates != null) {
+			resource.getContents().removeAll(duplicates);
+		}
+	}
+
+	private void removeFavoriteConfigs(Collection<CheckerConfig> configs) {
+		for (EObject object : resource.getContents()) {
+			if (object instanceof CheckerFavorite) {
+				final CheckerFavorite favorite = (CheckerFavorite) object;
+				if (favorite.getConfig() != null) {
+					if (configs.contains(favorite.getConfig())) {
+						favorite.setConfig(null);
+					}
+				}
+			}
+		}
+	}
+
+	private CheckerConfig findFavoriteConfig() {
+		for (EObject object : resource.getContents()) {
+			if (object instanceof CheckerFavorite) {
+				return ((CheckerFavorite) object).getConfig();
+			}
+		}
+		return null;
 	}
 
 	private class TclCheckerInstanceListAdapter implements IListAdapter {
@@ -454,7 +534,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			Messages.TclChecker_button_Add, Messages.TclChecker_button_Edit,
 			Messages.TclChecker_button_Remove };
 
-	private ListDialogField configurationField;
+	private CheckedListDialogField configurationField;
 	private CheckedListDialogField instanceField;
 	private EnvironmentContainer environments = new EnvironmentContainer();
 
@@ -508,12 +588,14 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	}
 
 	private Composite createConfigurationField(Composite folder) {
-		configurationField = new ListDialogField(
+		configurationField = new CheckedListDialogField(
 				new TclCheckerConfigurationListAdapter(),
 				CONFIGURATION_BUTTONS,
 				new TclCheckerConfigurationLabelProvider());
 		configurationField.setUseLabel(false);
 		configurationField.setListGrabExcessHorizontalSpace(true);
+		configurationField
+				.addCheckStateListener(new TclCheckerConfigFieldListener());
 		configurationField
 				.setTableColumns(new ListDialogField.ColumnsDescription(
 						new ColumnLayoutData[] { new ColumnWeightData(60),
@@ -656,6 +738,13 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	private void initConfigurations() {
 		final List<CheckerConfig> instances = collectConfugurations();
 		configurationField.setElements(instances);
+		final CheckerConfig favorite = findFavoriteConfig();
+		if (favorite != null) {
+			configurationField.setCheckedElements(Collections
+					.singletonList(favorite));
+		} else {
+			configurationField.setCheckedElements(Collections.emptyList());
+		}
 		if (!instances.isEmpty()) {
 			configurationField.selectFirstElement();
 		} else {

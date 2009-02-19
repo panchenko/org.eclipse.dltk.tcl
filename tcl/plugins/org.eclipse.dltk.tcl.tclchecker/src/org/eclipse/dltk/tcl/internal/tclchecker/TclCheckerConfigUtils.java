@@ -32,6 +32,7 @@ import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -130,6 +131,13 @@ public class TclCheckerConfigUtils {
 				favorite = ((CheckerFavorite) object).getConfig();
 			}
 		}
+		final EList<Resource> resources = resource.getResourceSet()
+				.getResources();
+		for (Resource r : resources.toArray(new Resource[resources.size()])) {
+			if (r != resource) {
+				collectConfigurations(configs, r);
+			}
+		}
 		if (!configs.isEmpty()) {
 			if (configs.size() > 1 && favorite != null
 					&& configs.contains(favorite)) {
@@ -142,6 +150,7 @@ public class TclCheckerConfigUtils {
 
 	private static InstanceConfigPair findConfiguration(
 			final Resource resource, final String environmentId) {
+		loadContributedConfigurations(resource.getResourceSet());
 		final CheckerInstance instance = findInstance(resource, environmentId);
 		if (instance != null) {
 			final CheckerConfig config = findConfig(resource);
