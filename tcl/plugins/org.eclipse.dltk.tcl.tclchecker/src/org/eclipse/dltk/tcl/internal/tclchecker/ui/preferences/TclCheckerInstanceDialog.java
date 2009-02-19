@@ -14,10 +14,12 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
+import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.ui.environment.EnvironmentContainer;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.dltk.ui.util.PixelConverter;
@@ -52,21 +54,27 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 
 	private final CheckerInstance instance;
 	private final EnvironmentContainer environments;
+	private final boolean isNew;
 
 	/**
 	 * @param parent
 	 * @param instance
 	 */
 	public TclCheckerInstanceDialog(Shell parent,
-			EnvironmentContainer environments, CheckerInstance instance) {
+			EnvironmentContainer environments, CheckerInstance instance,
+			boolean isNew) {
 		super(parent);
 		this.environments = environments;
 		this.instance = instance;
+		this.isNew = isNew;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
+	private String[] environmentIds;
+
 	private Combo versionField;
 	private Text environmentField;
+	private Combo environmentSelectField;
 	private Text pathField;
 	private Text cliField;
 	private Button noPCX;
@@ -77,7 +85,16 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 	private Button automaticField;
 
 	protected IEnvironment getEnvironment() {
-		return environments.get(instance.getEnvironmentId());
+		if (isNew) {
+			int index = environmentSelectField.getSelectionIndex();
+			if (index >= 0 && index < environmentIds.length) {
+				return environments.get(environmentIds[index]);
+			} else {
+				return null;
+			}
+		} else {
+			return environments.get(instance.getEnvironmentId());
+		}
 	}
 
 	@Override
@@ -101,8 +118,18 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 	private void createEnvironment(Composite parent) {
 		SWTFactory.createLabel(parent,
 				Messages.TclCheckerInstanceDialog_Environment, 1);
-		environmentField = SWTFactory.createText(parent, SWT.BORDER
-				| SWT.READ_ONLY, 2, Util.EMPTY_STRING);
+		if (isNew) {
+			environmentIds = environments.getEnvironmentIds();
+			String[] names = new String[environmentIds.length];
+			for (int i = 0; i < environmentIds.length; ++i) {
+				names[i] = environments.getName(environmentIds[i]);
+			}
+			environmentSelectField = SWTFactory.createCombo(parent, SWT.BORDER
+					| SWT.READ_ONLY, 2, names);
+		} else {
+			environmentField = SWTFactory.createText(parent, SWT.BORDER
+					| SWT.READ_ONLY, 2, Util.EMPTY_STRING);
+		}
 	}
 
 	/**
@@ -266,6 +293,11 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 	 * 
 	 */
 	protected void updateStatus() {
+		if (isNew) {
+			if (getEnvironment() == null) {
+				updateStatus(new StatusInfo(IStatus.ERROR, "Select environment"));
+			}
+		}
 		// TODO Auto-generated method stub
 
 	}
@@ -280,8 +312,12 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 	@Override
 	public void create() {
 		super.create();
-		environmentField.setText(environments.getName(instance
-				.getEnvironmentId()));
+		if (isNew) {
+
+		} else {
+			environmentField.setText(environments.getName(instance
+					.getEnvironmentId()));
+		}
 		pathField.setText(instance.getExecutablePath() != null ? instance
 				.getExecutablePath() : Util.EMPTY_STRING);
 		if (instance.getVersion() == CheckerVersion.VERSION5) {
@@ -300,6 +336,12 @@ public class TclCheckerInstanceDialog extends StatusDialog {
 
 	@Override
 	protected void okPressed() {
+		if (isNew) {
+			final IEnvironment environment = getEnvironment();
+			if (environment != null) {
+				instance.setEnvironmentId(environment.getId());
+			}
+		}
 		instance.setExecutablePath(pathField.getText());
 		instance
 				.setVersion(versionField.getSelectionIndex() == 1 ? CheckerVersion.VERSION5
