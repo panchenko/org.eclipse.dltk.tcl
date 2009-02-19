@@ -182,8 +182,11 @@ public class TclCheckerConfigUtils {
 				.createURI(ConfigsPackage.eNS_URI));
 		if (content != null && content.length() != 0) {
 			try {
+				final Map<String, Object> loadOptions = new HashMap<String, Object>();
+				loadOptions.put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE,
+						Boolean.TRUE);
 				resource.load(new URIConverter.ReadableInputStream(content,
-						ENCODING), null);
+						ENCODING), loadOptions);
 			} catch (IOException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
