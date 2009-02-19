@@ -9,16 +9,24 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.InstanceConfigPair;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.validators.core.AbstractValidatorType;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidator;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.resource.Resource;
 
 public class TclCheckerType extends AbstractValidatorType {
 
 	public static final String TYPE_ID = "org.eclipse.dltk.tclchecker"; //$NON-NLS-1$
 
-	private static final String CHECKER_ID = "Tcl Checker"; //$NON-NLS-1$
+	public static final String CHECKER_ID = "Tcl Checker"; //$NON-NLS-1$
 
 	private final TclCheckerImpl checker;
 
@@ -57,5 +65,32 @@ public class TclCheckerType extends AbstractValidatorType {
 	@SuppressWarnings("unchecked")
 	public boolean supports(Class validatorType) {
 		return ISourceModuleValidator.class.equals(validatorType);
+	}
+
+	@Override
+	public IValidator[] getAllValidators(IEnvironment environment) {
+		final InstanceConfigPair pair = TclCheckerConfigUtils
+				.getConfiguration(environment);
+		final List<IValidator> result = new ArrayList<IValidator>();
+		if (pair != null) {
+			result.add(new TclCheckerOptional(environment, pair.instance,
+					pair.config, this));
+			final List<CheckerConfig> configs = new ArrayList<CheckerConfig>();
+			TclCheckerConfigUtils.collectConfigurations(configs, pair.resource);
+			final EList<Resource> resources = pair.resource.getResourceSet()
+					.getResources();
+			for (Resource r : resources.toArray(new Resource[resources.size()])) {
+				if (r != pair.resource) {
+					TclCheckerConfigUtils.collectConfigurations(configs, r);
+				}
+			}
+			for (CheckerConfig config : configs) {
+				if (config != pair.config) {
+					result.add(new TclCheckerOptional(environment,
+							pair.instance, config, this));
+				}
+			}
+		}
+		return result.toArray(new IValidator[result.size()]);
 	}
 }

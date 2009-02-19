@@ -47,11 +47,13 @@ public class TclCheckerConfigUtils {
 	public static class InstanceConfigPair {
 		public final CheckerInstance instance;
 		public final CheckerConfig config;
+		public final Resource resource;
 
 		private InstanceConfigPair(CheckerInstance instance,
-				CheckerConfig config) {
+				CheckerConfig config, Resource resource) {
 			this.instance = instance;
 			this.config = config;
+			this.resource = resource;
 		}
 	}
 
@@ -155,7 +157,7 @@ public class TclCheckerConfigUtils {
 		if (instance != null) {
 			final CheckerConfig config = findConfig(resource);
 			if (config != null) {
-				return new InstanceConfigPair(instance, config);
+				return new InstanceConfigPair(instance, config, resource);
 			}
 		}
 		return null;
