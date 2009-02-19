@@ -49,7 +49,6 @@ import org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern;
-import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 
 public class TclActiveStateDebugThreadConfigurator implements
 		IScriptDebugThreadConfigurator {
