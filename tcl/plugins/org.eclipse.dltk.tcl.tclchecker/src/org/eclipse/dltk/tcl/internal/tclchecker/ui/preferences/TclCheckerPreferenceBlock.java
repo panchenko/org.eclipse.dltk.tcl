@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -109,7 +110,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				final CheckerConfig instance = (CheckerConfig) selection.get(0);
 				if (editConfiguration(instance) != null) {
 					saveResource();
-					field.refresh();
+					field.getTableViewer().refresh();
 				}
 			}
 		}
@@ -242,7 +243,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				final CheckerConfig config = (CheckerConfig) element;
 				switch (columnIndex) {
 				case 0:
-					return config.getName();
+					return NLS.bind(
+							Messages.TclChecker_configurationName_message,
+							Messages.TclChecker_name, config.getName());
 				case 1:
 					if (config.isReadOnly()) {
 						return Messages.TclCheckerPreferenceBlock_BuiltIn;
@@ -377,7 +380,13 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				final CheckerInstance instance = (CheckerInstance) element;
 				switch (columnIndex) {
 				case 0:
+					return Messages.TclChecker_name;
+				case 1:
 					return environments.getName(instance.getEnvironmentId());
+				case 2:
+					if (instance.isAutomatic()) {
+						return Messages.TclChecker_Auto;
+					}
 				}
 			}
 			return Util.EMPTY_STRING;
@@ -482,10 +491,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		instanceField
 				.addCheckStateListener(new TclCheckerInstanceFieldListener());
 		instanceField.setTableColumns(new ListDialogField.ColumnsDescription(
-				new String[] {
+				new ColumnLayoutData[] { new ColumnWeightData(50),
+						new ColumnWeightData(30), new ColumnWeightData(20) },
+				new String[] { Messages.TclChecker_column_InstanceName,
 						Messages.TclChecker_column_InstanceEnvironmentName,
-						Messages.TclChecker_column_InstanceConfigurationName },
-				true));
+						Messages.TclChecker_column_InstanceAuto }, true));
 		instanceField.setViewerSorter(new TclCheckerInstanceViewerSorter());
 		Composite composite = new Composite(folder, SWT.NONE);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));

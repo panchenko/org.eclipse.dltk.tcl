@@ -14,6 +14,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.messages"; //$NON-NLS-1$
 
+	public static String TclChecker_name;
+	public static String TclChecker_configurationName_message;
 	public static String TclChecker_path;
 	public static String TclChecker_pcxPath;
 
@@ -63,8 +65,11 @@ public class Messages extends NLS {
 	public static String TclChecker_column_ConfigurationName;
 	public static String TclChecker_column_ConfigurationType;
 
+	public static String TclChecker_column_InstanceName;
 	public static String TclChecker_column_InstanceEnvironmentName;
-	public static String TclChecker_column_InstanceConfigurationName;
+	public static String TclChecker_column_InstanceAuto;
+	
+	public static String TclChecker_Auto;
 
 	public static String TclChecker_mode;
 
