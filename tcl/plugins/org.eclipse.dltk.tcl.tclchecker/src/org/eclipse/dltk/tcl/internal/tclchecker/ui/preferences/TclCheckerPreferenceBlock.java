@@ -571,11 +571,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		instanceField
 				.addCheckStateListener(new TclCheckerInstanceFieldListener());
 		instanceField.setTableColumns(new ListDialogField.ColumnsDescription(
-				new ColumnLayoutData[] { new ColumnWeightData(50),
-						new ColumnWeightData(30), new ColumnWeightData(20) },
-				new String[] { Messages.TclChecker_column_InstanceName,
-						Messages.TclChecker_column_InstanceEnvironmentName,
-						Messages.TclChecker_column_InstanceAuto }, true));
+				new ColumnLayoutData[] { new ColumnWeightData(60),
+						new ColumnWeightData(40) }, new String[] {
+						Messages.TclChecker_column_InstanceName,
+						Messages.TclChecker_column_InstanceEnvironmentName },
+				true));
 		instanceField.setViewerSorter(new TclCheckerInstanceViewerSorter());
 		Composite composite = new Composite(folder, SWT.NONE);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -661,7 +661,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				workingCopy)
 				: null;
 		final TclCheckerInstanceDialog dialog = new TclCheckerInstanceDialog(
-				getShell(), environments, workingCopy);
+				getShell(), environments, workingCopy, input == null);
 		dialog.setTitle(Messages.TclChecker_edit_Environment_Title);
 		if (dialog.open() == Window.OK) {
 			if (input != null) {
