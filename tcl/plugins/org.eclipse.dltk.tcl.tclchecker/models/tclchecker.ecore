@@ -41,10 +41,8 @@
   </eSubpackages>
   <eSubpackages name="configs" nsURI="http://www.eclipse.org/dltk/tcl/tclchecker/configs"
       nsPrefix="configs">
-    <eClassifiers xsi:type="ecore:EClass" name="CheckerConfig">
+    <eClassifiers xsi:type="ecore:EClass" name="CheckerConfig" eSuperTypes="../../org.eclipse.dltk.validators.core/models/validators.ecore#//ValidatorConfig">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="summary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commandLineOptions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" eType="#//configs/CheckerMode"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="messageStates" upperBound="-1"
           eType="#//configs/MessageStateMap" containment="true"/>
@@ -52,8 +50,6 @@
           defaultValueLiteral="true"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="individualMessageStates"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="readOnly" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-          changeable="false" volatile="true" transient="true" derived="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EEnum" name="CheckerMode">
       <eLiterals name="DEFAULT" value="-1" literal="DEFAULT"/>
@@ -72,29 +68,29 @@
       <eLiterals name="CHECK" value="1"/>
       <eLiterals name="SUPPRESS" value="-1"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="CheckerInstance">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="environmentId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="executablePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CheckerEnvironmentInstance" eSuperTypes="../../org.eclipse.dltk.validators.core/models/validators.ecore#//ValidatorEnvironmentInstance">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="pcxFileFolders" upperBound="-1"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="#//configs/CheckerVersion"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="usePcxFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
           defaultValueLiteral="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//configs/CheckerInstance"
+          eOpposite="#//configs/CheckerInstance/environments"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CheckerInstance" eSuperTypes="../../org.eclipse.dltk.validators.core/models/validators.ecore#//ValidatorInstance">
+      <eOperations name="getEnvironment" eType="#//configs/CheckerEnvironmentInstance">
+        <eParameters name="environmentId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="#//configs/CheckerVersion"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="commandLineOptions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="automatic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="environments" upperBound="-1"
+          eType="#//configs/CheckerEnvironmentInstance" containment="true" eOpposite="#//configs/CheckerEnvironmentInstance/instance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="favorite" eType="#//configs/CheckerConfig"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="configs" upperBound="-1"
+          eType="#//configs/CheckerConfig" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EEnum" name="CheckerVersion">
-      <eLiterals name="VERSION4" value="4" literal="VERSION4"/>
-      <eLiterals name="VERSION5" value="5" literal="VERSION5"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="CheckerFavorite">
-      <eStructuralFeatures xsi:type="ecore:EReference" name="config" eType="#//configs/CheckerConfig"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="environments" upperBound="-1"
-          eType="#//configs/EnvironmentInstanceMap" containment="true"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="EnvironmentInstanceMap" instanceClassName="java.util.Map$Entry">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//configs/CheckerInstance"/>
+      <eLiterals name="VERSION4" value="400" literal="VERSION4"/>
+      <eLiterals name="VERSION5" value="500" literal="VERSION5"/>
     </eClassifiers>
   </eSubpackages>
 </ecore:EPackage>
