@@ -33,7 +33,7 @@ import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.InstanceConfigPair;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceResponse;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
@@ -123,11 +123,12 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 					return true;
 				}
 			};
-			final InstanceConfigPair pair = TclCheckerConfigUtils
-					.getConfiguration(environment);
-			if (pair != null) {
-				TclChecker checker = new TclChecker(pair.instance, pair.config,
-						environment);
+			final ValidatorInstanceResponse response = TclCheckerConfigUtils
+					.getConfiguration(environment, TclCheckerConfigUtils.ALL);
+			if (!response.isEmpty()) {
+				TclChecker checker = new TclChecker(
+						response.instances.get(0).environmentInstance,
+						response.instances.get(0).config, environment);
 				IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 						.getAdapter(IExecutionEnvironment.class);
 				checker.executeProcess(processor, execEnvironment, cmdLine);
