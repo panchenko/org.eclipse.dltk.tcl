@@ -12,7 +12,7 @@ package org.eclipse.dltk.tcl.internal.tclchecker;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceRef;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceResponse;
@@ -67,23 +67,23 @@ public class TclCheckerType extends AbstractValidatorType {
 	}
 
 	@Override
-	public IValidator[] getAllValidators(IEnvironment environment) {
+	public IValidator[] getAllValidators(IProject project) {
 		final ValidatorInstanceResponse response = TclCheckerConfigUtils
-				.getConfiguration(environment, TclCheckerConfigUtils.ALL);
+				.getConfiguration(project, TclCheckerConfigUtils.ALL);
 		final List<IValidator> result = new ArrayList<IValidator>();
 		for (ValidatorInstanceRef pair : response.instances) {
-			result.add(new TclCheckerOptional(environment,
+			result.add(new TclCheckerOptional(response.environment,
 					pair.environmentInstance, pair.config, this));
 			for (CheckerConfig config : pair.environmentInstance.getInstance()
 					.getConfigs()) {
 				if (config != pair.config) {
-					result.add(new TclCheckerOptional(environment,
+					result.add(new TclCheckerOptional(response.environment,
 							pair.environmentInstance, config, this));
 				}
 			}
 			for (CheckerConfig config : response.getCommonConfigurations()) {
 				if (config != pair.config) {
-					result.add(new TclCheckerOptional(environment,
+					result.add(new TclCheckerOptional(response.environment,
 							pair.environmentInstance, config, this));
 				}
 			}
