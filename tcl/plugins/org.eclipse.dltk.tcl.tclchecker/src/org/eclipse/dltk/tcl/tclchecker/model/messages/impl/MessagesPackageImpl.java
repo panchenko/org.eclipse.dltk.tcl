@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MessagesPackageImpl.java,v 1.4 2009/02/16 09:32:34 apanchenk Exp $
+ * $Id: MessagesPackageImpl.java,v 1.5 2009/02/27 09:16:02 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.messages.impl;
 
@@ -13,6 +13,7 @@ import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageCategory;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesFactory;
 import org.eclipse.dltk.tcl.tclchecker.model.messages.MessagesPackage;
+import org.eclipse.dltk.validators.configs.ValidatorsPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -103,6 +104,9 @@ public class MessagesPackageImpl extends EPackageImpl implements MessagesPackage
 		MessagesPackageImpl theMessagesPackage = (MessagesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof MessagesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new MessagesPackageImpl());
 
 		isInited = true;
+
+		// Initialize simple dependencies
+		ValidatorsPackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		ConfigsPackageImpl theConfigsPackage = (ConfigsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ConfigsPackage.eNS_URI) instanceof ConfigsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ConfigsPackage.eNS_URI) : ConfigsPackage.eINSTANCE);

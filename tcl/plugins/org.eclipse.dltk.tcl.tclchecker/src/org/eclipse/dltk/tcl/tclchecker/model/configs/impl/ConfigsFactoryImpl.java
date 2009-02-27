@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsFactoryImpl.java,v 1.3 2009/02/19 10:41:53 apanchenk Exp $
+ * $Id: ConfigsFactoryImpl.java,v 1.4 2009/02/27 09:16:02 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -65,9 +65,8 @@ public class ConfigsFactoryImpl extends EFactoryImpl implements ConfigsFactory {
 		switch (eClass.getClassifierID()) {
 			case ConfigsPackage.CHECKER_CONFIG: return createCheckerConfig();
 			case ConfigsPackage.MESSAGE_STATE_MAP: return (EObject)createMessageStateMap();
+			case ConfigsPackage.CHECKER_ENVIRONMENT_INSTANCE: return createCheckerEnvironmentInstance();
 			case ConfigsPackage.CHECKER_INSTANCE: return createCheckerInstance();
-			case ConfigsPackage.CHECKER_FAVORITE: return createCheckerFavorite();
-			case ConfigsPackage.ENVIRONMENT_INSTANCE_MAP: return (EObject)createEnvironmentInstanceMap();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -136,29 +135,19 @@ public class ConfigsFactoryImpl extends EFactoryImpl implements ConfigsFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public CheckerEnvironmentInstance createCheckerEnvironmentInstance() {
+		CheckerEnvironmentInstanceImpl checkerEnvironmentInstance = new CheckerEnvironmentInstanceImpl();
+		return checkerEnvironmentInstance;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CheckerInstance createCheckerInstance() {
 		CheckerInstanceImpl checkerInstance = new CheckerInstanceImpl();
 		return checkerInstance;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public CheckerFavorite createCheckerFavorite() {
-		CheckerFavoriteImpl checkerFavorite = new CheckerFavoriteImpl();
-		return checkerFavorite;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Map.Entry<String, CheckerInstance> createEnvironmentInstanceMap() {
-		EnvironmentInstanceMapImpl environmentInstanceMap = new EnvironmentInstanceMapImpl();
-		return environmentInstanceMap;
 	}
 
 	/**

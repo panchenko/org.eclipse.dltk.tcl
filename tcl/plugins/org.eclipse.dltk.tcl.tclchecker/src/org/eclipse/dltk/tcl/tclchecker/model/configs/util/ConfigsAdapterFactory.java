@@ -2,19 +2,23 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsAdapterFactory.java,v 1.3 2009/02/19 10:41:54 apanchenk Exp $
+ * $Id: ConfigsAdapterFactory.java,v 1.4 2009/02/27 09:16:02 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.util;
 
 import java.util.Map;
 
-import org.eclipse.dltk.tcl.tclchecker.model.configs.*;
-
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
+import org.eclipse.dltk.validators.configs.ValidatorConfig;
+import org.eclipse.dltk.validators.configs.ValidatorEnvironmentInstance;
+import org.eclipse.dltk.validators.configs.ValidatorInstance;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -82,16 +86,24 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 				return createMessageStateMapAdapter();
 			}
 			@Override
+			public Adapter caseCheckerEnvironmentInstance(CheckerEnvironmentInstance object) {
+				return createCheckerEnvironmentInstanceAdapter();
+			}
+			@Override
 			public Adapter caseCheckerInstance(CheckerInstance object) {
 				return createCheckerInstanceAdapter();
 			}
 			@Override
-			public Adapter caseCheckerFavorite(CheckerFavorite object) {
-				return createCheckerFavoriteAdapter();
+			public Adapter caseValidatorConfig(ValidatorConfig object) {
+				return createValidatorConfigAdapter();
 			}
 			@Override
-			public Adapter caseEnvironmentInstanceMap(Map.Entry<String, CheckerInstance> object) {
-				return createEnvironmentInstanceMapAdapter();
+			public Adapter caseValidatorEnvironmentInstance(ValidatorEnvironmentInstance object) {
+				return createValidatorEnvironmentInstanceAdapter();
+			}
+			@Override
+			public Adapter caseValidatorInstance(ValidatorInstance object) {
+				return createValidatorInstanceAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -142,6 +154,20 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance <em>Checker Environment Instance</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance
+	 * @generated
+	 */
+	public Adapter createCheckerEnvironmentInstanceAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance <em>Checker Instance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -156,30 +182,44 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite <em>Checker Favorite</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.validators.ValidatorInstance <em>Validator Instance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite
+	 * @see org.eclipse.dltk.validators.configs.validators.ValidatorInstance
 	 * @generated
 	 */
-	public Adapter createCheckerFavoriteAdapter() {
+	public Adapter createValidatorInstanceAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Environment Instance Map</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.validators.ValidatorEnvironmentInstance <em>Validator Environment Instance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see java.util.Map.Entry
+	 * @see org.eclipse.dltk.validators.configs.validators.ValidatorEnvironmentInstance
 	 * @generated
 	 */
-	public Adapter createEnvironmentInstanceMapAdapter() {
+	public Adapter createValidatorEnvironmentInstanceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.validators.ValidatorConfig <em>Validator Config</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.validators.configs.validators.ValidatorConfig
+	 * @generated
+	 */
+	public Adapter createValidatorConfigAdapter() {
 		return null;
 	}
 

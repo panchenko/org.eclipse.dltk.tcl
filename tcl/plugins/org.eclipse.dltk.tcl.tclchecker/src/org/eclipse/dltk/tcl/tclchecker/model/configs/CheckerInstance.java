@@ -2,13 +2,12 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstance.java,v 1.4 2009/02/19 10:41:52 apanchenk Exp $
+ * $Id: CheckerInstance.java,v 1.5 2009/02/27 09:16:01 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
+import org.eclipse.dltk.validators.configs.ValidatorInstance;
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -18,13 +17,11 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironmentId <em>Environment Id</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getExecutablePath <em>Executable Path</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFileFolders <em>Pcx File Folders</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getVersion <em>Version</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isUsePcxFiles <em>Use Pcx Files</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getCommandLineOptions <em>Command Line Options</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic <em>Automatic</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironments <em>Environments</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getFavorite <em>Favorite</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfigs <em>Configs</em>}</li>
  * </ul>
  * </p>
  *
@@ -32,75 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface CheckerInstance extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Environment Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Environment Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Environment Id</em>' attribute.
-	 * @see #setEnvironmentId(String)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_EnvironmentId()
-	 * @model
-	 * @generated
-	 */
-	String getEnvironmentId();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironmentId <em>Environment Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Environment Id</em>' attribute.
-	 * @see #getEnvironmentId()
-	 * @generated
-	 */
-	void setEnvironmentId(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Executable Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Executable Path</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Executable Path</em>' attribute.
-	 * @see #setExecutablePath(String)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_ExecutablePath()
-	 * @model
-	 * @generated
-	 */
-	String getExecutablePath();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getExecutablePath <em>Executable Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Executable Path</em>' attribute.
-	 * @see #getExecutablePath()
-	 * @generated
-	 */
-	void setExecutablePath(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Pcx File Folders</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Pcx File Folders</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pcx File Folders</em>' attribute list.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_PcxFileFolders()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getPcxFileFolders();
-
+public interface CheckerInstance extends ValidatorInstance {
 	/**
 	 * Returns the value of the '<em><b>Version</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion}.
@@ -131,33 +60,6 @@ public interface CheckerInstance extends EObject {
 	void setVersion(CheckerVersion value);
 
 	/**
-	 * Returns the value of the '<em><b>Use Pcx Files</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Use Pcx Files</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Use Pcx Files</em>' attribute.
-	 * @see #setUsePcxFiles(boolean)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_UsePcxFiles()
-	 * @model default="true"
-	 * @generated
-	 */
-	boolean isUsePcxFiles();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isUsePcxFiles <em>Use Pcx Files</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Use Pcx Files</em>' attribute.
-	 * @see #isUsePcxFiles()
-	 * @generated
-	 */
-	void setUsePcxFiles(boolean value);
-
-	/**
 	 * Returns the value of the '<em><b>Command Line Options</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -184,29 +86,71 @@ public interface CheckerInstance extends EObject {
 	void setCommandLineOptions(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Automatic</b></em>' attribute.
+	 * Returns the value of the '<em><b>Environments</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#getInstance <em>Instance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Automatic</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Environments</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Automatic</em>' attribute.
-	 * @see #setAutomatic(boolean)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Automatic()
+	 * @return the value of the '<em>Environments</em>' containment reference list.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Environments()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#getInstance
+	 * @model opposite="instance" containment="true"
+	 * @generated
+	 */
+	EList<CheckerEnvironmentInstance> getEnvironments();
+
+	/**
+	 * Returns the value of the '<em><b>Favorite</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Favorite</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Favorite</em>' reference.
+	 * @see #setFavorite(CheckerConfig)
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Favorite()
 	 * @model
 	 * @generated
 	 */
-	boolean isAutomatic();
+	CheckerConfig getFavorite();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic <em>Automatic</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getFavorite <em>Favorite</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Automatic</em>' attribute.
-	 * @see #isAutomatic()
+	 * @param value the new value of the '<em>Favorite</em>' reference.
+	 * @see #getFavorite()
 	 * @generated
 	 */
-	void setAutomatic(boolean value);
+	void setFavorite(CheckerConfig value);
+
+	/**
+	 * Returns the value of the '<em><b>Configs</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Configs</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Configs</em>' containment reference list.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerInstance_Configs()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<CheckerConfig> getConfigs();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	CheckerEnvironmentInstance getEnvironment(String environmentId);
 
 } // CheckerInstance

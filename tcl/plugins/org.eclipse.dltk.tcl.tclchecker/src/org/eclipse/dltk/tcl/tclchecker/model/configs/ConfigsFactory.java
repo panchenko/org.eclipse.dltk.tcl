@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsFactory.java,v 1.3 2009/02/19 10:41:52 apanchenk Exp $
+ * $Id: ConfigsFactory.java,v 1.4 2009/02/27 09:16:01 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -35,6 +35,15 @@ public interface ConfigsFactory extends EFactory {
 	CheckerConfig createCheckerConfig();
 
 	/**
+	 * Returns a new object of class '<em>Checker Environment Instance</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Checker Environment Instance</em>'.
+	 * @generated
+	 */
+	CheckerEnvironmentInstance createCheckerEnvironmentInstance();
+
+	/**
 	 * Returns a new object of class '<em>Checker Instance</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -42,15 +51,6 @@ public interface ConfigsFactory extends EFactory {
 	 * @generated
 	 */
 	CheckerInstance createCheckerInstance();
-
-	/**
-	 * Returns a new object of class '<em>Checker Favorite</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Checker Favorite</em>'.
-	 * @generated
-	 */
-	CheckerFavorite createCheckerFavorite();
 
 	/**
 	 * Returns the package supported by this factory.

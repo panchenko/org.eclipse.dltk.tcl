@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerConfigImpl.java,v 1.2 2009/02/17 11:57:11 apanchenk Exp $
+ * $Id: CheckerConfigImpl.java,v 1.3 2009/02/27 09:16:01 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -10,16 +10,14 @@ import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
+import org.eclipse.dltk.validators.configs.impl.ValidatorConfigImpl;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -31,19 +29,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isSummary <em>Summary</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getCommandLineOptions <em>Command Line Options</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getMode <em>Mode</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#getMessageStates <em>Message States</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isUseTclVer <em>Use Tcl Ver</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isIndividualMessageStates <em>Individual Message States</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerConfigImpl#isReadOnly <em>Read Only</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
+public class CheckerConfigImpl extends ValidatorConfigImpl implements CheckerConfig {
 	/**
 	 * The default value of the '{@link #isSummary() <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -63,46 +58,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 	 * @ordered
 	 */
 	protected boolean summary = SUMMARY_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getCommandLineOptions() <em>Command Line Options</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCommandLineOptions()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String COMMAND_LINE_OPTIONS_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getCommandLineOptions() <em>Command Line Options</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCommandLineOptions()
-	 * @generated
-	 * @ordered
-	 */
-	protected String commandLineOptions = COMMAND_LINE_OPTIONS_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String NAME_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getMode() <em>Mode</em>}' attribute.
@@ -175,16 +130,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 	protected boolean individualMessageStates = INDIVIDUAL_MESSAGE_STATES_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isReadOnly() <em>Read Only</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isReadOnly()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean READ_ONLY_EDEFAULT = false;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -222,48 +167,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 		summary = newSummary;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__SUMMARY, oldSummary, summary));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getCommandLineOptions() {
-		return commandLineOptions;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCommandLineOptions(String newCommandLineOptions) {
-		String oldCommandLineOptions = commandLineOptions;
-		commandLineOptions = newCommandLineOptions;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS, oldCommandLineOptions, commandLineOptions));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ConfigsPackage.CHECKER_CONFIG__NAME, oldName, name));
 	}
 
 	/**
@@ -344,22 +247,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public boolean isReadOnly() {
-		final Resource r = eResource();
-		if (r != null) {
-			final URI uri = r.getURI();
-			if (uri != null) {
-				return uri.isPlatformPlugin();
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -381,10 +268,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 		switch (featureID) {
 			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				return isSummary() ? Boolean.TRUE : Boolean.FALSE;
-			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
-				return getCommandLineOptions();
-			case ConfigsPackage.CHECKER_CONFIG__NAME:
-				return getName();
 			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				return getMode();
 			case ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES:
@@ -394,8 +277,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 				return isUseTclVer() ? Boolean.TRUE : Boolean.FALSE;
 			case ConfigsPackage.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES:
 				return isIndividualMessageStates() ? Boolean.TRUE : Boolean.FALSE;
-			case ConfigsPackage.CHECKER_CONFIG__READ_ONLY:
-				return isReadOnly() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -410,12 +291,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 		switch (featureID) {
 			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				setSummary(((Boolean)newValue).booleanValue());
-				return;
-			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
-				setCommandLineOptions((String)newValue);
-				return;
-			case ConfigsPackage.CHECKER_CONFIG__NAME:
-				setName((String)newValue);
 				return;
 			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				setMode((CheckerMode)newValue);
@@ -444,12 +319,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				setSummary(SUMMARY_EDEFAULT);
 				return;
-			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
-				setCommandLineOptions(COMMAND_LINE_OPTIONS_EDEFAULT);
-				return;
-			case ConfigsPackage.CHECKER_CONFIG__NAME:
-				setName(NAME_EDEFAULT);
-				return;
 			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				setMode(MODE_EDEFAULT);
 				return;
@@ -476,10 +345,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 		switch (featureID) {
 			case ConfigsPackage.CHECKER_CONFIG__SUMMARY:
 				return summary != SUMMARY_EDEFAULT;
-			case ConfigsPackage.CHECKER_CONFIG__COMMAND_LINE_OPTIONS:
-				return COMMAND_LINE_OPTIONS_EDEFAULT == null ? commandLineOptions != null : !COMMAND_LINE_OPTIONS_EDEFAULT.equals(commandLineOptions);
-			case ConfigsPackage.CHECKER_CONFIG__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case ConfigsPackage.CHECKER_CONFIG__MODE:
 				return mode != MODE_EDEFAULT;
 			case ConfigsPackage.CHECKER_CONFIG__MESSAGE_STATES:
@@ -488,8 +353,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 				return useTclVer != USE_TCL_VER_EDEFAULT;
 			case ConfigsPackage.CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES:
 				return individualMessageStates != INDIVIDUAL_MESSAGE_STATES_EDEFAULT;
-			case ConfigsPackage.CHECKER_CONFIG__READ_ONLY:
-				return isReadOnly() != READ_ONLY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -506,10 +369,6 @@ public class CheckerConfigImpl extends EObjectImpl implements CheckerConfig {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (summary: "); //$NON-NLS-1$
 		result.append(summary);
-		result.append(", commandLineOptions: "); //$NON-NLS-1$
-		result.append(commandLineOptions);
-		result.append(", name: "); //$NON-NLS-1$
-		result.append(name);
 		result.append(", mode: "); //$NON-NLS-1$
 		result.append(mode);
 		result.append(", useTclVer: "); //$NON-NLS-1$

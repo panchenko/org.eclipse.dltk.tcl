@@ -2,13 +2,12 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerConfig.java,v 1.1 2009/02/17 11:52:10 apanchenk Exp $
+ * $Id: CheckerConfig.java,v 1.2 2009/02/27 09:16:01 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
+import org.eclipse.dltk.validators.configs.ValidatorConfig;
 import org.eclipse.emf.common.util.EMap;
-
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -19,13 +18,10 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isSummary <em>Summary</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions <em>Command Line Options</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMode <em>Mode</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMessageStates <em>Message States</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isUseTclVer <em>Use Tcl Ver</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isIndividualMessageStates <em>Individual Message States</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isReadOnly <em>Read Only</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface CheckerConfig extends EObject {
+public interface CheckerConfig extends ValidatorConfig {
 	/**
 	 * Returns the value of the '<em><b>Summary</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -59,58 +55,6 @@ public interface CheckerConfig extends EObject {
 	 * @generated
 	 */
 	void setSummary(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Command Line Options</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Command Line Options</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Command Line Options</em>' attribute.
-	 * @see #setCommandLineOptions(String)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_CommandLineOptions()
-	 * @model
-	 * @generated
-	 */
-	String getCommandLineOptions();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions <em>Command Line Options</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Command Line Options</em>' attribute.
-	 * @see #getCommandLineOptions()
-	 * @generated
-	 */
-	void setCommandLineOptions(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_Name()
-	 * @model
-	 * @generated
-	 */
-	String getName();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
-	void setName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Mode</b></em>' attribute.
@@ -210,20 +154,5 @@ public interface CheckerConfig extends EObject {
 	 * @generated
 	 */
 	void setIndividualMessageStates(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Read Only</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Read Only</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Read Only</em>' attribute.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage#getCheckerConfig_ReadOnly()
-	 * @model transient="true" changeable="false" volatile="true" derived="true"
-	 * @generated
-	 */
-	boolean isReadOnly();
 
 } // CheckerConfig

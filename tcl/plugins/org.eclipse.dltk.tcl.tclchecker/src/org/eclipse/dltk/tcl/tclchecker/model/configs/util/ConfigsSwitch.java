@@ -2,15 +2,21 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsSwitch.java,v 1.3 2009/02/19 10:41:54 apanchenk Exp $
+ * $Id: ConfigsSwitch.java,v 1.4 2009/02/27 09:16:02 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.util;
 
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dltk.tcl.tclchecker.model.configs.*;
-
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
+import org.eclipse.dltk.validators.configs.ValidatorConfig;
+import org.eclipse.dltk.validators.configs.ValidatorEnvironmentInstance;
+import org.eclipse.dltk.validators.configs.ValidatorInstance;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -91,6 +97,7 @@ public class ConfigsSwitch<T> {
 			case ConfigsPackage.CHECKER_CONFIG: {
 				CheckerConfig checkerConfig = (CheckerConfig)theEObject;
 				T result = caseCheckerConfig(checkerConfig);
+				if (result == null) result = caseValidatorConfig(checkerConfig);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -100,21 +107,17 @@ public class ConfigsSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ConfigsPackage.CHECKER_ENVIRONMENT_INSTANCE: {
+				CheckerEnvironmentInstance checkerEnvironmentInstance = (CheckerEnvironmentInstance)theEObject;
+				T result = caseCheckerEnvironmentInstance(checkerEnvironmentInstance);
+				if (result == null) result = caseValidatorEnvironmentInstance(checkerEnvironmentInstance);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ConfigsPackage.CHECKER_INSTANCE: {
 				CheckerInstance checkerInstance = (CheckerInstance)theEObject;
 				T result = caseCheckerInstance(checkerInstance);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ConfigsPackage.CHECKER_FAVORITE: {
-				CheckerFavorite checkerFavorite = (CheckerFavorite)theEObject;
-				T result = caseCheckerFavorite(checkerFavorite);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ConfigsPackage.ENVIRONMENT_INSTANCE_MAP: {
-				@SuppressWarnings("unchecked") Map.Entry<String, CheckerInstance> environmentInstanceMap = (Map.Entry<String, CheckerInstance>)theEObject;
-				T result = caseEnvironmentInstanceMap(environmentInstanceMap);
+				if (result == null) result = caseValidatorInstance(checkerInstance);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -153,6 +156,21 @@ public class ConfigsSwitch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Checker Environment Instance</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Checker Environment Instance</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCheckerEnvironmentInstance(CheckerEnvironmentInstance object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Checker Instance</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -168,32 +186,47 @@ public class ConfigsSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Checker Favorite</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Validator Instance</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Checker Favorite</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Validator Instance</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseCheckerFavorite(CheckerFavorite object) {
+	public T caseValidatorInstance(ValidatorInstance object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Environment Instance Map</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Validator Environment Instance</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Environment Instance Map</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Validator Environment Instance</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseEnvironmentInstanceMap(Map.Entry<String, CheckerInstance> object) {
+	public T caseValidatorEnvironmentInstance(ValidatorEnvironmentInstance object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Validator Config</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Validator Config</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseValidatorConfig(ValidatorConfig object) {
 		return null;
 	}
 

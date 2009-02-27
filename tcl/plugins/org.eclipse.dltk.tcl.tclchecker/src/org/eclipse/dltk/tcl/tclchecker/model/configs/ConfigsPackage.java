@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackage.java,v 1.6 2009/02/19 10:41:52 apanchenk Exp $
+ * $Id: ConfigsPackage.java,v 1.7 2009/02/27 09:16:01 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
+import org.eclipse.dltk.validators.configs.ValidatorsPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -71,67 +72,13 @@ public interface ConfigsPackage extends EPackage {
 	int CHECKER_CONFIG = 0;
 
 	/**
-	 * The feature id for the '<em><b>Summary</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_CONFIG__SUMMARY = 0;
-
-	/**
-	 * The feature id for the '<em><b>Command Line Options</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_CONFIG__COMMAND_LINE_OPTIONS = 1;
-
-	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_CONFIG__NAME = 2;
-
-	/**
-	 * The feature id for the '<em><b>Mode</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_CONFIG__MODE = 3;
-
-	/**
-	 * The feature id for the '<em><b>Message States</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_CONFIG__MESSAGE_STATES = 4;
-
-	/**
-	 * The feature id for the '<em><b>Use Tcl Ver</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_CONFIG__USE_TCL_VER = 5;
-
-	/**
-	 * The feature id for the '<em><b>Individual Message States</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES = 6;
+	int CHECKER_CONFIG__NAME = ValidatorsPackage.VALIDATOR_CONFIG__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Read Only</b></em>' attribute.
@@ -140,7 +87,61 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_CONFIG__READ_ONLY = 7;
+	int CHECKER_CONFIG__READ_ONLY = ValidatorsPackage.VALIDATOR_CONFIG__READ_ONLY;
+
+	/**
+	 * The feature id for the '<em><b>Command Line Options</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_CONFIG__COMMAND_LINE_OPTIONS = ValidatorsPackage.VALIDATOR_CONFIG__COMMAND_LINE_OPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_CONFIG__SUMMARY = ValidatorsPackage.VALIDATOR_CONFIG_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Mode</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_CONFIG__MODE = ValidatorsPackage.VALIDATOR_CONFIG_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Message States</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_CONFIG__MESSAGE_STATES = ValidatorsPackage.VALIDATOR_CONFIG_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Use Tcl Ver</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_CONFIG__USE_TCL_VER = ValidatorsPackage.VALIDATOR_CONFIG_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Individual Message States</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES = ValidatorsPackage.VALIDATOR_CONFIG_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Checker Config</em>' class.
@@ -149,7 +150,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_CONFIG_FEATURE_COUNT = 8;
+	int CHECKER_CONFIG_FEATURE_COUNT = ValidatorsPackage.VALIDATOR_CONFIG_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.
@@ -189,14 +190,14 @@ public interface ConfigsPackage extends EPackage {
 	int MESSAGE_STATE_MAP_FEATURE_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl <em>Checker Instance</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerEnvironmentInstanceImpl <em>Checker Environment Instance</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerInstance()
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerEnvironmentInstanceImpl
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerEnvironmentInstance()
 	 * @generated
 	 */
-	int CHECKER_INSTANCE = 2;
+	int CHECKER_ENVIRONMENT_INSTANCE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Environment Id</b></em>' attribute.
@@ -205,7 +206,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_INSTANCE__ENVIRONMENT_ID = 0;
+	int CHECKER_ENVIRONMENT_INSTANCE__ENVIRONMENT_ID = ValidatorsPackage.VALIDATOR_ENVIRONMENT_INSTANCE__ENVIRONMENT_ID;
 
 	/**
 	 * The feature id for the '<em><b>Executable Path</b></em>' attribute.
@@ -214,43 +215,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_INSTANCE__EXECUTABLE_PATH = 1;
-
-	/**
-	 * The feature id for the '<em><b>Pcx File Folders</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_INSTANCE__PCX_FILE_FOLDERS = 2;
-
-	/**
-	 * The feature id for the '<em><b>Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_INSTANCE__VERSION = 3;
-
-	/**
-	 * The feature id for the '<em><b>Use Pcx Files</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_INSTANCE__USE_PCX_FILES = 4;
-
-	/**
-	 * The feature id for the '<em><b>Command Line Options</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_INSTANCE__COMMAND_LINE_OPTIONS = 5;
+	int CHECKER_ENVIRONMENT_INSTANCE__EXECUTABLE_PATH = ValidatorsPackage.VALIDATOR_ENVIRONMENT_INSTANCE__EXECUTABLE_PATH;
 
 	/**
 	 * The feature id for the '<em><b>Automatic</b></em>' attribute.
@@ -259,7 +224,134 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_INSTANCE__AUTOMATIC = 6;
+	int CHECKER_ENVIRONMENT_INSTANCE__AUTOMATIC = ValidatorsPackage.VALIDATOR_ENVIRONMENT_INSTANCE__AUTOMATIC;
+
+	/**
+	 * The feature id for the '<em><b>Pcx File Folders</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_ENVIRONMENT_INSTANCE__PCX_FILE_FOLDERS = ValidatorsPackage.VALIDATOR_ENVIRONMENT_INSTANCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Use Pcx Files</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_ENVIRONMENT_INSTANCE__USE_PCX_FILES = ValidatorsPackage.VALIDATOR_ENVIRONMENT_INSTANCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Instance</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_ENVIRONMENT_INSTANCE__INSTANCE = ValidatorsPackage.VALIDATOR_ENVIRONMENT_INSTANCE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Checker Environment Instance</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_ENVIRONMENT_INSTANCE_FEATURE_COUNT = ValidatorsPackage.VALIDATOR_ENVIRONMENT_INSTANCE_FEATURE_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl <em>Checker Instance</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerInstance()
+	 * @generated
+	 */
+	int CHECKER_INSTANCE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__NAME = ValidatorsPackage.VALIDATOR_INSTANCE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Automatic</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__AUTOMATIC = ValidatorsPackage.VALIDATOR_INSTANCE__AUTOMATIC;
+
+	/**
+	 * The feature id for the '<em><b>Validator Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__VALIDATOR_TYPE = ValidatorsPackage.VALIDATOR_INSTANCE__VALIDATOR_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Validator Nature</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__VALIDATOR_NATURE = ValidatorsPackage.VALIDATOR_INSTANCE__VALIDATOR_NATURE;
+
+	/**
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__VERSION = ValidatorsPackage.VALIDATOR_INSTANCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Command Line Options</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__COMMAND_LINE_OPTIONS = ValidatorsPackage.VALIDATOR_INSTANCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Environments</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__ENVIRONMENTS = ValidatorsPackage.VALIDATOR_INSTANCE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Favorite</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__FAVORITE = ValidatorsPackage.VALIDATOR_INSTANCE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Configs</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__CONFIGS = ValidatorsPackage.VALIDATOR_INSTANCE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Checker Instance</em>' class.
@@ -268,81 +360,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CHECKER_INSTANCE_FEATURE_COUNT = 7;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerFavoriteImpl <em>Checker Favorite</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerFavoriteImpl
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerFavorite()
-	 * @generated
-	 */
-	int CHECKER_FAVORITE = 3;
-
-	/**
-	 * The feature id for the '<em><b>Config</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_FAVORITE__CONFIG = 0;
-
-	/**
-	 * The feature id for the '<em><b>Environments</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_FAVORITE__ENVIRONMENTS = 1;
-
-	/**
-	 * The number of structural features of the '<em>Checker Favorite</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CHECKER_FAVORITE_FEATURE_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.EnvironmentInstanceMapImpl <em>Environment Instance Map</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.EnvironmentInstanceMapImpl
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getEnvironmentInstanceMap()
-	 * @generated
-	 */
-	int ENVIRONMENT_INSTANCE_MAP = 4;
-
-	/**
-	 * The feature id for the '<em><b>Key</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENVIRONMENT_INSTANCE_MAP__KEY = 0;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENVIRONMENT_INSTANCE_MAP__VALUE = 1;
-
-	/**
-	 * The number of structural features of the '<em>Environment Instance Map</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENVIRONMENT_INSTANCE_MAP_FEATURE_COUNT = 2;
+	int CHECKER_INSTANCE_FEATURE_COUNT = ValidatorsPackage.VALIDATOR_INSTANCE_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode <em>Checker Mode</em>}' enum.
@@ -352,7 +370,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerMode()
 	 * @generated
 	 */
-	int CHECKER_MODE = 5;
+	int CHECKER_MODE = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState <em>Message State</em>}' enum.
@@ -362,7 +380,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getMessageState()
 	 * @generated
 	 */
-	int MESSAGE_STATE = 6;
+	int MESSAGE_STATE = 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion <em>Checker Version</em>}' enum.
@@ -372,7 +390,7 @@ public interface ConfigsPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerVersion()
 	 * @generated
 	 */
-	int CHECKER_VERSION = 7;
+	int CHECKER_VERSION = 6;
 
 
 	/**
@@ -395,28 +413,6 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getCheckerConfig_Summary();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions <em>Command Line Options</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Command Line Options</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getCommandLineOptions()
-	 * @see #getCheckerConfig()
-	 * @generated
-	 */
-	EAttribute getCheckerConfig_CommandLineOptions();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getName()
-	 * @see #getCheckerConfig()
-	 * @generated
-	 */
-	EAttribute getCheckerConfig_Name();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMode <em>Mode</em>}'.
@@ -463,17 +459,6 @@ public interface ConfigsPackage extends EPackage {
 	EAttribute getCheckerConfig_IndividualMessageStates();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isReadOnly <em>Read Only</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Read Only</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isReadOnly()
-	 * @see #getCheckerConfig()
-	 * @generated
-	 */
-	EAttribute getCheckerConfig_ReadOnly();
-
-	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Message State Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -508,6 +493,49 @@ public interface ConfigsPackage extends EPackage {
 	EAttribute getMessageStateMap_Value();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance <em>Checker Environment Instance</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Checker Environment Instance</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance
+	 * @generated
+	 */
+	EClass getCheckerEnvironmentInstance();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#getPcxFileFolders <em>Pcx File Folders</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Pcx File Folders</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#getPcxFileFolders()
+	 * @see #getCheckerEnvironmentInstance()
+	 * @generated
+	 */
+	EAttribute getCheckerEnvironmentInstance_PcxFileFolders();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#isUsePcxFiles <em>Use Pcx Files</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Use Pcx Files</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#isUsePcxFiles()
+	 * @see #getCheckerEnvironmentInstance()
+	 * @generated
+	 */
+	EAttribute getCheckerEnvironmentInstance_UsePcxFiles();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#getInstance <em>Instance</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Instance</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance#getInstance()
+	 * @see #getCheckerEnvironmentInstance()
+	 * @generated
+	 */
+	EReference getCheckerEnvironmentInstance_Instance();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance <em>Checker Instance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -516,39 +544,6 @@ public interface ConfigsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getCheckerInstance();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironmentId <em>Environment Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Environment Id</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironmentId()
-	 * @see #getCheckerInstance()
-	 * @generated
-	 */
-	EAttribute getCheckerInstance_EnvironmentId();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getExecutablePath <em>Executable Path</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Executable Path</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getExecutablePath()
-	 * @see #getCheckerInstance()
-	 * @generated
-	 */
-	EAttribute getCheckerInstance_ExecutablePath();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFileFolders <em>Pcx File Folders</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Pcx File Folders</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getPcxFileFolders()
-	 * @see #getCheckerInstance()
-	 * @generated
-	 */
-	EAttribute getCheckerInstance_PcxFileFolders();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getVersion <em>Version</em>}'.
@@ -562,17 +557,6 @@ public interface ConfigsPackage extends EPackage {
 	EAttribute getCheckerInstance_Version();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isUsePcxFiles <em>Use Pcx Files</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Use Pcx Files</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isUsePcxFiles()
-	 * @see #getCheckerInstance()
-	 * @generated
-	 */
-	EAttribute getCheckerInstance_UsePcxFiles();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getCommandLineOptions <em>Command Line Options</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -584,81 +568,37 @@ public interface ConfigsPackage extends EPackage {
 	EAttribute getCheckerInstance_CommandLineOptions();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic <em>Automatic</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironments <em>Environments</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Automatic</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#isAutomatic()
+	 * @return the meta object for the containment reference list '<em>Environments</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getEnvironments()
 	 * @see #getCheckerInstance()
 	 * @generated
 	 */
-	EAttribute getCheckerInstance_Automatic();
+	EReference getCheckerInstance_Environments();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite <em>Checker Favorite</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getFavorite <em>Favorite</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Checker Favorite</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite
+	 * @return the meta object for the reference '<em>Favorite</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getFavorite()
+	 * @see #getCheckerInstance()
 	 * @generated
 	 */
-	EClass getCheckerFavorite();
+	EReference getCheckerInstance_Favorite();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite#getConfig <em>Config</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfigs <em>Configs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Config</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite#getConfig()
-	 * @see #getCheckerFavorite()
+	 * @return the meta object for the containment reference list '<em>Configs</em>'.
+	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance#getConfigs()
+	 * @see #getCheckerInstance()
 	 * @generated
 	 */
-	EReference getCheckerFavorite_Config();
-
-	/**
-	 * Returns the meta object for the map '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite#getEnvironments <em>Environments</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the map '<em>Environments</em>'.
-	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite#getEnvironments()
-	 * @see #getCheckerFavorite()
-	 * @generated
-	 */
-	EReference getCheckerFavorite_Environments();
-
-	/**
-	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Environment Instance Map</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Environment Instance Map</em>'.
-	 * @see java.util.Map.Entry
-	 * @model keyDataType="org.eclipse.emf.ecore.EString"
-	 *        valueType="org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance"
-	 * @generated
-	 */
-	EClass getEnvironmentInstanceMap();
-
-	/**
-	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Key</em>'.
-	 * @see java.util.Map.Entry
-	 * @see #getEnvironmentInstanceMap()
-	 * @generated
-	 */
-	EAttribute getEnvironmentInstanceMap_Key();
-
-	/**
-	 * Returns the meta object for the reference '{@link java.util.Map.Entry <em>Value</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Value</em>'.
-	 * @see java.util.Map.Entry
-	 * @see #getEnvironmentInstanceMap()
-	 * @generated
-	 */
-	EReference getEnvironmentInstanceMap_Value();
+	EReference getCheckerInstance_Configs();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode <em>Checker Mode</em>}'.
@@ -731,22 +671,6 @@ public interface ConfigsPackage extends EPackage {
 		EAttribute CHECKER_CONFIG__SUMMARY = eINSTANCE.getCheckerConfig_Summary();
 
 		/**
-		 * The meta object literal for the '<em><b>Command Line Options</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CHECKER_CONFIG__COMMAND_LINE_OPTIONS = eINSTANCE.getCheckerConfig_CommandLineOptions();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CHECKER_CONFIG__NAME = eINSTANCE.getCheckerConfig_Name();
-
-		/**
 		 * The meta object literal for the '<em><b>Mode</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -779,14 +703,6 @@ public interface ConfigsPackage extends EPackage {
 		EAttribute CHECKER_CONFIG__INDIVIDUAL_MESSAGE_STATES = eINSTANCE.getCheckerConfig_IndividualMessageStates();
 
 		/**
-		 * The meta object literal for the '<em><b>Read Only</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CHECKER_CONFIG__READ_ONLY = eINSTANCE.getCheckerConfig_ReadOnly();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.MessageStateMapImpl <em>Message State Map</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -813,6 +729,40 @@ public interface ConfigsPackage extends EPackage {
 		EAttribute MESSAGE_STATE_MAP__VALUE = eINSTANCE.getMessageStateMap_Value();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerEnvironmentInstanceImpl <em>Checker Environment Instance</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerEnvironmentInstanceImpl
+		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerEnvironmentInstance()
+		 * @generated
+		 */
+		EClass CHECKER_ENVIRONMENT_INSTANCE = eINSTANCE.getCheckerEnvironmentInstance();
+
+		/**
+		 * The meta object literal for the '<em><b>Pcx File Folders</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CHECKER_ENVIRONMENT_INSTANCE__PCX_FILE_FOLDERS = eINSTANCE.getCheckerEnvironmentInstance_PcxFileFolders();
+
+		/**
+		 * The meta object literal for the '<em><b>Use Pcx Files</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CHECKER_ENVIRONMENT_INSTANCE__USE_PCX_FILES = eINSTANCE.getCheckerEnvironmentInstance_UsePcxFiles();
+
+		/**
+		 * The meta object literal for the '<em><b>Instance</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CHECKER_ENVIRONMENT_INSTANCE__INSTANCE = eINSTANCE.getCheckerEnvironmentInstance_Instance();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerInstanceImpl <em>Checker Instance</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -823,44 +773,12 @@ public interface ConfigsPackage extends EPackage {
 		EClass CHECKER_INSTANCE = eINSTANCE.getCheckerInstance();
 
 		/**
-		 * The meta object literal for the '<em><b>Environment Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CHECKER_INSTANCE__ENVIRONMENT_ID = eINSTANCE.getCheckerInstance_EnvironmentId();
-
-		/**
-		 * The meta object literal for the '<em><b>Executable Path</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CHECKER_INSTANCE__EXECUTABLE_PATH = eINSTANCE.getCheckerInstance_ExecutablePath();
-
-		/**
-		 * The meta object literal for the '<em><b>Pcx File Folders</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CHECKER_INSTANCE__PCX_FILE_FOLDERS = eINSTANCE.getCheckerInstance_PcxFileFolders();
-
-		/**
 		 * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute CHECKER_INSTANCE__VERSION = eINSTANCE.getCheckerInstance_Version();
-
-		/**
-		 * The meta object literal for the '<em><b>Use Pcx Files</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CHECKER_INSTANCE__USE_PCX_FILES = eINSTANCE.getCheckerInstance_UsePcxFiles();
 
 		/**
 		 * The meta object literal for the '<em><b>Command Line Options</b></em>' attribute feature.
@@ -871,64 +789,28 @@ public interface ConfigsPackage extends EPackage {
 		EAttribute CHECKER_INSTANCE__COMMAND_LINE_OPTIONS = eINSTANCE.getCheckerInstance_CommandLineOptions();
 
 		/**
-		 * The meta object literal for the '<em><b>Automatic</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Environments</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CHECKER_INSTANCE__AUTOMATIC = eINSTANCE.getCheckerInstance_Automatic();
+		EReference CHECKER_INSTANCE__ENVIRONMENTS = eINSTANCE.getCheckerInstance_Environments();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerFavoriteImpl <em>Checker Favorite</em>}' class.
+		 * The meta object literal for the '<em><b>Favorite</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.CheckerFavoriteImpl
-		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getCheckerFavorite()
 		 * @generated
 		 */
-		EClass CHECKER_FAVORITE = eINSTANCE.getCheckerFavorite();
+		EReference CHECKER_INSTANCE__FAVORITE = eINSTANCE.getCheckerInstance_Favorite();
 
 		/**
-		 * The meta object literal for the '<em><b>Config</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Configs</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CHECKER_FAVORITE__CONFIG = eINSTANCE.getCheckerFavorite_Config();
-
-		/**
-		 * The meta object literal for the '<em><b>Environments</b></em>' map feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CHECKER_FAVORITE__ENVIRONMENTS = eINSTANCE.getCheckerFavorite_Environments();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.impl.EnvironmentInstanceMapImpl <em>Environment Instance Map</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.EnvironmentInstanceMapImpl
-		 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.impl.ConfigsPackageImpl#getEnvironmentInstanceMap()
-		 * @generated
-		 */
-		EClass ENVIRONMENT_INSTANCE_MAP = eINSTANCE.getEnvironmentInstanceMap();
-
-		/**
-		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ENVIRONMENT_INSTANCE_MAP__KEY = eINSTANCE.getEnvironmentInstanceMap_Key();
-
-		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ENVIRONMENT_INSTANCE_MAP__VALUE = eINSTANCE.getEnvironmentInstanceMap_Value();
+		EReference CHECKER_INSTANCE__CONFIGS = eINSTANCE.getCheckerInstance_Configs();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode <em>Checker Mode</em>}' enum.

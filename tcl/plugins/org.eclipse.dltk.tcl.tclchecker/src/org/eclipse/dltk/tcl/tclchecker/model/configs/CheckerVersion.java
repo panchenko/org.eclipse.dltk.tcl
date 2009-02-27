@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerVersion.java,v 1.2 2009/02/16 09:32:33 apanchenk Exp $
+ * $Id: CheckerVersion.java,v 1.3 2009/02/27 09:16:01 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -30,7 +30,7 @@ public enum CheckerVersion implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	VERSION4(4, "VERSION4", "VERSION4"), //$NON-NLS-1$ //$NON-NLS-2$
+	VERSION4(400, "VERSION4", "VERSION4"), //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * The '<em><b>VERSION5</b></em>' literal object.
@@ -40,7 +40,7 @@ public enum CheckerVersion implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	VERSION5(5, "VERSION5", "VERSION5"); //$NON-NLS-1$ //$NON-NLS-2$
+	VERSION5(500, "VERSION5", "VERSION5"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * The '<em><b>VERSION4</b></em>' literal value.
@@ -55,7 +55,7 @@ public enum CheckerVersion implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int VERSION4_VALUE = 4;
+	public static final int VERSION4_VALUE = 400;
 
 	/**
 	 * The '<em><b>VERSION5</b></em>' literal value.
@@ -70,7 +70,7 @@ public enum CheckerVersion implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int VERSION5_VALUE = 5;
+	public static final int VERSION5_VALUE = 500;
 
 	/**
 	 * An array of all the '<em><b>Checker Version</b></em>' enumerators.
