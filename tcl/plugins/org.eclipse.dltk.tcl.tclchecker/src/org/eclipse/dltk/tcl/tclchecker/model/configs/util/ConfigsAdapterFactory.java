@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsAdapterFactory.java,v 1.4 2009/02/27 09:16:02 apanchenk Exp $
+ * $Id: ConfigsAdapterFactory.java,v 1.5 2009/02/27 15:44:40 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.util;
 
@@ -182,13 +182,13 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.validators.ValidatorInstance <em>Validator Instance</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.ValidatorInstance <em>Validator Instance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.validators.configs.validators.ValidatorInstance
+	 * @see org.eclipse.dltk.validators.configs.ValidatorInstance
 	 * @generated
 	 */
 	public Adapter createValidatorInstanceAdapter() {
@@ -196,13 +196,13 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.validators.ValidatorEnvironmentInstance <em>Validator Environment Instance</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.ValidatorEnvironmentInstance <em>Validator Environment Instance</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.validators.configs.validators.ValidatorEnvironmentInstance
+	 * @see org.eclipse.dltk.validators.configs.ValidatorEnvironmentInstance
 	 * @generated
 	 */
 	public Adapter createValidatorEnvironmentInstanceAdapter() {
@@ -210,13 +210,13 @@ public class ConfigsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.validators.ValidatorConfig <em>Validator Config</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.validators.configs.ValidatorConfig <em>Validator Config</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.validators.configs.validators.ValidatorConfig
+	 * @see org.eclipse.dltk.validators.configs.ValidatorConfig
 	 * @generated
 	 */
 	public Adapter createValidatorConfigAdapter() {

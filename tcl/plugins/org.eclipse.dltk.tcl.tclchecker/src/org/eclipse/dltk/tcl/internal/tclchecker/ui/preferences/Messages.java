@@ -55,7 +55,9 @@ public class Messages extends NLS {
 
 	public static String TclChecker_browse;
 
-	public static String TclChecker_button_Add;
+	public static String TclChecker_button_Add_Configuration;
+
+	public static String TclChecker_button_Add_Validator;
 	public static String TclChecker_button_Edit;
 	public static String TclChecker_button_Copy;
 	public static String TclChecker_button_Remove;
@@ -85,7 +87,8 @@ public class Messages extends NLS {
 
 	public static String TclChecker_add_Configuration_Title;
 	public static String TclChecker_edit_Configuration_Title;
-	public static String TclChecker_edit_Environment_Title;
+	public static String TclChecker_edit_Instance_Title;
+	public static String TclChecker_add_Instance_Title;
 
 	public static String TclChecker_error;
 
@@ -127,6 +130,8 @@ public class Messages extends NLS {
 	public static String TclCheckerInstanceDialog_Environment;
 
 	public static String TclCheckerInstanceDialog_ExecutablePath;
+
+	public static String TclCheckerInstanceDialog_Name;
 
 	public static String TclCheckerInstanceDialog_None;
 

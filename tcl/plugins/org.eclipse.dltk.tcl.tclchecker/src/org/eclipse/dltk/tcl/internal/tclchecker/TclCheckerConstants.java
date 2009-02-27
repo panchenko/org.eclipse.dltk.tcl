@@ -15,10 +15,6 @@ public final class TclCheckerConstants {
 	private TclCheckerConstants() {
 	}
 
-	/**
-	 * XMI representation of the configuration data
-	 */
-	public static final String PREF_CONFIGURATION = "tclchecker.configuration"; //$NON-NLS-1$
 
 	/**
 	 * Version of the TclChecker preferences

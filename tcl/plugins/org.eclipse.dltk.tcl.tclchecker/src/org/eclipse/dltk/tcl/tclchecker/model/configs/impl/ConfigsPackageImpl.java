@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackageImpl.java,v 1.7 2009/02/27 09:16:02 apanchenk Exp $
+ * $Id: ConfigsPackageImpl.java,v 1.8 2009/02/27 15:44:40 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -474,6 +474,9 @@ public class ConfigsPackageImpl extends EPackageImpl implements ConfigsPackage {
 		initEReference(getCheckerInstance_Configs(), this.getCheckerConfig(), null, "configs", null, 0, -1, CheckerInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		EOperation op = addEOperation(checkerInstanceEClass, this.getCheckerEnvironmentInstance(), "getEnvironment", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, ecorePackage.getEString(), "environmentId", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
+		op = addEOperation(checkerInstanceEClass, this.getCheckerEnvironmentInstance(), "findEnvironment", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, ecorePackage.getEString(), "environmentId", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals

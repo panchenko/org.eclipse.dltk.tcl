@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstanceImpl.java,v 1.5 2009/02/27 09:16:02 apanchenk Exp $
+ * $Id: CheckerInstanceImpl.java,v 1.6 2009/02/27 15:44:40 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -241,8 +241,24 @@ public class CheckerInstanceImpl extends ValidatorInstanceImpl implements
 		CheckerEnvironmentInstance environmentInstance = ConfigsFactory.eINSTANCE
 				.createCheckerEnvironmentInstance();
 		environmentInstance.setEnvironmentId(environmentId);
+		environmentInstance.setAutomatic(isAutomatic());
 		envs.add(environmentInstance);
 		return environmentInstance;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public CheckerEnvironmentInstance findEnvironment(String environmentId) {
+		final EList<CheckerEnvironmentInstance> envs = getEnvironments();
+		for (CheckerEnvironmentInstance environmentInstance : envs) {
+			if (environmentId.equals(environmentInstance.getEnvironmentId())) {
+				return environmentInstance;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -406,11 +422,22 @@ public class CheckerInstanceImpl extends ValidatorInstanceImpl implements
 
 		};
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public EList<ValidatorEnvironmentInstance> getValidatorEnvironments() {
 		return (EList<ValidatorEnvironmentInstance>) (List<?>) getEnvironments();
+	}
+
+	@Override
+	public ValidatorConfig getValidatorFavoriteConfig() {
+		return getFavorite();
+	}
+
+	@Override
+	public void setValidatorFavoriteConfig(
+			ValidatorConfig newValidatorFavoriteConfig) {
+		setFavorite((CheckerConfig) newValidatorFavoriteConfig);
 	}
 
 } // CheckerInstanceImpl

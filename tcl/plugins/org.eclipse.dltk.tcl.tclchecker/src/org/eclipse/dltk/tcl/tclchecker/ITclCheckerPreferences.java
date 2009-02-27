@@ -23,37 +23,23 @@ import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 public interface ITclCheckerPreferences {
 
 	/**
-	 * Returns list of TclChecker configurations.
+	 * Returns list of the common TclChecker configurations.
 	 * 
 	 * @return
 	 */
-	List<CheckerConfig> getConfigurations();
+	List<CheckerConfig> getCommonConfigurations();
 
 	/**
-	 * Creates new configuration
-	 * 
-	 * @return
-	 */
-	CheckerConfig newConfiguration();
-
-	/**
-	 * Removes the specified configuration
-	 * 
-	 * @param config
-	 * @return <code>true</code> if the specified <code>config</code> was
-	 *         removed from preferences, <code>false</code> otherwise.
-	 */
-	boolean removeConfiguration(CheckerConfig config);
-
-	/**
-	 * Returns the environment specific configuration. For system preferences
-	 * <code>environmentId</code> is required, but for project-specific
-	 * preferences <code>null</code> could be used instead.
+	 * Returns the TclChecker instances
 	 * 
 	 * @param environmentId
 	 * @return
 	 */
-	CheckerInstance getEnvironment(String environmentId);
+	List<CheckerInstance> getInstances();
+
+	CheckerInstance newInstance();
+
+	boolean removeInstance(CheckerInstance instance);
 
 	/**
 	 * Saves changes in this object to the permanent storage

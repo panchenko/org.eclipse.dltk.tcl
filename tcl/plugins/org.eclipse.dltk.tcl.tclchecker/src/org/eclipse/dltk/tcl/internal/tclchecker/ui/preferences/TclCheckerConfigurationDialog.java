@@ -23,6 +23,7 @@ import org.eclipse.dltk.tcl.tclchecker.model.messages.MessageGroup;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.ui.util.SWTFactory;
+import org.eclipse.dltk.validators.configs.ValidatorsPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -282,7 +283,7 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 		name.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		bindingContext.bindValue(SWTObservables.observeText(name, SWT.Modify),
 				EMFObservables.observeValue(instance,
-						ConfigsPackage.Literals.CHECKER_CONFIG__NAME), null,
+						ValidatorsPackage.Literals.VALIDATOR_CONFIG__NAME), null,
 				null);
 	}
 
@@ -334,10 +335,15 @@ public class TclCheckerConfigurationDialog extends StatusDialog {
 		commandLineOptions = new Text(group, SWT.BORDER);
 		commandLineOptions
 				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		bindingContext.bindValue(SWTObservables.observeText(commandLineOptions,
-				SWT.Modify), EMFObservables.observeValue(instance,
-				ConfigsPackage.Literals.CHECKER_CONFIG__COMMAND_LINE_OPTIONS),
-				null, null);
+		bindingContext
+				.bindValue(
+						SWTObservables.observeText(commandLineOptions,
+								SWT.Modify),
+						EMFObservables
+								.observeValue(
+										instance,
+										ValidatorsPackage.Literals.VALIDATOR_CONFIG__COMMAND_LINE_OPTIONS),
+						null, null);
 		summary = SWTFactory.createCheckButton(group,
 				Messages.TclCheckerConfigurationDialog_Summary, null, false, 2);
 		bindingContext.bindValue(SWTObservables.observeSelection(summary),

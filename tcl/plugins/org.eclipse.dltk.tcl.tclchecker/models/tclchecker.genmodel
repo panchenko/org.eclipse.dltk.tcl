@@ -4,7 +4,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.dltk.tcl.tclchecker/src"
     modelPluginID="org.eclipse.dltk.tcl.tclchecker" modelName="Tclchecker" nonNLSMarkers="true"
     rootImplementsInterface="" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
-    copyrightFields="false" language="" usedGenPackages="../../org.eclipse.dltk.validators.core/models/validators.genmodel#//validators">
+    copyrightFields="false" language="" usedGenPackages="../../org.eclipse.dltk.validators.core/models/validators.genmodel#//configs">
   <foreignModel>tclchecker.ecore</foreignModel>
   <genPackages prefix="Model" basePackage="org.eclipse.dltk.tcl.tclchecker" disposableProviderFactory="true"
       loadInitialization="true" ecorePackage="tclchecker.ecore#/">
@@ -77,6 +77,9 @@
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tclchecker.ecore#//configs/CheckerInstance/configs"/>
         <genOperations ecoreOperation="tclchecker.ecore#//configs/CheckerInstance/getEnvironment">
           <genParameters ecoreParameter="tclchecker.ecore#//configs/CheckerInstance/getEnvironment/environmentId"/>
+        </genOperations>
+        <genOperations ecoreOperation="tclchecker.ecore#//configs/CheckerInstance/findEnvironment">
+          <genParameters ecoreParameter="tclchecker.ecore#//configs/CheckerInstance/findEnvironment/environmentId"/>
         </genOperations>
       </genClasses>
     </nestedGenPackages>

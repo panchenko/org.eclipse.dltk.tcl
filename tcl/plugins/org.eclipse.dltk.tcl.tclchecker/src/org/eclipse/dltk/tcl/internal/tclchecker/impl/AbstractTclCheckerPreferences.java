@@ -48,13 +48,10 @@ public abstract class AbstractTclCheckerPreferences implements
 
 	protected abstract void writeConfiguration(String value);
 
-	protected abstract ISingleEnvironmentPredicate createEnvironmentPredicate(
-			String environmentId);
-
 	/*
 	 * @see ITclCheckerPreferences#getConfigurations()
 	 */
-	public List<CheckerConfig> getConfigurations() {
+	public List<CheckerConfig> getCommonConfigurations() {
 		final List<CheckerConfig> instances = new ArrayList<CheckerConfig>();
 		TclCheckerConfigUtils.collectConfigurations(instances, resource);
 		for (Resource r : contributedResources) {
@@ -66,39 +63,32 @@ public abstract class AbstractTclCheckerPreferences implements
 	/*
 	 * @see ITclCheckerPreferences#getEnvironment(java.lang.String)
 	 */
-	public CheckerInstance getEnvironment(String environmentId) {
-		final ISingleEnvironmentPredicate predicate = createEnvironmentPredicate(environmentId);
+	public List<CheckerInstance> getInstances() {
+		List<CheckerInstance> instances = new ArrayList<CheckerInstance>();
 		for (EObject object : resource.getContents()) {
 			if (object instanceof CheckerInstance) {
 				final CheckerInstance instance = (CheckerInstance) object;
-				if (predicate.evaluate(instance.getEnvironmentId())) {
-					return instance;
-				}
+				instances.add(instance);
 			}
 		}
+		return Collections.unmodifiableList(instances);
+	}
+
+	/*
+	 * @see ITclCheckerPreferences#newInstance()
+	 */
+	public CheckerInstance newInstance() {
 		final CheckerInstance instance = ConfigsFactory.eINSTANCE
 				.createCheckerInstance();
-		instance.setEnvironmentId(predicate.getEnvironmentId());
 		resource.getContents().add(instance);
 		return instance;
 	}
 
 	/*
-	 * @see ITclCheckerPreferences#newConfiguration()
+	 * @see ITclCheckerPreferences#removeInstance(CheckerInstance)
 	 */
-	public CheckerConfig newConfiguration() {
-		final CheckerConfig instance = ConfigsFactory.eINSTANCE
-				.createCheckerConfig();
-		resource.getContents().add(instance);
-		return instance;
-	}
-
-	/*
-	 * @see ITclCheckerPreferences#removeConfiguration(ConfigInstance)
-	 */
-	public boolean removeConfiguration(CheckerConfig config) {
-		return resource.getContents().remove(config);
-
+	public boolean removeInstance(CheckerInstance instance) {
+		return resource.getContents().remove(instance);
 	}
 
 	/*

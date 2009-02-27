@@ -3,8 +3,9 @@ package org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,24 +15,25 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
-import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.CheckedListDialogField;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.IEnvironmentPredicate;
 import org.eclipse.dltk.tcl.internal.tclchecker.impl.SingleEnvironmentPredicate;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsFactory;
+import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.ui.environment.EnvironmentContainer;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
+import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.ui.util.SWTFactory;
+import org.eclipse.dltk.validators.configs.ValidatorConfig;
+import org.eclipse.dltk.validators.configs.ValidatorEnvironmentInstance;
+import org.eclipse.dltk.validators.configs.ValidatorInstance;
+import org.eclipse.dltk.validators.core.ValidatorRuntime;
+import org.eclipse.dltk.validators.internal.core.ValidatorsCore;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
@@ -43,30 +45,37 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.ColumnLayoutData;
-import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 
 	private static final PreferenceKey KEY_CONFIGURATION = new PreferenceKey(
-			TclCheckerPlugin.PLUGIN_ID, TclCheckerConstants.PREF_CONFIGURATION);
+			ValidatorsCore.PLUGIN_ID, ValidatorRuntime.PREF_CONFIGURATION);
 
 	private static final PreferenceKey[] KEYS = new PreferenceKey[] { KEY_CONFIGURATION };
 
@@ -75,541 +84,500 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		super(context, project, KEYS, container);
 	}
 
-	private class TclCheckerConfigurationListAdapter implements IListAdapter {
+	private static class ValidatorViewerSorter extends ViewerSorter {
 
-		private static final int IDX_ADD = 0;
-		private static final int IDX_EDIT = 1;
-		private static final int IDX_COPY = 2;
-		private static final int IDX_REMOVE = 3;
-		private static final int IDX_IMPORT = 5;
-		private static final int IDX_EXPORT = 6;
+		private static final int INSTANCE_CATEGORY = -1;
 
-		public void customButtonPressed(ListDialogField field, int index) {
-			if (index == IDX_ADD) {
-				doAdd(field);
-			} else if (index == IDX_EDIT) {
-				doEdit(field);
-			} else if (index == IDX_REMOVE) {
-				doRemove(field);
-			} else if (index == IDX_EXPORT) {
-				doExport(field);
-			} else if (index == IDX_IMPORT) {
-				doImport();
-			}
-		}
-
-		private void doAdd(ListDialogField field) {
-			final CheckerConfig instance = editConfiguration(null);
-			if (instance != null) {
-				resource.getContents().add(instance);
-				saveResource();
-				field.addElement(instance);
-			}
-		}
-
-		private void doEdit(ListDialogField field) {
-			List<?> selection = field.getSelectedElements();
-			if (canEdit(selection)) {
-				final CheckerConfig instance = (CheckerConfig) selection.get(0);
-				if (editConfiguration(instance) != null) {
-					saveResource();
-					field.getTableViewer().refresh();
-				}
-			}
-		}
-
-		private void doRemove(ListDialogField field) {
-			@SuppressWarnings("unchecked")
-			final List<CheckerConfig> selection = field.getSelectedElements();
-			if (canRemove(selection)) {
-				resource.getContents().removeAll(selection);
-				removeFavoriteConfigs(selection);
-				saveResource();
-				field.removeElements(selection);
-			}
-		}
-
-		private static final String FILTER_EXTENSIONS = "*.xml"; //$NON-NLS-1$
-
-		private void doExport(ListDialogField field) {
-			final List<?> selection = field.getSelectedElements();
-			if (selection.size() == 1) {
-				final FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
-				dialog.setText(Messages.TclChecker_export_Title);
-				dialog.setOverwrite(true);
-				dialog.setFilterExtensions(new String[] { FILTER_EXTENSIONS });
-				final String exportPath = dialog.open();
-				if (exportPath != null) {
-					final Resource resource = new XMIResourceImpl();
-					resource.getContents().add(
-							EcoreUtil.copy((EObject) selection.get(0)));
-					try {
-						final FileWriter writer = new FileWriter(exportPath);
-						try {
-							resource.save(
-									new URIConverter.WriteableOutputStream(
-											writer,
-											TclCheckerConfigUtils.ENCODING),
-									null);
-						} finally {
-							try {
-								writer.close();
-							} catch (IOException e) {
-								// ignore
-							}
-						}
-					} catch (IOException e) {
-						ErrorDialog.openError(getShell(),
-								Messages.TclChecker_export_ErrorTitle, e
-										.getMessage(), new Status(
-										IStatus.ERROR,
-										TclCheckerPlugin.PLUGIN_ID, e
-												.getMessage(), e));
-					}
-				}
-			}
-		}
-
-		private void doImport() {
-			final FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
-			dialog.setText(Messages.TclChecker_import_Title);
-			dialog.setFilterExtensions(new String[] { FILTER_EXTENSIONS });
-			final String importPath = dialog.open();
-			if (importPath != null) {
-				try {
-					final Resource importResource = new XMIResourceImpl(URI
-							.createFileURI(importPath));
-					importResource.load(null);
-					int importedCount = 0;
-					for (EObject object : importResource.getContents()) {
-						if (object instanceof CheckerConfig) {
-							resource.getContents().add(EcoreUtil.copy(object));
-							++importedCount;
-						}
-					}
-					if (importedCount != 0) {
-						initConfigurations();
-					}
-				} catch (Exception e) {
-					ErrorDialog.openError(getShell(),
-							Messages.TclChecker_import_ErrorTitle, e
-									.getMessage(), new Status(IStatus.ERROR,
-									TclCheckerPlugin.PLUGIN_ID, e.getMessage(),
-									e));
-				}
-			}
-		}
-
-		/**
-		 * @param selection
-		 * @return
-		 */
-		private boolean canEdit(List<?> selection) {
-			return selection.size() == 1
-					&& !((CheckerConfig) selection.get(0)).isReadOnly();
-		}
-
-		/**
-		 * @param selection
-		 * @return
-		 */
-		private boolean canRemove(List<?> selection) {
-			if (selection.isEmpty()) {
-				return false;
-			}
-			for (Iterator<?> i = selection.iterator(); i.hasNext();) {
-				CheckerConfig instance = (CheckerConfig) i.next();
-				if (instance.isReadOnly()) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		public void doubleClicked(ListDialogField field) {
-			customButtonPressed(field, IDX_EDIT);
-		}
-
-		public void selectionChanged(ListDialogField field) {
-			List<?> selection = field.getSelectedElements();
-			field.enableButton(IDX_EDIT, canEdit(selection));
-			field.enableButton(IDX_REMOVE, canRemove(selection));
-			field.enableButton(IDX_COPY, false); // TODO
-			field.enableButton(IDX_EXPORT, selection.size() == 1);
-		}
-
-	}
-
-	private static class TclCheckerConfigurationLabelProvider extends
-			LabelProvider implements ITableLabelProvider {
-
-		public String getColumnText(Object element, int columnIndex) {
-			if (element instanceof CheckerConfig) {
-				final CheckerConfig config = (CheckerConfig) element;
-				switch (columnIndex) {
-				case 0:
-					return NLS.bind(
-							Messages.TclChecker_configurationName_message,
-							Messages.TclChecker_name, config.getName());
-				case 1:
-					if (config.isReadOnly()) {
-						return Messages.TclCheckerPreferenceBlock_BuiltIn;
-					} else {
-						return Messages.TclCheckerPreferenceBlock_UserDefined;
-					}
-				}
-			}
-			return Util.EMPTY_STRING;
-		}
-
-		public Image getColumnImage(Object element, int columnIndex) {
-			return null;
-		}
-
-		@Override
-		public String getText(Object element) {
-			return getColumnText(element, 0);
-		}
-
-	}
-
-	private static class TclCheckerConfigurationViewerSorter extends
-			ViewerSorter {
-
-		private final int BUILTIN_CATEGORY = 0;
-		private final int USER_CATEGORY = 1;
+		private static final int BUILTIN_CONFIG_CATEGORY = -2;
+		private static final int USER_CONFIG_CATEGORY = -1;
 
 		@Override
 		public int category(Object element) {
-			if (element instanceof CheckerConfig) {
-				return ((CheckerConfig) element).isReadOnly() ? BUILTIN_CATEGORY
-						: USER_CATEGORY;
+			if (element instanceof ValidatorConfig) {
+				return ((ValidatorConfig) element).isReadOnly() ? BUILTIN_CONFIG_CATEGORY
+						: USER_CONFIG_CATEGORY;
+			} else if (element instanceof ValidatorInstance) {
+				return INSTANCE_CATEGORY;
 			}
 			return super.category(element);
 		}
+
 	}
 
-	private class TclCheckerConfigFieldListener implements ICheckStateListener {
+	private static class ViewerSorterComparatorWrapper implements
+			Comparator<Object> {
 
-		public void checkStateChanged(CheckStateChangedEvent event) {
-			if (event.getChecked()) {
-				@SuppressWarnings("unchecked")
-				final List<CheckerConfig> configs = configurationField
-						.getElements();
-				for (CheckerConfig config : configs) {
-					if (config != event.getElement()
-							&& configurationField.isChecked(config)) {
-						configurationField.setCheckedWithoutUpdate(config,
-								false);
-					}
-				}
-				updateFavoriteConfig((CheckerConfig) event.getElement());
-			} else {
-				updateFavoriteConfig(null);
-			}
-			saveResource();
+		/**
+		 * @param viewerl
+		 */
+		public ViewerSorterComparatorWrapper(StructuredViewer viewer) {
+			this.viewer = viewer;
+			this.sorter = viewer.getSorter() != null ? viewer.getSorter()
+					: new ValidatorViewerSorter();
+		}
+
+		private final StructuredViewer viewer;
+		private final ViewerSorter sorter;
+
+		public int compare(Object o1, Object o2) {
+			return sorter.compare(viewer, o1, o2);
 		}
 
 	}
 
-	/**
-	 * @param config
-	 */
-	private void updateFavoriteConfig(CheckerConfig config) {
-		boolean updated = false;
-		List<CheckerFavorite> duplicates = null;
-		for (EObject object : resource.getContents()) {
-			if (object instanceof CheckerFavorite) {
-				final CheckerFavorite favorite = (CheckerFavorite) object;
-				if (!updated) {
-					favorite.setConfig(config);
-					updated = true;
+	private class TclCheckerInstanceLabelProvider extends LabelProvider {
+
+		@Override
+		public String getText(Object element) {
+			if (element instanceof ValidatorInstance) {
+				final ValidatorInstance instance = (ValidatorInstance) element;
+				final String name = instance.getName();
+				if (name != null && name.length() != 0) {
+					return name;
 				} else {
-					if (duplicates == null) {
-						duplicates = new ArrayList<CheckerFavorite>();
-					}
-					duplicates.add(favorite);
-				}
-			}
-		}
-		if (!updated) {
-			final CheckerFavorite favorite = ConfigsFactory.eINSTANCE
-					.createCheckerFavorite();
-			favorite.setConfig(config);
-			resource.getContents().add(favorite);
-		} else if (duplicates != null) {
-			resource.getContents().removeAll(duplicates);
-		}
-	}
-
-	private void removeFavoriteConfigs(Collection<CheckerConfig> configs) {
-		for (EObject object : resource.getContents()) {
-			if (object instanceof CheckerFavorite) {
-				final CheckerFavorite favorite = (CheckerFavorite) object;
-				if (favorite.getConfig() != null) {
-					if (configs.contains(favorite.getConfig())) {
-						favorite.setConfig(null);
-					}
-				}
-			}
-		}
-	}
-
-	private CheckerConfig findFavoriteConfig() {
-		for (EObject object : resource.getContents()) {
-			if (object instanceof CheckerFavorite) {
-				return ((CheckerFavorite) object).getConfig();
-			}
-		}
-		return null;
-	}
-
-	private class TclCheckerInstanceListAdapter implements IListAdapter {
-
-		private static final int IDX_ADD = 0;
-		private static final int IDX_EDIT = 1;
-		private static final int IDX_REMOVE = 2;
-
-		public void customButtonPressed(ListDialogField field, int index) {
-			switch (index) {
-			case IDX_ADD:
-				doAdd(field);
-				break;
-			case IDX_EDIT:
-				doEdit(field.getSelectedElements());
-				break;
-			case IDX_REMOVE:
-				doRemove(field.getSelectedElements());
-				break;
-			}
-		}
-
-		private void doAdd(ListDialogField field) {
-			final CheckerInstance instance = editInstance(null);
-			if (instance != null) {
-				resource.getContents().add(instance);
-				saveResource();
-				field.addElement(instance);
-			}
-		}
-
-		/**
-		 * @param selection
-		 */
-		private void doEdit(List<?> selection) {
-			if (canEdit(selection)) {
-				final CheckerInstance instance = (CheckerInstance) selection
-						.get(0);
-				if (editInstance(instance) != null) {
-					instanceField.setGrayedWithoutUpdate(instance,
-							!canBeAutomatic(instance));
-					instanceField.setChecked(instance, canBeAutomatic(instance)
-							&& instance.isAutomatic());
-					instanceField.getTableViewer().refresh();
-					saveResource();
-				}
-			}
-		}
-
-		/**
-		 * @param selection
-		 */
-		private void doRemove(List<?> selection) {
-			resource.getContents().removeAll(selection);
-			saveResource();
-			instanceField.removeElements(selection);
-		}
-
-		public void doubleClicked(ListDialogField field) {
-			customButtonPressed(field, IDX_EDIT);
-		}
-
-		public void selectionChanged(ListDialogField field) {
-			final List<?> selection = field.getSelectedElements();
-			field.enableButton(IDX_EDIT, canEdit(selection));
-			field.enableButton(IDX_REMOVE, canRemove(selection));
-		}
-
-		/**
-		 * @param selection
-		 * @return
-		 */
-		private boolean canRemove(List<?> selection) {
-			return !selection.isEmpty();
-		}
-
-		/**
-		 * @param selection
-		 * @return
-		 */
-		private boolean canEdit(List<?> selection) {
-			return selection.size() == 1;
-		}
-
-	}
-
-	private class TclCheckerInstanceLabelProvider extends LabelProvider
-			implements ITableLabelProvider {
-
-		public Image getColumnImage(Object element, int columnIndex) {
-			return null;
-		}
-
-		public String getColumnText(Object element, int columnIndex) {
-			if (element instanceof CheckerInstance) {
-				final CheckerInstance instance = (CheckerInstance) element;
-				switch (columnIndex) {
-				case 0:
 					return Messages.TclChecker_name;
-				case 1:
-					return environments.getName(instance.getEnvironmentId());
-				case 2:
-					if (instance.isAutomatic()) {
-						return Messages.TclChecker_Auto;
-					}
+				}
+			} else if (element instanceof ValidatorConfig) {
+				return getConfigName((ValidatorConfig) element);
+			} else if (element instanceof ValidatorConfigRef) {
+				return getConfigName(((ValidatorConfigRef) element).config);
+			} else {
+				return Util.EMPTY_STRING;
+			}
+		}
+
+		private String getConfigName(ValidatorConfig config) {
+			if (config.isReadOnly()) {
+				return config.getName()
+						+ Messages.TclCheckerPreferenceBlock_BuiltIn;
+			} else {
+				return config.getName();
+			}
+		}
+	}
+
+	private class ValidatorInput {
+
+		public ValidatorInstance[] getInstances() {
+			final List<ValidatorInstance> instances = new ArrayList<ValidatorInstance>();
+			for (EObject object : resource.getContents()) {
+				if (object instanceof ValidatorInstance) {
+					// TODO check nature or validatorType
+					instances.add((ValidatorInstance) object);
 				}
 			}
-			return Util.EMPTY_STRING;
+			return instances.toArray(new ValidatorInstance[instances.size()]);
+		}
+
+	}
+
+	private class ValidatorContentProvider implements ITreeContentProvider {
+
+		public Object[] getChildren(Object parentElement) {
+			if (parentElement instanceof ValidatorInstance) {
+				return getConfigsOf((ValidatorInstance) parentElement);
+			}
+			return new Object[0];
+		}
+
+		public Object getParent(Object element) {
+			if (element instanceof ValidatorConfig) {
+				return ((ValidatorConfig) element).eContainer();
+			} else if (element instanceof ValidatorConfigRef) {
+				return ((ValidatorConfigRef) element).instance;
+			}
+			return null;
+		}
+
+		public boolean hasChildren(Object element) {
+			// TODO improve
+			return element instanceof ValidatorInstance;
+		}
+
+		public Object[] getElements(Object inputElement) {
+			if (inputElement instanceof ValidatorInput) {
+				return ((ValidatorInput) inputElement).getInstances();
+			}
+			return new Object[0];
+		}
+
+		public void dispose() {
+			// NOP
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			// NOP
+		}
+
+	}
+
+	private static class ValidatorConfigRef {
+
+		public ValidatorConfigRef(ValidatorInstance instance,
+				ValidatorConfig config) {
+			this.instance = instance;
+			this.config = config;
+		}
+
+		final ValidatorInstance instance;
+		final ValidatorConfig config;
+
+		@Override
+		public int hashCode() {
+			return instance.hashCode() ^ config.hashCode();
 		}
 
 		@Override
-		public String getText(Object element) {
-			return getColumnText(element, 0);
-		}
-
-	}
-
-	private class TclCheckerInstanceViewerSorter extends ViewerSorter {
-
-		private static final int LOCAL_CATEGORY = -3;
-		private static final int REMOTE_CATEGORY = -2;
-		private static final int UNKNOWN_CATEGORY = -1;
-
-		@Override
-		public int category(Object element) {
-			if (element instanceof CheckerInstance) {
-				final IEnvironment environment = environments
-						.get(((CheckerInstance) element).getEnvironmentId());
-				if (environment != null) {
-					return environment.isLocal() ? LOCAL_CATEGORY
-							: REMOTE_CATEGORY;
-				} else {
-					return UNKNOWN_CATEGORY;
-				}
+		public boolean equals(Object obj) {
+			if (obj instanceof ValidatorConfigRef) {
+				final ValidatorConfigRef other = (ValidatorConfigRef) obj;
+				return config == other.config && instance == other.instance;
 			}
-			return super.category(element);
-		}
-	}
-
-	private class TclCheckerInstanceFieldListener implements
-			ICheckStateListener {
-
-		/*
-		 * @see ICheckStateListener#checkStateChanged(CheckStateChangedEvent)
-		 */
-		public void checkStateChanged(CheckStateChangedEvent event) {
-			CheckerInstance instance = (CheckerInstance) event.getElement();
-			if (canBeAutomatic(instance)) {
-				if (instance.isAutomatic() != event.getChecked()) {
-					instance.setAutomatic(event.getChecked());
-					saveResource();
-				}
-			}
+			return false;
 		}
 
 	}
 
-	private static boolean canBeAutomatic(CheckerInstance instance) {
-		return instance.getExecutablePath() != null
-				&& instance.getExecutablePath().length() != 0;
-	}
-
-	private static final String[] CONFIGURATION_BUTTONS = {
-			Messages.TclChecker_button_Add, Messages.TclChecker_button_Edit,
-			Messages.TclChecker_button_Copy, Messages.TclChecker_button_Remove,
-			null, Messages.TclChecker_button_Import,
-			Messages.TclChecker_button_Export };
-
-	private static final String[] INSTANCE_BUTTONS = {
-			Messages.TclChecker_button_Add, Messages.TclChecker_button_Edit,
-			Messages.TclChecker_button_Remove };
-
-	private CheckedListDialogField configurationField;
-	private CheckedListDialogField instanceField;
+	private CheckboxTreeViewer viewer;
+	private Button[] fButtonControls;
 	private EnvironmentContainer environments = new EnvironmentContainer();
+
+	private static final int IDX_ADD_VALIDATOR = 0;
+	private static final int IDX_ADD_CONFIG = 1;
+	private static final int IDX_EDIT = 2;
+	private static final int IDX_COPY = 3;
+	private static final int IDX_REMOVE = 4;
+	private static final int IDX_IMPORT = 6;
+	private static final int IDX_EXPORT = 7;
 
 	@Override
 	protected Control createOptionsBlock(Composite parent) {
-		TabFolder folder = new TabFolder(parent, SWT.NONE);
-		TabItem tabInstances = new TabItem(folder, SWT.NONE);
-		tabInstances.setText(Messages.TclChecker_tab_Instances);
-		tabInstances.setControl(createInstanceField(folder));
+		Composite folder = SWTFactory.createComposite(parent, parent.getFont(),
+				2, 1, GridData.FILL_BOTH);
+		viewer = new CheckboxTreeViewer(folder, SWT.BORDER | SWT.SINGLE);
+		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+		viewer.setLabelProvider(new TclCheckerInstanceLabelProvider());
+		viewer.setSorter(new ValidatorViewerSorter());
+		viewer.setContentProvider(new ValidatorContentProvider());
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				TclCheckerPreferenceBlock.this
+						.selectionChanged(convertSelection(event.getSelection()));
+			}
+		});
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				customButtonPressed(IDX_EDIT);
+			}
+		});
+		viewer.addCheckStateListener(new ICheckStateListener() {
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				TclCheckerPreferenceBlock.this.checkStateChanged(event
+						.getElement(), event.getChecked());
+			}
+		});
 
-		TabItem tabConfigs = new TabItem(folder, SWT.NONE);
-		tabConfigs.setText(Messages.TclChecker_tab_Configurations);
-		tabConfigs.setControl(createConfigurationField(folder));
+		Composite buttonBox = SWTFactory.createComposite(folder, folder
+				.getFont(), 1, 1, GridData.FILL_VERTICAL);
+		String[] buttonLabels = { Messages.TclChecker_button_Add_Validator,
+				Messages.TclChecker_button_Add_Configuration,
+				Messages.TclChecker_button_Edit,
+				Messages.TclChecker_button_Copy,
+				Messages.TclChecker_button_Remove, null,
+				Messages.TclChecker_button_Import,
+				Messages.TclChecker_button_Export };
+		fButtonControls = new Button[buttonLabels.length];
+		for (int i = 0; i < buttonLabels.length; i++) {
+			String label = buttonLabels[i];
+			if (label != null) {
+				final int buttonIndex = i;
+				fButtonControls[i] = createButton(buttonBox, label, null);
+				fButtonControls[i].setEnabled(true);
+				fButtonControls[i].addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						customButtonPressed(buttonIndex);
+					}
+				});
+			} else {
+				fButtonControls[i] = null;
+				createSeparator(buttonBox);
+			}
+		}
 
-		folder.setSelection(folder.getItem(0));
 		environments.addChangeListener(new Runnable() {
 			public void run() {
-				instanceField.getTableViewer().refresh();
+				viewer.refresh();
 			}
 		});
 		return folder;
 	}
 
 	/**
-	 * @param folder
-	 * @return
+	 * @param element
+	 * @param checked
 	 */
-	private Composite createInstanceField(Composite folder) {
-		instanceField = new CheckedListDialogField(
-				new TclCheckerInstanceListAdapter(), INSTANCE_BUTTONS,
-				new TclCheckerInstanceLabelProvider());
-		instanceField.setUseLabel(false);
-		instanceField.setListGrabExcessHorizontalSpace(true);
-		instanceField
-				.addCheckStateListener(new TclCheckerInstanceFieldListener());
-		instanceField.setTableColumns(new ListDialogField.ColumnsDescription(
-				new ColumnLayoutData[] { new ColumnWeightData(60),
-						new ColumnWeightData(40) }, new String[] {
-						Messages.TclChecker_column_InstanceName,
-						Messages.TclChecker_column_InstanceEnvironmentName },
-				true));
-		instanceField.setViewerSorter(new TclCheckerInstanceViewerSorter());
-		Composite composite = new Composite(folder, SWT.NONE);
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		composite.setLayout(new GridLayout(3, false));
-		SWTFactory.createLabel(composite,
-				Messages.TclCheckerPreferenceBlock_environmentTabDescription,
-				3, SWT.WRAP);
-		instanceField.doFillIntoGrid(composite, 3);
-		return composite;
+	protected void checkStateChanged(Object element, boolean checked) {
+		if (element instanceof ValidatorInstance) {
+			final ValidatorInstance instance = (ValidatorInstance) element;
+			instance.setAutomatic(checked);
+			for (ValidatorEnvironmentInstance environmentInstance : instance
+					.getValidatorEnvironments()) {
+				environmentInstance.setAutomatic(checked);
+			}
+		} else if (element instanceof ValidatorConfig) {
+			ValidatorConfig config = (ValidatorConfig) element;
+			if (config.eContainer() != null) {
+				selectFavoriteConfig((ValidatorInstance) config.eContainer(),
+						config, element);
+			}
+		} else if (element instanceof ValidatorConfigRef) {
+			ValidatorConfigRef item = (ValidatorConfigRef) element;
+			selectFavoriteConfig(item.instance, item.config, element);
+		}
 	}
 
-	private Composite createConfigurationField(Composite folder) {
-		configurationField = new CheckedListDialogField(
-				new TclCheckerConfigurationListAdapter(),
-				CONFIGURATION_BUTTONS,
-				new TclCheckerConfigurationLabelProvider());
-		configurationField.setUseLabel(false);
-		configurationField.setListGrabExcessHorizontalSpace(true);
-		configurationField
-				.addCheckStateListener(new TclCheckerConfigFieldListener());
-		configurationField
-				.setTableColumns(new ListDialogField.ColumnsDescription(
-						new ColumnLayoutData[] { new ColumnWeightData(60),
-								new ColumnWeightData(40) }, new String[] {
-								Messages.TclChecker_column_ConfigurationName,
-								Messages.TclChecker_column_ConfigurationType },
-						true));
-		configurationField
-				.setViewerSorter(new TclCheckerConfigurationViewerSorter());
-		Composite composite = new Composite(folder, SWT.NONE);
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		composite.setLayout(new GridLayout(3, false));
-		configurationField.doFillIntoGrid(composite, 3);
-		return composite;
+	/**
+	 * @param container
+	 * @param config
+	 * @param element
+	 */
+	private void selectFavoriteConfig(ValidatorInstance instance,
+			ValidatorConfig config, Object element) {
+		instance.setValidatorFavoriteConfig(config);
+		viewer.setChecked(element, true);
+		for (Object checked : viewer.getCheckedElements()) {
+			if (checked != element) {
+				if (checked instanceof ValidatorConfig) {
+					final ValidatorConfig c = (ValidatorConfig) checked;
+					if (c.eContainer() == instance) {
+						viewer.setChecked(c, false);
+					}
+				} else if (checked instanceof ValidatorConfigRef) {
+					final ValidatorConfigRef ref = (ValidatorConfigRef) checked;
+					if (ref.instance == instance) {
+						viewer.setChecked(checked, false);
+					}
+				}
+			}
+		}
+	}
+
+	protected Button createButton(Composite parent, String label,
+			SelectionListener listener) {
+		Button button = new Button(parent, SWT.PUSH);
+		button.setFont(parent.getFont());
+		button.setText(label);
+		if (listener != null) {
+			button.addSelectionListener(listener);
+		}
+		GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.verticalAlignment = GridData.BEGINNING;
+		gd.widthHint = SWTFactory.getButtonWidthHint(button);
+
+		button.setLayoutData(gd);
+
+		return button;
+	}
+
+	private Label createSeparator(Composite parent) {
+		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
+		separator.setFont(parent.getFont());
+		separator.setVisible(false);
+		GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.verticalAlignment = GridData.BEGINNING;
+		gd.verticalIndent = 4;
+		separator.setLayoutData(gd);
+		return separator;
+	}
+
+	private void enableButton(int buttonIndex, boolean enabled) {
+		fButtonControls[buttonIndex].setEnabled(enabled);
+	}
+
+	private ValidatorInstance convertToValidatorInstance(List<?> selection) {
+		if (selection.size() == 1) {
+			final Object obj = selection.get(0);
+			if (obj instanceof ValidatorInstance) {
+				return (ValidatorInstance) obj;
+			} else if (obj instanceof ValidatorConfig) {
+				return (ValidatorInstance) ((ValidatorConfig) obj).eContainer();
+			} else if (obj instanceof ValidatorConfigRef) {
+				return ((ValidatorConfigRef) obj).instance;
+			}
+		}
+		return null;
+	}
+
+	private ValidatorConfig convertToValidatorConfig(List<?> selection) {
+		if (selection.size() == 1) {
+			return convertToValidatorConfig(selection.get(0));
+		}
+		return null;
+	}
+
+	private ValidatorConfig convertToValidatorConfig(final Object obj) {
+		if (obj instanceof ValidatorConfig) {
+			return (ValidatorConfig) obj;
+		} else if (obj instanceof ValidatorConfigRef) {
+			return ((ValidatorConfigRef) obj).config;
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * @param selection
+	 * @return
+	 */
+	private boolean canEdit(List<?> selection) {
+		if (selection.size() == 1) {
+			final Object obj = selection.get(0);
+			if (obj instanceof CheckerConfig) {
+				return !((CheckerConfig) obj).isReadOnly();
+			} else if (obj instanceof ValidatorConfigRef) {
+				return !((ValidatorConfigRef) obj).config.isReadOnly();
+			} else if (obj instanceof CheckerInstance) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param selection
+	 * @return
+	 */
+	private boolean canRemove(List<?> selection) {
+		if (selection.isEmpty()) {
+			return false;
+		}
+		for (Iterator<?> i = selection.iterator(); i.hasNext();) {
+			final Object obj = i.next();
+			if (obj instanceof CheckerConfig) {
+				if (((CheckerConfig) obj).isReadOnly()) {
+					return false;
+				}
+			} else if (obj instanceof ValidatorConfigRef) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected void selectionChanged(List<?> selection) {
+		final ValidatorInstance instance = convertToValidatorInstance(selection);
+		enableButton(IDX_ADD_CONFIG, instance != null);
+		enableButton(IDX_EDIT, canEdit(selection));
+		enableButton(IDX_COPY, false);
+		enableButton(IDX_REMOVE, canRemove(selection));
+		enableButton(IDX_IMPORT, instance != null);
+		enableButton(IDX_EXPORT, convertToValidatorConfig(selection) != null);
+	}
+
+	protected void customButtonPressed(int button) {
+		switch (button) {
+		case IDX_ADD_VALIDATOR:
+			doAddValidator();
+			break;
+		case IDX_ADD_CONFIG: {
+			final ValidatorInstance instance = convertToValidatorInstance(getSelection());
+			if (instance != null) {
+				doAddConfig(instance);
+			}
+			break;
+		}
+		case IDX_EDIT: {
+			final List<?> selection = getSelection();
+			if (canEdit(selection)) {
+				final Object obj = selection.get(0);
+				if (obj instanceof CheckerInstance) {
+					if (editInstance((CheckerInstance) obj) != null) {
+						saveResource();
+						viewer.refresh(obj);
+					}
+				} else if (obj instanceof CheckerConfig) {
+					if (editConfiguration((CheckerConfig) obj) != null) {
+						saveResource();
+						viewer.refresh(obj);
+					}
+				}
+			}
+			break;
+		}
+		case IDX_REMOVE: {
+			final List<?> selection = getSelection();
+			if (canRemove(selection)) {
+				final List<EObject> removed = new ArrayList<EObject>();
+				for (Object obj : selection) {
+					if (obj instanceof EObject) {
+						EcoreUtil.remove((EObject) obj);
+						removed.add((EObject) obj);
+						viewer.remove(obj);
+					}
+				}
+				for (ValidatorInstance instance : new ValidatorInput()
+						.getInstances()) {
+					if (instance.getValidatorFavoriteConfig() != null
+							&& removed.contains(instance
+									.getValidatorFavoriteConfig())) {
+						final Object[] configs = getConfigsOf(instance);
+						if (configs.length != 0) {
+							Arrays.sort(configs,
+									new ViewerSorterComparatorWrapper(viewer));
+							ValidatorConfig config = convertToValidatorConfig(configs[0]);
+							if (config != null) {
+								instance.setValidatorFavoriteConfig(config);
+								viewer.setChecked(configs[0], true);
+							}
+						} else {
+							instance.setValidatorFavoriteConfig(null);
+						}
+					}
+				}
+				saveResource();
+			}
+			break;
+		}
+		case IDX_COPY:
+			// TODO copy
+			break;
+		case IDX_IMPORT: {
+			final ValidatorInstance instance = convertToValidatorInstance(getSelection());
+			if (instance != null) {
+				doImport(instance);
+			}
+			break;
+		}
+		case IDX_EXPORT: {
+			final ValidatorConfig config = convertToValidatorConfig(getSelection());
+			if (config != null) {
+				doExport(config);
+			}
+		}
+			break;
+		}
+	}
+
+	private void doAddValidator() {
+		final CheckerInstance instance = editInstance(null);
+		if (instance != null) {
+			resource.getContents().add(instance);
+			saveResource();
+			viewer.refresh();
+		}
+	}
+
+	private void doAddConfig(ValidatorInstance instance) {
+		final CheckerConfig config = editConfiguration(null);
+		if (instance != null) {
+			instance.getValidatorConfigs().add(config);
+			saveResource();
+			viewer.add(instance, config);
+		}
 	}
 
 	protected CheckerConfig editConfiguration(final CheckerConfig input) {
@@ -652,34 +620,41 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	protected CheckerInstance editInstance(final CheckerInstance input) {
 		final CheckerInstance workingCopy;
 		if (input != null) {
-			workingCopy = (CheckerInstance) EcoreUtil.copy(input);
+			workingCopy = input;
 		} else {
 			workingCopy = ConfigsFactory.eINSTANCE.createCheckerInstance();
-			// FIXME workingCopy.setEnvironmentId(input.environmentId);
 		}
+		boolean result = false;
 		final ChangeRecorder changeRecorder = input != null ? new ChangeRecorder(
 				workingCopy)
 				: null;
-		final TclCheckerInstanceDialog dialog = new TclCheckerInstanceDialog(
-				getShell(), environments, workingCopy, input == null);
-		dialog.setTitle(Messages.TclChecker_edit_Environment_Title);
-		if (dialog.open() == Window.OK) {
+		try {
+			final IValidatorDialogContext context = new ValidatorDialogContext(
+					buildEnvironmentPredicate(), environments, input == null);
 			if (input != null) {
-				final ChangeDescription changeDescription = changeRecorder
-						.endRecording();
-				if (changeDescription != null) {
-					changeDescription.applyAndReverse();
-					final List<FeatureChange> featureChanges = changeDescription
-							.getObjectChanges().get(workingCopy);
-					if (featureChanges != null) {
-						for (FeatureChange featureChange : featureChanges) {
-							featureChange.apply(input);
-						}
-					}
-				}
-				return input;
+				final TclCheckerInstanceDialog dialog = new TclCheckerInstanceDialog(
+						getShell(), context, workingCopy);
+				dialog.setTitle(Messages.TclChecker_edit_Instance_Title);
+				result = dialog.open() == Window.OK;
 			} else {
+				TclCheckerInstanceWizard wizard = new TclCheckerInstanceWizard(
+						context, workingCopy);
+				WizardDialog wd = new WizardDialog(getShell(), wizard);
+				PixelConverter converter = new PixelConverter(getShell());
+				wd.setMinimumPageSize(
+						converter.convertWidthInCharsToPixels(70), converter
+								.convertHeightInCharsToPixels(20));
+				result = wd.open() == Window.OK;
+			}
+			if (result) {
 				return workingCopy;
+			}
+		} finally {
+			if (changeRecorder != null) {
+				if (!result) {
+					changeRecorder.endRecording().apply();
+				}
+				changeRecorder.dispose();
 			}
 		}
 		return null;
@@ -689,6 +664,18 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	protected void initialize() {
 		super.initialize();
 		initValues();
+	}
+
+	@Override
+	public boolean performOk() {
+		saveResource();
+		return super.performOk();
+	}
+
+	@Override
+	public boolean performApply() {
+		saveResource();
+		return super.performApply();
 	}
 
 	@Override
@@ -709,8 +696,28 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	private void initValues() {
 		environments.initialize();
 		loadResource();
-		initConfigurations();
-		initInstances();
+		final ValidatorInput input = new ValidatorInput();
+		final List<Object> checked = new ArrayList<Object>();
+		for (ValidatorInstance instance : input.getInstances()) {
+			if (instance.isAutomatic()) {
+				checked.add(instance);
+			}
+			if (instance instanceof CheckerInstance) {
+				final CheckerConfig favorite = ((CheckerInstance) instance)
+						.getFavorite();
+				if (favorite != null) {
+					if (instance.getValidatorConfigs().contains(favorite)) {
+						checked.add(favorite);
+					} else {
+						checked.add(new ValidatorConfigRef(instance, favorite));
+					}
+				}
+			}
+		}
+		viewer.setInput(input);
+		viewer.expandAll();
+		viewer.setCheckedElements(checked.toArray());
+		selectionChanged(convertSelection(viewer.getSelection()));
 	}
 
 	private void loadResource() {
@@ -724,35 +731,20 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	}
 
 	protected void saveResource() {
+		statusChanged(StatusInfo.OK_STATUS);
 		try {
 			setString(KEY_CONFIGURATION, TclCheckerConfigUtils
 					.saveConfiguration(resource));
 		} catch (IOException e) {
-			// FIXME show error
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
+			statusChanged(new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID,
+					e.getMessage()));
 		}
 	}
 
-	private void initConfigurations() {
-		final List<CheckerConfig> instances = collectConfugurations();
-		configurationField.setElements(instances);
-		final CheckerConfig favorite = findFavoriteConfig();
-		if (favorite != null) {
-			configurationField.setCheckedElements(Collections
-					.singletonList(favorite));
-		} else {
-			configurationField.setCheckedElements(Collections.emptyList());
-		}
-		if (!instances.isEmpty()) {
-			configurationField.selectFirstElement();
-		} else {
-			configurationField.selectElements(StructuredSelection.EMPTY);
-		}
-	}
-
-	private List<CheckerConfig> collectConfugurations() {
+	private List<CheckerConfig> collectConfigurations() {
 		final List<CheckerConfig> instances = new ArrayList<CheckerConfig>();
 		TclCheckerConfigUtils.collectConfigurations(instances, resource);
 		for (Resource r : contributedResources) {
@@ -781,31 +773,89 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		return new AllEnvironments();
 	}
 
-	private void initInstances() {
-		final IEnvironmentPredicate ePredicate = buildEnvironmentPredicate();
-		final List<CheckerInstance> handles = new ArrayList<CheckerInstance>();
-		final List<CheckerInstance> selected = new ArrayList<CheckerInstance>();
-		final List<CheckerInstance> grayed = new ArrayList<CheckerInstance>();
-		for (EObject object : resource.getContents()) {
-			if (object instanceof CheckerInstance) {
-				final CheckerInstance instance = (CheckerInstance) object;
-				if (ePredicate.evaluate(instance.getEnvironmentId())) {
-					handles.add(instance);
-					if (!canBeAutomatic(instance)) {
-						grayed.add(instance);
-					} else if (instance.isAutomatic()) {
-						selected.add(instance);
-					}
-				}
-			}
-		}
-		instanceField.setElements(handles);
-		instanceField.setCheckedElements(selected);
-		instanceField.setGrayedElements(grayed);
-		if (!handles.isEmpty()) {
-			instanceField.selectFirstElement();
+	private List<?> getSelection() {
+		return convertSelection(viewer.getSelection());
+	}
+
+	private List<?> convertSelection(ISelection selection) {
+		if (selection != null && !selection.isEmpty()
+				&& selection instanceof IStructuredSelection) {
+			return ((IStructuredSelection) selection).toList();
 		} else {
-			instanceField.selectElements(StructuredSelection.EMPTY);
+			return Collections.emptyList();
 		}
 	}
+
+	private static final String FILTER_EXTENSIONS = "*.xml"; //$NON-NLS-1$
+
+	private void doImport(ValidatorInstance instance) {
+		final FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
+		dialog.setText(Messages.TclChecker_import_Title);
+		dialog.setFilterExtensions(new String[] { FILTER_EXTENSIONS });
+		final String importPath = dialog.open();
+		if (importPath != null) {
+			try {
+				final Resource importResource = new XMIResourceImpl(URI
+						.createFileURI(importPath));
+				importResource.load(null);
+				int importedCount = 0;
+				for (EObject object : importResource.getContents()) {
+					if (object instanceof ValidatorConfig) {
+						instance.getValidatorConfigs().add(
+								(ValidatorConfig) EcoreUtil.copy(object));
+						++importedCount;
+					}
+				}
+				if (importedCount != 0) {
+					viewer.refresh();
+				}
+			} catch (Exception e) {
+				ErrorDialog.openError(getShell(),
+						Messages.TclChecker_import_ErrorTitle, e.getMessage(),
+						new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID, e
+								.getMessage(), e));
+			}
+		}
+	}
+
+	private void doExport(ValidatorConfig config) {
+		final FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
+		dialog.setText(Messages.TclChecker_export_Title);
+		dialog.setOverwrite(true);
+		dialog.setFilterExtensions(new String[] { FILTER_EXTENSIONS });
+		final String exportPath = dialog.open();
+		if (exportPath != null) {
+			final Resource resource = new XMIResourceImpl();
+			resource.getContents().add(EcoreUtil.copy(config));
+			try {
+				final FileWriter writer = new FileWriter(exportPath);
+				try {
+					resource.save(new URIConverter.WriteableOutputStream(
+							writer, TclCheckerConfigUtils.ENCODING), null);
+				} finally {
+					try {
+						writer.close();
+					} catch (IOException e) {
+						// ignore
+					}
+				}
+			} catch (IOException e) {
+				ErrorDialog.openError(getShell(),
+						Messages.TclChecker_export_ErrorTitle, e.getMessage(),
+						new Status(IStatus.ERROR, TclCheckerPlugin.PLUGIN_ID, e
+								.getMessage(), e));
+			}
+		}
+	}
+
+	protected Object[] getConfigsOf(final ValidatorInstance instance) {
+		final List<Object> children = new ArrayList<Object>();
+		children.addAll(instance.getValidatorConfigs());
+		final List<CheckerConfig> configs = collectConfigurations();
+		for (CheckerConfig config : configs) {
+			children.add(new ValidatorConfigRef(instance, config));
+		}
+		return children.toArray();
+	}
+
 }

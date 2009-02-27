@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerInstance.java,v 1.5 2009/02/27 09:16:01 apanchenk Exp $
+ * $Id: CheckerInstance.java,v 1.6 2009/02/27 15:44:39 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -152,5 +152,13 @@ public interface CheckerInstance extends ValidatorInstance {
 	 * @generated
 	 */
 	CheckerEnvironmentInstance getEnvironment(String environmentId);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	CheckerEnvironmentInstance findEnvironment(String environmentId);
 
 } // CheckerInstance

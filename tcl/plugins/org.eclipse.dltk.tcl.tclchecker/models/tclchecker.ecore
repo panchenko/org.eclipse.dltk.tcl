@@ -80,6 +80,9 @@
       <eOperations name="getEnvironment" eType="#//configs/CheckerEnvironmentInstance">
         <eParameters name="environmentId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </eOperations>
+      <eOperations name="findEnvironment" eType="#//configs/CheckerEnvironmentInstance">
+        <eParameters name="environmentId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eOperations>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="#//configs/CheckerVersion"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="commandLineOptions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="environments" upperBound="-1"

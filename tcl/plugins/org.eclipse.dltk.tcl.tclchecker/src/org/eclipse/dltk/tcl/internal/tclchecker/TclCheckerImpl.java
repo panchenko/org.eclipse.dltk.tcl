@@ -10,7 +10,7 @@
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.InstanceConfigPair;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceResponse;
 import org.eclipse.dltk.validators.core.AbstractValidator;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidatorType;
@@ -23,27 +23,28 @@ public class TclCheckerImpl extends AbstractValidator {
 
 	@Override
 	public boolean isAutomatic(IScriptProject project) {
-		final InstanceConfigPair pair = TclCheckerConfigUtils
-				.getConfiguration(project);
-		return pair != null && pair.instance.isAutomatic();
+		final ValidatorInstanceResponse response = TclCheckerConfigUtils
+				.getConfiguration(project, TclCheckerConfigUtils.AUTO);
+		return !response.isEmpty();
 	}
 
 	public boolean isValidatorValid(IScriptProject project) {
-		final InstanceConfigPair pair = TclCheckerConfigUtils
-				.getConfiguration(project);
-		return pair != null
-				&& TclCheckerHelper.canExecuteTclChecker(pair.instance,
-						getEnvrironment(project));
+		final ValidatorInstanceResponse response = TclCheckerConfigUtils
+				.getConfiguration(project, TclCheckerConfigUtils.AUTO);
+		return !response.isEmpty()
+				&& TclCheckerHelper.canExecuteTclChecker(response.instances
+						.get(0).environmentInstance, response.environment);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Object getValidator(IScriptProject project, Class validatorType) {
 		if (ISourceModuleValidator.class.equals(validatorType)) {
-			final InstanceConfigPair pair = TclCheckerConfigUtils
-					.getConfiguration(project);
-			if (pair != null) {
-				return new TclChecker(pair.instance, pair.config,
-						getEnvrironment(project));
+			final ValidatorInstanceResponse response = TclCheckerConfigUtils
+					.getConfiguration(project, TclCheckerConfigUtils.AUTO);
+			if (!response.isEmpty()) {
+				return new TclChecker(
+						response.instances.get(0).environmentInstance,
+						response.instances.get(0).config, response.environment);
 			}
 		}
 		return null;

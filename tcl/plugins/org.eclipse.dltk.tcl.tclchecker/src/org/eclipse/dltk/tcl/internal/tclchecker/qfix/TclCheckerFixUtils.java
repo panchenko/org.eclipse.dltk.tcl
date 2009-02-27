@@ -28,7 +28,8 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerMarker;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.InstanceConfigPair;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceRef;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceResponse;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.NullValidatorOutput;
@@ -160,14 +161,16 @@ public class TclCheckerFixUtils {
 		if (environment == null) {
 			return false;
 		}
-		final InstanceConfigPair pair = TclCheckerConfigUtils
-				.getConfiguration(resource.getProject());
-		if (pair == null) {
+		final ValidatorInstanceResponse response = TclCheckerConfigUtils
+				.getConfiguration(resource.getProject(),
+						TclCheckerConfigUtils.AUTO);
+		if (response.isEmpty()) {
 			return false;
 		}
-		new TclChecker(pair.instance, pair.config, environment).validate(
-				new ISourceModule[] { module }, new NullValidatorOutput(),
-				new NullProgressMonitor());
+		ValidatorInstanceRef pair = response.instances.get(0);
+		new TclChecker(pair.environmentInstance, pair.config, environment)
+				.validate(new ISourceModule[] { module },
+						new NullValidatorOutput(), new NullProgressMonitor());
 		return true;
 	}
 

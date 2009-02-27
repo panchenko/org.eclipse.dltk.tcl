@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackage.java,v 1.7 2009/02/27 09:16:01 apanchenk Exp $
+ * $Id: ConfigsPackage.java,v 1.8 2009/02/27 15:44:39 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -307,6 +307,15 @@ public interface ConfigsPackage extends EPackage {
 	 * @ordered
 	 */
 	int CHECKER_INSTANCE__VALIDATOR_NATURE = ValidatorsPackage.VALIDATOR_INSTANCE__VALIDATOR_NATURE;
+
+	/**
+	 * The feature id for the '<em><b>Validator Favorite Config</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__VALIDATOR_FAVORITE_CONFIG = ValidatorsPackage.VALIDATOR_INSTANCE__VALIDATOR_FAVORITE_CONFIG;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.

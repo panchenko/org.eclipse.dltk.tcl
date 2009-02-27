@@ -39,7 +39,7 @@ import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.tcl.internal.tclchecker.v5.Checker5OutputProcessor;
 import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.AbstractExternalValidator;
@@ -65,12 +65,12 @@ public class TclChecker extends AbstractExternalValidator implements
 				problem.getMessage(), attributes);
 	}
 
-	private final CheckerInstance instance;
+	private final CheckerEnvironmentInstance instance;
 	private final CheckerConfig config;
 	private final IEnvironment environment;
 
-	public TclChecker(CheckerInstance instance, CheckerConfig config,
-			IEnvironment environment) {
+	public TclChecker(CheckerEnvironmentInstance instance,
+			CheckerConfig config, IEnvironment environment) {
 		Assert.isNotNull(instance, "CheckerInstance can't be null"); //$NON-NLS-1$
 		Assert.isNotNull(config, "CheckerConfig can't be null"); //$NON-NLS-1$
 		this.instance = instance;
@@ -93,7 +93,7 @@ public class TclChecker extends AbstractExternalValidator implements
 		}
 
 		final IOutputProcessor processor;
-		if (CheckerVersion.VERSION5.equals(instance.getVersion())) {
+		if (CheckerVersion.VERSION5.equals(instance.getInstance().getVersion())) {
 			processor = new Checker5OutputProcessor(monitor, console, this,
 					this);
 		} else {

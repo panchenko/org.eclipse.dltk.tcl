@@ -21,7 +21,7 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState;
 import org.eclipse.dltk.utils.PlatformFileUtils;
@@ -39,13 +39,14 @@ public final class TclCheckerHelper {
 	private static final String SUMMARY_OPTION = "-summary"; //$NON-NLS-1$
 	private static final String VERBOSE_OPTION = "-verbose"; //$NON-NLS-1$
 
-	public static boolean buildCommandLine(CheckerInstance instance,
+	public static boolean buildCommandLine(
+			CheckerEnvironmentInstance environmentInstance,
 			CheckerConfig config, CommandLine cmdLine,
 			IEnvironment environment, IScriptProject project,
 			IValidatorOutput console) {
 		IFileHandle validatorFile = PlatformFileUtils
 				.findAbsoluteOrEclipseRelativeFile(environment, new Path(
-						instance.getExecutablePath()));
+						environmentInstance.getExecutablePath()));
 		cmdLine.add(validatorFile.toOSString());
 
 		if (console.isEnabled() && config.isSummary()) {
@@ -107,11 +108,11 @@ public final class TclCheckerHelper {
 			}
 		}
 
-		if (!instance.isUsePcxFiles()) {
+		if (!environmentInstance.isUsePcxFiles()) {
 			cmdLine.add(NO_PCX_OPTION);
 		} else {
 			// pcx paths
-			for (final String pcx : instance.getPcxFileFolders()) {
+			for (final String pcx : environmentInstance.getPcxFileFolders()) {
 				IFileHandle handle = PlatformFileUtils
 						.findAbsoluteOrEclipseRelativeFile(environment,
 								new Path(pcx));
@@ -123,7 +124,8 @@ public final class TclCheckerHelper {
 				}
 			}
 		}
-		String cliOptions = instance.getCommandLineOptions();
+		String cliOptions = environmentInstance.getInstance()
+				.getCommandLineOptions();
 		if (cliOptions != null && cliOptions.length() != 0) {
 			cmdLine.add(new CommandLine(cliOptions));
 		}
@@ -131,7 +133,8 @@ public final class TclCheckerHelper {
 		if (cliOptions != null && cliOptions.length() != 0) {
 			cmdLine.add(new CommandLine(cliOptions));
 		}
-		if (CheckerVersion.VERSION5.equals(instance.getVersion())) {
+		if (CheckerVersion.VERSION5.equals(environmentInstance.getInstance()
+				.getVersion())) {
 			cmdLine.add("-as"); //$NON-NLS-1$
 			cmdLine.add("script"); //$NON-NLS-1$
 		}
@@ -166,8 +169,9 @@ public final class TclCheckerHelper {
 		return false;
 	}
 
-	public static boolean canExecuteTclChecker(CheckerInstance instance,
+	public static boolean canExecuteTclChecker(
+			CheckerEnvironmentInstance environmentInstance,
 			IEnvironment environment) {
-		return isValidPath(environment, instance.getExecutablePath());
+		return isValidPath(environment, environmentInstance.getExecutablePath());
 	}
 }

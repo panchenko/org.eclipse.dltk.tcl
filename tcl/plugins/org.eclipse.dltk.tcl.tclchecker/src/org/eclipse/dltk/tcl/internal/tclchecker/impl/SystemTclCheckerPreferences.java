@@ -11,10 +11,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.tclchecker.impl;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.compiler.util.Util;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
-import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.validators.core.ValidatorRuntime;
+import org.eclipse.dltk.validators.internal.core.ValidatorsCore;
 
 public class SystemTclCheckerPreferences extends AbstractTclCheckerPreferences {
 
@@ -27,8 +26,8 @@ public class SystemTclCheckerPreferences extends AbstractTclCheckerPreferences {
 	 */
 	@Override
 	protected String readConfiguration() {
-		return TclCheckerPlugin.getDefault().getPluginPreferences().getString(
-				TclCheckerConstants.PREF_CONFIGURATION);
+		return ValidatorsCore.getDefault().getPluginPreferences().getString(
+				ValidatorRuntime.PREF_CONFIGURATION);
 	}
 
 	/*
@@ -36,20 +35,9 @@ public class SystemTclCheckerPreferences extends AbstractTclCheckerPreferences {
 	 */
 	@Override
 	protected void writeConfiguration(String value) {
-		TclCheckerPlugin.getDefault().getPluginPreferences().setValue(
-				TclCheckerConstants.PREF_CONFIGURATION, value);
-		TclCheckerPlugin.getDefault().savePluginPreferences();
-	}
-
-	/*
-	 * @see AbstractTclCheckerPreferences#createEnvironmentPredicate(String)
-	 */
-	@Override
-	protected ISingleEnvironmentPredicate createEnvironmentPredicate(
-			String environmentId) {
-		Assert.isNotNull(environmentId);
-		Assert.isLegal(environmentId.length() != 0);
-		return new SingleEnvironmentPredicate(environmentId);
+		ValidatorsCore.getDefault().getPluginPreferences().setValue(
+				ValidatorRuntime.PREF_CONFIGURATION, value);
+		ValidatorsCore.getDefault().savePluginPreferences();
 	}
 
 	/*

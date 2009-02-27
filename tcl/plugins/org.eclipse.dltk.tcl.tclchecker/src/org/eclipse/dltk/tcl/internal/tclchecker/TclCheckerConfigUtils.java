@@ -27,11 +27,12 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
-import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerFavorite;
+import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
+import org.eclipse.dltk.validators.core.ValidatorRuntime;
+import org.eclipse.dltk.validators.internal.core.ValidatorsCore;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -44,17 +45,86 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class TclCheckerConfigUtils {
 
-	public static class InstanceConfigPair {
-		public final CheckerInstance instance;
-		public final CheckerConfig config;
-		public final Resource resource;
+	public static interface ICheckerPredicate {
+		boolean evaluate(CheckerInstance instance);
+	}
 
-		private InstanceConfigPair(CheckerInstance instance,
-				CheckerConfig config, Resource resource) {
-			this.instance = instance;
+	public static final ICheckerPredicate ALL = new ICheckerPredicate() {
+
+		public boolean evaluate(CheckerInstance instance) {
+			return true;
+		}
+
+	};
+
+	public static final ICheckerPredicate AUTO = new ICheckerPredicate() {
+
+		public boolean evaluate(CheckerInstance instance) {
+			return instance.isAutomatic();
+		}
+
+	};
+
+	public static class ValidatorInstanceRef {
+
+		public ValidatorInstanceRef(
+				CheckerEnvironmentInstance environmentInstance,
+				CheckerConfig config) {
+			this.environmentInstance = environmentInstance;
 			this.config = config;
+		}
+
+		public final CheckerEnvironmentInstance environmentInstance;
+		public final CheckerConfig config;
+	}
+
+	public static class ValidatorInstanceResponse {
+
+		public ValidatorInstanceResponse(IEnvironment environment,
+				Resource resource) {
+			this.environment = environment;
 			this.resource = resource;
 		}
+
+		public final IEnvironment environment;
+		public final Resource resource;
+		public final List<ValidatorInstanceRef> instances = new ArrayList<ValidatorInstanceRef>();
+
+		public ResourceSet getResourceSet() {
+			return resource.getResourceSet();
+		}
+
+		/**
+		 * @return
+		 */
+		public String getEnvironmentId() {
+			return environment.getId();
+		}
+
+		public boolean isEmpty() {
+			return instances.isEmpty();
+		}
+
+		private List<CheckerConfig> commonConfigurations = null;
+
+		public List<CheckerConfig> getCommonConfigurations() {
+			if (commonConfigurations != null) {
+				return commonConfigurations;
+			}
+			commonConfigurations = new ArrayList<CheckerConfig>();
+			TclCheckerConfigUtils.collectConfigurations(commonConfigurations,
+					resource);
+			final EList<Resource> resources = resource.getResourceSet()
+					.getResources();
+			for (Resource r : resources.toArray(new Resource[resources.size()])) {
+				if (r != resource) {
+					TclCheckerConfigUtils.collectConfigurations(
+							commonConfigurations, r);
+				}
+			}
+			return commonConfigurations;
+		}
+
 	}
 
 	/**
@@ -65,9 +135,10 @@ public class TclCheckerConfigUtils {
 	 * @param project
 	 * @return
 	 */
-	public static InstanceConfigPair getConfiguration(IScriptProject project) {
+	public static ValidatorInstanceResponse getConfiguration(
+			IScriptProject project, ICheckerPredicate predicate) {
 		if (project != null && project.getProject() != null) {
-			return getConfiguration(project.getProject());
+			return getConfiguration(project.getProject(), predicate);
 		} else {
 			return null;
 		}
@@ -81,7 +152,8 @@ public class TclCheckerConfigUtils {
 	 * @param project
 	 * @return
 	 */
-	public static InstanceConfigPair getConfiguration(IProject project) {
+	public static ValidatorInstanceResponse getConfiguration(IProject project,
+			ICheckerPredicate predicate) {
 		final String environmentId;
 		if (project != null) {
 			environmentId = EnvironmentManager.getEnvironmentId(project);
@@ -92,85 +164,61 @@ public class TclCheckerConfigUtils {
 			return null;
 		}
 		final String configurationContent = new PreferencesLookupDelegate(
-				project).getString(TclCheckerPlugin.PLUGIN_ID,
-				TclCheckerConstants.PREF_CONFIGURATION);
+				project).getString(ValidatorsCore.PLUGIN_ID,
+				ValidatorRuntime.PREF_CONFIGURATION);
 		final Resource resource = loadConfiguration(configurationContent);
-		return findConfiguration(resource, environmentId);
+		final ValidatorInstanceResponse response = new ValidatorInstanceResponse(
+				EnvironmentManager.getEnvironmentById(environmentId), resource);
+		findConfiguration(response, predicate);
+		return response;
 	}
 
-	private static CheckerInstance findInstance(final Resource resource,
-			final String environmentId) {
-		final List<CheckerInstance> instances = new ArrayList<CheckerInstance>();
-		CheckerInstance favorite = null;
-		for (EObject object : resource.getContents()) {
+	private static void findConfiguration(ValidatorInstanceResponse response,
+			ICheckerPredicate predicate) {
+		loadContributedConfigurations(response.getResourceSet());
+		for (EObject object : response.resource.getContents()) {
 			if (object instanceof CheckerInstance) {
 				final CheckerInstance instance = (CheckerInstance) object;
-				if (environmentId.equals(instance.getEnvironmentId())) {
-					instances.add(instance);
+				if (predicate.evaluate(instance)) {
+					final CheckerEnvironmentInstance environmentInstance = instance
+							.findEnvironment(response.getEnvironmentId());
+					if (environmentInstance != null
+							&& environmentInstance.getExecutablePath() != null
+							&& environmentInstance.getExecutablePath().trim()
+									.length() != 0) {
+						CheckerConfig favorite = instance.getFavorite();
+						if (favorite == null
+								&& !instance.getConfigs().isEmpty()) {
+							favorite = instance.getConfigs().get(0);
+						}
+						if (favorite == null
+								&& !response.getCommonConfigurations()
+										.isEmpty()) {
+							favorite = response.getCommonConfigurations()
+									.get(0);
+						}
+						if (favorite != null) {
+							response.instances.add(new ValidatorInstanceRef(
+									environmentInstance, favorite));
+						}
+					}
 				}
-			} else if (object instanceof CheckerFavorite) {
-				favorite = ((CheckerFavorite) object).getEnvironments().get(
-						environmentId);
 			}
 		}
-		if (!instances.isEmpty()) {
-			if (instances.size() > 1 && favorite != null
-					&& instances.contains(favorite)) {
-				return favorite;
-			}
-			return instances.get(0);
-		}
-		return null;
 	}
 
-	private static CheckerConfig findConfig(final Resource resource) {
-		final List<CheckerConfig> configs = new ArrayList<CheckerConfig>();
-		CheckerConfig favorite = null;
-		for (EObject object : resource.getContents()) {
-			if (object instanceof CheckerConfig) {
-				configs.add((CheckerConfig) object);
-			} else if (object instanceof CheckerFavorite) {
-				favorite = ((CheckerFavorite) object).getConfig();
-			}
-		}
-		final EList<Resource> resources = resource.getResourceSet()
-				.getResources();
-		for (Resource r : resources.toArray(new Resource[resources.size()])) {
-			if (r != resource) {
-				collectConfigurations(configs, r);
-			}
-		}
-		if (!configs.isEmpty()) {
-			if (configs.size() > 1 && favorite != null
-					&& configs.contains(favorite)) {
-				return favorite;
-			}
-			return configs.get(0);
-		}
-		return null;
-	}
-
-	private static InstanceConfigPair findConfiguration(
-			final Resource resource, final String environmentId) {
-		loadContributedConfigurations(resource.getResourceSet());
-		final CheckerInstance instance = findInstance(resource, environmentId);
-		if (instance != null) {
-			final CheckerConfig config = findConfig(resource);
-			if (config != null) {
-				return new InstanceConfigPair(instance, config, resource);
-			}
-		}
-		return null;
-	}
-
-	public static InstanceConfigPair getConfiguration(IEnvironment environment) {
+	public static ValidatorInstanceResponse getConfiguration(
+			IEnvironment environment, ICheckerPredicate predicate) {
 		if (environment == null) {
 			return null;
 		}
-		final Resource resource = loadConfiguration(TclCheckerPlugin
-				.getDefault().getPreferenceStore().getString(
-						TclCheckerConstants.PREF_CONFIGURATION));
-		return findConfiguration(resource, environment.getId());
+		final Resource resource = loadConfiguration(ValidatorsCore.getDefault()
+				.getPluginPreferences().getString(
+						ValidatorRuntime.PREF_CONFIGURATION));
+		final ValidatorInstanceResponse response = new ValidatorInstanceResponse(
+				environment, resource);
+		findConfiguration(response, predicate);
+		return response;
 	}
 
 	public static Resource loadConfiguration(String content) {

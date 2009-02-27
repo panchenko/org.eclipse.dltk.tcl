@@ -12,22 +12,18 @@
 package org.eclipse.dltk.tcl.internal.tclchecker.impl;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.PreferencesDelegate;
-import org.eclipse.dltk.core.environment.EnvironmentManager;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConstants;
-import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
+import org.eclipse.dltk.validators.core.ValidatorRuntime;
+import org.eclipse.dltk.validators.internal.core.ValidatorsCore;
 
 public class ProjectTclCheckerPreferences extends AbstractTclCheckerPreferences {
 
-	private final IProject project;
 	private final PreferencesDelegate delegate;
 
 	/**
 	 * @param project
 	 */
 	public ProjectTclCheckerPreferences(IProject project) {
-		this.project = project;
 		this.delegate = new PreferencesDelegate(project);
 		initialize();
 	}
@@ -37,8 +33,8 @@ public class ProjectTclCheckerPreferences extends AbstractTclCheckerPreferences 
 	 */
 	@Override
 	protected String readConfiguration() {
-		return delegate.getString(TclCheckerPlugin.PLUGIN_ID,
-				TclCheckerConstants.PREF_CONFIGURATION);
+		return delegate.getString(ValidatorsCore.PLUGIN_ID,
+				ValidatorRuntime.PREF_CONFIGURATION);
 	}
 
 	/*
@@ -46,35 +42,16 @@ public class ProjectTclCheckerPreferences extends AbstractTclCheckerPreferences 
 	 */
 	@Override
 	protected void writeConfiguration(String value) {
-		delegate.setString(TclCheckerPlugin.PLUGIN_ID,
-				TclCheckerConstants.PREF_CONFIGURATION, value);
+		delegate.setString(ValidatorsCore.PLUGIN_ID,
+				ValidatorRuntime.PREF_CONFIGURATION, value);
 	}
 
 	/*
 	 * @see org.eclipse.dltk.tcl.tclchecker.ITclCheckerPreferences#delete()
 	 */
 	public void delete() {
-		delegate.setString(TclCheckerPlugin.PLUGIN_ID,
-				TclCheckerConstants.PREF_CONFIGURATION, null);
-	}
-
-	/*
-	 * @see AbstractTclCheckerPreferences#createEnvironmentPredicate(String)
-	 */
-	@Override
-	protected ISingleEnvironmentPredicate createEnvironmentPredicate(
-			String environmentId) {
-		final String projectEnvironmentId = EnvironmentManager
-				.getEnvironmentId(project);
-		if (projectEnvironmentId == null) {
-			throw new IllegalArgumentException(
-					"Could not retrieve environmentId of " + project.getName() //$NON-NLS-1$
-							+ " project"); //$NON-NLS-1$
-		}
-		if (environmentId != null && environmentId.length() != 0) {
-			Assert.isLegal(environmentId.equals(projectEnvironmentId));
-		}
-		return new SingleEnvironmentPredicate(projectEnvironmentId);
+		delegate.setString(ValidatorsCore.PLUGIN_ID,
+				ValidatorRuntime.PREF_CONFIGURATION, null);
 	}
 
 }

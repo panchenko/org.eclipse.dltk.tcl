@@ -21,10 +21,6 @@
       <attribute name="org.eclipse.dltk.tcl.tclchecker.timestamp" />
       <attribute name="org.eclipse.dltk.tcl.tclchecker.autoCorrectable" />
    </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.TclCheckerPreferenceInitializer"/>
-   </extension>
  <extension
          point="org.eclipse.dltk.validators.core.validator">
       <validatorType

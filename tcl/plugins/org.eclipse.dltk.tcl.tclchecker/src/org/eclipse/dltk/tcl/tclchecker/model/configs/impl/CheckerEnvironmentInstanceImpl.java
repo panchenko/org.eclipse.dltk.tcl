@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerEnvironmentInstanceImpl.java,v 1.1 2009/02/27 09:16:01 apanchenk Exp $
+ * $Id: CheckerEnvironmentInstanceImpl.java,v 1.2 2009/02/27 15:44:40 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs.impl;
 
@@ -11,6 +11,7 @@ import java.util.Collection;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.ConfigsPackage;
+import org.eclipse.dltk.validators.configs.ValidatorInstance;
 import org.eclipse.dltk.validators.configs.impl.ValidatorEnvironmentInstanceImpl;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -127,6 +128,11 @@ public class CheckerEnvironmentInstanceImpl extends ValidatorEnvironmentInstance
 	public CheckerInstance getInstance() {
 		if (eContainerFeatureID != ConfigsPackage.CHECKER_ENVIRONMENT_INSTANCE__INSTANCE) return null;
 		return (CheckerInstance)eContainer();
+	}
+
+	@Override
+	public ValidatorInstance getValidatorInstance() {
+		return getInstance();
 	}
 
 	/**
