@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: CheckerConfig.java,v 1.2 2009/02/27 09:16:01 apanchenk Exp $
+ * $Id: CheckerConfig.java,v 1.3 2009/02/28 07:15:22 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -34,8 +34,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	 * Returns the value of the '<em><b>Summary</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Summary</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * Returns TclChecker -summary option.
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Summary</em>' attribute.
@@ -49,6 +48,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	/**
 	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isSummary <em>Summary</em>}' attribute.
 	 * <!-- begin-user-doc -->
+	 * Sets TclChecker -summary option.
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Summary</em>' attribute.
 	 * @see #isSummary()
@@ -61,8 +61,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	 * The literals are from the enumeration {@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Mode</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * Returns TclChecker operations mode (-W0...-W4).
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Mode</em>' attribute.
@@ -77,6 +76,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	/**
 	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#getMode <em>Mode</em>}' attribute.
 	 * <!-- begin-user-doc -->
+	 * Sets TclChecker operations mode (-W0...-W4)
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Mode</em>' attribute.
 	 * @see org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerMode
@@ -91,8 +91,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	 * and the value is of type {@link org.eclipse.dltk.tcl.tclchecker.model.configs.MessageState},
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Message States</em>' map isn't clear,
-	 * there really should be more of a description here...
+	 * Returns the configurations of the individual messages -suppress/-check.
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Message States</em>' map.
@@ -107,8 +106,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	 * The default value is <code>"true"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Use Tcl Ver</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * Returns the TclChecker -useTcl<ver> option.
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Use Tcl Ver</em>' attribute.
@@ -122,6 +120,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	/**
 	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isUseTclVer <em>Use Tcl Ver</em>}' attribute.
 	 * <!-- begin-user-doc -->
+	 * Sets the TclChecker -useTcl<ver> option.
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Use Tcl Ver</em>' attribute.
 	 * @see #isUseTclVer()
@@ -133,8 +132,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	 * Returns the value of the '<em><b>Individual Message States</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Individual Message States</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * Returns the flag if {@link #getMessageStates()} should be used
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Individual Message States</em>' attribute.
@@ -148,6 +146,7 @@ public interface CheckerConfig extends ValidatorConfig {
 	/**
 	 * Sets the value of the '{@link org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig#isIndividualMessageStates <em>Individual Message States</em>}' attribute.
 	 * <!-- begin-user-doc -->
+	 * Sets the flag if {@link #getMessageStates()} should be used
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Individual Message States</em>' attribute.
 	 * @see #isIndividualMessageStates()
