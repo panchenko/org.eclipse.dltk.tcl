@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
@@ -623,6 +624,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			workingCopy = input;
 		} else {
 			workingCopy = ConfigsFactory.eINSTANCE.createCheckerInstance();
+			workingCopy.setId(UUID.randomUUID().toString());
 		}
 		boolean result = false;
 		final ChangeRecorder changeRecorder = input != null ? new ChangeRecorder(
