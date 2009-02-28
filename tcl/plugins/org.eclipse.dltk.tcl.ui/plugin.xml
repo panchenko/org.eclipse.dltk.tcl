@@ -210,7 +210,7 @@
           name="%TclEditorSyntaxColoringPreferencePage.name"/>
     <page
           category="org.eclipse.dltk.tcl.preferences.editor"
-          class="org.eclipse.dltk.tcl.internal.ui.preferences.TclEditorHoverPreferencePage"
+          class="org.eclipse.dltk.ui.preferences.ScriptEditorHoverPreferencePage:org.eclipse.dltk.tcl.core.nature"
           id="org.eclipse.dltk.tcl.preferences.editor.hovers"
           name="%TclEditorHoversPreferencePage.name"/>    
     <page
