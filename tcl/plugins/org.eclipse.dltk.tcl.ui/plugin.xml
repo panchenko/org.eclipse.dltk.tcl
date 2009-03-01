@@ -535,7 +535,7 @@
             id="org.eclipse.dltk.tcl.internal.ui.TclEditor.ruler.actions">
          <action
                label="Tcl Selection Ruler action"
-               class="org.eclipse.dltk.tcl.internal.ui.actions.TclSelectRulerAction"
+               class="org.eclipse.dltk.ui.actions.ScriptEditorRulerActionDelegate:org.eclipse.dltk.tcl.core.nature"
                actionID="RulerClick"
                id="org.eclipse.dltk.tcl.internal.ui.tcleditor.TclSelectRulerAction">
          </action>
