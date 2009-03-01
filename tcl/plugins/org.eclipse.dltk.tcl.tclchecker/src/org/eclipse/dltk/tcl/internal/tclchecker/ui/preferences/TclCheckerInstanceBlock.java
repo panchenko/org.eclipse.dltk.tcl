@@ -468,10 +468,12 @@ public class TclCheckerInstanceBlock extends AbstractValidatorEditBlock {
 	public IStatus isValid(Object hint) {
 		final String name = nameField.getText();
 		if (name == null || name.trim().length() == 0) {
-			return new StatusInfo(IStatus.ERROR, "Enter validator name");
+			return new StatusInfo(IStatus.ERROR,
+					Messages.TclCheckerInstanceBlock_errorEmptyValidatorName);
 		}
 		if (instance.getValidatorEnvironments().isEmpty()) {
-			return new StatusInfo(IStatus.ERROR, "No environments configured");
+			return new StatusInfo(IStatus.ERROR,
+					Messages.TclCheckerInstanceBlock_ErrorNoEnvironments);
 		}
 		final Map<ValidatorEnvironmentInstance, IStatus> environmentStatus = new HashMap<ValidatorEnvironmentInstance, IStatus>();
 		int correctEnvironments = 0;
@@ -493,20 +495,23 @@ public class TclCheckerInstanceBlock extends AbstractValidatorEditBlock {
 	private IStatus validateEnvironment(ValidatorEnvironmentInstance eInstance) {
 		final String path = eInstance.getExecutablePath();
 		if (path == null || path.trim().length() == 0) {
-			return new StatusInfo(IStatus.ERROR, "Path not specified");
+			return new StatusInfo(IStatus.ERROR,
+					Messages.TclCheckerInstanceBlock_ErrorPathNotSpecified);
 		}
 		final IEnvironment environment = environments.get(eInstance
 				.getEnvironmentId());
 		if (environment != null && environment.isLocal()) {
 			final Path pathObj = new Path(path);
 			if (pathObj.isEmpty()) {
-				return new StatusInfo(IStatus.ERROR, "Path is empty");
+				return new StatusInfo(IStatus.ERROR,
+						Messages.TclCheckerInstanceBlock_ErrorPathIsEmpty);
 			}
 			final IFileHandle file = PlatformFileUtils
 					.findAbsoluteOrEclipseRelativeFile(environment, pathObj);
 			if (file == null || !file.isFile()) {
 				return new StatusInfo(IStatus.ERROR, NLS.bind(
-						"File ''{0}'' not found", path));
+						Messages.TclCheckerInstanceBlock_ErrorFileNotFound,
+						path));
 			}
 		}
 		return null;

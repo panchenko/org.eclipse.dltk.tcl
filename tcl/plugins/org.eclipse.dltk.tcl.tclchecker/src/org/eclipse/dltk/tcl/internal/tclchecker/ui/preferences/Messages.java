@@ -117,6 +117,16 @@ public class Messages extends NLS {
 
 	public static String TclCheckerConfigurationDialog_UseTclVer;
 
+	public static String TclCheckerInstanceBlock_errorEmptyValidatorName;
+
+	public static String TclCheckerInstanceBlock_ErrorFileNotFound;
+
+	public static String TclCheckerInstanceBlock_ErrorNoEnvironments;
+
+	public static String TclCheckerInstanceBlock_ErrorPathIsEmpty;
+
+	public static String TclCheckerInstanceBlock_ErrorPathNotSpecified;
+
 	public static String TclCheckerInstanceDialog_automaticCheckbox;
 
 	public static String TclCheckerInstanceDialog_Browse;
