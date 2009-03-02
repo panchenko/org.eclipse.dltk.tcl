@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.dbgp.IDbgpStreamFilter;
 import org.eclipse.dltk.debug.core.DebugOption;
 import org.eclipse.dltk.debug.core.IDbgpService;
 import org.eclipse.dltk.debug.core.model.DefaultDebugOptions;
@@ -32,6 +33,7 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.launching.debug.DbgpConstants;
+import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 
@@ -132,9 +134,17 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 
 	protected IScriptDebugTarget createDebugTarget(ILaunch launch,
 			IDbgpService dbgpService) throws CoreException {
-		return new ScriptDebugTarget(getDebugModelId(), dbgpService,
-				getSessionId(launch.getLaunchConfiguration()), launch, null,
+		final ScriptDebugTarget target = new ScriptDebugTarget(
+				getDebugModelId(), dbgpService, getSessionId(launch
+						.getLaunchConfiguration()), launch, null,
 				new TclDebugOptions());
+		if (createPreferencesLookupDelegate(launch).getBoolean(
+				getDebugPreferenceQualifier(),
+				TclDebugConstants.DEBUG_STREAM_FILTER_VWAIT_RENAME_WARNING)) {
+			target
+					.setStreamFilters(new IDbgpStreamFilter[] { new TclActiveStateVwaitRenameFilter() });
+		}
+		return target;
 	}
 
 	private static class TclDebugOptions extends DefaultDebugOptions {
