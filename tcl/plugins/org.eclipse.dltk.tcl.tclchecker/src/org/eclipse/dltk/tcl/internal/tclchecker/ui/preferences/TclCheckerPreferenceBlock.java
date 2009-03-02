@@ -326,6 +326,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 					.getValidatorEnvironments()) {
 				environmentInstance.setAutomatic(checked);
 			}
+			// TODO disable other tclcheckers if any
 		} else if (element instanceof ValidatorConfig) {
 			ValidatorConfig config = (ValidatorConfig) element;
 			if (config.eContainer() != null) {
@@ -437,11 +438,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	private boolean canEdit(List<?> selection) {
 		if (selection.size() == 1) {
 			final Object obj = selection.get(0);
-			if (obj instanceof CheckerConfig) {
-				return !((CheckerConfig) obj).isReadOnly();
+			if (obj instanceof ValidatorConfig) {
+				return !((ValidatorConfig) obj).isReadOnly();
 			} else if (obj instanceof ValidatorConfigRef) {
 				return !((ValidatorConfigRef) obj).config.isReadOnly();
-			} else if (obj instanceof CheckerInstance) {
+			} else if (obj instanceof ValidatorInstance) {
 				return true;
 			}
 		}
@@ -458,8 +459,8 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 		for (Iterator<?> i = selection.iterator(); i.hasNext();) {
 			final Object obj = i.next();
-			if (obj instanceof CheckerConfig) {
-				if (((CheckerConfig) obj).isReadOnly()) {
+			if (obj instanceof ValidatorConfig) {
+				if (((ValidatorConfig) obj).isReadOnly()) {
 					return false;
 				}
 			} else if (obj instanceof ValidatorConfigRef) {
@@ -704,15 +705,13 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			if (instance.isAutomatic()) {
 				checked.add(instance);
 			}
-			if (instance instanceof CheckerInstance) {
-				final CheckerConfig favorite = ((CheckerInstance) instance)
-						.getFavorite();
-				if (favorite != null) {
-					if (instance.getValidatorConfigs().contains(favorite)) {
-						checked.add(favorite);
-					} else {
-						checked.add(new ValidatorConfigRef(instance, favorite));
-					}
+			final ValidatorConfig favorite = instance
+					.getValidatorFavoriteConfig();
+			if (favorite != null) {
+				if (instance.getValidatorConfigs().contains(favorite)) {
+					checked.add(favorite);
+				} else {
+					checked.add(new ValidatorConfigRef(instance, favorite));
 				}
 			}
 		}
