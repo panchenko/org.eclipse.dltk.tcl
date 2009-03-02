@@ -10,6 +10,7 @@ public class TclDebugPreferencesMessages {
 	}
 
 	public static String TclDebugPreferencePage_description;
+	public static String TclDebugPreferencePage_StreamFilterVWaitRename;
 	public static String TclDebugEnginePreferencePage_description;
 
 }
