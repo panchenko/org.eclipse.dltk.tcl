@@ -8,6 +8,7 @@
 
 package org.eclipse.dltk.tcl.activestatedebugger;
 
+import java.net.URI;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -20,7 +21,9 @@ import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.dbgp.IDbgpStackLevel;
 import org.eclipse.dltk.dbgp.IDbgpStreamFilter;
+import org.eclipse.dltk.debug.core.DLTKDebugConstants;
 import org.eclipse.dltk.debug.core.DebugOption;
 import org.eclipse.dltk.debug.core.IDbgpService;
 import org.eclipse.dltk.debug.core.model.DefaultDebugOptions;
@@ -124,7 +127,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		newConfig.addInterpreterArg(SCRIPT_KEY);
 
 		// Script arguments
-		List args = config.getScriptArgs();
+		List<?> args = config.getScriptArgs();
 		newConfig.clearScriptArgs();
 		newConfig.addScriptArg(ARGS_SEPARATOR);
 		newConfig.addScriptArgs(args);
@@ -159,6 +162,21 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 				return false;
 			}
 			return super.get(option);
+		}
+
+		@Override
+		public IDbgpStackLevel[] filterStackLevels(IDbgpStackLevel[] levels) {
+			if (levels.length > 1) {
+				final int lastIndex = levels.length - 1;
+				final URI uri = levels[lastIndex].getFileURI();
+				if (DLTKDebugConstants.UNKNOWN_SCHEME.equals(uri.getScheme())
+						&& "<console>".equals(uri.getFragment())) { //$NON-NLS-1$
+					IDbgpStackLevel[] result = new IDbgpStackLevel[lastIndex];
+					System.arraycopy(levels, 0, result, 0, lastIndex);
+					return result;
+				}
+			}
+			return levels;
 		}
 	}
 
