@@ -21,7 +21,6 @@ import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
-import org.eclipse.dltk.dbgp.IDbgpStackLevel;
 import org.eclipse.dltk.dbgp.IDbgpStreamFilter;
 import org.eclipse.dltk.debug.core.DLTKDebugConstants;
 import org.eclipse.dltk.debug.core.DebugOption;
@@ -29,6 +28,7 @@ import org.eclipse.dltk.debug.core.IDbgpService;
 import org.eclipse.dltk.debug.core.model.DefaultDebugOptions;
 import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
 import org.eclipse.dltk.debug.core.model.IScriptDebugThreadConfigurator;
+import org.eclipse.dltk.debug.core.model.IScriptStackFrame;
 import org.eclipse.dltk.internal.debug.core.model.ScriptDebugTarget;
 import org.eclipse.dltk.internal.launching.LaunchConfigurationUtils;
 import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
@@ -151,6 +151,9 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	}
 
 	private static class TclDebugOptions extends DefaultDebugOptions {
+
+		private static final String CONSOLE = "<console>"; //$NON-NLS-1$
+
 		public boolean get(BooleanOption option) {
 			if (option == DebugOption.DBGP_ASYNC) {
 				return false;
@@ -160,23 +163,37 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 				return false;
 			} else if (option == DebugOption.ENGINE_STOP_BEFORE_CODE) {
 				return false;
+			} else if (option == DebugOption.ENGINE_VALIDATE_STACK) {
+				return true;
 			}
 			return super.get(option);
 		}
 
 		@Override
-		public IDbgpStackLevel[] filterStackLevels(IDbgpStackLevel[] levels) {
-			if (levels.length > 1) {
-				final int lastIndex = levels.length - 1;
-				final URI uri = levels[lastIndex].getFileURI();
+		public IScriptStackFrame[] filterStackLevels(IScriptStackFrame[] frames) {
+			if (frames.length > 1) {
+				final int lastIndex = frames.length - 1;
+				final URI uri = frames[lastIndex].getSourceURI();
 				if (DLTKDebugConstants.UNKNOWN_SCHEME.equals(uri.getScheme())
-						&& "<console>".equals(uri.getFragment())) { //$NON-NLS-1$
-					IDbgpStackLevel[] result = new IDbgpStackLevel[lastIndex];
-					System.arraycopy(levels, 0, result, 0, lastIndex);
+						&& CONSOLE.equals(uri.getFragment())) {
+					IScriptStackFrame[] result = new IScriptStackFrame[lastIndex];
+					System.arraycopy(frames, 0, result, 0, lastIndex);
 					return result;
 				}
 			}
-			return levels;
+			return super.filterStackLevels(frames);
+		}
+
+		@Override
+		public boolean isValidStack(IScriptStackFrame[] frames) {
+			if (frames.length == 1) {
+				final URI uri = frames[0].getSourceURI();
+				if (DLTKDebugConstants.UNKNOWN_SCHEME.equals(uri.getScheme())
+						&& CONSOLE.equals(uri.getFragment())) {
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 
