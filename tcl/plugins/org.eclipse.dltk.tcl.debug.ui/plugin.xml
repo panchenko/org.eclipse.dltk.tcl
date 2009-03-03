@@ -411,6 +411,7 @@
             overviewRulerPreferenceKey="org.eclipse.dltk.tcl.debug.ui.spawnpoint.overview"           
             overviewRulerPreferenceValue="false"
             icon="/icons/obj16/spawnpoint.gif"
+            presentationLayer="4"
             includeOnPreferencePage="false">
       </specification>
    </extension>
