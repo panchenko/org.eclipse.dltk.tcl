@@ -158,7 +158,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 				return false;
 			} else if (option == DebugOption.ENGINE_SUPPORT_DATATYPES) {
 				return false;
-			} else if (option == DebugOption.ENGINE_STOP_BEFORE_FIRST_LINE) {
+			} else if (option == DebugOption.ENGINE_STOP_BEFORE_CODE) {
 				return false;
 			}
 			return super.get(option);
