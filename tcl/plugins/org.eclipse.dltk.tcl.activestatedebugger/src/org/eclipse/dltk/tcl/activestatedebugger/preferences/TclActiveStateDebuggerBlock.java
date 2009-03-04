@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -107,8 +108,17 @@ public class TclActiveStateDebuggerBlock extends
 		Group groupPatterns = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_patternsGroup, 1, 1,
 				GridData.FILL_BOTH);
-		patterns = new InstrumentationPatternList(getProject(), groupPatterns,
-				PreferenceMessages.instrumentation_patterns_message);
+		if (isProjectPreferencePage()) {
+			patterns = new InstrumentationPatternList(getProject(),
+					groupPatterns,
+					PreferenceMessages.instrumentation_patterns_message);
+		} else {
+			Label label = new Label(groupPatterns, SWT.NONE);
+			label
+					.setText(PreferenceMessages.TclActiveStateDebuggerBlock_patternsInProjectProperties);
+			label.setEnabled(false);
+			label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		}
 		Group options = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_options, 2, 1,
 				GridData.FILL_HORIZONTAL);
@@ -169,8 +179,10 @@ public class TclActiveStateDebuggerBlock extends
 
 	private void setValues() {
 		// patterns
-		patterns
-				.setValue(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS));
+		if (patterns != null) {
+			patterns
+					.setValue(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS));
+		}
 		// instrumentation features
 		Set<InstrumentationFeature> result = InstrumentationFeature
 				.decode(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_FEATURES));
@@ -235,9 +247,11 @@ public class TclActiveStateDebuggerBlock extends
 		setString(TclActiveStateDebuggerPreferencePage.PDX_PATH,
 				pdxPathKeyValue);
 		// patterns
-		setString(
-				TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS,
-				patterns.getValue());
+		if (patterns != null) {
+			setString(
+					TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS,
+					patterns.getValue());
+		}
 		// Instrumentation features
 		Set<InstrumentationFeature> selectedFeatures = new HashSet<InstrumentationFeature>();
 		for (final Button button : instrumentationButtons) {
