@@ -22,15 +22,15 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class TclDebugPreferencePage extends
 		AbstractConfigurationBlockPropertyAndPreferencePage {
 
-	private static PreferenceKey BREAK_ON_FIRST_LINE = new PreferenceKey(
+	private static final PreferenceKey BREAK_ON_FIRST_LINE = new PreferenceKey(
 			TclDebugPlugin.PLUGIN_ID,
 			DLTKDebugPreferenceConstants.PREF_DBGP_BREAK_ON_FIRST_LINE);
 
-	private static PreferenceKey ENABLE_DBGP_LOGGING = new PreferenceKey(
+	private static final PreferenceKey ENABLE_DBGP_LOGGING = new PreferenceKey(
 			TclDebugPlugin.PLUGIN_ID,
 			DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
 
-	private static PreferenceKey STREAM_FILTER_COMMAND_RENAME_WARNING = new PreferenceKey(
+	private static final PreferenceKey STREAM_FILTER_COMMAND_RENAME_WARNING = new PreferenceKey(
 			TclDebugPlugin.PLUGIN_ID,
 			TclDebugConstants.DEBUG_STREAM_FILTER_COMMAND_RENAME_WARNING);
 
