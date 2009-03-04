@@ -143,9 +143,9 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 				new TclDebugOptions());
 		if (createPreferencesLookupDelegate(launch).getBoolean(
 				getDebugPreferenceQualifier(),
-				TclDebugConstants.DEBUG_STREAM_FILTER_VWAIT_RENAME_WARNING)) {
+				TclDebugConstants.DEBUG_STREAM_FILTER_COMMAND_RENAME_WARNING)) {
 			target
-					.setStreamFilters(new IDbgpStreamFilter[] { new TclActiveStateVwaitRenameFilter() });
+					.setStreamFilters(new IDbgpStreamFilter[] { new TclActiveStateCommandRenameFilter() });
 		}
 		return target;
 	}

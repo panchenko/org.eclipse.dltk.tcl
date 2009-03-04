@@ -15,14 +15,14 @@ import java.util.regex.Pattern;
 
 import org.eclipse.dltk.dbgp.IDbgpStreamFilter;
 
-public class TclActiveStateVwaitRenameFilter implements IDbgpStreamFilter {
+public class TclActiveStateCommandRenameFilter implements IDbgpStreamFilter {
 
 	private Pattern pattern;
 
-	public TclActiveStateVwaitRenameFilter() {
+	public TclActiveStateCommandRenameFilter() {
 		try {
 			pattern = Pattern
-					.compile("Warning \\(issued by the debugger backend\\)\\.\nRenaming\\s+\"::vwait\" may crash the debugger\\.\n"); //$NON-NLS-1$
+					.compile("Warning \\(issued by the debugger backend\\)\\.\nRenaming\\s+\"\\S+\" may crash the debugger\\.\n"); //$NON-NLS-1$
 		} catch (IllegalArgumentException e) {
 			pattern = null;
 		}
