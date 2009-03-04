@@ -20,7 +20,7 @@ public class TclDebugPreferenceInitializer extends
 		store.setDefault(DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING,
 				false);
 		store.setDefault(
-				TclDebugConstants.DEBUG_STREAM_FILTER_VWAIT_RENAME_WARNING,
+				TclDebugConstants.DEBUG_STREAM_FILTER_COMMAND_RENAME_WARNING,
 				true);
 
 		store.setDefault(
