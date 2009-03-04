@@ -35,6 +35,10 @@ public final class ActionMessages extends NLS {
 	//public static String MemberFilterActionGroup_hide_classes_tooltip;
 	//public static String MemberFilterActionGroup_hide_classes_description;
 
+	public static String TclEditor_MatchingBracketOutsideSelectedElement;
+	public static String TclEditor_NoBracketSelected;
+	public static String TclEditor_NoMatchongBracket;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ActionMessages.class);
 	}

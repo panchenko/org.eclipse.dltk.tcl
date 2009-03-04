@@ -48,14 +48,15 @@ public class TclEditor extends ScriptEditor {
 
 	protected void initializeEditor() {
 		super.initializeEditor();
-		
+
 		setEditorContextMenuId(EDITOR_CONTEXT);
 		setRulerContextMenuId(RULER_CONTEXT);
 	}
 
 	protected void createActions() {
 		super.createActions();
-		ActionGroup generateActions = new GenerateActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+		ActionGroup generateActions = new GenerateActionGroup(this,
+				ITextEditorActionConstants.GROUP_EDIT);
 		fActionGroups.addGroup(generateActions);
 		fContextMenuGroup.addGroup(generateActions);
 	}
@@ -63,23 +64,22 @@ public class TclEditor extends ScriptEditor {
 	final static String[] properties = new String[] {
 			TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
 			TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST,
-			TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST,
-	};
+			TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST, };
 
 	protected String[] getFoldingEventPreferenceKeys() {
 		return properties;
 	}
 
 	protected IPreferenceStore getScriptPreferenceStore() {
-		return TclUI.getDefault().getPreferenceStore(); 
+		return TclUI.getDefault().getPreferenceStore();
 	}
-	
+
 	public ScriptTextTools getTextTools() {
 		return TclUI.getDefault().getTextTools();
 	}
 
 	protected ScriptOutlinePage doCreateOutlinePage() {
-		return new TclOutlinePage(this, TclUI.getDefault().getPreferenceStore());		
+		return new TclOutlinePage(this, TclUI.getDefault().getPreferenceStore());
 	}
 
 	protected void connectPartitioningToElement(IEditorInput input,
@@ -97,7 +97,7 @@ public class TclEditor extends ScriptEditor {
 		if (foldingProvider == null) {
 			foldingProvider = new TclFoldingStructureProvider();
 		}
-		
+
 		return foldingProvider;
 	}
 
@@ -135,7 +135,7 @@ public class TclEditor extends ScriptEditor {
 
 		int selectionLength = Math.abs(selection.getLength());
 		if (selectionLength > 1) {
-			setStatusLineErrorMessage("No bracket selected");
+			setStatusLineErrorMessage(ActionMessages.TclEditor_NoBracketSelected);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -144,10 +144,10 @@ public class TclEditor extends ScriptEditor {
 		int sourceCaretOffset = selection.getOffset() + selection.getLength();
 		if (isSurroundedByBrackets(document, sourceCaretOffset))
 			sourceCaretOffset -= selection.getLength();
-		
+
 		IRegion region = bracketMatcher.match(document, sourceCaretOffset);
 		if (region == null) {
-			setStatusLineErrorMessage("No matching bracket found");
+			setStatusLineErrorMessage(ActionMessages.TclEditor_NoMatchongBracket);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -176,7 +176,7 @@ public class TclEditor extends ScriptEditor {
 		}
 
 		if (!visible) {
-			setStatusLineErrorMessage("Matching bracket is outside selected element");
+			setStatusLineErrorMessage(ActionMessages.TclEditor_MatchingBracketOutsideSelectedElement);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
