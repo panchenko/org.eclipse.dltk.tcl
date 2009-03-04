@@ -178,6 +178,7 @@ public class TclSpawnpointPreferenceBlock implements IListAdapter,
 		listDialogField.setListGrabExcessHorizontalSpace(true);
 		listDialogField.doFillIntoGrid(control, 3);
 		listDialogField.addCheckStateListener(this);
+		selectionChanged(listDialogField);
 		return control;
 	}
 
