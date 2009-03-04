@@ -49,4 +49,6 @@ public class PreferenceMessages extends NLS {
 	public static String Spawnpoint_InputDialog_newTitle;
 	public static String Spawnpoint_PreferenceBlock_rebuildMessage;
 	public static String Spawnpoint_PreferenceBlock_rebuildTitle;
+	public static String TclActiveStateDebuggerBlock_rebuildMessage;
+	public static String TclActiveStateDebuggerBlock_rebuildTitle;
 }

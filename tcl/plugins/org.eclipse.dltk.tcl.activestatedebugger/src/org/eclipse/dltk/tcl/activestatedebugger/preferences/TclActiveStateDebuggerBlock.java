@@ -13,6 +13,7 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock
 import org.eclipse.dltk.tcl.activestatedebugger.ErrorAction;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationFeature;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
+import org.eclipse.dltk.ui.preferences.IPreferenceChangeRebuildPrompt;
+import org.eclipse.dltk.ui.preferences.PreferenceChangeRebuildPrompt;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.util.SWTFactory;
@@ -271,4 +274,19 @@ public class TclActiveStateDebuggerBlock extends
 		return TclActiveStateDebuggerPreferencePage.LOG_FILE_NAME;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	protected IPreferenceChangeRebuildPrompt getPreferenceChangeRebuildPrompt(
+			boolean workspaceSettings, Collection changedOptions) {
+		if (changedOptions
+				.contains(TclActiveStateDebuggerPreferencePage.PREF_SPAWNPOINTS)) {
+			return PreferenceChangeRebuildPrompt
+					.create(
+							workspaceSettings,
+							PreferenceMessages.TclActiveStateDebuggerBlock_rebuildTitle,
+							PreferenceMessages.TclActiveStateDebuggerBlock_rebuildMessage);
+		} else {
+			return null;
+		}
+	}
 }
