@@ -36,6 +36,7 @@ public final class TclActiveStateDebuggerConstants {
 		store.setDefault(LOG_FILE_NAME, Util.EMPTY_STRING);
 		store.setDefault(INSTRUMENTATION_FEATURES, InstrumentationFeature
 				.encode(InstrumentationFeature.DYNPROC,
+						InstrumentationFeature.AUTOLOAD,
 						InstrumentationFeature.TCLX,
 						InstrumentationFeature.EXPECT,
 						InstrumentationFeature.ITCL));
