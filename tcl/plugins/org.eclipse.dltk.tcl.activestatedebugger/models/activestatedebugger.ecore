@@ -10,4 +10,5 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WorkspacePattern" eSuperTypes="#//Pattern"/>
   <eClassifiers xsi:type="ecore:EClass" name="ExternalPattern" eSuperTypes="#//Pattern"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GlobPattern" eSuperTypes="#//Pattern"/>
 </ecore:EPackage>

@@ -46,6 +46,7 @@ import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern;
@@ -118,6 +119,12 @@ public class TclActiveStateDebugThreadConfigurator implements
 						commands.instrumentInclude(stringPatterns);
 					} else {
 						commands.instrumentExclude(stringPatterns);
+					}
+				} else if (pattern instanceof GlobPattern) {
+					if (pattern.isInclude()) {
+						commands.instrumentInclude(pattern.getPath());
+					} else {
+						commands.instrumentExclude(pattern.getPath());
 					}
 				}
 			}

@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesAdapterFactory.java,v 1.1 2008/11/13 11:10:42 apanchenk Exp $
+ * $Id: PreferencesAdapterFactory.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.util;
 
@@ -92,6 +92,10 @@ public class PreferencesAdapterFactory extends AdapterFactoryImpl {
 				return createExternalPatternAdapter();
 			}
 			@Override
+			public Adapter caseGlobPattern(GlobPattern object) {
+				return createGlobPatternAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -150,6 +154,20 @@ public class PreferencesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExternalPatternAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern <em>Glob Pattern</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern
+	 * @generated
+	 */
+	public Adapter createGlobPatternAdapter() {
 		return null;
 	}
 

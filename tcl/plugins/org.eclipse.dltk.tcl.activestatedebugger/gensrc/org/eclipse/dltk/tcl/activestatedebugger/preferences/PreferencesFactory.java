@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesFactory.java,v 1.1 2008/11/13 11:10:41 apanchenk Exp $
+ * $Id: PreferencesFactory.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -50,6 +50,15 @@ public interface PreferencesFactory extends EFactory {
 	 * @generated
 	 */
 	ExternalPattern createExternalPattern();
+
+	/**
+	 * Returns a new object of class '<em>Glob Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Glob Pattern</em>'.
+	 * @generated
+	 */
+	GlobPattern createGlobPattern();
 
 	/**
 	 * Returns the package supported by this factory.

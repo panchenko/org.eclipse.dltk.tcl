@@ -15,9 +15,11 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.viewsupport.StorageLabelProvider;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -52,12 +54,33 @@ public class InstrumentationPatternLabelProvider extends LabelProvider {
 			} else {
 				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_UNKNOWN);
 			}
+		} else if (element instanceof GlobPattern) {
+			return getGlobImage();
 		}
 		return super.getImage(element);
 	}
 
+	private Image globImage;
+
+	private Image getGlobImage() {
+		if (globImage == null) {
+			ImageDescriptor descriptor = TclActiveStateDebuggerPlugin
+					.imageDescriptorFromPlugin(
+							TclActiveStateDebuggerPlugin.PLUGIN_ID,
+							"icons/full/obj16/glob-pattern.gif"); //$NON-NLS-1$
+			if (descriptor != null) {
+				globImage = descriptor.createImage();
+			}
+		}
+		return globImage;
+	}
+
 	@Override
 	public void dispose() {
+		if (globImage != null) {
+			globImage.dispose();
+			globImage = null;
+		}
 		elementImageProvider.dispose();
 		storageLabelProvider.dispose();
 		super.dispose();

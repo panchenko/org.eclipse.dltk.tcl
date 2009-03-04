@@ -30,7 +30,9 @@ public class PreferenceMessages extends NLS {
 	public static String instrumentation_tab;
 	public static String instrumentation_pathSeparatorInPatten;
 	public static String instrumentation_pattern_AddButton;
+	public static String instrumentation_pattern_EditButton;
 	public static String instrumentation_pattern_RemoveButton;
+	public static String instrumentation_patternBrowseButton;
 	public static String instrumentation_patternDialogPromptSuffix;
 	public static String instrumentation_patternDialogTitle;
 	public static String instrumentation_patterns_message;

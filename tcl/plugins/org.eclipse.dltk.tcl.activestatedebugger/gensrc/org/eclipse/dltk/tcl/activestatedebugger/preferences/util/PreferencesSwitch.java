@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesSwitch.java,v 1.1 2008/11/13 11:10:42 apanchenk Exp $
+ * $Id: PreferencesSwitch.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.util;
 
@@ -115,6 +115,13 @@ public class PreferencesSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case PreferencesPackage.GLOB_PATTERN: {
+				GlobPattern globPattern = (GlobPattern)theEObject;
+				T result = caseGlobPattern(globPattern);
+				if (result == null) result = casePattern(globPattern);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -161,6 +168,21 @@ public class PreferencesSwitch<T> {
 	 * @generated
 	 */
 	public T caseExternalPattern(ExternalPattern object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Glob Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Glob Pattern</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseGlobPattern(GlobPattern object) {
 		return null;
 	}
 

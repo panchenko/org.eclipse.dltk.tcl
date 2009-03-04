@@ -10,11 +10,12 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackageImpl.java,v 1.1 2008/11/13 11:10:42 apanchenk Exp $
+ * $Id: PreferencesPackageImpl.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesFactory;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
@@ -51,6 +52,13 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * @generated
 	 */
 	private EClass externalPatternEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass globPatternEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -170,6 +178,15 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getGlobPattern() {
+		return globPatternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public PreferencesFactory getPreferencesFactory() {
 		return (PreferencesFactory)getEFactoryInstance();
 	}
@@ -200,6 +217,8 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		workspacePatternEClass = createEClass(WORKSPACE_PATTERN);
 
 		externalPatternEClass = createEClass(EXTERNAL_PATTERN);
+
+		globPatternEClass = createEClass(GLOB_PATTERN);
 	}
 
 	/**
@@ -232,6 +251,7 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		// Add supertypes to classes
 		workspacePatternEClass.getESuperTypes().add(this.getPattern());
 		externalPatternEClass.getESuperTypes().add(this.getPattern());
+		globPatternEClass.getESuperTypes().add(this.getPattern());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(patternEClass, Pattern.class, "Pattern", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -241,6 +261,8 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		initEClass(workspacePatternEClass, WorkspacePattern.class, "WorkspacePattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(externalPatternEClass, ExternalPattern.class, "ExternalPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+		initEClass(globPatternEClass, GlobPattern.class, "GlobPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

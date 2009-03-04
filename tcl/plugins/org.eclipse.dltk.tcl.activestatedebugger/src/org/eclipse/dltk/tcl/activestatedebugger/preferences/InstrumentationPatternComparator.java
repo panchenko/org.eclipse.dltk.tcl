@@ -18,10 +18,12 @@ public class InstrumentationPatternComparator extends ViewerComparator {
 
 	@Override
 	public int category(Object element) {
-		if (element instanceof WorkspacePattern) {
+		if (element instanceof GlobPattern) {
 			return 1;
-		} else if (element instanceof ExternalPattern) {
+		} else if (element instanceof WorkspacePattern) {
 			return 2;
+		} else if (element instanceof ExternalPattern) {
+			return 3;
 		} else {
 			return 0;
 		}

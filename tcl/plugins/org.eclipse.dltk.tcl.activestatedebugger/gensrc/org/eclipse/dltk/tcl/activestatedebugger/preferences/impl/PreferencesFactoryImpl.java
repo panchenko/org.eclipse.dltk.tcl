@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesFactoryImpl.java,v 1.1 2008/11/13 11:10:42 apanchenk Exp $
+ * $Id: PreferencesFactoryImpl.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
@@ -70,6 +70,7 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 		switch (eClass.getClassifierID()) {
 			case PreferencesPackage.WORKSPACE_PATTERN: return createWorkspacePattern();
 			case PreferencesPackage.EXTERNAL_PATTERN: return createExternalPattern();
+			case PreferencesPackage.GLOB_PATTERN: return createGlobPattern();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -93,6 +94,16 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 	public ExternalPattern createExternalPattern() {
 		ExternalPatternImpl externalPattern = new ExternalPatternImpl();
 		return externalPattern;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GlobPattern createGlobPattern() {
+		GlobPatternImpl globPattern = new GlobPatternImpl();
+		return globPattern;
 	}
 
 	/**

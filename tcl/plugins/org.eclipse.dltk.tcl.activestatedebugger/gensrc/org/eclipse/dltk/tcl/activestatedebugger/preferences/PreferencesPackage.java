@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackage.java,v 1.1 2008/11/13 11:10:41 apanchenk Exp $
+ * $Id: PreferencesPackage.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -179,6 +179,44 @@ public interface PreferencesPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl <em>Glob Pattern</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getGlobPattern()
+	 * @generated
+	 */
+	int GLOB_PATTERN = 3;
+
+	/**
+	 * The feature id for the '<em><b>Include</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOB_PATTERN__INCLUDE = PATTERN__INCLUDE;
+
+	/**
+	 * The feature id for the '<em><b>Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOB_PATTERN__PATH = PATTERN__PATH;
+
+	/**
+	 * The number of structural features of the '<em>Glob Pattern</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOB_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 0;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern <em>Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -229,6 +267,16 @@ public interface PreferencesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getExternalPattern();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern <em>Glob Pattern</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Glob Pattern</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern
+	 * @generated
+	 */
+	EClass getGlobPattern();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -297,6 +345,16 @@ public interface PreferencesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass EXTERNAL_PATTERN = eINSTANCE.getExternalPattern();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl <em>Glob Pattern</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getGlobPattern()
+		 * @generated
+		 */
+		EClass GLOB_PATTERN = eINSTANCE.getGlobPattern();
 
 	}
 
