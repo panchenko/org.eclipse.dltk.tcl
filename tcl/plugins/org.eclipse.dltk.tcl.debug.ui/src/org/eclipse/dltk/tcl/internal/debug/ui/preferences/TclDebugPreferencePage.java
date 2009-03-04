@@ -30,9 +30,9 @@ public class TclDebugPreferencePage extends
 			TclDebugPlugin.PLUGIN_ID,
 			DLTKDebugPreferenceConstants.PREF_DBGP_ENABLE_LOGGING);
 
-	private static PreferenceKey STREAM_FILTER_VWAIT_RENAME_WARNING = new PreferenceKey(
+	private static PreferenceKey STREAM_FILTER_COMMAND_RENAME_WARNING = new PreferenceKey(
 			TclDebugPlugin.PLUGIN_ID,
-			TclDebugConstants.DEBUG_STREAM_FILTER_VWAIT_RENAME_WARNING);
+			TclDebugConstants.DEBUG_STREAM_FILTER_COMMAND_RENAME_WARNING);
 
 	private static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.debug"; //$NON-NLS-1$
 	private static final String PROPERTY_PAGE_ID = "org.eclipse.dltk.tcl.propertyPage.debug"; //$NON-NLS-1$
@@ -62,16 +62,13 @@ public class TclDebugPreferencePage extends
 			@Override
 			protected void createSettingsGroup(Group group) {
 				super.createSettingsGroup(group);
-				bindControl(vwaitIgnore(group),
-						STREAM_FILTER_VWAIT_RENAME_WARNING, null);
-			}
-
-			private Button vwaitIgnore(Group group) {
-				return SWTFactory
+				final Button ignoreRename = SWTFactory
 						.createCheckButton(
 								group,
-								TclDebugPreferencesMessages.TclDebugPreferencePage_StreamFilterVWaitRename,
+								TclDebugPreferencesMessages.TclDebugPreferencePage_StreamFilterCommandRename,
 								null, false, 1);
+				bindControl(ignoreRename, STREAM_FILTER_COMMAND_RENAME_WARNING,
+						null);
 			}
 		};
 	}
@@ -82,7 +79,7 @@ public class TclDebugPreferencePage extends
 
 	protected PreferenceKey[] getKeys() {
 		return new PreferenceKey[] { BREAK_ON_FIRST_LINE, ENABLE_DBGP_LOGGING,
-				STREAM_FILTER_VWAIT_RENAME_WARNING };
+				STREAM_FILTER_COMMAND_RENAME_WARNING };
 	}
 
 	/*
