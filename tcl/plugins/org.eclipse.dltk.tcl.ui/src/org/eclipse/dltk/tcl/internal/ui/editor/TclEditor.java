@@ -12,6 +12,7 @@ package org.eclipse.dltk.tcl.internal.ui.editor;
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.internal.ui.actions.FoldingActionGroup;
+import org.eclipse.dltk.internal.ui.editor.BracketInserter;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.internal.ui.editor.ScriptOutlinePage;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
@@ -27,9 +28,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -42,6 +45,8 @@ public class TclEditor extends ScriptEditor {
 
 	public static final String RULER_CONTEXT = "#TclRulerContext"; //$NON-NLS-1$
 
+	private BracketInserter fBracketInserter = new TclBracketInserter(this);
+
 	private IFoldingStructureProvider foldingProvider;
 
 	private TclPairMatcher bracketMatcher;
@@ -51,6 +56,17 @@ public class TclEditor extends ScriptEditor {
 
 		setEditorContextMenuId(EDITOR_CONTEXT);
 		setRulerContextMenuId(RULER_CONTEXT);
+	}
+
+	/*
+	 * @see ScriptEditor#createPartControl(Composite)
+	 */
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer instanceof ITextViewerExtension)
+			((ITextViewerExtension) sourceViewer)
+					.prependVerifyKeyListener(fBracketInserter);
 	}
 
 	protected void createActions() {
@@ -196,5 +212,16 @@ public class TclEditor extends ScriptEditor {
 				MATCHING_BRACKETS_COLOR);
 
 		super.configureSourceViewerDecorationSupport(support);
+	}
+
+	/*
+	 * @see ScriptEditor#dispose()
+	 */
+	public void dispose() {
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer instanceof ITextViewerExtension)
+			((ITextViewerExtension) sourceViewer)
+					.removeVerifyKeyListener(fBracketInserter);
+		super.dispose();
 	}
 }

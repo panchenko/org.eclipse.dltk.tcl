@@ -963,7 +963,8 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			case ')':
 				smartIndentAfterClosingBracket(d, c);
 				break;
-			case '\"':
+			// case '\"':
+			// double quote is handled in TclBracketInserter
 			case '(':
 			case '{':
 			case '[':
