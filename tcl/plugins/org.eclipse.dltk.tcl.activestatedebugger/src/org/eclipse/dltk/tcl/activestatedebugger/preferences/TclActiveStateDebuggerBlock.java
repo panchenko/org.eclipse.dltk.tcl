@@ -100,42 +100,59 @@ public class TclActiveStateDebuggerBlock extends
 
 	private List<Button> instrumentationButtons;
 	private Combo errorActionCombo;
-	private InstrumentationPatternList includePatterns;
-	private InstrumentationPatternList excludePatterns;
+	private InstrumentationPatternList patterns;
+
+	// private InstrumentationPatternList excludePatterns;
 
 	private Control createInstrumentationPage(Composite parent) {
 		final Composite composite = SWTFactory.createComposite(parent, parent
 				.getFont(), 1, 1, GridData.FILL);
+		// composite.setBackground(DLTKDebugUIPlugin.getDefault().getColor(
+		// new RGB(0, 255, 0)));
 		Group groupPatterns = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_patternsGroup, 1, 1,
 				GridData.FILL_BOTH);
-		if (isProjectPreferencePage()) {
-			includePatterns = new InstrumentationPatternList(getProject(),
-					groupPatterns, "Includes", getShell(), true);
-			excludePatterns = new InstrumentationPatternList(getProject(),
-					groupPatterns, "Excludes", getShell(), false) {
-
-				@Override
-				protected void showLabel(Composite comp, String message,
-						int colSpan) {
-					Composite labelComposite = new Composite(comp, SWT.NONE);
-					GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-					final GridLayout labelCompositeLayout = new GridLayout(2,
-							false);
-					labelCompositeLayout.marginWidth = 0;
-					labelCompositeLayout.marginHeight = 0;
-					labelComposite.setLayout(labelCompositeLayout);
-					gd.horizontalSpan = colSpan;
-					labelComposite.setLayoutData(gd);
-					super.showLabel(labelComposite, message, 1);
-					Button excludeAll = new Button(labelComposite, SWT.CHECK);
-					excludeAll.setText("Exclude All");
-					excludeAll.setLayoutData(new GridData(
-							GridData.HORIZONTAL_ALIGN_END,
-							GridData.VERTICAL_ALIGN_CENTER, false, false));
-				}
-
-			};
+		// GridLayout patternGroupLayout = (GridLayout)
+		// groupPatterns.getLayout();
+		// patternGroupLayout.verticalSpacing = 0;
+		// patternGroupLayout.marginHeight = 0;
+		// groupPatterns.layout();
+		// patternGroupLayout.marginHeight=2;
+		if (true || isProjectPreferencePage()) {
+			patterns = new InstrumentationPatternList(getProject(),
+					groupPatterns,
+					PreferenceMessages.instrumentation_patterns_message,
+					getShell(), true);
+			// excludePatterns = new InstrumentationPatternList(getProject(),
+			// groupPatterns, "Excludes", getShell(), false) {
+			//
+			// @Override
+			// protected void showLabel(Composite comp, String message,
+			// int colSpan) {
+			// Composite labelComposite = new Composite(comp, SWT.NONE);
+			// GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			// final GridLayout labelCompositeLayout = new GridLayout(3,
+			// false);
+			// labelCompositeLayout.marginWidth = 0;
+			// labelCompositeLayout.marginHeight = 0;
+			// labelComposite.setLayout(labelCompositeLayout);
+			// gd.horizontalSpan = colSpan;
+			// labelComposite.setLayoutData(gd);
+			// labelComposite.setBackground(DLTKDebugUIPlugin.getDefault()
+			// .getColor(new RGB(255, 0, 0)));
+			// super.showLabel(labelComposite, message, 1);
+			// Label center = new Label(labelComposite, SWT.NONE);
+			// center.setLayoutData(new GridData(
+			// GridData.HORIZONTAL_ALIGN_FILL,
+			// GridData.VERTICAL_ALIGN_BEGINNING, true, false));
+			// Button excludeAll = new Button(labelComposite, SWT.CHECK);
+			// excludeAll.setText("Exclude All");
+			// excludeAll.setLayoutData(new GridData(
+			// GridData.HORIZONTAL_ALIGN_END,
+			// GridData.VERTICAL_ALIGN_CENTER, false, false));
+			// }
+			//
+			// };
 		} else {
 			Label label = new Label(groupPatterns, SWT.NONE);
 			label
@@ -203,20 +220,10 @@ public class TclActiveStateDebuggerBlock extends
 
 	private void setValues() {
 		// patterns
-		if (includePatterns != null && excludePatterns != null) {
-			final List<Pattern> includes = new ArrayList<Pattern>();
-			final List<Pattern> excludes = new ArrayList<Pattern>();
-			final List<Pattern> patterns = PatternListIO
-					.decode(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS));
-			for (Pattern pattern : patterns) {
-				if (pattern.isInclude()) {
-					includes.add(pattern);
-				} else {
-					excludes.add(pattern);
-				}
-			}
-			includePatterns.setValue(includes);
-			excludePatterns.setValue(excludes);
+		if (patterns != null) {
+			patterns
+					.setValue(PatternListIO
+							.decode(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS)));
 		}
 		// instrumentation features
 		Set<InstrumentationFeature> result = InstrumentationFeature
@@ -282,13 +289,10 @@ public class TclActiveStateDebuggerBlock extends
 		setString(TclActiveStateDebuggerPreferencePage.PDX_PATH,
 				pdxPathKeyValue);
 		// patterns
-		if (includePatterns != null && excludePatterns != null) {
-			final List<Pattern> patterns = new ArrayList<Pattern>();
-			patterns.addAll(includePatterns.getValue());
-			patterns.addAll(excludePatterns.getValue());
+		if (patterns != null) {
 			setString(
 					TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS,
-					PatternListIO.encode(patterns));
+					PatternListIO.encode(patterns.getValue()));
 		}
 		// Instrumentation features
 		Set<InstrumentationFeature> selectedFeatures = new HashSet<InstrumentationFeature>();

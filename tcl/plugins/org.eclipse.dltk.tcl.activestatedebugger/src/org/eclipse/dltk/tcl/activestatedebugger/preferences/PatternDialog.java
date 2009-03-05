@@ -36,7 +36,7 @@ public class PatternDialog extends StatusDialog {
 
 	protected void createDialogFields() {
 		fPattern = new StringDialogField();
-		fPattern.setLabelText("Pattern");
+		fPattern.setLabelText(PreferenceMessages.PatternDialog_patternLabel);
 	}
 
 	protected void createFieldListeners() {
@@ -79,7 +79,7 @@ public class PatternDialog extends StatusDialog {
 		String pattern = fPattern.getText().trim();
 		StatusInfo info = new StatusInfo();
 		if (pattern.length() == 0) {
-			info.setError("Pattern is empty");
+			info.setError(PreferenceMessages.PatternDialog_ErrorPatternIsEmpty);
 		}
 		return info;
 	}

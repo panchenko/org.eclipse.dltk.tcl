@@ -160,7 +160,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 
 	private String[] resolveFileHandle(final IFileHandle file) {
 		if (file != null) {
-			final String path = new Path(file.toOSString()).toString();
+			final String path = file.getPath().toString();
 			return new String[] { !file.isDirectory() ? path : path + "/*" }; //$NON-NLS-1$
 		} else {
 			return CharOperation.NO_STRINGS;
