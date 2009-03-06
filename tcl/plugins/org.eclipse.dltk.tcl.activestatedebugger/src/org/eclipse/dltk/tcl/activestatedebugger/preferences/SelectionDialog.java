@@ -16,33 +16,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IParent;
-import org.eclipse.dltk.core.IProjectFragment;
-import org.eclipse.dltk.core.IScriptModel;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -55,206 +37,6 @@ import org.eclipse.ui.dialogs.SelectionStatusDialog;
 
 public class SelectionDialog extends SelectionStatusDialog implements
 		ISelectionChangedListener {
-
-	static abstract class SelectionDialogInput {
-
-		public abstract Set<IScriptProject> collectProjects();
-
-		/**
-		 * @param model
-		 * @param projects
-		 * @param project
-		 */
-		protected void collectProjects(IScriptModel model,
-				Set<IScriptProject> projects, IScriptProject project) {
-			if (projects.add(project)) {
-				final IBuildpathEntry[] entries;
-				try {
-					entries = project.getResolvedBuildpath(true);
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-					return;
-				}
-				for (IBuildpathEntry entry : entries) {
-					if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						collectProjects(model, projects, model
-								.getScriptProject(entry.getPath().segment(0)));
-					}
-				}
-			}
-		}
-
-	}
-
-	static class ProjectSelectionDialogInput extends SelectionDialogInput {
-
-		final IScriptProject project;
-
-		/**
-		 * @param parentProject
-		 */
-		public ProjectSelectionDialogInput(IProject project) {
-			this.project = DLTKCore.create(project);
-		}
-
-		public Set<IScriptProject> collectProjects() {
-			final Set<IScriptProject> projects = new HashSet<IScriptProject>();
-			final IScriptModel model = DLTKCore.create(ResourcesPlugin
-					.getWorkspace().getRoot());
-			collectProjects(model, projects, project);
-			return projects;
-		}
-
-	}
-
-	static class WorkspaceSelectionDialogInput extends SelectionDialogInput {
-
-		@Override
-		public Set<IScriptProject> collectProjects() {
-			final Set<IScriptProject> projects = new HashSet<IScriptProject>();
-			final IScriptModel model = DLTKCore.create(ResourcesPlugin
-					.getWorkspace().getRoot());
-			try {
-				for (IScriptProject project : model
-						.getScriptProjects(TclNature.NATURE_ID)) {
-					collectProjects(model, projects, project);
-				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-			return projects;
-		}
-	}
-
-	private static class SelectionDialogComparator extends ViewerComparator {
-
-		@Override
-		public int category(Object element) {
-			if (element instanceof IResource) {
-				return 1;
-			} else if (element instanceof IModelElement) {
-				return 2;
-			} else {
-				return 0;
-			}
-		}
-
-	}
-
-	private static class SelectionDialogTreeContentProvider implements
-			ITreeContentProvider {
-
-		public Object[] getChildren(Object parentElement) {
-			try {
-				if (parentElement instanceof IScriptProject) {
-					final IProjectFragment[] fragments = ((IScriptProject) parentElement)
-							.getProjectFragments();
-					final List<IProjectFragment> result = new ArrayList<IProjectFragment>(
-							fragments.length);
-					for (IProjectFragment fragment : fragments) {
-						if (!fragment.isExternal()) {
-							result.add(fragment);
-						}
-					}
-					return result.toArray();
-				} else if (parentElement instanceof ISourceModule) {
-					return new Object[0];
-				} else if (parentElement instanceof IParent) {
-					return ((IParent) parentElement).getChildren();
-				} else if (parentElement instanceof IContainer) {
-					return ((IContainer) parentElement).members();
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-			return new Object[0];
-		}
-
-		public Object getParent(Object element) {
-			if (element instanceof IResource) {
-				return ((IResource) element).getParent();
-			} else if (element instanceof IModelElement) {
-				return ((IModelElement) element).getParent();
-			}
-			return null;
-		}
-
-		public boolean hasChildren(Object element) {
-			try {
-				if (element instanceof ISourceModule) {
-					return false;
-				} else if (element instanceof IParent) {
-					return ((IParent) element).hasChildren();
-				} else if (element instanceof IContainer) {
-					return true;
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-			return false;
-		}
-
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof SelectionDialogInput) {
-				final Set<IProjectFragment> libraries = new HashSet<IProjectFragment>();
-				final Set<IScriptProject> projects = ((SelectionDialogInput) inputElement)
-						.collectProjects();
-				for (IScriptProject project : projects) {
-					try {
-						for (IProjectFragment fragment : project
-								.getProjectFragments()) {
-							if (fragment.isExternal()
-									&& !IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR
-											.equals(fragment.getPath().segment(
-													0))) {
-								libraries.add(fragment);
-							}
-						}
-					} catch (ModelException e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
-						}
-					}
-				}
-				final List<Object> result = new ArrayList<Object>();
-				for (IScriptProject project : projects) {
-					try {
-						result.add(project.getUnderlyingResource());
-					} catch (ModelException e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
-						}
-					}
-				}
-				for (IProjectFragment fragment : libraries) {
-					result.add(fragment);
-				}
-				return result.toArray();
-			}
-			return new Object[0];
-		}
-
-		public void dispose() {
-			// TODO Auto-generated method stub
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			// TODO Auto-generated method stub
-		}
-
-	}
 
 	private CheckboxTreeViewer fViewer;
 
@@ -382,7 +164,7 @@ public class SelectionDialog extends SelectionStatusDialog implements
 	protected CheckboxTreeViewer createTreeViewer(Composite parent) {
 		fViewer = new CheckboxTreeViewer(parent, SWT.BORDER);
 
-		fViewer.setContentProvider(new SelectionDialogTreeContentProvider());
+		fViewer.setContentProvider(new ContentProvider());
 		fViewer.setLabelProvider(new ModelElementLabelProvider());
 		fViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {

@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.compiler.util.Util;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
 import org.eclipse.dltk.tcl.activestatedebugger.ErrorAction;
@@ -67,12 +68,14 @@ public class TclActiveStateDebuggerBlock extends
 	@Override
 	protected Control createOptionsBlock(Composite parent) {
 		final TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
-		final TabItem pathTab = new TabItem(tabFolder, SWT.NONE);
-		pathTab.setText(PreferenceMessages.path_tab);
-		pathTab.setControl(super.createOptionsBlock(tabFolder));
+		// FIXME DEVELOPMENT ON
 		final TabItem instrTab = new TabItem(tabFolder, SWT.NONE);
 		instrTab.setText(PreferenceMessages.instrumentation_tab);
 		instrTab.setControl(createInstrumentationPage(tabFolder));
+		// FIXME DEVELOPMENT OFF
+		final TabItem pathTab = new TabItem(tabFolder, SWT.NONE);
+		pathTab.setText(PreferenceMessages.path_tab);
+		pathTab.setControl(super.createOptionsBlock(tabFolder));
 		final TabItem spawnpointTab = new TabItem(tabFolder, SWT.NONE);
 		spawnpointTab.setText(PreferenceMessages.spawnpoints_tab);
 		spawnpointBlock = new TclSpawnpointPreferenceBlock(
@@ -118,11 +121,9 @@ public class TclActiveStateDebuggerBlock extends
 		// patternGroupLayout.marginHeight = 0;
 		// groupPatterns.layout();
 		// patternGroupLayout.marginHeight=2;
-		if (true || isProjectPreferencePage()) {
-			patterns = new InstrumentationPatternList(getProject(),
-					groupPatterns,
-					PreferenceMessages.instrumentation_patterns_message,
-					getShell(), true);
+		if (DLTKCore.DEBUG || isProjectPreferencePage()) {
+			patterns = new InstrumentationPatternList(getProject());
+			patterns.createControl(groupPatterns);
 			// excludePatterns = new InstrumentationPatternList(getProject(),
 			// groupPatterns, "Excludes", getShell(), false) {
 			//
