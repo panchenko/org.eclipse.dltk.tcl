@@ -164,7 +164,7 @@ public class SelectionDialog extends SelectionStatusDialog implements
 	protected CheckboxTreeViewer createTreeViewer(Composite parent) {
 		fViewer = new CheckboxTreeViewer(parent, SWT.BORDER);
 
-		fViewer.setContentProvider(new ContentProvider());
+		fViewer.setContentProvider(new InstrumentationContentProvider());
 		fViewer.setLabelProvider(new ModelElementLabelProvider());
 		fViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {

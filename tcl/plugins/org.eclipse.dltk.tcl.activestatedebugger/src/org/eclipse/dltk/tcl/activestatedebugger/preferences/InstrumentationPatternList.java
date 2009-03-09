@@ -20,8 +20,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.TreeSelectionControl.ICollector;
-import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.ui.DLTKUILanguageManager;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -95,9 +93,9 @@ public class InstrumentationPatternList {
 				.convertHeightInCharsToPixels(15);
 		fViewer.getTree().setLayoutData(viewerLayoutData);
 		// fViewer.setContentProvider(new SelectionDialogTreeContentProvider());
-		fViewer.setContentProvider(new ContentProvider());
-		fViewer.setLabelProvider(DLTKUILanguageManager
-				.createLabelProvider(TclNature.NATURE_ID));
+		InstrumentationContentProvider cp = new InstrumentationContentProvider();
+		fViewer.setContentProvider(cp);
+		fViewer.setLabelProvider(new InstrumentationLabelProvider(cp));
 		fViewer.setComparator(new SelectionDialogComparator());
 		fSelectionControl = new TreeSelectionControl(fViewer) {
 			@Override
