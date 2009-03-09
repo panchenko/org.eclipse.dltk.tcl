@@ -556,9 +556,10 @@ public class SimpleIndentingTest extends TestCase {
 		assertEquals("[]", cmd.text);
 		assertEquals(1, cmd.caretOffset);
 
-		cmd = new DocCmd(0, 0, "\"");
-		strategy.customizeDocumentCommand(new Document("\""), cmd);
-		assertEquals("", cmd.text);
+		// FIXME double quotes are now handled by TclBracketInserter
+		// cmd = new DocCmd(0, 0, "\"");
+		// strategy.customizeDocumentCommand(new Document("\""), cmd);
+		// assertEquals("", cmd.text);
 
 		cmd = new DocCmd(0, 0, "(");
 		strategy.customizeDocumentCommand(new Document("("), cmd);
