@@ -26,12 +26,19 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IExternalSourceModule;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IPreferencesLookupDelegate;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.dbgp.IDbgpFeature;
@@ -45,11 +52,10 @@ import org.eclipse.dltk.debug.core.model.IScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern;
 
 public class TclActiveStateDebugThreadConfigurator implements
 		IScriptDebugThreadConfigurator {
@@ -99,35 +105,76 @@ public class TclActiveStateDebugThreadConfigurator implements
 		if (errorAction != null) {
 			commands.setErrorAction(errorAction);
 		}
-		IEnvironment environment = EnvironmentManager.getEnvironment(project);
-		final List<Pattern> patterns = PatternListIO
+		final InstrumentationConfig config = PatternListIO
 				.decode(getString(TclActiveStateDebuggerConstants.INSTRUMENTATION_PATTERNS));
-		if (!patterns.isEmpty()) {
-			for (Pattern pattern : patterns) {
-				if (pattern instanceof WorkspacePattern) {
-					String[] stringPatterns = resolveWorkspacePattern(
-							environment, (WorkspacePattern) pattern);
-					if (pattern.isInclude()) {
-						commands.instrumentInclude(stringPatterns);
-					} else {
-						commands.instrumentExclude(stringPatterns);
+		if (config != null && config.getMode() != InstrumentationMode.DEFAULT) {
+			if (config.getMode() == InstrumentationMode.SOURCES) {
+				// TODO InstrumentationMode.SOURCES
+			} else {
+				final IEnvironment environment = EnvironmentManager
+						.getEnvironment(project);
+				for (ModelElementPattern pattern : config.getModelElements()) {
+					final IModelElement element = DLTKCore.create(pattern
+							.getHandleIdentifier());
+					if (element == null) {
+						continue;
 					}
-				} else if (pattern instanceof ExternalPattern) {
-					String[] stringPatterns = resolveExternalPattern(
-							environment, (ExternalPattern) pattern);
-					if (pattern.isInclude()) {
-						commands.instrumentInclude(stringPatterns);
-					} else {
-						commands.instrumentExclude(stringPatterns);
-					}
-				} else if (pattern instanceof GlobPattern) {
-					if (pattern.isInclude()) {
-						commands.instrumentInclude(pattern.getPath());
-					} else {
-						commands.instrumentExclude(pattern.getPath());
+					if (element instanceof ISourceModule) {
+						final ISourceModule module = (ISourceModule) element;
+						if (module instanceof IExternalSourceModule) {
+							if (module.isBuiltin())
+								continue;
+							sendPatterns(commands, resolveExternal(environment,
+									EnvironmentPathUtils.getLocalPath(module
+											.getPath()), false), pattern
+									.isInclude());
+						} else {
+							sendPatterns(commands, resolveWorkspace(
+									environment, module.getPath(), false),
+									pattern.isInclude());
+						}
+					} else if (element instanceof IScriptFolder) {
+						final IScriptFolder folder = (IScriptFolder) element;
+						if (folder.isReadOnly()) {
+							sendPatterns(commands, resolveExternal(environment,
+									EnvironmentPathUtils.getLocalPath(folder
+											.getPath()), false), pattern
+									.isInclude());
+						} else {
+							sendPatterns(commands, resolveWorkspace(
+									environment, folder.getPath(), true),
+									pattern.isInclude());
+						}
+					} else if (element instanceof IProjectFragment) {
+						final IProjectFragment fragment = (IProjectFragment) element;
+						if (fragment.isExternal()) {
+							if (fragment.isBuiltin())
+								continue;
+							sendPatterns(commands, resolveExternal(environment,
+									EnvironmentPathUtils.getLocalPath(fragment
+											.getPath()), false), pattern
+									.isInclude());
+						} else {
+							sendPatterns(commands, resolveWorkspace(
+									environment, fragment.getPath(), true),
+									pattern.isInclude());
+						}
+					} else if (element instanceof IScriptProject) {
+						final IScriptProject project = (IScriptProject) element;
+						sendPatterns(commands, resolveWorkspace(environment,
+								project.getPath(), true), pattern.isInclude());
 					}
 				}
 			}
+		}
+	}
+
+	private void sendPatterns(ActiveStateInstrumentCommands commands,
+			String[] patterns, boolean include) throws DbgpException {
+		if (include) {
+			commands.instrumentInclude(patterns);
+		} else {
+			commands.instrumentExclude(patterns);
 		}
 	}
 
@@ -136,32 +183,35 @@ public class TclActiveStateDebugThreadConfigurator implements
 	 * @param pattern
 	 * @return
 	 */
-	private String[] resolveExternalPattern(IEnvironment environment,
-			ExternalPattern pattern) {
-		return resolveFileHandle(environment
-				.getFile(new Path(pattern.getPath())));
+	private String[] resolveExternal(IEnvironment environment, IPath path,
+			boolean isDirectory) {
+		return resolveFileHandle(environment.getFile(path), isDirectory);
 	}
 
 	/**
 	 * @param pattern
 	 * @return
 	 */
-	private String[] resolveWorkspacePattern(IEnvironment environment,
-			WorkspacePattern pattern) {
-		final IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(new Path(pattern.getPath()));
+	private String[] resolveWorkspace(IEnvironment environment, IPath path,
+			boolean isDirectory) {
+		final IResource resource = getWorkspaceRoot().findMember(path);
 		if (resource != null) {
 			final URI uri = resource.getLocationURI();
 			final IFileHandle file = environment.getFile(uri);
-			return resolveFileHandle(file);
+			return resolveFileHandle(file, isDirectory);
 		}
 		return CharOperation.NO_STRINGS;
 	}
 
-	private String[] resolveFileHandle(final IFileHandle file) {
+	private IWorkspaceRoot getWorkspaceRoot() {
+		return ResourcesPlugin.getWorkspace().getRoot();
+	}
+
+	private String[] resolveFileHandle(final IFileHandle file,
+			boolean isDirectory) {
 		if (file != null) {
 			final String path = file.getPath().toString();
-			return new String[] { !file.isDirectory() ? path : path + "/*" }; //$NON-NLS-1$
+			return new String[] { !isDirectory ? path : path + "/*" }; //$NON-NLS-1$
 		} else {
 			return CharOperation.NO_STRINGS;
 		}
@@ -172,7 +222,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 	}
 
 	private List<IMarker> loadSpawnpoints() throws CoreException {
-		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		final IWorkspaceRoot root = getWorkspaceRoot();
 		final IMarker[] markers = root.findMarkers(
 				TclActiveStateDebuggerConstants.SPAWNPOINT_MARKER_TYPE, true,
 				IResource.DEPTH_INFINITE);
@@ -222,13 +272,12 @@ public class TclActiveStateDebugThreadConfigurator implements
 							.map(uri), lineNumber, true);
 					// TODO save spawnpoint id - need SpawnpointManager?
 				} catch (DbgpException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					// TODO save spawnpoint error - need SpawnpointManager?
+					TclActiveStateDebuggerPlugin.warn(e);
 				}
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			TclActiveStateDebuggerPlugin.warn(e);
 		}
 	}
 }

@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesAdapterFactory.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
+ * $Id: PreferencesAdapterFactory.java,v 1.3 2009/03/09 06:29:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.util;
 
@@ -80,20 +80,12 @@ public class PreferencesAdapterFactory extends AdapterFactoryImpl {
 	protected PreferencesSwitch<Adapter> modelSwitch =
 		new PreferencesSwitch<Adapter>() {
 			@Override
-			public Adapter casePattern(Pattern object) {
-				return createPatternAdapter();
+			public Adapter caseModelElementPattern(ModelElementPattern object) {
+				return createModelElementPatternAdapter();
 			}
 			@Override
-			public Adapter caseWorkspacePattern(WorkspacePattern object) {
-				return createWorkspacePatternAdapter();
-			}
-			@Override
-			public Adapter caseExternalPattern(ExternalPattern object) {
-				return createExternalPatternAdapter();
-			}
-			@Override
-			public Adapter caseGlobPattern(GlobPattern object) {
-				return createGlobPatternAdapter();
+			public Adapter caseInstrumentationConfig(InstrumentationConfig object) {
+				return createInstrumentationConfigAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -116,58 +108,30 @@ public class PreferencesAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern <em>Pattern</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern <em>Model Element Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern
 	 * @generated
 	 */
-	public Adapter createPatternAdapter() {
+	public Adapter createModelElementPatternAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern <em>Workspace Pattern</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig <em>Instrumentation Config</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig
 	 * @generated
 	 */
-	public Adapter createWorkspacePatternAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern <em>External Pattern</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern
-	 * @generated
-	 */
-	public Adapter createExternalPatternAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern <em>Glob Pattern</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern
-	 * @generated
-	 */
-	public Adapter createGlobPatternAdapter() {
+	public Adapter createInstrumentationConfigAdapter() {
 		return null;
 	}
 

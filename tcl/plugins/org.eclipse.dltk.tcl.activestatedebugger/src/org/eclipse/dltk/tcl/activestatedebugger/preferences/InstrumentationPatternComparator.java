@@ -18,12 +18,8 @@ public class InstrumentationPatternComparator extends ViewerComparator {
 
 	@Override
 	public int category(Object element) {
-		if (element instanceof GlobPattern) {
+		if (element instanceof ModelElementPattern) {
 			return 1;
-		} else if (element instanceof WorkspacePattern) {
-			return 2;
-		} else if (element instanceof ExternalPattern) {
-			return 3;
 		} else {
 			return 0;
 		}
@@ -36,9 +32,10 @@ public class InstrumentationPatternComparator extends ViewerComparator {
 		if (category1 != category2) {
 			return category1 - category2;
 		}
-		if (e1 instanceof Pattern && e2 instanceof Pattern) {
-			String path1 = ((Pattern) e1).getPath();
-			String path2 = ((Pattern) e2).getPath();
+		if (e1 instanceof ModelElementPattern
+				&& e2 instanceof ModelElementPattern) {
+			String path1 = ((ModelElementPattern) e1).getHandleIdentifier();
+			String path2 = ((ModelElementPattern) e2).getHandleIdentifier();
 			if (path1 != null) {
 				return path1.compareTo(path2);
 			}

@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.compiler.util.Util;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
 import org.eclipse.dltk.tcl.activestatedebugger.ErrorAction;
@@ -68,14 +67,12 @@ public class TclActiveStateDebuggerBlock extends
 	@Override
 	protected Control createOptionsBlock(Composite parent) {
 		final TabFolder tabFolder = new TabFolder(parent, SWT.NONE);
-		// FIXME DEVELOPMENT ON
-		final TabItem instrTab = new TabItem(tabFolder, SWT.NONE);
-		instrTab.setText(PreferenceMessages.instrumentation_tab);
-		instrTab.setControl(createInstrumentationPage(tabFolder));
-		// FIXME DEVELOPMENT OFF
 		final TabItem pathTab = new TabItem(tabFolder, SWT.NONE);
 		pathTab.setText(PreferenceMessages.path_tab);
 		pathTab.setControl(super.createOptionsBlock(tabFolder));
+		final TabItem instrTab = new TabItem(tabFolder, SWT.NONE);
+		instrTab.setText(PreferenceMessages.instrumentation_tab);
+		instrTab.setControl(createInstrumentationPage(tabFolder));
 		final TabItem spawnpointTab = new TabItem(tabFolder, SWT.NONE);
 		spawnpointTab.setText(PreferenceMessages.spawnpoints_tab);
 		spawnpointBlock = new TclSpawnpointPreferenceBlock(
@@ -105,55 +102,15 @@ public class TclActiveStateDebuggerBlock extends
 	private Combo errorActionCombo;
 	private InstrumentationPatternList patterns;
 
-	// private InstrumentationPatternList excludePatterns;
-
 	private Control createInstrumentationPage(Composite parent) {
 		final Composite composite = SWTFactory.createComposite(parent, parent
 				.getFont(), 1, 1, GridData.FILL);
-		// composite.setBackground(DLTKDebugUIPlugin.getDefault().getColor(
-		// new RGB(0, 255, 0)));
 		Group groupPatterns = SWTFactory.createGroup(composite,
 				PreferenceMessages.instrumentation_patternsGroup, 1, 1,
 				GridData.FILL_BOTH);
-		// GridLayout patternGroupLayout = (GridLayout)
-		// groupPatterns.getLayout();
-		// patternGroupLayout.verticalSpacing = 0;
-		// patternGroupLayout.marginHeight = 0;
-		// groupPatterns.layout();
-		// patternGroupLayout.marginHeight=2;
-		if (DLTKCore.DEBUG || isProjectPreferencePage()) {
+		if (isProjectPreferencePage()) {
 			patterns = new InstrumentationPatternList(getProject());
 			patterns.createControl(groupPatterns);
-			// excludePatterns = new InstrumentationPatternList(getProject(),
-			// groupPatterns, "Excludes", getShell(), false) {
-			//
-			// @Override
-			// protected void showLabel(Composite comp, String message,
-			// int colSpan) {
-			// Composite labelComposite = new Composite(comp, SWT.NONE);
-			// GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-			// final GridLayout labelCompositeLayout = new GridLayout(3,
-			// false);
-			// labelCompositeLayout.marginWidth = 0;
-			// labelCompositeLayout.marginHeight = 0;
-			// labelComposite.setLayout(labelCompositeLayout);
-			// gd.horizontalSpan = colSpan;
-			// labelComposite.setLayoutData(gd);
-			// labelComposite.setBackground(DLTKDebugUIPlugin.getDefault()
-			// .getColor(new RGB(255, 0, 0)));
-			// super.showLabel(labelComposite, message, 1);
-			// Label center = new Label(labelComposite, SWT.NONE);
-			// center.setLayoutData(new GridData(
-			// GridData.HORIZONTAL_ALIGN_FILL,
-			// GridData.VERTICAL_ALIGN_BEGINNING, true, false));
-			// Button excludeAll = new Button(labelComposite, SWT.CHECK);
-			// excludeAll.setText("Exclude All");
-			// excludeAll.setLayoutData(new GridData(
-			// GridData.HORIZONTAL_ALIGN_END,
-			// GridData.VERTICAL_ALIGN_CENTER, false, false));
-			// }
-			//
-			// };
 		} else {
 			Label label = new Label(groupPatterns, SWT.NONE);
 			label
@@ -219,7 +176,7 @@ public class TclActiveStateDebuggerBlock extends
 			.getName()
 			+ "#FEATURE"; //$NON-NLS-1$
 
-	private void setValues() {
+	private void initValues() {
 		// patterns
 		if (patterns != null) {
 			patterns
@@ -252,13 +209,13 @@ public class TclActiveStateDebuggerBlock extends
 	@Override
 	protected void initialize() {
 		super.initialize();
-		setValues();
+		initValues();
 	}
 
 	@Override
 	public void performDefaults() {
 		super.performDefaults();
-		setValues();
+		initValues();
 	}
 
 	protected void createEngineBlock(Composite parent) {

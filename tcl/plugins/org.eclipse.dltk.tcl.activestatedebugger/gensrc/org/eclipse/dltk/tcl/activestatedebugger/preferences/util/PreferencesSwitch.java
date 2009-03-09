@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesSwitch.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
+ * $Id: PreferencesSwitch.java,v 1.3 2009/03/09 06:29:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.util;
 
@@ -95,30 +95,15 @@ public class PreferencesSwitch<T> {
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case PreferencesPackage.PATTERN: {
-				Pattern pattern = (Pattern)theEObject;
-				T result = casePattern(pattern);
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN: {
+				ModelElementPattern modelElementPattern = (ModelElementPattern)theEObject;
+				T result = caseModelElementPattern(modelElementPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case PreferencesPackage.WORKSPACE_PATTERN: {
-				WorkspacePattern workspacePattern = (WorkspacePattern)theEObject;
-				T result = caseWorkspacePattern(workspacePattern);
-				if (result == null) result = casePattern(workspacePattern);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case PreferencesPackage.EXTERNAL_PATTERN: {
-				ExternalPattern externalPattern = (ExternalPattern)theEObject;
-				T result = caseExternalPattern(externalPattern);
-				if (result == null) result = casePattern(externalPattern);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case PreferencesPackage.GLOB_PATTERN: {
-				GlobPattern globPattern = (GlobPattern)theEObject;
-				T result = caseGlobPattern(globPattern);
-				if (result == null) result = casePattern(globPattern);
+			case PreferencesPackage.INSTRUMENTATION_CONFIG: {
+				InstrumentationConfig instrumentationConfig = (InstrumentationConfig)theEObject;
+				T result = caseInstrumentationConfig(instrumentationConfig);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -127,62 +112,32 @@ public class PreferencesSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Pattern</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Model Element Pattern</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Pattern</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Model Element Pattern</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePattern(Pattern object) {
+	public T caseModelElementPattern(ModelElementPattern object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Workspace Pattern</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Instrumentation Config</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Workspace Pattern</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Instrumentation Config</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseWorkspacePattern(WorkspacePattern object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>External Pattern</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>External Pattern</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseExternalPattern(ExternalPattern object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Glob Pattern</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Glob Pattern</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseGlobPattern(GlobPattern object) {
+	public T caseInstrumentationConfig(InstrumentationConfig object) {
 		return null;
 	}
 

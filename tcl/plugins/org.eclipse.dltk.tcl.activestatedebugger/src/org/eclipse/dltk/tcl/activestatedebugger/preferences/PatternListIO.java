@@ -13,9 +13,7 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.compiler.util.Util;
@@ -33,8 +31,7 @@ public class PatternListIO {
 
 	private static final String ENCODING = "UTF-8"; //$NON-NLS-1$
 
-	public static List<Pattern> decode(String value) {
-		final List<Pattern> result = new ArrayList<Pattern>();
+	public static InstrumentationConfig decode(String value) {
 		if (value != null && value.length() != 0) {
 			ResourceSet resourceSet = new ResourceSetImpl();
 			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -53,16 +50,16 @@ public class PatternListIO {
 				}
 			}
 			for (EObject object : resource.getContents()) {
-				if (object instanceof Pattern) {
-					result.add((Pattern) object);
+				if (object instanceof InstrumentationConfig) {
+					return (InstrumentationConfig) object;
 				}
 			}
 		}
-		return result;
+		return null;
 	}
 
-	public static String encode(List<Pattern> patterns) {
-		if (patterns.isEmpty()) {
+	public static String encode(InstrumentationConfig config) {
+		if (config == null) {
 			return Util.EMPTY_STRING;
 		}
 		ResourceSet resourceSet = new ResourceSetImpl();
@@ -73,9 +70,7 @@ public class PatternListIO {
 				PreferencesPackage.eINSTANCE);
 		XMLResource resource = (XMLResource) resourceSet.createResource(URI
 				.createURI(PreferencesPackage.eNS_URI));
-		for (Pattern pattern : patterns) {
-			resource.getContents().add(pattern);
-		}
+		resource.getContents().add(config);
 		resource.setEncoding(ENCODING);
 		StringWriter stringWriter = new StringWriter();
 		try {

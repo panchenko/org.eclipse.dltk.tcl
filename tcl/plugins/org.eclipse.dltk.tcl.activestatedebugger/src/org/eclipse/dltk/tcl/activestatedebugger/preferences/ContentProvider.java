@@ -21,7 +21,6 @@ import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.StandardModelElementContentProvider2;
-import org.eclipse.jface.viewers.Viewer;
 
 public class ContentProvider extends StandardModelElementContentProvider2 {
 

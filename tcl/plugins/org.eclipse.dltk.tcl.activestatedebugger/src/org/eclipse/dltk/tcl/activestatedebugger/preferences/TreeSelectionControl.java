@@ -18,12 +18,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -32,6 +32,8 @@ import org.eclipse.swt.custom.BusyIndicator;
 
 public class TreeSelectionControl implements ITreeViewerListener,
 		ICheckStateListener {
+
+	static final boolean DEBUG = false;
 
 	/**
 	 * @param viewer
@@ -63,6 +65,10 @@ public class TreeSelectionControl implements ITreeViewerListener,
 
 	}
 
+	protected String getLabelOf(Object element) {
+		return ((ILabelProvider) fViewer.getLabelProvider()).getText(element);
+	}
+
 	private Map<Object, SelectionState> checkedStateStore = new HashMap<Object, SelectionState>();
 	private Set<Object> whiteChecked = new HashSet<Object>();
 	private Set<Object> expandedTreeNodes = new HashSet<Object>();
@@ -81,15 +87,12 @@ public class TreeSelectionControl implements ITreeViewerListener,
 			// Update the hierarchy but do not white select the parent
 			grayUpdateHierarchy(parent);
 		}
-		if (DLTKCore.DEBUG) {
-			dump();
+		if (DEBUG) {
+			dump("onChecked"); //$NON-NLS-1$
 		}
 	}
 
-	/**
-	 * 
-	 */
-	void dump() {
+	void dump(String mode) {
 		final ArrayList<Object> includes = new ArrayList<Object>();
 		final ArrayList<Object> excludes = new ArrayList<Object>();
 		ICollector collector = new ICollector() {
@@ -102,19 +105,33 @@ public class TreeSelectionControl implements ITreeViewerListener,
 			}
 		};
 		collectCheckedItems(collector);
-		System.out.println("=== [INCLUDES]"); //$NON-NLS-1$
+		System.out.println("===" + mode + " ==="); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("[expandedTreeNodes]"); //$NON-NLS-1$
+		for (Iterator<?> i = expandedTreeNodes.iterator(); i.hasNext();) {
+			Object item = i.next();
+			System.out.println(" " + getLabelOf(item)); //$NON-NLS-1$
+		}
+		System.out.println("[white]"); //$NON-NLS-1$
+		for (Iterator<?> i = whiteChecked.iterator(); i.hasNext();) {
+			Object item = i.next();
+			System.out.println(" " + getLabelOf(item)); //$NON-NLS-1$
+		}
+		System.out.println("[state]"); //$NON-NLS-1$
+		for (Iterator<?> i = checkedStateStore.entrySet().iterator(); i
+				.hasNext();) {
+			Map.Entry<?, ?> entry = (Entry<?, ?>) i.next();
+			System.out.println(" " + getLabelOf(entry.getKey()) //$NON-NLS-1$
+					+ "=" + entry.getValue()); //$NON-NLS-1$
+		}
+		System.out.println("[INCLUDES]"); //$NON-NLS-1$
 		for (Iterator<?> i = includes.iterator(); i.hasNext();) {
 			Object item = i.next();
-			if (item instanceof IModelElement) {
-				System.out.println(((IModelElement) item).getPath());
-			}
+			System.out.println(" " + getLabelOf(item)); //$NON-NLS-1$
 		}
-		System.out.println("=== [EXCLUDES]"); //$NON-NLS-1$
+		System.out.println("[EXCLUDES]"); //$NON-NLS-1$
 		for (Iterator<?> i = excludes.iterator(); i.hasNext();) {
 			Object item = i.next();
-			if (item instanceof IModelElement) {
-				System.out.println(((IModelElement) item).getPath());
-			}
+			System.out.println(" " + getLabelOf(item)); //$NON-NLS-1$
 		}
 		System.out.println("==="); //$NON-NLS-1$
 	}
@@ -240,9 +257,6 @@ public class TreeSelectionControl implements ITreeViewerListener,
 		// always go through all children first since their white-checked
 		// statuses will be needed to determine the white-checked status for
 		// this tree Object
-		if (treeElement instanceof IModelElement) {
-			System.out.println(((IModelElement) treeElement).getPath());
-		}
 		Object[] children = root == treeElement ? treeContentProvider
 				.getElements(treeElement) : treeContentProvider
 				.getChildren(treeElement);
@@ -510,113 +524,89 @@ public class TreeSelectionControl implements ITreeViewerListener,
 	public void setInitialState(Collection<?> includes, Collection<?> excludes) {
 		// We are replacing all selected items with the given selected items,
 		// so reinitialize everything.
-		// fViewer.setCheckedElements(new Object[0]);
 		whiteChecked.clear();
 		checkedStateStore.clear();
-		final Set<Object> includedNodes = new HashSet<Object>();
-		// Update the store before the hierarchy to prevent updating parents
-		// before all of the children are done
+		expandedTreeNodes.clear();
+		final Set<Object> processedNodes = new HashSet<Object>();
 		for (Iterator<?> i = includes.iterator(); i.hasNext();) {
-			Object key = i.next();
-			// Replace the items in the checked state store with those from the
-			// supplied items
+			final Object key = i.next();
 			checkedStateStore.put(key, SelectionState.CHECKED);
-			whiteChecked.add(key);
-			includedNodes.add(key);
-			// proceed up the tree element hierarchy
-			Object parent = treeContentProvider.getParent(key);
-			if (parent != null) {
-				// proceed up the tree element hierarchy and make sure
-				// everything is in the table
-				primeHierarchyForInclusion(parent, includedNodes);
-			}
+			collectHierarchy(key, processedNodes, true);
 		}
-
-		final Set<Object> excludedNodes = new HashSet<Object>();
+		final Set<Object> allExcludes = new HashSet<Object>();
 		for (Iterator<?> i = excludes.iterator(); i.hasNext();) {
-			Object key = i.next();
-			excludedNodes.add(key);
-			// proceed up the tree element hierarchy
-			Object parent = treeContentProvider.getParent(key);
+			collectHierarchy(i.next(), allExcludes, false);
+		}
+		for (Iterator<?> i = includes.iterator(); i.hasNext();) {
+			final Object key = i.next();
+			if (!allExcludes.contains(key) && includes.contains(key)) {
+				whiteChecked.add(key);
+			}
+			expandHierarchy(key, true, includes, excludes, allExcludes);
+		}
+		for (Iterator<?> i = excludes.iterator(); i.hasNext();) {
+			expandHierarchy(i.next(), false, includes, excludes, allExcludes);
+		}
+		if (DEBUG) {
+			dump("onLoad"); //$NON-NLS-1$
+		}
+	}
+
+	private void collectHierarchy(Object item, Set<Object> processedNodes,
+			boolean include) {
+		if (processedNodes.add(item)) {
+			final Object parent = treeContentProvider.getParent(item);
 			if (parent != null) {
-				// proceed up the tree element hierarchy and make sure
-				// everything is in the table
-				primeHierarchyForExclusion(parent, excludedNodes);
+				if (include) {
+					checkedStateStore.put(parent, SelectionState.WHITE);
+				}
+				collectHierarchy(parent, processedNodes, include);
 			}
 		}
-		if (containsAny(includedNodes, excludedNodes)) {
-
-		}
-		dump();
-		// System.out.println(whiteChecked);
-		// Update the checked tree items. Since each tree item has a selected
-		// item, all the tree items will be gray checked.
-		// fViewer.setCheckedElements(checkedStateStore.keySet().toArray());
-		// for (Iterator<?> i = excludes.iterator(); i.hasNext();) {
-		// Object key = i.next();
-		// fViewer.setChecked(key, false);
-		// fViewer.setGrayed(key, false);
-		// }
-		// fViewer.setGrayedElements(checkedStateStore.keySet().toArray());
 	}
 
-	/**
-	 * @param collection
-	 * @param subset
-	 * @return
-	 */
-	private boolean containsAny(Collection<Object> collection,
-			Collection<Object> subset) {
-		for (Object obj : subset) {
-			if (collection.contains(obj)) {
-				return true;
+	private void expandHierarchy(Object item, boolean include,
+			Collection<?> includes, Collection<?> excludes,
+			Set<Object> allExcludes) {
+		if (DEBUG) {
+			System.out.println("  expandHierarchy(" + getLabelOf(item) + ')'); //$NON-NLS-1$
+		}
+		final Object parent = treeContentProvider.getParent(item);
+		if (parent != null) {
+			if (expandedTreeNodes.add(parent)) {
+				if (DEBUG) {
+					System.out.println("  expand " + getLabelOf(parent)); //$NON-NLS-1$
+				}
+				final Object[] children = treeContentProvider
+						.getChildren(parent);
+				boolean anyExclude = false;
+				for (int i = 0; i < children.length; ++i) {
+					final Object child = children[i];
+					if (allExcludes.contains(child)) {
+						anyExclude = true;
+						break;
+					}
+				}
+				for (int i = 0; i < children.length; ++i) {
+					final Object child = children[i];
+					if (!excludes.contains(child)) {
+						checkedStateStore.put(child, SelectionState.CHECKED);
+					}
+					if (!allExcludes.contains(child)) {
+						if (anyExclude) {
+							whiteChecked.add(child);
+						}
+					}
+				}
+				expandHierarchy(parent, include, includes, excludes,
+						allExcludes);
 			}
 		}
-		return false;
 	}
 
-	/**
-	 * Logically gray-check all ancestors of treeItem by ensuring that they
-	 * appear in the checked table. Add any elements to the selectedNodes so we
-	 * can track that has been done.
-	 */
-	private void primeHierarchyForInclusion(Object item,
-			Set<Object> selectedNodes) {
-		// Only prime it if we haven't visited yet
-		if (selectedNodes.contains(item)) {
-			return;
-		}
-		checkedStateStore.put(item, SelectionState.WHITE);
-		// mark as expanded as we are going to populate it after this
-		expandedTreeNodes.add(item);
-		selectedNodes.add(item);
-		Object parent = treeContentProvider.getParent(item);
-		if (parent != null) {
-			primeHierarchyForInclusion(parent, selectedNodes);
-		}
+	public void resetState() {
+		whiteChecked.clear();
+		checkedStateStore.clear();
 	}
 
-	/**
-	 * Logically gray-check all ancestors of treeItem by ensuring that they
-	 * appear in the checked table. Add any elements to the selectedNodes so we
-	 * can track that has been done.
-	 */
-	private void primeHierarchyForExclusion(Object item,
-			Set<Object> selectedNodes) {
-		// Only prime it if we haven't visited yet
-		if (selectedNodes.contains(item)) {
-			return;
-		}		
-		if (expandedTreeNodes.contains(item)) {
-			
-		}
-		else {
-			
-		}
-		selectedNodes.add(item);
-		Object parent = treeContentProvider.getParent(item);
-		if (parent != null) {
-			primeHierarchyForInclusion(parent, selectedNodes);
-		}
-	}
 }

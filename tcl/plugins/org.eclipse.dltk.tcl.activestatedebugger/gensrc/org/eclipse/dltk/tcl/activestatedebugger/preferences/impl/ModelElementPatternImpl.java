@@ -10,11 +10,11 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PatternImpl.java,v 1.1 2008/11/13 11:10:42 apanchenk Exp $
+ * $Id: ModelElementPatternImpl.java,v 1.1 2009/03/09 06:29:40 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -26,19 +26,39 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Pattern</b></em>'.
+ * An implementation of the model object '<em><b>Model Element Pattern</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl#isInclude <em>Include</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ModelElementPatternImpl#getHandleIdentifier <em>Handle Identifier</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ModelElementPatternImpl#isInclude <em>Include</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public abstract class PatternImpl extends EObjectImpl implements Pattern {
+public class ModelElementPatternImpl extends EObjectImpl implements ModelElementPattern {
+	/**
+	 * The default value of the '{@link #getHandleIdentifier() <em>Handle Identifier</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getHandleIdentifier()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String HANDLE_IDENTIFIER_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getHandleIdentifier() <em>Handle Identifier</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getHandleIdentifier()
+	 * @generated
+	 * @ordered
+	 */
+	protected String handleIdentifier = HANDLE_IDENTIFIER_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #isInclude() <em>Include</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -60,31 +80,11 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 	protected boolean include = INCLUDE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String PATH_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String path = PATH_EDEFAULT;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PatternImpl() {
+	public ModelElementPatternImpl() {
 		super();
 	}
 
@@ -95,7 +95,28 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return PreferencesPackage.Literals.PATTERN;
+		return PreferencesPackage.Literals.MODEL_ELEMENT_PATTERN;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getHandleIdentifier() {
+		return handleIdentifier;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setHandleIdentifier(String newHandleIdentifier) {
+		String oldHandleIdentifier = handleIdentifier;
+		handleIdentifier = newHandleIdentifier;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER, oldHandleIdentifier, handleIdentifier));
 	}
 
 	/**
@@ -116,28 +137,7 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 		boolean oldInclude = include;
 		include = newInclude;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.PATTERN__INCLUDE, oldInclude, include));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setPath(String newPath) {
-		String oldPath = path;
-		path = newPath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.PATTERN__PATH, oldPath, path));
+			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.MODEL_ELEMENT_PATTERN__INCLUDE, oldInclude, include));
 	}
 
 	/**
@@ -148,10 +148,10 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
+				return getHandleIdentifier();
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__INCLUDE:
 				return isInclude() ? Boolean.TRUE : Boolean.FALSE;
-			case PreferencesPackage.PATTERN__PATH:
-				return getPath();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -164,11 +164,11 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude(((Boolean)newValue).booleanValue());
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
+				setHandleIdentifier((String)newValue);
 				return;
-			case PreferencesPackage.PATTERN__PATH:
-				setPath((String)newValue);
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__INCLUDE:
+				setInclude(((Boolean)newValue).booleanValue());
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -182,11 +182,11 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude(INCLUDE_EDEFAULT);
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
+				setHandleIdentifier(HANDLE_IDENTIFIER_EDEFAULT);
 				return;
-			case PreferencesPackage.PATTERN__PATH:
-				setPath(PATH_EDEFAULT);
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__INCLUDE:
+				setInclude(INCLUDE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -200,10 +200,10 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
+				return HANDLE_IDENTIFIER_EDEFAULT == null ? handleIdentifier != null : !HANDLE_IDENTIFIER_EDEFAULT.equals(handleIdentifier);
+			case PreferencesPackage.MODEL_ELEMENT_PATTERN__INCLUDE:
 				return include != INCLUDE_EDEFAULT;
-			case PreferencesPackage.PATTERN__PATH:
-				return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -218,12 +218,12 @@ public abstract class PatternImpl extends EObjectImpl implements Pattern {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (include: "); //$NON-NLS-1$
+		result.append(" (handleIdentifier: "); //$NON-NLS-1$
+		result.append(handleIdentifier);
+		result.append(", include: "); //$NON-NLS-1$
 		result.append(include);
-		result.append(", path: "); //$NON-NLS-1$
-		result.append(path);
 		result.append(')');
 		return result.toString();
 	}
 
-} //PatternImpl
+} //ModelElementPatternImpl

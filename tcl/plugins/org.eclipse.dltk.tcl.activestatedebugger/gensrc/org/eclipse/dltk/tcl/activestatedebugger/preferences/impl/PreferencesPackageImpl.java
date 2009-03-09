@@ -10,19 +10,20 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackageImpl.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
+ * $Id: PreferencesPackageImpl.java,v 1.3 2009/03/09 06:29:40 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesFactory;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -37,28 +38,21 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass patternEClass = null;
+	private EClass modelElementPatternEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass workspacePatternEClass = null;
+	private EClass instrumentationConfigEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass externalPatternEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass globPatternEClass = null;
+	private EEnum instrumentationModeEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -133,8 +127,8 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getPattern() {
-		return patternEClass;
+	public EClass getModelElementPattern() {
+		return modelElementPatternEClass;
 	}
 
 	/**
@@ -142,8 +136,8 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPattern_Include() {
-		return (EAttribute)patternEClass.getEStructuralFeatures().get(0);
+	public EAttribute getModelElementPattern_HandleIdentifier() {
+		return (EAttribute)modelElementPatternEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -151,8 +145,8 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPattern_Path() {
-		return (EAttribute)patternEClass.getEStructuralFeatures().get(1);
+	public EAttribute getModelElementPattern_Include() {
+		return (EAttribute)modelElementPatternEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -160,8 +154,8 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getWorkspacePattern() {
-		return workspacePatternEClass;
+	public EClass getInstrumentationConfig() {
+		return instrumentationConfigEClass;
 	}
 
 	/**
@@ -169,8 +163,8 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getExternalPattern() {
-		return externalPatternEClass;
+	public EReference getInstrumentationConfig_ModelElements() {
+		return (EReference)instrumentationConfigEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -178,8 +172,17 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getGlobPattern() {
-		return globPatternEClass;
+	public EAttribute getInstrumentationConfig_Mode() {
+		return (EAttribute)instrumentationConfigEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getInstrumentationMode() {
+		return instrumentationModeEEnum;
 	}
 
 	/**
@@ -210,15 +213,16 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		isCreated = true;
 
 		// Create classes and their features
-		patternEClass = createEClass(PATTERN);
-		createEAttribute(patternEClass, PATTERN__INCLUDE);
-		createEAttribute(patternEClass, PATTERN__PATH);
+		modelElementPatternEClass = createEClass(MODEL_ELEMENT_PATTERN);
+		createEAttribute(modelElementPatternEClass, MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER);
+		createEAttribute(modelElementPatternEClass, MODEL_ELEMENT_PATTERN__INCLUDE);
 
-		workspacePatternEClass = createEClass(WORKSPACE_PATTERN);
+		instrumentationConfigEClass = createEClass(INSTRUMENTATION_CONFIG);
+		createEReference(instrumentationConfigEClass, INSTRUMENTATION_CONFIG__MODEL_ELEMENTS);
+		createEAttribute(instrumentationConfigEClass, INSTRUMENTATION_CONFIG__MODE);
 
-		externalPatternEClass = createEClass(EXTERNAL_PATTERN);
-
-		globPatternEClass = createEClass(GLOB_PATTERN);
+		// Create enums
+		instrumentationModeEEnum = createEEnum(INSTRUMENTATION_MODE);
 	}
 
 	/**
@@ -249,20 +253,21 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		workspacePatternEClass.getESuperTypes().add(this.getPattern());
-		externalPatternEClass.getESuperTypes().add(this.getPattern());
-		globPatternEClass.getESuperTypes().add(this.getPattern());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(patternEClass, Pattern.class, "Pattern", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEAttribute(getPattern_Include(), ecorePackage.getEBoolean(), "include", null, 1, 1, Pattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getPattern_Path(), ecorePackage.getEString(), "path", null, 1, 1, Pattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEClass(modelElementPatternEClass, ModelElementPattern.class, "ModelElementPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getModelElementPattern_HandleIdentifier(), ecorePackage.getEString(), "handleIdentifier", null, 1, 1, ModelElementPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getModelElementPattern_Include(), ecorePackage.getEBoolean(), "include", null, 1, 1, ModelElementPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(workspacePatternEClass, WorkspacePattern.class, "WorkspacePattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(instrumentationConfigEClass, InstrumentationConfig.class, "InstrumentationConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getInstrumentationConfig_ModelElements(), this.getModelElementPattern(), null, "modelElements", null, 0, -1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getInstrumentationConfig_Mode(), this.getInstrumentationMode(), "mode", null, 0, 1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(externalPatternEClass, ExternalPattern.class, "ExternalPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(globPatternEClass, GlobPattern.class, "GlobPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		// Initialize enums and add enum literals
+		initEEnum(instrumentationModeEEnum, InstrumentationMode.class, "InstrumentationMode"); //$NON-NLS-1$
+		addEEnumLiteral(instrumentationModeEEnum, InstrumentationMode.DEFAULT);
+		addEEnumLiteral(instrumentationModeEEnum, InstrumentationMode.SOURCES);
+		addEEnumLiteral(instrumentationModeEEnum, InstrumentationMode.SELECTION);
 
 		// Create resource
 		createResource(eNS_URI);

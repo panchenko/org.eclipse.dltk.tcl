@@ -7,10 +7,11 @@
  *
  
  *******************************************************************************/
-
 package org.eclipse.dltk.tcl.activestatedebugger;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.TclActiveStateDebuggerEnvironment;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -58,4 +59,21 @@ public class TclActiveStateDebuggerPlugin extends AbstractUIPlugin {
 		Assert.isNotNull(environment);
 		return new TclActiveStateDebuggerEnvironment(environment);
 	}
+
+	public static void log(int severity, String message, Throwable t) {
+		getDefault().getLog().log(new Status(severity, PLUGIN_ID, message, t));
+	}
+
+	public static void warn(String message) {
+		log(IStatus.WARNING, message, null);
+	}
+
+	public static void warn(Throwable e) {
+		warn(e.getMessage(), e);
+	}
+
+	public static void warn(String message, Throwable t) {
+		log(IStatus.WARNING, message, t);
+	}
+
 }

@@ -11,12 +11,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
-import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.viewsupport.StorageLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -30,32 +27,23 @@ public class InstrumentationPatternLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof Pattern) {
-			return ((Pattern) element).getPath();
-		} else {
-			return element.toString();
+		if (element instanceof ModelElementPattern) {
+			final IModelElement me = DLTKCore.create(((IModelElement) element)
+					.getHandleIdentifier());
+			if (me != null) {
+				return me.getPath().toString();
+			}
 		}
+		return element.toString();
 	}
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof ExternalPattern) {
-			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_LIBRARY);
-		} else if (element instanceof WorkspacePattern) {
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-					.findMember(new Path(((Pattern) element).getPath()));
-			if (resource != null) {
-				if (resource instanceof IContainer) {
-					return elementImageProvider.getImageLabel(resource,
-							ScriptElementImageProvider.SMALL_ICONS);
-				} else {
-					return storageLabelProvider.getImage(resource);
-				}
-			} else {
-				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_UNKNOWN);
-			}
-		} else if (element instanceof GlobPattern) {
-			return getGlobImage();
+		final IModelElement me = DLTKCore.create(((IModelElement) element)
+				.getHandleIdentifier());
+		if (me != null) {
+			return elementImageProvider.getImageLabel(me,
+					ScriptElementImageProvider.SMALL_ICONS);
 		}
 		return super.getImage(element);
 	}

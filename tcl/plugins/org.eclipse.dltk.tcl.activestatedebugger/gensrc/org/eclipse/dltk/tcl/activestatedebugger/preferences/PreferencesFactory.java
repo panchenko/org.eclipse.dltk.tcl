@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesFactory.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
+ * $Id: PreferencesFactory.java,v 1.3 2009/03/09 06:29:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -34,31 +34,22 @@ public interface PreferencesFactory extends EFactory {
 	PreferencesFactory eINSTANCE = org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Workspace Pattern</em>'.
+	 * Returns a new object of class '<em>Model Element Pattern</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Workspace Pattern</em>'.
+	 * @return a new object of class '<em>Model Element Pattern</em>'.
 	 * @generated
 	 */
-	WorkspacePattern createWorkspacePattern();
+	ModelElementPattern createModelElementPattern();
 
 	/**
-	 * Returns a new object of class '<em>External Pattern</em>'.
+	 * Returns a new object of class '<em>Instrumentation Config</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>External Pattern</em>'.
+	 * @return a new object of class '<em>Instrumentation Config</em>'.
 	 * @generated
 	 */
-	ExternalPattern createExternalPattern();
-
-	/**
-	 * Returns a new object of class '<em>Glob Pattern</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Glob Pattern</em>'.
-	 * @generated
-	 */
-	GlobPattern createGlobPattern();
+	InstrumentationConfig createInstrumentationConfig();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -10,13 +10,15 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackage.java,v 1.2 2009/03/04 19:08:48 apanchenk Exp $
+ * $Id: PreferencesPackage.java,v 1.3 2009/03/09 06:29:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * <!-- begin-user-doc -->
@@ -67,14 +69,23 @@ public interface PreferencesPackage extends EPackage {
 	PreferencesPackage eINSTANCE = org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl <em>Pattern</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ModelElementPatternImpl <em>Model Element Pattern</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getPattern()
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ModelElementPatternImpl
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getModelElementPattern()
 	 * @generated
 	 */
-	int PATTERN = 0;
+	int MODEL_ELEMENT_PATTERN = 0;
+
+	/**
+	 * The feature id for the '<em><b>Handle Identifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER = 0;
 
 	/**
 	 * The feature id for the '<em><b>Include</b></em>' attribute.
@@ -83,200 +94,138 @@ public interface PreferencesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PATTERN__INCLUDE = 0;
+	int MODEL_ELEMENT_PATTERN__INCLUDE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
+	 * The number of structural features of the '<em>Model Element Pattern</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PATTERN__PATH = 1;
+	int MODEL_ELEMENT_PATTERN_FEATURE_COUNT = 2;
 
 	/**
-	 * The number of structural features of the '<em>Pattern</em>' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.InstrumentationConfigImpl <em>Instrumentation Config</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.InstrumentationConfigImpl
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getInstrumentationConfig()
+	 * @generated
+	 */
+	int INSTRUMENTATION_CONFIG = 1;
+
+	/**
+	 * The feature id for the '<em><b>Model Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PATTERN_FEATURE_COUNT = 2;
+	int INSTRUMENTATION_CONFIG__MODEL_ELEMENTS = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.WorkspacePatternImpl <em>Workspace Pattern</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.WorkspacePatternImpl
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getWorkspacePattern()
-	 * @generated
-	 */
-	int WORKSPACE_PATTERN = 1;
-
-	/**
-	 * The feature id for the '<em><b>Include</b></em>' attribute.
+	 * The feature id for the '<em><b>Mode</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WORKSPACE_PATTERN__INCLUDE = PATTERN__INCLUDE;
+	int INSTRUMENTATION_CONFIG__MODE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
+	 * The number of structural features of the '<em>Instrumentation Config</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WORKSPACE_PATTERN__PATH = PATTERN__PATH;
+	int INSTRUMENTATION_CONFIG_FEATURE_COUNT = 2;
 
 	/**
-	 * The number of structural features of the '<em>Workspace Pattern</em>' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode <em>Instrumentation Mode</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getInstrumentationMode()
 	 * @generated
-	 * @ordered
 	 */
-	int WORKSPACE_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 0;
+	int INSTRUMENTATION_MODE = 2;
+
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ExternalPatternImpl <em>External Pattern</em>}' class.
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern <em>Model Element Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ExternalPatternImpl
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getExternalPattern()
+	 * @return the meta object for class '<em>Model Element Pattern</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern
 	 * @generated
 	 */
-	int EXTERNAL_PATTERN = 2;
+	EClass getModelElementPattern();
 
 	/**
-	 * The feature id for the '<em><b>Include</b></em>' attribute.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern#getHandleIdentifier <em>Handle Identifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXTERNAL_PATTERN__INCLUDE = PATTERN__INCLUDE;
-
-	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXTERNAL_PATTERN__PATH = PATTERN__PATH;
-
-	/**
-	 * The number of structural features of the '<em>External Pattern</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXTERNAL_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 0;
-
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl <em>Glob Pattern</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getGlobPattern()
+	 * @return the meta object for the attribute '<em>Handle Identifier</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern#getHandleIdentifier()
+	 * @see #getModelElementPattern()
 	 * @generated
 	 */
-	int GLOB_PATTERN = 3;
+	EAttribute getModelElementPattern_HandleIdentifier();
 
 	/**
-	 * The feature id for the '<em><b>Include</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GLOB_PATTERN__INCLUDE = PATTERN__INCLUDE;
-
-	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GLOB_PATTERN__PATH = PATTERN__PATH;
-
-	/**
-	 * The number of structural features of the '<em>Glob Pattern</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GLOB_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 0;
-
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern <em>Pattern</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Pattern</em>'.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern
-	 * @generated
-	 */
-	EClass getPattern();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern#isInclude <em>Include</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern#isInclude <em>Include</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Include</em>'.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern#isInclude()
-	 * @see #getPattern()
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern#isInclude()
+	 * @see #getModelElementPattern()
 	 * @generated
 	 */
-	EAttribute getPattern_Include();
+	EAttribute getModelElementPattern_Include();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern#getPath <em>Path</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig <em>Instrumentation Config</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern#getPath()
-	 * @see #getPattern()
+	 * @return the meta object for class '<em>Instrumentation Config</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig
 	 * @generated
 	 */
-	EAttribute getPattern_Path();
+	EClass getInstrumentationConfig();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern <em>Workspace Pattern</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig#getModelElements <em>Model Elements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Workspace Pattern</em>'.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.WorkspacePattern
+	 * @return the meta object for the containment reference list '<em>Model Elements</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig#getModelElements()
+	 * @see #getInstrumentationConfig()
 	 * @generated
 	 */
-	EClass getWorkspacePattern();
+	EReference getInstrumentationConfig_ModelElements();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern <em>External Pattern</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig#getMode <em>Mode</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>External Pattern</em>'.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ExternalPattern
+	 * @return the meta object for the attribute '<em>Mode</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig#getMode()
+	 * @see #getInstrumentationConfig()
 	 * @generated
 	 */
-	EClass getExternalPattern();
+	EAttribute getInstrumentationConfig_Mode();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern <em>Glob Pattern</em>}'.
+	 * Returns the meta object for enum '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode <em>Instrumentation Mode</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Glob Pattern</em>'.
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.GlobPattern
+	 * @return the meta object for enum '<em>Instrumentation Mode</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode
 	 * @generated
 	 */
-	EClass getGlobPattern();
+	EEnum getInstrumentationMode();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -301,14 +250,22 @@ public interface PreferencesPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl <em>Pattern</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ModelElementPatternImpl <em>Model Element Pattern</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getPattern()
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ModelElementPatternImpl
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getModelElementPattern()
 		 * @generated
 		 */
-		EClass PATTERN = eINSTANCE.getPattern();
+		EClass MODEL_ELEMENT_PATTERN = eINSTANCE.getModelElementPattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Handle Identifier</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER = eINSTANCE.getModelElementPattern_HandleIdentifier();
 
 		/**
 		 * The meta object literal for the '<em><b>Include</b></em>' attribute feature.
@@ -316,45 +273,43 @@ public interface PreferencesPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PATTERN__INCLUDE = eINSTANCE.getPattern_Include();
+		EAttribute MODEL_ELEMENT_PATTERN__INCLUDE = eINSTANCE.getModelElementPattern_Include();
 
 		/**
-		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.InstrumentationConfigImpl <em>Instrumentation Config</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.InstrumentationConfigImpl
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getInstrumentationConfig()
+		 * @generated
+		 */
+		EClass INSTRUMENTATION_CONFIG = eINSTANCE.getInstrumentationConfig();
+
+		/**
+		 * The meta object literal for the '<em><b>Model Elements</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PATTERN__PATH = eINSTANCE.getPattern_Path();
+		EReference INSTRUMENTATION_CONFIG__MODEL_ELEMENTS = eINSTANCE.getInstrumentationConfig_ModelElements();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.WorkspacePatternImpl <em>Workspace Pattern</em>}' class.
+		 * The meta object literal for the '<em><b>Mode</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.WorkspacePatternImpl
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getWorkspacePattern()
 		 * @generated
 		 */
-		EClass WORKSPACE_PATTERN = eINSTANCE.getWorkspacePattern();
+		EAttribute INSTRUMENTATION_CONFIG__MODE = eINSTANCE.getInstrumentationConfig_Mode();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ExternalPatternImpl <em>External Pattern</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode <em>Instrumentation Mode</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ExternalPatternImpl
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getExternalPattern()
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getInstrumentationMode()
 		 * @generated
 		 */
-		EClass EXTERNAL_PATTERN = eINSTANCE.getExternalPattern();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl <em>Glob Pattern</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.GlobPatternImpl
-		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getGlobPattern()
-		 * @generated
-		 */
-		EClass GLOB_PATTERN = eINSTANCE.getGlobPattern();
+		EEnum INSTRUMENTATION_MODE = eINSTANCE.getInstrumentationMode();
 
 	}
 

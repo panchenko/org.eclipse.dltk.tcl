@@ -39,6 +39,9 @@ public class PreferenceMessages extends NLS {
 	public static String instrumentation_patternsGroup;
 	public static String InstrumentationPatternList_AddTitleTemplate;
 	public static String InstrumentationPatternList_EditTitleTemplate;
+	public static String InstrumentationPatternList_ModeDefault;
+	public static String InstrumentationPatternList_ModeSelection;
+	public static String InstrumentationPatternList_ModeSources;
 	public static String InstrumentationPatternList_SelectionDialog_Title;
 	public static String path_tab;
 	public static String PatternDialog_ErrorPatternIsEmpty;
