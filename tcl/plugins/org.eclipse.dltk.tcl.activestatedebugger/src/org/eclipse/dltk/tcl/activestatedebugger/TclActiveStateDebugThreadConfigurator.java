@@ -138,7 +138,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 						if (folder.isReadOnly()) {
 							sendPatterns(commands, resolveExternal(environment,
 									EnvironmentPathUtils.getLocalPath(folder
-											.getPath()), false), pattern
+											.getPath()), true), pattern
 									.isInclude());
 						} else {
 							sendPatterns(commands, resolveWorkspace(
@@ -152,7 +152,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 								continue;
 							sendPatterns(commands, resolveExternal(environment,
 									EnvironmentPathUtils.getLocalPath(fragment
-											.getPath()), false), pattern
+											.getPath()), true), pattern
 									.isInclude());
 						} else {
 							sendPatterns(commands, resolveWorkspace(
