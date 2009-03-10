@@ -28,7 +28,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.IModelElement;
@@ -93,6 +92,66 @@ public class TclActiveStateDebugThreadConfigurator implements
 		}
 	}
 
+	private static class InstrumentationConfigurator {
+
+		final IEnvironment environment;
+		final Map<String, Boolean> patterns = new HashMap<String, Boolean>();
+
+		public InstrumentationConfigurator(IEnvironment environment) {
+			this.environment = environment;
+		}
+
+		/**
+		 * @param pattern
+		 * @return
+		 */
+		public void addWorkspace(IPath path, boolean isDirectory,
+				boolean include) {
+			final IResource resource = getWorkspaceRoot().findMember(path);
+			if (resource != null) {
+				final URI uri = resource.getLocationURI();
+				final IFileHandle file = environment.getFile(uri);
+				addFileHandle(file, isDirectory, include);
+			}
+		}
+
+		/**
+		 * @param environment
+		 * @param pattern
+		 * @return
+		 */
+		public void addExternal(IPath path, boolean isDirectory, boolean include) {
+			addFileHandle(environment.getFile(EnvironmentPathUtils
+					.getLocalPath(path)), isDirectory, include);
+		}
+
+		private void addFileHandle(final IFileHandle file, boolean isDirectory,
+				boolean include) {
+			if (file != null) {
+				String path = file.getPath().toString();
+				if (isDirectory) {
+					path += "/*"; //$NON-NLS-1$
+				}
+				patterns.put(path, Boolean.valueOf(include));
+			}
+		}
+
+		public void send(ActiveStateInstrumentCommands commands)
+				throws DbgpException {
+			final String[] paths = patterns.keySet().toArray(
+					new String[patterns.size()]);
+			Arrays.sort(paths);
+			for (String path : paths) {
+				final Boolean include = patterns.get(path);
+				if (include != null && include.booleanValue()) {
+					commands.instrumentInclude(path);
+				} else {
+					commands.instrumentExclude(path);
+				}
+			}
+		}
+	}
+
 	private void initializeDebugger(ActiveStateInstrumentCommands commands)
 			throws DbgpException {
 		final Set<InstrumentationFeature> selectedFeatures = InstrumentationFeature
@@ -113,108 +172,61 @@ public class TclActiveStateDebugThreadConfigurator implements
 			} else {
 				final IEnvironment environment = EnvironmentManager
 						.getEnvironment(project);
-				for (ModelElementPattern pattern : config.getModelElements()) {
-					final IModelElement element = DLTKCore.create(pattern
-							.getHandleIdentifier());
-					if (element == null) {
-						continue;
+				if (environment != null) {
+					final InstrumentationConfigurator configurator = new InstrumentationConfigurator(
+							environment);
+					for (ModelElementPattern pattern : config
+							.getModelElements()) {
+						final IModelElement element = DLTKCore.create(pattern
+								.getHandleIdentifier());
+						if (element == null) {
+							continue;
+						}
+						if (element instanceof ISourceModule) {
+							final ISourceModule module = (ISourceModule) element;
+							if (module instanceof IExternalSourceModule) {
+								if (!module.isBuiltin())
+									continue;
+								configurator.addExternal(module.getPath(),
+										false, pattern.isInclude());
+							} else {
+								configurator.addWorkspace(module.getPath(),
+										false, pattern.isInclude());
+							}
+						} else if (element instanceof IScriptFolder) {
+							final IScriptFolder folder = (IScriptFolder) element;
+							if (folder.isReadOnly()) {
+								configurator.addExternal(folder.getPath(),
+										true, pattern.isInclude());
+							} else {
+								configurator.addWorkspace(folder.getPath(),
+										true, pattern.isInclude());
+							}
+						} else if (element instanceof IProjectFragment) {
+							final IProjectFragment fragment = (IProjectFragment) element;
+							if (fragment.isExternal()) {
+								if (fragment.isBuiltin())
+									continue;
+								configurator.addExternal(fragment.getPath(),
+										true, pattern.isInclude());
+							} else {
+								configurator.addWorkspace(fragment.getPath(),
+										true, pattern.isInclude());
+							}
+						} else if (element instanceof IScriptProject) {
+							final IScriptProject project = (IScriptProject) element;
+							configurator.addWorkspace(project.getPath(), true,
+									pattern.isInclude());
+						}
 					}
-					if (element instanceof ISourceModule) {
-						final ISourceModule module = (ISourceModule) element;
-						if (module instanceof IExternalSourceModule) {
-							if (module.isBuiltin())
-								continue;
-							sendPatterns(commands, resolveExternal(environment,
-									EnvironmentPathUtils.getLocalPath(module
-											.getPath()), false), pattern
-									.isInclude());
-						} else {
-							sendPatterns(commands, resolveWorkspace(
-									environment, module.getPath(), false),
-									pattern.isInclude());
-						}
-					} else if (element instanceof IScriptFolder) {
-						final IScriptFolder folder = (IScriptFolder) element;
-						if (folder.isReadOnly()) {
-							sendPatterns(commands, resolveExternal(environment,
-									EnvironmentPathUtils.getLocalPath(folder
-											.getPath()), true), pattern
-									.isInclude());
-						} else {
-							sendPatterns(commands, resolveWorkspace(
-									environment, folder.getPath(), true),
-									pattern.isInclude());
-						}
-					} else if (element instanceof IProjectFragment) {
-						final IProjectFragment fragment = (IProjectFragment) element;
-						if (fragment.isExternal()) {
-							if (fragment.isBuiltin())
-								continue;
-							sendPatterns(commands, resolveExternal(environment,
-									EnvironmentPathUtils.getLocalPath(fragment
-											.getPath()), true), pattern
-									.isInclude());
-						} else {
-							sendPatterns(commands, resolveWorkspace(
-									environment, fragment.getPath(), true),
-									pattern.isInclude());
-						}
-					} else if (element instanceof IScriptProject) {
-						final IScriptProject project = (IScriptProject) element;
-						sendPatterns(commands, resolveWorkspace(environment,
-								project.getPath(), true), pattern.isInclude());
-					}
+					configurator.send(commands);
 				}
 			}
 		}
 	}
 
-	private void sendPatterns(ActiveStateInstrumentCommands commands,
-			String[] patterns, boolean include) throws DbgpException {
-		if (include) {
-			commands.instrumentInclude(patterns);
-		} else {
-			commands.instrumentExclude(patterns);
-		}
-	}
-
-	/**
-	 * @param environment
-	 * @param pattern
-	 * @return
-	 */
-	private String[] resolveExternal(IEnvironment environment, IPath path,
-			boolean isDirectory) {
-		return resolveFileHandle(environment.getFile(path), isDirectory);
-	}
-
-	/**
-	 * @param pattern
-	 * @return
-	 */
-	private String[] resolveWorkspace(IEnvironment environment, IPath path,
-			boolean isDirectory) {
-		final IResource resource = getWorkspaceRoot().findMember(path);
-		if (resource != null) {
-			final URI uri = resource.getLocationURI();
-			final IFileHandle file = environment.getFile(uri);
-			return resolveFileHandle(file, isDirectory);
-		}
-		return CharOperation.NO_STRINGS;
-	}
-
-	private IWorkspaceRoot getWorkspaceRoot() {
+	protected static IWorkspaceRoot getWorkspaceRoot() {
 		return ResourcesPlugin.getWorkspace().getRoot();
-	}
-
-	private String[] resolveFileHandle(final IFileHandle file,
-			boolean isDirectory) {
-		if (file != null) {
-			final String path = file.getPath().toString();
-			return new String[] { !isDirectory ? path : path + "/*" }; //$NON-NLS-1$
-		} else {
-			return CharOperation.NO_STRINGS;
-		}
 	}
 
 	private String getString(final String key) {
