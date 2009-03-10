@@ -27,7 +27,8 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.StandardModelElementContentProvider2;
 
-public class InstrumentationContentProvider extends StandardModelElementContentProvider2 {
+public class InstrumentationContentProvider extends
+		StandardModelElementContentProvider2 {
 
 	public InstrumentationContentProvider() {
 		super(false, false);
@@ -40,29 +41,32 @@ public class InstrumentationContentProvider extends StandardModelElementContentP
 		if (inputElement instanceof SelectionDialogInput) {
 			final Set<IScriptProject> projects = ((SelectionDialogInput) inputElement)
 					.collectProjects();
-			final Set<IProjectFragment> libraries = new HashSet<IProjectFragment>();
-			for (IScriptProject project : projects) {
-				try {
-					for (IProjectFragment fragment : project
-							.getProjectFragments()) {
-						if (fragment.isExternal() && !fragment.isBuiltin()) {
-							libraries.add(fragment);
-						}
-					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
-			}
+			final Set<IProjectFragment> libraries = collectExternalFragments(projects);
 			final List<Object> result = new ArrayList<Object>();
 			result.addAll(projects);
-			for (IProjectFragment fragment : libraries) {
-				result.add(fragment);
-			}
+			result.addAll(libraries);
 			return result.toArray();
 		}
 		return NO_CHILDREN;
+	}
+
+	public static Set<IProjectFragment> collectExternalFragments(
+			final Set<IScriptProject> projects) {
+		final Set<IProjectFragment> libraries = new HashSet<IProjectFragment>();
+		for (IScriptProject project : projects) {
+			try {
+				for (IProjectFragment fragment : project.getProjectFragments()) {
+					if (fragment.isExternal() && !fragment.isBuiltin()) {
+						libraries.add(fragment);
+					}
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return libraries;
 	}
 
 	@Override

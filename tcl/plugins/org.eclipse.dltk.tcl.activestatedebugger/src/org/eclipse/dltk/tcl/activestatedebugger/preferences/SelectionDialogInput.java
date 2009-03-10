@@ -28,7 +28,7 @@ abstract class SelectionDialogInput {
 	 * @param projects
 	 * @param project
 	 */
-	protected void collectProjects(IScriptModel model,
+	public static void collectProjects(IScriptModel model,
 			Set<IScriptProject> projects, IScriptProject project) {
 		if (projects.add(project)) {
 			final IBuildpathEntry[] entries;
