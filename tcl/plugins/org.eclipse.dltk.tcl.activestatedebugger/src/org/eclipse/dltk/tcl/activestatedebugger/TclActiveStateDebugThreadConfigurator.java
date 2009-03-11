@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +53,7 @@ import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationContentProvider;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
@@ -150,6 +152,89 @@ public class TclActiveStateDebugThreadConfigurator implements
 				}
 			}
 		}
+
+		/**
+		 * @param module
+		 */
+		public void addSourceModule(ISourceModule module, boolean include) {
+			if (module instanceof IExternalSourceModule) {
+				if (!module.isBuiltin())
+					return;
+				addExternal(module.getPath(), false, include);
+			} else {
+				addWorkspace(module.getPath(), false, include);
+			}
+		}
+
+		/**
+		 * @param folder
+		 * @param include
+		 */
+		public void addScriptFolder(IScriptFolder folder, boolean include) {
+			if (folder.isReadOnly()) {
+				addExternal(folder.getPath(), true, include);
+			} else {
+				addWorkspace(folder.getPath(), true, include);
+			}
+		}
+
+		/**
+		 * @param fragment
+		 * @param include
+		 */
+		public void addProjectFragment(IProjectFragment fragment,
+				boolean include) {
+			if (fragment.isExternal()) {
+				if (fragment.isBuiltin())
+					return;
+				addExternal(fragment.getPath(), true, include);
+			} else {
+				addWorkspace(fragment.getPath(), true, include);
+			}
+		}
+
+		/**
+		 * @param project
+		 * @param include
+		 */
+		public void addProject(IScriptProject project, boolean include) {
+			addWorkspace(project.getPath(), true, include);
+		}
+	}
+
+	private static abstract class PatternRef {
+		final boolean include;
+
+		public PatternRef(boolean include) {
+			this.include = include;
+		}
+
+	}
+
+	private static class ModelElementRef extends PatternRef {
+		final IModelElement element;
+
+		public ModelElementRef(IModelElement element, boolean include) {
+			super(include);
+			this.element = element;
+		}
+
+	}
+
+	private static List<PatternRef> parsePatterns(InstrumentationConfig config) {
+		List<PatternRef> result = new ArrayList<PatternRef>();
+		if (config != null) {
+			for (ModelElementPattern pattern : config.getModelElements()) {
+				final IModelElement element = DLTKCore.create(pattern
+						.getHandleIdentifier());
+				if (element != null) {
+					result
+							.add(new ModelElementRef(element, pattern
+									.isInclude()));
+				}
+			}
+		}
+		return result;
 	}
 
 	private void initializeDebugger(ActiveStateInstrumentCommands commands)
@@ -166,61 +251,73 @@ public class TclActiveStateDebugThreadConfigurator implements
 		}
 		final InstrumentationConfig config = PatternListIO
 				.decode(getString(TclActiveStateDebuggerConstants.INSTRUMENTATION_PATTERNS));
-		if (config != null && config.getMode() != InstrumentationMode.DEFAULT) {
-			if (config.getMode() == InstrumentationMode.SOURCES) {
-				// TODO InstrumentationMode.SOURCES
-			} else {
-				final IEnvironment environment = EnvironmentManager
-						.getEnvironment(project);
-				if (environment != null) {
-					final InstrumentationConfigurator configurator = new InstrumentationConfigurator(
-							environment);
-					for (ModelElementPattern pattern : config
-							.getModelElements()) {
-						final IModelElement element = DLTKCore.create(pattern
-								.getHandleIdentifier());
-						if (element == null) {
-							continue;
-						}
-						if (element instanceof ISourceModule) {
-							final ISourceModule module = (ISourceModule) element;
-							if (module instanceof IExternalSourceModule) {
-								if (!module.isBuiltin())
-									continue;
-								configurator.addExternal(module.getPath(),
-										false, pattern.isInclude());
-							} else {
-								configurator.addWorkspace(module.getPath(),
-										false, pattern.isInclude());
-							}
-						} else if (element instanceof IScriptFolder) {
-							final IScriptFolder folder = (IScriptFolder) element;
-							if (folder.isReadOnly()) {
-								configurator.addExternal(folder.getPath(),
-										true, pattern.isInclude());
-							} else {
-								configurator.addWorkspace(folder.getPath(),
-										true, pattern.isInclude());
-							}
-						} else if (element instanceof IProjectFragment) {
-							final IProjectFragment fragment = (IProjectFragment) element;
-							if (fragment.isExternal()) {
-								if (fragment.isBuiltin())
-									continue;
-								configurator.addExternal(fragment.getPath(),
-										true, pattern.isInclude());
-							} else {
-								configurator.addWorkspace(fragment.getPath(),
-										true, pattern.isInclude());
-							}
-						} else if (element instanceof IScriptProject) {
-							final IScriptProject project = (IScriptProject) element;
-							configurator.addWorkspace(project.getPath(), true,
-									pattern.isInclude());
-						}
+		final InstrumentationMode mode = InstrumentationUtils.getMode(config);
+		if (mode == InstrumentationMode.DEFAULT) {
+			return;
+		}
+		final IEnvironment environment = EnvironmentManager
+				.getEnvironment(project);
+		if (environment == null) {
+			return;
+		}
+		final InstrumentationConfigurator configurator = new InstrumentationConfigurator(
+				environment);
+		final InstrumentationContentProvider provider = new InstrumentationContentProvider();
+		final Set<IModelElement> processed = new HashSet<IModelElement>();
+		final Set<IScriptProject> projects = new HashSet<IScriptProject>();
+		InstrumentationUtils.collectProjects(projects, project);
+		if (mode == InstrumentationMode.SOURCES) {
+			for (IScriptProject project : projects) {
+				collect(provider, processed, project);
+				configurator.addProject(project, true);
+			}
+		} else {
+			for (PatternRef pattern : parsePatterns(config)) {
+				if (pattern instanceof ModelElementRef) {
+					final IModelElement element = ((ModelElementRef) pattern).element;
+					collect(provider, processed, element);
+					if (element instanceof ISourceModule) {
+						configurator.addSourceModule((ISourceModule) element,
+								pattern.include);
+					} else if (element instanceof IScriptFolder) {
+						configurator.addScriptFolder((IScriptFolder) element,
+								pattern.include);
+					} else if (element instanceof IProjectFragment) {
+						final IProjectFragment fragment = (IProjectFragment) element;
+						configurator.addProjectFragment(fragment,
+								pattern.include);
+					} else if (element instanceof IScriptProject) {
+						configurator.addProject((IScriptProject) element,
+								pattern.include);
 					}
-					configurator.send(commands);
 				}
+			}
+			for (IScriptProject project : projects) {
+				if (processed.add(project)) {
+					configurator.addProject(project, false);
+				}
+			}
+		}
+		for (IProjectFragment fragment : InstrumentationUtils
+				.collectExternalFragments(projects)) {
+			if (processed.add(fragment)) {
+				configurator.addProjectFragment(fragment, false);
+			}
+		}
+		configurator.send(commands);
+	}
+
+	/**
+	 * @param provider
+	 * @param processed
+	 * @param element
+	 */
+	private static void collect(InstrumentationContentProvider provider,
+			Set<IModelElement> processed, IModelElement element) {
+		if (processed.add(element)) {
+			Object parent = provider.getParent(element);
+			if (parent != null && parent instanceof IModelElement) {
+				collect(provider, processed, (IModelElement) parent);
 			}
 		}
 	}

@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
 import org.eclipse.dltk.tcl.core.TclNature;
 
 class WorkspaceSelectionDialogInput extends SelectionDialogInput {
@@ -31,7 +32,7 @@ class WorkspaceSelectionDialogInput extends SelectionDialogInput {
 		try {
 			for (IScriptProject project : model
 					.getScriptProjects(TclNature.NATURE_ID)) {
-				collectProjects(model, projects, project);
+				InstrumentationUtils.collectProjects(model, projects, project);
 			}
 		} catch (CoreException e) {
 			if (DLTKCore.DEBUG) {

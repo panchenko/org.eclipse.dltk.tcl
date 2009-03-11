@@ -13,18 +13,17 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
 import org.eclipse.dltk.ui.StandardModelElementContentProvider2;
 
 public class InstrumentationContentProvider extends
@@ -41,32 +40,14 @@ public class InstrumentationContentProvider extends
 		if (inputElement instanceof SelectionDialogInput) {
 			final Set<IScriptProject> projects = ((SelectionDialogInput) inputElement)
 					.collectProjects();
-			final Set<IProjectFragment> libraries = collectExternalFragments(projects);
+			final Set<IProjectFragment> libraries = InstrumentationUtils
+					.collectExternalFragments(projects);
 			final List<Object> result = new ArrayList<Object>();
 			result.addAll(projects);
 			result.addAll(libraries);
 			return result.toArray();
 		}
 		return NO_CHILDREN;
-	}
-
-	public static Set<IProjectFragment> collectExternalFragments(
-			final Set<IScriptProject> projects) {
-		final Set<IProjectFragment> libraries = new HashSet<IProjectFragment>();
-		for (IScriptProject project : projects) {
-			try {
-				for (IProjectFragment fragment : project.getProjectFragments()) {
-					if (fragment.isExternal() && !fragment.isBuiltin()) {
-						libraries.add(fragment);
-					}
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return libraries;
 	}
 
 	@Override
@@ -158,7 +139,7 @@ public class InstrumentationContentProvider extends
 				}
 				newElements.add(children[i]);
 			}
-			children = (IModelElement[]) newElements
+			children = newElements
 					.toArray(new IModelElement[newElements.size()]);
 		}
 		String prefix = fragment != null ? fragment.getElementName()

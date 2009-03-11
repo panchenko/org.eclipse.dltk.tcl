@@ -15,10 +15,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
 
 class ProjectSelectionDialogInput extends SelectionDialogInput {
 
@@ -33,9 +32,7 @@ class ProjectSelectionDialogInput extends SelectionDialogInput {
 
 	public Set<IScriptProject> collectProjects() {
 		final Set<IScriptProject> projects = new HashSet<IScriptProject>();
-		final IScriptModel model = DLTKCore.create(ResourcesPlugin
-				.getWorkspace().getRoot());
-		collectProjects(model, projects, project);
+		InstrumentationUtils.collectProjects(projects, project);
 		return projects;
 	}
 

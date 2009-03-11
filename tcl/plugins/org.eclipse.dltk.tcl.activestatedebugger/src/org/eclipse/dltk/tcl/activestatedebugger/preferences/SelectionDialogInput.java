@@ -13,40 +13,10 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
 import java.util.Set;
 
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ModelException;
 
-abstract class SelectionDialogInput {
+public abstract class SelectionDialogInput {
 
 	public abstract Set<IScriptProject> collectProjects();
-
-	/**
-	 * @param model
-	 * @param projects
-	 * @param project
-	 */
-	public static void collectProjects(IScriptModel model,
-			Set<IScriptProject> projects, IScriptProject project) {
-		if (projects.add(project)) {
-			final IBuildpathEntry[] entries;
-			try {
-				entries = project.getResolvedBuildpath(true);
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-				return;
-			}
-			for (IBuildpathEntry entry : entries) {
-				if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-					collectProjects(model, projects, model
-							.getScriptProject(entry.getPath().segment(0)));
-				}
-			}
-		}
-	}
 
 }

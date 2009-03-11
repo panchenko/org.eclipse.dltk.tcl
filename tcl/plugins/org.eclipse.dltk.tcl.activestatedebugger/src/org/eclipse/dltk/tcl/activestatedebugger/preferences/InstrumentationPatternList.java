@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.TreeSelectionControl.ICollector;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.ui.util.SWTFactory;
@@ -133,8 +134,8 @@ public class InstrumentationPatternList {
 		beginUpdate();
 		try {
 			this.configValue = config;
-			final InstrumentationMode mode = config != null ? config.getMode()
-					: InstrumentationMode.DEFAULT;
+			final InstrumentationMode mode = InstrumentationUtils
+					.getMode(config);
 			fSelectionControl
 					.setInput(parentProject == null ? new WorkspaceSelectionDialogInput()
 							: new ProjectSelectionDialogInput(parentProject));
