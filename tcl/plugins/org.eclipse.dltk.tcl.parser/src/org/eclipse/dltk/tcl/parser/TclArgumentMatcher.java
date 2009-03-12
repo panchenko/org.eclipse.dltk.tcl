@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +31,7 @@ import org.eclipse.dltk.tcl.definitions.TypedArgument;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionUtils;
 import org.eclipse.dltk.tcl.parser.definitions.SynopsisBuilder;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.osgi.util.NLS;
 
 public class TclArgumentMatcher {
 	public static final String SHORT_ARG = "short:";
@@ -1195,8 +1195,8 @@ public class TclArgumentMatcher {
 			collector
 					.report(
 							ITclErrorReporter.INVALID_ARGUMENT_VALUE,
-							MessageFormat
-									.format(
+							NLS
+									.bind(
 											Messages.TclArgumentMatcher_Argument_Of_Type_ExpectedDetail,
 											new Object[] {
 													synopsisBuilder
@@ -1210,8 +1210,8 @@ public class TclArgumentMatcher {
 			collector
 					.report(
 							ITclErrorReporter.INVALID_ARGUMENT_VALUE,
-							MessageFormat
-									.format(
+							NLS
+									.bind(
 											Messages.TclArgumentMatcher_Argument_Of_Type_Expected,
 											new Object[] {
 													synopsisBuilder
@@ -1228,8 +1228,8 @@ public class TclArgumentMatcher {
 		if (list.size() > argumentsUsed) {
 			TclArgument begin = list.get(argumentsUsed);
 			TclArgument end = list.get(list.size() - 1);
-			String message = MessageFormat
-					.format(Messages.TclArgumentMatcher_Extra_Arguments,
+			String message = NLS
+					.bind(Messages.TclArgumentMatcher_Extra_Arguments,
 							new Object[] { Integer.valueOf(list.size()
 									- argumentsUsed) });
 			collector.report(ITclErrorConstants.EXTRA_ARGUMENTS, message,
@@ -1246,12 +1246,10 @@ public class TclArgumentMatcher {
 		if (definitionArg instanceof TypedArgument) {
 			String type = synopsisBuilder.typeToString(
 					((TypedArgument) definitionArg).getType()).toLowerCase();
-			value = MessageFormat.format(
-					Messages.TclArgumentMatcher_Missing_TypedArgument,
+			value = NLS.bind(Messages.TclArgumentMatcher_Missing_TypedArgument,
 					new Object[] { type, arg });
 		} else {
-			value = MessageFormat.format(
-					Messages.TclArgumentMatcher_Missing_Argument,
+			value = NLS.bind(Messages.TclArgumentMatcher_Missing_Argument,
 					new Object[] { arg });
 		}
 		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, value,
@@ -1274,8 +1272,7 @@ public class TclArgumentMatcher {
 
 	private void reportMissingGroup(Group group, MatchResult r) {
 		Argument selector = getFirstSelector(group);
-		String message = MessageFormat.format(
-				Messages.TclArgumentMatcher_Missing_Argument,
+		String message = NLS.bind(Messages.TclArgumentMatcher_Missing_Argument,
 				new Object[] { synopsisBuilder.definitionToString(selector) });
 		r.getErrors().report(ITclErrorReporter.MISSING_ARGUMENT, message,
 				getExtraArgs(), this.command.getStart(), this.command.getEnd(),
@@ -1303,7 +1300,7 @@ public class TclArgumentMatcher {
 		String message = "";
 		int code = 0;
 		if (tclArgument != null) {
-			message = MessageFormat.format(
+			message = NLS.bind(
 					Messages.TclArgumentMatcher_Invalid_Arguments_And_Expected,
 					new Object[] { expected,
 							synopsisBuilder.argumentToString(tclArgument) });
@@ -1313,7 +1310,7 @@ public class TclArgumentMatcher {
 					ITclErrorReporter.ERROR);
 			return;
 		} else {
-			message = MessageFormat.format(
+			message = NLS.bind(
 					Messages.TclArgumentMatcher_Missing_Switch_Argument,
 					new Object[] { expected });
 			code = ITclErrorReporter.MISSING_ARGUMENT;

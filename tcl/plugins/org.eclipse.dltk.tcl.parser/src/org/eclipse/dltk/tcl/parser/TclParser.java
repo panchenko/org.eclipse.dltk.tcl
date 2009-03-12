@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,6 +42,7 @@ import org.eclipse.dltk.tcl.internal.parser.raw.VariableSubstitution;
 import org.eclipse.dltk.tcl.parser.TclArgumentMatcher.ComplexArgumentResult;
 import org.eclipse.dltk.tcl.parser.definitions.IScopeProcessor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.osgi.util.NLS;
 
 public class TclParser implements ITclParserOptions {
 	private static final boolean TRACE_PARSER = false;
@@ -493,16 +493,15 @@ public class TclParser implements ITclParserOptions {
 			Command definition) {
 		if (this.reporter == null)
 			return;
-		String message = MessageFormat.format(
-				Messages.TclParser_Command_Is_Deprecated, new Object[] {
-						commandValue, definition.getDeprecated() });
+		String message = NLS.bind(Messages.TclParser_Command_Is_Deprecated,
+				new Object[] { commandValue, definition.getDeprecated() });
 		this.reporter.report(ITclErrorReporter.DEPRECATED_COMMAND, message,
 				null, st.getStart(), st.getEnd(), ITclErrorReporter.WARNING);
 	}
 
 	private void reportInvalidVersion(TclCommand st, String commandValue,
 			TclErrorCollector parseErrors, Command definition) {
-		String message = MessageFormat.format(
+		String message = NLS.bind(
 				Messages.TclParser_Command_Version_Is_Invalid, new Object[] {
 						commandValue,
 
@@ -524,9 +523,8 @@ public class TclParser implements ITclParserOptions {
 				scopesList.append(", ");
 			scopesList.append(scopes.get(i).getName());
 		}
-		String message = MessageFormat.format(
-				Messages.TclParser_Command_Out_Of_Scope, new Object[] {
-						commandValue, scopesList });
+		String message = NLS.bind(Messages.TclParser_Command_Out_Of_Scope,
+				new Object[] { commandValue, scopesList });
 		this.reporter.report(ITclErrorReporter.COMMAND_OUT_OF_SCOPE, message,
 				null, st.getStart(), st.getEnd(), ITclErrorReporter.ERROR);
 	}
