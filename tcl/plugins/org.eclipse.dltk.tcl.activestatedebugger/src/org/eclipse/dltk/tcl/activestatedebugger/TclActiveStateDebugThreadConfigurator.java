@@ -28,7 +28,9 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.IModelElement;
@@ -364,9 +366,11 @@ public class TclActiveStateDebugThreadConfigurator implements
 		return result;
 	}
 
-	public void initializeBreakpoints(IScriptThread thread) {
+	public void initializeBreakpoints(IScriptThread thread,
+			IProgressMonitor monitor) {
 		try {
 			final List<IMarker> spawnpoints = loadSpawnpoints();
+			monitor.beginTask(Util.EMPTY_STRING, spawnpoints.size());
 			final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) thread
 					.getDbgpSession().get(IDbgpSpawnpointCommands.class);
 			final IScriptBreakpointPathMapper pathMapper = ((IScriptDebugTarget) thread
@@ -384,9 +388,11 @@ public class TclActiveStateDebugThreadConfigurator implements
 					// TODO save spawnpoint error - need SpawnpointManager?
 					TclActiveStateDebuggerPlugin.warn(e);
 				}
+				monitor.worked(1);
 			}
 		} catch (CoreException e) {
 			TclActiveStateDebuggerPlugin.warn(e);
 		}
+		monitor.done();
 	}
 }
