@@ -35,7 +35,7 @@ import org.eclipse.dltk.launching.ExternalDebuggingEngineRunner;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
-import org.eclipse.dltk.launching.debug.DbgpConstants;
+import org.eclipse.dltk.launching.debug.DbgpConnectionConfig;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 import org.eclipse.dltk.utils.PlatformFileUtils;
@@ -75,13 +75,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		IFileHandle file = getDebuggingEnginePath(delegate);
 
 		final String exe = getInstall().getInstallLocation().toOSString();
-		final String host = (String) config
-				.getProperty(DbgpConstants.HOST_PROP);
-		final String port = (String) config
-				.getProperty(DbgpConstants.PORT_PROP);
-		final String sessionId = (String) config
-				.getProperty(DbgpConstants.SESSION_ID_PROP);
-
+		DbgpConnectionConfig dbgpConfig = DbgpConnectionConfig.load(config);
 		IEnvironment env = getInstall().getEnvironment();
 
 		String pathKeyValue = getDebuggingPreference(delegate,
@@ -106,15 +100,16 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 
 		// Interpreter arguments
 		newConfig.addInterpreterArg(ADDRESS_KEY);
-		newConfig.addInterpreterArg(host + ':' + port);
+		newConfig.addInterpreterArg(dbgpConfig.getHost() + ':'
+				+ dbgpConfig.getPort());
 
 		newConfig.addInterpreterArg(SHELL_KEY);
 		newConfig.addInterpreterArg(exe);
 
 		newConfig.addInterpreterArg(IDE_KEY);
-		newConfig.addInterpreterArg(sessionId);
+		newConfig.addInterpreterArg(dbgpConfig.getSessionId());
 
-		String logFileName = getLogFileName(delegate, sessionId);
+		String logFileName = getLogFileName(delegate, dbgpConfig.getSessionId());
 		if (logFileName != null) {
 			newConfig.addInterpreterArg(LOG_KEY);
 			newConfig.addInterpreterArg(LOG_FILE_KEY);
