@@ -67,12 +67,12 @@ public class InstrumentationPatternList {
 		fMode = new Composite(comp, SWT.NONE);
 		fMode.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		fMode.setLayout(new FillLayout());
-		fDefaultMode = SWTFactory.createRadioButtonNoLayoutData(fMode,
-				PreferenceMessages.InstrumentationPatternList_ModeDefault);
 		fSourceModulesMode = SWTFactory.createRadioButtonNoLayoutData(fMode,
 				PreferenceMessages.InstrumentationPatternList_ModeSources);
 		fSelectionMode = SWTFactory.createRadioButtonNoLayoutData(fMode,
 				PreferenceMessages.InstrumentationPatternList_ModeSelection);
+		fDefaultMode = SWTFactory.createRadioButtonNoLayoutData(fMode,
+				PreferenceMessages.InstrumentationPatternList_ModeDefault);
 		SelectionListener modeListener = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
