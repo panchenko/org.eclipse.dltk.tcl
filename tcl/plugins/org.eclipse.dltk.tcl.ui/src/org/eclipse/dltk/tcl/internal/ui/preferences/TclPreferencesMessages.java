@@ -27,6 +27,8 @@ public class TclPreferencesMessages extends NLS {
 	public static String TclCorePreferencePage_checkContentRemoveExclude;
 	public static String TclCorePreferencePage_local;
 	public static String TclCorePreferencePage_remote;
+	public static String TclEnvironmentPropertyPage_detectAutomatically;
+	public static String TclEnvironmentPropertyPage_environmentLabel;
 	public static String TCLGlobalPreferencePage_description;
 	public static String TCLEditorPreferencePage_general;
 	public static String TCLSmartTypingConfigurationBlock_autoclose_title;
