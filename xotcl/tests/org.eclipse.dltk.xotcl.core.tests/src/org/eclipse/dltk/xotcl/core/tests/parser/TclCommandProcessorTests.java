@@ -32,19 +32,19 @@ import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclProcProcessor
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclSwitchCommandProcessor;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclUpvarProcessor;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.TclVariableProcessor;
-import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
-import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
-import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
 
+/**
+ * TODO move to the tcl.core.tests since there is no XOTCL specific here.
+ */
 public class TclCommandProcessorTests extends TestCase {
 	static TclStatement toCommand(String content) throws TclParseException {
-		TclScript parse = SimpleTclParser.staticParse(content);
-		List commands = parse.getCommands();
-		assertEquals(1, commands.size());
-		assertNotNull(commands.get(0));
+		Block block = new Block();
 		TestTclParser p = new TestTclParser(content);
-		return p.processLocal((TclCommand) commands.get(0), 0, null);
+		p.parse(content, 0, block);
+		assertEquals(1, block.getStatements().size());
+		assertNotNull(block.getStatements().get(0));
+		return (TclStatement) block.getStatements().get(0);
 	}
 
 	// //// If processor test.
@@ -451,7 +451,7 @@ public class TclCommandProcessorTests extends TestCase {
 
 	public void testTclForProcessor004() throws TclParseException {
 		String script = "for {set x 0} { $x<10 } { incr x }"; // infinite loop
-																// actually
+		// actually
 		TclForCommandProcessor processor = new TclForCommandProcessor();
 		ASTNode node = processor.process(toCommand(script), new TestTclParser(
 				script), null);

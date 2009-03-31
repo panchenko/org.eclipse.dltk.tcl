@@ -5,11 +5,13 @@ import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceParser;
 
 class TestTclParser extends TclSourceParser {
-	public TestTclParser( String content ) {
+
+	public TestTclParser(String content) {
 		this.content = content;
 		this.codeModel = new CodeModel(content);
+		setProcessorsState(false);
 	}
-	
+
 	public char[] getFileName() {
 		return "myfile.tcl".toCharArray();
 	}
