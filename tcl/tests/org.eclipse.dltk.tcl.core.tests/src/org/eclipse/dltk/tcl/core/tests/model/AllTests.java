@@ -19,6 +19,7 @@ public class AllTests {
 				"Test for org.eclipse.dltk.tcl.core.tests.model");
 		//$JUnit-BEGIN$
 		suite.addTest(SearchTests.suite());
+		suite.addTest(SearchVarTests.suite());
 		suite.addTest(TclSelectionTests.suite());
 		suite.addTest(CompletionTests.suite());
 		//$JUnit-END$
