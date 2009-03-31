@@ -1,10 +1,8 @@
 package org.eclipse.dltk.tcl.internal.parser;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -43,48 +41,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 	private int flags;
 	private boolean useDetectors = true;
 
-	Map commandToStatement = new HashMap();
-
-	private static class CommandToStatementKey {
-		public TclCommand command;
-		public int offset;
-
-		public CommandToStatementKey(TclCommand command2, int offset2) {
-			this.command = command2;
-			this.offset = offset2;
-		}
-
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result
-					+ ((command == null) ? 0 : command.hashCode());
-			result = prime * result + offset;
-			return result;
-		}
-
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			CommandToStatementKey other = (CommandToStatementKey) obj;
-			if (command == null) {
-				if (other.command != null)
-					return false;
-			} else if (!command.equals(other.command))
-				return false;
-			if (offset != other.offset)
-				return false;
-			return true;
-		}
-	}
-
 	private ModuleDeclaration moduleDeclaration;
-
-	// private Map commandParserCache = new HashMap();
 
 	public ModuleDeclaration parse(char[] fileName, char[] source,
 			IProblemReporter reporter) {
@@ -106,7 +63,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		}
 	}
 
-	ITclCommandProcessor localProcessor = new ITclCommandProcessor() {
+	protected ITclCommandProcessor localProcessor = new ITclCommandProcessor() {
 		public ASTNode process(TclStatement st, ITclParser parser,
 				ASTNode parent) {
 			// if (commandParserCache.containsKey(command)) {
@@ -136,7 +93,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 	};
 	private ITclCommandDetector[] detectors;
 
-	private void convertExecuteToBlocks(TclStatement st) {
+	protected void convertExecuteToBlocks(TclStatement st) {
 		ASTNode[] nodes = (ASTNode[]) st.getExpressions().toArray(
 				new ASTNode[st.getCount()]);
 		for (int i = 0; i < nodes.length; i++) {
@@ -161,29 +118,8 @@ public class TclSourceParser extends AbstractSourceParser implements
 		st.setExpressions(Arrays.asList(nodes));
 	}
 
-	public TclStatement processLocal(TclCommand command, int offset,
-			ASTNode parent) {
-
-		CommandToStatementKey key = new CommandToStatementKey(command, offset);
-		if (commandToStatement.containsKey(key)) {
-			return (TclStatement) commandToStatement.get(key);
-		}
-		TclStatement st = TclParseUtil.convertToAST(command,
-				this.getFileName(), offset, TclSourceParser.this.content,
-				TclSourceParser.this.startPos);
-		TclStatement node = (TclStatement) this.localProcessor.process(st,
-				this, null);
-		TclParseUtil.addToDeclaration(parent, node);
-		this.convertExecuteToBlocks(node);
-		TclParseUtil.removeFromDeclaration(parent, node);
-
-		commandToStatement.put(key, node);
-		return node;
-	}
-
 	public void parse(String content, int offset, ASTNode decl) {
 		initDetectors();
-		commandToStatement.clear();
 		TclScript script = null;
 		try {
 			script = SimpleTclParser.staticParse(content);
