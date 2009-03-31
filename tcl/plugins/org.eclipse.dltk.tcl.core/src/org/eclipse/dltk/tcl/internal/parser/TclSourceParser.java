@@ -63,7 +63,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		}
 	}
 
-	protected ITclCommandProcessor localProcessor = new ITclCommandProcessor() {
+	private ITclCommandProcessor localProcessor = new ITclCommandProcessor() {
 		public ASTNode process(TclStatement st, ITclParser parser,
 				ASTNode parent) {
 			// if (commandParserCache.containsKey(command)) {
@@ -93,7 +93,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 	};
 	private ITclCommandDetector[] detectors;
 
-	protected void convertExecuteToBlocks(TclStatement st) {
+	private void convertExecuteToBlocks(TclStatement st) {
 		ASTNode[] nodes = (ASTNode[]) st.getExpressions().toArray(
 				new ASTNode[st.getCount()]);
 		for (int i = 0; i < nodes.length; i++) {
