@@ -17,11 +17,6 @@ import org.eclipse.dltk.core.tests.model.TestSearchResults;
 
 public class SearchVarTests extends AbstractSingleProjectSearchTests {
 
-	/**
-	 * @param testPluginName
-	 * @param testName
-	 * @param scriptProjectName
-	 */
 	public SearchVarTests(String testName) {
 		super(Activator.PLUGIN_ID, testName, "SearchVar");
 	}
