@@ -60,6 +60,10 @@ public class InstrumentationSetupTests extends TestCase {
 		private final IPath path;
 		private final Set<IPath> paths;
 
+		public File(String path, Set<IPath> paths) {
+			this(new Path(path), paths);
+		}
+
 		/**
 		 * @param path
 		 * @param paths
@@ -178,8 +182,8 @@ public class InstrumentationSetupTests extends TestCase {
 		paths.add(new Path("A/B/C2")); //$NON-NLS-1$
 		paths.add(new Path("A/B/C3")); //$NON-NLS-1$
 		Setup setup = new Setup();
-		setup.addFileHandle(new File(new Path("A/B"), paths), true, false); //$NON-NLS-1$
-		setup.addFileHandle(new File(new Path("A/B/C2"), paths), false, true); //$NON-NLS-1$
+		setup.addFileHandle(new File("A/B", paths), true, false); //$NON-NLS-1$
+		setup.addFileHandle(new File("A/B/C2", paths), false, true); //$NON-NLS-1$
 		Set<IPath> roots = setup.getRoots();
 		assertEquals(1, roots.size());
 		assertTrue(roots.contains(new Path("A"))); //$NON-NLS-1$
@@ -200,7 +204,7 @@ public class InstrumentationSetupTests extends TestCase {
 		paths.add(new Path("A/B/C2")); //$NON-NLS-1$
 		paths.add(new Path("A/B/C3")); //$NON-NLS-1$
 		Setup setup = new Setup();
-		setup.addFileHandle(new File(new Path("A/B"), paths), true, false); //$NON-NLS-1$
+		setup.addFileHandle(new File("A/B", paths), true, false); //$NON-NLS-1$
 		IPath[] excludes = setup.getExcludes();
 		assertEquals(1, excludes.length);
 		assertEquals(new Path("A/B"), excludes[0]); //$NON-NLS-1$
@@ -213,11 +217,11 @@ public class InstrumentationSetupTests extends TestCase {
 		paths.add(new Path("X/Y/A/B/C2")); //$NON-NLS-1$
 		paths.add(new Path("X/Y/A/B/C3")); //$NON-NLS-1$
 		Setup setup = new Setup();
-		setup.addFileHandle(new File(new Path("X/Y/A/B"), paths), true, false); //$NON-NLS-1$
-		setup.addFileHandle(
-				new File(new Path("X/Y/A/B/C2"), paths), false, true); //$NON-NLS-1$
+		setup.addFileHandle(new File("X/Y/A/B", paths), true, false); //$NON-NLS-1$
+		setup.addFileHandle(new File("X/Y/A/B/C2", paths), false, true); //$NON-NLS-1$
 		Set<IPath> roots = setup.getRoots();
 		assertEquals(1, roots.size());
+		// FIXME probably it should return X/Y/A/B
 		assertTrue(roots.contains(new Path("X"))); //$NON-NLS-1$
 		//
 		IPath[] excludes = setup.getExcludes();
