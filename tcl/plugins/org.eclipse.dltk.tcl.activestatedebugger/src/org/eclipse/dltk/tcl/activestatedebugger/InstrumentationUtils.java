@@ -14,6 +14,7 @@ package org.eclipse.dltk.tcl.activestatedebugger;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -54,8 +55,7 @@ public class InstrumentationUtils {
 
 	public static void collectProjects(Set<IScriptProject> projects,
 			IScriptProject project) {
-		final IScriptModel model = DLTKCore.create(ResourcesPlugin
-				.getWorkspace().getRoot());
+		final IScriptModel model = DLTKCore.create(getWorkspaceRoot());
 		collectProjects(model, projects, project);
 	}
 
@@ -84,6 +84,10 @@ public class InstrumentationUtils {
 		} else {
 			return InstrumentationMode.SOURCES;
 		}
+	}
+
+	protected static IWorkspaceRoot getWorkspaceRoot() {
+		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
 }

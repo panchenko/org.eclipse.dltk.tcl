@@ -25,14 +25,11 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IPreferencesLookupDelegate;
 import org.eclipse.dltk.core.IProjectFragment;
@@ -40,9 +37,7 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.dbgp.IDbgpFeature;
 import org.eclipse.dltk.dbgp.IDbgpSpawnpoint;
 import org.eclipse.dltk.dbgp.commands.IDbgpSpawnpointCommands;
@@ -93,114 +88,6 @@ public class TclActiveStateDebugThreadConfigurator implements
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
-		}
-	}
-
-	private static class InstrumentationConfigurator {
-
-		final IEnvironment environment;
-		final Map<String, Boolean> patterns = new HashMap<String, Boolean>();
-
-		public InstrumentationConfigurator(IEnvironment environment) {
-			this.environment = environment;
-		}
-
-		/**
-		 * @param pattern
-		 * @return
-		 */
-		public void addWorkspace(IPath path, boolean isDirectory,
-				boolean include) {
-			final IResource resource = getWorkspaceRoot().findMember(path);
-			if (resource != null) {
-				final URI uri = resource.getLocationURI();
-				final IFileHandle file = environment.getFile(uri);
-				addFileHandle(file, isDirectory, include);
-			}
-		}
-
-		/**
-		 * @param environment
-		 * @param pattern
-		 * @return
-		 */
-		public void addExternal(IPath path, boolean isDirectory, boolean include) {
-			addFileHandle(environment.getFile(EnvironmentPathUtils
-					.getLocalPath(path)), isDirectory, include);
-		}
-
-		private void addFileHandle(final IFileHandle file, boolean isDirectory,
-				boolean include) {
-			if (file != null) {
-				String path = file.getPath().toString();
-				if (isDirectory) {
-					path += "/*"; //$NON-NLS-1$
-				}
-				patterns.put(path, Boolean.valueOf(include));
-			}
-		}
-
-		public void send(ActiveStateInstrumentCommands commands)
-				throws DbgpException {
-			final String[] paths = patterns.keySet().toArray(
-					new String[patterns.size()]);
-			Arrays.sort(paths);
-			for (String path : paths) {
-				final Boolean include = patterns.get(path);
-				if (include != null && include.booleanValue()) {
-					commands.instrumentInclude(path);
-				} else {
-					commands.instrumentExclude(path);
-				}
-			}
-		}
-
-		/**
-		 * @param module
-		 */
-		public void addSourceModule(ISourceModule module, boolean include) {
-			if (module instanceof IExternalSourceModule) {
-				if (!module.isBuiltin())
-					return;
-				addExternal(module.getPath(), false, include);
-			} else {
-				addWorkspace(module.getPath(), false, include);
-			}
-		}
-
-		/**
-		 * @param folder
-		 * @param include
-		 */
-		public void addScriptFolder(IScriptFolder folder, boolean include) {
-			if (folder.isReadOnly()) {
-				addExternal(folder.getPath(), true, include);
-			} else {
-				addWorkspace(folder.getPath(), true, include);
-			}
-		}
-
-		/**
-		 * @param fragment
-		 * @param include
-		 */
-		public void addProjectFragment(IProjectFragment fragment,
-				boolean include) {
-			if (fragment.isExternal()) {
-				if (fragment.isBuiltin())
-					return;
-				addExternal(fragment.getPath(), true, include);
-			} else {
-				addWorkspace(fragment.getPath(), true, include);
-			}
-		}
-
-		/**
-		 * @param project
-		 * @param include
-		 */
-		public void addProject(IScriptProject project, boolean include) {
-			addWorkspace(project.getPath(), true, include);
 		}
 	}
 
@@ -262,7 +149,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 		if (environment == null) {
 			return;
 		}
-		final InstrumentationConfigurator configurator = new InstrumentationConfigurator(
+		final InstrumentationSetup configurator = new InstrumentationSetup(
 				environment);
 		final InstrumentationContentProvider provider = new InstrumentationContentProvider();
 		final Set<IModelElement> processed = new HashSet<IModelElement>();
@@ -324,16 +211,12 @@ public class TclActiveStateDebugThreadConfigurator implements
 		}
 	}
 
-	protected static IWorkspaceRoot getWorkspaceRoot() {
-		return ResourcesPlugin.getWorkspace().getRoot();
-	}
-
 	private String getString(final String key) {
 		return delegate.getString(TclActiveStateDebuggerPlugin.PLUGIN_ID, key);
 	}
 
 	private List<IMarker> loadSpawnpoints() throws CoreException {
-		final IWorkspaceRoot root = getWorkspaceRoot();
+		final IWorkspaceRoot root = InstrumentationUtils.getWorkspaceRoot();
 		final IMarker[] markers = root.findMarkers(
 				TclActiveStateDebuggerConstants.SPAWNPOINT_MARKER_TYPE, true,
 				IResource.DEPTH_INFINITE);
