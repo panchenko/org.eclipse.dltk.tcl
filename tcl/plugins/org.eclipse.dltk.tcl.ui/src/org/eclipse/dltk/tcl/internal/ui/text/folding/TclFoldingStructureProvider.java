@@ -66,7 +66,7 @@ public class TclFoldingStructureProvider extends
 		 * if an ASTVisitor implementation is created for this, just override
 		 * getFoldingVisitor() and remove this method
 		 */
-		ModuleDeclaration md = getModuleDeclaration();
+		ModuleDeclaration md = parse(code, offset);
 		List statements = md.getStatements();
 		if (statements == null) {
 			return new CodeBlock[0];
@@ -266,12 +266,11 @@ public class TclFoldingStructureProvider extends
 				return fInitCollapseClasses;
 			}
 		}
-		
-		if (mayCollapse(s))
-		{
+
+		if (mayCollapse(s)) {
 			return fInitCollapseOtherBlocks;
 		}
-		
+
 		return super.initiallyCollapse(s);
 	}
 
@@ -301,7 +300,7 @@ public class TclFoldingStructureProvider extends
 		}
 		return false;
 	}
-	
+
 	protected boolean mayCollapse(ASTNode s,
 			FoldingStructureComputationContext ctx) {
 		return mayCollapse(s);
