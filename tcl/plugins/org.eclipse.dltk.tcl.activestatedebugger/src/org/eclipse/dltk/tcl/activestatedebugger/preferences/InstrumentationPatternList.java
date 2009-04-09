@@ -136,9 +136,9 @@ public class InstrumentationPatternList {
 			this.configValue = config;
 			final InstrumentationMode mode = InstrumentationUtils
 					.getMode(config);
-			fSelectionControl
-					.setInput(parentProject == null ? new WorkspaceSelectionDialogInput()
-							: new ProjectSelectionDialogInput(parentProject));
+			final SelectionDialogInput treeInput = parentProject == null ? new WorkspaceSelectionDialogInput()
+					: new ProjectSelectionDialogInput(parentProject);
+			fSelectionControl.setInput(treeInput);
 			if (InstrumentationMode.SOURCES.equals(mode)) {
 				fSourceModulesMode.setSelection(true);
 				fViewer.getControl().setEnabled(false);
@@ -146,24 +146,32 @@ public class InstrumentationPatternList {
 			} else if (InstrumentationMode.SELECTION.equals(mode)) {
 				fSelectionMode.setSelection(true);
 				fViewer.getControl().setEnabled(true);
-				final List<IModelElement> includes = new ArrayList<IModelElement>();
-				final List<IModelElement> excludes = new ArrayList<IModelElement>();
-				for (ModelElementPattern pattern : config.getModelElements()) {
-					final List<IModelElement> output = pattern.isInclude() ? includes
+				final List<Object> includes = new ArrayList<Object>();
+				final List<Object> excludes = new ArrayList<Object>();
+				for (Pattern pattern : config.getModelElements()) {
+					final List<Object> output = pattern.isInclude() ? includes
 							: excludes;
-					final IModelElement element = DLTKCore.create(pattern
-							.getHandleIdentifier());
+					final Object element;
+					if (pattern instanceof ModelElementPattern) {
+						element = DLTKCore
+								.create(((ModelElementPattern) pattern)
+										.getHandleIdentifier());
+					} else if (pattern instanceof LibraryPattern) {
+						element = new LibraryContainerElement(treeInput);
+					} else {
+						element = null;
+					}
 					if (element != null) {
 						output.add(element);
 					}
 				}
 				if (TreeSelectionControl.DEBUG) {
-					for (IModelElement element : includes) {
-						System.out.println("+" + element.getPath()); //$NON-NLS-1$
-					}
-					for (IModelElement element : excludes) {
-						System.out.println("-" + element.getPath()); //$NON-NLS-1$
-					}
+					// for (IModelElement element : includes) {
+					//						System.out.println("+" + element.getPath()); //$NON-NLS-1$
+					// }
+					// for (IModelElement element : excludes) {
+					//						System.out.println("-" + element.getPath()); //$NON-NLS-1$
+					// }
 				}
 				fSelectionControl.setInitialState(includes, excludes);
 			} else {
@@ -189,14 +197,17 @@ public class InstrumentationPatternList {
 					.createInstrumentationConfig();
 		}
 		if (fSelectionMode.getSelection()) {
+			final Object LIBRARY_CONTAINER = new Object();
 			configValue.setMode(InstrumentationMode.SELECTION);
-			final Set<String> includes = new HashSet<String>();
-			final Set<String> excludes = new HashSet<String>();
+			final Set<Object> includes = new HashSet<Object>();
+			final Set<Object> excludes = new HashSet<Object>();
 			fSelectionControl.collectCheckedItems(new ICollector() {
 				public void include(Object object) {
 					if (object instanceof IModelElement) {
 						includes.add(((IModelElement) object)
 								.getHandleIdentifier());
+					} else if (object instanceof LibraryContainerElement) {
+						includes.add(LIBRARY_CONTAINER);
 					}
 				}
 
@@ -204,33 +215,58 @@ public class InstrumentationPatternList {
 					if (object instanceof IModelElement) {
 						excludes.add(((IModelElement) object)
 								.getHandleIdentifier());
+					} else if (object instanceof LibraryContainerElement) {
+						excludes.add(LIBRARY_CONTAINER);
 					}
 				}
 			});
-			final List<ModelElementPattern> toRemove = new ArrayList<ModelElementPattern>();
-			for (ModelElementPattern pattern : configValue.getModelElements()) {
-				final Set<String> input = pattern.isInclude() ? includes
+			final List<Pattern> toRemove = new ArrayList<Pattern>();
+			for (Pattern pattern : configValue.getModelElements()) {
+				final Set<Object> input = pattern.isInclude() ? includes
 						: excludes;
-				if (!input.remove(pattern.getHandleIdentifier())) {
+				final Object oldItem;
+				if (pattern instanceof ModelElementPattern) {
+					oldItem = ((ModelElementPattern) pattern)
+							.getHandleIdentifier();
+				} else if (pattern instanceof LibraryPattern) {
+					oldItem = LIBRARY_CONTAINER;
+				} else {
+					oldItem = null;
+				}
+				if (!input.remove(oldItem)) {
 					toRemove.add(pattern);
 				}
 			}
-			for (ModelElementPattern pattern : toRemove) {
+			for (Pattern pattern : toRemove) {
 				configValue.getModelElements().remove(pattern);
 			}
-			for (String include : includes) {
-				final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
-						.createModelElementPattern();
-				pattern.setInclude(true);
-				pattern.setHandleIdentifier(include);
-				configValue.getModelElements().add(pattern);
+			for (Object include : includes) {
+				if (include instanceof String) {
+					final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
+							.createModelElementPattern();
+					pattern.setInclude(true);
+					pattern.setHandleIdentifier((String) include);
+					configValue.getModelElements().add(pattern);
+				} else if (include == LIBRARY_CONTAINER) {
+					final LibraryPattern pattern = PreferencesFactory.eINSTANCE
+							.createLibraryPattern();
+					pattern.setInclude(true);
+					configValue.getModelElements().add(pattern);
+				}
 			}
-			for (String exclude : excludes) {
-				final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
-						.createModelElementPattern();
-				pattern.setInclude(false);
-				pattern.setHandleIdentifier(exclude);
-				configValue.getModelElements().add(pattern);
+			for (Object exclude : excludes) {
+				if (exclude instanceof String) {
+					final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
+							.createModelElementPattern();
+					pattern.setInclude(false);
+					pattern.setHandleIdentifier((String) exclude);
+					configValue.getModelElements().add(pattern);
+				} else if (exclude == LIBRARY_CONTAINER) {
+					final LibraryPattern pattern = PreferencesFactory.eINSTANCE
+							.createLibraryPattern();
+					pattern.setInclude(false);
+					configValue.getModelElements().add(pattern);
+				}
 			}
 		} else if (fSourceModulesMode.getSelection()) {
 			configValue.setMode(InstrumentationMode.SOURCES);

@@ -39,7 +39,7 @@ public class InstrumentationSetup {
 		final IFileHandle fileHandle;
 		boolean include;
 		boolean exclude;
-		boolean leaf;
+		Boolean leaf;
 		public final Map<IPath, Entry> children = new HashMap<IPath, Entry>();
 		public boolean directory;
 
@@ -97,7 +97,7 @@ public class InstrumentationSetup {
 			IPath path = file.getPath();
 			Entry entry = entries.get(path);
 			if (entry != null) {
-				entry.leaf = true;
+				entry.leaf = Boolean.valueOf(include);
 				if (include) {
 					entry.include = true;
 				} else {
@@ -106,7 +106,7 @@ public class InstrumentationSetup {
 				return;
 			}
 			entry = new Entry(path, file);
-			entry.leaf = true;
+			entry.leaf = Boolean.valueOf(include);
 			entries.put(path, entry);
 			entry.directory = true;
 			if (include) {
@@ -157,10 +157,15 @@ public class InstrumentationSetup {
 			return directory ? path.toString() + "/*" : path.toString(); //$NON-NLS-1$
 		}
 
+		@Override
+		public String toString() {
+			return (include ? "+" : "-") + getPatternText(); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
 	}
 
 	private static void walk(Entry entry, List<PatternEntry> patterns) {
-		if (entry.fileHandle == null || !entry.leaf) {
+		if (entry.fileHandle == null || entry.leaf == null) {
 			for (Entry e : entry.children.values()) {
 				walk(e, patterns);
 			}
@@ -171,7 +176,7 @@ public class InstrumentationSetup {
 				final Entry childEntry = entry.children.get(path);
 				if (childEntry == null) {
 					patterns.add(new PatternEntry(path, child.isDirectory(),
-							false));
+							entry.leaf.booleanValue()));
 				} else {
 					walk(childEntry, patterns);
 				}

@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesSwitch.java,v 1.3 2009/03/09 06:29:41 apanchenk Exp $
+ * $Id: PreferencesSwitch.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.util;
 
@@ -98,12 +98,26 @@ public class PreferencesSwitch<T> {
 			case PreferencesPackage.MODEL_ELEMENT_PATTERN: {
 				ModelElementPattern modelElementPattern = (ModelElementPattern)theEObject;
 				T result = caseModelElementPattern(modelElementPattern);
+				if (result == null) result = casePattern(modelElementPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case PreferencesPackage.INSTRUMENTATION_CONFIG: {
 				InstrumentationConfig instrumentationConfig = (InstrumentationConfig)theEObject;
 				T result = caseInstrumentationConfig(instrumentationConfig);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PreferencesPackage.PATTERN: {
+				Pattern pattern = (Pattern)theEObject;
+				T result = casePattern(pattern);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PreferencesPackage.LIBRARY_PATTERN: {
+				LibraryPattern libraryPattern = (LibraryPattern)theEObject;
+				T result = caseLibraryPattern(libraryPattern);
+				if (result == null) result = casePattern(libraryPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -138,6 +152,36 @@ public class PreferencesSwitch<T> {
 	 * @generated
 	 */
 	public T caseInstrumentationConfig(InstrumentationConfig object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Pattern</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePattern(Pattern object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Library Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Library Pattern</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLibraryPattern(LibraryPattern object) {
 		return null;
 	}
 

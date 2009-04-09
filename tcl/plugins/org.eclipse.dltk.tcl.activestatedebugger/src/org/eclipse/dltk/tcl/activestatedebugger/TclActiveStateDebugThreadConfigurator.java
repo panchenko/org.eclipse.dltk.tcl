@@ -52,7 +52,9 @@ import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationContentProvider;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.LibraryPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
 
 public class TclActiveStateDebugThreadConfigurator implements
@@ -100,6 +102,14 @@ public class TclActiveStateDebugThreadConfigurator implements
 
 	}
 
+	private static class LibraryContainerRef extends PatternRef {
+
+		public LibraryContainerRef(boolean include) {
+			super(include);
+		}
+
+	}
+
 	private static class ModelElementRef extends PatternRef {
 		final IModelElement element;
 
@@ -113,13 +123,17 @@ public class TclActiveStateDebugThreadConfigurator implements
 	private static List<PatternRef> parsePatterns(InstrumentationConfig config) {
 		List<PatternRef> result = new ArrayList<PatternRef>();
 		if (config != null) {
-			for (ModelElementPattern pattern : config.getModelElements()) {
-				final IModelElement element = DLTKCore.create(pattern
-						.getHandleIdentifier());
-				if (element != null) {
-					result
-							.add(new ModelElementRef(element, pattern
-									.isInclude()));
+			for (Pattern pattern : config.getModelElements()) {
+				if (pattern instanceof ModelElementPattern) {
+					final IModelElement element = DLTKCore
+							.create(((ModelElementPattern) pattern)
+									.getHandleIdentifier());
+					if (element != null) {
+						result.add(new ModelElementRef(element, pattern
+								.isInclude()));
+					}
+				} else if (pattern instanceof LibraryPattern) {
+					result.add(new LibraryContainerRef(pattern.isInclude()));
 				}
 			}
 		}
@@ -155,6 +169,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 		final Set<IModelElement> processed = new HashSet<IModelElement>();
 		final Set<IScriptProject> projects = new HashSet<IScriptProject>();
 		InstrumentationUtils.collectProjects(projects, project);
+		boolean libraryInclude = false;
 		if (mode == InstrumentationMode.SOURCES) {
 			for (IScriptProject project : projects) {
 				collect(provider, processed, project);
@@ -179,6 +194,15 @@ public class TclActiveStateDebugThreadConfigurator implements
 						configurator.addProject((IScriptProject) element,
 								pattern.include);
 					}
+				} else if (pattern instanceof LibraryContainerRef) {
+					libraryInclude = pattern.include;
+					// for (IProjectFragment fragment : InstrumentationUtils
+					// .collectExternalFragments(projects)) {
+					// if (processed.add(fragment)) {
+					// configurator.addProjectFragment(fragment,
+					// );
+					// }
+					// }
 				}
 			}
 			for (IScriptProject project : projects) {
@@ -190,7 +214,7 @@ public class TclActiveStateDebugThreadConfigurator implements
 		for (IProjectFragment fragment : InstrumentationUtils
 				.collectExternalFragments(projects)) {
 			if (processed.add(fragment)) {
-				configurator.addProjectFragment(fragment, false);
+				configurator.addProjectFragment(fragment, libraryInclude);
 			}
 		}
 		configurator.send(commands);

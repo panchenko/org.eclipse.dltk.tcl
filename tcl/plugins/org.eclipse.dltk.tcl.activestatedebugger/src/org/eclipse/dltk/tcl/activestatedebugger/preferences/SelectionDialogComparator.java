@@ -24,6 +24,8 @@ class SelectionDialogComparator extends ViewerComparator {
 	private static final int FOLDER_CATEGORY = 3;
 	private static final int MODEL_ELEMENT_CATEGORY = 4;
 
+	private static final int LIBRARY_CONTAINER_CATEGORY = 10;
+
 	@Override
 	public int category(Object element) {
 		if (element instanceof IScriptProject) {
@@ -34,6 +36,8 @@ class SelectionDialogComparator extends ViewerComparator {
 			return FOLDER_CATEGORY;
 		} else if (element instanceof IModelElement) {
 			return MODEL_ELEMENT_CATEGORY;
+		} else if (element instanceof LibraryContainerElement) {
+			return LIBRARY_CONTAINER_CATEGORY;
 		} else {
 			return 0;
 		}

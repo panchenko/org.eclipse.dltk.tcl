@@ -10,56 +10,60 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: ModelElementPatternImpl.java,v 1.2 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: PatternImpl.java,v 1.3 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
+
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Model Element Pattern</b></em>'.
+ * An implementation of the model object '<em><b>Pattern</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ModelElementPatternImpl#getHandleIdentifier <em>Handle Identifier</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl#isInclude <em>Include</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ModelElementPatternImpl extends PatternImpl implements ModelElementPattern {
+public class PatternImpl extends EObjectImpl implements Pattern {
 	/**
-	 * The default value of the '{@link #getHandleIdentifier() <em>Handle Identifier</em>}' attribute.
+	 * The default value of the '{@link #isInclude() <em>Include</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getHandleIdentifier()
+	 * @see #isInclude()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String HANDLE_IDENTIFIER_EDEFAULT = null;
+	protected static final boolean INCLUDE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #getHandleIdentifier() <em>Handle Identifier</em>}' attribute.
+	 * The cached value of the '{@link #isInclude() <em>Include</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getHandleIdentifier()
+	 * @see #isInclude()
 	 * @generated
 	 * @ordered
 	 */
-	protected String handleIdentifier = HANDLE_IDENTIFIER_EDEFAULT;
+	protected boolean include = INCLUDE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ModelElementPatternImpl() {
+	public PatternImpl() {
 		super();
 	}
 
@@ -70,7 +74,7 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return PreferencesPackage.Literals.MODEL_ELEMENT_PATTERN;
+		return PreferencesPackage.Literals.PATTERN;
 	}
 
 	/**
@@ -78,8 +82,8 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getHandleIdentifier() {
-		return handleIdentifier;
+	public boolean isInclude() {
+		return include;
 	}
 
 	/**
@@ -87,11 +91,11 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setHandleIdentifier(String newHandleIdentifier) {
-		String oldHandleIdentifier = handleIdentifier;
-		handleIdentifier = newHandleIdentifier;
+	public void setInclude(boolean newInclude) {
+		boolean oldInclude = include;
+		include = newInclude;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER, oldHandleIdentifier, handleIdentifier));
+			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.PATTERN__INCLUDE, oldInclude, include));
 	}
 
 	/**
@@ -102,8 +106,8 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
-				return getHandleIdentifier();
+			case PreferencesPackage.PATTERN__INCLUDE:
+				return isInclude() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -116,8 +120,8 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
-				setHandleIdentifier((String)newValue);
+			case PreferencesPackage.PATTERN__INCLUDE:
+				setInclude(((Boolean)newValue).booleanValue());
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -131,8 +135,8 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
-				setHandleIdentifier(HANDLE_IDENTIFIER_EDEFAULT);
+			case PreferencesPackage.PATTERN__INCLUDE:
+				setInclude(INCLUDE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -146,8 +150,8 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER:
-				return HANDLE_IDENTIFIER_EDEFAULT == null ? handleIdentifier != null : !HANDLE_IDENTIFIER_EDEFAULT.equals(handleIdentifier);
+			case PreferencesPackage.PATTERN__INCLUDE:
+				return include != INCLUDE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -162,10 +166,10 @@ public class ModelElementPatternImpl extends PatternImpl implements ModelElement
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (handleIdentifier: "); //$NON-NLS-1$
-		result.append(handleIdentifier);
+		result.append(" (include: "); //$NON-NLS-1$
+		result.append(include);
 		result.append(')');
 		return result.toString();
 	}
 
-} //ModelElementPatternImpl
+} //PatternImpl

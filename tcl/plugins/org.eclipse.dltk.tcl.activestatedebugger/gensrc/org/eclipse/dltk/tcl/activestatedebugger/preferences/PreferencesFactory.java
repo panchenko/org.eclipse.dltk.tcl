@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesFactory.java,v 1.3 2009/03/09 06:29:41 apanchenk Exp $
+ * $Id: PreferencesFactory.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -50,6 +50,24 @@ public interface PreferencesFactory extends EFactory {
 	 * @generated
 	 */
 	InstrumentationConfig createInstrumentationConfig();
+
+	/**
+	 * Returns a new object of class '<em>Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Pattern</em>'.
+	 * @generated
+	 */
+	Pattern createPattern();
+
+	/**
+	 * Returns a new object of class '<em>Library Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Library Pattern</em>'.
+	 * @generated
+	 */
+	LibraryPattern createLibraryPattern();
 
 	/**
 	 * Returns the package supported by this factory.

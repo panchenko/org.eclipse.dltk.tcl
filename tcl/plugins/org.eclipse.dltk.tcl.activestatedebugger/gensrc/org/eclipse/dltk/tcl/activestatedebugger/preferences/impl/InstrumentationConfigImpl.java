@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: InstrumentationConfigImpl.java,v 1.1 2009/03/09 06:29:40 apanchenk Exp $
+ * $Id: InstrumentationConfigImpl.java,v 1.2 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
@@ -18,20 +18,15 @@ import java.util.Collection;
 
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -58,7 +53,7 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ModelElementPattern> modelElements;
+	protected EList<Pattern> modelElements;
 
 	/**
 	 * The default value of the '{@link #getMode() <em>Mode</em>}' attribute.
@@ -104,9 +99,9 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ModelElementPattern> getModelElements() {
+	public EList<Pattern> getModelElements() {
 		if (modelElements == null) {
-			modelElements = new EObjectContainmentEList<ModelElementPattern>(ModelElementPattern.class, this, PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS);
+			modelElements = new EObjectContainmentEList<Pattern>(Pattern.class, this, PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS);
 		}
 		return modelElements;
 	}
@@ -173,7 +168,7 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 		switch (featureID) {
 			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
 				getModelElements().clear();
-				getModelElements().addAll((Collection<? extends ModelElementPattern>)newValue);
+				getModelElements().addAll((Collection<? extends Pattern>)newValue);
 				return;
 			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODE:
 				setMode((InstrumentationMode)newValue);

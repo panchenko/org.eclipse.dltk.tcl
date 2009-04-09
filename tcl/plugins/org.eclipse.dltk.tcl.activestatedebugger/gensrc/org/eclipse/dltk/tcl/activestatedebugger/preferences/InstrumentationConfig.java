@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: InstrumentationConfig.java,v 1.1 2009/03/09 06:29:41 apanchenk Exp $
+ * $Id: InstrumentationConfig.java,v 1.2 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -38,7 +38,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface InstrumentationConfig extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Model Elements</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern}.
+	 * The list contents are of type {@link org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Model Elements</em>' containment reference list isn't clear,
@@ -50,7 +50,7 @@ public interface InstrumentationConfig extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ModelElementPattern> getModelElements();
+	EList<Pattern> getModelElements();
 
 	/**
 	 * Returns the value of the '<em><b>Mode</b></em>' attribute.

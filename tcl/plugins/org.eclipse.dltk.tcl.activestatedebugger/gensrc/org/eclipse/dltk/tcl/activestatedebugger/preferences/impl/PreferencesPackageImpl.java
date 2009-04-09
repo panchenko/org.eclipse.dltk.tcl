@@ -10,13 +10,15 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackageImpl.java,v 1.3 2009/03/09 06:29:40 apanchenk Exp $
+ * $Id: PreferencesPackageImpl.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.LibraryPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesFactory;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
 import org.eclipse.emf.ecore.EAttribute;
@@ -46,6 +48,20 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * @generated
 	 */
 	private EClass instrumentationConfigEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass patternEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass libraryPatternEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -145,15 +161,6 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModelElementPattern_Include() {
-		return (EAttribute)modelElementPatternEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getInstrumentationConfig() {
 		return instrumentationConfigEClass;
 	}
@@ -174,6 +181,33 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 */
 	public EAttribute getInstrumentationConfig_Mode() {
 		return (EAttribute)instrumentationConfigEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getPattern() {
+		return patternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPattern_Include() {
+		return (EAttribute)patternEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getLibraryPattern() {
+		return libraryPatternEClass;
 	}
 
 	/**
@@ -215,11 +249,15 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		// Create classes and their features
 		modelElementPatternEClass = createEClass(MODEL_ELEMENT_PATTERN);
 		createEAttribute(modelElementPatternEClass, MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER);
-		createEAttribute(modelElementPatternEClass, MODEL_ELEMENT_PATTERN__INCLUDE);
 
 		instrumentationConfigEClass = createEClass(INSTRUMENTATION_CONFIG);
 		createEReference(instrumentationConfigEClass, INSTRUMENTATION_CONFIG__MODEL_ELEMENTS);
 		createEAttribute(instrumentationConfigEClass, INSTRUMENTATION_CONFIG__MODE);
+
+		patternEClass = createEClass(PATTERN);
+		createEAttribute(patternEClass, PATTERN__INCLUDE);
+
+		libraryPatternEClass = createEClass(LIBRARY_PATTERN);
 
 		// Create enums
 		instrumentationModeEEnum = createEEnum(INSTRUMENTATION_MODE);
@@ -253,15 +291,21 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		modelElementPatternEClass.getESuperTypes().add(this.getPattern());
+		libraryPatternEClass.getESuperTypes().add(this.getPattern());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(modelElementPatternEClass, ModelElementPattern.class, "ModelElementPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getModelElementPattern_HandleIdentifier(), ecorePackage.getEString(), "handleIdentifier", null, 1, 1, ModelElementPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEAttribute(getModelElementPattern_Include(), ecorePackage.getEBoolean(), "include", null, 1, 1, ModelElementPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(instrumentationConfigEClass, InstrumentationConfig.class, "InstrumentationConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getInstrumentationConfig_ModelElements(), this.getModelElementPattern(), null, "modelElements", null, 0, -1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getInstrumentationConfig_ModelElements(), this.getPattern(), null, "modelElements", null, 0, -1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getInstrumentationConfig_Mode(), this.getInstrumentationMode(), "mode", null, 0, 1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(patternEClass, Pattern.class, "Pattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getPattern_Include(), ecorePackage.getEBoolean(), "include", null, 1, 1, Pattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(libraryPatternEClass, LibraryPattern.class, "LibraryPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(instrumentationModeEEnum, InstrumentationMode.class, "InstrumentationMode"); //$NON-NLS-1$

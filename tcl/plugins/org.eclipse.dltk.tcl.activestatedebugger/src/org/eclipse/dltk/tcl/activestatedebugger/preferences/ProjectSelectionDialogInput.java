@@ -36,4 +36,17 @@ class ProjectSelectionDialogInput extends SelectionDialogInput {
 		return projects;
 	}
 
+	@Override
+	public int hashCode() {
+		return project.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ProjectSelectionDialogInput) {
+			return project.equals(((ProjectSelectionDialogInput) obj).project);
+		}
+		return false;
+	}
+
 }

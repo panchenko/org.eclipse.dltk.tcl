@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesFactoryImpl.java,v 1.3 2009/03/09 06:29:40 apanchenk Exp $
+ * $Id: PreferencesFactoryImpl.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
@@ -71,6 +71,8 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 		switch (eClass.getClassifierID()) {
 			case PreferencesPackage.MODEL_ELEMENT_PATTERN: return createModelElementPattern();
 			case PreferencesPackage.INSTRUMENTATION_CONFIG: return createInstrumentationConfig();
+			case PreferencesPackage.PATTERN: return createPattern();
+			case PreferencesPackage.LIBRARY_PATTERN: return createLibraryPattern();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -124,6 +126,26 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 	public InstrumentationConfig createInstrumentationConfig() {
 		InstrumentationConfigImpl instrumentationConfig = new InstrumentationConfigImpl();
 		return instrumentationConfig;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Pattern createPattern() {
+		PatternImpl pattern = new PatternImpl();
+		return pattern;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LibraryPattern createLibraryPattern() {
+		LibraryPatternImpl libraryPattern = new LibraryPatternImpl();
+		return libraryPattern;
 	}
 
 	/**

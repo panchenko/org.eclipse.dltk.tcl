@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
 import org.eclipse.dltk.ui.StandardModelElementContentProvider2;
+import org.eclipse.jface.viewers.Viewer;
 
 public class InstrumentationContentProvider extends
 		StandardModelElementContentProvider2 {
@@ -35,16 +36,25 @@ public class InstrumentationContentProvider extends
 
 	private boolean fIsFlatLayout = false;
 
+	private Object input;
+
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		this.input = newInput;
+	}
+
 	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof SelectionDialogInput) {
-			final Set<IScriptProject> projects = ((SelectionDialogInput) inputElement)
-					.collectProjects();
-			final Set<IProjectFragment> libraries = InstrumentationUtils
-					.collectExternalFragments(projects);
+			final SelectionDialogInput input = (SelectionDialogInput) inputElement;
+			final Set<IScriptProject> projects = input.collectProjects();
 			final List<Object> result = new ArrayList<Object>();
 			result.addAll(projects);
-			result.addAll(libraries);
+			final Set<IProjectFragment> libraries = InstrumentationUtils
+					.collectExternalFragments(projects);
+			if (!libraries.isEmpty()) {
+				result.add(new LibraryContainerElement(input));
+			}
 			return result.toArray();
 		}
 		return NO_CHILDREN;
@@ -62,12 +72,28 @@ public class InstrumentationContentProvider extends
 		}
 		if (element instanceof IProjectFragment
 				&& ((IProjectFragment) element).isExternal()) {
-			return null;
+			return new LibraryContainerElement((SelectionDialogInput) input);
 		}
 		if (!fIsFlatLayout && element instanceof IScriptFolder) {
 			return getHierarchicalPackageParent((IScriptFolder) element);
 		}
 		return super.internalGetParent(element);
+	}
+
+	@Override
+	public Object[] getChildren(Object element) {
+		if (element instanceof LibraryContainerElement) {
+			if (input instanceof SelectionDialogInput) {
+				final Set<IScriptProject> projects = ((SelectionDialogInput) input)
+						.collectProjects();
+				final Set<IProjectFragment> libraries = InstrumentationUtils
+						.collectExternalFragments(projects);
+				return libraries.toArray();
+			} else {
+				return NO_CHILDREN;
+			}
+		}
+		return super.getChildren(element);
 	}
 
 	@Override

@@ -10,11 +10,10 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: ModelElementPattern.java,v 1.1 2009/03/09 06:29:41 apanchenk Exp $
+ * $Id: ModelElementPattern.java,v 1.2 2009/04/09 12:09:30 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +24,6 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern#getHandleIdentifier <em>Handle Identifier</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern#isInclude <em>Include</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,7 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface ModelElementPattern extends EObject {
+public interface ModelElementPattern extends Pattern {
 	/**
 	 * Returns the value of the '<em><b>Handle Identifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -59,31 +57,5 @@ public interface ModelElementPattern extends EObject {
 	 * @generated
 	 */
 	void setHandleIdentifier(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Include</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Include</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Include</em>' attribute.
-	 * @see #setInclude(boolean)
-	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage#getModelElementPattern_Include()
-	 * @model id="true" required="true"
-	 * @generated
-	 */
-	boolean isInclude();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern#isInclude <em>Include</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Include</em>' attribute.
-	 * @see #isInclude()
-	 * @generated
-	 */
-	void setInclude(boolean value);
 
 } // ModelElementPattern
