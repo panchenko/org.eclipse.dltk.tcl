@@ -66,9 +66,7 @@ public class TclFoldingStructureProvider extends
 		 * if an ASTVisitor implementation is created for this, just override
 		 * getFoldingVisitor() and remove this method
 		 */
-		ISourceParser pp = null;
-		pp = DLTKLanguageManager.getSourceParser(TclNature.NATURE_ID);
-		ModuleDeclaration md = pp.parse(null, code.toCharArray(), null);
+		ModuleDeclaration md = getModuleDeclaration();
 		List statements = md.getStatements();
 		if (statements == null) {
 			return new CodeBlock[0];
