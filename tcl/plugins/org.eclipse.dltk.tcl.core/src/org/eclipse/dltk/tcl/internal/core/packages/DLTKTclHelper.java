@@ -2,6 +2,7 @@ package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -315,11 +317,11 @@ public class DLTKTclHelper {
 			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder();
 			parser.setErrorHandler(new DefaultHandler());
-			Document document = parser.parse(new ByteArrayInputStream(text
-					.getBytes()));
+			Document document = parser.parse(new InputSource(new StringReader(
+					text)));
 			return document;
 		} catch (IOException e) {
-
+			// should not happen
 		} catch (ParserConfigurationException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
