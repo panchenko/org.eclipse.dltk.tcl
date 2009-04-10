@@ -18,11 +18,10 @@ public final class TclPartitions {
 	}
 
 	public static final String TCL_PARTITIONING = TclConstants.TCL_PARTITIONING;
-	public static final String TCL_COMMENT = "__tcl_comment";
-	public static final String TCL_STRING = "__tcl_string";
-	public static final String TCL_INNER_CODE = "__tcl_inner_code";
+	public static final String TCL_COMMENT = "__tcl_comment"; //$NON-NLS-1$
+	public static final String TCL_STRING = "__tcl_string"; //$NON-NLS-1$
+	public static final String TCL_INNER_CODE = "__tcl_inner_code"; //$NON-NLS-1$
 
-    public final static String[] TCL_PARTITION_TYPES = new String[] {
-        IDocument.DEFAULT_CONTENT_TYPE, TCL_STRING, TCL_COMMENT
-    };
+	public final static String[] TCL_PARTITION_TYPES = new String[] {
+			IDocument.DEFAULT_CONTENT_TYPE, TCL_STRING, TCL_COMMENT };
 }
