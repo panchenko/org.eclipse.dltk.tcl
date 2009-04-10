@@ -141,7 +141,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 	public void createControl(Composite ancestor) {
 		super.createControl(ancestor);
-		Composite composite = new Composite((Composite) getControl(), SWT.NONE);
+		Composite composite = new Composite(ancestor, SWT.NONE);
 		composite.setLayoutData(new GridData(GridData.FILL, SWT.FILL, true,
 				true));
 		org.eclipse.swt.layout.GridLayout gridLayout = new org.eclipse.swt.layout.GridLayout(
