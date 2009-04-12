@@ -19,7 +19,7 @@ import org.eclipse.jface.text.IDocument;
 /**
  * Tcl code templates preference page
  */
-public class TclCodeTemplatesPreferencePage extends
+public class TclTemplatesPreferencePage extends
 		ScriptTemplatePreferencePage {
 
 	/*

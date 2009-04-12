@@ -15,9 +15,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.console.ui.ScriptConsoleUIPlugin;
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.internal.ui.text.TclCodeTemplateAccess;
 import org.eclipse.dltk.tcl.internal.ui.text.TclTextTools;
 import org.eclipse.dltk.ui.DLTKUILanguageManager;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
+import org.eclipse.dltk.ui.text.templates.ICodeTemplateAccess;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -54,8 +56,18 @@ public class TclUI extends AbstractUIPlugin {
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
+		try {
+			if (codeTemplateAccess != null) {
+				if (codeTemplateAccess instanceof ICodeTemplateAccess.ICodeTemplateAccessInternal) {
+					((ICodeTemplateAccess.ICodeTemplateAccessInternal) codeTemplateAccess)
+							.dispose();
+				}
+				codeTemplateAccess = null;
+			}
+		} finally {
+			super.stop(context);
+			plugin = null;
+		}
 	}
 
 	/**
@@ -96,9 +108,22 @@ public class TclUI extends AbstractUIPlugin {
 								message, null));
 	}
 
+	public static void error(Throwable t) {
+		error(t.getMessage(), t);
+	}
+
 	public static void error(String message, Throwable t) {
 		plugin.getLog().log(
 				new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, message, t));
+	}
+
+	private ICodeTemplateAccess codeTemplateAccess = null;
+
+	public ICodeTemplateAccess getCodeTemplateAccess() {
+		if (codeTemplateAccess == null) {
+			codeTemplateAccess = new TclCodeTemplateAccess();
+		}
+		return codeTemplateAccess;
 	}
 
 }

@@ -170,7 +170,12 @@
           class="org.eclipse.dltk.tcl.internal.ui.templates.TclUniversalTemplateContextType"
           id="tclUniversalTemplateContextType"
           name="%TclTemplateContext.name">
-    </contextType>    
+    </contextType>
+    <contextType
+          class="org.eclipse.jface.text.templates.TemplateContextType"
+          id="org.eclipse.dltk.tcl.text.template.type.tcl"
+          name="Tcl File">
+    </contextType>
     <include
           file="templates/templates.xml"
           translations="templates/templates.properties">
@@ -194,10 +199,15 @@
           id="org.eclipse.dltk.tcl.preferences.mans"
           name="%TclManPagesPreferencePage.name"/>
     <page
-           category="org.eclipse.dltk.tcl.preferences.editor"
-           class="org.eclipse.dltk.tcl.internal.ui.templates.TclCodeTemplatesPreferencePage"
-           id="org.eclipse.dltk.tcl.preferences.templates"
+           category="org.eclipse.dltk.tcl.preferences"
+           class="org.eclipse.dltk.tcl.internal.ui.preferences.TclCodeTemplatesPreferencePage"
+           id="org.eclipse.dltk.tcl.preferences.code.templates"
            name="%TclCodeTemplatesPreferencePage.name"/>        
+    <page
+           category="org.eclipse.dltk.tcl.preferences.editor"
+           class="org.eclipse.dltk.tcl.internal.ui.templates.TclTemplatesPreferencePage"
+           id="org.eclipse.dltk.tcl.preferences.templates"
+           name="%TclTemplatesPreferencePage.name"/>        
     <page
           category="org.eclipse.dltk.tcl.preferences"
           class="org.eclipse.dltk.tcl.internal.ui.preferences.TclEditorPreferencesPage"

@@ -22,6 +22,7 @@ import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlighter;
 import org.eclipse.dltk.ui.editor.highlighting.SemanticHighlighting;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
+import org.eclipse.dltk.ui.text.templates.TemplateVariableProcessor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -47,6 +48,13 @@ public class TclTextTools extends ScriptTextTools {
 			String partitioning) {
 		return new TclSourceViewerConfiguration(getColorManager(),
 				preferenceStore, editor, partitioning);
+	}
+
+	public ScriptSourceViewerConfiguration createSourceViewerConfiguraton(
+			IPreferenceStore preferenceStore, ITextEditor editor,
+			TemplateVariableProcessor variableProcessor) {
+		return new CodeTemplateTclSourceViewerConfiguration(getColorManager(),
+				preferenceStore, null, variableProcessor);
 	}
 
 	public IPartitionTokenScanner getPartitionScanner() {
