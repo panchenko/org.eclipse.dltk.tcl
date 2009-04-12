@@ -10,11 +10,9 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.compiler.task.TodoTaskPreferences;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ScriptSourceViewer;
 import org.eclipse.dltk.internal.ui.text.ScriptElementProvider;
-import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.internal.ui.hierarchy.TclHierarchyInformationControl;
 import org.eclipse.dltk.tcl.internal.ui.text.completion.TclContentAssistPreference;
 import org.eclipse.dltk.tcl.internal.ui.text.completion.TclScriptCompletionProcessor;
@@ -22,7 +20,6 @@ import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
 import org.eclipse.dltk.ui.text.AbstractScriptScanner;
 import org.eclipse.dltk.ui.text.IColorManager;
-import org.eclipse.dltk.ui.text.ScriptCommentScanner;
 import org.eclipse.dltk.ui.text.ScriptPresentationReconciler;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
