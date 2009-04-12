@@ -62,4 +62,7 @@ public class PreferenceMessages extends NLS {
 	public static String TclActiveStateDebuggerBlock_patternsInProjectProperties;
 	public static String TclActiveStateDebuggerBlock_rebuildMessage;
 	public static String TclActiveStateDebuggerBlock_rebuildTitle;
+	public static String TclLoggingPathBlock_enable;
+	public static String TclLoggingPathBlock_No;
+	public static String TclLoggingPathBlock_Yes;
 }

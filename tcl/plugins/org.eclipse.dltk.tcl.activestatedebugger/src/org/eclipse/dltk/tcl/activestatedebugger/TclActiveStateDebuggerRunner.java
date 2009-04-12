@@ -10,6 +10,7 @@ package org.eclipse.dltk.tcl.activestatedebugger;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -17,6 +18,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IPreferencesLookupDelegate;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -36,6 +38,7 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.launching.debug.DbgpConnectionConfig;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.TclActiveStateDebuggerEnvironment;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 import org.eclipse.dltk.utils.PlatformFileUtils;
@@ -242,6 +245,19 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 							exception, code);
 		}
 		super.abort(message, exception, code);
+	}
+
+	/*
+	 * @see DebuggingEngineRunner#isLoggingEnabled()
+	 */
+	@Override
+	protected boolean isLoggingEnabled(IPreferencesLookupDelegate delegate) {
+		final Map<String, Boolean> values = TclActiveStateDebuggerEnvironment
+				.decodeBooleans(delegate.getString(
+						getDebuggingEnginePreferenceQualifier(),
+						TclActiveStateDebuggerConstants.LOG_ENABLE_KEY));
+		final Boolean b = values.get(getInstall().getEnvironmentId());
+		return b == null || b.booleanValue();
 	}
 
 }

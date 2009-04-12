@@ -18,6 +18,7 @@ public final class TclActiveStateDebuggerConstants {
 	public static final String DEBUGGING_ENGINE_PATH_KEY = "debugging_engine_path"; //$NON-NLS-1$
 	public static final String DEBUGGING_ENGINE_PDX_PATH_KEY = "debugging_engine_pdx_path"; //$NON-NLS-1$
 
+	public static final String LOG_ENABLE_KEY = "debugging_engine_log_enable"; //$NON-NLS-1$
 	public static final String LOG_FILE_NAME = "log_file_name"; //$NON-NLS-1$
 
 	public static final String INSTRUMENTATION_FEATURES = "instrumentationFeatures"; //$NON-NLS-1$
@@ -33,6 +34,7 @@ public final class TclActiveStateDebuggerConstants {
 	public static void initalizeDefaults(IPreferenceStore store) {
 		store.setDefault(DEBUGGING_ENGINE_PATH_KEY, Util.EMPTY_STRING);
 		store.setDefault(DEBUGGING_ENGINE_PDX_PATH_KEY, Util.EMPTY_STRING);
+		store.setDefault(LOG_ENABLE_KEY, Util.EMPTY_STRING);
 		store.setDefault(LOG_FILE_NAME, Util.EMPTY_STRING);
 		store.setDefault(INSTRUMENTATION_FEATURES, InstrumentationFeature
 				.encode(InstrumentationFeature.DYNPROC,

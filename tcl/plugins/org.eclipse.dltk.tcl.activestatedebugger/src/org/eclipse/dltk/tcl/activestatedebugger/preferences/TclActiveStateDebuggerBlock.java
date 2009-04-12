@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
+import org.eclipse.dltk.debug.ui.preferences.ScriptDebugPreferencesMessages;
 import org.eclipse.dltk.tcl.activestatedebugger.ErrorAction;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationFeature;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
@@ -226,6 +227,33 @@ public class TclActiveStateDebuggerBlock extends
 	protected void createOtherBlock(Composite parent) {
 		addDownloadLink(parent, PreferenceMessages.DebuggingEngineDownloadPage,
 				PreferenceMessages.DebuggingEngineDownloadPageLink);
+	}
+
+	private TclLoggingPathBlock loggingBlock;
+
+	@Override
+	protected void createLoggingBlock(Composite parent) {
+		final Group group = SWTFactory.createGroup(parent,
+				ScriptDebugPreferencesMessages.LoggingGroupLabel, 3, 1,
+				GridData.FILL_BOTH);
+		loggingBlock = new TclLoggingPathBlock();
+		loggingBlock.createControl(group, getRelevantEnvironments());
+		Map<?, ?> paths = EnvironmentPathUtils
+				.decodePaths(getString(getLogFileNamePreferenceKey()));
+		loggingBlock.setPaths(paths);
+		loggingBlock
+				.setEnableLogging(TclActiveStateDebuggerEnvironment
+						.decodeBooleans(getString(TclActiveStateDebuggerPreferencePage.LOG_ENABLE)));
+	}
+
+	@Override
+	protected void saveLoggingOptions() {
+		String loggingPaths = EnvironmentPathUtils.encodePaths(loggingBlock
+				.getPaths());
+		setString(getLogFileNamePreferenceKey(), loggingPaths);
+		setString(TclActiveStateDebuggerPreferencePage.LOG_ENABLE,
+				TclActiveStateDebuggerEnvironment.encodeBooleans(loggingBlock
+						.getEnableLogging()));
 	}
 
 	private void createPDXGroup(final Composite parent) {

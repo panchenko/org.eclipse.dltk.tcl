@@ -30,6 +30,10 @@ public interface ITclActiveStateDebuggerEnvironment {
 
 	public void setPDXPath(String path);
 
+	public boolean isLoggingEnabled();
+
+	public void setLoggingEnabled(boolean value);
+
 	public String getLoggingPath();
 
 	public void setLoggingPath(String path);

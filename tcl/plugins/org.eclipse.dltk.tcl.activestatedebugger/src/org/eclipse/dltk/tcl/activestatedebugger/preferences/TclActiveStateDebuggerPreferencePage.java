@@ -34,6 +34,10 @@ public class TclActiveStateDebuggerPreferencePage extends
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PDX_PATH_KEY);
 
+	static final PreferenceKey LOG_ENABLE = new PreferenceKey(
+			TclActiveStateDebuggerPlugin.PLUGIN_ID,
+			TclActiveStateDebuggerConstants.LOG_ENABLE_KEY);
+
 	static final PreferenceKey LOG_FILE_NAME = new PreferenceKey(
 			TclActiveStateDebuggerPlugin.PLUGIN_ID,
 			TclActiveStateDebuggerConstants.LOG_FILE_NAME);
@@ -65,7 +69,7 @@ public class TclActiveStateDebuggerPreferencePage extends
 			IStatusChangeListener newStatusChangedListener, IProject project,
 			IWorkbenchPreferenceContainer container) {
 		final PreferenceKey[] keys = new PreferenceKey[] { ENGINE_PATH,
-				PDX_PATH, LOG_FILE_NAME, INSTRUMENTATION_FEATURES,
+				PDX_PATH, LOG_ENABLE, LOG_FILE_NAME, INSTRUMENTATION_FEATURES,
 				INSTRUMENTATION_ERROR_ACTION, INSTRUMENTATION_PATTERNS,
 				PREF_SPAWNPOINTS };
 		return new TclActiveStateDebuggerBlock(newStatusChangedListener,
