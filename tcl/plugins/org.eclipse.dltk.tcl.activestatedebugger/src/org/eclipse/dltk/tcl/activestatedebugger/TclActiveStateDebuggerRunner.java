@@ -65,9 +65,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.launching.ExternalDebuggingEngineRunner#alterConfig(
-	 * org.eclipse.dltk.launching.InterpreterConfig, java.lang.String)
+	 * @see ExternalDebuggingEngineRunner#alterConfig(InterpreterConfig,String)
 	 */
 	protected InterpreterConfig alterConfig(InterpreterConfig config,
 			PreferencesLookupDelegate delegate) {
@@ -193,42 +191,35 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getDebuggingEngineId()
+	 * @see DebuggingEngineRunner#getDebuggingEngineId()
 	 */
 	protected String getDebuggingEngineId() {
 		return ENGINE_ID;
 	}
 
 	/*
-	 * @seeorg.eclipse.dltk.launching.ExternalDebuggingEngineRunner#
-	 * getDebuggingEnginePreferenceKey()
+	 * @see ExternalDebuggingEngineRunner#getDebuggingEnginePreferenceKey()
 	 */
 	protected String getDebuggingEnginePreferenceKey() {
 		return TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY;
 	}
 
 	/*
-	 * @seeorg.eclipse.dltk.launching.DebuggingEngineRunner#
-	 * getDebuggingEnginePreferenceQualifier()
+	 * @see DebuggingEngineRunner#getDebuggingEnginePreferenceQualifier()
 	 */
 	protected String getDebuggingEnginePreferenceQualifier() {
 		return TclActiveStateDebuggerPlugin.PLUGIN_ID;
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getDebugPreferenceQualifier
-	 * ()
+	 * @see DebuggingEngineRunner#getDebugPreferenceQualifier()
 	 */
 	protected String getDebugPreferenceQualifier() {
 		return TclDebugPlugin.PLUGIN_ID;
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.launching.DebuggingEngineRunner#getLogFileNamePreferenceKey
-	 * ()
+	 * @see DebuggingEngineRunner#getLogFileNamePreferenceKey()
 	 */
 	protected String getLogFileNamePreferenceKey() {
 		return TclActiveStateDebuggerConstants.LOG_FILE_NAME;
