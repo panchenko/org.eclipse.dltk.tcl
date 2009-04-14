@@ -15,13 +15,10 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.wizards.IProjectWizardLastPage;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
-import org.eclipse.dltk.ui.wizards.ProjectWizardConfigureLinkedFoldersPage;
-import org.eclipse.dltk.ui.wizards.ProjectWizardSelectLinkedFoldersPage;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
@@ -32,8 +29,6 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 	public static final String ID_WIZARD = "org.eclipse.dltk.tcl.internal.ui.wizards.TclProjectWizard"; //$NON-NLS-1$
 
 	private TclProjectWizardFirstPage fFirstPage;
-	private ProjectWizardSelectLinkedFoldersPage fLinkedSourcePage;
-	private ProjectWizardConfigureLinkedFoldersPage fConfigureFoldersPage;
 	private TclProjectWizardSecondPage fSecondPage;
 
 	private IConfigurationElement fConfigElement;
@@ -48,14 +43,6 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 		super.addPages();
 		fFirstPage = new TclProjectWizardFirstPage();
 		addPage(fFirstPage);
-		if (true) {
-			fLinkedSourcePage = new ProjectWizardSelectLinkedFoldersPage(
-					fFirstPage);
-			addPage(fLinkedSourcePage);
-			fConfigureFoldersPage = new ProjectWizardConfigureLinkedFoldersPage(
-					TclNature.NATURE_ID, fFirstPage, fLinkedSourcePage);
-		}
-		addPage(fConfigureFoldersPage);
 		fSecondPage = new TclProjectWizardSecondPage(fFirstPage);
 		addPage(fSecondPage);
 	}
@@ -75,11 +62,7 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 	}
 
 	private IProjectWizardLastPage getLastPage() {
-		if (!fFirstPage.isExternalLinked()) {
-			return fSecondPage;
-		} else {
-			return fConfigureFoldersPage;
-		}
+		return fSecondPage;
 	}
 
 	/*
@@ -130,16 +113,6 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 	}
 
 	private boolean isEnabledPage(IWizardPage page) {
-		if (!fFirstPage.isExternalLinked()) {
-			if (page instanceof ProjectWizardSelectLinkedFoldersPage
-					|| page instanceof ProjectWizardConfigureLinkedFoldersPage) {
-				return false;
-			}
-		} else {
-			if (page instanceof TclProjectWizardSecondPage) {
-				return false;
-			}
-		}
 		return true;
 	}
 }

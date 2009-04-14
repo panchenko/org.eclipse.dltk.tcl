@@ -9,15 +9,11 @@
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
  *******************************************************************************/
-/**
- * 
- */
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.swt.SWT;
@@ -29,7 +25,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
 final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
-	TclInterpreterGroup fInterpreterGroup;
+
 	private Button useAnalysis;
 	private Group packagesGroup;
 	private Label labelElement;
@@ -54,24 +50,8 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		}
 	}
 
-	protected void createInterpreterGroup(Composite parent) {
-		fInterpreterGroup = new TclInterpreterGroup(parent);
-	}
-
-	protected Observable getInterpreterGroupObservable() {
-		return fInterpreterGroup;
-	}
-
-	protected boolean supportInterpreter() {
-		return true;
-	}
-
-	protected IInterpreterInstall getInterpreter() {
-		return fInterpreterGroup.getSelectedInterpreter();
-	}
-
-	protected void handlePossibleInterpreterChange() {
-		fInterpreterGroup.handlePossibleInterpreterChange();
+	protected IInterpreterGroup createInterpreterGroup(Composite parent) {
+		return new TclInterpreterGroup(parent);
 	}
 
 	protected boolean interpeterRequired() {
@@ -105,7 +85,7 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 			}
 		};
 		fLocationGroup.addObserver(o);
-		fInterpreterGroup.addObserver(o);
+		((TclInterpreterGroup) getInterpreterGroup()).addObserver(o);
 	}
 
 	public boolean useAnalysis() {
@@ -118,7 +98,4 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		return result[0];
 	}
 
-	protected boolean isEnableLinkedProject() {
-		return false;
-	}
 }
