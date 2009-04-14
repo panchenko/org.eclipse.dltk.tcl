@@ -212,17 +212,12 @@ public class PackageRequireChecker implements IBuildParticipant,
 		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
 				&& isAutoAddPackages() && !newDependencies.isEmpty()) {
 			@SuppressWarnings("unchecked")
-			Set<String> names = InterpreterContainerHelper
+			final Set<String> names = InterpreterContainerHelper
 					.getInterpreterContainerDependencies(project);
-			Set<String> result = new HashSet<String>();
-			result.addAll(newDependencies);
-			result.addAll(names);
-
-			if (result.size() != names.size() && result.containsAll(names)) {
+			if (names.addAll(newDependencies)) {
 				InterpreterContainerHelper.setInterpreterContainerDependencies(
-						project, result);
+						project, names);
 			}
-
 		}
 	}
 
