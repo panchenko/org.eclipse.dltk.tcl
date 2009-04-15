@@ -32,6 +32,7 @@ import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.ScriptProjectUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
@@ -110,9 +111,11 @@ public class PackageRequireChecker implements IBuildParticipant,
 	}
 
 	private int buildType;
+	private boolean autoAddPackages;
 
 	public boolean beginBuild(int buildType) {
 		this.buildType = buildType;
+		this.autoAddPackages = ScriptProjectUtil.isBuilderEnabled(project);
 		if (buildType != IBuildParticipantExtension.FULL_BUILD) {
 			@SuppressWarnings("unchecked")
 			final Set<String> projectPackages = manager
@@ -297,7 +300,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 	}
 
 	private final boolean isAutoAddPackages() {
-		return true;
+		return autoAddPackages;
 	}
 
 	/**
