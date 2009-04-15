@@ -2,16 +2,16 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -29,9 +29,6 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 
 		private final IProject project;
 
-		/**
-		 * @param project
-		 */
 		public ProjectBuildJob(IProject project) {
 			super(
 					NLS
@@ -48,6 +45,25 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 			} catch (CoreException e) {
 				return e.getStatus();
 			}
+		}
+	}
+
+	private static class ProjectIndexJob extends Job {
+
+		private final IProject project;
+
+		public ProjectIndexJob(IProject project) {
+			super(
+					NLS
+							.bind(
+									TclPreferencesMessages.TclEnvironmentPropertyPage_IndexingJobName,
+									project.getName()));
+			this.project = project;
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			ProjectIndexerManager.indexProject(project);
+			return Status.OK_STATUS;
 		}
 	}
 
@@ -83,8 +99,7 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 		fEnvironments.setItems(items);
 		fEnvironments.select(selection);
 
-		final IEclipsePreferences coreNode = new ProjectScope(project)
-				.getNode(DLTKCore.PLUGIN_ID);
+		final IScriptProject scriptProject = DLTKCore.create(project);
 
 		indexerEnabled = new Button(composite, SWT.CHECK);
 		final GridData indexerData = new GridData(GridData.FILL_HORIZONTAL);
@@ -92,8 +107,8 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 		indexerEnabled.setLayoutData(indexerData);
 		indexerEnabled
 				.setText(TclPreferencesMessages.TclEnvironmentPropertyPage_IndexerEnabled);
-		indexerEnabled.setSelection(coreNode.getBoolean(
-				DLTKCore.INDEXER_ENABLED, true));
+		indexerEnabled.setSelection(!DLTKCore.DISABLED.equals(scriptProject
+				.getOption(DLTKCore.INDEXER_ENABLED, false)));
 
 		builderEnabled = new Button(composite, SWT.CHECK);
 		final GridData builderData = new GridData(GridData.FILL_HORIZONTAL);
@@ -101,8 +116,8 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 		builderEnabled.setLayoutData(indexerData);
 		builderEnabled
 				.setText(TclPreferencesMessages.TclEnvironmentPropertyPage_BuilderEnabled);
-		builderEnabled.setSelection(coreNode.getBoolean(
-				DLTKCore.BUILDER_ENABLED, true));
+		builderEnabled.setSelection(!DLTKCore.DISABLED.equals(scriptProject
+				.getOption(DLTKCore.BUILDER_ENABLED, false)));
 
 		return composite;
 	}
@@ -118,28 +133,30 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 				EnvironmentManager.setEnvironment(project,
 						environments[selection - 1]);
 			}
-			final IEclipsePreferences coreNode = new ProjectScope(project)
-					.getNode(DLTKCore.PLUGIN_ID);
-			if (indexerEnabled.getSelection()) {
-				coreNode.remove(DLTKCore.INDEXER_ENABLED);
-			} else {
-				coreNode.putBoolean(DLTKCore.INDEXER_ENABLED, false);
-			}
-			if (builderEnabled.getSelection()) {
-				final boolean wasEnabled = coreNode.getBoolean(
-						DLTKCore.BUILDER_ENABLED, true);
-				coreNode.remove(DLTKCore.BUILDER_ENABLED);
-				if (!wasEnabled) {
-					final Job job = new ProjectBuildJob(project);
-					job.schedule(500);
-				}
-			} else {
-				coreNode.putBoolean(DLTKCore.BUILDER_ENABLED, false);
-			}
-			coreNode.flush();
-		} catch (Exception e) {
+		} catch (CoreException e) {
 			// TODO
 			return false;
+		}
+		final IScriptProject scriptProject = DLTKCore.create(project);
+		final boolean newIndexer = indexerEnabled.getSelection();
+		final boolean wasIndexer = !DLTKCore.DISABLED.equals(scriptProject
+				.getOption(DLTKCore.INDEXER_ENABLED, false));
+		if (wasIndexer != newIndexer) {
+			scriptProject.setOption(DLTKCore.INDEXER_ENABLED,
+					newIndexer ? DLTKCore.ENABLED : DLTKCore.DISABLED);
+			if (newIndexer) {
+				new ProjectIndexJob(project).schedule(500);
+			}
+		}
+		final boolean newBuilder = builderEnabled.getSelection();
+		final boolean wasBuilder = !DLTKCore.DISABLED.equals(scriptProject
+				.getOption(DLTKCore.BUILDER_ENABLED, false));
+		if (wasBuilder != newBuilder) {
+			scriptProject.setOption(DLTKCore.BUILDER_ENABLED,
+					newBuilder ? DLTKCore.ENABLED : DLTKCore.DISABLED);
+			if (!newBuilder) {
+				new ProjectBuildJob(project).schedule(500);
+			}
 		}
 		return super.performOk();
 	}

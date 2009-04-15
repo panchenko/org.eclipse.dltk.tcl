@@ -3,12 +3,13 @@
  */
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -23,7 +24,6 @@ import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.dltk.ui.wizards.ProjectWizardSecondPage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.osgi.service.prefs.BackingStoreException;
 
 final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 	TclProjectWizardSecondPage(ProjectWizardFirstPage mainPage) {
@@ -62,15 +62,10 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 		final IEnvironment environment = EnvironmentManager
 				.getEnvironment(project);
 		if (environment != null && !environment.isLocal()) {
-			final IEclipsePreferences coreNode = new ProjectScope(project)
-					.getNode(DLTKCore.PLUGIN_ID);
-			coreNode.putBoolean(DLTKCore.INDEXER_ENABLED, false);
-			coreNode.putBoolean(DLTKCore.BUILDER_ENABLED, false);
-			try {
-				coreNode.flush();
-			} catch (BackingStoreException e) {
-				TclUI.error(e);
-			}
+			final Map options = new HashMap();
+			options.put(DLTKCore.INDEXER_ENABLED, DLTKCore.DISABLED);
+			options.put(DLTKCore.BUILDER_ENABLED, DLTKCore.DISABLED);
+			DLTKCore.create(project).setOptions(options);
 		}
 	}
 
