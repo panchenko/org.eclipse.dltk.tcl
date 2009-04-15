@@ -11,33 +11,16 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.preferences;
 
+import org.eclipse.dltk.tcl.internal.ui.TclCodeTemplateArea;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.TclUILanguageToolkit;
 import org.eclipse.dltk.ui.preferences.CodeTemplatesPreferencePage;
 
 public class TclCodeTemplatesPreferencePage extends CodeTemplatesPreferencePage {
 
-	public static final String PREF_ID = "org.eclipse.dltk.tcl.preferencePage.CodeTemplatePage"; //$NON-NLS-1$
-	public static final String PROP_ID = "org.eclipse.dltk.tcl.propertyPage.CodeTemplatePage"; //$NON-NLS-1$
-
 	public TclCodeTemplatesPreferencePage() {
-		super(TclUILanguageToolkit.getInstance(), TclUI.getDefault()
-				.getCodeTemplateAccess());
+		super(TclUILanguageToolkit.getInstance(), new TclCodeTemplateArea());
 		setPreferenceStore(TclUI.getDefault().getPreferenceStore());
-	}
-
-	/*
-	 * @see PropertyAndPreferencePage#getPreferencePageId()
-	 */
-	protected String getPreferencePageId() {
-		return PREF_ID;
-	}
-
-	/*
-	 * @see PropertyAndPreferencePage#getPropertyPageId()
-	 */
-	protected String getPropertyPageId() {
-		return PROP_ID;
 	}
 
 }

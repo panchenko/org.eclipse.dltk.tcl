@@ -20,6 +20,7 @@ import org.eclipse.dltk.tcl.internal.ui.text.TclTextTools;
 import org.eclipse.dltk.ui.DLTKUILanguageManager;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
 import org.eclipse.dltk.ui.text.templates.ICodeTemplateAccess;
+import org.eclipse.dltk.ui.text.templates.ITemplateAccess;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -58,8 +59,8 @@ public class TclUI extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			if (codeTemplateAccess != null) {
-				if (codeTemplateAccess instanceof ICodeTemplateAccess.ICodeTemplateAccessInternal) {
-					((ICodeTemplateAccess.ICodeTemplateAccessInternal) codeTemplateAccess)
+				if (codeTemplateAccess instanceof ITemplateAccess.ITemplateAccessInternal) {
+					((ITemplateAccess.ITemplateAccessInternal) codeTemplateAccess)
 							.dispose();
 				}
 				codeTemplateAccess = null;

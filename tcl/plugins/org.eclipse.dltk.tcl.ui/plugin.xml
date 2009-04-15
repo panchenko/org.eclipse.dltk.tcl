@@ -172,13 +172,17 @@
           name="%TclTemplateContext.name">
     </contextType>
     <contextType
-          class="org.eclipse.jface.text.templates.TemplateContextType"
+          class="org.eclipse.dltk.ui.text.templates.SourceModuleTemplateContextType"
           id="org.eclipse.dltk.tcl.text.template.type.tcl"
-          name="Tcl File">
+          name="%TclFileContextType.name">
     </contextType>
     <include
           file="templates/templates.xml"
           translations="templates/templates.properties">
+    </include> 
+    <include
+          file="templates/file-templates.xml"
+          translations="templates/file-templates.properties">
     </include> 
  </extension>
  <extension

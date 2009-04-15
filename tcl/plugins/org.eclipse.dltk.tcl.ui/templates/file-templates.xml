@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<template name="%tclfile.template.name" id="org.eclipse.dltk.tcl.text.templates.tcl" description="Tcl File" context="org.eclipse.dltk.tcl.text.template.type.tcl" enabled="true">#!/bin/tclsh
+</template>
+
+<template name="%wishfile.template.name" id="org.eclipse.dltk.tcl.text.templates.wish" description="Wish File" context="org.eclipse.dltk.tcl.text.template.type.tcl" enabled="true">#!/bin/wish
+</template>
+
+</templates>

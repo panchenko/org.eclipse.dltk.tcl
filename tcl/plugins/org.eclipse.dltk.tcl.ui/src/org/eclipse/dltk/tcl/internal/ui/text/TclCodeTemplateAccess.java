@@ -45,7 +45,7 @@ public class TclCodeTemplateAccess extends CodeTemplateAccess {
 
 	public ICodeTemplateCategory[] getCategories() {
 		if (categories == null) {
-			Iterator i = getCodeTemplateContextRegistry().contextTypes();
+			Iterator i = getContextTypeRegistry().contextTypes();
 			List contextTypes = new ArrayList();
 			while (i.hasNext()) {
 				contextTypes.add(i.next());

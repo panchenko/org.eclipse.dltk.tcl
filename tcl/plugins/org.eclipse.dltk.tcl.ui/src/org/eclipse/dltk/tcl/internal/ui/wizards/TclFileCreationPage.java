@@ -10,8 +10,9 @@
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.internal.ui.TclCodeTemplateArea;
+import org.eclipse.dltk.ui.text.templates.ICodeTemplateArea;
 import org.eclipse.dltk.ui.wizards.NewSourceModulePage;
-
 
 public class TclFileCreationPage extends NewSourceModulePage {
 
@@ -23,7 +24,37 @@ public class TclFileCreationPage extends NewSourceModulePage {
 		return "This wizard creates a new Tcl file.";
 	}
 
-	protected String getPageTitle() {		
+	protected String getPageTitle() {
 		return "Create new Tcl file";
+	}
+
+	private final ICodeTemplateArea codeTemplateArea = new TclCodeTemplateArea();
+
+	/*
+	 * @see NewSourceModulePage#getCodeTemplateArea()
+	 */
+	protected ICodeTemplateArea getTemplateArea() {
+		return codeTemplateArea;
+	}
+
+	/*
+	 * @see NewSourceModulePage#getCodeTemplateContextTypes()
+	 */
+	protected String[] getCodeTemplateContextTypeIds() {
+		return new String[] { "org.eclipse.dltk.tcl.text.template.type.tcl" }; //$NON-NLS-1$
+	}
+
+	/*
+	 * @see NewSourceModulePage#getDefaultCodeTemplateId()
+	 */
+	protected String getDefaultCodeTemplateId() {
+		return "org.eclipse.dltk.tcl.text.templates.tcl"; //$NON-NLS-1$
+	}
+
+	/**
+	 * @return the name of the template used in the previous dialog invocation.
+	 */
+	protected String getLastUsedTemplateName() {
+		return null;
 	}
 }
