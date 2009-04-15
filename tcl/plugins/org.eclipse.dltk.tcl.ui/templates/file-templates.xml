@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-<template name="%tclfile.template.name" id="org.eclipse.dltk.tcl.text.templates.tcl" description="Tcl File" context="org.eclipse.dltk.tcl.text.template.type.tcl" enabled="true">#!/bin/tclsh
+<template name="%tclfile.template.name" id="org.eclipse.dltk.tcl.text.templates.tcl" description="%tclfile.template.description" context="org.eclipse.dltk.tcl.text.template.type.tcl" enabled="true">#!/bin/sh
+# ${file_name} \
+exec tclsh "$$0" $${1+"$$@"}
 </template>
 
-<template name="%wishfile.template.name" id="org.eclipse.dltk.tcl.text.templates.wish" description="Wish File" context="org.eclipse.dltk.tcl.text.template.type.tcl" enabled="true">#!/bin/wish
+<template name="%wishfile.template.name" id="org.eclipse.dltk.tcl.text.templates.wish" description="%wishfile.template.description" context="org.eclipse.dltk.tcl.text.template.type.tcl" enabled="true">#!/bin/sh
+# ${file_name} \
+exec wish "$$0" $${1+"$$@"}
+</template>
+
+<template name="%tclfile.template.env.name" id="org.eclipse.dltk.tcl.text.templates.tcl.env" description="%tclfile.template.env.description" context="org.eclipse.dltk.tcl.text.template.type.tcl" enabled="true">#!/bin/env tclsh
 </template>
 
 </templates>
