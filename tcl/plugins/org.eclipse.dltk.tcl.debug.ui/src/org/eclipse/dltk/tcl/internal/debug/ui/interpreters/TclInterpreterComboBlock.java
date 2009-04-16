@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
@@ -53,6 +54,12 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
+/**
+ * FIXME this class is used on Interpreter tab in Launch Configurations and
+ * AbstractInterpreterContainerWizardPage. Configured packages are saved only on
+ * the later on via getEntry() method. On Interpreter tab packages could be
+ * modified but value is not saved anywhere.
+ */
 public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	protected TclInterpreterComboBlock(
 			IMainLaunchConfigurationTabListenerManager tab) {
@@ -96,8 +103,6 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 	private class PackagesContentProvider implements ITreeContentProvider {
 
-		private final Object[] NONE_OBJECT = new Object[0];
-
 		public void dispose() {
 		}
 
@@ -108,7 +113,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			if (parentElement instanceof Set) {
 				return getElements(parentElement);
 			}
-			return NONE_OBJECT;
+			return CharOperation.NO_STRINGS;
 		}
 
 		public Object getParent(Object element) {
@@ -123,7 +128,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			if (inputElement instanceof Set) {
 				return packages.toArray();
 			}
-			return NONE_OBJECT;
+			return CharOperation.NO_STRINGS;
 		}
 	}
 
@@ -141,11 +146,14 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 	public void createControl(Composite ancestor) {
 		super.createControl(ancestor);
-		Composite composite = new Composite(ancestor, SWT.NONE);
-		composite.setLayoutData(new GridData(GridData.FILL, SWT.FILL, true,
-				true));
-		org.eclipse.swt.layout.GridLayout gridLayout = new org.eclipse.swt.layout.GridLayout(
-				2, false);
+		// use Composite created in super to place additional controls.
+		final Composite mainComposite = (Composite) getControl();
+		Composite composite = new Composite(mainComposite, SWT.NONE);
+		GridData compositeData = new GridData(GridData.FILL, SWT.FILL, true,
+				true);
+		compositeData.horizontalSpan = ((GridLayout) mainComposite.getLayout()).numColumns;
+		composite.setLayoutData(compositeData);
+		GridLayout gridLayout = new GridLayout(2, false);
 		composite.setLayout(gridLayout);
 
 		this.fElements = new TreeViewer(composite);
