@@ -30,9 +30,8 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		return new TclInterpreterLibraryBlock(dialog);
 	}
 
-	protected AbstractInterpreterEnvironmentVariablesBlock createEnvironmentVariablesBlock(
-			AddScriptInterpreterDialog dialog) {
-		return new TclInterpreterEnvironmentVariablesBlock(dialog);
+	protected AbstractInterpreterEnvironmentVariablesBlock createEnvironmentVariablesBlock() {
+		return new TclInterpreterEnvironmentVariablesBlock(this);
 	}
 
 	protected boolean useInterpreterArgs() {
