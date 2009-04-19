@@ -26,9 +26,9 @@ import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.NopTypeNameRequestor;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.TypeNameRequestor;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.validators.TclCheckBuildParticipant;
 import org.eclipse.dltk.tcl.parser.PerformanceMonitor;
@@ -130,12 +130,9 @@ public class ChecksProjectTest extends TestCase {
 			engine.searchAllTypeNames(null, "!@$#!@".toCharArray(),
 					SearchPattern.R_PATTERN_MATCH
 							| SearchPattern.R_CASE_SENSITIVE,
-					IDLTKSearchConstants.TYPE, scope, new TypeNameRequestor() {
-						public void acceptType(int modifiers,
-								char[] packageName, char[] simpleTypeName,
-								char[][] enclosingTypeNames, String path) {
-						}
-					}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+					IDLTKSearchConstants.TYPE, scope,
+					new NopTypeNameRequestor(),
+					IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 		} catch (CoreException e) {
 		}
 	}
