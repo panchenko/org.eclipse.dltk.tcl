@@ -168,7 +168,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		final List<TclCommand> commands = parser.parse(new String(contents),
 				null, processor);
 		packageCollector.getRequireRefs().clear();
-		packageCollector.process(commands);
+		packageCollector.process(commands, context.getSourceModule());
 	}
 
 	public void build(IBuildContext context) throws CoreException {
@@ -177,7 +177,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 			return;
 		}
 		packageCollector.getRequireRefs().clear();
-		packageCollector.process(statements);
+		packageCollector.process(statements, context.getSourceModule());
 		if (!packageCollector.getRequireRefs().isEmpty()) {
 			modules.add(new ModuleInfo(context.getSourceModule()
 					.getElementName(), context.getLineTracker(), context
