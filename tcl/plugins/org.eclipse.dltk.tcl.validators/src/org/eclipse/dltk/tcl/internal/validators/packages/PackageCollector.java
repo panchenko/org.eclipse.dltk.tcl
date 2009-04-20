@@ -16,13 +16,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
-import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
@@ -41,12 +39,8 @@ public class PackageCollector extends TclVisitor {
 	private final Set<String> requirePackages = new HashSet<String>();
 
 	private final Set<String> packagesProvided = new HashSet<String>();
-	private final Set<String> packagesFromPackages = new HashSet<String>();
 
-	private ISourceModule currentModule;
-
-	public void process(List<TclCommand> declaration, ISourceModule module) {
-		this.currentModule = module;
+	public void process(List<TclCommand> declaration) {
 		try {
 			TclParserUtils.traverse(declaration, this);
 		} catch (Exception e) {
@@ -105,11 +99,7 @@ public class PackageCollector extends TclVisitor {
 			}
 			String pkg = pkgName.getValue();
 			if (PackagesManager.isValidPackageName(pkg)) {
-				if (currentModule instanceof TclPackageSourceModule) {
-					packagesFromPackages.add(pkg);
-				} else {
-					packagesProvided.add(pkg);
-				}
+				packagesProvided.add(pkg);
 			}
 		}
 	}
@@ -126,10 +116,6 @@ public class PackageCollector extends TclVisitor {
 	 */
 	public Set<String> getRequirePackages() {
 		return requirePackages;
-	}
-
-	public Set<String> getPacakgesFromPacakges() {
-		return packagesFromPackages;
 	}
 
 	/**
