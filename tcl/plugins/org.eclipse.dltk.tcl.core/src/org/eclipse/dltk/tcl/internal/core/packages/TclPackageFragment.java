@@ -87,7 +87,7 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 			ModelElement classFile = (ModelElement) getScriptFolder(classFileName);
 			return classFile.getHandleFromMemento(memento, owner);
 		case JEM_USER_ELEMENT:
-			return MementoModelElementUtil.getHandleFromMememento(memento,
+			return MementoModelElementUtil.getHandleFromMemento(memento,
 					this, owner);
 		}
 		return null;
