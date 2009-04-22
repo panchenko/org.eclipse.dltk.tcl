@@ -30,6 +30,7 @@ import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -42,6 +43,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -66,7 +68,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		super(tab);
 	}
 
-	private Set packages = new HashSet();
+	private Set<String> packages = new HashSet<String>();
 
 	public class PackagesLabelProvider extends LabelProvider {
 
@@ -81,9 +83,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 									LocalEnvironment.ENVIRONMENT_ID));
 				}
 				if (install != null) {
-					final Set names = PackagesManager.getInstance()
-							.getPackageNames(install);
-					if (!names.contains(packageName)) {
+					final Set<PackageInfo> names = PackagesManager
+							.getInstance().getPackageNames(install);
+					if (!names.contains(new PackagesManager.PackageInfo(
+							packageName))) {
 						return DLTKPluginImages.DESC_OBJS_ERROR.createImage();
 					}
 				}
@@ -203,6 +206,16 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 						}
 					}
 				});
+		this.fElements.setComparator(new ViewerComparator() {
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+
+				if (e1 instanceof String && e2 instanceof String) {
+					return ((String) e1).compareToIgnoreCase((String) e2);
+				}
+				return super.compare(viewer, e1, e2);
+			}
+		});
 		remove.setEnabled(false);
 
 		this.addPropertyChangeListener(new IPropertyChangeListener() {
@@ -263,9 +276,13 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 							LocalEnvironment.ENVIRONMENT_ID));
 		}
 		if (install != null) {
-			final List names = new ArrayList(PackagesManager.getInstance()
-					.getPackageNames(install));
-			Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
+			List<PackageInfo> packages = new ArrayList<PackageInfo>(
+					PackagesManager.getInstance().getPackageNames(install));
+			final List<String> names = new ArrayList<String>();
+			for (PackageInfo info : packages) {
+				names.add(info.getPackageName());
+			}
+			Collections.sort(names);
 			ListDialog dialog = new ListDialog(this.fElements.getControl()
 					.getShell());
 			dialog.setContentProvider(new IStructuredContentProvider() {

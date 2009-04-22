@@ -15,6 +15,7 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.wizards.IBuildpathContainerPageExtension;
 import org.eclipse.dltk.ui.wizards.NewElementWizardPage;
@@ -111,11 +112,9 @@ public class TclPackagesContainerPage extends NewElementWizardPage implements
 
 	public IBuildpathEntry getSelection() {
 		IBuildpathEntry createPackagesContainer = InterpreterContainerHelper
-				.createPackagesContainer(
-						this.packages,
-						new Path(
-								InterpreterContainerHelper.CONTAINER_PATH)
-								.append(this.scriptProject.getElementName()));
+				.createPackagesContainer(this.packages, new Path(
+						InterpreterContainerHelper.CONTAINER_PATH)
+						.append(this.scriptProject.getElementName()));
 		return createPackagesContainer;
 	}
 
@@ -216,8 +215,12 @@ public class TclPackagesContainerPage extends NewElementWizardPage implements
 			}
 		}
 		if (install != null) {
-			final Set names = PackagesManager.getInstance().getPackageNames(
-					install);
+			Set<PackageInfo> packages = PackagesManager.getInstance()
+					.getPackageNames(install);
+			final Set<String> names = new HashSet<String>();
+			for (PackageInfo info : packages) {
+				names.add(info.getPackageName());
+			}
 			ListDialog dialog = new ListDialog(this.fElements.getControl()
 					.getShell());
 			dialog.setContentProvider(new IStructuredContentProvider() {
