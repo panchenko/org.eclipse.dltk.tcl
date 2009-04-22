@@ -47,6 +47,7 @@ import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.internal.core.packages.Messages;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclParser;
@@ -64,23 +65,22 @@ public class PackageRequireChecker implements IBuildParticipant,
 	private final PackagesManager manager = PackagesManager.getInstance();
 	private final PackageCollector packageCollector = new PackageCollector();
 
-	private final Set<String> knownPackageNames;
+	private final Set<PackageInfo> knownPackageNames;
 	private final Set<IPath> buildpath;
 	private final Map<String, Boolean> availabilityCache = new HashMap<String, Boolean>();
 
 	private final List<ModuleInfo> modules = new ArrayList<ModuleInfo>();
 
-	private final Set<String> providedByRequiredProjects = new HashSet<String>();
+	private final Set<PackageInfo> providedByRequiredProjects = new HashSet<PackageInfo>();
 
 	private static class ModuleInfo {
 		final String name;
 		final ISourceLineTracker lineTracker;
-		final List<PackageRequireRef> requireDirectives;
+		final List<PackageInfo> requireDirectives;
 		final IProblemReporter reporter;
 
 		public ModuleInfo(String moduleName, ISourceLineTracker codeModel,
-				IProblemReporter reporter,
-				List<PackageRequireRef> requireDirectives) {
+				IProblemReporter reporter, List<PackageInfo> requireDirectives) {
 			this.name = moduleName;
 			this.lineTracker = codeModel;
 			this.reporter = reporter;
@@ -95,7 +95,6 @@ public class PackageRequireChecker implements IBuildParticipant,
 	 * @throws IllegalStateException
 	 *             if associated interpreter could not be found
 	 */
-	@SuppressWarnings("unchecked")
 	public PackageRequireChecker(IScriptProject project) throws CoreException,
 			IllegalStateException {
 		this.project = project;
@@ -117,8 +116,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		this.buildType = buildType;
 		this.autoAddPackages = ScriptProjectUtil.isBuilderEnabled(project);
 		if (buildType != IBuildParticipantExtension.FULL_BUILD) {
-			@SuppressWarnings("unchecked")
-			final Set<String> projectPackages = manager
+			final Set<PackageInfo> projectPackages = manager
 					.getInternalPackageNames(install, project);
 			packageCollector.getPackagesProvided().addAll(projectPackages);
 		}
@@ -143,8 +141,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 				final IProject project = workspaceRoot.getProject(path
 						.lastSegment());
 				if (project.exists()) {
-					@SuppressWarnings("unchecked")
-					final Set<String> projectPackages = manager
+					final Set<PackageInfo> projectPackages = manager
 							.getInternalPackageNames(install, project);
 					providedByRequiredProjects.addAll(projectPackages);
 				}
@@ -168,7 +165,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		final List<TclCommand> commands = parser.parse(new String(contents),
 				null, processor);
 		packageCollector.getRequireRefs().clear();
-		packageCollector.process(commands);
+		packageCollector.process(commands, context.getSourceModule());
 	}
 
 	public void build(IBuildContext context) throws CoreException {
@@ -177,11 +174,11 @@ public class PackageRequireChecker implements IBuildParticipant,
 			return;
 		}
 		packageCollector.getRequireRefs().clear();
-		packageCollector.process(statements);
+		packageCollector.process(statements, context.getSourceModule());
 		if (!packageCollector.getRequireRefs().isEmpty()) {
 			modules.add(new ModuleInfo(context.getSourceModule()
 					.getElementName(), context.getLineTracker(), context
-					.getProblemReporter(), new ArrayList<PackageRequireRef>(
+					.getProblemReporter(), new ArrayList<PackageInfo>(
 					packageCollector.getRequireRefs())));
 		}
 	}
@@ -194,7 +191,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		}
 		monitor.subTask(Messages.TclCheckBuilder_retrievePackages);
 		// initialize manager caches after they are collected
-		final Set<String> requiredPackages = packageCollector
+		final Set<PackageInfo> requiredPackages = packageCollector
 				.getRequirePackages();
 		if (!requiredPackages.isEmpty()) {
 			manager.getPathsForPackages(install, requiredPackages);
@@ -206,7 +203,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 		for (ModuleInfo moduleInfo : modules) {
 			monitor.subTask(NLS.bind(Messages.TclCheckBuilder_processing,
 					moduleInfo.name, Integer.toString(remainingWork)));
-			for (PackageRequireRef ref : moduleInfo.requireDirectives) {
+			for (PackageInfo ref : moduleInfo.requireDirectives) {
 				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker,
 						newDependencies);
 			}
@@ -244,28 +241,29 @@ public class PackageRequireChecker implements IBuildParticipant,
 		return buildpath;
 	}
 
-	private void reportPackageProblem(PackageRequireRef pkg,
+	private void reportPackageProblem(PackageInfo pkg,
 			IProblemReporter reporter, String message, String pkgName,
 			ISourceLineTracker lineTracker) {
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_REQUIRED_PACKAGE, new String[] { pkgName },
-				ProblemSeverities.Error, pkg.start, pkg.end, lineTracker
-						.getLineNumberOfOffset(pkg.start)));
+				ProblemSeverities.Error, pkg.getStart(), pkg.getEnd(),
+				lineTracker.getLineNumberOfOffset(pkg.getStart())));
 	}
 
-	private void checkPackage(PackageRequireRef pkg, IProblemReporter reporter,
+	private void checkPackage(PackageInfo pkg, IProblemReporter reporter,
 			ISourceLineTracker lineTracker, Set<String> newDependencies) {
-		final String packageName = pkg.name;
+		final String packageName = pkg.getPackageName();
 
-		if (packageCollector.getPackagesProvided().contains(packageName)) {
+		if (packageCollector.getPackagesProvided().contains(
+				new PackageInfo(packageName))) {
 			return;
 		}
-		if (providedByRequiredProjects.contains(packageName)) {
+		if (providedByRequiredProjects.contains(new PackageInfo(packageName))) {
 			return;
 		}
 
 		// Report unknown packages
-		if (!knownPackageNames.contains(packageName)) {
+		if (!knownPackageNames.contains(new PackageInfo(packageName))) {
 			reportPackageProblem(pkg, reporter, NLS.bind(
 					Messages.TclCheckBuilder_unknownPackage, packageName),
 					packageName, lineTracker);
@@ -283,7 +281,6 @@ public class PackageRequireChecker implements IBuildParticipant,
 			newDependencies.add(packageName);
 		}
 
-		@SuppressWarnings("unchecked")
 		final Set<String> dependencies = manager.getDependencies(packageName,
 				install).keySet();
 		for (String dependencyName : dependencies) {
@@ -315,11 +312,12 @@ public class PackageRequireChecker implements IBuildParticipant,
 		if (result != null) {
 			return result.booleanValue();
 		}
-		if (packageCollector.getPackagesProvided().contains(packageName)) {
+		if (packageCollector.getPackagesProvided().contains(
+				new PackageInfo(packageName))) {
 			availabilityCache.put(packageName, Boolean.TRUE);
 			return true;
 		}
-		if (providedByRequiredProjects.contains(packageName)) {
+		if (providedByRequiredProjects.contains(new PackageInfo(packageName))) {
 			availabilityCache.put(packageName, Boolean.TRUE);
 			return true;
 		}

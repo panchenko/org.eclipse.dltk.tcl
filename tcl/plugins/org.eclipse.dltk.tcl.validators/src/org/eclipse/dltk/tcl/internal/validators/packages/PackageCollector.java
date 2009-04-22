@@ -16,11 +16,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
@@ -34,13 +36,15 @@ public class PackageCollector extends TclVisitor {
 	static final String IFNEEDED = "ifneeded"; //$NON-NLS-1$
 	static final String EXACT = "-exact"; //$NON-NLS-1$
 
-	private final List<PackageRequireRef> requireRefs = new ArrayList<PackageRequireRef>();
+	private final List<PackageInfo> requireRefs = new ArrayList<PackageInfo>();
 
-	private final Set<String> requirePackages = new HashSet<String>();
+	private final Set<PackageInfo> requirePackages = new HashSet<PackageInfo>();
+	private final Set<PackageInfo> packagesProvided = new HashSet<PackageInfo>();
 
-	private final Set<String> packagesProvided = new HashSet<String>();
+	private ISourceModule currentModule;
 
-	public void process(List<TclCommand> declaration) {
+	public void process(List<TclCommand> declaration, ISourceModule module) {
+		this.currentModule = module;
 		try {
 			TclParserUtils.traverse(declaration, this);
 		} catch (Exception e) {
@@ -87,9 +91,13 @@ public class PackageCollector extends TclVisitor {
 				packageName = pkgName.getValue();
 			}
 			if (PackagesManager.isValidPackageName(packageName)) {
-				requireRefs.add(new PackageRequireRef(packageName, command
-						.getStart(), command.getEnd()));
-				requirePackages.add(packageName);
+				PackageInfo info = new PackageInfo(packageName, null,
+						currentModule);
+				info.setStart(command.getStart());
+				info.setEnd(command.getEnd());
+				requireRefs.add(info);
+				requirePackages.add(new PackageInfo(packageName, null,
+						currentModule));
 			}
 		} else if (IFNEEDED.equalsIgnoreCase(keyword)
 				|| PROVIDE.equalsIgnoreCase(keyword)) {
@@ -99,7 +107,7 @@ public class PackageCollector extends TclVisitor {
 			}
 			String pkg = pkgName.getValue();
 			if (PackagesManager.isValidPackageName(pkg)) {
-				packagesProvided.add(pkg);
+				packagesProvided.add(new PackageInfo(pkg, null, currentModule));
 			}
 		}
 	}
@@ -107,21 +115,21 @@ public class PackageCollector extends TclVisitor {
 	/**
 	 * @return the packagesRequired
 	 */
-	public List<PackageRequireRef> getRequireRefs() {
+	public List<PackageInfo> getRequireRefs() {
 		return requireRefs;
 	}
 
 	/**
 	 * @return the requirePackages
 	 */
-	public Set<String> getRequirePackages() {
+	public Set<PackageInfo> getRequirePackages() {
 		return requirePackages;
 	}
 
 	/**
 	 * @return the packagesProvided
 	 */
-	public Set<String> getPackagesProvided() {
+	public Set<PackageInfo> getPackagesProvided() {
 		return packagesProvided;
 	}
 }
