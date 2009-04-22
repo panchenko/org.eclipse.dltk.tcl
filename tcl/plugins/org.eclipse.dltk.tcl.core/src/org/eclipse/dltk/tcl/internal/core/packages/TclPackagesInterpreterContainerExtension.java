@@ -22,6 +22,7 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
 
 public class TclPackagesInterpreterContainerExtension implements
 		IInterpreterContainerExtension {
@@ -55,8 +56,10 @@ public class TclPackagesInterpreterContainerExtension implements
 			}
 		}
 		if (install != null) {
-			Set packages = InterpreterContainerHelper
+			Set packagesOld = InterpreterContainerHelper
 					.getInterpreterContainerDependencies(project);
+			Set<PackageInfo> packages = PackageUtils.getNewPackagesFromOld(
+					packagesOld, install);
 			if (packages.size() == 0) {
 				return;
 			}

@@ -40,16 +40,12 @@ public class TclPackagesModelProvider implements IModelProvider {
 			}
 			Set<String> set = InterpreterContainerHelper
 					.getInterpreterContainerDependencies(project);
-			Set<PackageInfo> packages = new HashSet<PackageInfo>();
-			PackagesManager manager = PackagesManager.getInstance();
-			Set<PackageInfo> names = manager.getPackageNames(install);
-			for (PackageInfo packageInfo : names) {
-				if (set.contains(packageInfo.getPackageName())) {
-					packages.add(packageInfo);
-				}
-			}
-			manager.getPathsForPackages(install, packages);
-			manager.getPathsForPackagesWithDeps(install, packages);
+			Set<PackageInfo> packages = PackageUtils.getNewPackagesFromOld(set,
+					install);
+			PackagesManager.getInstance()
+					.getPathsForPackages(install, packages);
+			PackagesManager.getInstance().getPathsForPackagesWithDeps(install,
+					packages);
 			for (String packageName : set) {
 				TclPackageFragment fragment = new TclPackageFragment(
 						(ScriptProject) parentElement, packageName, install);
