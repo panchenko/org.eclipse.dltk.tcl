@@ -11,9 +11,13 @@ package org.eclipse.dltk.tcl.internal.ui;
 
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.core.TclConstants;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
 import org.eclipse.dltk.tcl.internal.ui.text.SimpleTclSourceViewerConfiguration;
 import org.eclipse.dltk.ui.AbstractDLTKUILanguageToolkit;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
@@ -48,6 +52,29 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 			}
 			buf.append(s);
 		}
+
+//		public void getProjectFragmentLabel(IProjectFragment root, long flags,
+//				StringBuffer buf) {
+//			if (root instanceof TclPackagesFragment) {
+//				buf.append("Packages");
+//				return;
+//			}
+//			super.getProjectFragmentLabel(root, flags, buf);
+//		}
+
+//		protected void getScriptFolderLabel(IScriptFolder folder,
+//				StringBuffer buf) {
+//			if (folder instanceof TclPackageElement) {
+//				TclPackageElement pkg = (TclPackageElement) folder;
+//				buf.append(pkg.getPackageName());
+//				if (pkg.getVersion() != null) {
+//					buf.append(" ").append(pkg.getVersion());
+//				}
+//
+//				return;
+//			}
+//			super.getScriptFolderLabel(folder, buf);
+//		}
 
 		protected char getTypeDelimiter() {
 			return '$';
