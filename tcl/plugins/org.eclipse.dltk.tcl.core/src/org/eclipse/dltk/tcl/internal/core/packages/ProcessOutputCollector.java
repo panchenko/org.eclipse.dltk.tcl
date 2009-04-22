@@ -51,7 +51,7 @@ public class ProcessOutputCollector {
 
 		final InputStream stream;
 		final String endOfStreamMarker;
-		final List output = new ArrayList();
+		final List<String> output = new ArrayList<String>();
 
 		/**
 		 * @param stream
@@ -84,7 +84,7 @@ public class ProcessOutputCollector {
 		}
 	}
 
-	public static List execute(Process process) {
+	public static List<String> execute(Process process) {
 		try {
 			process.getOutputStream().close();
 		} catch (Exception e) {

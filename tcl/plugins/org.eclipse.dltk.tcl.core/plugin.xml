@@ -188,6 +188,14 @@
             class="org.eclipse.dltk.tcl.internal.core.TclCorePreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.dltk.core.model">
+      <model
+            class="org.eclipse.dltk.tcl.internal.core.packages.TclPackagesModelProvider"
+            id="org.eclipse.dltk.tcl.core.packages"
+            language="org.eclipse.dltk.tcl.core.nature">
+      </model>
+   </extension>
    <!--extension
          point="org.eclipse.dltk.core.buildpathContainerInitializer">
       <buildpathContainerInitializer

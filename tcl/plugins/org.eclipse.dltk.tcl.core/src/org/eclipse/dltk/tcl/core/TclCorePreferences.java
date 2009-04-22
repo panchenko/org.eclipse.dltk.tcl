@@ -25,4 +25,6 @@ public class TclCorePreferences {
 
 	public static final char CHECK_CONTENT_EXCLUDE_SEPARATOR = ';';
 
+	public static boolean USE_PACKAGE_CONCEPT = true;
+
 }

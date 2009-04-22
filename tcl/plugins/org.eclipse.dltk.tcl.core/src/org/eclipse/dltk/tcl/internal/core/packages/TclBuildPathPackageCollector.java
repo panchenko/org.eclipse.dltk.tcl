@@ -24,9 +24,9 @@ import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 
 public class TclBuildPathPackageCollector extends ASTVisitor {
 
-	private final List requireDirectives = new ArrayList();
-	private final Set packagesRequired = new HashSet();
-	private final Set packagesProvided = new HashSet();
+	private final List<TclPackageDeclaration> requireDirectives = new ArrayList<TclPackageDeclaration>();
+	private final Set<String> packagesRequired = new HashSet<String>();
+	private final Set<String> packagesProvided = new HashSet<String>();
 
 	public void process(ModuleDeclaration declaration) {
 		try {
@@ -56,21 +56,21 @@ public class TclBuildPathPackageCollector extends ASTVisitor {
 	/**
 	 * @return the requireDirectives
 	 */
-	public List getRequireDirectives() {
+	public List<TclPackageDeclaration> getRequireDirectives() {
 		return requireDirectives;
 	}
 
 	/**
 	 * @return the packagesRequired
 	 */
-	public Set getPackagesRequired() {
+	public Set<String> getPackagesRequired() {
 		return packagesRequired;
 	}
 
 	/**
 	 * @return the packagesProvided
 	 */
-	public Set getPackagesProvided() {
+	public Set<String> getPackagesProvided() {
 		return packagesProvided;
 	}
 

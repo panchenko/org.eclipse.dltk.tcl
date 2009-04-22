@@ -21,6 +21,7 @@ import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.core.TclCorePreferences;
 
 public class TclPackagesInterpreterContainerExtension implements
 		IInterpreterContainerExtension {
@@ -31,6 +32,9 @@ public class TclPackagesInterpreterContainerExtension implements
 	}
 
 	public void processEntres(IScriptProject project, List buildpathEntries) {
+		if (TclCorePreferences.USE_PACKAGE_CONCEPT) {
+			return;
+		}
 		IPath[] locations = null;
 		IInterpreterInstall install = null;
 		try {

@@ -68,6 +68,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnVari
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
 import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
+import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinUtils;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
@@ -298,16 +299,16 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 			if (install != null) {
-				Set packageNames = PackagesManager.getInstance()
+				Set<PackageInfo> packageNames = PackagesManager.getInstance()
 						.getPackageNames(install);
-				Set names = PackagesManager.getInstance()
+				Set<PackageInfo> names = PackagesManager.getInstance()
 						.getInternalPackageNames(install, this.scriptProject);
 				packageNames.addAll(names);
 				List k = new ArrayList();
 				String prefix = new String(token);
-				for (Iterator iterator = packageNames.iterator(); iterator
+				for (Iterator<PackageInfo> iterator = packageNames.iterator(); iterator
 						.hasNext();) {
-					String kkw = (String) iterator.next();
+					String kkw = iterator.next().getPackageName();
 					if (kkw.indexOf('$') == -1) {
 						if (kkw.startsWith(prefix)) {
 							k.add(kkw);
