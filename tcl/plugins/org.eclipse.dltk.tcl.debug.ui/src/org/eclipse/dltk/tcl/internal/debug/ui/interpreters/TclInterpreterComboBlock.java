@@ -29,8 +29,7 @@ import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -83,10 +82,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 									LocalEnvironment.ENVIRONMENT_ID));
 				}
 				if (install != null) {
-					final Set<PackageInfo> names = PackagesManager
-							.getInstance().getPackageNames(install);
-					if (!names.contains(new PackagesManager.PackageInfo(
-							packageName))) {
+					final Set<String> names = TclPackagesManager
+							.getPackageInfosAsString(install);
+
+					if (!names.contains(packageName)) {
 						return DLTKPluginImages.DESC_OBJS_ERROR.createImage();
 					}
 				}
@@ -276,12 +275,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 							LocalEnvironment.ENVIRONMENT_ID));
 		}
 		if (install != null) {
-			List<PackageInfo> packages = new ArrayList<PackageInfo>(
-					PackagesManager.getInstance().getPackageNames(install));
+			Set<String> packages = TclPackagesManager
+					.getPackageInfosAsString(install);
 			final List<String> names = new ArrayList<String>();
-			for (PackageInfo info : packages) {
-				names.add(info.getPackageName());
-			}
+			names.addAll(packages);
 			Collections.sort(names);
 			ListDialog dialog = new ListDialog(this.fElements.getControl()
 					.getShell());

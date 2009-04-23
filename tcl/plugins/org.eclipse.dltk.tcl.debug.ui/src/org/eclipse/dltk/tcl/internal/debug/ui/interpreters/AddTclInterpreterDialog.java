@@ -15,7 +15,7 @@ import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialo
 import org.eclipse.dltk.internal.debug.ui.interpreters.IAddInterpreterDialogRequestor;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 import org.eclipse.swt.widgets.Shell;
 
 public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
@@ -48,7 +48,7 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		// interpreter.
 		IInterpreterInstall install = getLastInterpreterInstall();
 		if (install != null) {
-			PackagesManager.getInstance().removeInterprterInfo(install);
+			TclPackagesManager.removeInterpreterInfo(install);
 		}
 	}
 
