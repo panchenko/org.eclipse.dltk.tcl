@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
@@ -28,10 +27,8 @@ import org.eclipse.dltk.internal.launching.AbstractInterpreterInstallType;
 import org.eclipse.dltk.internal.launching.InterpreterMessages;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
-import org.eclipse.dltk.launching.LibraryLocation;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.tcl.internal.core.packages.DLTKTclHelper;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 public class GenericTclInstallType extends AbstractInterpreterInstallType {
@@ -119,18 +116,18 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 				// String result = retrivePaths(installLocation, locations,
 				// monitor, createPathFile(), variables);
 				// This is safe retrieval
-				String[] autoPath = DLTKTclHelper.getDefaultPath(
-						installLocation, variables);
-				IEnvironment env = installLocation.getEnvironment();
-				if (autoPath != null) {
-					for (int i = 0; i < autoPath.length; i++) {
-						Path libraryPath = new Path(autoPath[i]);
-						IFileHandle file = env.getFile(libraryPath);
-						if (file.exists()) {
-							locations.add(new LibraryLocation(libraryPath));
-						}
-					}
-				}
+				// String[] autoPath = DLTKTclHelper.getDefaultPath(
+				// installLocation, variables);
+				// IEnvironment env = installLocation.getEnvironment();
+				// if (autoPath != null) {
+				// for (int i = 0; i < autoPath.length; i++) {
+				// Path libraryPath = new Path(autoPath[i]);
+				// IFileHandle file = env.getFile(libraryPath);
+				// if (file.exists()) {
+				// locations.add(new LibraryLocation(libraryPath));
+				// }
+				// }
+				// }
 			}
 		};
 	}
