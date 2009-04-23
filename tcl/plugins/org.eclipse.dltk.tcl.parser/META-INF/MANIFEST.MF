@@ -18,7 +18,7 @@ Export-Package: org.eclipse.dltk.tcl.ast,
  org.eclipse.dltk.tcl.parser,
  org.eclipse.dltk.tcl.parser.definitions
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.dltk.core
 Bundle-Activator: org.eclipse.dltk.tcl.internal.parser.TclParserCore
