@@ -19,7 +19,8 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
@@ -61,22 +62,26 @@ public final class TclCheckerHelper {
 				final IInterpreterInstall install = ScriptRuntime
 						.getInterpreterInstall(project);
 				if (install != null) {
-					final String version = PackagesManager.getInstance()
-							.getPackageVersion(install, "Tcl"); //$NON-NLS-1$
-					if (version != null && version.length() != 0) {
-						if (version.startsWith("8.")) { //$NON-NLS-1$
-							int pos = version.indexOf('.', 2);
-							if (pos < 0) {
-								pos = version.length();
+					TclPackageInfo pkg = TclPackagesManager.getPackageInfo(
+							install, "Tcl", true);
+					if (pkg != null) {
+						final String version = pkg.getVersion();
+						if (version != null && version.length() != 0) {
+							if (version.startsWith("8.")) { //$NON-NLS-1$
+								int pos = version.indexOf('.', 2);
+								if (pos < 0) {
+									pos = version.length();
+								}
+								cmdLine.add("-use"); //$NON-NLS-1$
+								/*
+								 * Initially the Tcl<ver> argument was
+								 * surrounded with double quotes, but on Linux
+								 * this command if started from Eclipse work
+								 * with errors [DLTK-839] (but from shell the
+								 * same command work fine).
+								 */
+								cmdLine.add("Tcl" + version.substring(0, pos)); //$NON-NLS-1$
 							}
-							cmdLine.add("-use"); //$NON-NLS-1$
-							/*
-							 * Initially the Tcl<ver> argument was surrounded
-							 * with double quotes, but on Linux this command if
-							 * started from Eclipse work with errors [DLTK-839]
-							 * (but from shell the same command work fine).
-							 */
-							cmdLine.add("Tcl" + version.substring(0, pos)); //$NON-NLS-1$
 						}
 					}
 				}
