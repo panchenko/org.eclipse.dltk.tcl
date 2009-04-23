@@ -12,15 +12,12 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.CorrectionEngine;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
@@ -32,13 +29,13 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclProblems;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.text.AnnotationResolutionProposal;
 import org.eclipse.dltk.ui.text.IScriptCorrectionContext;
 import org.eclipse.dltk.ui.text.IScriptCorrectionProcessor;
 import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
-import org.eclipse.jface.text.source.Annotation;
 
 public class TclRequireCorrectionProcessor implements
 		IScriptCorrectionProcessor {
@@ -144,20 +141,12 @@ public class TclRequireCorrectionProcessor implements
 				}
 			}
 			if (install != null) {
-				PackagesManager manager = PackagesManager.getInstance();
-				IPath[] paths = manager.getPathsForPackage(install, pkgName);
-				if (paths != null && paths.length > 0) {
-					return true;
+				TclPackageInfo info = TclPackagesManager.getPackageInfo(
+						install, pkgName, true);
+				if (info == null || !info.isFetched()) {
+					return false;
 				}
-				Map dependencies = manager.getDependencies(pkgName, install);
-				for (Iterator iterator = dependencies.keySet().iterator(); iterator
-						.hasNext();) {
-					String pkg = (String) iterator.next();
-					IPath[] paths2 = manager.getPathsForPackage(install, pkg);
-					if (paths2 != null && paths2.length > 0) {
-						return true;
-					}
-				}
+				return true;
 			}
 		}
 		return false;
