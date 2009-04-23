@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IAccessRule;
 import org.eclipse.dltk.core.IBuildpathAttribute;
@@ -22,7 +23,9 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
+import org.eclipse.emf.common.util.EList;
 
 public class TclPackagesInterpreterContainerExtension implements
 		IInterpreterContainerExtension {
@@ -56,29 +59,28 @@ public class TclPackagesInterpreterContainerExtension implements
 			}
 		}
 		if (install != null) {
-			Set packagesOld = InterpreterContainerHelper
+			Set<String> set = InterpreterContainerHelper
 					.getInterpreterContainerDependencies(project);
-			Set<PackageInfo> packages = PackageUtils.getNewPackagesFromOld(
-					packagesOld, install);
-			if (packages.size() == 0) {
+
+			List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
+					install, set, true);
+			if (infos.size() == 0) {
 				return;
 			}
 			IEnvironment env = EnvironmentManager.getEnvironment(project);
 			if (env == null) {
 				return;
 			}
-			// This is very slow if no information is available.
-			Set allPaths = new HashSet();
-			// for (Iterator iterator = packages.iterator();
-			// iterator.hasNext();) {
-			// String pkgName = (String) iterator.next();
-			IPath[] libs = PackagesManager.getInstance()
-					.getPathsForPackagesWithDeps(install, packages);
-			for (int i = 0; i < libs.length; i++) {
-				IPath fullPath = EnvironmentPathUtils.getFullPath(env, libs[i]);
-				allPaths.add(fullPath);
+			Set<IPath> allPaths = new HashSet<IPath>();
+			for (TclPackageInfo info : infos) {
+				EList<String> sources = info.getSources();
+				for (String path : sources) {
+					IPath rpath = new Path(path).removeLastSegments(1);
+					IPath fullPath = EnvironmentPathUtils.getFullPath(env,
+							rpath);
+					allPaths.add(fullPath);
+				}
 			}
-			// }
 
 			Set rawEntries = new HashSet(allPaths.size());
 			for (Iterator iterator = allPaths.iterator(); iterator.hasNext();) {

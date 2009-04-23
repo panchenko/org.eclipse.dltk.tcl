@@ -61,19 +61,22 @@ import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ICompletionExtension;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
+import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordArgumentOrFunctionArgument;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordOrFunction;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnVariable;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.TclCompletionParser;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager;
 import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinUtils;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
 import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.emf.common.util.EList;
 
 public class TclCompletionEngine extends ScriptCompletionEngine {
 
@@ -299,19 +302,32 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 			if (install != null) {
-				Set<PackageInfo> packageNames = PackagesManager.getInstance()
-						.getPackageNames(install);
-				Set<PackageInfo> names = PackagesManager.getInstance()
-						.getInternalPackageNames(install, this.scriptProject);
-				packageNames.addAll(names);
-				List k = new ArrayList();
+				List<TclPackageInfo> packageNames = TclPackagesManager
+						.getPackageInfos(install);
+				Set<String> added = new HashSet<String>();
+				List<String> k = new ArrayList<String>();
 				String prefix = new String(token);
-				for (Iterator<PackageInfo> iterator = packageNames.iterator(); iterator
-						.hasNext();) {
-					String kkw = iterator.next().getPackageName();
+				for (Iterator<TclPackageInfo> iterator = packageNames
+						.iterator(); iterator.hasNext();) {
+					String kkw = iterator.next().getName();
 					if (kkw.indexOf('$') == -1) {
 						if (kkw.startsWith(prefix)) {
-							k.add(kkw);
+							if (added.add(kkw)) {
+								k.add(kkw);
+							}
+						}
+					}
+				}
+				List<TclModuleInfo> packages = TclPackagesManager
+						.getProjectModules(project.getElementName());
+				if (packages != null) {
+					for (TclModuleInfo tclModuleInfo : packages) {
+						EList<TclSourceEntry> provided = tclModuleInfo
+								.getProvided();
+						for (TclSourceEntry userPkgs : provided) {
+							if (added.add(userPkgs.getValue())) {
+								k.add(userPkgs.getValue());
+							}
 						}
 					}
 				}

@@ -1,7 +1,5 @@
 package org.eclipse.dltk.tcl.internal.core.packages;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +12,8 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInfo;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 
 public class TclPackagesModelProvider implements IModelProvider {
 	public TclPackagesModelProvider() {
@@ -40,15 +39,13 @@ public class TclPackagesModelProvider implements IModelProvider {
 			}
 			Set<String> set = InterpreterContainerHelper
 					.getInterpreterContainerDependencies(project);
-			Set<PackageInfo> packages = PackageUtils.getNewPackagesFromOld(set,
-					install);
-			PackagesManager.getInstance()
-					.getPathsForPackages(install, packages);
-			PackagesManager.getInstance().getPathsForPackagesWithDeps(install,
-					packages);
-			for (String packageName : set) {
+
+			List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
+					install, set, true);
+			for (TclPackageInfo packageName : infos) {
 				TclPackageFragment fragment = new TclPackageFragment(
-						(ScriptProject) parentElement, packageName, install);
+						(ScriptProject) parentElement, packageName.getName(),
+						install);
 				if (!children.contains(fragment)) {
 					children.add(fragment);
 				}

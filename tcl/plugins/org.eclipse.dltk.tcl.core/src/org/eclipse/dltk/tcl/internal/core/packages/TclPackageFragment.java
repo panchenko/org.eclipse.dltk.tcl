@@ -23,7 +23,8 @@ import org.eclipse.dltk.internal.core.OpenableElementInfo;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
 import org.eclipse.dltk.launching.IInterpreterInstall;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInformation;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.utils.CorePrinter;
 
 public class TclPackageFragment extends Openable implements IProjectFragment,
@@ -44,7 +45,7 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 	}
 
 	public String getElementName() {
-		return "Packages";
+		return "Packages@" + packageName;
 	}
 
 	public boolean equals(Object o) {
@@ -62,14 +63,15 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource)
 			throws ModelException {
 		List children = new ArrayList();
-		PackageInformation pkgInfo = PackagesManager.getInstance()
-				.getPackageInfo(this.packageName, install);
-		if (pkgInfo != null) {
-			children.add(new TclPackageElement(this, this.packageName, pkgInfo
-					.getVersion()));
+		TclPackageInfo packageInfo = TclPackagesManager.getPackageInfo(install,
+				this.packageName, true);
+		if (packageInfo != null) {
+			children.add(new TclPackageElement(this, this.packageName,
+					packageInfo.getVersion()));
+
+			info.setChildren((IModelElement[]) children
+					.toArray(new IModelElement[children.size()]));
 		}
-		info.setChildren((IModelElement[]) children
-				.toArray(new IModelElement[children.size()]));
 		return true;
 	}
 

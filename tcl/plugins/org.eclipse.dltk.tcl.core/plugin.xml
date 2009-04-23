@@ -196,6 +196,14 @@
             language="org.eclipse.dltk.tcl.core.nature">
       </model>
    </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            class="org.eclipse.dltk.tcl.core.packages.TclPackagesPackage"
+            genModel="/model/pacakges.genmodel"
+            uri="http://www.eclipse.org/dltk/tcl/packages">
+      </package>
+   </extension>
    <!--extension
          point="org.eclipse.dltk.core.buildpathContainerInitializer">
       <buildpathContainerInitializer

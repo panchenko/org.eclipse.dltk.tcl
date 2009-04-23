@@ -2,6 +2,7 @@ package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +33,8 @@ import org.eclipse.dltk.internal.core.ScriptFolderInfo;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.internal.core.packages.PackagesManager.PackageInformation;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.utils.CorePrinter;
 
 public class TclPackageElement extends Openable implements IScriptFolder {
@@ -95,9 +97,13 @@ public class TclPackageElement extends Openable implements IScriptFolder {
 			// add modules from resources
 			Set<IModelElement> vChildren = new HashSet<IModelElement>();
 			// Add external source module here.
-			PackageInformation information = PackagesManager.getInstance()
-					.getPackageInfo(this.packageName, install);
-			Set<String> sources = information.getSources();
+
+			TclPackageInfo packageInfo = TclPackagesManager.getPackageInfo(
+					install, this.packageName, true);
+			if (packageInfo == null) {
+				return true;
+			}
+			List<String> sources = packageInfo.getSources();
 			if (!sources.isEmpty()) {
 				String[] paths = sources.toArray(new String[sources.size()]);
 				IEnvironment environment = EnvironmentManager

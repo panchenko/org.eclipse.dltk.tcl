@@ -21,6 +21,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 
 public class TclBuildPathPackageCollector extends ASTVisitor {
 
@@ -40,7 +41,7 @@ public class TclBuildPathPackageCollector extends ASTVisitor {
 		if (s instanceof TclPackageDeclaration) {
 			final TclPackageDeclaration pkg = (TclPackageDeclaration) s;
 			if (pkg.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
-				if (PackagesManager.isValidPackageName(pkg.getName())) {
+				if (TclPackagesManager.isValidPackageName(pkg.getName())) {
 					requireDirectives.add(new TclPackageDeclaration(pkg));
 					packagesRequired.add(pkg.getName());
 				}

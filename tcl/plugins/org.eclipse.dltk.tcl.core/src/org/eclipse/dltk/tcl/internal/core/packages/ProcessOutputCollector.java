@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
+
 public class ProcessOutputCollector {
 
 	private static class ErrorStreamReaderThread extends Thread {
@@ -94,7 +96,7 @@ public class ProcessOutputCollector {
 		new ErrorStreamReaderThread(errorStream).start();
 		final InputStream inputStream = process.getInputStream();
 		final OutputReaderThread output = new OutputReaderThread(inputStream,
-				DLTKTclHelper.END_OF_STREAM);
+				TclPackagesManager.END_OF_STREAM);
 		output.start();
 		// TODO also we should check if process is terminated
 		try {
