@@ -10,12 +10,14 @@
 package org.eclipse.dltk.tcl.internal.tclchecker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceRef;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceResponse;
+import org.eclipse.dltk.tcl.internal.tclchecker.ui.preferences.ValidatorConfigComparator;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.validators.core.AbstractValidatorType;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
@@ -72,20 +74,13 @@ public class TclCheckerType extends AbstractValidatorType {
 				.getConfiguration(project, TclCheckerConfigUtils.ALL);
 		final List<IValidator> result = new ArrayList<IValidator>();
 		for (ValidatorInstanceRef pair : response.instances) {
-			result.add(new TclCheckerOptional(response.environment,
-					pair.environmentInstance, pair.config, this));
-			for (CheckerConfig config : pair.environmentInstance.getInstance()
-					.getConfigs()) {
-				if (config != pair.config) {
-					result.add(new TclCheckerOptional(response.environment,
-							pair.environmentInstance, config, this));
-				}
-			}
-			for (CheckerConfig config : response.getCommonConfigurations()) {
-				if (config != pair.config) {
-					result.add(new TclCheckerOptional(response.environment,
-							pair.environmentInstance, config, this));
-				}
+			final List<CheckerConfig> configs = new ArrayList<CheckerConfig>();
+			configs.addAll(response.getCommonConfigurations());
+			configs.addAll(pair.environmentInstance.getInstance().getConfigs());
+			Collections.sort(configs, new ValidatorConfigComparator());
+			for (CheckerConfig config : configs) {
+				result.add(new TclCheckerOptional(response.environment,
+						pair.environmentInstance, config, this));
 			}
 		}
 		return result.toArray(new IValidator[result.size()]);

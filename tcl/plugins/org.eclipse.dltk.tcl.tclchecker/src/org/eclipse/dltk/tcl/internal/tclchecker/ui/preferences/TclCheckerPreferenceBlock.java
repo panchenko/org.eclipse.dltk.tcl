@@ -56,9 +56,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -85,45 +84,35 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		super(context, project, KEYS, container);
 	}
 
-	private static class ValidatorViewerSorter extends ViewerSorter {
+	private static class ValidatorViewerComparator extends ViewerComparator {
 
-		private static final int INSTANCE_CATEGORY = -1;
-
-		private static final int BUILTIN_CONFIG_CATEGORY = -2;
-		private static final int USER_CONFIG_CATEGORY = -1;
+		private static final int INSTANCE_CATEGORY = 0;
+		private static final int CONFIG_CATEGORY = 1000;
 
 		@Override
 		public int category(Object element) {
-			if (element instanceof ValidatorConfig) {
-				return ((ValidatorConfig) element).isReadOnly() ? BUILTIN_CONFIG_CATEGORY
-						: USER_CONFIG_CATEGORY;
+			if (isConfig(element)) {
+				return CONFIG_CATEGORY;
 			} else if (element instanceof ValidatorInstance) {
 				return INSTANCE_CATEGORY;
 			}
 			return super.category(element);
 		}
 
-	}
+		private final Comparator<ValidatorConfig> configComparator = new ValidatorConfigComparator();
 
-	private static class ViewerSorterComparatorWrapper implements
-			Comparator<Object> {
-
-		/**
-		 * @param viewerl
-		 */
-		public ViewerSorterComparatorWrapper(StructuredViewer viewer) {
-			this.viewer = viewer;
-			this.sorter = viewer.getSorter() != null ? viewer.getSorter()
-					: new ValidatorViewerSorter();
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if (isConfig(e1) && isConfig(e2)) {
+				return configComparator.compare(convertToValidatorConfig(e1),
+						convertToValidatorConfig(e2));
+			}
+			return super.compare(viewer, e1, e2);
 		}
 
-		private final StructuredViewer viewer;
-		private final ViewerSorter sorter;
-
-		public int compare(Object o1, Object o2) {
-			return sorter.compare(viewer, o1, o2);
+		private boolean isConfig(Object e1) {
+			return (e1 instanceof ValidatorConfig || e1 instanceof ValidatorConfigRef);
 		}
-
 	}
 
 	private class TclCheckerInstanceLabelProvider extends LabelProvider {
@@ -255,10 +244,10 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 	protected Control createOptionsBlock(Composite parent) {
 		Composite folder = SWTFactory.createComposite(parent, parent.getFont(),
 				2, 1, GridData.FILL_BOTH);
-		viewer = new CheckboxTreeViewer(folder, SWT.BORDER | SWT.SINGLE);
+		viewer = new CheckboxTreeViewer(folder, SWT.BORDER | SWT.MULTI);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setLabelProvider(new TclCheckerInstanceLabelProvider());
-		viewer.setSorter(new ValidatorViewerSorter());
+		viewer.setComparator(new ValidatorViewerComparator());
 		viewer.setContentProvider(new ValidatorContentProvider());
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -414,14 +403,22 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		return null;
 	}
 
-	private ValidatorConfig convertToValidatorConfig(List<?> selection) {
-		if (selection.size() == 1) {
-			return convertToValidatorConfig(selection.get(0));
+	private ValidatorConfig[] convertToValidatorConfigs(List<?> selection) {
+		if (!selection.isEmpty()) {
+			final ValidatorConfig[] configs = new ValidatorConfig[selection
+					.size()];
+			for (int i = 0; i < selection.size(); ++i) {
+				configs[i] = convertToValidatorConfig(selection.get(i));
+				if (configs[i] == null) {
+					return null;
+				}
+			}
+			return configs;
 		}
 		return null;
 	}
 
-	private ValidatorConfig convertToValidatorConfig(final Object obj) {
+	private static ValidatorConfig convertToValidatorConfig(final Object obj) {
 		if (obj instanceof ValidatorConfig) {
 			return (ValidatorConfig) obj;
 		} else if (obj instanceof ValidatorConfigRef) {
@@ -477,7 +474,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		enableButton(IDX_COPY, false);
 		enableButton(IDX_REMOVE, canRemove(selection));
 		enableButton(IDX_IMPORT, instance != null);
-		enableButton(IDX_EXPORT, convertToValidatorConfig(selection) != null);
+		enableButton(IDX_EXPORT, convertToValidatorConfigs(selection) != null);
 	}
 
 	protected void customButtonPressed(int button) {
@@ -526,15 +523,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 					if (instance.getValidatorFavoriteConfig() != null
 							&& removed.contains(instance
 									.getValidatorFavoriteConfig())) {
-						final Object[] configs = getConfigsOf(instance);
-						if (configs.length != 0) {
-							Arrays.sort(configs,
-									new ViewerSorterComparatorWrapper(viewer));
-							ValidatorConfig config = convertToValidatorConfig(configs[0]);
-							if (config != null) {
-								instance.setValidatorFavoriteConfig(config);
-								viewer.setChecked(configs[0], true);
-							}
+						final Object determined = determineFavoriteConfig(instance);
+						final ValidatorConfig config = convertToValidatorConfig(determined);
+						if (config != null) {
+							instance.setValidatorFavoriteConfig(config);
+							viewer.setChecked(determined, true);
 						} else {
 							instance.setValidatorFavoriteConfig(null);
 						}
@@ -555,12 +548,43 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 			break;
 		}
 		case IDX_EXPORT: {
-			final ValidatorConfig config = convertToValidatorConfig(getSelection());
-			if (config != null) {
-				doExport(config);
+			final ValidatorConfig[] configs = convertToValidatorConfigs(getSelection());
+			if (configs != null) {
+				doExport(configs);
 			}
 		}
 			break;
+		}
+	}
+
+	/**
+	 * Returns {@link ValidatorConfig} or {@link ValidatorConfigRef} or
+	 * <code>null</code>.
+	 * 
+	 * @param instance
+	 * @return
+	 */
+	private Object determineFavoriteConfig(ValidatorInstance instance) {
+		final Object[] configs = getConfigsOf(instance);
+		if (configs.length != 0) {
+			Arrays.sort(configs, new Comparator<Object>() {
+				public int compare(Object a, Object b) {
+					final ValidatorConfig aa = convertToValidatorConfig(a);
+					final ValidatorConfig bb = convertToValidatorConfig(b);
+					if (aa == null) {
+						return bb == null ? 0 : -1;
+					} else if (bb == null) {
+						return +1;
+					}
+					if (aa.isReadOnly() != bb.isReadOnly()) {
+						return aa.isReadOnly() ? -1 : +1;
+					}
+					return bb.getPriority() - aa.getPriority();
+				}
+			});
+			return configs[0];
+		} else {
+			return null;
 		}
 	}
 
@@ -713,6 +737,11 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 				} else {
 					checked.add(new ValidatorConfigRef(instance, favorite));
 				}
+			} else {
+				final Object determined = determineFavoriteConfig(instance);
+				if (determined != null) {
+					checked.add(determined);
+				}
 			}
 		}
 		viewer.setInput(input);
@@ -819,7 +848,7 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		}
 	}
 
-	private void doExport(ValidatorConfig config) {
+	private void doExport(ValidatorConfig[] configs) {
 		final FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
 		dialog.setText(Messages.TclChecker_export_Title);
 		dialog.setOverwrite(true);
@@ -827,7 +856,9 @@ public class TclCheckerPreferenceBlock extends AbstractOptionsBlock {
 		final String exportPath = dialog.open();
 		if (exportPath != null) {
 			final Resource resource = new XMIResourceImpl();
-			resource.getContents().add(EcoreUtil.copy(config));
+			for (ValidatorConfig config : configs) {
+				resource.getContents().add(EcoreUtil.copy(config));
+			}
 			try {
 				final FileWriter writer = new FileWriter(exportPath);
 				try {

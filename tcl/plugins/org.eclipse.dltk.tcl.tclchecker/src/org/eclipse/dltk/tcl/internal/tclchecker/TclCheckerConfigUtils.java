@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 public class TclCheckerConfigUtils {
 
@@ -221,11 +222,40 @@ public class TclCheckerConfigUtils {
 		return response;
 	}
 
+	private static class ValidatorConfigResource extends XMIResourceImpl
+			implements IContributedResource {
+
+		public ValidatorConfigResource(URI uri) {
+			super(uri);
+		}
+
+		private int priority;
+
+		public int getOrder() {
+			return priority;
+		}
+
+		public void setOrder(int value) {
+			this.priority = value;
+		}
+
+	}
+
+	private static class ValidatorConfigResourceFactory extends
+			XMIResourceFactoryImpl {
+
+		@Override
+		public Resource createResource(URI uri) {
+			return new ValidatorConfigResource(uri);
+		}
+
+	}
+
 	public static Resource loadConfiguration(String content) {
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-						new XMIResourceFactoryImpl());
+						new ValidatorConfigResourceFactory());
 		resourceSet.getPackageRegistry().put(ConfigsPackage.eNS_URI,
 				ConfigsPackage.eINSTANCE);
 		Resource resource = resourceSet.createResource(URI
@@ -276,6 +306,14 @@ public class TclCheckerConfigUtils {
 				try {
 					r.load(null);
 					result.add(r);
+					if (r instanceof IContributedResource) {
+						try {
+							((IContributedResource) r).setOrder(Integer
+									.parseInt(element.getAttribute("order")));
+						} catch (NumberFormatException e) {
+							// ignore
+						}
+					}
 				} catch (IOException e) {
 					// TODO log error
 					resourceSet.getResources().remove(r);

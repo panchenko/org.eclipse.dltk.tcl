@@ -4,7 +4,7 @@
   <extension-point id="configuration" name="%extension-point.name.configuration" schema="schema/configuration.exsd"/>
 
   <extension point="org.eclipse.dltk.tcl.tclchecker.configuration">
-     <configuration resource="/resources/builtin.xml"/>
+     <configuration resource="/resources/builtin.xml" order="2147483647"/>
   </extension>
 
    <extension

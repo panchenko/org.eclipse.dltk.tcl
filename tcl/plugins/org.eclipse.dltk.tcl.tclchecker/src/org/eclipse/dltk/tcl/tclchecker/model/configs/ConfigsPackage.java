@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ConfigsPackage.java,v 1.8 2009/02/27 15:44:39 apanchenk Exp $
+ * $Id: ConfigsPackage.java,v 1.9 2009/04/25 04:29:47 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.tclchecker.model.configs;
 
@@ -97,6 +97,15 @@ public interface ConfigsPackage extends EPackage {
 	 * @ordered
 	 */
 	int CHECKER_CONFIG__COMMAND_LINE_OPTIONS = ValidatorsPackage.VALIDATOR_CONFIG__COMMAND_LINE_OPTIONS;
+
+	/**
+	 * The feature id for the '<em><b>Priority</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_CONFIG__PRIORITY = ValidatorsPackage.VALIDATOR_CONFIG__PRIORITY;
 
 	/**
 	 * The feature id for the '<em><b>Summary</b></em>' attribute.
@@ -316,6 +325,15 @@ public interface ConfigsPackage extends EPackage {
 	 * @ordered
 	 */
 	int CHECKER_INSTANCE__VALIDATOR_FAVORITE_CONFIG = ValidatorsPackage.VALIDATOR_INSTANCE__VALIDATOR_FAVORITE_CONFIG;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECKER_INSTANCE__ID = ValidatorsPackage.VALIDATOR_INSTANCE__ID;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
