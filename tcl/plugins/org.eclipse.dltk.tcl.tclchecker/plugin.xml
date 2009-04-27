@@ -2,6 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
   <extension-point id="configuration" name="%extension-point.name.configuration" schema="schema/configuration.exsd"/>
+  <extension-point id="parameter" name="%extension-point.name.parameter" schema="schema/parameter.exsd"/>
 
   <extension point="org.eclipse.dltk.tcl.tclchecker.configuration">
      <configuration resource="/resources/builtin.xml" order="2147483647"/>

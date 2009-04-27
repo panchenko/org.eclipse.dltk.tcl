@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -174,29 +176,51 @@ public class TclCheckerMigration {
 
 	private static final int VERSION_EMF = 1;
 
+	private static final String PARAMETER_EP = TclCheckerPlugin.PLUGIN_ID
+			+ ".parameter";
+
+	private static Set<String> loadParameters(String parameterName) {
+		final Set<String> values = new HashSet<String>();
+		if (parameterName != null) {
+			final IConfigurationElement[] elements = Platform
+					.getExtensionRegistry().getConfigurationElementsFor(
+							PARAMETER_EP);
+			for (int i = 0; i < elements.length; ++i) {
+				if (parameterName.equals(elements[i].getAttribute("name"))) {
+					values.add(elements[i].getAttribute("value"));
+				}
+			}
+		}
+		return values;
+	}
+
 	public static void migratePreferences() {
 		final IPreferenceStore store = TclCheckerPlugin.getDefault()
 				.getPreferenceStore();
-		if (store.getInt(TclCheckerConstants.PREF_VERSION) == VERSION_EMF) {
+		final int version = store.getInt(TclCheckerConstants.PREF_VERSION);
+		if (version == VERSION_EMF) {
 			return;
 		}
-		final Set<String> removeKeys = new HashSet<String>();
-		try {
-			final ITclCheckerPreferences preferences = new SystemTclCheckerPreferences() {
-				@Override
-				protected String readConfiguration() {
-					return Util.EMPTY_STRING;
-				}
-			};
-			migrate(store, preferences, removeKeys);
-			preferences.save();
-		} catch (Exception e) {
-			TclCheckerPlugin.error("TclChecker preferences upgrade problem", e); //$NON-NLS-1$
+		if (!loadParameters("migration.v" + version).contains("false")) {
+			final Set<String> removeKeys = new HashSet<String>();
+			try {
+				final ITclCheckerPreferences preferences = new SystemTclCheckerPreferences() {
+					@Override
+					protected String readConfiguration() {
+						return Util.EMPTY_STRING;
+					}
+				};
+				migrate(store, preferences, removeKeys);
+				preferences.save();
+			} catch (Exception e) {
+				TclCheckerPlugin.error(
+						"TclChecker preferences upgrade problem", e); //$NON-NLS-1$
+			}
+			for (String key : removeKeys) {
+				store.setToDefault(key);
+			}
 		}
 		store.setValue(TclCheckerConstants.PREF_VERSION, VERSION_EMF);
-		for (String key : removeKeys) {
-			store.setToDefault(key);
-		}
 	}
 
 	private static void migrate(IPreferenceStore store,
