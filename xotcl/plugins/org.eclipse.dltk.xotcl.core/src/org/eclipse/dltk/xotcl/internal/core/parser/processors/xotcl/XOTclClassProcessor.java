@@ -12,7 +12,7 @@ import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclClassParameterDeclaration;
 
@@ -74,7 +74,7 @@ public class XOTclClassProcessor extends AbstractTclCommandProcessor {
 
 						st = ((TclBlockExpression) sc).parseBlockSimple();
 
-						List arguments = TclParseUtils.parseArguments(st);
+						List arguments = OldTclParserUtils.parseArguments(st);
 						// Lets add all arguments as variable declarations for
 						// selected class.
 						for (int j = 0; j < arguments.size(); j++) {

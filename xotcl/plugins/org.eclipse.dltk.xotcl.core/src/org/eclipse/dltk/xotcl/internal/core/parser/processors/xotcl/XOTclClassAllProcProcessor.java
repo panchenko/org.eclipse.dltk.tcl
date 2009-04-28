@@ -17,7 +17,7 @@ import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.ast.ExtendedTclMethodDeclaration;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.Messages;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclExInstanceVariable;
 import org.eclipse.dltk.xotcl.core.ast.xotcl.XOTclInstanceVariable;
@@ -79,7 +79,7 @@ public class XOTclClassAllProcProcessor extends AbstractTclCommandProcessor {
 
 			st = ((TclBlockExpression) procArguments).parseBlockSimple();
 
-			arguments = TclParseUtils.parseArguments(st);
+			arguments = OldTclParserUtils.parseArguments(st);
 		}
 		if (procArguments instanceof SimpleReference) {
 			arguments = new ArrayList();
