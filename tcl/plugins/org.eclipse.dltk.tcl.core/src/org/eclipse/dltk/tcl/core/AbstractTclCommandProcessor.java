@@ -29,8 +29,8 @@ public abstract class AbstractTclCommandProcessor implements
 		}
 		if (TclPlugin.REPORT_PARSER_PROBLEMS) {
 			problemReporter.reportProblem(new DefaultProblem(message, 0, null,
-					severity, start, end, parser.getCodeModel().getLineNumber(
-							start, end)));
+					severity, start, end, parser.getCodeModel()
+							.getLineNumberOfOffset(start)));
 		}
 	}
 

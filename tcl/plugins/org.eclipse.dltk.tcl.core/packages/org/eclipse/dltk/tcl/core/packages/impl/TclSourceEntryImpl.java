@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclSourceEntryImpl.java,v 1.1 2009/04/23 10:58:24 asobolev Exp $
+ * $Id: TclSourceEntryImpl.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclSourceEntryImpl#getValue <em>Value</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclSourceEntryImpl#getStart <em>Start</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclSourceEntryImpl#getEnd <em>End</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclSourceEntryImpl#getCorrectedValue <em>Corrected Value</em>}</li>
  * </ul>
  * </p>
  *
@@ -92,26 +91,6 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 	 * @ordered
 	 */
 	protected int end = END_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getCorrectedValue() <em>Corrected Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCorrectedValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String CORRECTED_VALUE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getCorrectedValue() <em>Corrected Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCorrectedValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected String correctedValue = CORRECTED_VALUE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -203,29 +182,6 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getCorrectedValue() {
-		return correctedValue;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCorrectedValue(String newCorrectedValue) {
-		String oldCorrectedValue = correctedValue;
-		correctedValue = newCorrectedValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					TclPackagesPackage.TCL_SOURCE_ENTRY__CORRECTED_VALUE,
-					oldCorrectedValue, correctedValue));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -235,8 +191,6 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 			return new Integer(getStart());
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__END:
 			return new Integer(getEnd());
-		case TclPackagesPackage.TCL_SOURCE_ENTRY__CORRECTED_VALUE:
-			return getCorrectedValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -257,9 +211,6 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 			return;
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__END:
 			setEnd(((Integer) newValue).intValue());
-			return;
-		case TclPackagesPackage.TCL_SOURCE_ENTRY__CORRECTED_VALUE:
-			setCorrectedValue((String) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -282,9 +233,6 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__END:
 			setEnd(END_EDEFAULT);
 			return;
-		case TclPackagesPackage.TCL_SOURCE_ENTRY__CORRECTED_VALUE:
-			setCorrectedValue(CORRECTED_VALUE_EDEFAULT);
-			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -304,9 +252,6 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 			return start != START_EDEFAULT;
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__END:
 			return end != END_EDEFAULT;
-		case TclPackagesPackage.TCL_SOURCE_ENTRY__CORRECTED_VALUE:
-			return CORRECTED_VALUE_EDEFAULT == null ? correctedValue != null
-					: !CORRECTED_VALUE_EDEFAULT.equals(correctedValue);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -328,8 +273,6 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 		result.append(start);
 		result.append(", end: ");
 		result.append(end);
-		result.append(", correctedValue: ");
-		result.append(correctedValue);
 		result.append(')');
 		return result.toString();
 	}

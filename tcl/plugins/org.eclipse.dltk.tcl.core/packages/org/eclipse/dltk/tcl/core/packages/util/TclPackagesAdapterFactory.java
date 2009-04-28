@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesAdapterFactory.java,v 1.1 2009/04/23 10:58:25 asobolev Exp $
+ * $Id: TclPackagesAdapterFactory.java,v 1.2 2009/04/28 11:00:05 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
@@ -96,6 +96,11 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseUserCorrection(UserCorrection object) {
+			return createUserCorrectionAdapter();
+		}
+
+		@Override
 		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -181,6 +186,20 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTclSourceEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection <em>User Correction</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.core.packages.UserCorrection
+	 * @generated
+	 */
+	public Adapter createUserCorrectionAdapter() {
 		return null;
 	}
 

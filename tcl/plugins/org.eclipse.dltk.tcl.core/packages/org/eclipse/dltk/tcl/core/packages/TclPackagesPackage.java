@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.1 2009/04/23 10:58:25 asobolev Exp $
+ * $Id: TclPackagesPackage.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -199,13 +199,22 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_PROJECT_INFO__MODULES = 1;
 
 	/**
+	 * The feature id for the '<em><b>Package Corrections</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROJECT_INFO__PACKAGE_CORRECTIONS = 2;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Project Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_PROJECT_INFO_FEATURE_COUNT = 2;
+	int TCL_PROJECT_INFO_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl <em>Tcl Module Info</em>}' class.
@@ -254,13 +263,31 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_MODULE_INFO__SOURCED = 3;
 
 	/**
+	 * The feature id for the '<em><b>Source Corrections</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_MODULE_INFO__SOURCE_CORRECTIONS = 4;
+
+	/**
+	 * The feature id for the '<em><b>External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_MODULE_INFO__EXTERNAL = 5;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Module Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_MODULE_INFO_FEATURE_COUNT = 4;
+	int TCL_MODULE_INFO_FEATURE_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclSourceEntryImpl <em>Tcl Source Entry</em>}' class.
@@ -300,22 +327,50 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_SOURCE_ENTRY__END = 2;
 
 	/**
-	 * The feature id for the '<em><b>Corrected Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCL_SOURCE_ENTRY__CORRECTED_VALUE = 3;
-
-	/**
 	 * The number of structural features of the '<em>Tcl Source Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_SOURCE_ENTRY_FEATURE_COUNT = 4;
+	int TCL_SOURCE_ENTRY_FEATURE_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl <em>User Correction</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl
+	 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getUserCorrection()
+	 * @generated
+	 */
+	int USER_CORRECTION = 5;
+
+	/**
+	 * The feature id for the '<em><b>Original Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_CORRECTION__ORIGINAL_VALUE = 0;
+
+	/**
+	 * The feature id for the '<em><b>User Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_CORRECTION__USER_VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>User Correction</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_CORRECTION_FEATURE_COUNT = 2;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclPackageInfo <em>Tcl Package Info</em>}'.
@@ -458,6 +513,17 @@ public interface TclPackagesPackage extends EPackage {
 	EReference getTclProjectInfo_Modules();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getPackageCorrections <em>Package Corrections</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Package Corrections</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getPackageCorrections()
+	 * @see #getTclProjectInfo()
+	 * @generated
+	 */
+	EReference getTclProjectInfo_PackageCorrections();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo <em>Tcl Module Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -499,6 +565,28 @@ public interface TclPackagesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTclModuleInfo_Sourced();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getSourceCorrections <em>Source Corrections</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Source Corrections</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getSourceCorrections()
+	 * @see #getTclModuleInfo()
+	 * @generated
+	 */
+	EReference getTclModuleInfo_SourceCorrections();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#isExternal <em>External</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>External</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclModuleInfo#isExternal()
+	 * @see #getTclModuleInfo()
+	 * @generated
+	 */
+	EAttribute getTclModuleInfo_External();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclSourceEntry <em>Tcl Source Entry</em>}'.
@@ -544,15 +632,36 @@ public interface TclPackagesPackage extends EPackage {
 	EAttribute getTclSourceEntry_End();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclSourceEntry#getCorrectedValue <em>Corrected Value</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection <em>User Correction</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Corrected Value</em>'.
-	 * @see org.eclipse.dltk.tcl.core.packages.TclSourceEntry#getCorrectedValue()
-	 * @see #getTclSourceEntry()
+	 * @return the meta object for class '<em>User Correction</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.UserCorrection
 	 * @generated
 	 */
-	EAttribute getTclSourceEntry_CorrectedValue();
+	EClass getUserCorrection();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#getOriginalValue <em>Original Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Original Value</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.UserCorrection#getOriginalValue()
+	 * @see #getUserCorrection()
+	 * @generated
+	 */
+	EAttribute getUserCorrection_OriginalValue();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#getUserValue <em>User Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>User Value</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.UserCorrection#getUserValue()
+	 * @see #getUserCorrection()
+	 * @generated
+	 */
+	EAttribute getUserCorrection_UserValue();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getHandle <em>Handle</em>}'.
@@ -706,6 +815,15 @@ public interface TclPackagesPackage extends EPackage {
 				.getTclProjectInfo_Modules();
 
 		/**
+		 * The meta object literal for the '<em><b>Package Corrections</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_PROJECT_INFO__PACKAGE_CORRECTIONS = eINSTANCE
+				.getTclProjectInfo_PackageCorrections();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl <em>Tcl Module Info</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -741,6 +859,24 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EReference TCL_MODULE_INFO__SOURCED = eINSTANCE
 				.getTclModuleInfo_Sourced();
+
+		/**
+		 * The meta object literal for the '<em><b>Source Corrections</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_MODULE_INFO__SOURCE_CORRECTIONS = eINSTANCE
+				.getTclModuleInfo_SourceCorrections();
+
+		/**
+		 * The meta object literal for the '<em><b>External</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_MODULE_INFO__EXTERNAL = eINSTANCE
+				.getTclModuleInfo_External();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclSourceEntryImpl <em>Tcl Source Entry</em>}' class.
@@ -779,13 +915,32 @@ public interface TclPackagesPackage extends EPackage {
 		EAttribute TCL_SOURCE_ENTRY__END = eINSTANCE.getTclSourceEntry_End();
 
 		/**
-		 * The meta object literal for the '<em><b>Corrected Value</b></em>' attribute feature.
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl <em>User Correction</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl
+		 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getUserCorrection()
+		 * @generated
+		 */
+		EClass USER_CORRECTION = eINSTANCE.getUserCorrection();
+
+		/**
+		 * The meta object literal for the '<em><b>Original Value</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TCL_SOURCE_ENTRY__CORRECTED_VALUE = eINSTANCE
-				.getTclSourceEntry_CorrectedValue();
+		EAttribute USER_CORRECTION__ORIGINAL_VALUE = eINSTANCE
+				.getUserCorrection_OriginalValue();
+
+		/**
+		 * The meta object literal for the '<em><b>User Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute USER_CORRECTION__USER_VALUE = eINSTANCE
+				.getUserCorrection_UserValue();
 
 		/**
 		 * The meta object literal for the '<em><b>Handle</b></em>' attribute feature.

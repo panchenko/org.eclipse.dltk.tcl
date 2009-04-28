@@ -14,6 +14,7 @@ import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
 import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
 
 public class TclPackagesModelProvider implements IModelProvider {
 	public TclPackagesModelProvider() {
@@ -49,6 +50,12 @@ public class TclPackagesModelProvider implements IModelProvider {
 				if (!children.contains(fragment)) {
 					children.add(fragment);
 				}
+			}
+			// add sources fragment
+			TclSourcesFragment fragment = new TclSourcesFragment(
+					(ScriptProject) parentElement, install);
+			if (!children.contains(fragment)) {
+				children.add(fragment);
 			}
 		}
 	}

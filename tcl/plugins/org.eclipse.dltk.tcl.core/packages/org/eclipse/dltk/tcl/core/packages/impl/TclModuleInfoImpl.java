@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclModuleInfoImpl.java,v 1.1 2009/04/23 10:58:24 asobolev Exp $
+ * $Id: TclModuleInfoImpl.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -12,6 +12,7 @@ import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
+import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -38,6 +39,8 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getRequired <em>Required</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getProvided <em>Provided</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getSourced <em>Sourced</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getSourceCorrections <em>Source Corrections</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#isExternal <em>External</em>}</li>
  * </ul>
  * </p>
  *
@@ -93,6 +96,36 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 	 * @ordered
 	 */
 	protected EList<TclSourceEntry> sourced;
+
+	/**
+	 * The cached value of the '{@link #getSourceCorrections() <em>Source Corrections</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSourceCorrections()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<UserCorrection> sourceCorrections;
+
+	/**
+	 * The default value of the '{@link #isExternal() <em>External</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isExternal()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean EXTERNAL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isExternal() <em>External</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isExternal()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean external = EXTERNAL_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -160,6 +193,43 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<UserCorrection> getSourceCorrections() {
+		if (sourceCorrections == null) {
+			sourceCorrections = new EObjectContainmentEList<UserCorrection>(
+					UserCorrection.class, this,
+					TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS);
+		}
+		return sourceCorrections;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isExternal() {
+		return external;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setExternal(boolean newExternal) {
+		boolean oldExternal = external;
+		external = newExternal;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL, oldExternal,
+					external));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd,
 			int featureID, NotificationChain msgs) {
@@ -173,6 +243,9 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			return ((InternalEList<?>) getSourced())
 					.basicRemove(otherEnd, msgs);
+		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
+			return ((InternalEList<?>) getSourceCorrections()).basicRemove(
+					otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -216,6 +289,10 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 			return getProvided();
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			return getSourced();
+		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
+			return getSourceCorrections();
+		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:
+			return isExternal() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -247,6 +324,14 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 			getSourced()
 					.addAll((Collection<? extends TclSourceEntry>) newValue);
 			return;
+		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
+			getSourceCorrections().clear();
+			getSourceCorrections().addAll(
+					(Collection<? extends UserCorrection>) newValue);
+			return;
+		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:
+			setExternal(((Boolean) newValue).booleanValue());
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -271,6 +356,12 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			getSourced().clear();
 			return;
+		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
+			getSourceCorrections().clear();
+			return;
+		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:
+			setExternal(EXTERNAL_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -292,6 +383,10 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 			return provided != null && !provided.isEmpty();
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			return sourced != null && !sourced.isEmpty();
+		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
+			return sourceCorrections != null && !sourceCorrections.isEmpty();
+		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:
+			return external != EXTERNAL_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -309,6 +404,8 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (handle: ");
 		result.append(handle);
+		result.append(", external: ");
+		result.append(external);
 		result.append(')');
 		return result.toString();
 	}

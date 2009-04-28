@@ -19,7 +19,7 @@ import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclProcProcessor extends AbstractTclCommandProcessor {
 
@@ -60,7 +60,7 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 
 			st = ((TclBlockExpression) procArguments).parseBlockSimple(false);
 
-			arguments = TclParseUtils.parseArguments(st);
+			arguments = OldTclParserUtils.parseArguments(st);
 		}
 		if (procArguments instanceof SimpleReference) {
 			arguments = new ArrayList();

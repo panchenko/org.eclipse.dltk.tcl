@@ -53,62 +53,6 @@ public class TclParseUtil {
 		return object != null && object.getClass().equals(TclWord.class);
 	}
 
-	/**
-	 * @deprecated
-	 * @see org.eclipse.dltk.utils.TextUtils#createLineTracker(String)
-	 */
-	public static class CodeModel {
-
-		private int[] codeLineLengths;
-		private int[] codeStarts;
-		private int[] codeEnds;
-
-		public CodeModel(String code) {
-			String[] codeLines = code.split("\n");
-			int count = codeLines.length;
-
-			this.codeLineLengths = new int[count];
-			this.codeStarts = new int[count];
-			this.codeEnds = new int[count];
-
-			int sum = 0;
-			for (int i = 0; i < count; ++i) {
-				this.codeLineLengths[i] = sum;
-				String trim = codeLines[i].trim();
-				int off = codeLines[i].indexOf(trim);
-				this.codeStarts[i] = sum + off;
-				this.codeEnds[i] = trim.length();
-				sum += codeLines[i].length() + 1;
-			}
-		}
-
-		public int getLineNumber(TclElement command) {
-			return this.getLineNumber(command.getStart(), command.getEnd());
-		}
-
-		public int[] getBounds(int lineNumber) {
-			if (lineNumber < this.codeLineLengths.length) {
-				int start = this.codeStarts[lineNumber];
-				int end = this.codeEnds[lineNumber];
-				return new int[] { start, start + end };
-			}
-			return new int[] { 0, 0 };
-		}
-
-		public int getLineNumber(int start, int end) {
-			int len = codeLineLengths.length;
-			for (int i = 0; i < len - 1; ++i) {
-				int s = this.codeLineLengths[i];
-				int e = this.codeLineLengths[i + 1] - 1;
-
-				if (s <= start && end <= e) {
-					return i + 1;
-				}
-			}
-			return this.codeLineLengths.length;
-		}
-	}
-
 	public static String nameFromBlock(String name, char c1, char c2) {
 		int pos = name.indexOf(c1);
 		String nname = name.substring(pos + 1);

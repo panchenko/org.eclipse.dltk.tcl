@@ -12,6 +12,7 @@ import org.eclipse.dltk.ast.parser.ISourceParserExtension;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.ITclCommandDetector;
@@ -22,18 +23,18 @@ import org.eclipse.dltk.tcl.core.ITclSourceParser;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.ITclCommandDetector.CommandInfo;
-import org.eclipse.dltk.tcl.core.TclParseUtil.CodeModel;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 import org.eclipse.dltk.tcl.internal.parser.ext.CommandManager;
 import org.eclipse.dltk.tcl.internal.parser.raw.SimpleTclParser;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
+import org.eclipse.dltk.utils.TextUtils;
 
 public class TclSourceParser extends AbstractSourceParser implements
 		ITclSourceParser, ITclParser, ISourceParserExtension {
 	private IProblemReporter problemReporter;
-	protected CodeModel codeModel;
+	protected ISourceLineTracker codeModel;
 	protected String content;
 	private char[] fileName;
 	private int startPos = 0;
@@ -48,7 +49,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		initDetectors();
 		this.problemReporter = reporter;
 		this.content = new String(source);
-		this.codeModel = new CodeModel(this.content);
+		this.codeModel = TextUtils.createLineTracker(this.content);
 		this.fileName = fileName;
 
 		this.moduleDeclaration = new ModuleDeclaration(this.content.length());
@@ -215,7 +216,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		return this.localProcessor;
 	}
 
-	public CodeModel getCodeModel() {
+	public ISourceLineTracker getCodeModel() {
 		return this.codeModel;
 	}
 

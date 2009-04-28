@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclSourceEntry.java,v 1.1 2009/04/23 10:58:25 asobolev Exp $
+ * $Id: TclSourceEntry.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclSourceEntry#getValue <em>Value</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclSourceEntry#getStart <em>Start</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclSourceEntry#getEnd <em>End</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclSourceEntry#getCorrectedValue <em>Corrected Value</em>}</li>
  * </ul>
  * </p>
  *
@@ -105,31 +104,5 @@ public interface TclSourceEntry extends EObject {
 	 * @generated
 	 */
 	void setEnd(int value);
-
-	/**
-	 * Returns the value of the '<em><b>Corrected Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Corrected Value</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Corrected Value</em>' attribute.
-	 * @see #setCorrectedValue(String)
-	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclSourceEntry_CorrectedValue()
-	 * @model
-	 * @generated
-	 */
-	String getCorrectedValue();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.core.packages.TclSourceEntry#getCorrectedValue <em>Corrected Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Corrected Value</em>' attribute.
-	 * @see #getCorrectedValue()
-	 * @generated
-	 */
-	void setCorrectedValue(String value);
 
 } // TclSourceEntry

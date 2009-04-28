@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.eclipse.dltk.tcl.internal.core.packages;
+package org.eclipse.dltk.tcl.internal.core.sources;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IPath;
@@ -15,8 +15,8 @@ import org.eclipse.dltk.internal.core.ModelElement;
 /**
  * Source module used in packages
  */
-public class TclPackageSourceModule extends ExternalSourceModule {
-	public TclPackageSourceModule(ModelElement parent, String name,
+public class TclSourcesSourceModule extends ExternalSourceModule {
+	public TclSourcesSourceModule(ModelElement parent, String name,
 			WorkingCopyOwner owner, IStorage storage) {
 		super(parent, name, owner, storage);
 	}

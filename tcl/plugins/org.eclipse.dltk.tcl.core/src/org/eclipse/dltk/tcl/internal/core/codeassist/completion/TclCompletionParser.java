@@ -33,7 +33,7 @@ import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ICompletionExtension;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclASTUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclAssistParser;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclCompletionParser extends TclAssistParser {
 	private static class TclEmptyCompleteStatement extends TclStatement {
@@ -150,7 +150,7 @@ public class TclCompletionParser extends TclAssistParser {
 			if (completionNode instanceof StringLiteral) {
 				int maxLen = position - completionNode.sourceStart();
 				int pos = maxLen;
-				SimpleReference tok = TclParseUtils.extractVariableFromString(
+				SimpleReference tok = OldTclParserUtils.extractVariableFromString(
 						(StringLiteral) completionNode, pos);
 				if (tok != null) {
 					this.assistNodeParent = inNode;

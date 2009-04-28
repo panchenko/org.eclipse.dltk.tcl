@@ -75,7 +75,7 @@ import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinUtils;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 import org.eclipse.emf.common.util.EList;
 
 public class TclCompletionEngine extends ScriptCompletionEngine {
@@ -1375,7 +1375,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			for (int i = 0; i < statements.size(); ++i) {
 				ASTNode nde = (ASTNode) statements.get(i);
 				if (nde instanceof TclStatement) {
-					String[] variable = TclParseUtils
+					String[] variable = OldTclParserUtils
 							.returnVariable((TclStatement) nde);
 					if (variable != null) {
 						for (int u = 0; u < variable.length; ++u) {
@@ -1483,7 +1483,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	private void checkTclStatementForVariables(final List choices,
 			TclStatement s) {
-		String[] variable = TclParseUtils.returnVariable(s);
+		String[] variable = OldTclParserUtils.returnVariable(s);
 		if (variable != null) {
 			for (int u = 0; u < variable.length; ++u) {
 				this.checkAddVariable(choices, variable[u]);
@@ -1523,15 +1523,15 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected String processMethodName(IMethod method, String tok) {
-		return TclParseUtils.processMethodName(method, tok);
+		return OldTclParserUtils.processMethodName(method, tok);
 	}
 
 	protected String processFieldName(IField method, String tok) {
-		return TclParseUtils.processFieldName(method, tok);
+		return OldTclParserUtils.processFieldName(method, tok);
 	}
 
 	protected String processTypeName(IType method, String tok) {
-		String name = TclParseUtils.processTypeName(method, tok);
+		String name = OldTclParserUtils.processTypeName(method, tok);
 		if (name.startsWith("::")
 				&& ((tok.length() > 1 && tok.charAt(0) != ':' && tok.charAt(1) != ':') || tok
 						.length() == 0)) {

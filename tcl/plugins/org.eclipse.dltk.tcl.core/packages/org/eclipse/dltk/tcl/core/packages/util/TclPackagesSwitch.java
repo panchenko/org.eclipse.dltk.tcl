@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesSwitch.java,v 1.1 2009/04/23 10:58:25 asobolev Exp $
+ * $Id: TclPackagesSwitch.java,v 1.2 2009/04/28 11:00:05 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
@@ -119,6 +119,13 @@ public class TclPackagesSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case TclPackagesPackage.USER_CORRECTION: {
+			UserCorrection userCorrection = (UserCorrection) theEObject;
+			T result = caseUserCorrection(userCorrection);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -196,6 +203,21 @@ public class TclPackagesSwitch<T> {
 	 * @generated
 	 */
 	public T caseTclSourceEntry(TclSourceEntry object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>User Correction</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>User Correction</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUserCorrection(UserCorrection object) {
 		return null;
 	}
 

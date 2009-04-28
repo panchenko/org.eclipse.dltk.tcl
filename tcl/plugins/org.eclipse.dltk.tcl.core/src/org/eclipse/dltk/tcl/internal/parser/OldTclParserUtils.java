@@ -32,7 +32,7 @@ import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclNature;
 
-public class TclParseUtils {
+public class OldTclParserUtils {
 	public static final Object AST = "ast";
 
 	public static List parseArguments(List st) {
@@ -463,7 +463,7 @@ public class TclParseUtils {
 			TclStatement statement) {
 		List fields = new ArrayList();
 
-		String[] vars = TclParseUtils.returnVariable(statement);
+		String[] vars = OldTclParserUtils.returnVariable(statement);
 		if (vars != null) {
 			for (int j = 0; j < vars.length; ++j) {
 				int nStart = statement.sourceStart();

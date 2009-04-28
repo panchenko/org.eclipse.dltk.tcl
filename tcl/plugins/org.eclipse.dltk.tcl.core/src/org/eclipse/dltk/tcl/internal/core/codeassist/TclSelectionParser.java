@@ -31,7 +31,7 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnAST;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnKeywordOrFunction;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnNode;
 import org.eclipse.dltk.tcl.internal.core.codeassist.selection.SelectionOnVariable;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclSelectionParser extends TclAssistParser {
 	public void handleNotInElement(ASTNode node, int position) {
@@ -111,7 +111,7 @@ public class TclSelectionParser extends TclAssistParser {
 				}
 				handleNotInElement(expr, position);
 			}
-			String var = TclParseUtils.returnVariableCheck(statement, position);
+			String var = OldTclParserUtils.returnVariableCheck(statement, position);
 			if ((completionToken != null && completionToken.startsWith("$"))
 					|| var != null) {
 				this.assistNodeParent = inNode;
@@ -205,7 +205,7 @@ public class TclSelectionParser extends TclAssistParser {
 					content);
 		}
 
-		SimpleReference tok = TclParseUtils.findVariableFromString(
+		SimpleReference tok = OldTclParserUtils.findVariableFromString(
 				(StringLiteral) completionNode, pos);
 		if (tok != null) {
 			this.assistNodeParent = inNode;
@@ -273,7 +273,7 @@ public class TclSelectionParser extends TclAssistParser {
 								ref, ref, inNode);
 						throw new SelectionNodeFound(nde);
 					} else {
-						SimpleReference var = TclParseUtils
+						SimpleReference var = OldTclParserUtils
 								.extractVariableFromString(ref.sourceStart(),
 										ref.sourceEnd(), position
 												- ref.sourceStart(), ref

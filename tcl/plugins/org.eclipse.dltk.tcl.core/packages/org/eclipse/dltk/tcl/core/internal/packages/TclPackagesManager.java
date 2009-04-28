@@ -133,7 +133,7 @@ public class TclPackagesManager {
 		return interpreterInfo;
 	}
 
-	private static synchronized TclProjectInfo getTclProject(String name) {
+	public static synchronized TclProjectInfo getTclProject(String name) {
 		EList<EObject> contents = infos.getContents();
 		TclProjectInfo info = null;
 		for (EObject eObject : contents) {

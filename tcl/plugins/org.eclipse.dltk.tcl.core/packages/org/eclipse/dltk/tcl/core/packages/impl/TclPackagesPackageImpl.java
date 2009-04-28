@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.1 2009/04/23 10:58:24 asobolev Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -14,6 +14,7 @@ import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
+import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -63,6 +64,13 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * @generated
 	 */
 	private EClass tclSourceEntryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass userCorrectionEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -269,6 +277,16 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getTclProjectInfo_PackageCorrections() {
+		return (EReference) tclProjectInfoEClass.getEStructuralFeatures()
+				.get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTclModuleInfo() {
 		return tclModuleInfoEClass;
 	}
@@ -298,6 +316,24 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 */
 	public EReference getTclModuleInfo_Sourced() {
 		return (EReference) tclModuleInfoEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTclModuleInfo_SourceCorrections() {
+		return (EReference) tclModuleInfoEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclModuleInfo_External() {
+		return (EAttribute) tclModuleInfoEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -344,9 +380,28 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTclSourceEntry_CorrectedValue() {
-		return (EAttribute) tclSourceEntryEClass.getEStructuralFeatures()
-				.get(3);
+	public EClass getUserCorrection() {
+		return userCorrectionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getUserCorrection_OriginalValue() {
+		return (EAttribute) userCorrectionEClass.getEStructuralFeatures()
+				.get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getUserCorrection_UserValue() {
+		return (EAttribute) userCorrectionEClass.getEStructuralFeatures()
+				.get(1);
 	}
 
 	/**
@@ -404,19 +459,26 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 		tclProjectInfoEClass = createEClass(TCL_PROJECT_INFO);
 		createEAttribute(tclProjectInfoEClass, TCL_PROJECT_INFO__NAME);
 		createEReference(tclProjectInfoEClass, TCL_PROJECT_INFO__MODULES);
+		createEReference(tclProjectInfoEClass,
+				TCL_PROJECT_INFO__PACKAGE_CORRECTIONS);
 
 		tclModuleInfoEClass = createEClass(TCL_MODULE_INFO);
 		createEAttribute(tclModuleInfoEClass, TCL_MODULE_INFO__HANDLE);
 		createEReference(tclModuleInfoEClass, TCL_MODULE_INFO__REQUIRED);
 		createEReference(tclModuleInfoEClass, TCL_MODULE_INFO__PROVIDED);
 		createEReference(tclModuleInfoEClass, TCL_MODULE_INFO__SOURCED);
+		createEReference(tclModuleInfoEClass,
+				TCL_MODULE_INFO__SOURCE_CORRECTIONS);
+		createEAttribute(tclModuleInfoEClass, TCL_MODULE_INFO__EXTERNAL);
 
 		tclSourceEntryEClass = createEClass(TCL_SOURCE_ENTRY);
 		createEAttribute(tclSourceEntryEClass, TCL_SOURCE_ENTRY__VALUE);
 		createEAttribute(tclSourceEntryEClass, TCL_SOURCE_ENTRY__START);
 		createEAttribute(tclSourceEntryEClass, TCL_SOURCE_ENTRY__END);
-		createEAttribute(tclSourceEntryEClass,
-				TCL_SOURCE_ENTRY__CORRECTED_VALUE);
+
+		userCorrectionEClass = createEClass(USER_CORRECTION);
+		createEAttribute(userCorrectionEClass, USER_CORRECTION__ORIGINAL_VALUE);
+		createEAttribute(userCorrectionEClass, USER_CORRECTION__USER_VALUE);
 	}
 
 	/**
@@ -505,6 +567,11 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+		initEReference(getTclProjectInfo_PackageCorrections(), this
+				.getUserCorrection(), null, "packageCorrections", null, 0, -1,
+				TclProjectInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tclModuleInfoEClass, TclModuleInfo.class, "TclModuleInfo",
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -527,6 +594,15 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+		initEReference(getTclModuleInfo_SourceCorrections(), this
+				.getUserCorrection(), null, "sourceCorrections", null, 0, -1,
+				TclModuleInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclModuleInfo_External(), ecorePackage.getEBoolean(),
+				"external", null, 0, 1, TclModuleInfo.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(tclSourceEntryEClass, TclSourceEntry.class,
 				"TclSourceEntry", !IS_ABSTRACT, !IS_INTERFACE,
@@ -543,9 +619,18 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				null, 0, 1, TclSourceEntry.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
-		initEAttribute(getTclSourceEntry_CorrectedValue(), ecorePackage
-				.getEString(), "correctedValue", null, 0, 1,
-				TclSourceEntry.class, !IS_TRANSIENT, !IS_VOLATILE,
+
+		initEClass(userCorrectionEClass, UserCorrection.class,
+				"UserCorrection", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getUserCorrection_OriginalValue(), ecorePackage
+				.getEString(), "originalValue", null, 0, 1,
+				UserCorrection.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getUserCorrection_UserValue(),
+				ecorePackage.getEString(), "userValue", null, 0, 1,
+				UserCorrection.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 

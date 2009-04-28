@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesFactoryImpl.java,v 1.1 2009/04/23 10:58:24 asobolev Exp $
+ * $Id: TclPackagesFactoryImpl.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -71,6 +71,8 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 			return createTclModuleInfo();
 		case TclPackagesPackage.TCL_SOURCE_ENTRY:
 			return createTclSourceEntry();
+		case TclPackagesPackage.USER_CORRECTION:
+			return createUserCorrection();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName()
 					+ "' is not a valid classifier");
@@ -125,6 +127,16 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 	public TclSourceEntry createTclSourceEntry() {
 		TclSourceEntryImpl tclSourceEntry = new TclSourceEntryImpl();
 		return tclSourceEntry;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UserCorrection createUserCorrection() {
+		UserCorrectionImpl userCorrection = new UserCorrectionImpl();
+		return userCorrection;
 	}
 
 	/**

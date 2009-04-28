@@ -20,7 +20,7 @@ import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.extensions.IMatchLocatorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 	IMatchLocatorExtension[] extensions;
@@ -40,7 +40,7 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 			if (node instanceof TclStatement) {
 				TclStatement statement = (TclStatement) node;
 				// process variables.
-				FieldDeclaration[] fields = TclParseUtils
+				FieldDeclaration[] fields = OldTclParserUtils
 						.returnVariableDeclarations(statement);
 				for (int k = 0; k < fields.length; ++k) {
 					locator.match(fields[k], TclMatchLocatorParser.this
@@ -140,7 +140,7 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 				String value = literal.getValue();
 				pos = value.indexOf("$");
 				while (pos != -1) {
-					SimpleReference ref = TclParseUtils.findVariableFromString(
+					SimpleReference ref = OldTclParserUtils.findVariableFromString(
 							literal, pos);
 					if (ref != null) {
 						ref.setName(ref.getName().substring(1));

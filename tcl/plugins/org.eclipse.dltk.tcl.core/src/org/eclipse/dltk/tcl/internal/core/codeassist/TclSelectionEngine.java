@@ -54,7 +54,7 @@ import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclField;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclNamespaceImport;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclProc;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclSelectionEngine extends ScriptSelectionEngine {
 	public static boolean DEBUG = DLTKCore.DEBUG_SELECTION;
@@ -546,7 +546,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				if (node instanceof TclStatement
 						&& node.sourceEnd() < beforePosition) {
 					TclStatement s = (TclStatement) node;
-					String[] variable = TclParseUtils.returnVariable(s);
+					String[] variable = OldTclParserUtils.returnVariable(s);
 					if (variable != null) {
 						for (int u = 0; u < variable.length; ++u) {
 							checkVariable(name, prefix + variable[u], node);
@@ -780,9 +780,9 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 			cheat = true;
 		}
 
-		int start = TclParseUtils.startLineOrNoSymbol(selectionSourceStart,
+		int start = OldTclParserUtils.startLineOrNoSymbol(selectionSourceStart,
 				source);
-		int end = TclParseUtils.endLineOrNoSymbol(selectionSourceEnd, source);
+		int end = OldTclParserUtils.endLineOrNoSymbol(selectionSourceEnd, source);
 		if (end <= start) {
 			if (cheat)
 				return checkSelection(source, selectionSourceEnd - 1,

@@ -336,7 +336,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				String value = literal.getValue();
 				pos = value.indexOf("$");
 				while (pos != -1) {
-					SimpleReference ref = TclParseUtils.findVariableFromString(
+					SimpleReference ref = OldTclParserUtils.findVariableFromString(
 							literal, pos);
 					if (ref != null) {
 						this.fRequestor.acceptFieldReference(ref.getName()

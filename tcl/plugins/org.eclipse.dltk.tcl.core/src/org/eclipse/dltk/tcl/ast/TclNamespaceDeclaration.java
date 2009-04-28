@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclNamespaceDeclaration extends TypeDeclaration {
 
@@ -38,7 +38,7 @@ public class TclNamespaceDeclaration extends TypeDeclaration {
 			Object o = i.next();
 			if (o instanceof TclStatement) {
 				TclStatement statement = (TclStatement) o;
-				FieldDeclaration[] decls = TclParseUtils
+				FieldDeclaration[] decls = OldTclParserUtils
 						.returnVariableDeclarations(statement);
 				if (decls != null) {
 					for (int j = 0; j < decls.length; ++j) {

@@ -30,7 +30,7 @@ import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.internal.core.packages.TclBuildPathPackageCollector;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinModel;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.TclPackage;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclResolver {
 	private IResolveElementParent resolver;
@@ -273,7 +273,7 @@ public class TclResolver {
 			 */
 			return name;
 		} else if (node instanceof TclStatement) {
-			String[] var = TclParseUtils.returnVariable((TclStatement) node);
+			String[] var = OldTclParserUtils.returnVariable((TclStatement) node);
 			if (var != null) {
 				return var[0];
 			}

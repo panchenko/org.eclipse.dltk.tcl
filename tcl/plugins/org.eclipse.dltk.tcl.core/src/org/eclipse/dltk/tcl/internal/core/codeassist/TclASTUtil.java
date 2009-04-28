@@ -20,7 +20,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclASTUtil {
 	public static List getStatements(ASTNode node) {
@@ -99,10 +99,10 @@ public class TclASTUtil {
 	}
 
 	public static int endLineOrSymbol(ASTNode node, String content) {
-		return TclParseUtils.endLineOrSymbol(node.sourceEnd(), content);
+		return OldTclParserUtils.endLineOrSymbol(node.sourceEnd(), content);
 	}
 
 	public static int startLineOrSymbol(ASTNode node, String content) {
-		return TclParseUtils.startLineOrSymbol(node.sourceStart(), content);
+		return OldTclParserUtils.startLineOrSymbol(node.sourceStart(), content);
 	}
 }
