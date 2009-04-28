@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
+import java.lang.Character.Subset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

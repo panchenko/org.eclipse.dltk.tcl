@@ -16,7 +16,8 @@ Export-Package: org.eclipse.dltk.tcl.ast,
  org.eclipse.dltk.tcl.internal.parser,
  org.eclipse.dltk.tcl.internal.parser.raw,
  org.eclipse.dltk.tcl.parser,
- org.eclipse.dltk.tcl.parser.definitions
+ org.eclipse.dltk.tcl.parser.definitions,
+ org.eclipse.dltk.tcl.parser.printer
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,

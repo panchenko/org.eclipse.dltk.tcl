@@ -52,10 +52,10 @@ public class QuotesSubstitution extends TclElement implements ISubstitution {
 									.getPosition(), ErrorDescription.ERROR));
 					break;
 				}
-				buffer.add((char) c);
 				if (c == '"') {
 					break;
 				}
+				buffer.add((char) c);
 			}
 		}
 		contents.addAll(buffer.getContents());
