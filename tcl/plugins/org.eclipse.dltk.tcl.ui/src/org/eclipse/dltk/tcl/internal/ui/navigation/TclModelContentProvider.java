@@ -13,6 +13,8 @@ import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesElement;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
 import org.eclipse.dltk.ui.IModelContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
@@ -40,7 +42,37 @@ public class TclModelContentProvider implements IModelContentProvider {
 						TclPackageFragment fragment = (TclPackageFragment) fragments[i];
 						children.addAll(Arrays.asList(fragment.getChildren()));
 					}
-
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		if (parentElement instanceof IScriptProject) {
+			// Show packages element
+			IScriptProject prj = (IScriptProject) parentElement;
+			IProjectFragment[] fragments = null;
+			try {
+				fragments = prj.getProjectFragments();
+			} catch (ModelException e) {
+				DLTKCore.error("Error resolving project fragments", e);
+			}
+			for (int i = 0; i < fragments.length; i++) {
+				if (fragments[i] instanceof TclSourcesFragment) {
+					children.add(fragments[i]);
+				}
+			}
+		}
+		if (parentElement instanceof TclSourcesFragment) {
+			TclSourcesFragment fragment = (TclSourcesFragment) parentElement;
+			children.clear();
+			try {
+				IModelElement[] elements = fragment.getChildren();
+				TclSourcesElement element = (TclSourcesElement) elements[0];
+				IModelElement[] modelElements = element.getChildren();
+				for (int i = 0; i < modelElements.length; i++) {
+					children.add(modelElements[i]);
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
