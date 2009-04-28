@@ -16,13 +16,13 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 
-public class PackageRequireCheckerFactory extends AbstractBuildParticipantType {
+public class PackageRequireSourceAnalysisFactory extends AbstractBuildParticipantType {
 
 	@Override
 	public IBuildParticipant createBuildParticipant(IScriptProject project)
 			throws CoreException {
 		try {
-			return new PackageRequireChecker(project);
+			return new PackageRequireSourceAnalyser(project);
 		} catch (IllegalStateException e) {
 			// catch interpreter install not found case
 			return null;

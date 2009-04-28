@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.validators.packages;
 
+import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -25,6 +23,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
@@ -33,6 +33,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptProjectUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
@@ -41,7 +42,10 @@ import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -50,7 +54,10 @@ import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
+import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
+import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
+import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.internal.core.packages.Messages;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
@@ -61,16 +68,17 @@ import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.osgi.util.NLS;
 
-public class PackageRequireChecker implements IBuildParticipant,
+public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		IBuildParticipantExtension, IBuildParticipantExtension2 {
 
 	private final IScriptProject project;
 	private final IInterpreterInstall install;
 
-	private final PackageCollector packageCollector = new PackageCollector();
+	private final PackageSourceCollector packageCollector = new PackageSourceCollector();
 
-	private final Set<IPath> buildpath;
-	private final Map<String, Boolean> availabilityCache = new HashMap<String, Boolean>();
+	// private final Set<IPath> buildpath;
+	// private final Map<String, Boolean> availabilityCache = new
+	// HashMap<String, Boolean>();
 
 	private final List<ModuleInfo> modules = new ArrayList<ModuleInfo>();
 
@@ -79,13 +87,16 @@ public class PackageRequireChecker implements IBuildParticipant,
 		final ISourceLineTracker lineTracker;
 		final TclModuleInfo moduleInfo;
 		final IProblemReporter reporter;
+		final IPath moduleLocation;
 
 		public ModuleInfo(String moduleName, ISourceLineTracker codeModel,
-				IProblemReporter reporter, TclModuleInfo moduleInfo) {
+				IProblemReporter reporter, TclModuleInfo moduleInfo,
+				IPath moduleLocation) {
 			this.name = moduleName;
 			this.lineTracker = codeModel;
 			this.reporter = reporter;
 			this.moduleInfo = moduleInfo;
+			this.moduleLocation = moduleLocation;
 		}
 
 	}
@@ -96,8 +107,8 @@ public class PackageRequireChecker implements IBuildParticipant,
 	 * @throws IllegalStateException
 	 *             if associated interpreter could not be found
 	 */
-	public PackageRequireChecker(IScriptProject project) throws CoreException,
-			IllegalStateException {
+	public PackageRequireSourceAnalyser(IScriptProject project)
+			throws CoreException, IllegalStateException {
 		this.project = project;
 		install = ScriptRuntime.getInterpreterInstall(project);
 		if (install == null) {
@@ -107,7 +118,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 							.getElementName()));
 		}
 		knownInfos = TclPackagesManager.getPackageInfos(install);
-		buildpath = getBuildpath(project);
+		// buildpath = getBuildpath(project);
 	}
 
 	private int buildType;
@@ -155,7 +166,7 @@ public class PackageRequireChecker implements IBuildParticipant,
 	private final NamespaceScopeProcessor processor = DefinitionManager
 			.getInstance().createProcessor();
 
-	private static final char[] PACKAGE_CHARS = PackageCollector.PACKAGE
+	private static final char[] PACKAGE_CHARS = PackageSourceCollector.PACKAGE
 			.toCharArray();
 	private List<TclPackageInfo> knownInfos;
 
@@ -178,16 +189,112 @@ public class PackageRequireChecker implements IBuildParticipant,
 			return;
 		}
 		// packageCollector.getRequireRefs().clear();
-		packageCollector.process(statements, context.getSourceModule());
-		// if (!packageCollector.getRequireRefs().isEmpty()) {
-		modules.add(new ModuleInfo(context.getSourceModule().getElementName(),
-				context.getLineTracker(), context.getProblemReporter(),
-				packageCollector.getCreateCurrentModuleInfo(context
-						.getSourceModule())));
-		// }
+		ISourceModule module = context.getSourceModule();
+		packageCollector.process(statements, module);
+		IPath modulePath = module.getPath();
+		IEnvironment env = EnvironmentManager.getEnvironment(project);
+		if (module.getResource() != null) {
+			modulePath = module.getResource().getLocation();
+			if (modulePath == null) {
+				URI uri = module.getResource().getLocationURI();
+				if (uri != null) {
+					IFileHandle file = env.getFile(uri);
+					if (file != null) {
+						modulePath = file.getPath();
+					}
+				}
+			}
+		}
+		modules
+				.add(new ModuleInfo(module.getElementName(), context
+						.getLineTracker(), context.getProblemReporter(),
+						packageCollector.getCreateCurrentModuleInfo(module),
+						modulePath));
 	}
 
 	public void endBuild(IProgressMonitor monitor) {
+		monitor.subTask(Messages.TclCheckBuilder_retrievePackages);
+		// initialize manager caches after they are collected
+		// process all modules
+		final Set<String> newDependencies = new HashSet<String>();
+		int remainingWork = modules.size();
+		IEnvironment environment = EnvironmentManager
+				.getEnvironment(this.project);
+		TclProjectInfo projectInfo = TclPackagesManager.getTclProject(project
+				.getElementName());
+		for (ModuleInfo moduleInfo : modules) {
+			monitor.subTask(NLS.bind(Messages.TclCheckBuilder_processing,
+					moduleInfo.name, Integer.toString(remainingWork)));
+
+			for (TclSourceEntry ref : moduleInfo.moduleInfo.getRequired()) {
+				// Check for user override for selected source value
+				EList<UserCorrection> corrections = projectInfo
+						.getPackageCorrections();
+				TclSourceEntry toCheck = ref;
+				for (UserCorrection userCorrection : corrections) {
+					if (userCorrection.getOriginalValue()
+							.equals(ref.getValue())) {
+						toCheck = TclPackagesFactory.eINSTANCE
+								.createTclSourceEntry();
+						toCheck.setEnd(ref.getEnd());
+						toCheck.setStart(ref.getStart());
+						toCheck.setValue(userCorrection.getUserValue());
+						break;
+					}
+				}
+				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker,
+						newDependencies);
+			}
+			IPath folder = moduleInfo.moduleLocation.removeLastSegments(1);
+			// Convert path to real path.
+
+			for (TclSourceEntry source : moduleInfo.moduleInfo.getSourced()) {
+				EList<UserCorrection> corrections = moduleInfo.moduleInfo
+						.getSourceCorrections();
+				IPath sourcedPath = null;
+				boolean needToAddCorrection = false;
+				for (UserCorrection userCorrection : corrections) {
+					if (userCorrection.getOriginalValue().equals(
+							source.getValue())) {
+						break;
+					}
+				}
+				if (sourcedPath == null) {
+					sourcedPath = resolveSourceValue(folder, source);
+					needToAddCorrection = true;
+				}
+
+				IFileHandle file = environment.getFile(sourcedPath);
+				if (file != null) {
+					if (!file.exists()) {
+						reportSourceProblem(source, moduleInfo.reporter,
+								"Could not locate sourced file", source
+										.getValue(), moduleInfo.lineTracker);
+					} else {
+						// Add user correction if not specified yet.
+						if (needToAddCorrection) {
+							UserCorrection correction = TclPackagesFactory.eINSTANCE
+									.createUserCorrection();
+							correction.setOriginalValue(source.getValue());
+							correction.setUserValue(file.toString());
+							corrections.add(correction);
+						}
+					}
+				}
+			}
+
+			--remainingWork;
+		}
+		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
+				&& isAutoAddPackages() && !newDependencies.isEmpty()) {
+			@SuppressWarnings("unchecked")
+			final Set<String> names = InterpreterContainerHelper
+					.getInterpreterContainerDependencies(project);
+			if (names.addAll(newDependencies)) {
+				InterpreterContainerHelper.setInterpreterContainerDependencies(
+						project, names);
+			}
+		}
 		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD) {
 			List<TclModuleInfo> mods = packageCollector.getModules().get(
 					project);
@@ -203,53 +310,47 @@ public class PackageRequireChecker implements IBuildParticipant,
 			// Save packages provided by the project
 			TclPackagesManager.setProjectModules(project.getElementName(),
 					result);
-		}
-		monitor.subTask(Messages.TclCheckBuilder_retrievePackages);
-		// initialize manager caches after they are collected
-		// process all modules
-		final Set<String> newDependencies = new HashSet<String>();
-		int remainingWork = modules.size();
-		for (ModuleInfo moduleInfo : modules) {
-			monitor.subTask(NLS.bind(Messages.TclCheckBuilder_processing,
-					moduleInfo.name, Integer.toString(remainingWork)));
-
-			for (TclSourceEntry ref : moduleInfo.moduleInfo.getRequired()) {
-				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker,
-						newDependencies);
-			}
-			--remainingWork;
-		}
-		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
-				&& isAutoAddPackages() && !newDependencies.isEmpty()) {
-			@SuppressWarnings("unchecked")
-			final Set<String> names = InterpreterContainerHelper
-					.getInterpreterContainerDependencies(project);
-			if (names.addAll(newDependencies)) {
-				InterpreterContainerHelper.setInterpreterContainerDependencies(
-						project, names);
+			// Do delta refresh
+			try {
+				ModelManager.getModelManager().getDeltaProcessor()
+						.checkExternalChanges(new IModelElement[] { project },
+								new NullProgressMonitor());
+			} catch (ModelException e) {
+				DLTKCore.error("Failed to call for model update:", e);
 			}
 		}
 	}
 
-	private static Set<IPath> getBuildpath(IScriptProject project) {
-		final IBuildpathEntry[] resolvedBuildpath;
-		try {
-			resolvedBuildpath = project.getResolvedBuildpath(true);
-		} catch (ModelException e1) {
-			TclValidatorsCore.error(e1);
-			return Collections.emptySet();
+	private IPath resolveSourceValue(IPath folder, TclSourceEntry source) {
+		IPath valuePath = Path.fromPortableString(source.getValue());
+		IPath sourcedPath = null;
+		if (valuePath.isAbsolute()) {
+			sourcedPath = valuePath;
+		} else {
+			folder.append(sourcedPath);
 		}
-		final Set<IPath> buildpath = new HashSet<IPath>();
-		for (int i = 0; i < resolvedBuildpath.length; i++) {
-			final IBuildpathEntry entry = resolvedBuildpath[i];
-			if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
-					&& entry.isExternal()) {
-				buildpath.add(EnvironmentPathUtils
-						.getLocalPath(entry.getPath()));
-			}
-		}
-		return buildpath;
+		return sourcedPath;
 	}
+
+	// private static Set<IPath> getBuildpath(IScriptProject project) {
+	// final IBuildpathEntry[] resolvedBuildpath;
+	// try {
+	// resolvedBuildpath = project.getResolvedBuildpath(true);
+	// } catch (ModelException e1) {
+	// TclValidatorsCore.error(e1);
+	// return Collections.emptySet();
+	// }
+	// final Set<IPath> buildpath = new HashSet<IPath>();
+	// for (int i = 0; i < resolvedBuildpath.length; i++) {
+	// final IBuildpathEntry entry = resolvedBuildpath[i];
+	// if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
+	// && entry.isExternal()) {
+	// buildpath.add(EnvironmentPathUtils
+	// .getLocalPath(entry.getPath()));
+	// }
+	// }
+	// return buildpath;
+	// }
 
 	private void reportPackageProblem(TclSourceEntry pkg,
 			IProblemReporter reporter, String message, String pkgName,
@@ -257,6 +358,15 @@ public class PackageRequireChecker implements IBuildParticipant,
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_REQUIRED_PACKAGE, new String[] { pkgName },
 				ProblemSeverities.Error, pkg.getStart(), pkg.getEnd(),
+				lineTracker.getLineNumberOfOffset(pkg.getStart())));
+	}
+
+	private void reportSourceProblem(TclSourceEntry pkg,
+			IProblemReporter reporter, String message, String pkgName,
+			ISourceLineTracker lineTracker) {
+		reporter.reportProblem(new DefaultProblem(message,
+				TclProblems.UNKNOWN_SOURCE, new String[] { pkgName },
+				ProblemSeverities.Warning, pkg.getStart(), pkg.getEnd(),
 				lineTracker.getLineNumberOfOffset(pkg.getStart())));
 	}
 

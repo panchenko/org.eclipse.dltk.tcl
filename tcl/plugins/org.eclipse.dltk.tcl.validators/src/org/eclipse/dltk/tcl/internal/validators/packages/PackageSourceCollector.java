@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -25,12 +26,14 @@ import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.definitions.Command;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
+import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.emf.common.util.EList;
 
-public class PackageCollector extends TclVisitor {
+public class PackageSourceCollector extends TclVisitor {
 
 	static final String PACKAGE = "package"; //$NON-NLS-1$
 	static final String REQUIRE = "require"; //$NON-NLS-1$
@@ -38,13 +41,15 @@ public class PackageCollector extends TclVisitor {
 	static final String IFNEEDED = "ifneeded"; //$NON-NLS-1$
 	static final String EXACT = "-exact"; //$NON-NLS-1$
 
+	static final String SOURCE = "source";//$NON-NLS-1$
+
 	private final Map<IScriptProject, List<TclModuleInfo>> modules = new HashMap<IScriptProject, List<TclModuleInfo>>();
 	private TclModuleInfo currentModuleInfo;
 
-	// private ISourceModule currentModule;
+	private ISourceModule currentModule;
 
 	public void process(List<TclCommand> declaration, ISourceModule module) {
-		// this.currentModule = module;
+		this.currentModule = module;
 		try {
 			currentModuleInfo = getCreateCurrentModuleInfo(module);
 			currentModuleInfo.getProvided().clear();
@@ -57,33 +62,42 @@ public class PackageCollector extends TclVisitor {
 	}
 
 	public TclModuleInfo getCreateCurrentModuleInfo(ISourceModule module) {
-		String identifier = module.getHandleIdentifier();
-		IScriptProject scriptProject = module.getScriptProject();
-		List<TclModuleInfo> list = modules.get(scriptProject);
-		if (list == null) {
-			list = new ArrayList<TclModuleInfo>();
-			modules.put(scriptProject, list);
-		}
-		TclModuleInfo result = null;
-		// Remove all old required and provided packages.
-		for (TclModuleInfo info : list) {
-			if (info.getHandle().equals(identifier)) {
-				result = info;
-				break;
+		if (module != null) {
+			String identifier = module.getHandleIdentifier();
+			IScriptProject scriptProject = module.getScriptProject();
+			List<TclModuleInfo> list = modules.get(scriptProject);
+			if (list == null) {
+				list = new ArrayList<TclModuleInfo>();
+				modules.put(scriptProject, list);
 			}
+			TclModuleInfo result = null;
+			// Remove all old required and provided packages.
+			for (TclModuleInfo info : list) {
+				if (info.getHandle().equals(identifier)) {
+					result = info;
+					break;
+				}
+			}
+			if (result == null) {
+				result = TclPackagesFactory.eINSTANCE.createTclModuleInfo();
+				result.setHandle(identifier);
+				result.setExternal(module instanceof IExternalSourceModule);
+				list.add(result);
+			}
+			return result;
 		}
-		if (result == null) {
-			result = TclPackagesFactory.eINSTANCE.createTclModuleInfo();
-			result.setHandle(identifier);
-			list.add(result);
-		}
-		return result;
+		return TclPackagesFactory.eINSTANCE.createTclModuleInfo();
 	}
 
 	public boolean visit(TclCommand command) {
 		Command definition = command.getDefinition();
 		if (definition != null && PACKAGE.equals(definition.getName())) {
 			processPackageCommand(command);
+		}
+		if (!(currentModule instanceof TclPackageSourceModule)) {
+			if (definition != null && SOURCE.equals(definition.getName())) {
+				processSourceCommand(command);
+			}
 		}
 		return super.visit(command);
 	}
@@ -145,10 +159,29 @@ public class PackageCollector extends TclVisitor {
 		}
 	}
 
+	private void processSourceCommand(TclCommand command) {
+		EList<TclArgument> arguments = command.getArguments();
+		for (TclArgument tclArgument : arguments) {
+			TclSourceEntry entry = TclPackagesFactory.eINSTANCE
+					.createTclSourceEntry();
+			entry.setStart(tclArgument.getStart());
+			entry.setEnd(tclArgument.getEnd());
+			this.currentModuleInfo.getSourced().add(entry);
+			entry.setValue(SimpleCodePrinter.getArgumentString(tclArgument));
+		}
+	}
+
 	/**
 	 * @return the packagesProvided
 	 */
 	public Map<IScriptProject, List<TclModuleInfo>> getModules() {
 		return modules;
+	}
+
+	/**
+	 * For testing purposes only.
+	 */
+	public TclModuleInfo getCurrentModuleInfo() {
+		return currentModuleInfo;
 	}
 }

@@ -10,9 +10,9 @@
             nature="org.eclipse.dltk.tcl.core.nature">
       </buildParticipant>
       <buildParticipant
-            class="org.eclipse.dltk.tcl.internal.validators.packages.PackageRequireCheckerFactory"
+            class="org.eclipse.dltk.tcl.internal.validators.packages.PackageRequireSourceAnalysisFactory"
             id="org.eclipse.dltk.tcl.validators.packages"
-            name="Package Require Checker"
+            name="Package Require/Source Analysis"
             nature="org.eclipse.dltk.tcl.core.nature">
             <requires
                   id="org.eclipse.dltk.tcl.validators.checks">
