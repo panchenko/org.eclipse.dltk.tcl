@@ -11,7 +11,7 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.ITclParser;
-import org.eclipse.dltk.tcl.internal.parser.TclParseUtils;
+import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class IncrTclUtils {
 	public static String extractMethodName(Expression procName) {
@@ -33,7 +33,7 @@ public class IncrTclUtils {
 
 			st = ((TclBlockExpression) procArguments).parseBlockSimple(false);
 
-			arguments = TclParseUtils.parseArguments(st);
+			arguments = OldTclParserUtils.parseArguments(st);
 		}
 		if (procArguments instanceof SimpleReference) {
 			arguments = new ArrayList();
