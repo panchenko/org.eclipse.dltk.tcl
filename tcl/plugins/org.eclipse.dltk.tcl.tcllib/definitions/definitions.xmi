@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tclparse:Scope xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tclparse="http://www.eclipse.org/dltk/tcl/parserules.ecore">
+<tclparse:Scope xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tclparse="http://www.eclipse.org/dltk/tcl/parserules.ecore" xsi:schemaLocation="http://www.eclipse.org/dltk/tcl/parserules.ecore ../../org.eclipse.dltk.tcl.parser/models/definitions.ecore">
   <children xsi:type="tclparse:Namespace" name="">
     <children xsi:type="tclparse:Command" name="after">
       <arguments xsi:type="tclparse:Switch" checkPrefix="true">
