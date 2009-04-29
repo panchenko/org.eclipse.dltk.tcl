@@ -39,7 +39,7 @@ public class TclModelLabelProvider extends LabelProvider {
 
 	public Image getImage(Object element) {
 		if (element instanceof TclSourcesFragment) {
-			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_EXTJAR_WSRC);
+			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_LIBRARY_SRC);
 		}
 		return null;
 	}

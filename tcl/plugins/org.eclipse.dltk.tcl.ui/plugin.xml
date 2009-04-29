@@ -685,4 +685,12 @@
          language="org.eclipse.dltk.tcl.core.nature">
    </modelLabelProvider>
 </extension>
+<extension
+      point="org.eclipse.dltk.ui.modelCompareProvider">
+   <modelCompareProvider
+         class="org.eclipse.dltk.tcl.internal.ui.navigation.TclModelCompareProvider"
+         id="org.eclipse.dltk.tcl.ui.modelCompareProvider"
+         language="org.eclipse.dltk.tcl.core.nature">
+   </modelCompareProvider>
+</extension>
 </plugin>

@@ -60,7 +60,10 @@ public class TclModelContentProvider implements IModelContentProvider {
 			}
 			for (int i = 0; i < fragments.length; i++) {
 				if (fragments[i] instanceof TclSourcesFragment) {
-					children.add(fragments[i]);
+					TclSourcesFragment fragment = (TclSourcesFragment) fragments[i];
+					if (fragment.containChildrens()) {
+						children.add(fragment);
+					}
 				}
 			}
 		}
