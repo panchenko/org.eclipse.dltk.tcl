@@ -89,6 +89,7 @@ public class TclPackagesManager {
 
 	public static Set<TclPackageInfo> getDependencies(
 			IInterpreterInstall install, String name, boolean fetchIfRequired) {
+		initialize();
 		TclPackageInfo info = getPackageInfo(install, name, fetchIfRequired);
 		if (info != null) {
 			Set<TclPackageInfo> result = new HashSet<TclPackageInfo>();
@@ -134,6 +135,7 @@ public class TclPackagesManager {
 	}
 
 	public static synchronized TclProjectInfo getTclProject(String name) {
+		initialize();
 		EList<EObject> contents = infos.getContents();
 		TclProjectInfo info = null;
 		for (EObject eObject : contents) {
@@ -469,12 +471,14 @@ public class TclPackagesManager {
 	}
 
 	public static synchronized List<TclModuleInfo> getProjectModules(String name) {
+		initialize();
 		TclProjectInfo info = getTclProject(name);
 		return Collections.unmodifiableList(info.getModules());
 	}
 
 	public static synchronized void setProjectModules(String name,
 			List<TclModuleInfo> modules) {
+		initialize();
 		TclProjectInfo info = getTclProject(name);
 		info.getModules().clear();
 		info.getModules().addAll(modules);
@@ -483,6 +487,7 @@ public class TclPackagesManager {
 
 	public static synchronized void removeInterpreterInfo(
 			IInterpreterInstall install) {
+		initialize();
 		TclInterpreterInfo info = getTclInterpreter(install);
 		info.getPackages().clear();
 		save();
@@ -490,6 +495,7 @@ public class TclPackagesManager {
 
 	public static synchronized Set<String> getPackageInfosAsString(
 			IInterpreterInstall install) {
+		initialize();
 		Set<String> result = new HashSet<String>();
 		List<TclPackageInfo> list = getPackageInfos(install);
 		for (TclPackageInfo tclPackageInfo : list) {

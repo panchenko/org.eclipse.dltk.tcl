@@ -1,10 +1,13 @@
 package org.eclipse.dltk.tcl.internal.core.sources;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -23,6 +26,7 @@ import org.eclipse.dltk.internal.core.OpenableElementInfo;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
 import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
@@ -34,18 +38,14 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 	public static final IPath PATH = new Path(IBuildpathEntry.BUILDPATH_SPECIAL
 			+ "sources#");
 	private IPath currentPath;
-	private IInterpreterInstall install;
 
-	public TclSourcesFragment(ScriptProject project,
-			IInterpreterInstall install) {
+	public TclSourcesFragment(ScriptProject project) {
 		super(project);
-		this.install = install;
-		this.currentPath = PATH.append(install.getInstallLocation().getPath())
-				.append("@");
+		this.currentPath = PATH.append(project.getElementName()).append("@");
 	}
 
 	public String getElementName() {
-		return "Sources@";
+		return currentPath.toString();
 	}
 
 	public boolean equals(Object o) {
@@ -205,5 +205,23 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 			}
 		}
 		return hash;
+	}
+
+	public boolean containChildrens() {
+		IInterpreterInstall install = null;
+		try {
+			install = ScriptRuntime.getInterpreterInstall(getScriptProject());
+		} catch (CoreException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+			return false;
+		}
+		if (install == null) {
+			return false;
+		}
+		Set<IPath> sources = new HashSet<IPath>();
+		TclSourcesUtils.fillSources(install, getScriptProject(), sources);
+		return !sources.isEmpty();
 	}
 }

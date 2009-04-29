@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -23,6 +24,7 @@ import org.eclipse.dltk.internal.core.OpenableElementInfo;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
 import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.utils.CorePrinter;
@@ -32,16 +34,12 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 	public static final IPath PATH = new Path(IBuildpathEntry.BUILDPATH_SPECIAL
 			+ "packages#");
 	private IPath currentPath;
-	private IInterpreterInstall install;
 	private String packageName;
 
-	protected TclPackageFragment(ScriptProject project, String packageName,
-			IInterpreterInstall install) {
+	protected TclPackageFragment(ScriptProject project, String packageName) {
 		super(project);
-		this.install = install;
 		this.packageName = packageName;
-		this.currentPath = PATH.append(install.getInstallLocation().getPath())
-				.append("@").append(packageName);
+		this.currentPath = PATH.append("@").append(packageName);
 	}
 
 	public String getElementName() {
@@ -62,7 +60,20 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 	protected boolean buildStructure(OpenableElementInfo info,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource)
 			throws ModelException {
+		IInterpreterInstall install = null;
+		try {
+			install = ScriptRuntime.getInterpreterInstall(getScriptProject());
+		} catch (CoreException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+			return false;
+		}
+		if (install == null) {
+			return false;
+		}
 		List children = new ArrayList();
+
 		TclPackageInfo packageInfo = TclPackagesManager.getPackageInfo(install,
 				this.packageName, true);
 		if (packageInfo != null) {
@@ -89,8 +100,8 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 			ModelElement classFile = (ModelElement) getScriptFolder(classFileName);
 			return classFile.getHandleFromMemento(memento, owner);
 		case JEM_USER_ELEMENT:
-			return MementoModelElementUtil.getHandleFromMemento(memento,
-					this, owner);
+			return MementoModelElementUtil.getHandleFromMemento(memento, this,
+					owner);
 		}
 		return null;
 	}
