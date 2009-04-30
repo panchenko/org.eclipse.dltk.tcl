@@ -215,6 +215,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	public void endBuild(IProgressMonitor monitor) {
 		monitor.subTask(Messages.TclCheckBuilder_retrievePackages);
 		// initialize manager caches after they are collected
+		@SuppressWarnings("unchecked")
+		final Set<String> names = InterpreterContainerHelper
+				.getInterpreterContainerDependencies(project);
 		// process all modules
 		final Set<String> newDependencies = new HashSet<String>();
 		int remainingWork = modules.size();
@@ -243,7 +246,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					}
 				}
 				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker,
-						newDependencies);
+						newDependencies, names);
 			}
 			IPath folder = moduleInfo.moduleLocation.removeLastSegments(1);
 			// Convert path to real path.
@@ -260,25 +263,43 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					}
 				}
 				if (sourcedPath == null) {
-					sourcedPath = resolveSourceValue(folder, source);
+					sourcedPath = resolveSourceValue(folder, source,
+							environment);
 					needToAddCorrection = true;
 				}
-
-				IFileHandle file = environment.getFile(sourcedPath);
-				if (file != null) {
-					if (!file.exists()) {
-						reportSourceProblem(source, moduleInfo.reporter,
-								"Could not locate sourced file", source
-										.getValue(), moduleInfo.lineTracker);
-					} else {
-						// Add user correction if not specified yet.
-						if (needToAddCorrection) {
-							UserCorrection correction = TclPackagesFactory.eINSTANCE
-									.createUserCorrection();
-							correction.setOriginalValue(source.getValue());
-							correction.setUserValue(file.toString());
-							corrections.add(correction);
+				if (sourcedPath != null) {
+					IFileHandle file = environment.getFile(sourcedPath);
+					if (file != null) {
+						if (!file.exists()) {
+							reportSourceProblem(source, moduleInfo.reporter,
+									"Could not locate sourced file:" + file.toOSString(), source
+											.getValue(), moduleInfo.lineTracker);
+						} else {
+							if (file.isDirectory()) {
+								reportSourceProblem(
+										source,
+										moduleInfo.reporter,
+										"Sourcing of folders are not supported",
+										source.getValue(),
+										moduleInfo.lineTracker);
+							} else
+							// Add user correction if not specified yet.
+							if (needToAddCorrection) {
+								UserCorrection correction = TclPackagesFactory.eINSTANCE
+										.createUserCorrection();
+								correction.setOriginalValue(source.getValue());
+								correction.setUserValue(file.toString());
+								corrections.add(correction);
+							}
 						}
+					}
+				} else {
+					if (!TclPackagesManager.isValidName(source.getValue())) {
+						reportSourceProblemCorrection(
+								source,
+								moduleInfo.reporter,
+								"Could not locate sourced file. Correction is required.",
+								source.getValue(), moduleInfo.lineTracker);
 					}
 				}
 			}
@@ -287,9 +308,6 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		}
 		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
 				&& isAutoAddPackages() && !newDependencies.isEmpty()) {
-			@SuppressWarnings("unchecked")
-			final Set<String> names = InterpreterContainerHelper
-					.getInterpreterContainerDependencies(project);
 			if (names.addAll(newDependencies)) {
 				InterpreterContainerHelper.setInterpreterContainerDependencies(
 						project, names);
@@ -321,36 +339,26 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		}
 	}
 
-	private IPath resolveSourceValue(IPath folder, TclSourceEntry source) {
-		IPath valuePath = Path.fromPortableString(source.getValue());
+	private IPath resolveSourceValue(IPath folder, TclSourceEntry source,
+			IEnvironment environment) {
+		String value = source.getValue();
+		IPath valuePath = null;
+		if (environment.isLocal()) {
+			valuePath = Path.fromOSString(source.getValue());
+		} else {
+			value = value.replace('\\', '/');
+			valuePath = Path.fromPortableString(source.getValue());
+		}
 		IPath sourcedPath = null;
 		if (valuePath.isAbsolute()) {
 			sourcedPath = valuePath;
 		} else {
-			folder.append(sourcedPath);
+			if (TclPackagesManager.isValidName(value)) {
+				sourcedPath = folder.append(valuePath);
+			}
 		}
 		return sourcedPath;
 	}
-
-	// private static Set<IPath> getBuildpath(IScriptProject project) {
-	// final IBuildpathEntry[] resolvedBuildpath;
-	// try {
-	// resolvedBuildpath = project.getResolvedBuildpath(true);
-	// } catch (ModelException e1) {
-	// TclValidatorsCore.error(e1);
-	// return Collections.emptySet();
-	// }
-	// final Set<IPath> buildpath = new HashSet<IPath>();
-	// for (int i = 0; i < resolvedBuildpath.length; i++) {
-	// final IBuildpathEntry entry = resolvedBuildpath[i];
-	// if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
-	// && entry.isExternal()) {
-	// buildpath.add(EnvironmentPathUtils
-	// .getLocalPath(entry.getPath()));
-	// }
-	// }
-	// return buildpath;
-	// }
 
 	private void reportPackageProblem(TclSourceEntry pkg,
 			IProblemReporter reporter, String message, String pkgName,
@@ -361,17 +369,38 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				lineTracker.getLineNumberOfOffset(pkg.getStart())));
 	}
 
+	private void reportPackageProblemCorrection(TclSourceEntry pkg,
+			IProblemReporter reporter, String message, String pkgName,
+			ISourceLineTracker lineTracker) {
+		reporter.reportProblem(new DefaultProblem(message,
+				TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION,
+				new String[] { pkgName }, ProblemSeverities.Error, pkg
+						.getStart(), pkg.getEnd(), lineTracker
+						.getLineNumberOfOffset(pkg.getStart())));
+	}
+
 	private void reportSourceProblem(TclSourceEntry pkg,
 			IProblemReporter reporter, String message, String pkgName,
 			ISourceLineTracker lineTracker) {
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_SOURCE, new String[] { pkgName },
-				ProblemSeverities.Warning, pkg.getStart(), pkg.getEnd(),
+				ProblemSeverities.Error, pkg.getStart(), pkg.getEnd(),
 				lineTracker.getLineNumberOfOffset(pkg.getStart())));
 	}
 
+	private void reportSourceProblemCorrection(TclSourceEntry pkg,
+			IProblemReporter reporter, String message, String pkgName,
+			ISourceLineTracker lineTracker) {
+		reporter.reportProblem(new DefaultProblem(message,
+				TclProblems.UNKNOWN_SOURCE_CORRECTION,
+				new String[] { pkgName }, ProblemSeverities.Error, pkg
+						.getStart(), pkg.getEnd(), lineTracker
+						.getLineNumberOfOffset(pkg.getStart())));
+	}
+
 	private void checkPackage(TclSourceEntry pkg, IProblemReporter reporter,
-			ISourceLineTracker lineTracker, Set<String> newDependencies) {
+			ISourceLineTracker lineTracker, Set<String> newDependencies,
+			Set<String> names) {
 		final String packageName = pkg.getValue();
 
 		List<TclModuleInfo> list = new ArrayList<TclModuleInfo>();
@@ -406,17 +435,32 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			}
 		}
 		if (!found) {
-			reportPackageProblem(pkg, reporter, NLS.bind(
-					Messages.TclCheckBuilder_unknownPackage, packageName),
-					packageName, lineTracker);
+			if (!TclPackagesManager.isValidName(packageName)) {
+				reportPackageProblemCorrection(
+						pkg,
+						reporter,
+						NLS
+								.bind(
+										"Could not detect required package. Correction is required",
+										packageName), packageName, lineTracker);
+				return;
+			} else {
+				reportPackageProblem(pkg, reporter, NLS.bind(
+						Messages.TclCheckBuilder_unknownPackage, packageName),
+						packageName, lineTracker);
+			}
 			return;
 		}
 
 		// Receive main package and it paths.
 		if (!isAutoAddPackages()) {
-			reportPackageProblem(pkg, reporter, NLS.bind(
-					Messages.TclCheckBuilder_unresolvedDependencies,
-					packageName), packageName, lineTracker);
+			// Check for already added packages for case then builder is not
+			// enabled.
+			if (!names.contains(packageName)) {
+				reportPackageProblem(pkg, reporter, NLS.bind(
+						Messages.TclCheckBuilder_unresolvedDependencies,
+						packageName), packageName, lineTracker);
+			}
 			return;
 		}
 		newDependencies.add(packageName);

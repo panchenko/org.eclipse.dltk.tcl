@@ -19,7 +19,6 @@ import java.util.Map;
 import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
@@ -102,35 +101,32 @@ public class PackageSourceCollector extends TclVisitor {
 		return super.visit(command);
 	}
 
-	private StringArgument getStringArg(EList<TclArgument> args, int index) {
+	private TclArgument getStringArg(EList<TclArgument> args, int index) {
 		if (index < args.size()) {
-			final TclArgument argument = args.get(index);
-			if (argument instanceof StringArgument) {
-				return (StringArgument) argument;
-			}
+			return args.get(index);
 		}
 		return null;
 	}
 
 	private void processPackageCommand(TclCommand command) {
 		EList<TclArgument> args = command.getArguments();
-		StringArgument style = getStringArg(args, 0);
+		TclArgument style = getStringArg(args, 0);
 		if (style == null) {
 			return;
 		}
-		final String keyword = style.getValue();
+		final String keyword = SimpleCodePrinter.getArgumentString(style);
 		if (REQUIRE.equalsIgnoreCase(keyword)) {
-			StringArgument pkgName = getStringArg(args, 1);
+			TclArgument pkgName = getStringArg(args, 1);
 			if (pkgName == null) {
 				return;
 			}
-			String packageName = pkgName.getValue();
+			String packageName = SimpleCodePrinter.getArgumentString(pkgName);
 			if (EXACT.equals(packageName)) {
 				pkgName = getStringArg(args, 2);
 				if (pkgName == null) {
 					return;
 				}
-				packageName = pkgName.getValue();
+				packageName = SimpleCodePrinter.getArgumentString(pkgName);
 			}
 			// if (TclPackagesManager.isValidPackageName(packageName)) {
 			TclSourceEntry entry = TclPackagesFactory.eINSTANCE
@@ -142,11 +138,11 @@ public class PackageSourceCollector extends TclVisitor {
 			// }
 		} else if (IFNEEDED.equalsIgnoreCase(keyword)
 				|| PROVIDE.equalsIgnoreCase(keyword)) {
-			StringArgument pkgName = getStringArg(args, 1);
+			TclArgument pkgName = getStringArg(args, 1);
 			if (pkgName == null) {
 				return;
 			}
-			String pkg = pkgName.getValue();
+			String pkg = SimpleCodePrinter.getArgumentString(pkgName);
 			// if (TclPackagesManager.isValidPackageName(pkg)) {
 			// packagesProvided.add(new PackageInfo(pkg, null, currentModule));
 			// }
