@@ -217,6 +217,7 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 	 */
 	public void testCloseTclProject() {
 		initProject(true);
+		helper.openTclPerspective();
 
 		new ProjectOperations(bot).closeProject(PROJECT_NAME);
 
@@ -230,6 +231,7 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 	 */
 	public void testOpenTclProject() {
 		initProject(false);
+		helper.openTclPerspective();
 
 		new ProjectOperations(bot).openProject(PROJECT_NAME);
 
