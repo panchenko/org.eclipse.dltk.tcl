@@ -50,8 +50,8 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.TclProblems;
-import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
@@ -65,6 +65,7 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
+import org.eclipse.dltk.tcl.validators.packages.PackageSourceCollector;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.osgi.util.NLS;
 

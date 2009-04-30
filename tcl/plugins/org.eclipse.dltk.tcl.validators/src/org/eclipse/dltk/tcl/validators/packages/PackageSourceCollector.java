@@ -9,7 +9,7 @@
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  *******************************************************************************/
-package org.eclipse.dltk.tcl.internal.validators.packages;
+package org.eclipse.dltk.tcl.validators.packages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ import org.eclipse.emf.common.util.EList;
 
 public class PackageSourceCollector extends TclVisitor {
 
-	static final String PACKAGE = "package"; //$NON-NLS-1$
+	public static final String PACKAGE = "package"; //$NON-NLS-1$
 	static final String REQUIRE = "require"; //$NON-NLS-1$
 	static final String PROVIDE = "provide"; //$NON-NLS-1$
 	static final String IFNEEDED = "ifneeded"; //$NON-NLS-1$
