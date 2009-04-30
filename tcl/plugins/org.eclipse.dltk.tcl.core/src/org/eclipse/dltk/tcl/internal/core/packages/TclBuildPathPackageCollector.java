@@ -19,9 +19,9 @@ import java.util.Set;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
-import org.eclipse.dltk.tcl.core.internal.packages.TclPackagesManager;
 
 public class TclBuildPathPackageCollector extends ASTVisitor {
 

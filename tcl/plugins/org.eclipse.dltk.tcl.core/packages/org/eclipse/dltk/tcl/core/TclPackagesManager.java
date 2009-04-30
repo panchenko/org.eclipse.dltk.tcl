@@ -1,4 +1,4 @@
-package org.eclipse.dltk.tcl.core.internal.packages;
+package org.eclipse.dltk.tcl.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -214,7 +214,7 @@ public class TclPackagesManager {
 		return null;
 	}
 
-	public static void processContent(List<String> content,
+	private static void processContent(List<String> content,
 			boolean markAsFetched, TclInterpreterInfo info) {
 		String text = getXMLContent(content);
 		Document document = getDocument(text);
@@ -490,6 +490,7 @@ public class TclPackagesManager {
 		initialize();
 		TclInterpreterInfo info = getTclInterpreter(install);
 		info.getPackages().clear();
+		infos.getContents().remove(info);
 		save();
 	}
 
