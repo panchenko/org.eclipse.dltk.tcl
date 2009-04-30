@@ -16,6 +16,8 @@ import org.eclipse.dltk.compiler.problem.IProblem;
 public class TclProblems {
 
 	public static final int UNKNOWN_REQUIRED_PACKAGE = IProblem.ImportRelated + 1;
-	public static final int UNKNOWN_SOURCE = IProblem.ImportRelated + 2;
+	public static final int UNKNOWN_REQUIRED_PACKAGE_CORRECTION = IProblem.ImportRelated + 2;
+	public static final int UNKNOWN_SOURCE = IProblem.ImportRelated + 3;
+	public static final int UNKNOWN_SOURCE_CORRECTION = IProblem.ImportRelated + 4;
 
 }

@@ -41,7 +41,7 @@ public class TclBuildPathPackageCollector extends ASTVisitor {
 		if (s instanceof TclPackageDeclaration) {
 			final TclPackageDeclaration pkg = (TclPackageDeclaration) s;
 			if (pkg.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
-				if (TclPackagesManager.isValidPackageName(pkg.getName())) {
+				if (TclPackagesManager.isValidName(pkg.getName())) {
 					requireDirectives.add(new TclPackageDeclaration(pkg));
 					packagesRequired.add(pkg.getName());
 				}

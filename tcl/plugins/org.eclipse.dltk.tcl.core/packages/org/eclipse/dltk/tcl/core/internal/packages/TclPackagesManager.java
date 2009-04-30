@@ -463,7 +463,7 @@ public class TclPackagesManager {
 		return false;
 	}
 
-	public static boolean isValidPackageName(String packageName) {
+	public static boolean isValidName(String packageName) {
 		return packageName != null && packageName.length() != 0
 				&& packageName.indexOf('$') == -1
 				&& packageName.indexOf('[') == -1
