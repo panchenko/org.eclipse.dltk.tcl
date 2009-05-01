@@ -279,9 +279,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 					.getPackageInfosAsString(install);
 			final List<String> names = new ArrayList<String>();
 			names.addAll(packages);
-			Collections.sort(names);
+			Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
 			ListDialog dialog = new ListDialog(this.fElements.getControl()
 					.getShell());
+			dialog.setTitle("Add Packages");
 			dialog.setContentProvider(new IStructuredContentProvider() {
 				public Object[] getElements(Object inputElement) {
 					return names.toArray();
