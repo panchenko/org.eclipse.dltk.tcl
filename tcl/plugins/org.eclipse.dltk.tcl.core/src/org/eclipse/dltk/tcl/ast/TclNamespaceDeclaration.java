@@ -13,16 +13,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.tcl.internal.parser.OldTclParserUtils;
 
 public class TclNamespaceDeclaration extends TypeDeclaration {
-
-	public TclNamespaceDeclaration(DLTKToken name) {
-		super(name);
-	}
 
 	public TclNamespaceDeclaration(String name, int nameStart, int nameEnd,
 			int start, int end) {
