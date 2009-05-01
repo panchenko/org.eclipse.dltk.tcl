@@ -29,6 +29,8 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 
 		long lastModified;
 
+		boolean initialized = false;
+
 		void load() {
 			Job loadTclBuiltin = new Job("Generate Tcl builtin file...") {
 				protected IStatus run(final IProgressMonitor monitor) {
@@ -48,8 +50,9 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 									monitor);
 					if (content != null) {
 						source.append(content);
+						lastModified = System.currentTimeMillis();
+						initialized = true;
 					}
-					lastModified = System.currentTimeMillis();
 					return Status.OK_STATUS;
 				}
 			};
@@ -102,6 +105,8 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 	private synchronized void initialize() {
 		if (helper == null) {
 			helper = new BuiltinsHelper();
+		}
+		if (!helper.initialized) {
 			helper.load();
 		}
 	}
