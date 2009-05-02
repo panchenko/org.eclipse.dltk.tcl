@@ -57,4 +57,8 @@ public class TclFileCreationPage extends NewSourceModulePage {
 	protected String getLastUsedTemplateName() {
 		return null;
 	}
+
+	protected boolean isLinkingSupported() {
+		return true;
+	}
 }
