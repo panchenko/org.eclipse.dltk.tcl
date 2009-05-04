@@ -22,6 +22,7 @@ import net.sf.swtbot.utils.SWTUtils;
 import net.sf.swtbot.wait.Conditions;
 import net.sf.swtbot.wait.DefaultCondition;
 import net.sf.swtbot.widgets.SWTBotCheckBox;
+import net.sf.swtbot.widgets.SWTBotCombo;
 import net.sf.swtbot.widgets.SWTBotRadio;
 import net.sf.swtbot.widgets.SWTBotShell;
 import net.sf.swtbot.widgets.SWTBotText;
@@ -34,6 +35,8 @@ import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.ui.tests.swtbot.ErrorMessages;
 import org.eclipse.dltk.ui.tests.swtbot.complex.ProjectTests;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Widget;
 
 public class ProjectOperations extends Operations {
 
@@ -166,8 +169,15 @@ public class ProjectOperations extends Operations {
 			getBot().waitUntil(Conditions.shellCloses(shell));
 
 			openNewTclProject();
-			getBot().radio(RADIO_USE_ALT_INTERPR).click();
-			getBot().comboBox(1).setSelection(1);
+			SWTBotRadio botUseInterpr = getBot().radio(RADIO_USE_ALT_INTERPR);
+			botUseInterpr.click();
+			Widget comboWidget = SWTUtils.nextWidget(botUseInterpr.widget);
+			if (!(comboWidget instanceof Combo)) {
+				throw new WidgetNotFoundException("Combo for "
+						+ RADIO_USE_ALT_INTERPR + " not found.");
+			}
+			SWTBotCombo botInterprCombo = new SWTBotCombo((Combo) comboWidget);
+			botInterprCombo.setSelection(1);
 			internalCreate(name);
 
 			getProjectItem(name);

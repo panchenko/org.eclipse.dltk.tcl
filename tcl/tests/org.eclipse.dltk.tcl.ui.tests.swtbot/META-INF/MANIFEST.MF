@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.dltk.tcl.core,
  org.eclipse.core.resources,
  org.eclipse.ltk.ui.refactoring,
- org.hamcrest
+ org.hamcrest,
+ org.apache.log4j
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %pluginProvider
