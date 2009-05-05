@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: TclPackagesPackage.java,v 1.3 2009/05/05 11:16:30 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -162,13 +162,31 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_INTERPRETER_INFO__PACKAGES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Fetched</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_INTERPRETER_INFO__FETCHED = 3;
+
+	/**
+	 * The feature id for the '<em><b>Environment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_INTERPRETER_INFO__ENVIRONMENT = 4;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Interpreter Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_INTERPRETER_INFO_FEATURE_COUNT = 3;
+	int TCL_INTERPRETER_INFO_FEATURE_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl <em>Tcl Project Info</em>}' class.
@@ -481,6 +499,28 @@ public interface TclPackagesPackage extends EPackage {
 	EReference getTclInterpreterInfo_Packages();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#isFetched <em>Fetched</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Fetched</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#isFetched()
+	 * @see #getTclInterpreterInfo()
+	 * @generated
+	 */
+	EAttribute getTclInterpreterInfo_Fetched();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getEnvironment <em>Environment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Environment</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getEnvironment()
+	 * @see #getTclInterpreterInfo()
+	 * @generated
+	 */
+	EAttribute getTclInterpreterInfo_Environment();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo <em>Tcl Project Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -786,6 +826,24 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EReference TCL_INTERPRETER_INFO__PACKAGES = eINSTANCE
 				.getTclInterpreterInfo_Packages();
+
+		/**
+		 * The meta object literal for the '<em><b>Fetched</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_INTERPRETER_INFO__FETCHED = eINSTANCE
+				.getTclInterpreterInfo_Fetched();
+
+		/**
+		 * The meta object literal for the '<em><b>Environment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_INTERPRETER_INFO__ENVIRONMENT = eINSTANCE
+				.getTclInterpreterInfo_Environment();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl <em>Tcl Project Info</em>}' class.

@@ -48,6 +48,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class TclPackagesManager {
 	private static final String DLTK_TCL = "scripts/dltk.tcl"; //$NON-NLS-1$
 	public static final String END_OF_STREAM = "DLTK-TCL-HELPER-9E7A168E-5EEF-4a46-A86D-0C82E90686E4-END-OF-STREAM";
+	private static final String PKG_VERSION = "v20090505";
 
 	private static Resource infos = null;
 
@@ -111,13 +112,16 @@ public class TclPackagesManager {
 		EList<EObject> contents = infos.getContents();
 		TclInterpreterInfo interpreterInfo = null;
 		String interpreterLocation = install.getInstallLocation().toOSString();
+		String environmentId = install.getInstallLocation().getEnvironmentId();
 		for (EObject eObject : contents) {
 			if (eObject instanceof TclInterpreterInfo) {
 				TclInterpreterInfo info = (TclInterpreterInfo) eObject;
 				String location = info.getInstallLocation();
 				String name = info.getName();
+				String env = info.getEnvironment();
 				if (interpreterLocation.equals(location)
-						&& install.getName().equals(name)) {
+						&& install.getName().equals(name) && env != null
+						&& env.equals(environmentId)) {
 					interpreterInfo = info;
 					break;
 				}
@@ -128,7 +132,10 @@ public class TclPackagesManager {
 					.createTclInterpreterInfo();
 			interpreterInfo.setInstallLocation(interpreterLocation);
 			interpreterInfo.setName(install.getName());
+			interpreterInfo.setEnvironment(environmentId);
 			infos.getContents().add(interpreterInfo);
+		}
+		if (!interpreterInfo.isFetched()) {
 			fetchPackagesForInterpreter(install, interpreterInfo);
 		}
 		return interpreterInfo;
@@ -162,7 +169,10 @@ public class TclPackagesManager {
 				.getInstallLocation().toOSString(),
 				new String[] { "get-pkgs" }, install //$NON-NLS-1$
 						.getEnvironmentVariables());
-		processContent(content, false, interpreterInfo);
+		if (content != null) {
+			processContent(content, false, interpreterInfo);
+			interpreterInfo.setFetched(true);
+		}
 	}
 
 	public static void save() {
@@ -387,7 +397,7 @@ public class TclPackagesManager {
 	private static void initialize() {
 		if (infos == null) {
 			IPath packagesPath = TclPlugin.getDefault().getStateLocation()
-					.append("tclPackages.info");
+					.append("tclPackages_"+ PKG_VERSION +".info");
 			infos = new XMIResourceImpl(URI.createFileURI(packagesPath
 					.toOSString()));
 			try {
@@ -430,7 +440,7 @@ public class TclPackagesManager {
 			}
 		}
 		if (process == null) {
-			return new ArrayList<String>();
+			return null;
 		}
 		List<String> output = ProcessOutputCollector.execute(process);
 		deployment.dispose();

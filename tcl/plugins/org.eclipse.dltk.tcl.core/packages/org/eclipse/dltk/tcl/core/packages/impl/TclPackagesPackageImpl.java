@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.3 2009/05/05 11:16:30 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -248,6 +248,26 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getTclInterpreterInfo_Fetched() {
+		return (EAttribute) tclInterpreterInfoEClass.getEStructuralFeatures()
+				.get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclInterpreterInfo_Environment() {
+		return (EAttribute) tclInterpreterInfoEClass.getEStructuralFeatures()
+				.get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTclProjectInfo() {
 		return tclProjectInfoEClass;
 	}
@@ -455,6 +475,10 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 		createEAttribute(tclInterpreterInfoEClass, TCL_INTERPRETER_INFO__NAME);
 		createEReference(tclInterpreterInfoEClass,
 				TCL_INTERPRETER_INFO__PACKAGES);
+		createEAttribute(tclInterpreterInfoEClass,
+				TCL_INTERPRETER_INFO__FETCHED);
+		createEAttribute(tclInterpreterInfoEClass,
+				TCL_INTERPRETER_INFO__ENVIRONMENT);
 
 		tclProjectInfoEClass = createEClass(TCL_PROJECT_INFO);
 		createEAttribute(tclProjectInfoEClass, TCL_PROJECT_INFO__NAME);
@@ -554,6 +578,16 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclInterpreterInfo_Fetched(), ecorePackage
+				.getEBoolean(), "fetched", "false", 0, 1,
+				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getTclInterpreterInfo_Environment(), ecorePackage
+				.getEString(), "environment", null, 0, 1,
+				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
 		initEClass(tclProjectInfoEClass, TclProjectInfo.class,
 				"TclProjectInfo", !IS_ABSTRACT, !IS_INTERFACE,

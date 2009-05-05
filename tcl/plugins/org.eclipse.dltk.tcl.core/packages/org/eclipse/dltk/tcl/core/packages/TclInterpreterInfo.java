@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclInterpreterInfo.java,v 1.1 2009/04/23 10:58:25 asobolev Exp $
+ * $Id: TclInterpreterInfo.java,v 1.2 2009/05/05 11:16:30 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getInstallLocation <em>Install Location</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getPackages <em>Packages</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#isFetched <em>Fetched</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getEnvironment <em>Environment</em>}</li>
  * </ul>
  * </p>
  *
@@ -96,5 +98,58 @@ public interface TclInterpreterInfo extends EObject {
 	 * @generated
 	 */
 	EList<TclPackageInfo> getPackages();
+
+	/**
+	 * Returns the value of the '<em><b>Fetched</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Fetched</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Fetched</em>' attribute.
+	 * @see #setFetched(boolean)
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclInterpreterInfo_Fetched()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isFetched();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#isFetched <em>Fetched</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Fetched</em>' attribute.
+	 * @see #isFetched()
+	 * @generated
+	 */
+	void setFetched(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Environment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Environment</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Environment</em>' attribute.
+	 * @see #setEnvironment(String)
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclInterpreterInfo_Environment()
+	 * @model
+	 * @generated
+	 */
+	String getEnvironment();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getEnvironment <em>Environment</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Environment</em>' attribute.
+	 * @see #getEnvironment()
+	 * @generated
+	 */
+	void setEnvironment(String value);
 
 } // TclInterpreterInfo
