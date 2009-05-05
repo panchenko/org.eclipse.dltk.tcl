@@ -74,7 +74,7 @@ final class TclSourceMarkerResolution implements IMarkerResolution,
 	}
 
 	public static boolean fixAvailable(ISourceModule module, String source) {
-		if( module == null || !module.exists()) {
+		if (module == null || !module.exists()) {
 			return false;
 		}
 		IEnvironment env = EnvironmentManager.getEnvironment(module);
@@ -97,7 +97,11 @@ final class TclSourceMarkerResolution implements IMarkerResolution,
 		if (sourcePath == null) {
 			return false;
 		}
-		return true;
+		IFileHandle file = env.getFile(sourcePath);
+		if (file != null && file.exists() && file.isFile()) {
+			return true;
+		}
+		return false;
 	}
 
 	private boolean resolve() {
