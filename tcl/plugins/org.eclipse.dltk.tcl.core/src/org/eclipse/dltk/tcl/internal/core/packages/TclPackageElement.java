@@ -31,6 +31,7 @@ import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.OpenableElementInfo;
 import org.eclipse.dltk.internal.core.ScriptFolderInfo;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
+import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
@@ -74,11 +75,8 @@ public class TclPackageElement extends Openable implements IScriptFolder {
 			return false;
 
 		TclPackageElement other = (TclPackageElement) o;
-		return this.packageName.equals(other.packageName);
-	}
-
-	public int hashCode() {
-		return this.packageName.hashCode();
+		return this.packageName.equals(other.packageName)
+				&& getParent().equals(other.getParent());
 	}
 
 	protected boolean buildStructure(OpenableElementInfo info,
@@ -138,8 +136,8 @@ public class TclPackageElement extends Openable implements IScriptFolder {
 			ModelElement classFile = (ModelElement) getSourceModule(classFileName);
 			return classFile.getHandleFromMemento(memento, owner);
 		case JEM_USER_ELEMENT:
-			return MementoModelElementUtil.getHandleFromMemento(memento,
-					this, owner);
+			return MementoModelElementUtil.getHandleFromMemento(memento, this,
+					owner);
 		}
 		return null;
 	}

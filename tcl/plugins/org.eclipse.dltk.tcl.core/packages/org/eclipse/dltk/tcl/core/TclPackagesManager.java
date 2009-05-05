@@ -165,7 +165,7 @@ public class TclPackagesManager {
 		processContent(content, false, interpreterInfo);
 	}
 
-	private static void save() {
+	public static void save() {
 		if (infos == null) {
 			return;
 		}

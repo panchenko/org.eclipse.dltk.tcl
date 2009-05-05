@@ -65,17 +65,21 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 		return null;
 	}
 
-	public boolean equals(Object o) {
-		if (this == o)
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		if (!(o instanceof TclSourcesElement))
+		if (!super.equals(obj))
 			return false;
-
+		if (getClass() != obj.getClass())
+			return false;
+		TclSourcesElement other = (TclSourcesElement) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
 		return true;
-	}
-
-	public int hashCode() {
-		return getElementName().hashCode();
 	}
 
 	protected boolean buildStructure(OpenableElementInfo info,
