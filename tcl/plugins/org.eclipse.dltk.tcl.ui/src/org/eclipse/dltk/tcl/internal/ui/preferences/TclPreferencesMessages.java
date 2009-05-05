@@ -4,14 +4,15 @@ import org.eclipse.osgi.util.NLS;
 
 public class TclPreferencesMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.ui.preferences.TclPreferencesMessages";//$NON-NLS-1$	
-//	public static String SmartTypingConfigurationBlock_pasting_title;
+
+	// public static String SmartTypingConfigurationBlock_pasting_title;
 
 	private TclPreferencesMessages() {
 		// Do not instantiate
 	}
 
 	static {
-		NLS.initializeMessages(BUNDLE_NAME,org.eclipse.dltk.tcl.internal.ui.preferences.TclPreferencesMessages.class);
+		NLS.initializeMessages(BUNDLE_NAME, TclPreferencesMessages.class);
 	}
 	public static String TclCheckContentExcludeDialog_duplicatePatternError;
 	public static String TclCheckContentExcludeDialog_editTitle;
@@ -44,5 +45,7 @@ public class TclPreferencesMessages extends NLS {
 	public static String TCLSmartTypingConfigurationBlock_closeBraces;
 	public static String TCLSmartTypingConfigurationBlock_closeStrings;
 	public static String TCLSmartTypingConfigurationBlock_typing_tabTitle;
+	public static String TclContentAssistConfigurationBlock_filteringSection_title;
+	public static String TclContentAssistConfigurationBlock_filteringSection_filterInternalTclApi;
 	public static String TodoTaskDescription;
 }
