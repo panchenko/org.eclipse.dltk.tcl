@@ -39,6 +39,9 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
+/**
+ * FIXME Remove TclPackagesContainerPage class if not used anywhere
+ */
 public class TclPackagesContainerPage extends NewElementWizardPage implements
 		IBuildpathContainerPage, IBuildpathContainerPageExtension {
 	public class PackagesLabelProvider extends LabelProvider {
