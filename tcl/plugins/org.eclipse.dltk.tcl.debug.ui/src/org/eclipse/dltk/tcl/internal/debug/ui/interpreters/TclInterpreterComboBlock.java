@@ -86,7 +86,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 							.getPackageInfosAsString(install);
 
 					if (!names.contains(packageName)) {
-						return DLTKPluginImages.DESC_OBJS_ERROR.createImage();
+						return DLTKPluginImages
+								.get(DLTKPluginImages.IMG_OBJS_ERROR);
 					}
 				}
 			}
@@ -103,7 +104,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 	}
 
-	private class PackagesContentProvider implements ITreeContentProvider {
+	private static class PackagesContentProvider implements
+			ITreeContentProvider {
 
 		public void dispose() {
 		}
@@ -111,6 +113,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof Set) {
 				return getElements(parentElement);
@@ -126,9 +129,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			return false;
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof Set) {
-				return packages.toArray();
+				return ((Set) inputElement).toArray();
 			}
 			return CharOperation.NO_STRINGS;
 		}
@@ -205,16 +209,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 						}
 					}
 				});
-		this.fElements.setComparator(new ViewerComparator() {
-			@Override
-			public int compare(Viewer viewer, Object e1, Object e2) {
-
-				if (e1 instanceof String && e2 instanceof String) {
-					return ((String) e1).compareToIgnoreCase((String) e2);
-				}
-				return super.compare(viewer, e1, e2);
-			}
-		});
+		this.fElements.setComparator(new ViewerComparator());
 		remove.setEnabled(false);
 
 		this.addPropertyChangeListener(new IPropertyChangeListener() {
@@ -227,13 +222,14 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void removePackage() {
 		ISelection selection = this.fElements.getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			boolean update = false;
-			for (Iterator iterator = sel.iterator(); iterator.hasNext();) {
-				String pkg = (String) iterator.next();
+			for (Iterator<String> iterator = sel.iterator(); iterator.hasNext();) {
+				String pkg = iterator.next();
 				boolean res = this.packages.remove(pkg);
 				if (res) {
 					update = res;
@@ -318,7 +314,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	public void initialize(IScriptProject project,
 			IBuildpathEntry[] currentEntries) {
 		this.scriptProject = project;
-		Set set = InterpreterContainerHelper
+		@SuppressWarnings("unchecked")
+		Set<String> set = InterpreterContainerHelper
 				.getInterpreterContainerDependencies(project);
 		this.packages.addAll(set);
 	}
