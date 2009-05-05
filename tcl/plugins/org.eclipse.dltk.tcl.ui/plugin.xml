@@ -112,11 +112,11 @@
             finalPerspective="org.eclipse.dltk.tcl.ui.TclPerspective"
             icon="$nl$/icons/etool16/newprj_wiz.gif"
             id="org.eclipse.dltk.tcl.internal.ui.wizards.TclProjectWizard"
-            name="Tcl Project"
+            name="%NewTCLProject.label"
             preferredPerspectives="org.eclipse.dltk.tcl.ui.TclPerspective"
             project="true">
          <description>
-            Creates new Tcl project.
+            %NewTCLProject.description
          </description>
       </wizard>
       <wizard
@@ -238,7 +238,7 @@
           id="org.eclipse.dltk.tcl.preferences.editor.folding"
           name="%TclEditorFoldingPreferencePage.name"/>
      <page
-            name="Libraries"
+            name="%TclLibrariesPage.name"
             category="org.eclipse.dltk.tcl.preferences"
             class="org.eclipse.dltk.tcl.internal.ui.preferences.TclLibraryPreferencePage"
             id="org.eclipse.dltk.tcl.preferences.UserLibraryPreferencePage">
@@ -633,21 +633,21 @@
          class="org.eclipse.dltk.ui.browsing.ProjectsView:org.eclipse.dltk.tcl.core.nature"
          icon="icons/eview16/tcl_persp.gif"
          id="org.eclipse.dltk.tcl.ui.Projects"
-         name="Tcl Projects">
+         name="%TclProjectsView.name">
    </view>   
    <view
          category="org.eclipse.dltk.tcl.ui"
          class="org.eclipse.dltk.ui.browsing.ext.ExtendedClassesView:org.eclipse.dltk.tcl.core.nature"
          icon="icons/eview16/tcl_persp.gif"
          id="org.eclipse.dltk.tcl.ui.extbrowsing"
-         name="Tcl Namespaces/Classes">
+         name="%TclNsClassesView.name">
    </view>
    <view
          category="org.eclipse.dltk.tcl.ui"
          class="org.eclipse.dltk.ui.browsing.MembersView:org.eclipse.dltk.tcl.core.nature"
          icon="icons/eview16/tcl_persp.gif"
          id="org.eclipse.dltk.tcl.ui.Members"
-         name="Tcl Members">
+         name="%TclMembersView.name">
    </view>
 </extension>
 <extension
