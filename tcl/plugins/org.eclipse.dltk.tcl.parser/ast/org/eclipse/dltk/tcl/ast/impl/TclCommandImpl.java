@@ -18,6 +18,7 @@ import org.eclipse.dltk.tcl.ast.AstPackage;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Command;
+import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -389,7 +390,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String toString() {
@@ -402,6 +403,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 		result.append(", matched: ");
 		result.append(matched);
 		result.append(')');
+		result.append("\n{" + SimpleCodePrinter.getCommandString(this) + "}");
 		return result.toString();
 	}
 
