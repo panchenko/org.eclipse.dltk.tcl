@@ -124,17 +124,24 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 	private int buildType;
 	private boolean autoAddPackages;
-	private Set<TclModuleInfo> providedByRequiredProjects;
+	private Set<TclModuleInfo> providedByRequiredProjects = new HashSet<TclModuleInfo>();
 
 	public boolean beginBuild(int buildType) {
 		this.buildType = buildType;
 		this.autoAddPackages = ScriptProjectUtil.isBuilderEnabled(project);
-		if (buildType != IBuildParticipantExtension.FULL_BUILD) {
-			List<TclModuleInfo> moduleInfos = new ArrayList<TclModuleInfo>();
-			moduleInfos.addAll(TclPackagesManager.getProjectModules(project
-					.getElementName()));
-			packageCollector.getModules().put(project, moduleInfos);
+		List<TclModuleInfo> moduleInfos = new ArrayList<TclModuleInfo>();
+		moduleInfos.addAll(TclPackagesManager.getProjectModules(project
+				.getElementName()));
+		if (buildType == IBuildParticipantExtension.FULL_BUILD) {
+			// We need to clear all information of builds instead of correction
+			// information. Empty modules will be removed later.
+			for (TclModuleInfo tclModuleInfo : moduleInfos) {
+				tclModuleInfo.getProvided().clear();
+				tclModuleInfo.getRequired().clear();
+				tclModuleInfo.getSourced().clear();
+			}
 		}
+		packageCollector.getModules().put(project, moduleInfos);
 		loadProvidedPackagesFromRequiredProjects();
 		return true;
 	}
@@ -181,17 +188,13 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		final List<TclCommand> commands = parser.parse(new String(contents),
 				null, processor);
 		// packageCollector.getRequireRefs().clear();
-		packageCollector.process(commands, context.getSourceModule());
+		ISourceModule module = context.getSourceModule();
+		packageCollector.process(commands, module);
+
+		addInfoForModule(context, module);
 	}
 
-	public void build(IBuildContext context) throws CoreException {
-		List<TclCommand> statements = TclBuildContext.getStatements(context);
-		if (statements == null) {
-			return;
-		}
-		// packageCollector.getRequireRefs().clear();
-		ISourceModule module = context.getSourceModule();
-		packageCollector.process(statements, module);
+	private void addInfoForModule(IBuildContext context, ISourceModule module) {
 		IPath modulePath = module.getPath();
 		IEnvironment env = EnvironmentManager.getEnvironment(project);
 		if (module.getResource() != null) {
@@ -211,6 +214,17 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 						.getLineTracker(), context.getProblemReporter(),
 						packageCollector.getCreateCurrentModuleInfo(module),
 						modulePath));
+	}
+
+	public void build(IBuildContext context) throws CoreException {
+		List<TclCommand> statements = TclBuildContext.getStatements(context);
+		if (statements == null) {
+			return;
+		}
+		// packageCollector.getRequireRefs().clear();
+		ISourceModule module = context.getSourceModule();
+		packageCollector.process(statements, module);
+		addInfoForModule(context, module);
 	}
 
 	public void endBuild(IProgressMonitor monitor) {
@@ -246,8 +260,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 						break;
 					}
 				}
-				checkPackage(ref, moduleInfo.reporter, moduleInfo.lineTracker,
-						newDependencies, names);
+				checkPackage(toCheck, moduleInfo.reporter,
+						moduleInfo.lineTracker, newDependencies, names);
 			}
 			IPath folder = moduleInfo.moduleLocation.removeLastSegments(1);
 			// Convert path to real path.
@@ -260,6 +274,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				for (UserCorrection userCorrection : corrections) {
 					if (userCorrection.getOriginalValue().equals(
 							source.getValue())) {
+						String userValue = userCorrection.getUserValue();
+
+						if (environment.isLocal()) {
+							sourcedPath = Path.fromOSString(userValue);
+						} else {
+							userValue = userValue.replace('\\', '/');
+							sourcedPath = Path.fromPortableString(source
+									.getValue());
+						}
 						break;
 					}
 				}
@@ -273,7 +296,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					if (file != null) {
 						if (!file.exists()) {
 							reportSourceProblem(source, moduleInfo.reporter,
-									"Could not locate sourced file:" + file.toOSString(), source
+									"Could not locate sourced file:"
+											+ file.toOSString(), source
 											.getValue(), moduleInfo.lineTracker);
 						} else {
 							if (file.isDirectory()) {
@@ -286,11 +310,21 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 							} else
 							// Add user correction if not specified yet.
 							if (needToAddCorrection) {
-								UserCorrection correction = TclPackagesFactory.eINSTANCE
-										.createUserCorrection();
-								correction.setOriginalValue(source.getValue());
-								correction.setUserValue(file.toString());
-								corrections.add(correction);
+								if (!isAutoAddPackages()) {
+									reportSourceProblem(
+											source,
+											moduleInfo.reporter,
+											"Source are not added to project buildpath.",
+											source.getValue(),
+											moduleInfo.lineTracker);
+								} else {
+									UserCorrection correction = TclPackagesFactory.eINSTANCE
+											.createUserCorrection();
+									correction.setOriginalValue(source
+											.getValue());
+									correction.setUserValue(file.toString());
+									corrections.add(correction);
+								}
 							}
 						}
 					}
@@ -321,8 +355,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			// Clean modules without required items
 			for (TclModuleInfo tclModuleInfo : mods) {
 				if (!(tclModuleInfo.getProvided().isEmpty()
-						&& tclModuleInfo.getRequired().isEmpty() && tclModuleInfo
-						.getSourced().isEmpty())) {
+						&& tclModuleInfo.getRequired().isEmpty()
+						&& tclModuleInfo.getSourced().isEmpty() && tclModuleInfo
+						.getSourceCorrections().isEmpty())) {
 					result.add(tclModuleInfo);
 				}
 			}

@@ -136,8 +136,9 @@ public class PackageSourceCollector extends TclVisitor {
 			entry.setEnd(pkgName.getEnd());
 			currentModuleInfo.getRequired().add(entry);
 			// }
-		} else if (IFNEEDED.equalsIgnoreCase(keyword)
-				|| PROVIDE.equalsIgnoreCase(keyword)) {
+		} else if (/*
+					 * IFNEEDED.equalsIgnoreCase(keyword) ||
+					 */PROVIDE.equalsIgnoreCase(keyword)) {
 			TclArgument pkgName = getStringArg(args, 1);
 			if (pkgName == null) {
 				return;
