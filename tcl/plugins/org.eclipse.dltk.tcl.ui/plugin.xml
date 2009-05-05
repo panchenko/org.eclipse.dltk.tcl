@@ -665,7 +665,7 @@
 <extension
       point="org.eclipse.dltk.ui.correctionProcessor">
       <correctionProcessor
-            class="org.eclipse.dltk.tcl.internal.ui.text.TclRequireCorrectionProcessor"
+            class="org.eclipse.dltk.tcl.internal.ui.text.TclSourcePackageCorrectionProcessor"
             nature="org.eclipse.dltk.tcl.core.nature">
       </correctionProcessor>
 </extension>

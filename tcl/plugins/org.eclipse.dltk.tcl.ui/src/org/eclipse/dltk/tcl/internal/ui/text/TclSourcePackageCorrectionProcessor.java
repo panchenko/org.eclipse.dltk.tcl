@@ -37,7 +37,7 @@ import org.eclipse.dltk.ui.text.IScriptCorrectionContext;
 import org.eclipse.dltk.ui.text.IScriptCorrectionProcessor;
 import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
 
-public class TclRequireCorrectionProcessor implements
+public class TclSourcePackageCorrectionProcessor implements
 		IScriptCorrectionProcessor {
 
 	public boolean canFix(IScriptAnnotation annotation) {
@@ -58,31 +58,64 @@ public class TclRequireCorrectionProcessor implements
 					}
 				}
 			}
+		} else if (annotation.getId() == TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION) {
+			return true;
+		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
+			return true;
+		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE) {
+			final String[] args = annotation.getArguments();
+			if (args != null && args.length != 0 && args[0] != null) {
+				final ISourceModule module = annotation.getSourceModule();
+				if (module != null) {
+					final IScriptProject project = module.getScriptProject();
+					if (project != null) {
+						if (TclSourceMarkerResolution.fixAvailable(module,
+								args[0])) {
+							return true;
+						}
+					}
+				}
+			}
 		}
 		return false;
 	}
 
 	public void computeQuickAssistProposals(IScriptAnnotation annotation,
 			IScriptCorrectionContext context) {
-		if (isFixable(annotation)) {
-			final String pkgName = annotation.getArguments()[0];
-			if (addPackageName(context, pkgName)) {
-				context.addProposal(new AnnotationResolutionProposal(
-						new TclRequirePackageMarkerResolution(pkgName, context
-								.getProject()), annotation));
+		if (annotation.getId() == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
+			if (isFixable(annotation)) {
+				final String pkgName = annotation.getArguments()[0];
+				if (addPackageName(context, pkgName)) {
+					context.addProposal(new AnnotationResolutionProposal(
+							new TclRequirePackageMarkerResolution(pkgName,
+									context.getProject()), annotation));
+				}
 			}
+		} else if (annotation.getId() == TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION) {
+			final String pkgName = annotation.getArguments()[0];
+			context.addProposal(new AnnotationResolutionProposal(
+					new TclRequirePackageCorrectionMarkerResolution(pkgName,
+							context.getProject()), annotation));
+		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
+			final String fName = annotation.getArguments()[0];
+			context.addProposal(new AnnotationResolutionProposal(
+					new TclSourceCorrectionMarkerResolution(fName, context
+							.getProject(), context.getModule()), annotation));
+		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE) {
+			final String fName = annotation.getArguments()[0];
+			context.addProposal(new AnnotationResolutionProposal(
+					new TclSourceMarkerResolution(fName, context.getProject(),
+							context.getModule()), annotation));
 		}
 	}
 
-	private static final String PACKAGES = TclRequireCorrectionProcessor.class
+	private static final String PACKAGES = TclSourcePackageCorrectionProcessor.class
 			.getName()
 			+ "#PACKAGES"; //$NON-NLS-1$
+	private static final String SOURCES = TclSourcePackageCorrectionProcessor.class
+			.getName()
+			+ "#SOURCES"; //$NON-NLS-1$
 
-	/**
-	 * @param context
-	 * @param pkgName
-	 * @return
-	 */
 	private boolean addPackageName(IScriptCorrectionContext context,
 			String pkgName) {
 		Set packages = (Set) context.getAttribute(PACKAGES);
@@ -92,6 +125,19 @@ public class TclRequireCorrectionProcessor implements
 			packages = new HashSet();
 			packages.add(pkgName);
 			context.setAttribute(PACKAGES, packages);
+			return true;
+		}
+	}
+
+	private boolean addSourceName(IScriptCorrectionContext context,
+			String sourceName) {
+		Set packages = (Set) context.getAttribute(SOURCES);
+		if (packages != null) {
+			return packages.add(sourceName);
+		} else {
+			packages = new HashSet();
+			packages.add(sourceName);
+			context.setAttribute(SOURCES, packages);
 			return true;
 		}
 	}
@@ -111,19 +157,52 @@ public class TclRequireCorrectionProcessor implements
 					return true;
 				}
 			}
+		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION) {
+			return true;
+		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
+			return true;
+		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE) {
+			final String[] args = CorrectionEngine.getProblemArguments(marker);
+			if (args != null && args.length != 0 && args[0] != null) {
+				IResource resource = marker.getResource();
+				if (TclSourceMarkerResolution.fixAvailable(
+						(ISourceModule) DLTKCore.create(resource), args[0])) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
 
 	public void computeQuickAssistProposals(IMarker marker,
 			IScriptCorrectionContext context) {
-		if (isFixable(marker)) {
+		if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
+			if (isFixable(marker)) {
+				final String pkgName = CorrectionEngine
+						.getProblemArguments(marker)[0];
+				if (addPackageName(context, pkgName)) {
+					context.addProposal(new MarkerResolutionProposal(
+							new TclRequirePackageMarkerResolution(pkgName,
+									context.getProject()), marker));
+				}
+			}
+		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION) {
 			final String pkgName = CorrectionEngine.getProblemArguments(marker)[0];
 			if (addPackageName(context, pkgName)) {
 				context.addProposal(new MarkerResolutionProposal(
-						new TclRequirePackageMarkerResolution(pkgName, context
-								.getProject()), marker));
+						new TclRequirePackageCorrectionMarkerResolution(
+								pkgName, context.getProject()), marker));
 			}
+		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
+			final String fName = CorrectionEngine.getProblemArguments(marker)[0];
+			context.addProposal(new MarkerResolutionProposal(
+					new TclSourceCorrectionMarkerResolution(fName, context
+							.getProject(), context.getModule()), marker));
+		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE) {
+			final String fName = CorrectionEngine.getProblemArguments(marker)[0];
+			context.addProposal(new MarkerResolutionProposal(
+					new TclSourceMarkerResolution(fName, context.getProject(),
+							context.getModule()), marker));
 		}
 	}
 

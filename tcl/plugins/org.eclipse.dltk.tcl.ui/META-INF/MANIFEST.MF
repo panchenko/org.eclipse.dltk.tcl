@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.dltk.console.ui,
  org.eclipse.compare,
  org.eclipse.search,
- org.eclipse.dltk.tcl.parser
+ org.eclipse.dltk.tcl.parser,
+ org.eclipse.emf.ecore
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.dltk.tcl.internal.ui,
  org.eclipse.dltk.tcl.internal.ui.documentation,
