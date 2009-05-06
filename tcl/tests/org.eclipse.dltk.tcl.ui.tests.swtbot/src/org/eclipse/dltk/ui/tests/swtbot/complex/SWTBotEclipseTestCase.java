@@ -12,10 +12,10 @@
 package org.eclipse.dltk.ui.tests.swtbot.complex;
 
 import junit.framework.TestCase;
-import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
 
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swtbot.eclipse.finder.SWTEclipseBot;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;

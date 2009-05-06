@@ -11,18 +11,17 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.tests.swtbot.operations;
 
-import net.sf.swtbot.SWTBotTestCase;
-import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
-import net.sf.swtbot.eclipse.finder.widgets.SWTBotView;
-import net.sf.swtbot.wait.DefaultCondition;
-import net.sf.swtbot.widgets.SWTBotShell;
-import net.sf.swtbot.widgets.SWTBotStyledText;
-import net.sf.swtbot.widgets.SWTBotTreeItem;
-import net.sf.swtbot.widgets.TimeoutException;
-import net.sf.swtbot.widgets.WidgetNotFoundException;
-
 import org.eclipse.dltk.ui.tests.swtbot.complex.LaunchTests;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swtbot.eclipse.finder.SWTEclipseBot;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 

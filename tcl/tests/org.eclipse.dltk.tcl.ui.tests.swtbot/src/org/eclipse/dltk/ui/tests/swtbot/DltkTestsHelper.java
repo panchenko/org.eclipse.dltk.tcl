@@ -17,18 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
-import net.sf.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import net.sf.swtbot.finder.UIThreadRunnable;
-import net.sf.swtbot.finder.results.BoolResult;
-import net.sf.swtbot.finder.results.VoidResult;
-import net.sf.swtbot.wait.DefaultCondition;
-import net.sf.swtbot.widgets.SWTBotShell;
-import net.sf.swtbot.widgets.SWTBotTree;
-import net.sf.swtbot.widgets.SWTBotTreeItem;
-import net.sf.swtbot.widgets.TimeoutException;
-import net.sf.swtbot.widgets.WidgetNotFoundException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -53,6 +41,17 @@ import org.eclipse.dltk.launching.IInterpreterInstallType;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.swtbot.eclipse.finder.SWTEclipseBot;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.BoolResult;
+import org.eclipse.swtbot.swt.finder.results.VoidResult;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 

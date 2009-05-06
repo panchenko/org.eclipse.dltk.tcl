@@ -11,12 +11,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.tests.swtbot.complex;
 
-import net.sf.swtbot.widgets.TimeoutException;
-import net.sf.swtbot.widgets.WidgetNotFoundException;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ui.tests.swtbot.DltkTestsHelper;
 import org.eclipse.dltk.ui.tests.swtbot.operations.EditorOperations;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 
 public class EditorTests extends SWTBotEclipseTestCase {
 

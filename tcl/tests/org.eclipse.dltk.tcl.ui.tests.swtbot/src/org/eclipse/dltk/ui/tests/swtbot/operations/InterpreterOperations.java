@@ -13,25 +13,24 @@ package org.eclipse.dltk.ui.tests.swtbot.operations;
 
 import java.text.MessageFormat;
 
-import net.sf.swtbot.SWTBotTestCase;
-import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
-import net.sf.swtbot.wait.Conditions;
-import net.sf.swtbot.widgets.SWTBotButton;
-import net.sf.swtbot.widgets.SWTBotCombo;
-import net.sf.swtbot.widgets.SWTBotRadio;
-import net.sf.swtbot.widgets.SWTBotShell;
-import net.sf.swtbot.widgets.SWTBotTable;
-import net.sf.swtbot.widgets.SWTBotTree;
-import net.sf.swtbot.widgets.SWTBotTreeItem;
-import net.sf.swtbot.widgets.TimeoutException;
-import net.sf.swtbot.widgets.WidgetNotFoundException;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.internal.debug.ui.interpreters.InterpretersMessages;
 import org.eclipse.dltk.ui.tests.swtbot.DltkTestsHelper;
 import org.eclipse.dltk.ui.tests.swtbot.ErrorMessages;
 import org.eclipse.dltk.ui.tests.swtbot.complex.InterpreterTests;
+import org.eclipse.swtbot.eclipse.finder.SWTEclipseBot;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotRadio;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 
 public class InterpreterOperations extends Operations {
 

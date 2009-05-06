@@ -9,8 +9,6 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.eclipse.dltk.core,
  org.eclipse.dltk.core.tests,
- net.sf.swtbot.eclipse.finder,
- net.sf.swtbot.finder,
  org.eclipse.dltk.tcl.ui,
  org.eclipse.dltk.launching,
  org.eclipse.dltk.ui,
@@ -21,7 +19,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ltk.ui.refactoring,
  org.hamcrest,
- org.apache.log4j
+ org.apache.log4j,
+ org.eclipse.swtbot.eclipse.finder,
+ org.eclipse.swtbot.swt.finder
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %pluginProvider

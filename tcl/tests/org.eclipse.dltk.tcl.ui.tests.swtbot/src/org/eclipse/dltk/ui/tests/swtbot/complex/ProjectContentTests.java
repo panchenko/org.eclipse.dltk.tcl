@@ -11,13 +11,13 @@ nc. - initial API and Implementation
 package org.eclipse.dltk.ui.tests.swtbot.complex;
 
 import junit.framework.TestSuite;
-import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.tests.swtbot.DltkTestsHelper;
 import org.eclipse.dltk.ui.tests.swtbot.operations.Operations;
 import org.eclipse.dltk.ui.tests.swtbot.operations.ProjectContentOperations;
+import org.eclipse.swtbot.eclipse.finder.SWTEclipseBot;
 
 public class ProjectContentTests extends SuiteOfTestCases {
 

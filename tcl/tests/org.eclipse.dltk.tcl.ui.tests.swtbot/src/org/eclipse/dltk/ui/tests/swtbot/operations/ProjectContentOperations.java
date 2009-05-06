@@ -11,18 +11,17 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.tests.swtbot.operations;
 
-import net.sf.swtbot.SWTBotTestCase;
-import net.sf.swtbot.eclipse.finder.SWTEclipseBot;
-import net.sf.swtbot.wait.Conditions;
-import net.sf.swtbot.widgets.SWTBotCheckBox;
-import net.sf.swtbot.widgets.SWTBotShell;
-import net.sf.swtbot.widgets.SWTBotText;
-import net.sf.swtbot.widgets.SWTBotTreeItem;
-import net.sf.swtbot.widgets.TimeoutException;
-import net.sf.swtbot.widgets.WidgetNotFoundException;
-
 import org.eclipse.dltk.ui.tests.swtbot.complex.ProjectContentTests;
 import org.eclipse.dltk.ui.wizards.Messages;
+import org.eclipse.swtbot.eclipse.finder.SWTEclipseBot;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 
 public class ProjectContentOperations extends Operations {
 
