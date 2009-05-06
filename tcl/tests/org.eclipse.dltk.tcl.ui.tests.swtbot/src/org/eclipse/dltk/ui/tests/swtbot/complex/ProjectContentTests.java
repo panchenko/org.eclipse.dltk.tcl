@@ -163,13 +163,13 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * 1. New folder exist in parent folder<br>
 	 * 
 	 */
-	public void testCreateFolderByContextMenu() {
-		operations.createFolderByContextMenu(getProjectName(), FOLDER1,
-				NEW_FOLDER1);
-		String folderName = FOLDER1 + "/" + NEW_FOLDER1;
-		helper.assertFolderExists(getProjectName(), folderName);
-		operations.assertProjectElementExist(getProjectName(), folderName);
-	}
+//	public void testCreateFolderByContextMenu() {
+//		operations.createFolderByContextMenu(getProjectName(), FOLDER1,
+//				NEW_FOLDER1);
+//		String folderName = FOLDER1 + "/" + NEW_FOLDER1;
+//		helper.assertFolderExists(getProjectName(), folderName);
+//		operations.assertProjectElementExist(getProjectName(), folderName);
+//	}
 
 	/**
 	 * Create a source folder without update exclusion filter (DLTK-516)<br>
@@ -304,12 +304,12 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * 2. This folder is source folder<br>
 	 * 
 	 */
-	public void testCreateSourceFolderByContextMenu001() {
-		operations.createSourceFolderByContextMenu(getProjectName(), "",
-				NEW_FOLDER1, false);
-		helper.assertSourceFolderExists(project, NEW_FOLDER1);
-		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER1);
-	}
+//	public void testCreateSourceFolderByContextMenu001() {
+//		operations.createSourceFolderByContextMenu(getProjectName(), "",
+//				NEW_FOLDER1, false);
+//		helper.assertSourceFolderExists(project, NEW_FOLDER1);
+//		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER1);
+//	}
 
 	/**
 	 * Create a source folder without update exclusion filter using pop-up menu
@@ -331,16 +331,16 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * 2. This folder is source folder<br>
 	 * 
 	 */
-	public void testCreateSourceFolderByContextMenu002() {
-		operations.createSourceFolderByContextMenu(getProjectName(),
-				SOURCE_FOLDER1, NEW_FOLDER1, false);
-		helper.assertSourceFolderExists(project, NEW_FOLDER1);
-		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER1);
-
-		String folderName = SOURCE_FOLDER1 + "/" + NEW_FOLDER1;
-		helper.assertSourceFolderDoesNotExist(project, folderName);
-		operations.assertProjectElementNotExist(getProjectName(), folderName);
-	}
+//	public void testCreateSourceFolderByContextMenu002() {
+//		operations.createSourceFolderByContextMenu(getProjectName(),
+//				SOURCE_FOLDER1, NEW_FOLDER1, false);
+//		helper.assertSourceFolderExists(project, NEW_FOLDER1);
+//		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER1);
+//
+//		String folderName = SOURCE_FOLDER1 + "/" + NEW_FOLDER1;
+//		helper.assertSourceFolderDoesNotExist(project, folderName);
+//		operations.assertProjectElementNotExist(getProjectName(), folderName);
+//	}
 
 	/**
 	 * Create a source folder without update exclusion filter using pop-up menu
@@ -362,16 +362,16 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * 2. This folder is source folder<br>
 	 * 
 	 */
-	public void testCreateSourceFolderByContextMenu003() {
-		operations.createSourceFolderByContextMenu(getProjectName(), FOLDER1,
-				NEW_FOLDER1, false);
-		helper.assertSourceFolderExists(project, NEW_FOLDER1);
-		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER1);
-
-		String folderName = FOLDER1 + "/" + NEW_FOLDER1;
-		helper.assertSourceFolderDoesNotExist(project, folderName);
-		operations.assertProjectElementNotExist(getProjectName(), folderName);
-	}
+//	public void testCreateSourceFolderByContextMenu003() {
+//		operations.createSourceFolderByContextMenu(getProjectName(), FOLDER1,
+//				NEW_FOLDER1, false);
+//		helper.assertSourceFolderExists(project, NEW_FOLDER1);
+//		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER1);
+//
+//		String folderName = FOLDER1 + "/" + NEW_FOLDER1;
+//		helper.assertSourceFolderDoesNotExist(project, folderName);
+//		operations.assertProjectElementNotExist(getProjectName(), folderName);
+//	}
 
 	/**
 	 * Create a Tcl file in project root (DLTK-518)<br>
@@ -425,11 +425,11 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Create a Tcl file in project root using pop-up menu (DLTK-607). Equals to
 	 * testCreateFile001 but for Open New File dialog use (PopupMenu->New->File)
 	 */
-	public void testCreateFileByContextMenu() {
-		operations.createFileByContextMenu(getProjectName(), null, NEW_FILE);
-		helper.assertFileExists(getProjectName(), NEW_FILE);
-		operations.assertProjectElementExist(getProjectName(), NEW_FILE);
-	}
+//	public void testCreateFileByContextMenu() {
+//		operations.createFileByContextMenu(getProjectName(), null, NEW_FILE);
+//		helper.assertFileExists(getProjectName(), NEW_FILE);
+//		operations.assertProjectElementExist(getProjectName(), NEW_FILE);
+//	}
 
 	/**
 	 * Create a script in project root (DLTK-521).<br>
@@ -501,18 +501,18 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * 1. script must be created in source folder<br>
 	 * 
 	 */
-	public void testCreateScriptByContextMenu() {
-		operations.createScriptByContextMenu(getProjectName(), null,
-				NEW_TCL_SCRIPT1);
-		helper.assertFileDoesNotExist(getProjectName(), NEW_TCL_SCRIPT1);
-		operations.assertProjectElementNotExist(getProjectName(),
-				NEW_TCL_SCRIPT1);
-
-		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
-				NEW_TCL_SCRIPT1);
-		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
-				+ "/" + NEW_TCL_SCRIPT1);
-	}
+//	public void testCreateScriptByContextMenu() {
+//		operations.createScriptByContextMenu(getProjectName(), null,
+//				NEW_TCL_SCRIPT1);
+//		helper.assertFileDoesNotExist(getProjectName(), NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementNotExist(getProjectName(),
+//				NEW_TCL_SCRIPT1);
+//
+//		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
+//				+ "/" + NEW_TCL_SCRIPT1);
+//	}
 
 	/**
 	 * Create a script in folder. Folder not in build path. (DLTK-606).<br>
@@ -558,19 +558,19 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Expected:<br>
 	 * 1. script must be created in default source folder<br>
 	 */
-	public void testCreateScriptInFolderByContextMenu() {
-		operations.createScriptByContextMenu(getProjectName(), FOLDER1,
-				NEW_TCL_SCRIPT1);
-
-		String path = FOLDER1 + "/" + NEW_TCL_SCRIPT1;
-		helper.assertFileDoesNotExist(getProjectName(), path);
-		operations.assertProjectElementNotExist(getProjectName(), path);
-
-		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
-				NEW_TCL_SCRIPT1);
-		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
-				+ "/" + NEW_TCL_SCRIPT1);
-	}
+//	public void testCreateScriptInFolderByContextMenu() {
+//		operations.createScriptByContextMenu(getProjectName(), FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//
+//		String path = FOLDER1 + "/" + NEW_TCL_SCRIPT1;
+//		helper.assertFileDoesNotExist(getProjectName(), path);
+//		operations.assertProjectElementNotExist(getProjectName(), path);
+//
+//		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
+//				+ "/" + NEW_TCL_SCRIPT1);
+//	}
 
 	/**
 	 * Create a script in source folder (DLTK-605)
@@ -589,14 +589,14 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Create a script in source folder by context menu (DLTK-610)
 	 * 
 	 */
-	public void testCreateScriptInSourceFolderByContextMenu() {
-		operations.createScriptByContextMenu(getProjectName(), SOURCE_FOLDER1,
-				NEW_TCL_SCRIPT1);
-		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
-				NEW_TCL_SCRIPT1);
-		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
-				+ "/" + NEW_TCL_SCRIPT1);
-	}
+//	public void testCreateScriptInSourceFolderByContextMenu() {
+//		operations.createScriptByContextMenu(getProjectName(), SOURCE_FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
+//				+ "/" + NEW_TCL_SCRIPT1);
+//	}
 
 	/**
 	 * Create a Tcl file in source folder (DLTK-519)
@@ -615,14 +615,14 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Create a Tcl file in source folder by context menu (DLTK-609)
 	 * 
 	 */
-	public void testCreateFileInSourceFolderByContextMenu() {
-		operations.createFileByContextMenu(getProjectName(), SOURCE_FOLDER1,
-				NEW_TCL_SCRIPT1);
-		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
-				NEW_TCL_SCRIPT1);
-		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
-				+ "/" + NEW_TCL_SCRIPT1);
-	}
+//	public void testCreateFileInSourceFolderByContextMenu() {
+//		operations.createFileByContextMenu(getProjectName(), SOURCE_FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
+//				+ "/" + NEW_TCL_SCRIPT1);
+//	}
 
 	/**
 	 * Create a TCL file in folder. Folder not in build path. (DLTK-520)
@@ -639,13 +639,13 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Create a TCL file in folder by context menu (DLTK-611)
 	 * 
 	 */
-	public void testCreateFileInFolderByContextMenu() {
-		operations.createFileByContextMenu(getProjectName(), FOLDER1,
-				NEW_TCL_SCRIPT1);
-		String path = FOLDER1 + "/" + NEW_TCL_SCRIPT1;
-		helper.assertFileExists(getProjectName(), path);
-		operations.assertProjectElementExist(getProjectName(), path);
-	}
+//	public void testCreateFileInFolderByContextMenu() {
+//		operations.createFileByContextMenu(getProjectName(), FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		String path = FOLDER1 + "/" + NEW_TCL_SCRIPT1;
+//		helper.assertFileExists(getProjectName(), path);
+//		operations.assertProjectElementExist(getProjectName(), path);
+//	}
 
 	// //////////////////////////////////////////////////////////////////////////
 	//
@@ -875,12 +875,12 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Rename a folder using context menu (DLTK-613)
 	 * 
 	 */
-	public void testRenameFolderByContextMenu() {
-		operations.renameElementByContextMenu(Operations.DLG_RENAME,
-				getProjectName(), FOLDER1, NEW_FOLDER2);
-		helper.assertFolderExists(getProjectName(), NEW_FOLDER2);
-		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER2);
-	}
+//	public void testRenameFolderByContextMenu() {
+//		operations.renameElementByContextMenu(Operations.DLG_RENAME,
+//				getProjectName(), FOLDER1, NEW_FOLDER2);
+//		helper.assertFolderExists(getProjectName(), NEW_FOLDER2);
+//		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER2);
+//	}
 
 	/**
 	 * Rename a source folder (DLTK-539)
@@ -898,14 +898,14 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Rename a source folder using context menu (DLTK-617)
 	 * 
 	 */
-	public void testRenameSourceFolderByContextMenu() {
-		operations.renameElementByContextMenu(
-				Operations.DLG_RENAME_SOURCE_FOLDER, getProjectName(),
-				SOURCE_FOLDER1, NEW_FOLDER2);
-		helper.assertSourceFolderExists(project, NEW_FOLDER2);
-		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER2);
-
-	}
+//	public void testRenameSourceFolderByContextMenu() {
+//		operations.renameElementByContextMenu(
+//				Operations.DLG_RENAME_SOURCE_FOLDER, getProjectName(),
+//				SOURCE_FOLDER1, NEW_FOLDER2);
+//		helper.assertSourceFolderExists(project, NEW_FOLDER2);
+//		operations.assertProjectElementExist(getProjectName(), NEW_FOLDER2);
+//
+//	}
 
 	/**
 	 * Rename Tcl file in project root (DLTK-543)
@@ -922,12 +922,12 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Rename a Tcl file in project root by context menu (DLTK-622)
 	 * 
 	 */
-	public void testRenameFileByContextMenu() {
-		operations.renameElementByContextMenu(Operations.DLG_RENAME,
-				getProjectName(), SCRIPT_IN_ROOT, NEW_TCL_SCRIPT1);
-		helper.assertFileExists(getProjectName(), NEW_TCL_SCRIPT1);
-		operations.assertProjectElementExist(getProjectName(), NEW_TCL_SCRIPT1);
-	}
+//	public void testRenameFileByContextMenu() {
+//		operations.renameElementByContextMenu(Operations.DLG_RENAME,
+//				getProjectName(), SCRIPT_IN_ROOT, NEW_TCL_SCRIPT1);
+//		helper.assertFileExists(getProjectName(), NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementExist(getProjectName(), NEW_TCL_SCRIPT1);
+//	}
 
 	/**
 	 * Rename a Tcl file in folder (DLTK-542)
@@ -946,14 +946,14 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Rename a Tcl file in folder by context menu (DLTK-621)
 	 * 
 	 */
-	public void testRenameFileInFolderByContextMenu() {
-		operations.renameElementByContextMenu(Operations.DLG_RENAME,
-				getProjectName(), FOLDER1 + "/" + FILE1, NEW_FILE);
-
-		helper.assertFileExists(getProjectName(), FOLDER1 + "/" + NEW_FILE);
-		operations.assertProjectElementExist(getProjectName(), FOLDER1 + "/"
-				+ NEW_FILE);
-	}
+//	public void testRenameFileInFolderByContextMenu() {
+//		operations.renameElementByContextMenu(Operations.DLG_RENAME,
+//				getProjectName(), FOLDER1 + "/" + FILE1, NEW_FILE);
+//
+//		helper.assertFileExists(getProjectName(), FOLDER1 + "/" + NEW_FILE);
+//		operations.assertProjectElementExist(getProjectName(), FOLDER1 + "/"
+//				+ NEW_FILE);
+//	}
 
 	/**
 	 * Rename a Tcl file in source folder (DLTK-541)
@@ -974,18 +974,18 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Rename a Tcl File in source folder by context menu (DLTK-620)
 	 * 
 	 */
-	public void testRenameFileInSourceFolderByContextMenu() {
-		operations
-				.renameElementByContextMenu(
-						Operations.DLG_RENAME_SOURCE_MODULE, getProjectName(),
-						SOURCE_FOLDER1 + "/" + SCRIPT_IN_SOURCE_FOLDER,
-						NEW_TCL_SCRIPT1);
-
-		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
-				NEW_TCL_SCRIPT1);
-		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
-				+ "/" + NEW_TCL_SCRIPT1);
-	}
+//	public void testRenameFileInSourceFolderByContextMenu() {
+//		operations
+//				.renameElementByContextMenu(
+//						Operations.DLG_RENAME_SOURCE_MODULE, getProjectName(),
+//						SOURCE_FOLDER1 + "/" + SCRIPT_IN_SOURCE_FOLDER,
+//						NEW_TCL_SCRIPT1);
+//
+//		helper.assertScriptExists(getProjectName(), SOURCE_FOLDER1,
+//				NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementExist(getProjectName(), SOURCE_FOLDER1
+//				+ "/" + NEW_TCL_SCRIPT1);
+//	}
 
 	/**
 	 * Rename script in project root (DLTK-537)
@@ -1010,21 +1010,21 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Rename script in project root using popup-menu (DLTK-714)
 	 * 
 	 */
-	public void testRenameScriptByContextMenu() {
-		try {
-			altProjectName = ROOT_IN_BUILD_PATH_PROJECT_NAME;
-			project = helper.setUpScriptProject(altProjectName);
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-
-		operations.renameElementByContextMenu(
-				Operations.DLG_RENAME_SOURCE_MODULE, getProjectName(),
-				SCRIPT_IN_ROOT, NEW_TCL_SCRIPT1);
-
-		helper.assertScriptExists(getProjectName(), "", NEW_TCL_SCRIPT1);
-		operations.assertProjectElementExist(getProjectName(), NEW_TCL_SCRIPT1);
-	}
+//	public void testRenameScriptByContextMenu() {
+//		try {
+//			altProjectName = ROOT_IN_BUILD_PATH_PROJECT_NAME;
+//			project = helper.setUpScriptProject(altProjectName);
+//		} catch (Exception ex) {
+//			throw new RuntimeException(ex);
+//		}
+//
+//		operations.renameElementByContextMenu(
+//				Operations.DLG_RENAME_SOURCE_MODULE, getProjectName(),
+//				SCRIPT_IN_ROOT, NEW_TCL_SCRIPT1);
+//
+//		helper.assertScriptExists(getProjectName(), "", NEW_TCL_SCRIPT1);
+//		operations.assertProjectElementExist(getProjectName(), NEW_TCL_SCRIPT1);
+//	}
 
 	/**
 	 * Rename a project (DLTK-540)
@@ -1042,14 +1042,14 @@ public class ProjectContentTests extends SuiteOfTestCases {
 	 * Rename a project by context menu (DLTK-618)
 	 * 
 	 */
-	public void testRenameProjectByContextMenu() {
-		altProjectName = "RenamedProject";
-		operations.renameElementByContextMenu(
-				Operations.DLG_RENAME_SCRIPT_PROJECT, getProjectName(), "",
-				altProjectName);
-		helper.assertTclProject(altProjectName);
-		operations.assertProjectElementExist(altProjectName, "");
-	}
+//	public void testRenameProjectByContextMenu() {
+//		altProjectName = "RenamedProject";
+//		operations.renameElementByContextMenu(
+//				Operations.DLG_RENAME_SCRIPT_PROJECT, getProjectName(), "",
+//				altProjectName);
+//		helper.assertTclProject(altProjectName);
+//		operations.assertProjectElementExist(altProjectName, "");
+//	}
 
 	// //////////////////////////////////////////////////////////////////////////
 	//

@@ -272,14 +272,14 @@ public class InterpreterTests extends SWTBotEclipseTestCase {
 	 * Expected:<br>
 	 * 1. Project contain specified Interpreter Library<br>
 	 */
-	public void testAdd002() {
-		helper.initDefAndAltInterpreters();
-
-		IScriptProject project = initProject(projectName = DltkTestsHelper.EMPTY_PROJECT_WITHOUT_LIB);
-		new InterpreterOperations(bot).addInterpreter002(projectName);
-
-		helper.assertInterpreter(project, DltkTestsHelper.DEF_INTERPRETER_ID);
-	}
+//	public void testAdd002() {
+//		helper.initDefAndAltInterpreters();
+//
+//		IScriptProject project = initProject(projectName = DltkTestsHelper.EMPTY_PROJECT_WITHOUT_LIB);
+//		new InterpreterOperations(bot).addInterpreter002(projectName);
+//
+//		helper.assertInterpreter(project, DltkTestsHelper.DEF_INTERPRETER_ID);
+//	}
 
 	/**
 	 * Try to add several Interpreter Libraries to a project. (DLTK-646)<br>

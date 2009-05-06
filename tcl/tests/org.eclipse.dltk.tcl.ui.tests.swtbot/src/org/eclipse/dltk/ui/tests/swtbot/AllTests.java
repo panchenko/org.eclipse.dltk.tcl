@@ -14,6 +14,7 @@ package org.eclipse.dltk.ui.tests.swtbot;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.ui.tests.swtbot.complex.EditorTests;
 import org.eclipse.dltk.ui.tests.swtbot.complex.InterpreterTests;
 import org.eclipse.dltk.ui.tests.swtbot.complex.ProjectContentTests;
@@ -22,6 +23,7 @@ import org.eclipse.dltk.ui.tests.swtbot.complex.ProjectTests;
 public class AllTests {
 
 	public static Test suite() {
+		EnvironmentManager.getEnvironments();
 		TestSuite suite = new TestSuite("SWTBot tests for "
 				+ Activator.PLUGIN_ID);
 		// $JUnit-BEGIN$

@@ -151,7 +151,7 @@ public class DltkTestsHelper extends AbstractModelTests {
 				debug("Test finished but exist opened window. Try to close this window...");
 				System.out.println("Try to close shell:"
 						+ shells[index].getText());
-				Thread.sleep(3000);
+//				Thread.sleep(3000);
 				if (shells[index].isOpen()) {
 					shells[index].close();
 				}
@@ -163,7 +163,7 @@ public class DltkTestsHelper extends AbstractModelTests {
 				}
 
 				public boolean test() throws Exception {
-					return bot.shells().length == 1;
+					return bot.shells().length > 1;
 				}
 			});
 

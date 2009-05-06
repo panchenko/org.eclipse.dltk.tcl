@@ -112,16 +112,16 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 	 * 2. Project have default Interpreter Library<br>
 	 * 
 	 */
-	public void testCreateTclProject002() {
-		helper.openTclPerspective();
-		helper.initOnlyDefInterpreter();
-
-		ProjectOperations operation = new ProjectOperations(bot);
-		operation.createFromScriptExplorer(PROJECT_NAME);
-		helper.assertTclProject(PROJECT_NAME);
-		helper.assertInterpreter(PROJECT_NAME,
-				DltkTestsHelper.DEF_INTERPRETER_ID);
-	}
+//	public void testCreateTclProject002() {
+//		helper.openTclPerspective();
+//		helper.initOnlyDefInterpreter();
+//
+//		ProjectOperations operation = new ProjectOperations(bot);
+//		operation.createFromScriptExplorer(PROJECT_NAME);
+//		helper.assertTclProject(PROJECT_NAME);
+//		helper.assertInterpreter(PROJECT_NAME,
+//				DltkTestsHelper.DEF_INTERPRETER_ID);
+//	}
 
 	/**
 	 * Create a Tcl project from existing source with detect option switched on.
