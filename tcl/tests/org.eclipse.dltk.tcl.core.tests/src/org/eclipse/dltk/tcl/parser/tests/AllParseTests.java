@@ -18,12 +18,18 @@ import java.util.zip.ZipInputStream;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.tests.model.Activator;
+import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
+import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
+import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 
 public class AllParseTests extends TestCase {
 
@@ -87,14 +93,31 @@ public class AllParseTests extends TestCase {
 	}
 
 	protected void runTest() throws Throwable {
-		System.out.println("Test " + getName()); //$NON-NLS-1$
+		System.out.print("Test " + getName()); //$NON-NLS-1$
+		final ProblemCollector collector = new ProblemCollector();
 		final ISourceParser parser = DLTKLanguageManager
 				.getSourceParser(TclNature.NATURE_ID);
-		final ProblemCollector collector = new ProblemCollector();
-		parser.parse(null, content, collector);
+		long s1 = System.currentTimeMillis();
+		ModuleDeclaration module1 = parser.parse(null, content, collector);
+		long e1 = System.currentTimeMillis();
 		if (collector.hasErrors()) {
 			fail(collector.getErrors().toString());
 		}
-	}
+		// Parse with new parser and compare results.
+		TclParser newParser = new TclParser();
+		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
+				.createProcessor();
+		NewTclSourceParser newSourceParser = new NewTclSourceParser();
 
+		long s2 = System.currentTimeMillis();
+		TclModule module = newParser.parseModule(new String(content), null,
+				processor);
+		ModuleDeclaration module2 = newSourceParser.parse(null, module,
+				collector);
+		long e2 = System.currentTimeMillis();
+		// String str1 = module1.toString();
+		// String str2 = module2.toString();
+		// TestCase.assertEquals(str1, str2);
+		System.out.println("Time comparison:" + (e1 - s1) + "%%" + (e2 - s2));
+	}
 }
