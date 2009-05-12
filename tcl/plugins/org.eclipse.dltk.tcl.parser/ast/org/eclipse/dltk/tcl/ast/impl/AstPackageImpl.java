@@ -22,7 +22,9 @@ import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
+import org.eclipse.dltk.tcl.ast.TclCodeModel;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.VariableReference;
 
 import org.eclipse.dltk.tcl.definitions.DefinitionsPackage;
@@ -119,6 +121,20 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	private EClass iSubstitutionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tclModuleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tclCodeModelEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -407,6 +423,16 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getTclArgumentList_OriginalArgument() {
+		return (EReference) tclArgumentListEClass.getEStructuralFeatures().get(
+				2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getArgumentMatch() {
 		return argumentMatchEClass;
 	}
@@ -452,6 +478,15 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getComplexString_Value() {
+		return (EAttribute) complexStringEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getVariableReference() {
 		return variableReferenceEClass;
 	}
@@ -483,6 +518,69 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 */
 	public EClass getISubstitution() {
 		return iSubstitutionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTclModule() {
+		return tclModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTclModule_Statements() {
+		return (EReference) tclModuleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclModule_Size() {
+		return (EAttribute) tclModuleEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTclModule_CodeModel() {
+		return (EReference) tclModuleEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTclCodeModel() {
+		return tclCodeModelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclCodeModel_Delimeters() {
+		return (EAttribute) tclCodeModelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclCodeModel_LineOffsets() {
+		return (EAttribute) tclCodeModelEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -543,6 +641,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 		createEReference(tclArgumentListEClass, TCL_ARGUMENT_LIST__ARGUMENTS);
 		createEReference(tclArgumentListEClass,
 				TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT);
+		createEReference(tclArgumentListEClass,
+				TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT);
 
 		argumentMatchEClass = createEClass(ARGUMENT_MATCH);
 		createEReference(argumentMatchEClass, ARGUMENT_MATCH__DEFINITION);
@@ -550,12 +650,22 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 
 		complexStringEClass = createEClass(COMPLEX_STRING);
 		createEReference(complexStringEClass, COMPLEX_STRING__ARGUMENTS);
+		createEAttribute(complexStringEClass, COMPLEX_STRING__VALUE);
 
 		variableReferenceEClass = createEClass(VARIABLE_REFERENCE);
 		createEAttribute(variableReferenceEClass, VARIABLE_REFERENCE__NAME);
 		createEReference(variableReferenceEClass, VARIABLE_REFERENCE__INDEX);
 
 		iSubstitutionEClass = createEClass(ISUBSTITUTION);
+
+		tclModuleEClass = createEClass(TCL_MODULE);
+		createEReference(tclModuleEClass, TCL_MODULE__STATEMENTS);
+		createEAttribute(tclModuleEClass, TCL_MODULE__SIZE);
+		createEReference(tclModuleEClass, TCL_MODULE__CODE_MODEL);
+
+		tclCodeModelEClass = createEClass(TCL_CODE_MODEL);
+		createEAttribute(tclCodeModelEClass, TCL_CODE_MODEL__DELIMETERS);
+		createEAttribute(tclCodeModelEClass, TCL_CODE_MODEL__LINE_OFFSETS);
 	}
 
 	/**
@@ -688,6 +798,11 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+		initEReference(getTclArgumentList_OriginalArgument(), this
+				.getTclArgument(), null, "originalArgument", null, 0, 1,
+				TclArgumentList.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(argumentMatchEClass, ArgumentMatch.class, "ArgumentMatch",
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -709,6 +824,10 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+		initEAttribute(getComplexString_Value(), ecorePackage.getEString(),
+				"value", null, 0, 1, ComplexString.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(variableReferenceEClass, VariableReference.class,
 				"VariableReference", !IS_ABSTRACT, !IS_INTERFACE,
@@ -725,6 +844,32 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 
 		initEClass(iSubstitutionEClass, ISubstitution.class, "ISubstitution",
 				IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(tclModuleEClass, TclModule.class, "TclModule", !IS_ABSTRACT,
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTclModule_Statements(), this.getTclCommand(), null,
+				"statements", null, 0, -1, TclModule.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclModule_Size(), ecorePackage.getEInt(), "size",
+				null, 0, 1, TclModule.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEReference(getTclModule_CodeModel(), this.getTclCodeModel(), null,
+				"codeModel", null, 0, 1, TclModule.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(tclCodeModelEClass, TclCodeModel.class, "TclCodeModel",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTclCodeModel_Delimeters(), ecorePackage.getEString(),
+				"delimeters", null, 0, -1, TclCodeModel.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclCodeModel_LineOffsets(), ecorePackage.getEInt(),
+				"lineOffsets", null, 0, -1, TclCodeModel.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

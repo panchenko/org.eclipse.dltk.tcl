@@ -18,6 +18,7 @@ import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.definitions.ComplexArgument;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -33,6 +34,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl#getArguments <em>Arguments</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl#getDefinitionArgument <em>Definition Argument</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl#getOriginalArgument <em>Original Argument</em>}</li>
  * </ul>
  * </p>
  *
@@ -59,6 +61,16 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 	 * @ordered
 	 */
 	protected ComplexArgument definitionArgument;
+
+	/**
+	 * The cached value of the '{@link #getOriginalArgument() <em>Original Argument</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOriginalArgument()
+	 * @generated
+	 * @ordered
+	 */
+	protected TclArgument originalArgument;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -140,6 +152,83 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public TclArgument getOriginalArgument() {
+		return originalArgument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetOriginalArgument(
+			TclArgument newOriginalArgument, NotificationChain msgs) {
+		TclArgument oldOriginalArgument = originalArgument;
+		originalArgument = newOriginalArgument;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET,
+					AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
+					oldOriginalArgument, newOriginalArgument);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setOriginalArgument(TclArgument newOriginalArgument) {
+		if (newOriginalArgument != originalArgument) {
+			NotificationChain msgs = null;
+			if (originalArgument != null)
+				msgs = ((InternalEObject) originalArgument)
+						.eInverseRemove(
+								this,
+								EOPPOSITE_FEATURE_BASE
+										- AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
+								null, msgs);
+			if (newOriginalArgument != null)
+				msgs = ((InternalEObject) newOriginalArgument)
+						.eInverseAdd(
+								this,
+								EOPPOSITE_FEATURE_BASE
+										- AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
+								null, msgs);
+			msgs = basicSetOriginalArgument(newOriginalArgument, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
+					newOriginalArgument, newOriginalArgument));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
+			return basicSetOriginalArgument(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -149,6 +238,8 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 			if (resolve)
 				return getDefinitionArgument();
 			return basicGetDefinitionArgument();
+		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
+			return getOriginalArgument();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -169,6 +260,9 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 		case AstPackage.TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT:
 			setDefinitionArgument((ComplexArgument) newValue);
 			return;
+		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
+			setOriginalArgument((TclArgument) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -187,6 +281,9 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 		case AstPackage.TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT:
 			setDefinitionArgument((ComplexArgument) null);
 			return;
+		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
+			setOriginalArgument((TclArgument) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -203,6 +300,8 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 			return arguments != null && !arguments.isEmpty();
 		case AstPackage.TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT:
 			return definitionArgument != null;
+		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
+			return originalArgument != null;
 		}
 		return super.eIsSet(featureID);
 	}

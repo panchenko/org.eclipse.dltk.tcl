@@ -121,6 +121,24 @@ public interface AstFactory extends EFactory {
 	VariableReference createVariableReference();
 
 	/**
+	 * Returns a new object of class '<em>Tcl Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tcl Module</em>'.
+	 * @generated
+	 */
+	TclModule createTclModule();
+
+	/**
+	 * Returns a new object of class '<em>Tcl Code Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tcl Code Model</em>'.
+	 * @generated
+	 */
+	TclCodeModel createTclCodeModel();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

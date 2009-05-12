@@ -16,8 +16,10 @@ import java.util.Collection;
 import org.eclipse.dltk.tcl.ast.AstPackage;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.TclArgument;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -28,6 +30,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ComplexStringImpl#getArguments <em>Arguments</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ComplexStringImpl#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *
@@ -43,6 +46,25 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	 * @ordered
 	 */
 	protected EList<TclArgument> arguments;
+
+	/**
+	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String VALUE_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected String value = VALUE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -82,11 +104,35 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setValue(String newValue) {
+		String oldValue = value;
+		value = newValue;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					AstPackage.COMPLEX_STRING__VALUE, oldValue, value));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case AstPackage.COMPLEX_STRING__ARGUMENTS:
 			return getArguments();
+		case AstPackage.COMPLEX_STRING__VALUE:
+			return getValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -104,6 +150,9 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 			getArguments().clear();
 			getArguments().addAll((Collection<? extends TclArgument>) newValue);
 			return;
+		case AstPackage.COMPLEX_STRING__VALUE:
+			setValue((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -119,6 +168,9 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 		case AstPackage.COMPLEX_STRING__ARGUMENTS:
 			getArguments().clear();
 			return;
+		case AstPackage.COMPLEX_STRING__VALUE:
+			setValue(VALUE_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -133,8 +185,28 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 		switch (featureID) {
 		case AstPackage.COMPLEX_STRING__ARGUMENTS:
 			return arguments != null && !arguments.isEmpty();
+		case AstPackage.COMPLEX_STRING__VALUE:
+			return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT
+					.equals(value);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (value: ");
+		result.append(value);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ComplexStringImpl

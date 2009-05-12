@@ -432,13 +432,22 @@ public interface AstPackage extends EPackage {
 	int TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT = TCL_ARGUMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Original Argument</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT = TCL_ARGUMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Argument List</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_ARGUMENT_LIST_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 2;
+	int TCL_ARGUMENT_LIST_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.ArgumentMatchImpl <em>Argument Match</em>}' class.
@@ -515,13 +524,22 @@ public interface AstPackage extends EPackage {
 	int COMPLEX_STRING__ARGUMENTS = TCL_ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPLEX_STRING__VALUE = TCL_ARGUMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Complex String</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPLEX_STRING_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 1;
+	int COMPLEX_STRING_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.VariableReferenceImpl <em>Variable Reference</em>}' class.
@@ -596,6 +614,89 @@ public interface AstPackage extends EPackage {
 	 * @ordered
 	 */
 	int ISUBSTITUTION_FEATURE_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl <em>Tcl Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.ast.impl.TclModuleImpl
+	 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclModule()
+	 * @generated
+	 */
+	int TCL_MODULE = 11;
+
+	/**
+	 * The feature id for the '<em><b>Statements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_MODULE__STATEMENTS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_MODULE__SIZE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Code Model</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_MODULE__CODE_MODEL = 2;
+
+	/**
+	 * The number of structural features of the '<em>Tcl Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_MODULE_FEATURE_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.TclCodeModelImpl <em>Tcl Code Model</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.ast.impl.TclCodeModelImpl
+	 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclCodeModel()
+	 * @generated
+	 */
+	int TCL_CODE_MODEL = 12;
+
+	/**
+	 * The feature id for the '<em><b>Delimeters</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_CODE_MODEL__DELIMETERS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Line Offsets</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_CODE_MODEL__LINE_OFFSETS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Tcl Code Model</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_CODE_MODEL_FEATURE_COUNT = 2;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.Node <em>Node</em>}'.
@@ -833,6 +934,17 @@ public interface AstPackage extends EPackage {
 	EReference getTclArgumentList_DefinitionArgument();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument <em>Original Argument</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Original Argument</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument()
+	 * @see #getTclArgumentList()
+	 * @generated
+	 */
+	EReference getTclArgumentList_OriginalArgument();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.ArgumentMatch <em>Argument Match</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -886,6 +998,17 @@ public interface AstPackage extends EPackage {
 	EReference getComplexString_Arguments();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.ComplexString#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.ComplexString#getValue()
+	 * @see #getComplexString()
+	 * @generated
+	 */
+	EAttribute getComplexString_Value();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.VariableReference <em>Variable Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -926,6 +1049,81 @@ public interface AstPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getISubstitution();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.TclModule <em>Tcl Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Tcl Module</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclModule
+	 * @generated
+	 */
+	EClass getTclModule();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.TclModule#getStatements <em>Statements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Statements</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclModule#getStatements()
+	 * @see #getTclModule()
+	 * @generated
+	 */
+	EReference getTclModule_Statements();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclModule#getSize <em>Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Size</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclModule#getSize()
+	 * @see #getTclModule()
+	 * @generated
+	 */
+	EAttribute getTclModule_Size();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.dltk.tcl.ast.TclModule#getCodeModel <em>Code Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Code Model</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclModule#getCodeModel()
+	 * @see #getTclModule()
+	 * @generated
+	 */
+	EReference getTclModule_CodeModel();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.TclCodeModel <em>Tcl Code Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Tcl Code Model</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclCodeModel
+	 * @generated
+	 */
+	EClass getTclCodeModel();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.ast.TclCodeModel#getDelimeters <em>Delimeters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Delimeters</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclCodeModel#getDelimeters()
+	 * @see #getTclCodeModel()
+	 * @generated
+	 */
+	EAttribute getTclCodeModel_Delimeters();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.ast.TclCodeModel#getLineOffsets <em>Line Offsets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Line Offsets</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclCodeModel#getLineOffsets()
+	 * @see #getTclCodeModel()
+	 * @generated
+	 */
+	EAttribute getTclCodeModel_LineOffsets();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1145,6 +1343,15 @@ public interface AstPackage extends EPackage {
 				.getTclArgumentList_DefinitionArgument();
 
 		/**
+		 * The meta object literal for the '<em><b>Original Argument</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT = eINSTANCE
+				.getTclArgumentList_OriginalArgument();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.ArgumentMatchImpl <em>Argument Match</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1192,6 +1399,14 @@ public interface AstPackage extends EPackage {
 				.getComplexString_Arguments();
 
 		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMPLEX_STRING__VALUE = eINSTANCE.getComplexString_Value();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.VariableReferenceImpl <em>Variable Reference</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1228,6 +1443,68 @@ public interface AstPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ISUBSTITUTION = eINSTANCE.getISubstitution();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl <em>Tcl Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.ast.impl.TclModuleImpl
+		 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclModule()
+		 * @generated
+		 */
+		EClass TCL_MODULE = eINSTANCE.getTclModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Statements</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_MODULE__STATEMENTS = eINSTANCE.getTclModule_Statements();
+
+		/**
+		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_MODULE__SIZE = eINSTANCE.getTclModule_Size();
+
+		/**
+		 * The meta object literal for the '<em><b>Code Model</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_MODULE__CODE_MODEL = eINSTANCE.getTclModule_CodeModel();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.TclCodeModelImpl <em>Tcl Code Model</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.ast.impl.TclCodeModelImpl
+		 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclCodeModel()
+		 * @generated
+		 */
+		EClass TCL_CODE_MODEL = eINSTANCE.getTclCodeModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Delimeters</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_CODE_MODEL__DELIMETERS = eINSTANCE
+				.getTclCodeModel_Delimeters();
+
+		/**
+		 * The meta object literal for the '<em><b>Line Offsets</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_CODE_MODEL__LINE_OFFSETS = eINSTANCE
+				.getTclCodeModel_LineOffsets();
 
 	}
 

@@ -84,6 +84,7 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 					if (c == '(') { // read index part
 						this.kind = VAR_ARRAY;
 						TclWord cvb = new TclWord();
+						cvb.setStart(input.getPosition());
 						int ch;
 						while (true) {
 							ISubstitution s = parser.getCVB(input);
@@ -109,9 +110,15 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 								}
 
 								if (ch == ')') {
+									if (input.isEOF()) {
+										cvb.setEnd(input.getPosition() - 1);
+									} else {
+										cvb.setEnd(input.getPosition()-2);
+									}
 									break;
-								} else
+								} else {
 									cvb.add((char) ch);
+								}
 							}
 						}
 						this.index = cvb;

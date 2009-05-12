@@ -85,6 +85,10 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 			return createComplexString();
 		case AstPackage.VARIABLE_REFERENCE:
 			return createVariableReference();
+		case AstPackage.TCL_MODULE:
+			return createTclModule();
+		case AstPackage.TCL_CODE_MODEL:
+			return createTclCodeModel();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName()
 					+ "' is not a valid classifier");
@@ -189,6 +193,26 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 	public VariableReference createVariableReference() {
 		VariableReferenceImpl variableReference = new VariableReferenceImpl();
 		return variableReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TclModule createTclModule() {
+		TclModuleImpl tclModule = new TclModuleImpl();
+		return tclModule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TclCodeModel createTclCodeModel() {
+		TclCodeModelImpl tclCodeModel = new TclCodeModelImpl();
+		return tclCodeModel;
 	}
 
 	/**

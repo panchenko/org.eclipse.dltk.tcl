@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getArguments <em>Arguments</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getDefinitionArgument <em>Definition Argument</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument <em>Original Argument</em>}</li>
  * </ul>
  * </p>
  *
@@ -73,5 +74,31 @@ public interface TclArgumentList extends TclArgument {
 	 * @generated
 	 */
 	void setDefinitionArgument(ComplexArgument value);
+
+	/**
+	 * Returns the value of the '<em><b>Original Argument</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Original Argument</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Original Argument</em>' containment reference.
+	 * @see #setOriginalArgument(TclArgument)
+	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclArgumentList_OriginalArgument()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TclArgument getOriginalArgument();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument <em>Original Argument</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Original Argument</em>' containment reference.
+	 * @see #getOriginalArgument()
+	 * @generated
+	 */
+	void setOriginalArgument(TclArgument value);
 
 } // TclArgumentList

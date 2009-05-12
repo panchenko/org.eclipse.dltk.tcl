@@ -206,6 +206,20 @@ public class AstSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case AstPackage.TCL_MODULE: {
+			TclModule tclModule = (TclModule) theEObject;
+			T result = caseTclModule(tclModule);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case AstPackage.TCL_CODE_MODEL: {
+			TclCodeModel tclCodeModel = (TclCodeModel) theEObject;
+			T result = caseTclCodeModel(tclCodeModel);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -373,6 +387,36 @@ public class AstSwitch<T> {
 	 * @generated
 	 */
 	public T caseISubstitution(ISubstitution object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Tcl Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Tcl Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTclModule(TclModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Tcl Code Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Tcl Code Model</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTclCodeModel(TclCodeModel object) {
 		return null;
 	}
 

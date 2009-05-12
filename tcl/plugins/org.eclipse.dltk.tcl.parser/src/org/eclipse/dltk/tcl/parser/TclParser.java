@@ -12,11 +12,13 @@
 package org.eclipse.dltk.tcl.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.ArgumentMatch;
 import org.eclipse.dltk.tcl.ast.AstFactory;
 import org.eclipse.dltk.tcl.ast.ComplexString;
@@ -25,7 +27,9 @@ import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
+import org.eclipse.dltk.tcl.ast.TclCodeModel;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.VariableReference;
 import org.eclipse.dltk.tcl.definitions.Argument;
 import org.eclipse.dltk.tcl.definitions.Command;
@@ -41,6 +45,7 @@ import org.eclipse.dltk.tcl.internal.parser.raw.TclWord;
 import org.eclipse.dltk.tcl.internal.parser.raw.VariableSubstitution;
 import org.eclipse.dltk.tcl.parser.TclArgumentMatcher.ComplexArgumentResult;
 import org.eclipse.dltk.tcl.parser.definitions.IScopeProcessor;
+import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.osgi.util.NLS;
 
@@ -81,6 +86,31 @@ public class TclParser implements ITclParserOptions {
 
 	public List<TclCommand> parse(String source) {
 		return parse(source, null, null);
+	}
+
+	public TclModule parseModule(String source, ITclErrorReporter reporter,
+			IScopeProcessor scopeProcessor) {
+		TclModule module = AstFactory.eINSTANCE.createTclModule();
+		TclCodeModel codeModel = AstFactory.eINSTANCE.createTclCodeModel();
+		module.setCodeModel(codeModel);
+		module.setSize(source.length());
+		ISourceLineTracker tracker = TextUtils.createLineTracker(source);
+		int[] offsets = tracker.getLineOffsets();
+		String[] delimeters = tracker.getDelimeters();
+		EList<Integer> loff = codeModel.getLineOffsets();
+		for (int i = 0; i < offsets.length; i++) {
+			loff.add(offsets[i]);
+		}
+		codeModel.getDelimeters().addAll(Arrays.asList(delimeters));
+
+		this.source = source;
+		this.reporter = reporter;
+		this.scopeProcessor = scopeProcessor;
+		List<TclCommand> tclCommands = new ArrayList<TclCommand>();
+		parseToBlock(tclCommands, source, 0);
+
+		module.getStatements().addAll(tclCommands);
+		return module;
 	}
 
 	public List<TclCommand> parse(String source, ITclErrorReporter reporter,
@@ -282,6 +312,7 @@ public class TclParser implements ITclParserOptions {
 			list.getArguments().addAll(arguments2);
 			list.setStart(original.getStart());
 			list.setEnd(original.getEnd());
+			list.setOriginalArgument(arguments.get(arg.getArgumentNumber()));
 			List<ComplexArgumentResult> complexArguments2 = arg
 					.getComplexArguments();
 			if (complexArguments2.size() > 0) {
@@ -431,17 +462,31 @@ public class TclParser implements ITclParserOptions {
 			ref.setName(bs.getName());
 			TclWord index = bs.getIndex();
 			if (index != null) {
-				TclArgument a = processWordContentAsExpression(offset, content,
-						factory, index.getStart(), index.getEnd(), index
-								.getContents().get(0));
-				if (a != null) {
-					ref.setIndex(a);
+				if (index.getContents().size() == 1) {
+					TclArgument a = processWordContentAsExpression(offset,
+							content, factory, index.getStart(), index.getEnd(),
+							index.getContents().get(0));
+					if (a != null) {
+						ref.setIndex(a);
+					}
+				} else {
+					ComplexString literal = makeComplexString(offset, content,
+							factory, index.getStart(), index.getEnd(), index
+									.getContents());
+					if (literal != null) {
+						ref.setIndex(literal);
+					}
 				}
 			}
 			exp = ref;
 		} else {
 			String wordText = null;
+			// if (!(o instanceof String)) {
 			wordText = content.substring(offset + start, end + 1 + offset);
+			// } else {
+			// wordText = (String) o;
+			// }
+
 			StringArgument reference = factory.createStringArgument();
 			reference.setStart(offset + start);
 			reference.setEnd(offset + end + 1);
@@ -456,6 +501,7 @@ public class TclParser implements ITclParserOptions {
 		ComplexString literal = factory.createComplexString();
 		literal.setStart(offset + start);
 		literal.setEnd(offset + end + 1);
+		literal.setValue(content.substring(offset + start, offset + end + 1));
 		int pos = start;
 		for (int i = 0; i < contents.size(); i++) {
 			Object oo = contents.get(i);
