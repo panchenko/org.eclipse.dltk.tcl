@@ -13,6 +13,7 @@ package org.eclipse.dltk.tcl.parser.tests;
 
 import java.util.List;
 
+import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -38,12 +39,26 @@ public class SimpleCodePrinterTests extends TestCase {
 	}
 
 	public void test004() throws Exception {
-		outCheck("source \"$arg/beta 2.tcl\"", "source $arg/beta 2.tcl");
+		outCheck("source \"$arg/beta 2.tcl\"", "source \"$arg/beta 2.tcl\"");
 	}
 
 	public void test005() throws Exception {
 		outCheck("source [file join $dir alfa.tcl]",
 				"source [file join $dir alfa.tcl]");
+	}
+
+	public void test006() throws Exception {
+		outCheck("file delete $path(gorp.file)", "file delete $path(gorp.file)");
+	}
+	public void test007() throws Exception {
+		outCheck("file delete $path(gorp.file)\n", "file delete $path(gorp.file)");
+	}
+
+	public void test008() throws Exception {
+		outCheck("file delete $path($result,$str)", "file delete $path($result,$str)");
+	}
+	public void test009() throws Exception {
+		outCheck("file delete $path($result,$str)\n", "file delete $path($result,$str)");
 	}
 
 	private void outCheck(String source, String expected) throws Exception {
