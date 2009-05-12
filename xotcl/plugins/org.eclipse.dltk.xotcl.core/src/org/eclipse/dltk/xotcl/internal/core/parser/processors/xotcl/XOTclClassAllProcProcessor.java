@@ -110,8 +110,15 @@ public class XOTclClassAllProcProcessor extends AbstractTclCommandProcessor {
 		method.acceptArguments(arguments);
 		Block block = new Block(procCode.sourceStart(), procCode.sourceEnd());
 
-		String content = parser.substring(procCode.sourceStart() + 1, procCode
-				.sourceEnd() - 1);
+		if (procCode instanceof Block) {
+			block.getStatements().addAll(((Block) procCode).getStatements());
+		} else if (procCode instanceof TclBlockExpression) {
+			String content = ((TclBlockExpression) procCode).getBlock();
+			if (content.startsWith("{") && content.endsWith("}")) {
+				content = content.substring(1, content.length() - 1);
+			}
+			parser.parse(content, procCode.sourceStart() + 1, block);
+		}
 		method.acceptBody(block);
 		this.addToParent(parent, method);
 
@@ -135,7 +142,7 @@ public class XOTclClassAllProcProcessor extends AbstractTclCommandProcessor {
 			}
 		}
 
-		parser.parse(content, procCode.sourceStart() + 1, block);
+		// parser.parse(content, procCode.sourceStart() + 1, block);
 		return method;
 	}
 

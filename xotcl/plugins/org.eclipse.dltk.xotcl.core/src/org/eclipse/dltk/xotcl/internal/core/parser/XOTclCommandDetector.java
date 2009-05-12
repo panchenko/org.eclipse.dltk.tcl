@@ -13,7 +13,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.ITclCommandDetector;
 import org.eclipse.dltk.tcl.core.ITclCommandDetectorExtension;
-import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 import org.eclipse.dltk.xotcl.core.XOTclParseUtil;
@@ -54,7 +53,7 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 	}
 
 	public CommandInfo detectCommand(TclStatement statement,
-			ModuleDeclaration module, ITclParser parser, ASTNode parent) {
+			ModuleDeclaration module, ASTNode parent) {
 		if (statement.getCount() == 0) {
 			return null;
 		}
@@ -63,21 +62,20 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 			String value = ((SimpleReference) commandName).getName();
 			if (value.equals("Class") || value.equals("::xotcl::Class")
 					|| value.equals("xotcl::Class")) {
-				return checkClass(statement, module, parser, parent);
+				return checkClass(statement, module, parent);
 			} else if (value.equals("Object")
 					|| value.equals("::xotcl::Object")
 					|| value.equals("xotcl::Object")) {
-				return checkObject(statement, module, parser, parent);
+				return checkObject(statement, module, parent);
 			} else {
-				return checkInstanceOperations(module, parent, statement,
-						parser);
+				return checkInstanceOperations(module, parent, statement);
 			}
 		}
 		return null;
 	}
 
 	private CommandInfo checkInstanceOperations(ModuleDeclaration module,
-			ASTNode parent, TclStatement statement, ITclParser parser) {
+			ASTNode parent, TclStatement statement) {
 		if (false) {// runtimeModel
 			return null;
 		}
@@ -206,7 +204,7 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 	}
 
 	private CommandInfo checkClass(TclStatement statement,
-			ModuleDeclaration module, ITclParser parser, ASTNode parent) {
+			ModuleDeclaration module, ASTNode parent) {
 
 		Expression arg = statement.getAt(1);
 		if (arg instanceof SimpleReference) {
@@ -237,7 +235,7 @@ public class XOTclCommandDetector implements ITclCommandDetector,
 	}
 
 	private CommandInfo checkObject(TclStatement statement,
-			ModuleDeclaration module, ITclParser parser, ASTNode parent) {
+			ModuleDeclaration module, ASTNode parent) {
 
 		Expression arg = statement.getAt(1);
 		if (arg instanceof SimpleReference) {
