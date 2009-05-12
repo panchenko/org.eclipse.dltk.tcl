@@ -80,7 +80,7 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 	 * 
 	 */
 	public CommandInfo detectCommand(TclStatement statement,
-			ModuleDeclaration module, ITclParser parser, ASTNode decl) {
+			ModuleDeclaration module, ASTNode decl) {
 		if (statement.getCount() == 0) {
 			return null;
 		}
@@ -94,13 +94,13 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 					return new CommandInfo("#itcl#" + itclCommands[i], null);
 				}
 			}
-			return checkInstanceOperations(module, decl, statement, parser);
+			return checkInstanceOperations(module, decl, statement);
 		}
 		return null;
 	}
 
 	private CommandInfo checkInstanceOperations(ModuleDeclaration module,
-			ASTNode parent, TclStatement statement, ITclParser parser) {
+			ASTNode parent, TclStatement statement) {
 		if (runtimeModel) {
 			return null;
 		}

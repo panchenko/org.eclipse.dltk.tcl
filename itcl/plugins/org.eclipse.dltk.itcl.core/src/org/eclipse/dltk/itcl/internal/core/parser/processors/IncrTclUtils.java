@@ -59,13 +59,14 @@ public class IncrTclUtils {
 
 	public static void parseAddToBlock(ITclParser parser, Expression procCode,
 			Block block) {
-		String content = parser.substring(procCode.sourceStart(), procCode
-				.sourceEnd());
-		if (content.startsWith("{") && content.endsWith("}")) {
-			content = parser.substring(procCode.sourceStart() + 1, procCode
-					.sourceEnd() - 1);
+		if (procCode instanceof Block) {
+			block.getStatements().addAll(((Block) procCode).getStatements());
+		} else if (procCode instanceof TclBlockExpression) {
+			String content = ((TclBlockExpression) procCode).getBlock();
+			if (content.startsWith("{") && content.endsWith("}")) {
+				content = content.substring(1, content.length() - 1);
+			}
+			parser.parse(content, procCode.sourceStart() + 1- parser.getStartPos(), block);
 		}
-		parser.parse(content,
-				procCode.sourceStart() + 1 - parser.getStartPos(), block);
 	}
 }
