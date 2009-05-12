@@ -578,13 +578,6 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 	}
 
-	protected void processExecuteBlock(String name, Expression bl,
-			int beforePosition) {
-		TclExecuteExpression block = (TclExecuteExpression) bl;
-		List code = block.parseExpression(block.sourceStart() + 1);
-		checkVariableStatements(name, beforePosition, code, "");
-	}
-
 	private void checkVariable(String name, String variable, ASTNode node) {
 		String str;
 		if (variable.indexOf('(') != -1) {

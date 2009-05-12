@@ -27,19 +27,18 @@ public class TclForeachCommandProcessor extends AbstractTclCommandProcessor {
 		} else {
 			// foreach.setArguments(null);
 			Expression procCode = statement.getAt(statement.getCount() - 1);
-			if (procCode instanceof TclBlockExpression) {
+			if (procCode instanceof Block) {
+				foreach.acceptBlock((Block) procCode);
+			} else if (procCode instanceof TclBlockExpression) {
 				Block block = new Block(procCode.sourceStart(), procCode
 						.sourceEnd());
 
-				String content = parser.substring(procCode.sourceStart(),
-						procCode.sourceEnd());
+				String content = ((TclBlockExpression) procCode).getBlock();
 				if (content.startsWith("{") && content.endsWith("}")) {
-					content = parser.substring(procCode.sourceStart() + 1,
-							procCode.sourceEnd() - 1);
+					content = content.substring(1, content.length() - 1);
 				}
 				foreach.acceptBlock(block);
-				parser.parse(content, procCode.sourceStart() + 1
-						- parser.getStartPos(), block);
+				parser.parse(content, procCode.sourceStart() + 1- parser.getStartPos(), block);
 			}
 
 		}

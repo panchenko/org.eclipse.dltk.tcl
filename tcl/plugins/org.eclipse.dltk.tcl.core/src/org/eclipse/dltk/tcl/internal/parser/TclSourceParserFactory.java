@@ -9,10 +9,11 @@ import org.eclipse.dltk.ast.parser.ISourceParserFactory;
 public class TclSourceParserFactory implements ISourceParserFactory {
 
 	/*
-	 * @see org.eclipse.dltk.ast.parser.ISourceParserFactory#createSourceParser()
+	 * @see
+	 * org.eclipse.dltk.ast.parser.ISourceParserFactory#createSourceParser()
 	 */
 	public ISourceParser createSourceParser() {
-		return new TclSourceParser();
+		return new NewTclSourceParser();
 	}
 
 }

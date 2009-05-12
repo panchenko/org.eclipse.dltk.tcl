@@ -31,7 +31,15 @@ public class TclCatchProcessor extends AbstractTclCommandProcessor {
 						.makeVariable(variableName), null, variableName
 						.sourceStart(), variableName.sourceEnd());
 			}
-			if (e instanceof TclBlockExpression) {
+			if (e instanceof Block) {
+				TclCatchStatement catchStatement = new TclCatchStatement(
+						(Block) e, variable, statement.sourceStart(), statement
+								.sourceEnd());
+				catchStatement.getStatements().addAll(
+						((Block) e).getStatements());
+				addToParent(parent, catchStatement);
+				return catchStatement;
+			} else if (e instanceof TclBlockExpression) {
 				TclBlockExpression block = (TclBlockExpression) e;
 				String blockContent = block.getBlock();
 				blockContent = blockContent.substring(1,

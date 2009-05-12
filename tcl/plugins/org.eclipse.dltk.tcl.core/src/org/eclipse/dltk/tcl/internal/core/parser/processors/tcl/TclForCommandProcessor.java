@@ -20,24 +20,24 @@ public class TclForCommandProcessor extends AbstractTclCommandProcessor {
 					ProblemSeverities.Error);
 			return null;
 		}
-		TclForStatement forStatement = new TclForStatement(statement.sourceStart(),
-				statement.sourceEnd());
+		TclForStatement forStatement = new TclForStatement(statement
+				.sourceStart(), statement.sourceEnd());
 		addToParent(parent, forStatement);
 
 		Expression procCode = statement.getAt(statement.getCount() - 1);
+		if (procCode instanceof Block) {
+			forStatement.acceptBlock((Block) procCode);
+		}
 		if (procCode instanceof TclBlockExpression) {
 			Block block = new Block(procCode.sourceStart(), procCode
 					.sourceEnd());
 
-			String content = parser.substring(procCode.sourceStart(), procCode
-					.sourceEnd());
+			String content = ((TclBlockExpression) procCode).getBlock();
 			if (content.startsWith("{") && content.endsWith("}")) {
-				content = parser.substring(procCode.sourceStart() + 1, procCode
-						.sourceEnd() - 1);
+				content = content.substring(1, content.length() - 1);
 			}
 			forStatement.acceptBlock(block);
-			parser.parse(content, procCode.sourceStart() + 1
-					- parser.getStartPos(), block);
+			parser.parse(content, procCode.sourceStart() + 1- parser.getStartPos(), block);
 		}
 
 		return forStatement;

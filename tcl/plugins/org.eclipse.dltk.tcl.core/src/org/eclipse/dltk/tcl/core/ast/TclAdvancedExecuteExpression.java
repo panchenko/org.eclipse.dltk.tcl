@@ -11,6 +11,7 @@ package org.eclipse.dltk.tcl.core.ast;
 
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.tcl.ast.TclConstants;
+import org.eclipse.dltk.utils.CorePrinter;
 
 public class TclAdvancedExecuteExpression extends Block {
 	public TclAdvancedExecuteExpression(int start, int end) {
@@ -20,5 +21,9 @@ public class TclAdvancedExecuteExpression extends Block {
 
 	public int getKind() {
 		return TclConstants.TCL_EXECUTE_EXPRESSION;
+	}
+	
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("Expression" + getSourceRange() + ":" + getKind()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

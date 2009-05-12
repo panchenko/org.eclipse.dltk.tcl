@@ -12,6 +12,8 @@ package org.eclipse.dltk.tcl.ast;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 
 public class TclModuleDeclaration extends ModuleDeclaration {
+	private TclModule module;
+
 	public TclModuleDeclaration(int sourceLength) {
 		super(sourceLength, true);
 	}
@@ -20,5 +22,13 @@ public class TclModuleDeclaration extends ModuleDeclaration {
 	}
 
 	public void rebuildMethods() {
+	}
+
+	public void setTclModule(TclModule module) {
+		this.module = module;
+	}
+
+	private TclModule getTclModule() {
+		return this.module;
 	}
 }

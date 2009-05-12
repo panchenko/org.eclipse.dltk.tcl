@@ -17,7 +17,7 @@ import org.eclipse.dltk.tcl.core.ast.TclSwitchStatement;
 
 public class TclSwitchCommandProcessor extends AbstractTclCommandProcessor {
 
-	public ASTNode process(TclStatement statement, ITclParser parser, 
+	public ASTNode process(TclStatement statement, ITclParser parser,
 			ASTNode parent) {
 
 		TclSwitchStatement switchStatement = new TclSwitchStatement(statement
@@ -40,8 +40,7 @@ public class TclSwitchCommandProcessor extends AbstractTclCommandProcessor {
 				patternsStart = i + 1;
 				switchStatement.setString(at);
 				break;
-			}
-			else if (at instanceof TclAdvancedExecuteExpression) {
+			} else if (at instanceof TclAdvancedExecuteExpression) {
 				patternsStart = i + 1;
 				switchStatement.setString(at);
 				break;
@@ -57,11 +56,12 @@ public class TclSwitchCommandProcessor extends AbstractTclCommandProcessor {
 					for (Iterator iterator = list.iterator(); iterator
 							.hasNext();) {
 						ASTNode st = (ASTNode) iterator.next();
-						if (st instanceof TclBlockExpression) {
+						if (st instanceof Block) {
+							switchStatement.addChild((Block) st);
+						} else if (st instanceof TclBlockExpression) {
 							parserBlockAddTo(parser, switchStatement,
 									(TclBlockExpression) st);
-						}
-						if (st instanceof TclStatement) {
+						} else if (st instanceof TclStatement) {
 							TclStatement stt = (TclStatement) st;
 							for (int i = 0; i < stt.getCount(); i++) {
 								ASTNode sttt = (ASTNode) stt.getAt(i);
@@ -92,10 +92,9 @@ public class TclSwitchCommandProcessor extends AbstractTclCommandProcessor {
 	private void parserBlockAddTo(ITclParser parser,
 			TclSwitchStatement switchStatement, TclBlockExpression st) {
 		Block block = new Block(st.sourceStart(), st.sourceEnd());
-		String content = parser.substring(st.sourceStart(), st.sourceEnd());
+		String content = st.getBlock();
 		if (content.startsWith("{") && content.endsWith("}")) {
-			content = parser
-					.substring(st.sourceStart() + 1, st.sourceEnd() - 1);
+			content = content.substring(1, content.length() - 1);
 		}
 		switchStatement.addChild(block);
 		parser.parse(content, st.sourceStart() + 1 - parser.getStartPos(),

@@ -12,7 +12,7 @@ import org.eclipse.dltk.tcl.core.ast.TclWhileStatement;
 
 public class TclWhileCommandProcessor extends AbstractTclCommandProcessor {
 
-	public ASTNode process(TclStatement statement, ITclParser parser, 
+	public ASTNode process(TclStatement statement, ITclParser parser,
 			ASTNode parent) {
 		TclWhileStatement foreach = new TclWhileStatement(statement
 				.sourceStart(), statement.sourceEnd());
@@ -29,11 +29,9 @@ public class TclWhileCommandProcessor extends AbstractTclCommandProcessor {
 				Block block = new Block(procCode.sourceStart(), procCode
 						.sourceEnd());
 
-				String content = parser.substring(procCode.sourceStart(),
-						procCode.sourceEnd());
+				String content = ((TclBlockExpression) procCode).getBlock();
 				if (content.startsWith("{") && content.endsWith("}")) {
-					content = parser.substring(procCode.sourceStart() + 1,
-							procCode.sourceEnd() - 1);
+					content = content.substring(1, content.length() - 1);
 				}
 				foreach.acceptBlock(block);
 				parser.parse(content, procCode.sourceStart() + 1

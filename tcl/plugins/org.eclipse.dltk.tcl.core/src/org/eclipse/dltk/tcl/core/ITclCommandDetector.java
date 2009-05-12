@@ -30,6 +30,5 @@ public interface ITclCommandDetector {
 	/**
 	 * Should not scan all module. It could be really slow.
 	 */
-	CommandInfo detectCommand(TclStatement statement, ModuleDeclaration module,
-			ITclParser parser, ASTNode decl);
+	CommandInfo detectCommand(TclStatement statement, ModuleDeclaration module, ASTNode decl);
 }

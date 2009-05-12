@@ -85,13 +85,15 @@ public class TclNamespaceProcessor extends AbstractTclCommandProcessor {
 						+ t.getName());
 			}
 			addToParent(parent, type);
-			type.setBody((Block) code);
+			type.setBody(code);
 			for (int i = FIRST_ARGUMENT_POSITION; i < statement.getCount(); i++) {
 				Expression expr = statement.getAt(i);
 				if (expr == null) {
 					return null;
 				}
-				if (expr instanceof TclBlockExpression) {
+				if (expr instanceof Block) {
+					code.getStatements().addAll(((Block) expr).getStatements());
+				} else if (expr instanceof TclBlockExpression) {
 					TclBlockExpression block = (TclBlockExpression) expr;
 					String blockContent = block.getBlock();
 					if (blockContent.length() > 2) {

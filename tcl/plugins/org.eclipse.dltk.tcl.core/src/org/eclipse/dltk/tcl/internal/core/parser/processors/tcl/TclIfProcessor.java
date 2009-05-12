@@ -113,7 +113,8 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 		return ifStatement;
 	}
 
-	private void parseIf(IfContext context, IfStatement ifStatement) throws IfStatementError {
+	private void parseIf(IfContext context, IfStatement ifStatement)
+			throws IfStatementError {
 		ifStatement.acceptCondition(parseCondition(context));
 		if (context.isEOF()) {
 			throw new IfStatementError(
@@ -179,6 +180,9 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 			} else {
 				return (TclExecuteExpression) node;
 			}
+
+		} else if (node instanceof Block) {
+			return (Block) node;
 		} else {
 			throw new IfStatementError(message, context.start(), context.end());
 		}
@@ -206,8 +210,7 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 			TclBlockExpression block) {
 		String blockContent = block.getBlock();
 		blockContent = blockContent.substring(1, blockContent.length() - 1);
-		parser.parse(blockContent, block.sourceStart() + 1
-				- parser.getStartPos(), el);
+		parser.parse(blockContent, block.sourceStart() + 1- parser.getStartPos(), el);
 	}
 
 	private ASTNode parseCondition(IfContext context) throws IfStatementError {
@@ -240,6 +243,8 @@ public class TclIfProcessor extends AbstractTclCommandProcessor {
 			List childs = ex.getChilds();
 			return new ASTListNode(node.sourceStart(), node.sourceEnd(), childs);
 		} else if (node instanceof TclExecuteExpression) {
+			return node;
+		} else if (node instanceof Block) {
 			return node;
 		}
 		throw new IfStatementError(Messages.TclIfProcessor_incorrectCondition,

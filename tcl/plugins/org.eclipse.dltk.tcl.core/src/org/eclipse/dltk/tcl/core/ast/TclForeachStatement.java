@@ -8,6 +8,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.utils.CorePrinter;
 
 public class TclForeachStatement extends Statement {
 	List arguments = null;
@@ -38,7 +39,7 @@ public class TclForeachStatement extends Statement {
 	}
 
 	public List getArguments() {
-		if( arguments == null ) {
+		if (arguments == null) {
 			arguments = new ArrayList();
 		}
 		return arguments;
@@ -50,5 +51,20 @@ public class TclForeachStatement extends Statement {
 
 	public void acceptBlock(Block block) {
 		this.block = block;
+	}
+
+	@Override
+	public void printNode(CorePrinter output) {
+		output.print("foreach ");
+		if (this.arguments != null) {
+			for (Iterator iterator = this.arguments.iterator(); iterator
+					.hasNext();) {
+				ASTNode node = (ASTNode) iterator.next();
+				node.printNode(output);
+			}
+		}
+		if (this.block != null) {
+			block.printNode(output);
+		}
 	}
 }

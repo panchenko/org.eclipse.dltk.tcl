@@ -67,17 +67,6 @@ public class TclSourceParser extends AbstractSourceParser implements
 	private ITclCommandProcessor localProcessor = new ITclCommandProcessor() {
 		public ASTNode process(TclStatement st, ITclParser parser,
 				ASTNode parent) {
-			// if (commandParserCache.containsKey(command)) {
-			// ASTNode st = (ASTNode) commandParserCache.get(command);
-			// if (parent != null) {
-			// TclParseUtil.addToDeclaration(parent, st);
-			// }
-			// return st;
-			// }
-			// TclStatement st = TclParseUtil.convertToAST(command, parser
-			// .getFileName(), offset, TclSourceParser.this.content,
-			// TclSourceParser.this.startPos);
-			// commandParserCache.put(command, st);
 			if (parent != null) {
 				TclParseUtil.addToDeclaration(parent, st);
 				// Replace execute expressions and parse they content.
@@ -106,13 +95,12 @@ public class TclSourceParser extends AbstractSourceParser implements
 					expression = expression.substring(1,
 							expression.length() - 1);
 					TclAdvancedExecuteExpression newExpr = new TclAdvancedExecuteExpression(
-							nodes[i].sourceStart() + 1,
-							nodes[i].sourceEnd() - 1);
+							nodes[i].sourceStart(), nodes[i].sourceEnd());
 					nodes[i] = newExpr;
 					st.setExpressions(Arrays.asList(nodes));
 					TclSourceParser.this.parse(expression, nodes[i]
 							.sourceStart()
-							- getStartPos(), newExpr);
+							+ 1 - getStartPos(), newExpr);
 				}
 			}
 		}
@@ -195,7 +183,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 									.setBuildRuntimeModelFlag(isBuildingRuntimeModel());
 						}
 						CommandInfo commandName = detectors[i].detectCommand(
-								command, this.moduleDeclaration, this, decl);
+								command, this.moduleDeclaration, decl);
 						if (commandName != null) {
 							processor = CommandManager.getInstance()
 									.getProcessor(commandName.commandName);
@@ -269,6 +257,18 @@ public class TclSourceParser extends AbstractSourceParser implements
 
 	public void setUseDetectors(boolean b) {
 		this.useDetectors = false;
+	}
+
+	public void setProblemReporter(IProblemReporter problemReporter2) {
+		this.problemReporter = problemReporter2;
+	}
+
+	public void setModuleDeclaration(ModuleDeclaration moduleDeclaration) {
+		this.moduleDeclaration = moduleDeclaration;
+	}
+
+	public void setContent(String content2) {
+		this.content = content2;
 	}
 
 }

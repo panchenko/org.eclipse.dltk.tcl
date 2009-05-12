@@ -38,17 +38,6 @@ public class TclParseUtil {
 	public static String extractWord(TclElement element, String content) {
 		return content.substring((element).getStart(), (element).getEnd() + 1);
 	}
-
-	public static String extractWord(TclElement element, ITclParser parser,
-			int s, int e) {
-		return parser.substring((element).getStart() + s, (element).getEnd()
-				+ 1 + e);
-	}
-
-	public static String extractWord(TclElement element, ITclParser parser) {
-		return parser.substring((element).getStart(), (element).getEnd() + 1);
-	}
-
 	public static boolean isCommandStart(Object object) {
 		return object != null && object.getClass().equals(TclWord.class);
 	}
@@ -115,27 +104,6 @@ public class TclParseUtil {
 			name = ((TclExecuteExpression) variableName).getExpression();
 		}
 		if (name != null) {
-
-			// String arrayName = null;
-			// String arrayIndex = null;
-			// if (isArrayVariable(name)) {
-			// int t1 = name.indexOf("(");
-			// if (t1 > 0 && (name.charAt(t1 - 1) == '\\')) {
-			// t1--;
-			// }
-			// arrayName = name.substring(0, t1);
-			// arrayIndex = name.substring(name.indexOf("(") + 1, name
-			// .length() - 1);
-			// if (arrayIndex.endsWith("\\")) {
-			// arrayIndex = arrayIndex.substring(0,
-			// arrayIndex.length() - 1);
-			// }
-			// }
-			//
-			// if (arrayName != null) {
-			// name = arrayName;
-			// }
-
 			String fullName = escapeName(name);
 
 			start = variableName.sourceStart();

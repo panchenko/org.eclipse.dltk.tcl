@@ -82,21 +82,23 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 		}
 		Block block = new Block(procCode.sourceStart(), procCode.sourceEnd());
 
-		String content = parser.substring(procCode.sourceStart(), procCode
-				.sourceEnd());
-		if (content.startsWith("{") && content.endsWith("}")) {
-			content = parser.substring(procCode.sourceStart() + 1, procCode
-					.sourceEnd() - 1);
+		if (procCode instanceof Block) {
+			method.acceptBody((Block) procCode);
+		} else if (procCode instanceof TclBlockExpression) {
+			String content = ((TclBlockExpression) procCode).getBlock();
+			if (content.startsWith("{") && content.endsWith("}")) {
+				content = content.substring(1, content.length() - 1);
+			}
+			method.acceptBody(block);
+			parser.parse(content, procCode.sourceStart() + 1
+					- parser.getStartPos(), block);
 		}
-		method.acceptBody(block);
-		parser.parse(content,
-				procCode.sourceStart() + 1 - parser.getStartPos(), block);
 		this.addToParent(parent, method);
 		String methodFQN = TclParseUtil.getElementFQN(method, "::",
 				getModuleDeclaration());
 		int pos = methodFQN.lastIndexOf("::");
 		if (pos != -1) {
-			methodFQN = methodFQN.substring(0, pos); 
+			methodFQN = methodFQN.substring(0, pos);
 			method.setDeclaringTypeName(methodFQN);
 		}
 		return method;
