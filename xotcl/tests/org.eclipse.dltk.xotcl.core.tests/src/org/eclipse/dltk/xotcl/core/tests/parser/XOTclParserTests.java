@@ -11,28 +11,30 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.tcl.core.ITclSourceParser;
-import org.eclipse.dltk.tcl.internal.parser.TclSourceParser;
+import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
+import org.eclipse.dltk.tcl.internal.parser.TclSourceParserFactory;
 
 public class XOTclParserTests extends TestCase {
-	
+
 	public void testParseUtil001() throws Throwable {
-		String content = 
-			"set a {gamma[lappend $alfa 20]}";
-		ModuleDeclaration module = this.parser( content );
+		String content = "set a {gamma[lappend $alfa 20]}";
+		ModuleDeclaration module = this.parser(content);
 		System.out.println("Cool");
 	}
-	
-	private ASTNode[] findNodeByName(ModuleDeclaration module, final String name) throws Exception {
+
+	private ASTNode[] findNodeByName(ModuleDeclaration module, final String name)
+			throws Exception {
 		final List results = new ArrayList();
-		module.traverse( new ASTVisitor() {
+		module.traverse(new ASTVisitor() {
 			public boolean endvisit(TypeDeclaration s) throws Exception {
-				if( s.getName().equals(name)) {
+				if (s.getName().equals(name)) {
 					return results.add(s);
 				}
 				return super.endvisit(s);
 			}
+
 			public boolean visit(MethodDeclaration s) throws Exception {
-				if( s.getName().equals(name)) {
+				if (s.getName().equals(name)) {
 					return results.add(s);
 				}
 				return super.visit(s);
@@ -40,9 +42,12 @@ public class XOTclParserTests extends TestCase {
 		});
 		return (ASTNode[]) results.toArray(new ASTNode[results.size()]);
 	}
+
 	private ModuleDeclaration parser(String content) {
-		ITclSourceParser parser = new TclSourceParser();
-		ModuleDeclaration module = parser.parse("file".toCharArray(), content.toCharArray(), null);
+		ITclSourceParser parser = (ITclSourceParser) (new TclSourceParserFactory())
+				.createSourceParser();
+		ModuleDeclaration module = parser.parse("file".toCharArray(), content
+				.toCharArray(), null);
 		assertNotNull(module);
 		return module;
 	}

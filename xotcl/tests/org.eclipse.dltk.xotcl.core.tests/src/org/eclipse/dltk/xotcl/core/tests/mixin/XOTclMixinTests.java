@@ -14,7 +14,8 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.mixin.IMixinRequestor.ElementInfo;
 import org.eclipse.dltk.tcl.core.ITclSourceParser;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinBuildVisitor;
-import org.eclipse.dltk.tcl.internal.parser.TclSourceParser;
+import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
+import org.eclipse.dltk.tcl.internal.parser.TclSourceParserFactory;
 
 public class XOTclMixinTests extends TestCase {
 	class TestMixinRequestorCollector implements IMixinRequestor {
@@ -31,45 +32,33 @@ public class XOTclMixinTests extends TestCase {
 	}
 
 	public void testParseUtil001() throws Throwable {
-		String content = 
-			"namespace eval c  {\n" +
-			"}\n" +
-			"namespace eval a {\n" +
-			"	namespace eval b {\n" +
-			"		proc c::d { } {\n" +
-			"		}\n" +
-			"	}\n" +
-			"}\n";
-		String expected = 
-			"c : null\n" +
-			"a : null\n" +
-			"a{b : null\n" +
-			"c{d : null\n";
+		String content = "namespace eval c  {\n" + "}\n"
+				+ "namespace eval a {\n" + "	namespace eval b {\n"
+				+ "		proc c::d { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String expected = "c : null\n" + "a : null\n" + "a{b : null\n"
+				+ "c{d : null\n";
 		checkMixin(content, expected);
 	}
+
 	public void testParseUtil002() throws Throwable {
-		String content = 
-			"package require XOTcl\n" +
-			"namespace import ::xotcl::*\n" +
-			"Class MyModule\n" +
-			"# Documentation 1\n" +
-			"MyModule instproc myInstanceProc { vars } {\n" +
-			"	puts \"MyInstanceProc\"\n" +
-			"}\n" +
-			"MyModule create myModuleInstance\n" +
-			"myModuleInstance myInstanceProc\n" ;
-		String expected = 
-			"MyModule : null\n" +
-			"MyModule{myInstanceProc : null\n" +
-			"myModuleInstance : null\n" ;
+		String content = "package require XOTcl\n"
+				+ "namespace import ::xotcl::*\n" + "Class MyModule\n"
+				+ "# Documentation 1\n"
+				+ "MyModule instproc myInstanceProc { vars } {\n"
+				+ "	puts \"MyInstanceProc\"\n" + "}\n"
+				+ "MyModule create myModuleInstance\n"
+				+ "myModuleInstance myInstanceProc\n";
+		String expected = "MyModule : null\n"
+				+ "MyModule{myInstanceProc : null\n"
+				+ "myModuleInstance : null\n";
 		checkMixin(content, expected);
 	}
-	
 
 	private void checkMixin(String content, String expected) throws Exception {
-		ModuleDeclaration module = this.parser( content );
+		ModuleDeclaration module = this.parser(content);
 		TestMixinRequestorCollector collector = new TestMixinRequestorCollector();
-		TclMixinBuildVisitor visitor = new TclMixinBuildVisitor(module, null,false, collector);
+		TclMixinBuildVisitor visitor = new TclMixinBuildVisitor(module, null,
+				false, collector);
 		module.traverse(visitor);
 		ElementInfo[] info = collector.getInfo();
 		String actual = infoToString(info);
@@ -106,7 +95,8 @@ public class XOTclMixinTests extends TestCase {
 	}
 
 	private ModuleDeclaration parser(String content) {
-		ITclSourceParser parser = new TclSourceParser();
+		ITclSourceParser parser = (ITclSourceParser) (new TclSourceParserFactory())
+				.createSourceParser();
 		ModuleDeclaration module = parser.parse("file".toCharArray(), content
 				.toCharArray(), null);
 		assertNotNull(module);

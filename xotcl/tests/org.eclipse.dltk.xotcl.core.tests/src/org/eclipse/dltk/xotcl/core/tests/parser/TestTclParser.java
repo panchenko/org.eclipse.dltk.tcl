@@ -1,14 +1,11 @@
 package org.eclipse.dltk.xotcl.core.tests.parser;
 
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.dltk.tcl.internal.parser.TclSourceParser;
-import org.eclipse.dltk.utils.TextUtils;
+import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
 
-class TestTclParser extends TclSourceParser {
+class TestTclParser extends NewTclSourceParser {
 
 	public TestTclParser(String content) {
-		this.content = content;
-		this.codeModel = TextUtils.createLineTracker(content);
 		setProcessorsState(false);
 	}
 
