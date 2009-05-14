@@ -12,7 +12,7 @@ package org.eclipse.dltk.tcl.ast;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 
 public class TclModuleDeclaration extends ModuleDeclaration {
-	private TclModule module;
+	private transient TclModule module;
 
 	public TclModuleDeclaration(int sourceLength) {
 		super(sourceLength, true);
@@ -28,7 +28,7 @@ public class TclModuleDeclaration extends ModuleDeclaration {
 		this.module = module;
 	}
 
-	private TclModule getTclModule() {
+	public TclModule getTclModule() {
 		return this.module;
 	}
 }

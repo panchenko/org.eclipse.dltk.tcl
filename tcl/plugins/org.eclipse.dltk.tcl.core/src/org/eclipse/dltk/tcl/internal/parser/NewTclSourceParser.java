@@ -1,8 +1,10 @@
 package org.eclipse.dltk.tcl.internal.parser;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -16,7 +18,6 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParserExtension;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.ComplexString;
@@ -64,6 +65,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 	public ModuleDeclaration parse(char[] fileName, TclModule tclModule,
 			IProblemReporter reporter) {
+		processedForContentNodes.clear();
 		initDetectors();
 		this.tclModule = tclModule;
 		TclCodeModel model = this.tclModule.getCodeModel();
@@ -111,6 +113,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 	private ITclCommandDetector[] detectors;
 
 	protected void parse(TclModule module, ASTNode decl) {
+		processedForContentNodes.clear();
 		initDetectors();
 
 		List<TclCommand> commands = module.getStatements();
@@ -124,6 +127,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			runStatementProcessor(decl, st);
 		}
 	}
+
+	private Set<ASTNode> processedForContentNodes = new HashSet();
 
 	private void runStatementProcessor(ASTNode decl, TclStatement st) {
 		ITclCommandProcessor processor = this.locateProcessor(st, decl);
@@ -144,8 +149,10 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 					nde.traverse(new ASTVisitor() {
 						public boolean visit(TypeDeclaration s)
 								throws Exception {
-							List stats = s.getStatements();
-							processStatements(s, stats);
+							if (processedForContentNodes.add(s)) {
+								List stats = s.getStatements();
+								processStatements(s, stats);
+							}
 							return true;
 						}
 
@@ -165,21 +172,27 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 						public boolean visit(MethodDeclaration s)
 								throws Exception {
-							List stats = s.getStatements();
-							processStatements(s, stats);
+							if (processedForContentNodes.add(s)) {
+								List stats = s.getStatements();
+								processStatements(s, stats);
+							}
 							return true;
 						}
 
 						public boolean visit(Expression s) throws Exception {
 							if (s instanceof Block) {
-								Block bl = (Block) s;
-								List stats = bl.getStatements();
-								processStatements(bl, stats);
+								if (processedForContentNodes.add(s)) {
+									Block bl = (Block) s;
+									List stats = bl.getStatements();
+									processStatements(bl, stats);
+								}
 								return true;
 							} else if (s instanceof TclAdvancedExecuteExpression) {
-								TclAdvancedExecuteExpression ex = (TclAdvancedExecuteExpression) s;
-								List stats = ex.getStatements();
-								processStatements(ex, stats);
+								if (processedForContentNodes.add(s)) {
+									TclAdvancedExecuteExpression ex = (TclAdvancedExecuteExpression) s;
+									List stats = ex.getStatements();
+									processStatements(ex, stats);
+								}
 							} else if (s instanceof TclExecuteExpression) {
 								// This should not happen at all.
 							}
@@ -351,6 +364,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 	}
 
 	public void parse(String content, int offset, ASTNode parent) {
+		processedForContentNodes.clear();
 		TclSourceParser parser = new TclSourceParser();
 		parser.setOffset(offset);
 		parser.setModuleDeclaration(moduleDeclaration);
@@ -363,6 +377,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 	public ModuleDeclaration parse(final char[] fileName, char[] source,
 			final IProblemReporter reporter) {
+		processedForContentNodes.clear();
 		TclParser newParser = new TclParser();
 		TclErrorCollector collector = null;
 		if (reporter != null) {

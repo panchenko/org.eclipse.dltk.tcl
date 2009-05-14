@@ -487,6 +487,14 @@ public class OldTclParserUtils {
 				.size()]);
 	}
 
+	/**
+	 * @deprecated This method not support persistent caching.
+	 * @param astCache
+	 * @param content
+	 * @param problemReporter
+	 * @param filename
+	 * @return
+	 */
 	public static ModuleDeclaration parseModule(ISourceModuleInfo astCache,
 			char[] content, IProblemReporter problemReporter, char[] filename) {
 		return SourceParserUtil.getModuleDeclaration(filename, content,

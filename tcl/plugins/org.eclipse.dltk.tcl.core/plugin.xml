@@ -204,6 +204,13 @@
             uri="http://www.eclipse.org/dltk/tcl/packages">
       </package>
    </extension>
+   <extension
+         point="org.eclipse.dltk.core.astCache">
+      <astCache
+            class="org.eclipse.dltk.tcl.internal.core.TclASTCache"
+            language="org.eclipse.dltk.tcl.core.nature">
+      </astCache>
+   </extension>
    <!--extension
          point="org.eclipse.dltk.core.buildpathContainerInitializer">
       <buildpathContainerInitializer

@@ -58,8 +58,9 @@ public class TclStatement extends Statement {
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
-			if( this.expressions != null ) {
-				for (int i = 0; i < this.expressions.size(); i++) {
+			if (this.expressions != null) {
+				int exprSize = this.expressions.size();
+				for (int i = 0; i < exprSize; i++) {
 					ASTNode node = (ASTNode) this.expressions.get(i);
 					node.traverse(visitor);
 				}
