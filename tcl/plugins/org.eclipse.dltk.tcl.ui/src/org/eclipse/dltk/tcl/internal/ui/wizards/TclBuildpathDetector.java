@@ -53,23 +53,14 @@ public class TclBuildpathDetector extends BuildpathDetector {
 				sub.subTask(NLS.bind(msg, String.valueOf(correctFiles.size()
 						- count), file.getName()));
 				ISourceModule module = (ISourceModule) DLTKCore.create(file);
-				// if (module.exists()) {
-				char[] source;
+				ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(module);
 				try {
-					source = org.eclipse.dltk.internal.core.util.Util
-							.getResourceContentsAsCharArray(file);
-					ModuleDeclaration moduleDeclaration = SourceParserUtil
-							.getModuleDeclaration(file.getName().toCharArray(),
-									source, TclNature.NATURE_ID, null, null);
-					try {
-						collector.process(moduleDeclaration);
-					} catch (Exception e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
-						}
+					collector.process(moduleDeclaration);
+				} catch (Exception e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
 					}
-				} catch (ModelException e1) {
-					e1.printStackTrace();
 				}
 				count++;
 				// }
