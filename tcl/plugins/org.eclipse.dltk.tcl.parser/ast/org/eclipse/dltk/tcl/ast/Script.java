@@ -33,7 +33,7 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Script extends TclArgument {
 	/**
-	 * Returns the value of the '<em><b>Commands</b></em>' reference list.
+	 * Returns the value of the '<em><b>Commands</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.dltk.tcl.ast.TclCommand}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -41,9 +41,9 @@ public interface Script extends TclArgument {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Commands</em>' reference list.
+	 * @return the value of the '<em>Commands</em>' containment reference list.
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getScript_Commands()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<TclCommand> getCommands();

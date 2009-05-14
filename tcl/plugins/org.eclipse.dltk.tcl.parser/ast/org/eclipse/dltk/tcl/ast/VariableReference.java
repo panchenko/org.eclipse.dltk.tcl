@@ -57,26 +57,26 @@ public interface VariableReference extends TclArgument, ISubstitution {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Index</b></em>' reference.
+	 * Returns the value of the '<em><b>Index</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Index</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Index</em>' reference.
+	 * @return the value of the '<em>Index</em>' containment reference.
 	 * @see #setIndex(TclArgument)
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getVariableReference_Index()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	TclArgument getIndex();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.VariableReference#getIndex <em>Index</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.VariableReference#getIndex <em>Index</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Index</em>' reference.
+	 * @param value the new value of the '<em>Index</em>' containment reference.
 	 * @see #getIndex()
 	 * @generated
 	 */

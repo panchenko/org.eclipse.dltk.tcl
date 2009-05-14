@@ -167,7 +167,7 @@ public interface AstPackage extends EPackage {
 	int SCRIPT__END = TCL_ARGUMENT__END;
 
 	/**
-	 * The feature id for the '<em><b>Commands</b></em>' reference list.
+	 * The feature id for the '<em><b>Commands</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -277,7 +277,7 @@ public interface AstPackage extends EPackage {
 	int SUBSTITUTION__END = TCL_ARGUMENT__END;
 
 	/**
-	 * The feature id for the '<em><b>Commands</b></em>' reference list.
+	 * The feature id for the '<em><b>Commands</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -323,7 +323,7 @@ public interface AstPackage extends EPackage {
 	int TCL_COMMAND__END = NODE__END;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' reference.
+	 * The feature id for the '<em><b>Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -332,7 +332,7 @@ public interface AstPackage extends EPackage {
 	int TCL_COMMAND__NAME = NODE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Arguments</b></em>' reference list.
+	 * The feature id for the '<em><b>Arguments</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -350,7 +350,7 @@ public interface AstPackage extends EPackage {
 	int TCL_COMMAND__DEFINITION = NODE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Matches</b></em>' reference list.
+	 * The feature id for the '<em><b>Matches</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -414,7 +414,7 @@ public interface AstPackage extends EPackage {
 	int TCL_ARGUMENT_LIST__END = TCL_ARGUMENT__END;
 
 	/**
-	 * The feature id for the '<em><b>Arguments</b></em>' reference list.
+	 * The feature id for the '<em><b>Arguments</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -515,7 +515,7 @@ public interface AstPackage extends EPackage {
 	int COMPLEX_STRING__END = TCL_ARGUMENT__END;
 
 	/**
-	 * The feature id for the '<em><b>Arguments</b></em>' reference list.
+	 * The feature id for the '<em><b>Arguments</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -579,7 +579,7 @@ public interface AstPackage extends EPackage {
 	int VARIABLE_REFERENCE__NAME = TCL_ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Index</b></em>' reference.
+	 * The feature id for the '<em><b>Index</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -699,6 +699,134 @@ public interface AstPackage extends EPackage {
 	int TCL_CODE_MODEL_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.TclProblemModelImpl <em>Tcl Problem Model</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.ast.impl.TclProblemModelImpl
+	 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclProblemModel()
+	 * @generated
+	 */
+	int TCL_PROBLEM_MODEL = 13;
+
+	/**
+	 * The feature id for the '<em><b>Problems</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM_MODEL__PROBLEMS = 0;
+
+	/**
+	 * The number of structural features of the '<em>Tcl Problem Model</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM_MODEL_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.TclProblemImpl <em>Tcl Problem</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.ast.impl.TclProblemImpl
+	 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclProblem()
+	 * @generated
+	 */
+	int TCL_PROBLEM = 14;
+
+	/**
+	 * The feature id for the '<em><b>Arguments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__ARGUMENTS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__ID = 1;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__MESSAGE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Source Start</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__SOURCE_START = 3;
+
+	/**
+	 * The feature id for the '<em><b>Source End</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__SOURCE_END = 4;
+
+	/**
+	 * The feature id for the '<em><b>Error</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__ERROR = 5;
+
+	/**
+	 * The feature id for the '<em><b>Warning</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__WARNING = 6;
+
+	/**
+	 * The feature id for the '<em><b>File Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__FILE_NAME = 7;
+
+	/**
+	 * The feature id for the '<em><b>Line Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM__LINE_NUMBER = 8;
+
+	/**
+	 * The number of structural features of the '<em>Tcl Problem</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROBLEM_FEATURE_COUNT = 9;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -741,10 +869,10 @@ public interface AstPackage extends EPackage {
 	EClass getScript();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.dltk.tcl.ast.Script#getCommands <em>Commands</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.Script#getCommands <em>Commands</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Commands</em>'.
+	 * @return the meta object for the containment reference list '<em>Commands</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.Script#getCommands()
 	 * @see #getScript()
 	 * @generated
@@ -805,10 +933,10 @@ public interface AstPackage extends EPackage {
 	EClass getSubstitution();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.dltk.tcl.ast.Substitution#getCommands <em>Commands</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.Substitution#getCommands <em>Commands</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Commands</em>'.
+	 * @return the meta object for the containment reference list '<em>Commands</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.Substitution#getCommands()
 	 * @see #getSubstitution()
 	 * @generated
@@ -836,10 +964,10 @@ public interface AstPackage extends EPackage {
 	EClass getTclCommand();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.dltk.tcl.ast.TclCommand#getName <em>Name</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.dltk.tcl.ast.TclCommand#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Name</em>'.
+	 * @return the meta object for the containment reference '<em>Name</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.TclCommand#getName()
 	 * @see #getTclCommand()
 	 * @generated
@@ -847,10 +975,10 @@ public interface AstPackage extends EPackage {
 	EReference getTclCommand_Name();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.dltk.tcl.ast.TclCommand#getArguments <em>Arguments</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.TclCommand#getArguments <em>Arguments</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Arguments</em>'.
+	 * @return the meta object for the containment reference list '<em>Arguments</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.TclCommand#getArguments()
 	 * @see #getTclCommand()
 	 * @generated
@@ -869,10 +997,10 @@ public interface AstPackage extends EPackage {
 	EReference getTclCommand_Definition();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.dltk.tcl.ast.TclCommand#getMatches <em>Matches</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.TclCommand#getMatches <em>Matches</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Matches</em>'.
+	 * @return the meta object for the containment reference list '<em>Matches</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.TclCommand#getMatches()
 	 * @see #getTclCommand()
 	 * @generated
@@ -912,10 +1040,10 @@ public interface AstPackage extends EPackage {
 	EClass getTclArgumentList();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getArguments <em>Arguments</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getArguments <em>Arguments</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Arguments</em>'.
+	 * @return the meta object for the containment reference list '<em>Arguments</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.TclArgumentList#getArguments()
 	 * @see #getTclArgumentList()
 	 * @generated
@@ -987,10 +1115,10 @@ public interface AstPackage extends EPackage {
 	EClass getComplexString();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.dltk.tcl.ast.ComplexString#getArguments <em>Arguments</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.ComplexString#getArguments <em>Arguments</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Arguments</em>'.
+	 * @return the meta object for the containment reference list '<em>Arguments</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.ComplexString#getArguments()
 	 * @see #getComplexString()
 	 * @generated
@@ -1030,10 +1158,10 @@ public interface AstPackage extends EPackage {
 	EAttribute getVariableReference_Name();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.dltk.tcl.ast.VariableReference#getIndex <em>Index</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.dltk.tcl.ast.VariableReference#getIndex <em>Index</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Index</em>'.
+	 * @return the meta object for the containment reference '<em>Index</em>'.
 	 * @see org.eclipse.dltk.tcl.ast.VariableReference#getIndex()
 	 * @see #getVariableReference()
 	 * @generated
@@ -1126,6 +1254,136 @@ public interface AstPackage extends EPackage {
 	EAttribute getTclCodeModel_LineOffsets();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.TclProblemModel <em>Tcl Problem Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Tcl Problem Model</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblemModel
+	 * @generated
+	 */
+	EClass getTclProblemModel();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ast.TclProblemModel#getProblems <em>Problems</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Problems</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblemModel#getProblems()
+	 * @see #getTclProblemModel()
+	 * @generated
+	 */
+	EReference getTclProblemModel_Problems();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.TclProblem <em>Tcl Problem</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Tcl Problem</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem
+	 * @generated
+	 */
+	EClass getTclProblem();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.ast.TclProblem#getArguments <em>Arguments</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Arguments</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#getArguments()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_Arguments();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#getId()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_Id();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#getMessage()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_Message();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#getSourceStart <em>Source Start</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Source Start</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#getSourceStart()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_SourceStart();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#getSourceEnd <em>Source End</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Source End</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#getSourceEnd()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_SourceEnd();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#isError <em>Error</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Error</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#isError()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_Error();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#isWarning <em>Warning</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Warning</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#isWarning()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_Warning();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#getFileName <em>File Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>File Name</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#getFileName()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_FileName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclProblem#getLineNumber <em>Line Number</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Line Number</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem#getLineNumber()
+	 * @see #getTclProblem()
+	 * @generated
+	 */
+	EAttribute getTclProblem_LineNumber();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1184,7 +1442,7 @@ public interface AstPackage extends EPackage {
 		EClass SCRIPT = eINSTANCE.getScript();
 
 		/**
-		 * The meta object literal for the '<em><b>Commands</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Commands</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1236,7 +1494,7 @@ public interface AstPackage extends EPackage {
 		EClass SUBSTITUTION = eINSTANCE.getSubstitution();
 
 		/**
-		 * The meta object literal for the '<em><b>Commands</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Commands</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1265,7 +1523,7 @@ public interface AstPackage extends EPackage {
 		EClass TCL_COMMAND = eINSTANCE.getTclCommand();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Name</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1273,7 +1531,7 @@ public interface AstPackage extends EPackage {
 		EReference TCL_COMMAND__NAME = eINSTANCE.getTclCommand_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Arguments</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Arguments</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1290,7 +1548,7 @@ public interface AstPackage extends EPackage {
 				.getTclCommand_Definition();
 
 		/**
-		 * The meta object literal for the '<em><b>Matches</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Matches</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1325,7 +1583,7 @@ public interface AstPackage extends EPackage {
 		EClass TCL_ARGUMENT_LIST = eINSTANCE.getTclArgumentList();
 
 		/**
-		 * The meta object literal for the '<em><b>Arguments</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Arguments</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1390,7 +1648,7 @@ public interface AstPackage extends EPackage {
 		EClass COMPLEX_STRING = eINSTANCE.getComplexString();
 
 		/**
-		 * The meta object literal for the '<em><b>Arguments</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Arguments</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1426,7 +1684,7 @@ public interface AstPackage extends EPackage {
 				.getVariableReference_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Index</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Index</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1505,6 +1763,110 @@ public interface AstPackage extends EPackage {
 		 */
 		EAttribute TCL_CODE_MODEL__LINE_OFFSETS = eINSTANCE
 				.getTclCodeModel_LineOffsets();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.TclProblemModelImpl <em>Tcl Problem Model</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.ast.impl.TclProblemModelImpl
+		 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclProblemModel()
+		 * @generated
+		 */
+		EClass TCL_PROBLEM_MODEL = eINSTANCE.getTclProblemModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Problems</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_PROBLEM_MODEL__PROBLEMS = eINSTANCE
+				.getTclProblemModel_Problems();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.TclProblemImpl <em>Tcl Problem</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.ast.impl.TclProblemImpl
+		 * @see org.eclipse.dltk.tcl.ast.impl.AstPackageImpl#getTclProblem()
+		 * @generated
+		 */
+		EClass TCL_PROBLEM = eINSTANCE.getTclProblem();
+
+		/**
+		 * The meta object literal for the '<em><b>Arguments</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__ARGUMENTS = eINSTANCE.getTclProblem_Arguments();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__ID = eINSTANCE.getTclProblem_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__MESSAGE = eINSTANCE.getTclProblem_Message();
+
+		/**
+		 * The meta object literal for the '<em><b>Source Start</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__SOURCE_START = eINSTANCE
+				.getTclProblem_SourceStart();
+
+		/**
+		 * The meta object literal for the '<em><b>Source End</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__SOURCE_END = eINSTANCE
+				.getTclProblem_SourceEnd();
+
+		/**
+		 * The meta object literal for the '<em><b>Error</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__ERROR = eINSTANCE.getTclProblem_Error();
+
+		/**
+		 * The meta object literal for the '<em><b>Warning</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__WARNING = eINSTANCE.getTclProblem_Warning();
+
+		/**
+		 * The meta object literal for the '<em><b>File Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__FILE_NAME = eINSTANCE.getTclProblem_FileName();
+
+		/**
+		 * The meta object literal for the '<em><b>Line Number</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PROBLEM__LINE_NUMBER = eINSTANCE
+				.getTclProblem_LineNumber();
 
 	}
 

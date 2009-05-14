@@ -209,7 +209,8 @@ public class TclArgumentMatcher {
 		List<Argument> definitionArguments = definition.getArguments();
 
 		EList<TclArgument> arguments = command.getArguments();
-		if (arguments.size() == 0 && definitionArguments.size() == 0) {
+		int argSize = arguments.size();
+		if (argSize == 0 && definitionArguments.isEmpty()) {
 			return true;
 		}
 		MatchResult result = matchArgument(arguments, 0, definitionArguments, 0);
@@ -218,10 +219,10 @@ public class TclArgumentMatcher {
 			this.codePositions.addAll(result.getBlockArguments());
 			this.complexArguments.addAll(result.getComplexArguments());
 			this.mappings.putAll(result.getMapping());
-			if (result.getArgumentsUsed() == arguments.size()) {
+			if (result.getArgumentsUsed() == argSize) {
 				return true;
 			} else {
-				if (result.getArgumentsUsed() < arguments.size()) {
+				if (result.getArgumentsUsed() < argSize) {
 					reportExtraArguments(arguments, result.getArgumentsUsed(),
 							this.errors);
 					return true;
@@ -230,7 +231,7 @@ public class TclArgumentMatcher {
 		}
 		if (this.errors.getCount() == 0) {
 			reportInvalidArgumentCount(this.command.getStart(), this.command
-					.getEnd(), arguments.size(), this.errors, definition);
+					.getEnd(), argSize, this.errors, definition);
 		}
 		return false;
 	}
@@ -291,8 +292,9 @@ public class TclArgumentMatcher {
 	}
 
 	private static int[] getArrayFromList(List<Integer> list) {
-		int[] positions = new int[list.size()];
-		for (int i = 0; i < list.size(); i++) {
+		int lsize = list.size();
+		int[] positions = new int[lsize];
+		for (int i = 0; i < lsize; i++) {
 			positions[i] = list.get(i).intValue();
 		}
 		return positions;
@@ -350,9 +352,10 @@ public class TclArgumentMatcher {
 
 		List<MatchResult> list = matchDefinition(arguments, pos, definitionArg);
 
-		if (list.size() == 0
-				|| (list.size() == 1 && !list.get(0).isMatched() && !list
-						.get(0).isImplicit())) {
+		int listSize = list.size();
+		if (listSize == 0
+				|| (listSize == 1 && !list.get(0).isMatched() && !list.get(0)
+						.isImplicit())) {
 			if (arguments.size() > pos + 1) {
 				List<TclArgument> extraArgs = new ArrayList<TclArgument>();
 				extraArgs.add(arguments.get(pos));
@@ -524,7 +527,8 @@ public class TclArgumentMatcher {
 
 		matchSwitch(arguments, pos, switchDef, ress, counts, 0, upperBound);
 
-		for (int i = 0; i < ress.size(); i++) {
+		int ressSize = ress.size();
+		for (int i = 0; i < ressSize; i++) {
 			MatchResult r = ress.get(i);
 			Integer count = counts.get(r);
 			if (count != null && count.intValue() < lowerBound) {
@@ -543,7 +547,7 @@ public class TclArgumentMatcher {
 			// results.add(r);
 			// }
 		}
-		if (ress.size() == 0 && arguments.size() > pos
+		if (ressSize == 0 && arguments.size() > pos
 				&& DefinitionUtils.isMode(switchDef)) {
 			if (arguments.get(pos) instanceof ISubstitution) {
 				MatchResult r = new MatchResult();
@@ -554,7 +558,7 @@ public class TclArgumentMatcher {
 			}
 		}
 		// Add empty variant if multiplicity support it.
-		if (ress.size() == 0 && lowerBound > 0) {
+		if (ressSize == 0 && lowerBound > 0) {
 			// We should report error if not argument are specified, but
 			// required.
 			MatchResult r = new MatchResult();
@@ -632,7 +636,8 @@ public class TclArgumentMatcher {
 				if (r.getArgumentsUsed() > 0) {
 					matchSwitch(arguments, pos + r.getArgumentsUsed(), sw,
 							ress2, counts, count + 1, upperBound);
-					for (int k = 0; k < ress2.size(); k++) {
+					int ress2Size = ress2.size();
+					for (int k = 0; k < ress2Size; k++) {
 						MatchResult r2 = ress2.get(k);
 						if (r2.isMatched() && !r2.isMatchWithErrors()) {
 							r2.setArgumentsUsed(r.getArgumentsUsed()
@@ -674,7 +679,8 @@ public class TclArgumentMatcher {
 		List<MatchResult> ress = new ArrayList<MatchResult>();
 		Map<MatchResult, Integer> counts = new HashMap<MatchResult, Integer>();
 		matchGroup(arguments, pos, groupArguments, ress, counts, 0, upperBound);
-		for (int i = 0; i < ress.size(); i++) {
+		int ressSize = ress.size();
+		for (int i = 0; i < ressSize; i++) {
 			MatchResult r = ress.get(i);
 			Integer count = counts.get(r);
 			if (count != null && count.intValue() < lowerBound) {
@@ -693,7 +699,7 @@ public class TclArgumentMatcher {
 			// results.add(r);
 			// }
 		}
-		if (ress.size() == 0 && lowerBound > 0) {
+		if (ressSize == 0 && lowerBound > 0) {
 			// We should report error if not argument are specified, but
 			// required.
 			MatchResult r = new MatchResult();
@@ -737,7 +743,8 @@ public class TclArgumentMatcher {
 					matchGroup(arguments, pos + r.getArgumentsUsed(),
 							groupArguments, ress2, counts, count + 1,
 							upperBound);
-					for (int k = 0; k < ress2.size(); k++) {
+					int ress2Size = ress2.size();
+					for (int k = 0; k < ress2Size; k++) {
 						MatchResult r2 = ress2.get(k);
 						if (r2.isMatched()/* && !r2.isMatchWithErrors() */) {
 							r2.setArgumentsUsed(r.getArgumentsUsed()
@@ -817,7 +824,8 @@ public class TclArgumentMatcher {
 		List<ComplexArgumentResult> complexArguments = new ArrayList<ComplexArgumentResult>();
 		// We need to check for low
 		Map<Integer, TclErrorCollector> collectors = new HashMap<Integer, TclErrorCollector>();
-		for (int i = 0; i < arguments.size() - pos; i++) {
+		int argumentsSize = arguments.size();
+		for (int i = 0; i < argumentsSize - pos; i++) {
 			TclErrorCollector collector = new TclErrorCollector();
 
 			TclArgument a = arguments.get(pos + i);
@@ -842,7 +850,7 @@ public class TclArgumentMatcher {
 			r.setMatchWithErrors(true);
 			int start = this.command.getStart();
 			int end = this.command.getEnd();
-			if (arguments.size() > pos) {
+			if (argumentsSize > pos) {
 				TclArgument arg = arguments.get(pos);
 				start = arg.getStart();
 				end = arg.getEnd();
@@ -1118,11 +1126,15 @@ public class TclArgumentMatcher {
 					.extractGroupPseudoConstant(group);
 			if (constant != null) {
 				selector = constant;
-			} else if (group.getArguments().size() > 0) {
-				for (int i = 0; i < group.getArguments().size(); i++) {
-					if (group.getArguments().get(i).getLowerBound() > 0) {
-						selector = getFirstSelector(group.getArguments().get(i));
-						break;
+			} else {
+				int groupArgsSize = group.getArguments().size();
+				if (groupArgsSize > 0) {
+					for (int i = 0; i < groupArgsSize; i++) {
+						if (group.getArguments().get(i).getLowerBound() > 0) {
+							selector = getFirstSelector(group.getArguments()
+									.get(i));
+							break;
+						}
 					}
 				}
 			}
@@ -1142,12 +1154,15 @@ public class TclArgumentMatcher {
 					.extractGroupPseudoConstant(group);
 			if (constant != null) {
 				selectors.add(constant);
-			} else if (group.getArguments().size() > 0) {
-				for (int i = 0; i < group.getArguments().size(); i++) {
-					if (group.getArguments().get(i).getLowerBound() > 0) {
-						selectors.addAll(getFinalSelectors(group.getArguments()
-								.get(i)));
-						break;
+			} else {
+				int groupArgsSize = group.getArguments().size();
+				if (groupArgsSize > 0) {
+					for (int i = 0; i < groupArgsSize; i++) {
+						if (group.getArguments().get(i).getLowerBound() > 0) {
+							selectors.addAll(getFinalSelectors(group
+									.getArguments().get(i)));
+							break;
+						}
 					}
 				}
 			}

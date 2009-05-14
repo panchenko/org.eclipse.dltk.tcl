@@ -145,6 +145,16 @@ public class AstAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseTclProblemModel(TclProblemModel object) {
+			return createTclProblemModelAdapter();
+		}
+
+		@Override
+		public Adapter caseTclProblem(TclProblem object) {
+			return createTclProblemAdapter();
+		}
+
+		@Override
 		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -342,6 +352,34 @@ public class AstAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTclCodeModelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.ast.TclProblemModel <em>Tcl Problem Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblemModel
+	 * @generated
+	 */
+	public Adapter createTclProblemModelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.ast.TclProblem <em>Tcl Problem</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.ast.TclProblem
+	 * @generated
+	 */
+	public Adapter createTclProblemAdapter() {
 		return null;
 	}
 

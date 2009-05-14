@@ -145,9 +145,11 @@ public class TclParser implements ITclParserOptions {
 		for (org.eclipse.dltk.tcl.internal.parser.raw.TclCommand command : commands) {
 			// Basic TclCommand
 			TclCommand st = parseTclCommand(command, offset, this.source);
-			TclCommand comm = processTclCommand(st);
-			if (comm != null) {
-				block.add(comm);
+			if (st != null) {
+				TclCommand comm = processTclCommand(st);
+				if (comm != null) {
+					block.add(comm);
+				}
 			}
 		}
 	}
@@ -292,7 +294,7 @@ public class TclParser implements ITclParserOptions {
 			for (int i = 0; i < positions.length; i++) {
 				int start = positions[0];
 				int end = positions[1];
-				for (int j = start; j < end; j++) {
+				for (int j = start; (j < end) & (j < arguments.size()); j++) {
 					match.getArguments().add(arguments.get(j));
 				}
 			}
@@ -303,7 +305,8 @@ public class TclParser implements ITclParserOptions {
 	private void processComplexArguments(EList<TclArgument> arguments,
 			ComplexArgumentResult[] complexArguments) {
 		for (ComplexArgumentResult arg : complexArguments) {
-			TclArgument original = arguments.get(arg.getArgumentNumber());
+			TclArgument oldArgument = arguments.get(arg.getArgumentNumber());
+			TclArgument original = oldArgument;
 			int[] blockArguments2 = arg.getBlockArguments();
 			List<TclArgument> arguments2 = arg.getArguments();
 			parseReplaceBlockArguments(arguments2, blockArguments2);
@@ -312,7 +315,6 @@ public class TclParser implements ITclParserOptions {
 			list.getArguments().addAll(arguments2);
 			list.setStart(original.getStart());
 			list.setEnd(original.getEnd());
-			list.setOriginalArgument(arguments.get(arg.getArgumentNumber()));
 			List<ComplexArgumentResult> complexArguments2 = arg
 					.getComplexArguments();
 			if (complexArguments2.size() > 0) {
@@ -321,6 +323,7 @@ public class TclParser implements ITclParserOptions {
 								.size()]));
 			}
 			arguments.set(arg.getArgumentNumber(), list);
+			list.setOriginalArgument(oldArgument);
 		}
 	}
 
@@ -408,8 +411,10 @@ public class TclParser implements ITclParserOptions {
 			tclCommand.setEnd(command.getEnd() + offset + 1);
 			return tclCommand;
 		} catch (StringIndexOutOfBoundsException bounds) {
-			reporter.report(ITclErrorReporter.UNKNOWN, bounds.getMessage(),
-					null, 0, 0, ITclErrorReporter.ERROR);
+			if (reporter != null) {
+				reporter.report(ITclErrorReporter.UNKNOWN, bounds.getMessage(),
+						null, 0, 0, ITclErrorReporter.ERROR);
+			}
 			return null;
 		}
 	}

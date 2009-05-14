@@ -139,6 +139,24 @@ public interface AstFactory extends EFactory {
 	TclCodeModel createTclCodeModel();
 
 	/**
+	 * Returns a new object of class '<em>Tcl Problem Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tcl Problem Model</em>'.
+	 * @generated
+	 */
+	TclProblemModel createTclProblemModel();
+
+	/**
+	 * Returns a new object of class '<em>Tcl Problem</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tcl Problem</em>'.
+	 * @generated
+	 */
+	TclProblem createTclProblem();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

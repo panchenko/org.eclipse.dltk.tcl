@@ -20,10 +20,13 @@ import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -45,7 +48,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  */
 public class TclCommandImpl extends NodeImpl implements TclCommand {
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' reference.
+	 * The cached value of the '{@link #getName() <em>Name</em>}' containment reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getName()
 	 * @generated
@@ -54,7 +57,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected TclArgument name;
 
 	/**
-	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' reference list.
+	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' containment reference list.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getArguments()
 	 * @generated
@@ -72,7 +75,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected Command definition;
 
 	/**
-	 * The cached value of the '{@link #getMatches() <em>Matches</em>}' reference list.
+	 * The cached value of the '{@link #getMatches() <em>Matches</em>}' containment reference list.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getMatches()
 	 * @generated
@@ -140,24 +143,28 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	 * @generated
 	 */
 	public TclArgument getName() {
-		if (name != null && name.eIsProxy()) {
-			InternalEObject oldName = (InternalEObject) name;
-			name = (TclArgument) eResolveProxy(oldName);
-			if (name != oldName) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							AstPackage.TCL_COMMAND__NAME, oldName, name));
-			}
-		}
 		return name;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TclArgument basicGetName() {
-		return name;
+	public NotificationChain basicSetName(TclArgument newName,
+			NotificationChain msgs) {
+		TclArgument oldName = name;
+		name = newName;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET, AstPackage.TCL_COMMAND__NAME, oldName,
+					newName);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -165,11 +172,22 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	 * @generated
 	 */
 	public void setName(TclArgument newName) {
-		TclArgument oldName = name;
-		name = newName;
-		if (eNotificationRequired())
+		if (newName != name) {
+			NotificationChain msgs = null;
+			if (name != null)
+				msgs = ((InternalEObject) name).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - AstPackage.TCL_COMMAND__NAME,
+						null, msgs);
+			if (newName != null)
+				msgs = ((InternalEObject) newName).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - AstPackage.TCL_COMMAND__NAME,
+						null, msgs);
+			msgs = basicSetName(newName, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					AstPackage.TCL_COMMAND__NAME, oldName, name));
+					AstPackage.TCL_COMMAND__NAME, newName, newName));
 	}
 
 	/**
@@ -178,7 +196,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	 */
 	public EList<TclArgument> getArguments() {
 		if (arguments == null) {
-			arguments = new EObjectResolvingEList<TclArgument>(
+			arguments = new EObjectContainmentEList<TclArgument>(
 					TclArgument.class, this, AstPackage.TCL_COMMAND__ARGUMENTS);
 		}
 		return arguments;
@@ -229,7 +247,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	 */
 	public EList<ArgumentMatch> getMatches() {
 		if (matches == null) {
-			matches = new EObjectResolvingEList<ArgumentMatch>(
+			matches = new EObjectContainmentEList<ArgumentMatch>(
 					ArgumentMatch.class, this, AstPackage.TCL_COMMAND__MATCHES);
 		}
 		return matches;
@@ -277,6 +295,27 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case AstPackage.TCL_COMMAND__NAME:
+			return basicSetName(null, msgs);
+		case AstPackage.TCL_COMMAND__ARGUMENTS:
+			return ((InternalEList<?>) getArguments()).basicRemove(otherEnd,
+					msgs);
+		case AstPackage.TCL_COMMAND__MATCHES:
+			return ((InternalEList<?>) getMatches())
+					.basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -284,9 +323,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case AstPackage.TCL_COMMAND__NAME:
-			if (resolve)
-				return getName();
-			return basicGetName();
+			return getName();
 		case AstPackage.TCL_COMMAND__ARGUMENTS:
 			return getArguments();
 		case AstPackage.TCL_COMMAND__DEFINITION:

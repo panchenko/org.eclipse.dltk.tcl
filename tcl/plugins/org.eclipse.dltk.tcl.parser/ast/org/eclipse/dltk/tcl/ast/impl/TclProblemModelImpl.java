@@ -1,59 +1,59 @@
-/*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.  
+/**
+ * <copyright>
+ * </copyright>
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
- *
- * Contributors:
- *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
- *******************************************************************************/
+ * $Id: TclProblemModelImpl.java,v 1.1 2009/05/14 16:06:34 asobolev Exp $
+ */
 package org.eclipse.dltk.tcl.ast.impl;
 
 import java.util.Collection;
 
 import org.eclipse.dltk.tcl.ast.AstPackage;
-import org.eclipse.dltk.tcl.ast.Substitution;
-import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclProblem;
+import org.eclipse.dltk.tcl.ast.TclProblemModel;
+
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Substitution</b></em>'.
+ * An implementation of the model object '<em><b>Tcl Problem Model</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.SubstitutionImpl#getCommands <em>Commands</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclProblemModelImpl#getProblems <em>Problems</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
+public class TclProblemModelImpl extends EObjectImpl implements TclProblemModel {
 	/**
-	 * The cached value of the '{@link #getCommands() <em>Commands</em>}' containment reference list.
+	 * The cached value of the '{@link #getProblems() <em>Problems</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCommands()
+	 * @see #getProblems()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TclCommand> commands;
+	protected EList<TclProblem> problems;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected SubstitutionImpl() {
+	protected TclProblemModelImpl() {
 		super();
 	}
 
@@ -64,7 +64,7 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return AstPackage.Literals.SUBSTITUTION;
+		return AstPackage.Literals.TCL_PROBLEM_MODEL;
 	}
 
 	/**
@@ -72,12 +72,13 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<TclCommand> getCommands() {
-		if (commands == null) {
-			commands = new EObjectContainmentEList<TclCommand>(
-					TclCommand.class, this, AstPackage.SUBSTITUTION__COMMANDS);
+	public EList<TclProblem> getProblems() {
+		if (problems == null) {
+			problems = new EObjectContainmentEList<TclProblem>(
+					TclProblem.class, this,
+					AstPackage.TCL_PROBLEM_MODEL__PROBLEMS);
 		}
-		return commands;
+		return problems;
 	}
 
 	/**
@@ -89,8 +90,8 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	public NotificationChain eInverseRemove(InternalEObject otherEnd,
 			int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case AstPackage.SUBSTITUTION__COMMANDS:
-			return ((InternalEList<?>) getCommands()).basicRemove(otherEnd,
+		case AstPackage.TCL_PROBLEM_MODEL__PROBLEMS:
+			return ((InternalEList<?>) getProblems()).basicRemove(otherEnd,
 					msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -104,8 +105,8 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case AstPackage.SUBSTITUTION__COMMANDS:
-			return getCommands();
+		case AstPackage.TCL_PROBLEM_MODEL__PROBLEMS:
+			return getProblems();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -119,9 +120,9 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case AstPackage.SUBSTITUTION__COMMANDS:
-			getCommands().clear();
-			getCommands().addAll((Collection<? extends TclCommand>) newValue);
+		case AstPackage.TCL_PROBLEM_MODEL__PROBLEMS:
+			getProblems().clear();
+			getProblems().addAll((Collection<? extends TclProblem>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -135,8 +136,8 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case AstPackage.SUBSTITUTION__COMMANDS:
-			getCommands().clear();
+		case AstPackage.TCL_PROBLEM_MODEL__PROBLEMS:
+			getProblems().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -150,10 +151,10 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case AstPackage.SUBSTITUTION__COMMANDS:
-			return commands != null && !commands.isEmpty();
+		case AstPackage.TCL_PROBLEM_MODEL__PROBLEMS:
+			return problems != null && !problems.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //SubstitutionImpl
+} //TclProblemModelImpl

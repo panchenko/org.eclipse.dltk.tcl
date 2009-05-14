@@ -25,6 +25,8 @@ import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCodeModel;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclModule;
+import org.eclipse.dltk.tcl.ast.TclProblem;
+import org.eclipse.dltk.tcl.ast.TclProblemModel;
 import org.eclipse.dltk.tcl.ast.VariableReference;
 
 import org.eclipse.dltk.tcl.definitions.DefinitionsPackage;
@@ -135,6 +137,20 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * @generated
 	 */
 	private EClass tclCodeModelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tclProblemModelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tclProblemEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -588,6 +604,115 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getTclProblemModel() {
+		return tclProblemModelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTclProblemModel_Problems() {
+		return (EReference) tclProblemModelEClass.getEStructuralFeatures().get(
+				0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTclProblem() {
+		return tclProblemEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_Arguments() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_Id() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_Message() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_SourceStart() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_SourceEnd() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_Error() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_Warning() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_FileName() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclProblem_LineNumber() {
+		return (EAttribute) tclProblemEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public AstFactory getAstFactory() {
 		return (AstFactory) getEFactoryInstance();
 	}
@@ -666,6 +791,20 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 		tclCodeModelEClass = createEClass(TCL_CODE_MODEL);
 		createEAttribute(tclCodeModelEClass, TCL_CODE_MODEL__DELIMETERS);
 		createEAttribute(tclCodeModelEClass, TCL_CODE_MODEL__LINE_OFFSETS);
+
+		tclProblemModelEClass = createEClass(TCL_PROBLEM_MODEL);
+		createEReference(tclProblemModelEClass, TCL_PROBLEM_MODEL__PROBLEMS);
+
+		tclProblemEClass = createEClass(TCL_PROBLEM);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__ARGUMENTS);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__ID);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__MESSAGE);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__SOURCE_START);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__SOURCE_END);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__ERROR);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__WARNING);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__FILE_NAME);
+		createEAttribute(tclProblemEClass, TCL_PROBLEM__LINE_NUMBER);
 	}
 
 	/**
@@ -727,7 +866,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getScript_Commands(), this.getTclCommand(), null,
 				"commands", null, 0, -1, Script.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getScript_ContentStart(), ecorePackage.getEInt(),
 				"contentStart", null, 0, 1, Script.class, !IS_TRANSIENT,
@@ -750,7 +889,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSubstitution_Commands(), this.getTclCommand(), null,
 				"commands", null, 0, -1, Substitution.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tclArgumentEClass, TclArgument.class, "TclArgument",
@@ -760,11 +899,11 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTclCommand_Name(), this.getTclArgument(), null,
 				"name", null, 0, 1, TclCommand.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTclCommand_Arguments(), this.getTclArgument(), null,
 				"arguments", null, 0, -1, TclCommand.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTclCommand_Definition(), theDefinitionsPackage
 				.getCommand(), null, "definition", null, 0, 1,
@@ -773,7 +912,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_DERIVED, IS_ORDERED);
 		initEReference(getTclCommand_Matches(), this.getArgumentMatch(), null,
 				"matches", null, 0, -1, TclCommand.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTclCommand_QualifiedName(),
 				ecorePackage.getEString(), "qualifiedName", null, 0, 1,
@@ -789,8 +928,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTclArgumentList_Arguments(), this.getTclArgument(),
 				null, "arguments", null, 0, -1, TclArgumentList.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 		initEReference(getTclArgumentList_DefinitionArgument(),
 				theDefinitionsPackage.getComplexArgument(), null,
@@ -821,8 +960,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getComplexString_Arguments(), this.getTclArgument(),
 				null, "arguments", null, 0, -1, ComplexString.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 		initEAttribute(getComplexString_Value(), ecorePackage.getEString(),
 				"value", null, 0, 1, ComplexString.class, !IS_TRANSIENT,
@@ -838,8 +977,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_DERIVED, IS_ORDERED);
 		initEReference(getVariableReference_Index(), this.getTclArgument(),
 				null, "index", null, 0, 1, VariableReference.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 
 		initEClass(iSubstitutionEClass, ISubstitution.class, "ISubstitution",
@@ -868,6 +1007,54 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTclCodeModel_LineOffsets(), ecorePackage.getEInt(),
 				"lineOffsets", null, 0, -1, TclCodeModel.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+
+		initEClass(tclProblemModelEClass, TclProblemModel.class,
+				"TclProblemModel", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTclProblemModel_Problems(), this.getTclProblem(),
+				null, "problems", null, 0, -1, TclProblemModel.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+
+		initEClass(tclProblemEClass, TclProblem.class, "TclProblem",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTclProblem_Arguments(), ecorePackage.getEString(),
+				"arguments", null, 0, -1, TclProblem.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclProblem_Id(), ecorePackage.getEInt(), "id", null,
+				0, 1, TclProblem.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getTclProblem_Message(), ecorePackage.getEString(),
+				"message", null, 0, 1, TclProblem.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclProblem_SourceStart(), ecorePackage.getEInt(),
+				"sourceStart", null, 0, 1, TclProblem.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclProblem_SourceEnd(), ecorePackage.getEInt(),
+				"sourceEnd", null, 0, 1, TclProblem.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclProblem_Error(), ecorePackage.getEBoolean(),
+				"error", null, 0, 1, TclProblem.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclProblem_Warning(), ecorePackage.getEBoolean(),
+				"warning", null, 0, 1, TclProblem.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclProblem_FileName(), ecorePackage.getEString(),
+				"fileName", null, 0, 1, TclProblem.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclProblem_LineNumber(), ecorePackage.getEInt(),
+				"lineNumber", null, 0, 1, TclProblem.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 

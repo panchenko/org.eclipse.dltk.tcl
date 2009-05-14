@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclModuleImpl.java,v 1.1 2009/05/12 09:39:43 asobolev Exp $
+ * $Id: TclModuleImpl.java,v 1.2 2009/05/14 16:06:34 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.ast.impl;
 
@@ -34,22 +34,18 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl#getStatements <em>
- * Statements</em>}</li>
- * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl#getSize <em>Size</em>}
- * </li>
- * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl#getCodeModel <em>Code
- * Model</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl#getStatements <em>Statements</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl#getSize <em>Size</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclModuleImpl#getCodeModel <em>Code Model</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class TclModuleImpl extends EObjectImpl implements TclModule {
 	/**
-	 * The cached value of the '{@link #getStatements() <em>Statements</em>}'
-	 * containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getStatements() <em>Statements</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getStatements()
 	 * @generated
 	 * @ordered
@@ -59,7 +55,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 	/**
 	 * The default value of the '{@link #getSize() <em>Size</em>}' attribute.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see #getSize()
 	 * @generated
 	 * @ordered
@@ -69,7 +64,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 	/**
 	 * The cached value of the '{@link #getSize() <em>Size</em>}' attribute.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see #getSize()
 	 * @generated
 	 * @ordered
@@ -77,9 +71,8 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 	protected int size = SIZE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getCodeModel() <em>Code Model</em>}'
-	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getCodeModel() <em>Code Model</em>}' containment reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getCodeModel()
 	 * @generated
 	 * @ordered
@@ -88,7 +81,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected TclModuleImpl() {
@@ -97,7 +89,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -107,7 +98,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<TclCommand> getStatements() {
@@ -120,7 +110,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public int getSize() {
@@ -129,7 +118,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setSize(int newSize) {
@@ -142,7 +130,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public TclCodeModel getCodeModel() {
@@ -151,7 +138,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetCodeModel(TclCodeModel newCodeModel,
@@ -172,7 +158,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setCodeModel(TclCodeModel newCodeModel) {
@@ -197,7 +182,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -215,7 +199,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -233,7 +216,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -256,7 +238,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -277,7 +258,6 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

@@ -34,7 +34,7 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface TclArgumentList extends TclArgument {
 	/**
-	 * Returns the value of the '<em><b>Arguments</b></em>' reference list.
+	 * Returns the value of the '<em><b>Arguments</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.dltk.tcl.ast.TclArgument}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -42,9 +42,9 @@ public interface TclArgumentList extends TclArgument {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Arguments</em>' reference list.
+	 * @return the value of the '<em>Arguments</em>' containment reference list.
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclArgumentList_Arguments()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<TclArgument> getArguments();

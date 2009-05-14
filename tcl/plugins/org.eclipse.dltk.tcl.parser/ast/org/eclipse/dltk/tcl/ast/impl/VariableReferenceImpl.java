@@ -16,6 +16,7 @@ import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.VariableReference;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -55,7 +56,7 @@ public class VariableReferenceImpl extends TclArgumentImpl implements
 	 */
 	protected String name = NAME_EDEFAULT;
 	/**
-	 * The cached value of the '{@link #getIndex() <em>Index</em>}' reference.
+	 * The cached value of the '{@link #getIndex() <em>Index</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getIndex()
@@ -111,16 +112,6 @@ public class VariableReferenceImpl extends TclArgumentImpl implements
 	 * @generated
 	 */
 	public TclArgument getIndex() {
-		if (index != null && index.eIsProxy()) {
-			InternalEObject oldIndex = (InternalEObject) index;
-			index = (TclArgument) eResolveProxy(oldIndex);
-			if (index != oldIndex) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							AstPackage.VARIABLE_REFERENCE__INDEX, oldIndex,
-							index));
-			}
-		}
 		return index;
 	}
 
@@ -129,8 +120,20 @@ public class VariableReferenceImpl extends TclArgumentImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TclArgument basicGetIndex() {
-		return index;
+	public NotificationChain basicSetIndex(TclArgument newIndex,
+			NotificationChain msgs) {
+		TclArgument oldIndex = index;
+		index = newIndex;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET, AstPackage.VARIABLE_REFERENCE__INDEX,
+					oldIndex, newIndex);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -139,11 +142,39 @@ public class VariableReferenceImpl extends TclArgumentImpl implements
 	 * @generated
 	 */
 	public void setIndex(TclArgument newIndex) {
-		TclArgument oldIndex = index;
-		index = newIndex;
-		if (eNotificationRequired())
+		if (newIndex != index) {
+			NotificationChain msgs = null;
+			if (index != null)
+				msgs = ((InternalEObject) index).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE
+								- AstPackage.VARIABLE_REFERENCE__INDEX, null,
+						msgs);
+			if (newIndex != null)
+				msgs = ((InternalEObject) newIndex).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE
+								- AstPackage.VARIABLE_REFERENCE__INDEX, null,
+						msgs);
+			msgs = basicSetIndex(newIndex, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					AstPackage.VARIABLE_REFERENCE__INDEX, oldIndex, index));
+					AstPackage.VARIABLE_REFERENCE__INDEX, newIndex, newIndex));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case AstPackage.VARIABLE_REFERENCE__INDEX:
+			return basicSetIndex(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -157,9 +188,7 @@ public class VariableReferenceImpl extends TclArgumentImpl implements
 		case AstPackage.VARIABLE_REFERENCE__NAME:
 			return getName();
 		case AstPackage.VARIABLE_REFERENCE__INDEX:
-			if (resolve)
-				return getIndex();
-			return basicGetIndex();
+			return getIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

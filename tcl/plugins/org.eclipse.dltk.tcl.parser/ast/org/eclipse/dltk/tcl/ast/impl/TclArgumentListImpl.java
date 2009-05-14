@@ -23,6 +23,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -43,7 +45,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 public class TclArgumentListImpl extends TclArgumentImpl implements
 		TclArgumentList {
 	/**
-	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' reference list.
+	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getArguments()
@@ -98,7 +100,7 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 	 */
 	public EList<TclArgument> getArguments() {
 		if (arguments == null) {
-			arguments = new EObjectResolvingEList<TclArgument>(
+			arguments = new EObjectContainmentEList<TclArgument>(
 					TclArgument.class, this,
 					AstPackage.TCL_ARGUMENT_LIST__ARGUMENTS);
 		}
@@ -218,6 +220,9 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 	public NotificationChain eInverseRemove(InternalEObject otherEnd,
 			int featureID, NotificationChain msgs) {
 		switch (featureID) {
+		case AstPackage.TCL_ARGUMENT_LIST__ARGUMENTS:
+			return ((InternalEList<?>) getArguments()).basicRemove(otherEnd,
+					msgs);
 		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
 			return basicSetOriginalArgument(null, msgs);
 		}

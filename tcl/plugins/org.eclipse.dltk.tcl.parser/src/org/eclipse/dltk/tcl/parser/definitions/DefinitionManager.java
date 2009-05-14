@@ -71,7 +71,7 @@ public class DefinitionManager {
 		if (coreProcessor == null) {
 			coreProcessor = createNewProcessor();
 		}
-		return new NamespaceScopeProcessor(this.coreProcessor);
+		return new NamespaceScopeProcessor(coreProcessor);
 	}
 
 	public static DefinitionManager getInstance() {

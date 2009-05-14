@@ -24,6 +24,7 @@ import java.util.List;
 public class TclWord extends TclElement {
 
 	private final List<Object> contents;
+	private int len = -1;
 
 	TclWord() {
 		this.contents = new ArrayList<Object>();
@@ -39,16 +40,24 @@ public class TclWord extends TclElement {
 			o = contents.get(contents.size() - 1);
 		if (o != null && o instanceof String) {
 			contents.set(contents.size() - 1, ((String) o).concat(text));
-		} else
+		} else {
 			contents.add(text);
+		}
+		if (len != -1) {
+			len += text.length();
+		}
 	}
 
 	public void add(char c) {
+		if (len != -1) {
+			len += 1;
+		}
 		add(String.valueOf(c));
 	}
 
 	public void add(ISubstitution s) {
 		contents.add(s);
+		len = -1;
 	}
 
 	public List<Object> getContents() {
@@ -56,17 +65,20 @@ public class TclWord extends TclElement {
 	}
 
 	public int length() {
-		int result = 0;
-		for (Iterator<Object> iter = contents.iterator(); iter.hasNext();) {
-			Object o = iter.next();
-			if (o instanceof TclElement) {
-				TclElement el = (TclElement) o;
-				result += el.getEnd() - el.getStart() + 1;
-			} else if (o instanceof String) {
-				result += ((String) o).length();
+		if (len == -1) {
+			int result = 0;
+			for (Iterator<Object> iter = contents.iterator(); iter.hasNext();) {
+				Object o = iter.next();
+				if (o instanceof TclElement) {
+					TclElement el = (TclElement) o;
+					result += el.getEnd() - el.getStart() + 1;
+				} else if (o instanceof String) {
+					result += ((String) o).length();
+				}
 			}
+			len = result;
 		}
-		return result;
+		return len;
 	}
 
 	public String toString() {

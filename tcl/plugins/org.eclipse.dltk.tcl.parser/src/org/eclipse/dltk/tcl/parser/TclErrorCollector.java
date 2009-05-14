@@ -14,6 +14,14 @@ package org.eclipse.dltk.tcl.parser;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
+import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
+import org.eclipse.dltk.tcl.ast.TclModule;
+import org.eclipse.dltk.utils.TextUtils.DefaultSourceLineTracker;
+
 public class TclErrorCollector implements ITclErrorReporter {
 	private Set<TclError> errors = new HashSet<TclError>();
 
@@ -52,6 +60,23 @@ public class TclErrorCollector implements ITclErrorReporter {
 						error.getErrorKind());
 			}
 		}
+	}
+
+	public void reportAll(final IProblemReporter reporter,
+			final ISourceLineTracker tracker) {
+		reportAll(new ITclErrorReporter() {
+			public void report(int code, String message, String[] extraMessage,
+					int start, int end, int kind) {
+				reporter
+						.reportProblem(new DefaultProblem(
+								message,
+								code,
+								extraMessage,
+								kind == ITclErrorReporter.ERROR ? ProblemSeverities.Error
+										: ProblemSeverities.Warning, start,
+								end, tracker.getLineNumberOfOffset(start)));
+			}
+		});
 	}
 
 	public int getCount() {

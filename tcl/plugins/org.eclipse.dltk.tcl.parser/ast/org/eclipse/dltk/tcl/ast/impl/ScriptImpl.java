@@ -17,9 +17,13 @@ import org.eclipse.dltk.tcl.ast.AstPackage;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -39,7 +43,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  */
 public class ScriptImpl extends TclArgumentImpl implements Script {
 	/**
-	 * The cached value of the '{@link #getCommands() <em>Commands</em>}' reference list.
+	 * The cached value of the '{@link #getCommands() <em>Commands</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getCommands()
@@ -111,8 +115,8 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 	 */
 	public EList<TclCommand> getCommands() {
 		if (commands == null) {
-			commands = new EObjectResolvingEList<TclCommand>(TclCommand.class,
-					this, AstPackage.SCRIPT__COMMANDS);
+			commands = new EObjectContainmentEList<TclCommand>(
+					TclCommand.class, this, AstPackage.SCRIPT__COMMANDS);
 		}
 		return commands;
 	}
@@ -160,6 +164,22 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					AstPackage.SCRIPT__CONTENT_END, oldContentEnd, contentEnd));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case AstPackage.SCRIPT__COMMANDS:
+			return ((InternalEList<?>) getCommands()).basicRemove(otherEnd,
+					msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

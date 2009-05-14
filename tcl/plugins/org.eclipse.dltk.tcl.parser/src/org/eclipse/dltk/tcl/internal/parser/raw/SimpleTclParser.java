@@ -183,8 +183,9 @@ public class SimpleTclParser {
 				break;
 			}
 		}
-		if (cmd.getWords().size() > 0) {
-			TclWord w = cmd.getWords().get(cmd.getWords().size() - 1);
+		int wordsSize = cmd.getWords().size();
+		if (wordsSize > 0) {
+			TclWord w = cmd.getWords().get(wordsSize - 1);
 			cmd.setEnd(w.getEnd());
 		} else
 			cmd.setEnd(cmd.getStart());

@@ -38,33 +38,33 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface TclCommand extends Node {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' reference.
+	 * Returns the value of the '<em><b>Name</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' reference.
+	 * @return the value of the '<em>Name</em>' containment reference.
 	 * @see #setName(TclArgument)
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclCommand_Name()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	TclArgument getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.TclCommand#getName <em>Name</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.TclCommand#getName <em>Name</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' reference.
+	 * @param value the new value of the '<em>Name</em>' containment reference.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(TclArgument value);
 
 	/**
-	 * Returns the value of the '<em><b>Arguments</b></em>' reference list.
+	 * Returns the value of the '<em><b>Arguments</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.dltk.tcl.ast.TclArgument}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -72,9 +72,9 @@ public interface TclCommand extends Node {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Arguments</em>' reference list.
+	 * @return the value of the '<em>Arguments</em>' containment reference list.
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclCommand_Arguments()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<TclArgument> getArguments();
@@ -106,7 +106,7 @@ public interface TclCommand extends Node {
 	void setDefinition(Command value);
 
 	/**
-	 * Returns the value of the '<em><b>Matches</b></em>' reference list.
+	 * Returns the value of the '<em><b>Matches</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.dltk.tcl.ast.ArgumentMatch}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -114,9 +114,9 @@ public interface TclCommand extends Node {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Matches</em>' reference list.
+	 * @return the value of the '<em>Matches</em>' containment reference list.
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclCommand_Matches()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<ArgumentMatch> getMatches();

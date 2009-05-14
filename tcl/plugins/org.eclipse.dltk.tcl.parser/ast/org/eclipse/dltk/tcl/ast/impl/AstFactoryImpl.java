@@ -89,6 +89,10 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 			return createTclModule();
 		case AstPackage.TCL_CODE_MODEL:
 			return createTclCodeModel();
+		case AstPackage.TCL_PROBLEM_MODEL:
+			return createTclProblemModel();
+		case AstPackage.TCL_PROBLEM:
+			return createTclProblem();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName()
 					+ "' is not a valid classifier");
@@ -213,6 +217,26 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 	public TclCodeModel createTclCodeModel() {
 		TclCodeModelImpl tclCodeModel = new TclCodeModelImpl();
 		return tclCodeModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TclProblemModel createTclProblemModel() {
+		TclProblemModelImpl tclProblemModel = new TclProblemModelImpl();
+		return tclProblemModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TclProblem createTclProblem() {
+		TclProblemImpl tclProblem = new TclProblemImpl();
+		return tclProblem;
 	}
 
 	/**
