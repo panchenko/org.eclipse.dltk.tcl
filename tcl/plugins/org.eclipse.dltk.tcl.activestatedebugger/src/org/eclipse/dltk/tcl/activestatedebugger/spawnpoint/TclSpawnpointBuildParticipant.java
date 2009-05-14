@@ -18,6 +18,7 @@ import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
@@ -122,7 +123,8 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 		if (file == null) {
 			return;
 		}
-		List<TclCommand> commands = TclBuildContext.getStatements(context);
+		TclModule tclModule = TclBuildContext.getStatements(context);
+		List<TclCommand> commands = tclModule.getStatements();
 		if (commands == null) {
 			return;
 		}
