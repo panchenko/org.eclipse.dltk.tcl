@@ -41,7 +41,7 @@ public class CommandRedefinitionCheck implements ITclCheck {
 			final ITclErrorReporter reporter, Map<String, String> options,
 			IScriptProject project, final ISourceLineTracker sourceLineTracker) {
 		final IScopeProcessor processor = DefinitionManager.getInstance()
-				.createProcessor();
+				.getCoreProcessor();
 		TclParserUtils.traverse(tclCommands, new TclVisitor() {
 			Map<String, Integer> userCommands = new HashMap<String, Integer>();
 

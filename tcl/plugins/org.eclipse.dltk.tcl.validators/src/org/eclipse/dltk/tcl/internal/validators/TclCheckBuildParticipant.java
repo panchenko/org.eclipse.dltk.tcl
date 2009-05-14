@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.internal.validators.ChecksExtensionManager.TclCheckInfo;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
@@ -33,6 +34,7 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
+import org.eclipse.emf.common.util.EList;
 
 public class TclCheckBuildParticipant implements IBuildParticipant {
 
@@ -46,7 +48,7 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 			TclValidatorsCore.getDefault().getPluginPreferences());
 
 	public TclCheckBuildParticipant(IScriptProject project) {
-		processor = DefinitionManager.getInstance().createProcessor();
+		processor = DefinitionManager.getInstance().getCoreProcessor();
 	}
 
 	public void build(IBuildContext context) throws CoreException {
@@ -56,16 +58,9 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 			}
 
 			final ISourceModule module = context.getSourceModule();
-			final String source = new String(context.getContents());
-
-			TclParser parser = new TclParser();
 			TclErrorCollector errorCollector = new TclErrorCollector();
-
-			parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR,
-					false);
-			List<TclCommand> commands = parser.parse(source, errorCollector,
-					processor);
-			TclBuildContext.setStatements(context, commands);
+			TclModule tclModule = TclBuildContext.getStatements(context);
+			EList<TclCommand> commands = tclModule.getStatements();
 			final ISourceLineTracker lineTracker = context.getLineTracker();
 			if (TESTING_DO_CHECKS) {
 				// Perform all checks.
@@ -85,20 +80,7 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 			}
 			final IProblemReporter reporter = context.getProblemReporter();
 			// report errors to the build context
-			errorCollector.reportAll(new ITclErrorReporter() {
-				public void report(int code, String message,
-						String[] extraMessage, int start, int end, int kind) {
-					reporter
-							.reportProblem(new DefaultProblem(
-									message,
-									code,
-									extraMessage,
-									kind == ITclErrorReporter.ERROR ? ProblemSeverities.Error
-											: ProblemSeverities.Warning, start,
-									end, lineTracker
-											.getLineNumberOfOffset(start)));
-				}
-			});
+			errorCollector.reportAll(reporter, lineTracker);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

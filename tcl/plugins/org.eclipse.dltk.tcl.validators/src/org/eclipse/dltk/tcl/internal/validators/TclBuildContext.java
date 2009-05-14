@@ -11,23 +11,35 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.validators;
 
-import java.util.List;
-
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
-import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclModule;
+import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
+import org.eclipse.dltk.tcl.parser.TclErrorCollector;
+import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 
 public class TclBuildContext {
 
-	private static final String ATTR_NEW_AST = "NEW_AST"; //$NON-NLS-1$
-
-	@SuppressWarnings("unchecked")
-	public static List<TclCommand> getStatements(IBuildContext context) {
-		return (List<TclCommand>) context.get(ATTR_NEW_AST);
+	public static TclModule getStatements(IBuildContext context) {
+		// Parse and store statements here.
+		ModuleDeclaration declaration = SourceParserUtil.getModuleDeclaration(
+				context.getSourceModule(), context.getProblemReporter());
+		if (declaration instanceof TclModuleDeclaration) {
+			TclModuleDeclaration decl = (TclModuleDeclaration) declaration;
+			TclModule tclModule = decl.getTclModule();
+			if (tclModule != null) {
+				return tclModule;
+			}
+		}
+		TclParser parser = new TclParser();
+		TclErrorCollector collector = new TclErrorCollector();
+		TclModule module = parser.parseModule(
+				new String(context.getContents()), collector, DefinitionManager
+						.getInstance().getCoreProcessor());
+		collector.reportAll(context.getProblemReporter(), context
+				.getLineTracker());
+		return module;
 	}
-
-	public static void setStatements(IBuildContext context,
-			List<TclCommand> commands) {
-		context.set(ATTR_NEW_AST, commands);
-	}
-
 }

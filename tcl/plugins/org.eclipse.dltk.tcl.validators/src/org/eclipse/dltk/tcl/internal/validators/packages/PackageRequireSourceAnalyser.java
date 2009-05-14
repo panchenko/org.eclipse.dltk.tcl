@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
@@ -36,6 +37,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptProjectUtil;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
@@ -50,6 +52,8 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclModule;
+import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
@@ -179,17 +183,12 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private List<TclPackageInfo> knownInfos;
 
 	public void buildExternalModule(IBuildContext context) throws CoreException {
-		final char[] contents = context.getContents();
-		if (CharOperation.indexOf(PACKAGE_CHARS, contents, false) == -1) {
-			return;
-		}
-		final TclParser parser = new TclParser();
-		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, false);
-		final List<TclCommand> commands = parser.parse(new String(contents),
-				null, processor);
-		// packageCollector.getRequireRefs().clear();
+		TclModule tclModule = TclBuildContext.getStatements(context);
+		List<TclCommand> statements = tclModule.getStatements();
 		ISourceModule module = context.getSourceModule();
-		packageCollector.process(commands, module);
+
+		// packageCollector.getRequireRefs().clear();
+		packageCollector.process(statements, module);
 
 		addInfoForModule(context, module);
 	}
@@ -217,12 +216,13 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	}
 
 	public void build(IBuildContext context) throws CoreException {
-		List<TclCommand> statements = TclBuildContext.getStatements(context);
+		TclModule tclModule = TclBuildContext.getStatements(context);
+		List<TclCommand> statements = tclModule.getStatements();
 		if (statements == null) {
 			return;
 		}
-		// packageCollector.getRequireRefs().clear();
 		ISourceModule module = context.getSourceModule();
+		// packageCollector.getRequireRefs().clear();
 		packageCollector.process(statements, module);
 		addInfoForModule(context, module);
 	}
