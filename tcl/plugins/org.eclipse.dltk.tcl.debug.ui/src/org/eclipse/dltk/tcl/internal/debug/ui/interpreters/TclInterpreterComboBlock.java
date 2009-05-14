@@ -141,6 +141,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	private TreeViewer fElements;
 	private IScriptProject scriptProject;
 	private Button addButton;
+	private Button addAllButton;
 
 	protected void showInterpreterPreferencePage() {
 		showPrefPage(TclInterpreterPreferencePage.PAGE_ID);
@@ -181,6 +182,15 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				addPackage();
+			}
+		});
+		addAllButton = new Button(buttons, SWT.PUSH);
+		data2 = new GridData(SWT.FILL, SWT.FILL, false, false);
+		addAllButton.setLayoutData(data2);
+		addAllButton.setText("Add all");
+		addAllButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				addAllPackages();
 			}
 		});
 		final Button remove = new Button(buttons, SWT.PUSH);
@@ -307,6 +317,31 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 					| SWT.APPLICATION_MODAL);
 			box.setText("Packages");
 			box.setMessage("Project interpreter could not be found...");
+			box.open();
+		}
+	}
+
+	protected void addAllPackages() {
+		IInterpreterInstall install = null;
+		try {
+			install = ScriptRuntime.getInterpreterInstall(this.scriptProject);
+		} catch (CoreException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		if (install != null) {
+			Set<String> packages = TclPackagesManager
+					.getPackageInfosAsString(install);
+			this.packages.addAll(packages);
+
+			refreshView();
+		} else {
+			MessageBox box = new MessageBox(this.fElements.getControl()
+					.getShell(), SWT.OK | SWT.ICON_INFORMATION
+					| SWT.APPLICATION_MODAL);
+			box.setText("Packages");
+			box.setText("Project interpreter could not be found...");
 			box.open();
 		}
 	}
