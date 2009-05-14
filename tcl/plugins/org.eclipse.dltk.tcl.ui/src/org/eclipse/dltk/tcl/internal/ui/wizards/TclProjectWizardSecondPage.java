@@ -8,13 +8,9 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.preferences.TclBuildPathsBlock;
@@ -42,19 +38,6 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 
 	protected IPreferenceStore getPreferenceStore() {
 		return TclUI.getDefault().getPreferenceStore();
-	}
-
-	protected BuildpathDetector createBuildpathDetector(
-			IProgressMonitor monitor, IDLTKLanguageToolkit toolkit)
-			throws CoreException {
-		TclBuildpathDetector detector = new TclBuildpathDetector(
-				getCurrProject(), toolkit);
-
-		TclProjectWizardFirstPage page = (TclProjectWizardFirstPage) this
-				.getFirstPage();
-		detector.setUseAnalysis(page.useAnalysis());
-		detector.detectBuildpath(new SubProgressMonitor(monitor, 20));
-		return detector;
 	}
 
 	protected void postConfigureProject() throws CoreException {
