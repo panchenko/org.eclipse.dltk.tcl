@@ -50,15 +50,25 @@ public class SimpleCodePrinterTests extends TestCase {
 	public void test006() throws Exception {
 		outCheck("file delete $path(gorp.file)", "file delete $path(gorp.file)");
 	}
+
 	public void test007() throws Exception {
-		outCheck("file delete $path(gorp.file)\n", "file delete $path(gorp.file)");
+		outCheck("file delete $path(gorp.file)\n",
+				"file delete $path(gorp.file)");
 	}
 
 	public void test008() throws Exception {
-		outCheck("file delete $path($result,$str)", "file delete $path($result,$str)");
+		outCheck("file delete $path($result,$str)",
+				"file delete $path($result,$str)");
 	}
+
 	public void test009() throws Exception {
-		outCheck("file delete $path($result,$str)\n", "file delete $path($result,$str)");
+		outCheck("file delete $path($result,$str)\n",
+				"file delete $path($result,$str)");
+	}
+
+	public void test010() throws Exception {
+		outCheck("proc hello2 {name2} {\n" + "	puts \"Hello, $name2\"\n" + "}",
+				"proc hello2 {name2} {puts \"Hello, $name2\"}");
 	}
 
 	private void outCheck(String source, String expected) throws Exception {
