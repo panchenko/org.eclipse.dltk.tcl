@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 
 public class TclASTCache implements IASTCache {
-	public static final String TCL_AST_ATTRIBUTE = TclPlugin.PLUGIN_ID + ".ast";
+	public static final String TCL_AST_ATTRIBUTE = "_ast";
 
 	public TclASTCache() {
 	}

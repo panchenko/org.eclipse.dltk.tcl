@@ -225,7 +225,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			return stringToAST(argument, value);
 		} else if (arg instanceof ComplexString) {
 			ComplexString carg = (ComplexString) arg;
-			return stringToAST(carg, carg.getValue());
+			return stringToAST(carg, SimpleCodePrinter.getArgumentString(carg));
 		} else if (arg instanceof Script) {
 			Script st = (Script) arg;
 			EList<TclCommand> eList = st.getCommands();
@@ -254,7 +254,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			return block;
 		} else if (arg instanceof TclArgumentList) {
 			TclArgumentList st = (TclArgumentList) arg;
-			return convertToAST(st.getOriginalArgument());
+			String str = SimpleCodePrinter.getArgumentString(st);
+			return stringToAST(st, str);
 		}
 		throw new RuntimeException(
 				"TODO: Not all cases are matched in TCL Parser AST converter");
