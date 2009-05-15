@@ -305,8 +305,7 @@ public class TclParser implements ITclParserOptions {
 	private void processComplexArguments(EList<TclArgument> arguments,
 			ComplexArgumentResult[] complexArguments) {
 		for (ComplexArgumentResult arg : complexArguments) {
-			TclArgument oldArgument = arguments.get(arg.getArgumentNumber());
-			TclArgument original = oldArgument;
+			TclArgument original = arguments.get(arg.getArgumentNumber());
 			int[] blockArguments2 = arg.getBlockArguments();
 			List<TclArgument> arguments2 = arg.getArguments();
 			parseReplaceBlockArguments(arguments2, blockArguments2);
@@ -323,7 +322,22 @@ public class TclParser implements ITclParserOptions {
 								.size()]));
 			}
 			arguments.set(arg.getArgumentNumber(), list);
-			list.setOriginalArgument(oldArgument);
+			list.setKind(0);
+			if (original instanceof ComplexString) {
+				list.setKind(((ComplexString) original).getKind());
+			} else if (original instanceof StringArgument) {
+				StringArgument sArg = (StringArgument) original;
+				String value = sArg.getValue();
+				list.setKind(0);
+				if (value.startsWith("{") && value.endsWith("}")) {
+					list.setKind(1);
+				}
+				if (value.startsWith("\"") && value.endsWith("\"")) {
+					list.setKind(2);
+				}
+			}
+
+			// list.setOriginalArgument(oldArgument);
 		}
 	}
 
@@ -506,7 +520,15 @@ public class TclParser implements ITclParserOptions {
 		ComplexString literal = factory.createComplexString();
 		literal.setStart(offset + start);
 		literal.setEnd(offset + end + 1);
-		literal.setValue(content.substring(offset + start, offset + end + 1));
+		String value = content.substring(offset + start, offset + end + 1);
+		literal.setKind(0);
+		if (value.startsWith("{") && value.endsWith("}")) {
+			literal.setKind(1);
+		}
+		if (value.startsWith("\"") && value.endsWith("\"")) {
+			literal.setKind(2);
+		}
+		// literal.setValue(value);
 		int pos = start;
 		for (int i = 0; i < contents.size(); i++) {
 			Object oo = contents.get(i);

@@ -439,8 +439,8 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTclArgumentList_OriginalArgument() {
-		return (EReference) tclArgumentListEClass.getEStructuralFeatures().get(
+	public EAttribute getTclArgumentList_Kind() {
+		return (EAttribute) tclArgumentListEClass.getEStructuralFeatures().get(
 				2);
 	}
 
@@ -494,7 +494,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComplexString_Value() {
+	public EAttribute getComplexString_Kind() {
 		return (EAttribute) complexStringEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -766,8 +766,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 		createEReference(tclArgumentListEClass, TCL_ARGUMENT_LIST__ARGUMENTS);
 		createEReference(tclArgumentListEClass,
 				TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT);
-		createEReference(tclArgumentListEClass,
-				TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT);
+		createEAttribute(tclArgumentListEClass, TCL_ARGUMENT_LIST__KIND);
 
 		argumentMatchEClass = createEClass(ARGUMENT_MATCH);
 		createEReference(argumentMatchEClass, ARGUMENT_MATCH__DEFINITION);
@@ -775,7 +774,7 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 
 		complexStringEClass = createEClass(COMPLEX_STRING);
 		createEReference(complexStringEClass, COMPLEX_STRING__ARGUMENTS);
-		createEAttribute(complexStringEClass, COMPLEX_STRING__VALUE);
+		createEAttribute(complexStringEClass, COMPLEX_STRING__KIND);
 
 		variableReferenceEClass = createEClass(VARIABLE_REFERENCE);
 		createEAttribute(variableReferenceEClass, VARIABLE_REFERENCE__NAME);
@@ -937,11 +936,10 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
-		initEReference(getTclArgumentList_OriginalArgument(), this
-				.getTclArgument(), null, "originalArgument", null, 0, 1,
-				TclArgumentList.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclArgumentList_Kind(), ecorePackage.getEInt(),
+				"kind", null, 0, 1, TclArgumentList.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(argumentMatchEClass, ArgumentMatch.class, "ArgumentMatch",
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -963,10 +961,10 @@ public class AstPackageImpl extends EPackageImpl implements AstPackage {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
-		initEAttribute(getComplexString_Value(), ecorePackage.getEString(),
-				"value", null, 0, 1, ComplexString.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComplexString_Kind(), ecorePackage.getEInt(), "kind",
+				null, 0, 1, ComplexString.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
 		initEClass(variableReferenceEClass, VariableReference.class,
 				"VariableReference", !IS_ABSTRACT, !IS_INTERFACE,

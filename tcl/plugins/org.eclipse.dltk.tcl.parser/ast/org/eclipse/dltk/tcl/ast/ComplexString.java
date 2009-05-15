@@ -22,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.ComplexString#getArguments <em>Arguments</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.ComplexString#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.ComplexString#getKind <em>Kind</em>}</li>
  * </ul>
  * </p>
  *
@@ -48,29 +48,29 @@ public interface ComplexString extends TclArgument, ISubstitution {
 	EList<TclArgument> getArguments();
 
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * Returns the value of the '<em><b>Kind</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Value</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Kind</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Value</em>' attribute.
-	 * @see #setValue(String)
-	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getComplexString_Value()
+	 * @return the value of the '<em>Kind</em>' attribute.
+	 * @see #setKind(int)
+	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getComplexString_Kind()
 	 * @model
 	 * @generated
 	 */
-	String getValue();
+	int getKind();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.ComplexString#getValue <em>Value</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.ComplexString#getKind <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Value</em>' attribute.
-	 * @see #getValue()
+	 * @param value the new value of the '<em>Kind</em>' attribute.
+	 * @see #getKind()
 	 * @generated
 	 */
-	void setValue(String value);
+	void setKind(int value);
 
 } // ComplexString

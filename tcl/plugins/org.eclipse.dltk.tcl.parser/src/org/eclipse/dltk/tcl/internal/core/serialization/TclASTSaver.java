@@ -1,17 +1,18 @@
 package org.eclipse.dltk.tcl.internal.core.serialization;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
-import org.eclipse.dltk.core.DLTKContentTypeManager;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.internal.core.util.Util;
-import org.eclipse.dltk.tcl.ast.AstFactory;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -21,7 +22,6 @@ import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCodeModel;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclModule;
-import org.eclipse.dltk.tcl.ast.TclProblem;
 import org.eclipse.dltk.tcl.ast.VariableReference;
 import org.eclipse.dltk.tcl.definitions.Command;
 import org.eclipse.emf.common.util.EList;
@@ -33,16 +33,28 @@ public class TclASTSaver implements ITclASTConstants {
 	private TclModule module;
 	private OutputStream stream;
 	private DataOutputStream out;
+	public List<String> stringIndex = new ArrayList<String>();
 
 	public TclASTSaver(TclModule module, OutputStream stream)
 			throws IOException {
 		this.module = module;
 		this.stream = stream;
-		this.out = new DataOutputStream(this.stream);
+	}
+
+	public void writeInt(int value) throws IOException {
+		if (module.getSize() < Byte.MAX_VALUE) {
+			out.writeByte(value);
+		} else if (module.getSize() < Short.MAX_VALUE) {
+			out.writeShort(value);
+		} else {
+			out.writeInt(value);
+		}
 	}
 
 	public void store(ProblemCollector collector) throws IOException {
-		out.writeInt(TAG_MODULE);
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		this.out = new DataOutputStream(bout);
+		out.writeByte(TAG_MODULE);
 		out.writeInt(module.getSize());
 		EList<TclCommand> statements = module.getStatements();
 		out.writeInt(statements.size());
@@ -60,7 +72,7 @@ public class TclASTSaver implements ITclASTConstants {
 			EList<Integer> lineOffsets = codeModel.getLineOffsets();
 			out.writeInt(lineOffsets.size());
 			for (Integer integer : lineOffsets) {
-				out.writeInt(integer.intValue());
+				writeInt(integer.intValue());
 			}
 		} else {
 			out.writeBoolean(false);
@@ -88,14 +100,26 @@ public class TclASTSaver implements ITclASTConstants {
 		} else {
 			out.writeInt(0);
 		}
+		// Store all string index
+		this.out.flush();
+		this.out = new DataOutputStream(this.stream);
+
+		// Store strings
+		out.writeInt(stringIndex.size());
+		for (String s : this.stringIndex) {
+			Util.writeUTF(out, s.toCharArray());
+		}
+		org.eclipse.dltk.compiler.util.Util.copy(new ByteArrayInputStream(bout
+				.toByteArray()), this.out);
+
 	}
 
 	private void saveProblem(IProblem problem) throws IOException {
-		out.writeInt(TAG_PROBLEM);
+		out.writeByte(TAG_PROBLEM);
 		out.writeInt(problem.getID());
 		writeString(problem.getMessage());
-		out.writeInt(problem.getSourceStart());
-		out.writeInt(problem.getSourceEnd());
+		writeInt(problem.getSourceStart());
+		writeInt(problem.getSourceEnd() - problem.getSourceStart());
 		if (problem.getArguments() != null) {
 			out.writeInt(problem.getArguments().length);
 			for (String arg : problem.getArguments()) {
@@ -106,7 +130,7 @@ public class TclASTSaver implements ITclASTConstants {
 		}
 		out.writeBoolean(problem.isError());
 		out.writeBoolean(problem.isWarning());
-		out.writeInt(problem.getSourceLineNumber());
+		writeInt(problem.getSourceLineNumber());
 	}
 
 	public void out(TclArgument arg) throws IOException {
@@ -114,17 +138,17 @@ public class TclASTSaver implements ITclASTConstants {
 			// Simple absolute or relative source'ing.
 			StringArgument argument = (StringArgument) arg;
 			String value = argument.getValue();
-			out.writeInt(TAG_STRING_ARGUMENT);
-			out.writeInt(arg.getStart());
-			out.writeInt(arg.getEnd());
+			out.writeByte(TAG_STRING_ARGUMENT);
+			writeInt(arg.getStart());
+			writeInt(arg.getEnd() - arg.getStart());
 			writeString(value);
 		} else if (arg instanceof ComplexString) {
 			ComplexString carg = (ComplexString) arg;
-			String cargValue = carg.getValue();
-			out.writeInt(TAG_COMPLEX_STRING_ARGUMENT);
-			out.writeInt(arg.getStart());
-			out.writeInt(arg.getEnd());
-			writeString(cargValue);
+			// String cargValue = carg.getValue();
+			out.writeByte(TAG_COMPLEX_STRING_ARGUMENT);
+			writeInt(arg.getStart());
+			writeInt(arg.getEnd() - arg.getStart());
+			// writeString(cargValue);
 			EList<TclArgument> eList = carg.getArguments();
 			out.writeInt(eList.size());
 			for (TclArgument tclArgument : eList) {
@@ -133,20 +157,20 @@ public class TclASTSaver implements ITclASTConstants {
 		} else if (arg instanceof Script) {
 			Script st = (Script) arg;
 			EList<TclCommand> eList = st.getCommands();
-			out.writeInt(TAG_SCRIPT_ARGUMENT);
-			out.writeInt(arg.getStart());
-			out.writeInt(arg.getEnd());
-			out.writeInt(st.getContentStart());
-			out.writeInt(st.getContentEnd());
+			out.writeByte(TAG_SCRIPT_ARGUMENT);
+			writeInt(arg.getStart());
+			writeInt(arg.getEnd() - arg.getStart());
+			writeInt(st.getContentStart());
+			writeInt(st.getContentEnd() - st.getContentStart());
 			out.writeInt(eList.size());
 			for (TclCommand tclArgument : eList) {
 				out(tclArgument);
 			}
 		} else if (arg instanceof VariableReference) {
 			VariableReference var = (VariableReference) arg;
-			out.writeInt(TAG_VARIABLE_ARGUMENT);
-			out.writeInt(arg.getStart());
-			out.writeInt(arg.getEnd());
+			out.writeByte(TAG_VARIABLE_ARGUMENT);
+			writeInt(arg.getStart());
+			writeInt(arg.getEnd() - arg.getStart());
 			writeString(var.getName());
 			TclArgument index = var.getIndex();
 			if (index == null) {
@@ -158,29 +182,22 @@ public class TclASTSaver implements ITclASTConstants {
 		} else if (arg instanceof Substitution) {
 			Substitution st = (Substitution) arg;
 			EList<TclCommand> eList = st.getCommands();
-			out.writeInt(TAG_SUBSTITUTION_ARGUMENT);
-			out.writeInt(arg.getStart());
-			out.writeInt(arg.getEnd());
+			out.writeByte(TAG_SUBSTITUTION_ARGUMENT);
+			writeInt(arg.getStart());
+			writeInt(arg.getEnd() - arg.getStart());
 			out.writeInt(eList.size());
 			for (TclCommand tclArgument : eList) {
 				out(tclArgument);
 			}
 		} else if (arg instanceof TclArgumentList) {
 			TclArgumentList st = (TclArgumentList) arg;
-			out.writeInt(TAG_ARGUMENT_LIST_ARGUMENT);
-			out.writeInt(arg.getStart());
-			out.writeInt(arg.getEnd());
+			out.writeByte(TAG_ARGUMENT_LIST_ARGUMENT);
+			writeInt(arg.getStart());
+			writeInt(arg.getEnd() - arg.getStart());
 			EList<TclArgument> arguments = st.getArguments();
 			out.writeInt(arguments.size());
 			for (TclArgument tclArgument : arguments) {
 				out(tclArgument);
-			}
-			TclArgument originalArg = st.getOriginalArgument();
-			if (originalArg == null) {
-				out.writeBoolean(false);
-			} else {
-				out.writeBoolean(true);
-				out(originalArg);
 			}
 			storeERef(st.getDefinitionArgument());
 		}
@@ -188,17 +205,49 @@ public class TclASTSaver implements ITclASTConstants {
 
 	private void writeString(String value) throws IOException {
 		if (value == null) {
-			out.writeBoolean(false);
+			out.writeByte(0);
+			return;
+		}
+		int indexOf = stringIndex.indexOf(value);
+		if (indexOf != -1) {
+			outNum(indexOf, 1, 2);
+			return;
 		} else {
-			out.writeBoolean(true);
-			Util.writeUTF(out, value.toCharArray());
+			// Try to find part of word
+			if (value.length() > 6) {
+				for (String base : stringIndex) {
+					if (base.contains(value)) {
+						// Part of string
+						int pos = base.indexOf(value);
+						out.writeByte(3);
+						int basePos = stringIndex.indexOf(base);
+						outNum(basePos, 1, 2);
+						outNum(pos, 1, 2);
+						outNum(value.length(), 1, 2);
+						return;
+					}
+				}
+			}
+			stringIndex.add(value);
+			outNum(stringIndex.size() - 1, 1, 2);
+			return;
+		}
+	}
+
+	private void outNum(int indexOf, int id1, int id2) throws IOException {
+		if (indexOf <= Byte.MAX_VALUE) {
+			out.writeByte(id1);
+			out.writeByte(indexOf);
+		} else if (indexOf > Byte.MAX_VALUE) {
+			out.writeByte(id2);
+			out.writeInt(indexOf);
 		}
 	}
 
 	public void out(TclCommand command) throws IOException {
-		out.writeInt(TAG_COMMAND);
-		out.writeInt(command.getStart());
-		out.writeInt(command.getEnd());
+		out.writeByte(TAG_COMMAND);
+		writeInt(command.getStart());
+		writeInt(command.getEnd());
 		writeString(command.getQualifiedName());
 		Command def = command.getDefinition();
 		storeERef(def);

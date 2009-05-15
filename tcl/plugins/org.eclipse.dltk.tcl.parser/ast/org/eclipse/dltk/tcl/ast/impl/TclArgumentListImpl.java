@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl#getArguments <em>Arguments</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl#getDefinitionArgument <em>Definition Argument</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl#getOriginalArgument <em>Original Argument</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclArgumentListImpl#getKind <em>Kind</em>}</li>
  * </ul>
  * </p>
  *
@@ -65,14 +65,24 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 	protected ComplexArgument definitionArgument;
 
 	/**
-	 * The cached value of the '{@link #getOriginalArgument() <em>Original Argument</em>}' containment reference.
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOriginalArgument()
+	 * @see #getKind()
 	 * @generated
 	 * @ordered
 	 */
-	protected TclArgument originalArgument;
+	protected static final int KIND_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKind()
+	 * @generated
+	 * @ordered
+	 */
+	protected int kind = KIND_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -154,8 +164,8 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TclArgument getOriginalArgument() {
-		return originalArgument;
+	public int getKind() {
+		return kind;
 	}
 
 	/**
@@ -163,52 +173,12 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetOriginalArgument(
-			TclArgument newOriginalArgument, NotificationChain msgs) {
-		TclArgument oldOriginalArgument = originalArgument;
-		originalArgument = newOriginalArgument;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this,
-					Notification.SET,
-					AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
-					oldOriginalArgument, newOriginalArgument);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setOriginalArgument(TclArgument newOriginalArgument) {
-		if (newOriginalArgument != originalArgument) {
-			NotificationChain msgs = null;
-			if (originalArgument != null)
-				msgs = ((InternalEObject) originalArgument)
-						.eInverseRemove(
-								this,
-								EOPPOSITE_FEATURE_BASE
-										- AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
-								null, msgs);
-			if (newOriginalArgument != null)
-				msgs = ((InternalEObject) newOriginalArgument)
-						.eInverseAdd(
-								this,
-								EOPPOSITE_FEATURE_BASE
-										- AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
-								null, msgs);
-			msgs = basicSetOriginalArgument(newOriginalArgument, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
+	public void setKind(int newKind) {
+		int oldKind = kind;
+		kind = newKind;
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT,
-					newOriginalArgument, newOriginalArgument));
+					AstPackage.TCL_ARGUMENT_LIST__KIND, oldKind, kind));
 	}
 
 	/**
@@ -223,8 +193,6 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 		case AstPackage.TCL_ARGUMENT_LIST__ARGUMENTS:
 			return ((InternalEList<?>) getArguments()).basicRemove(otherEnd,
 					msgs);
-		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
-			return basicSetOriginalArgument(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -243,8 +211,8 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 			if (resolve)
 				return getDefinitionArgument();
 			return basicGetDefinitionArgument();
-		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
-			return getOriginalArgument();
+		case AstPackage.TCL_ARGUMENT_LIST__KIND:
+			return new Integer(getKind());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -265,8 +233,8 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 		case AstPackage.TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT:
 			setDefinitionArgument((ComplexArgument) newValue);
 			return;
-		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
-			setOriginalArgument((TclArgument) newValue);
+		case AstPackage.TCL_ARGUMENT_LIST__KIND:
+			setKind(((Integer) newValue).intValue());
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -286,8 +254,8 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 		case AstPackage.TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT:
 			setDefinitionArgument((ComplexArgument) null);
 			return;
-		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
-			setOriginalArgument((TclArgument) null);
+		case AstPackage.TCL_ARGUMENT_LIST__KIND:
+			setKind(KIND_EDEFAULT);
 			return;
 		}
 		super.eUnset(featureID);
@@ -305,10 +273,27 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 			return arguments != null && !arguments.isEmpty();
 		case AstPackage.TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT:
 			return definitionArgument != null;
-		case AstPackage.TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT:
-			return originalArgument != null;
+		case AstPackage.TCL_ARGUMENT_LIST__KIND:
+			return kind != KIND_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (kind: ");
+		result.append(kind);
+		result.append(')');
+		return result.toString();
 	}
 
 } //TclArgumentListImpl

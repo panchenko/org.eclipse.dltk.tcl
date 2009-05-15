@@ -432,13 +432,13 @@ public interface AstPackage extends EPackage {
 	int TCL_ARGUMENT_LIST__DEFINITION_ARGUMENT = TCL_ARGUMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Original Argument</b></em>' containment reference.
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT = TCL_ARGUMENT_FEATURE_COUNT + 2;
+	int TCL_ARGUMENT_LIST__KIND = TCL_ARGUMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Tcl Argument List</em>' class.
@@ -524,13 +524,13 @@ public interface AstPackage extends EPackage {
 	int COMPLEX_STRING__ARGUMENTS = TCL_ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPLEX_STRING__VALUE = TCL_ARGUMENT_FEATURE_COUNT + 1;
+	int COMPLEX_STRING__KIND = TCL_ARGUMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Complex String</em>' class.
@@ -1062,15 +1062,15 @@ public interface AstPackage extends EPackage {
 	EReference getTclArgumentList_DefinitionArgument();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument <em>Original Argument</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getKind <em>Kind</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Original Argument</em>'.
-	 * @see org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument()
+	 * @return the meta object for the attribute '<em>Kind</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.TclArgumentList#getKind()
 	 * @see #getTclArgumentList()
 	 * @generated
 	 */
-	EReference getTclArgumentList_OriginalArgument();
+	EAttribute getTclArgumentList_Kind();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.ArgumentMatch <em>Argument Match</em>}'.
@@ -1126,15 +1126,15 @@ public interface AstPackage extends EPackage {
 	EReference getComplexString_Arguments();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.ComplexString#getValue <em>Value</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.ComplexString#getKind <em>Kind</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see org.eclipse.dltk.tcl.ast.ComplexString#getValue()
+	 * @return the meta object for the attribute '<em>Kind</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.ComplexString#getKind()
 	 * @see #getComplexString()
 	 * @generated
 	 */
-	EAttribute getComplexString_Value();
+	EAttribute getComplexString_Kind();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.VariableReference <em>Variable Reference</em>}'.
@@ -1601,13 +1601,13 @@ public interface AstPackage extends EPackage {
 				.getTclArgumentList_DefinitionArgument();
 
 		/**
-		 * The meta object literal for the '<em><b>Original Argument</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Kind</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference TCL_ARGUMENT_LIST__ORIGINAL_ARGUMENT = eINSTANCE
-				.getTclArgumentList_OriginalArgument();
+		EAttribute TCL_ARGUMENT_LIST__KIND = eINSTANCE
+				.getTclArgumentList_Kind();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.ArgumentMatchImpl <em>Argument Match</em>}' class.
@@ -1657,12 +1657,12 @@ public interface AstPackage extends EPackage {
 				.getComplexString_Arguments();
 
 		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Kind</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute COMPLEX_STRING__VALUE = eINSTANCE.getComplexString_Value();
+		EAttribute COMPLEX_STRING__KIND = eINSTANCE.getComplexString_Kind();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.VariableReferenceImpl <em>Variable Reference</em>}' class.

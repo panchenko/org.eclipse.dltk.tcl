@@ -3,10 +3,11 @@ package org.eclipse.dltk.tcl.internal.core.serialization;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
 import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.internal.core.util.Util;
@@ -26,7 +27,6 @@ import org.eclipse.dltk.tcl.definitions.ComplexArgument;
 import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -34,6 +34,8 @@ public class TclASTLoader implements ITclASTConstants {
 	private InputStream stream;
 	private DataInputStream in;
 	private Scope[] scopes;
+	private List<String> stringIndex = new ArrayList<String>();
+	int moduleSize = 0;
 
 	public TclASTLoader(InputStream stream) throws IOException {
 		this.stream = stream;
@@ -41,20 +43,33 @@ public class TclASTLoader implements ITclASTConstants {
 		scopes = DefinitionManager.getInstance().getScopes();
 	}
 
+	public int readInt() throws IOException {
+		if (moduleSize < Byte.MAX_VALUE) {
+			return in.readByte();
+		} else if (moduleSize < Short.MAX_VALUE) {
+			return in.readShort();
+		} else {
+			return in.readInt();
+		}
+	}
+
 	public TclModule getModule(ProblemCollector collector) throws IOException {
-		int moduleTag = in.readInt(); // TAG_MODULE
+		// Load strings
+		int stringCount = in.readInt();
+		for (int i = 0; i < stringCount; ++i) {
+			stringIndex.add(new String(Util.readUTF(in)));
+		}
+
+		int moduleTag = in.readByte(); // TAG_MODULE
 		switch (moduleTag) {
 		case TAG_MODULE:
 			TclModule module = AstFactory.eINSTANCE.createTclModule();
-			module.setSize(in.readInt());// module.getSize()
+			moduleSize = in.readInt();
+			module.setSize(moduleSize);// module.getSize()
 			EList<TclCommand> statements = module.getStatements();
 			int statemetsSize = in.readInt(); // statements.size()
 			for (int i = 0; i < statemetsSize; ++i) {
-				TclCommand command = readCommand();
-				if (command == null) {
-					return null;// Error in restoring
-				}
-				statements.add(command);
+				statements.add(readCommand());
 			}
 			boolean hasCodeModel = in.readBoolean();
 			if (hasCodeModel) {
@@ -69,7 +84,7 @@ public class TclASTLoader implements ITclASTConstants {
 				int offsets = in.readInt();
 				EList<Integer> offList = codeModel.getLineOffsets();
 				for (int i = 0; i < offsets; i++) {
-					offList.add(Integer.valueOf(in.readInt()));
+					offList.add(Integer.valueOf(readInt()));
 				}
 			}
 			// Restore problems
@@ -83,14 +98,14 @@ public class TclASTLoader implements ITclASTConstants {
 	}
 
 	private void loadProblem(ProblemCollector collector) throws IOException {
-		int tag = in.readInt();// TAG_PROBLEM);
+		int tag = in.readByte();// TAG_PROBLEM);
 		if (tag != TAG_PROBLEM) {
 			return;
 		}
 		int id = in.readInt();
 		String message = readString();
-		int start = in.readInt();
-		int end = in.readInt();
+		int start = readInt();
+		int end = readInt() + start;
 		int argsSize = in.readInt();
 		String[] args = null;
 		if (argsSize > 0) {
@@ -101,7 +116,7 @@ public class TclASTLoader implements ITclASTConstants {
 		}
 		boolean error = in.readBoolean();
 		boolean warning = in.readBoolean();
-		int lineNumber = in.readInt();
+		int lineNumber = readInt();
 		int sev = 0;
 		if (error) {
 			sev = ProblemSeverities.Error;
@@ -115,55 +130,47 @@ public class TclASTLoader implements ITclASTConstants {
 	}
 
 	public TclArgument readArgument() throws IOException {
-		int argType = in.readInt();
+		int argType = in.readByte();
 		switch (argType) {
 		case TAG_STRING_ARGUMENT: {
 			// Simple absolute or relative source'ing.
 			StringArgument argument = AstFactory.eINSTANCE
 					.createStringArgument();
-			argument.setStart(in.readInt());
-			argument.setEnd(in.readInt());
+			argument.setStart(readInt());
+			argument.setEnd(readInt() + argument.getStart());
 			argument.setValue(readString());
 			return argument;
 		}
 		case TAG_COMPLEX_STRING_ARGUMENT: {
 			ComplexString carg = AstFactory.eINSTANCE.createComplexString();
-			carg.setStart(in.readInt());
-			carg.setEnd(in.readInt());
-			carg.setValue(readString());
+			carg.setStart(readInt());
+			carg.setEnd(readInt() + carg.getStart());
+			// carg.setValue(readString());
 			EList<TclArgument> eList = carg.getArguments();
 			int size = in.readInt();
 			for (int i = 0; i < size; ++i) {
-				TclArgument arg = readArgument();
-				if (arg == null) {
-					return null;
-				}
-				eList.add(arg);
+				eList.add(readArgument());
 			}
 			return carg;
 		}
 		case TAG_SCRIPT_ARGUMENT: {
 			Script st = AstFactory.eINSTANCE.createScript();
 			EList<TclCommand> eList = st.getCommands();
-			st.setStart(in.readInt());
-			st.setEnd(in.readInt());
-			st.setContentStart(in.readInt());
-			st.setContentEnd(in.readInt());
+			st.setStart(readInt());
+			st.setEnd(readInt() + st.getStart());
+			st.setContentStart(readInt());
+			st.setContentEnd(readInt() + st.getContentStart());
 			int size = in.readInt();
 			for (int i = 0; i < size; ++i) {
-				TclCommand arg = readCommand();
-				if (arg == null) {
-					return null;
-				}
-				eList.add(arg);
+				eList.add(readCommand());
 			}
 			return st;
 		}
 		case TAG_VARIABLE_ARGUMENT: {
 			VariableReference var = AstFactory.eINSTANCE
 					.createVariableReference();
-			var.setStart(in.readInt());
-			var.setEnd(in.readInt());
+			var.setStart(readInt());
+			var.setEnd(readInt() + var.getStart());
 			var.setName(readString());
 			boolean index = in.readBoolean();
 			if (index) {
@@ -174,35 +181,27 @@ public class TclASTLoader implements ITclASTConstants {
 		case TAG_SUBSTITUTION_ARGUMENT: {
 			Substitution st = AstFactory.eINSTANCE.createSubstitution();
 			EList<TclCommand> eList = st.getCommands();
-			st.setStart(in.readInt());
-			st.setEnd(in.readInt());
+			st.setStart(readInt());
+			st.setEnd(readInt() + st.getStart());
 			int size = in.readInt();
 			for (int i = 0; i < size; ++i) {
-				TclCommand arg = readCommand();
-				if (arg == null) {
-					return null;
-				}
-				eList.add(arg);
+				eList.add(readCommand());
 			}
 			return st;
 		}
 		case TAG_ARGUMENT_LIST_ARGUMENT: {
 			TclArgumentList st = AstFactory.eINSTANCE.createTclArgumentList();
-			st.setStart(in.readInt());
-			st.setEnd(in.readInt());
+			st.setStart(readInt());
+			st.setEnd(readInt() + st.getStart());
 			EList<TclArgument> arguments = st.getArguments();
 			int size = in.readInt();
 			for (int i = 0; i < size; ++i) {
-				TclArgument arg = readArgument();
-				if (arg == null) {
-					return null;
-				}
-				arguments.add(arg);
+				arguments.add(readArgument());
 			}
-			boolean originalArg = in.readBoolean();
-			if (originalArg) {
-				st.setOriginalArgument(readArgument());
-			}
+			// boolean originalArg = in.readBoolean();
+			// if (originalArg) {
+			// st.setOriginalArgument(readArgument());
+			// }
 			EObject def = restoreERef();
 			if (def instanceof ComplexArgument) {
 				st.setDefinitionArgument((ComplexArgument) def);
@@ -210,17 +209,17 @@ public class TclASTLoader implements ITclASTConstants {
 			return st;
 		}
 		}
-		return null;
+		throw new IOException("Failed to load command argument.");
 	}
 
 	public TclCommand readCommand() throws IOException {
-		int tagCommand = in.readInt();
+		int tagCommand = in.readByte();
 		if (tagCommand != TAG_COMMAND) {
-			return null;
+			throw new IOException("Incorrect command tag");
 		}
 		TclCommand command = AstFactory.eINSTANCE.createTclCommand();
-		command.setStart(in.readInt());
-		command.setEnd(in.readInt());
+		command.setStart(readInt());
+		command.setEnd(readInt() + command.getStart());
 		command.setQualifiedName(readString());
 		EObject def = restoreERef();
 		if (def instanceof Command) {
@@ -230,11 +229,7 @@ public class TclASTLoader implements ITclASTConstants {
 		int size = in.readInt();// command.getArguments().size());
 		EList<TclArgument> eList = command.getArguments();
 		for (int i = 0; i < size; ++i) {
-			TclArgument argument = readArgument();
-			if (argument == null) {
-				return null;
-			}
-			eList.add(argument);
+			eList.add(readArgument());
 		}
 		return command;
 	}
@@ -255,11 +250,35 @@ public class TclASTLoader implements ITclASTConstants {
 		return def;
 	}
 
+	public int readNum(int id1, int id2) throws IOException {
+		byte b = in.readByte();
+		if (b == id1) {
+			return in.readByte();
+		} else if (b == id2) {
+			return in.readInt();
+		}
+		return 0;
+	}
+
 	private String readString() throws IOException {
-		boolean readBoolean = in.readBoolean();
-		if (readBoolean == false) {
+		byte b = in.readByte();
+		if (b == 0) {
 			return null;
 		}
-		return new String(Util.readUTF(in));
+		if (b == 1) {
+			int pos = in.readByte();
+			return stringIndex.get(pos);
+		} else if (b == 2) {
+			int pos = in.readInt();
+			return stringIndex.get(pos);
+		} else if (b == 3) {
+			int basePos = readNum(1, 2);
+			int pos = readNum(1, 2);
+			int len = readNum(1, 2);
+			String base = stringIndex.get(basePos);
+			String str = base.substring(pos, pos + len);
+			return str;
+		}
+		return "";
 	}
 }

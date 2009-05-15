@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getArguments <em>Arguments</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getDefinitionArgument <em>Definition Argument</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument <em>Original Argument</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getKind <em>Kind</em>}</li>
  * </ul>
  * </p>
  *
@@ -76,29 +76,29 @@ public interface TclArgumentList extends TclArgument {
 	void setDefinitionArgument(ComplexArgument value);
 
 	/**
-	 * Returns the value of the '<em><b>Original Argument</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Kind</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Original Argument</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Kind</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Original Argument</em>' containment reference.
-	 * @see #setOriginalArgument(TclArgument)
-	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclArgumentList_OriginalArgument()
-	 * @model containment="true"
+	 * @return the value of the '<em>Kind</em>' attribute.
+	 * @see #setKind(int)
+	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclArgumentList_Kind()
+	 * @model
 	 * @generated
 	 */
-	TclArgument getOriginalArgument();
+	int getKind();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getOriginalArgument <em>Original Argument</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.TclArgumentList#getKind <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Original Argument</em>' containment reference.
-	 * @see #getOriginalArgument()
+	 * @param value the new value of the '<em>Kind</em>' attribute.
+	 * @see #getKind()
 	 * @generated
 	 */
-	void setOriginalArgument(TclArgument value);
+	void setKind(int value);
 
 } // TclArgumentList

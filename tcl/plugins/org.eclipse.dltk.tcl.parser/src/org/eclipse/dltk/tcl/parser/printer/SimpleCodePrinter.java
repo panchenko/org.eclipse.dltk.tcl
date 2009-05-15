@@ -23,13 +23,23 @@ public class SimpleCodePrinter {
 			return value;
 		} else if (arg instanceof ComplexString) {
 			ComplexString carg = (ComplexString) arg;
-			if (carg.getValue() != null) {
-				return carg.getValue();
-			}
+			// if (carg.getValue() != null) {
+			// return carg.getValue();
+			// }
 			EList<TclArgument> eList = carg.getArguments();
 			StringBuffer buff = new StringBuffer();
+			if (carg.getKind() == 1) {
+				buff.append("{");
+			} else if (carg.getKind() == 2) {
+				buff.append("\"");
+			}
 			for (TclArgument tclArgument : eList) {
 				buff.append(getArgumentString(tclArgument));
+			}
+			if (carg.getKind() == 1) {
+				buff.append("}");
+			} else if (carg.getKind() == 2) {
+				buff.append("\"");
 			}
 			return buff.toString();
 		} else if (arg instanceof Script) {
@@ -75,7 +85,28 @@ public class SimpleCodePrinter {
 			return buff.toString();
 		} else if (arg instanceof TclArgumentList) {
 			TclArgumentList st = (TclArgumentList) arg;
-			return getArgumentString(st.getOriginalArgument());
+			EList<TclArgument> eList = st.getArguments();
+			StringBuffer buff = new StringBuffer();
+			if (st.getKind() == 1) {
+				buff.append("{");
+			} else if (st.getKind() == 2) {
+				buff.append("\"");
+			}
+			boolean first = true;
+			for (TclArgument tclArgument : eList) {
+				if (first) {
+					first = false;
+				} else {
+					buff.append(" ");
+				}
+				buff.append(getArgumentString(tclArgument));
+			}
+			if (st.getKind() == 1) {
+				buff.append("}");
+			} else if (st.getKind() == 2) {
+				buff.append("\"");
+			}
+			return buff.toString();
 		}
 		return "";
 	}
@@ -105,6 +136,9 @@ public class SimpleCodePrinter {
 	}
 
 	private static String nameFromBlock(String name, char c1, char c2) {
+		if (name.length() < 2) {
+			return name;
+		}
 		if (name.charAt(0) == c1 && name.charAt(name.length() - 1) == c2) {
 			return name.substring(1, name.length() - 1);
 		}

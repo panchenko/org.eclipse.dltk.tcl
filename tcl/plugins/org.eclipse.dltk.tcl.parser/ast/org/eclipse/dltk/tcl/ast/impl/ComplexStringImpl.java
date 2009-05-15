@@ -34,7 +34,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ComplexStringImpl#getArguments <em>Arguments</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ComplexStringImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.impl.ComplexStringImpl#getKind <em>Kind</em>}</li>
  * </ul>
  * </p>
  *
@@ -52,23 +52,24 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	protected EList<TclArgument> arguments;
 
 	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
+	 * @see #getKind()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String VALUE_EDEFAULT = null;
+	protected static final int KIND_EDEFAULT = 0;
+
 	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
+	 * @see #getKind()
 	 * @generated
 	 * @ordered
 	 */
-	protected String value = VALUE_EDEFAULT;
+	protected int kind = KIND_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -108,8 +109,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getValue() {
-		return value;
+	public int getKind() {
+		return kind;
 	}
 
 	/**
@@ -117,12 +118,12 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setValue(String newValue) {
-		String oldValue = value;
-		value = newValue;
+	public void setKind(int newKind) {
+		int oldKind = kind;
+		kind = newKind;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					AstPackage.COMPLEX_STRING__VALUE, oldValue, value));
+					AstPackage.COMPLEX_STRING__KIND, oldKind, kind));
 	}
 
 	/**
@@ -151,8 +152,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 		switch (featureID) {
 		case AstPackage.COMPLEX_STRING__ARGUMENTS:
 			return getArguments();
-		case AstPackage.COMPLEX_STRING__VALUE:
-			return getValue();
+		case AstPackage.COMPLEX_STRING__KIND:
+			return new Integer(getKind());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -170,8 +171,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 			getArguments().clear();
 			getArguments().addAll((Collection<? extends TclArgument>) newValue);
 			return;
-		case AstPackage.COMPLEX_STRING__VALUE:
-			setValue((String) newValue);
+		case AstPackage.COMPLEX_STRING__KIND:
+			setKind(((Integer) newValue).intValue());
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -188,8 +189,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 		case AstPackage.COMPLEX_STRING__ARGUMENTS:
 			getArguments().clear();
 			return;
-		case AstPackage.COMPLEX_STRING__VALUE:
-			setValue(VALUE_EDEFAULT);
+		case AstPackage.COMPLEX_STRING__KIND:
+			setKind(KIND_EDEFAULT);
 			return;
 		}
 		super.eUnset(featureID);
@@ -205,9 +206,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 		switch (featureID) {
 		case AstPackage.COMPLEX_STRING__ARGUMENTS:
 			return arguments != null && !arguments.isEmpty();
-		case AstPackage.COMPLEX_STRING__VALUE:
-			return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT
-					.equals(value);
+		case AstPackage.COMPLEX_STRING__KIND:
+			return kind != KIND_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -223,8 +223,8 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (value: ");
-		result.append(value);
+		result.append(" (kind: ");
+		result.append(kind);
 		result.append(')');
 		return result.toString();
 	}

@@ -36,8 +36,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
         eType="#//TclArgument" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="definitionArgument" eType="ecore:EClass definitions.ecore#//ComplexArgument"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="originalArgument" eType="#//TclArgument"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArgumentMatch">
     <eStructuralFeatures xsi:type="ecore:EReference" name="definition" eType="ecore:EClass definitions.ecore#//Argument"/>
@@ -47,7 +46,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="ComplexString" eSuperTypes="#//TclArgument #//ISubstitution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
         eType="#//TclArgument" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VariableReference" eSuperTypes="#//TclArgument #//ISubstitution">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
