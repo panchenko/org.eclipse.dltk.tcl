@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.3 2009/05/05 11:16:30 asobolev Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.4 2009/05/17 11:39:13 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -258,9 +258,19 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTclInterpreterInfo_Environment() {
+	public EAttribute getTclInterpreterInfo_FetchedAt() {
 		return (EAttribute) tclInterpreterInfoEClass.getEStructuralFeatures()
 				.get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclInterpreterInfo_Environment() {
+		return (EAttribute) tclInterpreterInfoEClass.getEStructuralFeatures()
+				.get(5);
 	}
 
 	/**
@@ -478,6 +488,8 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 		createEAttribute(tclInterpreterInfoEClass,
 				TCL_INTERPRETER_INFO__FETCHED);
 		createEAttribute(tclInterpreterInfoEClass,
+				TCL_INTERPRETER_INFO__FETCHED_AT);
+		createEAttribute(tclInterpreterInfoEClass,
 				TCL_INTERPRETER_INFO__ENVIRONMENT);
 
 		tclProjectInfoEClass = createEClass(TCL_PROJECT_INFO);
@@ -583,6 +595,10 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+		initEAttribute(getTclInterpreterInfo_FetchedAt(), ecorePackage
+				.getEDate(), "fetchedAt", null, 0, 1, TclInterpreterInfo.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTclInterpreterInfo_Environment(), ecorePackage
 				.getEString(), "environment", null, 0, 1,
 				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,

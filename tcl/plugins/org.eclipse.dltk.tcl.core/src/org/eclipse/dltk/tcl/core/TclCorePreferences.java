@@ -23,6 +23,16 @@ public class TclCorePreferences {
 
 	public static final String CHECK_CONTENT_EXCLUDES = "check_content.excludes";
 
+	/**
+	 * Number of milliseconds to cache packages for local interpreter.
+	 */
+	public static final String PACKAGES_REFRESH_INTERVAL_LOCAL = "packages.refreshInterval.local";
+
+	/**
+	 * Number of milliseconds to cache packages for remote interpreter.
+	 */
+	public static final String PACKAGES_REFRESH_INTERVAL_REMOTE = "packages.refreshInterval.remote";
+
 	public static final char CHECK_CONTENT_EXCLUDE_SEPARATOR = ';';
 
 	public static boolean USE_PACKAGE_CONCEPT = true;

@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclInterpreterInfoImpl.java,v 1.2 2009/05/05 11:16:30 asobolev Exp $
+ * $Id: TclInterpreterInfoImpl.java,v 1.3 2009/05/17 11:39:13 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
 import java.util.Collection;
 
+import java.util.Date;
 import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
@@ -37,6 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#getPackages <em>Packages</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#isFetched <em>Fetched</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#getFetchedAt <em>Fetched At</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#getEnvironment <em>Environment</em>}</li>
  * </ul>
  * </p>
@@ -114,6 +116,26 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 	 * @ordered
 	 */
 	protected boolean fetched = FETCHED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getFetchedAt() <em>Fetched At</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFetchedAt()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Date FETCHED_AT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getFetchedAt() <em>Fetched At</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFetchedAt()
+	 * @generated
+	 * @ordered
+	 */
+	protected Date fetchedAt = FETCHED_AT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getEnvironment() <em>Environment</em>}' attribute.
@@ -242,6 +264,29 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Date getFetchedAt() {
+		return fetchedAt;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFetchedAt(Date newFetchedAt) {
+		Date oldFetchedAt = fetchedAt;
+		fetchedAt = newFetchedAt;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT,
+					oldFetchedAt, fetchedAt));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getEnvironment() {
 		return environment;
 	}
@@ -291,7 +336,9 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__PACKAGES:
 			return getPackages();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
-			return isFetched();
+			return isFetched() ? Boolean.TRUE : Boolean.FALSE;
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
+			return getFetchedAt();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			return getEnvironment();
 		}
@@ -319,7 +366,10 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 					(Collection<? extends TclPackageInfo>) newValue);
 			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
-			setFetched((Boolean) newValue);
+			setFetched(((Boolean) newValue).booleanValue());
+			return;
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
+			setFetchedAt((Date) newValue);
 			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			setEnvironment((String) newValue);
@@ -348,6 +398,9 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
 			setFetched(FETCHED_EDEFAULT);
 			return;
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
+			setFetchedAt(FETCHED_AT_EDEFAULT);
+			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			setEnvironment(ENVIRONMENT_EDEFAULT);
 			return;
@@ -373,6 +426,9 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 			return packages != null && !packages.isEmpty();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
 			return fetched != FETCHED_EDEFAULT;
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
+			return FETCHED_AT_EDEFAULT == null ? fetchedAt != null
+					: !FETCHED_AT_EDEFAULT.equals(fetchedAt);
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			return ENVIRONMENT_EDEFAULT == null ? environment != null
 					: !ENVIRONMENT_EDEFAULT.equals(environment);
@@ -397,6 +453,8 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 		result.append(name);
 		result.append(", fetched: ");
 		result.append(fetched);
+		result.append(", fetchedAt: ");
+		result.append(fetchedAt);
 		result.append(", environment: ");
 		result.append(environment);
 		result.append(')');

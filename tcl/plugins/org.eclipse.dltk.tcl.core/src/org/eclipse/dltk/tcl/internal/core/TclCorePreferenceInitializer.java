@@ -43,6 +43,12 @@ public class TclCorePreferenceInitializer extends AbstractPreferenceInitializer 
 								+ "*.c;*.cpp;*.h;*.jp*;*.png;*.gif;*.htm*;*.txt;*.ps;"
 								+ "*.pdf;*.xsd;README;*.doc;*.xsl;*.ppt;*.odf;*.n;*.rc;"
 								+ "*.pdx;*.tap;*.pc;*.enc;*.xml");
+		preferences.setDefault(
+				TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL,
+				15 * 60 * 1000);
+		preferences.setDefault(
+				TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE,
+				24 * 60 * 60 * 1000);
 	}
 
 }

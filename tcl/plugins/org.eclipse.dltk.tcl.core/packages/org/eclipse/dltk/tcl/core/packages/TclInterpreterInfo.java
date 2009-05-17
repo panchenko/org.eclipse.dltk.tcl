@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclInterpreterInfo.java,v 1.2 2009/05/05 11:16:30 asobolev Exp $
+ * $Id: TclInterpreterInfo.java,v 1.3 2009/05/17 11:39:12 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
+import java.util.Date;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getPackages <em>Packages</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#isFetched <em>Fetched</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getFetchedAt <em>Fetched At</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getEnvironment <em>Environment</em>}</li>
  * </ul>
  * </p>
@@ -125,6 +127,32 @@ public interface TclInterpreterInfo extends EObject {
 	 * @generated
 	 */
 	void setFetched(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Fetched At</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Fetched At</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Fetched At</em>' attribute.
+	 * @see #setFetchedAt(Date)
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclInterpreterInfo_FetchedAt()
+	 * @model
+	 * @generated
+	 */
+	Date getFetchedAt();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getFetchedAt <em>Fetched At</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Fetched At</em>' attribute.
+	 * @see #getFetchedAt()
+	 * @generated
+	 */
+	void setFetchedAt(Date value);
 
 	/**
 	 * Returns the value of the '<em><b>Environment</b></em>' attribute.

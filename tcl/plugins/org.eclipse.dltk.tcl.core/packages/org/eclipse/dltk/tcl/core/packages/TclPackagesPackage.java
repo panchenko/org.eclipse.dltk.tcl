@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.3 2009/05/05 11:16:30 asobolev Exp $
+ * $Id: TclPackagesPackage.java,v 1.4 2009/05/17 11:39:11 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -171,13 +171,22 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_INTERPRETER_INFO__FETCHED = 3;
 
 	/**
+	 * The feature id for the '<em><b>Fetched At</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_INTERPRETER_INFO__FETCHED_AT = 4;
+
+	/**
 	 * The feature id for the '<em><b>Environment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_INTERPRETER_INFO__ENVIRONMENT = 4;
+	int TCL_INTERPRETER_INFO__ENVIRONMENT = 5;
 
 	/**
 	 * The number of structural features of the '<em>Tcl Interpreter Info</em>' class.
@@ -186,7 +195,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_INTERPRETER_INFO_FEATURE_COUNT = 5;
+	int TCL_INTERPRETER_INFO_FEATURE_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl <em>Tcl Project Info</em>}' class.
@@ -508,6 +517,17 @@ public interface TclPackagesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTclInterpreterInfo_Fetched();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getFetchedAt <em>Fetched At</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Fetched At</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getFetchedAt()
+	 * @see #getTclInterpreterInfo()
+	 * @generated
+	 */
+	EAttribute getTclInterpreterInfo_FetchedAt();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getEnvironment <em>Environment</em>}'.
@@ -835,6 +855,15 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EAttribute TCL_INTERPRETER_INFO__FETCHED = eINSTANCE
 				.getTclInterpreterInfo_Fetched();
+
+		/**
+		 * The meta object literal for the '<em><b>Fetched At</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_INTERPRETER_INFO__FETCHED_AT = eINSTANCE
+				.getTclInterpreterInfo_FetchedAt();
 
 		/**
 		 * The meta object literal for the '<em><b>Environment</b></em>' attribute feature.

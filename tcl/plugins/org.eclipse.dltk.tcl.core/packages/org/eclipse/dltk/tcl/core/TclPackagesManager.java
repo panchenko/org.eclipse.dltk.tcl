@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -135,10 +136,23 @@ public class TclPackagesManager {
 			interpreterInfo.setEnvironment(environmentId);
 			infos.getContents().add(interpreterInfo);
 		}
-		if (!interpreterInfo.isFetched()) {
+		if (!interpreterInfo.isFetched()
+				|| interpreterInfo.getFetchedAt() == null
+				|| interpreterInfo.getFetchedAt().getTime()
+						+ getPackagesRefreshInterval(install) < System
+						.currentTimeMillis()) {
 			fetchPackagesForInterpreter(install, interpreterInfo);
 		}
 		return interpreterInfo;
+	}
+
+	private static long getPackagesRefreshInterval(IInterpreterInstall install) {
+		return TclPlugin
+				.getDefault()
+				.getPluginPreferences()
+				.getLong(
+						install.getEnvironment().isLocal() ? TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL
+								: TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE);
 	}
 
 	public static synchronized TclProjectInfo getTclProject(String name) {
@@ -170,8 +184,10 @@ public class TclPackagesManager {
 				new String[] { "get-pkgs" }, install //$NON-NLS-1$
 						.getEnvironmentVariables());
 		if (content != null) {
-			processContent(content, false, interpreterInfo);
+			processContent(content, false, true, interpreterInfo);
 			interpreterInfo.setFetched(true);
+			interpreterInfo.setFetchedAt(new Date());
+			save();
 		}
 	}
 
@@ -225,11 +241,13 @@ public class TclPackagesManager {
 	}
 
 	private static void processContent(List<String> content,
-			boolean markAsFetched, TclInterpreterInfo info) {
+			boolean markAsFetched, boolean purgePackages,
+			TclInterpreterInfo info) {
 		String text = getXMLContent(content);
 		Document document = getDocument(text);
 
 		if (document != null) {
+			final Set<String> processedPackages = new HashSet<String>();
 			Element element = document.getDocumentElement();
 			NodeList childNodes = element.getChildNodes();
 			int len = childNodes.getLength();
@@ -243,6 +261,7 @@ public class TclPackagesManager {
 						if (isElementName(pkgNde, "package")) { //$NON-NLS-1$
 							Element pkgElement = (Element) pkgNde;
 							String name = pkgElement.getAttribute("name");
+							processedPackages.add(name);
 							TclPackageInfo pkg = getCreatePackage(info, name);
 							if (markAsFetched) {
 								pkg.setFetched(markAsFetched);
@@ -252,8 +271,16 @@ public class TclPackagesManager {
 					}
 				}
 			}
+			if (purgePackages) {
+				for (Iterator<TclPackageInfo> i = info.getPackages().iterator(); i
+						.hasNext();) {
+					TclPackageInfo packageInfo = i.next();
+					if (!processedPackages.contains(packageInfo.getName())) {
+						i.remove();
+					}
+				}
+			}
 		}
-		save();
 	}
 
 	private static TclPackageInfo getCreatePackage(TclInterpreterInfo info,
@@ -386,18 +413,19 @@ public class TclPackagesManager {
 		}
 		List<String> output = ProcessOutputCollector.execute(process);
 		deployment.dispose();
-		processContent(output, true, interpreterInfo);
+		processContent(output, true, false, interpreterInfo);
 
 		// Mark all toFetch as fetched.
 		for (TclPackageInfo info : toFetch) {
 			info.setFetched(true);
 		}
+		save();
 	}
 
 	private static void initialize() {
 		if (infos == null) {
 			IPath packagesPath = TclPlugin.getDefault().getStateLocation()
-					.append("tclPackages_"+ PKG_VERSION +".info");
+					.append("tclPackages_" + PKG_VERSION + ".info");
 			infos = new XMIResourceImpl(URI.createFileURI(packagesPath
 					.toOSString()));
 			try {
