@@ -1,18 +1,13 @@
 package org.eclipse.dltk.tcl.internal.core.serialization;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.internal.core.util.Util;
+import org.eclipse.dltk.core.caching.AbstractDataSaver;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -29,16 +24,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-public class TclASTSaver implements ITclASTConstants {
+public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
 	private TclModule module;
-	private OutputStream stream;
-	private DataOutputStream out;
-	public List<String> stringIndex = new ArrayList<String>();
+	private ProblemCollector collector;
 
 	public TclASTSaver(TclModule module, OutputStream stream)
 			throws IOException {
+		super(stream);
 		this.module = module;
-		this.stream = stream;
 	}
 
 	public void writeInt(int value) throws IOException {
@@ -52,8 +45,12 @@ public class TclASTSaver implements ITclASTConstants {
 	}
 
 	public void store(ProblemCollector collector) throws IOException {
-		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		this.out = new DataOutputStream(bout);
+		this.collector = collector;
+		storeContent();
+		storeStringIndex();
+	}
+
+	protected void storeContent() throws IOException {
 		out.writeByte(TAG_MODULE);
 		out.writeInt(module.getSize());
 		EList<TclCommand> statements = module.getStatements();
@@ -100,18 +97,6 @@ public class TclASTSaver implements ITclASTConstants {
 		} else {
 			out.writeInt(0);
 		}
-		// Store all string index
-		this.out.flush();
-		this.out = new DataOutputStream(this.stream);
-
-		// Store strings
-		out.writeInt(stringIndex.size());
-		for (String s : this.stringIndex) {
-			Util.writeUTF(out, s.toCharArray());
-		}
-		org.eclipse.dltk.compiler.util.Util.copy(new ByteArrayInputStream(bout
-				.toByteArray()), this.out);
-
 	}
 
 	private void saveProblem(IProblem problem) throws IOException {
@@ -200,47 +185,6 @@ public class TclASTSaver implements ITclASTConstants {
 				out(tclArgument);
 			}
 			storeERef(st.getDefinitionArgument());
-		}
-	}
-
-	private void writeString(String value) throws IOException {
-		if (value == null) {
-			out.writeByte(0);
-			return;
-		}
-		int indexOf = stringIndex.indexOf(value);
-		if (indexOf != -1) {
-			outNum(indexOf, 1, 2);
-			return;
-		} else {
-			// Try to find part of word
-			if (value.length() > 6) {
-				for (String base : stringIndex) {
-					if (base.contains(value)) {
-						// Part of string
-						int pos = base.indexOf(value);
-						out.writeByte(3);
-						int basePos = stringIndex.indexOf(base);
-						outNum(basePos, 1, 2);
-						outNum(pos, 1, 2);
-						outNum(value.length(), 1, 2);
-						return;
-					}
-				}
-			}
-			stringIndex.add(value);
-			outNum(stringIndex.size() - 1, 1, 2);
-			return;
-		}
-	}
-
-	private void outNum(int indexOf, int id1, int id2) throws IOException {
-		if (indexOf <= Byte.MAX_VALUE) {
-			out.writeByte(id1);
-			out.writeByte(indexOf);
-		} else if (indexOf > Byte.MAX_VALUE) {
-			out.writeByte(id2);
-			out.writeInt(indexOf);
 		}
 	}
 

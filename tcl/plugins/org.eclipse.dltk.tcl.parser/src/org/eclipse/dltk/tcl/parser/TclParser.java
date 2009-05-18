@@ -55,6 +55,7 @@ public class TclParser implements ITclParserOptions {
 	private String source;
 	private ITclErrorReporter reporter;
 	private IScopeProcessor scopeProcessor;
+	private int globalOffset = 0;
 
 	private Map<String, Boolean> options = new HashMap<String, Boolean>();
 
@@ -88,18 +89,22 @@ public class TclParser implements ITclParserOptions {
 		return parse(source, null, null);
 	}
 
+	public void setGlobalOffset(int globalOffset) {
+		this.globalOffset = globalOffset;
+	}
+
 	public TclModule parseModule(String source, ITclErrorReporter reporter,
 			IScopeProcessor scopeProcessor) {
 		TclModule module = AstFactory.eINSTANCE.createTclModule();
 		TclCodeModel codeModel = AstFactory.eINSTANCE.createTclCodeModel();
 		module.setCodeModel(codeModel);
-		module.setSize(source.length());
+		module.setSize(source.length() + globalOffset);
 		ISourceLineTracker tracker = TextUtils.createLineTracker(source);
 		int[] offsets = tracker.getLineOffsets();
 		String[] delimeters = tracker.getDelimeters();
 		EList<Integer> loff = codeModel.getLineOffsets();
 		for (int i = 0; i < offsets.length; i++) {
-			loff.add(offsets[i]);
+			loff.add(offsets[i] + globalOffset);
 		}
 		codeModel.getDelimeters().addAll(Arrays.asList(delimeters));
 
@@ -312,8 +317,8 @@ public class TclParser implements ITclParserOptions {
 			TclArgumentList list = AstFactory.eINSTANCE.createTclArgumentList();
 			list.setDefinitionArgument(arg.getDefinition());
 			list.getArguments().addAll(arguments2);
-			list.setStart(original.getStart());
-			list.setEnd(original.getEnd());
+			list.setStart(original.getStart()+ globalOffset);
+			list.setEnd(original.getEnd()+ globalOffset);
 			List<ComplexArgumentResult> complexArguments2 = arg
 					.getComplexArguments();
 			if (complexArguments2.size() > 0) {
@@ -365,8 +370,8 @@ public class TclParser implements ITclParserOptions {
 			StringArgument blockCode = (StringArgument) arguments
 					.get(blockArguments[i]);
 			Script script = AstFactory.eINSTANCE.createScript();
-			script.setStart(blockCode.getStart());
-			script.setEnd(blockCode.getEnd());
+			script.setStart(blockCode.getStart()+ globalOffset);
+			script.setEnd(blockCode.getEnd()+ globalOffset);
 			String wordText = blockCode.getValue();
 			if (wordText.startsWith("{") && wordText.endsWith("}")
 					|| wordText.startsWith("\"") && wordText.endsWith("\"")) {
@@ -409,7 +414,7 @@ public class TclParser implements ITclParserOptions {
 					Object o = contents.get(0);
 					exp = processWordContentAsExpression(offset, content,
 							factory, word.getStart(), word.getEnd(), o);
-				} else {
+				} else if (contents.size() > 1) {
 					ComplexString literal = makeComplexString(offset, content,
 							factory, word.getStart(), word.getEnd(), contents);
 					exp = literal;
@@ -421,8 +426,8 @@ public class TclParser implements ITclParserOptions {
 					tclCommand.getArguments().add(exp);
 				}
 			}
-			tclCommand.setStart(start + offset);
-			tclCommand.setEnd(command.getEnd() + offset + 1);
+			tclCommand.setStart(start + offset+ globalOffset);
+			tclCommand.setEnd(command.getEnd() + offset + 1+ globalOffset);
 			return tclCommand;
 		} catch (StringIndexOutOfBoundsException bounds) {
 			if (reporter != null) {
@@ -442,10 +447,10 @@ public class TclParser implements ITclParserOptions {
 			List<Object> contents = qs.getContents();
 			if (contents.size() == 1) {
 				String wordText = null;
-				wordText = content.substring(offset + start, end + 1 + offset);
+				wordText = content.substring(offset + start, offset + end + 1);
 				StringArgument literal = factory.createStringArgument();
-				literal.setStart(offset + qs.getStart());
-				literal.setEnd(offset + qs.getEnd() + 1);
+				literal.setStart(offset + qs.getStart() + globalOffset);
+				literal.setEnd(offset + qs.getEnd() + 1 + globalOffset);
 				literal.setValue(wordText);
 				exp = literal;
 			} else {
@@ -455,20 +460,20 @@ public class TclParser implements ITclParserOptions {
 			}
 		} else if (o instanceof BracesSubstitution) {
 			String wordText = null;
-			wordText = content.substring(offset + start, end + 1 + offset);
+			wordText = content.substring(start + offset, end + offset + 1);
 			BracesSubstitution bs = (BracesSubstitution) o;
 
 			StringArgument block = factory.createStringArgument();
-			block.setStart(offset + bs.getStart());
-			block.setEnd(offset + bs.getEnd() + 1);
+			block.setStart(offset + bs.getStart() + globalOffset);
+			block.setEnd(offset + bs.getEnd() + 1 + globalOffset);
 			block.setValue(wordText);
 			exp = block;
 		} else if (o instanceof CommandSubstitution) {
 			CommandSubstitution bs = (CommandSubstitution) o;
 
 			Substitution bl = factory.createSubstitution();
-			bl.setStart(offset + bs.getStart());
-			bl.setEnd(offset + bs.getEnd() + 1);
+			bl.setStart(offset + bs.getStart() + globalOffset);
+			bl.setEnd(offset + bs.getEnd() + 1 + globalOffset);
 			TclScript script = bs.getScript();
 			processRawCommands(bl.getCommands(), offset, script.getCommands());
 
@@ -476,8 +481,8 @@ public class TclParser implements ITclParserOptions {
 		} else if (o instanceof VariableSubstitution) {
 			VariableSubstitution bs = (VariableSubstitution) o;
 			VariableReference ref = factory.createVariableReference();
-			ref.setStart(offset + bs.getStart());
-			ref.setEnd(offset + bs.getEnd() + 1);
+			ref.setStart(offset + bs.getStart() + globalOffset);
+			ref.setEnd(offset + bs.getEnd() + 1 + globalOffset);
 			ref.setName(bs.getName());
 			TclWord index = bs.getIndex();
 			if (index != null) {
@@ -488,7 +493,7 @@ public class TclParser implements ITclParserOptions {
 					if (a != null) {
 						ref.setIndex(a);
 					}
-				} else {
+				} else if (index.getContents().size() > 1) {
 					ComplexString literal = makeComplexString(offset, content,
 							factory, index.getStart(), index.getEnd(), index
 									.getContents());
@@ -501,14 +506,14 @@ public class TclParser implements ITclParserOptions {
 		} else {
 			String wordText = null;
 			// if (!(o instanceof String)) {
-			wordText = content.substring(offset + start, end + 1 + offset);
+			wordText = content.substring(offset + start, offset + end + 1);
 			// } else {
 			// wordText = (String) o;
 			// }
 
 			StringArgument reference = factory.createStringArgument();
-			reference.setStart(offset + start);
-			reference.setEnd(offset + end + 1);
+			reference.setStart(offset + start+ globalOffset);
+			reference.setEnd(offset + end + 1+ globalOffset);
 			reference.setValue(wordText);
 			exp = reference;
 		}
@@ -518,8 +523,8 @@ public class TclParser implements ITclParserOptions {
 	private ComplexString makeComplexString(int offset, String content,
 			AstFactory factory, int start, int end, List<Object> contents) {
 		ComplexString literal = factory.createComplexString();
-		literal.setStart(offset + start);
-		literal.setEnd(offset + end + 1);
+		literal.setStart(offset + start + globalOffset);
+		literal.setEnd(offset + end + 1 + globalOffset);
 		String value = content.substring(offset + start, offset + end + 1);
 		literal.setKind(0);
 		if (value.startsWith("{") && value.endsWith("}")) {
@@ -536,9 +541,9 @@ public class TclParser implements ITclParserOptions {
 				String st = (String) oo;
 				StringArgument a = factory.createStringArgument();
 				a.setValue(st);
-				a.setStart(pos + offset);
+				a.setStart(pos + offset + globalOffset);
 				pos += st.length();
-				a.setEnd(pos + offset);
+				a.setEnd(pos + offset + globalOffset);
 				literal.getArguments().add(a);
 			} else if (oo instanceof ISubstitution && oo instanceof TclElement) {
 				TclElement bs = (TclElement) oo;

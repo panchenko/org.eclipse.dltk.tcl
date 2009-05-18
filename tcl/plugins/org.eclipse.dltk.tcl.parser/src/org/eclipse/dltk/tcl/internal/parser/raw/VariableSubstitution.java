@@ -92,6 +92,9 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 							if (s != null) {
 								s.readMe(input, parser);
 								cvb.add(s);
+								if (s instanceof TclElement) {
+									cvb.setEnd(((TclElement) s).getEnd());
+								}
 							} else {
 								ch = input.read();
 								if (ch == ICodeScanner.EOF) {
@@ -113,11 +116,12 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 									if (input.isEOF()) {
 										cvb.setEnd(input.getPosition() - 1);
 									} else {
-										cvb.setEnd(input.getPosition()-2);
+										cvb.setEnd(input.getPosition() - 2);
 									}
 									break;
 								} else {
 									cvb.add((char) ch);
+									cvb.setEnd(input.getPosition());
 								}
 							}
 						}

@@ -1,16 +1,13 @@
 package org.eclipse.dltk.tcl.internal.core.serialization;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
 import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.compiler.problem.ProblemCollector;
+import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
-import org.eclipse.dltk.internal.core.util.Util;
+import org.eclipse.dltk.core.caching.AbstractDataLoader;
 import org.eclipse.dltk.tcl.ast.AstFactory;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.Script;
@@ -30,16 +27,13 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
-public class TclASTLoader implements ITclASTConstants {
-	private InputStream stream;
-	private DataInputStream in;
+public class TclASTLoader extends AbstractDataLoader implements
+		ITclASTConstants {
 	private Scope[] scopes;
-	private List<String> stringIndex = new ArrayList<String>();
 	int moduleSize = 0;
 
 	public TclASTLoader(InputStream stream) throws IOException {
-		this.stream = stream;
-		this.in = new DataInputStream(this.stream);
+		super(stream);
 		scopes = DefinitionManager.getInstance().getScopes();
 	}
 
@@ -53,12 +47,9 @@ public class TclASTLoader implements ITclASTConstants {
 		}
 	}
 
-	public TclModule getModule(ProblemCollector collector) throws IOException {
+	public TclModule getModule(IProblemReporter collector) throws IOException {
 		// Load strings
-		int stringCount = in.readInt();
-		for (int i = 0; i < stringCount; ++i) {
-			stringIndex.add(new String(Util.readUTF(in)));
-		}
+		readStrings();
 
 		int moduleTag = in.readByte(); // TAG_MODULE
 		switch (moduleTag) {
@@ -97,7 +88,7 @@ public class TclASTLoader implements ITclASTConstants {
 		return null;
 	}
 
-	private void loadProblem(ProblemCollector collector) throws IOException {
+	private void loadProblem(IProblemReporter collector) throws IOException {
 		int tag = in.readByte();// TAG_PROBLEM);
 		if (tag != TAG_PROBLEM) {
 			return;
@@ -248,37 +239,5 @@ public class TclASTLoader implements ITclASTConstants {
 			}
 		}
 		return def;
-	}
-
-	public int readNum(int id1, int id2) throws IOException {
-		byte b = in.readByte();
-		if (b == id1) {
-			return in.readByte();
-		} else if (b == id2) {
-			return in.readInt();
-		}
-		return 0;
-	}
-
-	private String readString() throws IOException {
-		byte b = in.readByte();
-		if (b == 0) {
-			return null;
-		}
-		if (b == 1) {
-			int pos = in.readByte();
-			return stringIndex.get(pos);
-		} else if (b == 2) {
-			int pos = in.readInt();
-			return stringIndex.get(pos);
-		} else if (b == 3) {
-			int basePos = readNum(1, 2);
-			int pos = readNum(1, 2);
-			int len = readNum(1, 2);
-			String base = stringIndex.get(basePos);
-			String str = base.substring(pos, pos + len);
-			return str;
-		}
-		return "";
 	}
 }
