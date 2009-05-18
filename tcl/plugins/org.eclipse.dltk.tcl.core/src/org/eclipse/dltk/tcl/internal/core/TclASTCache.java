@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.IASTCache;
 import org.eclipse.dltk.ast.parser.ISourceParser;
+import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IExternalSourceModule;
@@ -17,7 +18,6 @@ import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
-import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.internal.core.serialization.TclASTLoader;
 import org.eclipse.dltk.tcl.internal.core.serialization.TclASTSaver;
 import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
@@ -54,24 +54,33 @@ public class TclASTCache implements IASTCache {
 			}
 		}
 
+		ProblemCollector collector = new ProblemCollector();
+		TclModule tclModule = null;
+		tclModule = restoreTclModuleFromCache(handle, cache, collector);
+		if (tclModule != null) {
+			ASTCacheEntry entry = new ASTCacheEntry();
+			NewTclSourceParser parser = new NewTclSourceParser();
+			entry.problems = collector;
+			entry.module = parser.parse(null, tclModule, null);
+			if (entry.problems.isEmpty()) {
+				entry.problems = null;
+			}
+			return entry;
+		}
+		return null;
+	}
+
+	public static TclModule restoreTclModuleFromCache(IFileHandle handle,
+			IContentCache cache, IProblemReporter collector) {
 		InputStream stream = cache.getCacheEntryAttribute(handle,
 				TCL_AST_ATTRIBUTE);
 		if (stream != null) {
 			try {
 				TclASTLoader loader = new TclASTLoader(stream);
-				ProblemCollector collector = new ProblemCollector();
 				TclModule tclModule = loader.getModule(collector);
-				if (tclModule == null) {
-					return null;
+				if (tclModule != null) {
+					return tclModule;
 				}
-				ASTCacheEntry entry = new ASTCacheEntry();
-				NewTclSourceParser parser = new NewTclSourceParser();
-				entry.problems = collector;
-				entry.module = parser.parse(null, tclModule, null);
-				if (entry.problems.isEmpty()) {
-					entry.problems = null;
-				}
-				return entry;
 			} catch (IOException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();

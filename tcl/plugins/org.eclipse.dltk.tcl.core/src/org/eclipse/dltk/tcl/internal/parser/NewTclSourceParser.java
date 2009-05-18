@@ -47,6 +47,7 @@ import org.eclipse.dltk.tcl.internal.parser.ext.CommandManager;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
+import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.emf.common.util.EList;
@@ -55,13 +56,16 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		ITclParser, ISourceParser, ISourceParserExtension, ITclSourceParser {
 	private IProblemReporter problemReporter;
 	private char[] fileName;
-	private int startPos = 0;
 	boolean useProcessors = true;
 	private boolean useDetectors = true;
 
 	private TclModuleDeclaration moduleDeclaration;
 	private TclModule tclModule;
-	ISourceLineTracker tracker;
+	private ISourceLineTracker tracker;
+
+	private Set<ASTNode> processedForContentNodes = new HashSet();
+	private NamespaceScopeProcessor coreProcessor = DefinitionManager
+			.getInstance().getCoreProcessor();;
 
 	public ModuleDeclaration parse(char[] fileName, TclModule tclModule,
 			IProblemReporter reporter) {
@@ -111,12 +115,17 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		}
 	};
 	private ITclCommandDetector[] detectors;
+	private int globalOffset;
 
 	protected void parse(TclModule module, ASTNode decl) {
 		processedForContentNodes.clear();
 		initDetectors();
 
 		List<TclCommand> commands = module.getStatements();
+		processStatements(decl, commands);
+	}
+
+	private void processStatements(ASTNode decl, List<TclCommand> commands) {
 		for (Iterator<TclCommand> iter = commands.iterator(); iter.hasNext();) {
 			TclCommand command = iter.next();
 			// Command handling
@@ -127,8 +136,6 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			runStatementProcessor(decl, st);
 		}
 	}
-
-	private Set<ASTNode> processedForContentNodes = new HashSet();
 
 	private void runStatementProcessor(ASTNode decl, TclStatement st) {
 		ITclCommandProcessor processor = this.locateProcessor(st, decl);
@@ -344,12 +351,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		return this.fileName;
 	}
 
-	public void setOffset(int offset) {
-		this.startPos = offset;
-	}
-
 	public int getStartPos() {
-		return this.startPos;
+		return 0;
 	}
 
 	public void setProcessorsState(boolean state) {
@@ -364,32 +367,48 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		return tracker;
 	}
 
+	/**
+	 * Assume parsing are in same module.
+	 */
 	public void parse(String content, int offset, ASTNode parent) {
 		processedForContentNodes.clear();
-		TclSourceParser parser = new TclSourceParser();
-		parser.setOffset(offset);
-		parser.setModuleDeclaration(moduleDeclaration);
-		parser.setProblemReporter(getProblemReporter());
-		parser.setContent(content);
-		parser.setUseDetectors(useDetectors);
-		parser.setProcessorsState(useProcessors);
-		parser.parse(content, 0, parent);
+		TclParser newParser = new TclParser();
+		TclErrorCollector collector = null;
+		if (problemReporter != null) {
+			collector = new TclErrorCollector();
+		}
+		newParser.setGlobalOffset(offset);
+		List<TclCommand> module = newParser.parse(new String(content),
+				collector, coreProcessor);
+		if (problemReporter != null) {
+			collector.reportAll(problemReporter, tracker);
+		}
+		processStatements(parent, module);
 	}
 
 	public ModuleDeclaration parse(final char[] fileName, char[] source,
 			final IProblemReporter reporter) {
 		processedForContentNodes.clear();
+		this.problemReporter = reporter;
 		TclParser newParser = new TclParser();
 		TclErrorCollector collector = null;
 		if (reporter != null) {
 			collector = new TclErrorCollector();
 		}
 		TclModule module = newParser.parseModule(new String(source), collector,
-				DefinitionManager.getInstance().getCoreProcessor());
+				coreProcessor);
 		// TODO: Add error passing to reporter here.
-		return parse(fileName, module, reporter);
+		ModuleDeclaration result = parse(fileName, module, reporter);
+		if (collector != null) {
+			collector.reportAll(reporter, tracker);
+		}
+		return result;
 	}
 
 	public void setFlags(int flags) {
+	}
+
+	public void setOffset(int offset) {
+		this.globalOffset = offset;
 	}
 }

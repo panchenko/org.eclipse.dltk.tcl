@@ -38,6 +38,7 @@ public class TclParseUtil {
 	public static String extractWord(TclElement element, String content) {
 		return content.substring((element).getStart(), (element).getEnd() + 1);
 	}
+
 	public static boolean isCommandStart(Object object) {
 		return object != null && object.getClass().equals(TclWord.class);
 	}
@@ -120,13 +121,10 @@ public class TclParseUtil {
 			List exprs = new ArrayList();
 			for (Iterator iterator = words.iterator(); iterator.hasNext();) {
 				TclWord word = (TclWord) iterator.next();
-				String wordText = null;
-				wordText = content.substring(offset + word.getStart(), word
-						.getEnd()
-						+ 1 + offset);
-
 				// wordText = SimpleTclParser.magicSubstitute(wordText);
 				Object o = word.getContents().get(0);
+
+				String wordText = getWordText(word);
 				if (o instanceof QuotesSubstitution) {
 					QuotesSubstitution qs = (QuotesSubstitution) o;
 
@@ -162,6 +160,17 @@ public class TclParseUtil {
 		} catch (StringIndexOutOfBoundsException bounds) {
 			return null;
 		}
+	}
+
+	private static String getWordText(TclWord word) {
+		StringBuffer buff = new StringBuffer();
+		List<Object> contents = word.getContents();
+		for (Object object : contents) {
+			if (object instanceof String) {
+				buff.append((String) object);
+			}
+		}
+		return buff.toString();
 	}
 
 	public static void addToDeclaration(ASTNode decl, ASTNode node) {
