@@ -12,34 +12,76 @@
 package org.eclipse.dltk.tcl.internal.validators;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.compiler.problem.ProblemCollector;
+import org.eclipse.dltk.core.ISourceModuleInfoCache;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.dltk.core.caching.IContentCache;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
+import org.eclipse.dltk.tcl.internal.core.TclASTCache;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 
 public class TclBuildContext {
 
+	private static final String NEW_AST = "new_ast";
+	private static final String NEW_PROBLEMS = "new_ast_problems";
+
 	public static TclModule getStatements(IBuildContext context) {
+		Object object = context.get(NEW_AST);
+		if (object != null && object instanceof TclModule) {
+			Object object2 = context.get(NEW_PROBLEMS);
+			if (object2 instanceof ProblemCollector) {
+				ProblemCollector collector = (ProblemCollector) object2;
+				collector.copyTo(context.getProblemReporter());
+			}
+			return (TclModule) object;
+		}
 		// Parse and store statements here.
-		ModuleDeclaration declaration = SourceParserUtil.getModuleDeclaration(
-				context.getSourceModule(), context.getProblemReporter());
-		if (declaration instanceof TclModuleDeclaration) {
-			TclModuleDeclaration decl = (TclModuleDeclaration) declaration;
+		ISourceModuleInfoCache infoCache = ModelManager.getModelManager()
+				.getSourceModuleInfoCache();
+		ISourceModuleInfo info = infoCache.get(context.getSourceModule());
+		ProblemCollector collector = new ProblemCollector();
+		ModuleDeclaration cache = SourceParserUtil.getModuleFromCache(info, 0,
+				collector);
+		if (cache instanceof TclModuleDeclaration) {
+			TclModuleDeclaration decl = (TclModuleDeclaration) cache;
 			TclModule tclModule = decl.getTclModule();
 			if (tclModule != null) {
+				collector.copyTo(context.getProblemReporter());
 				return tclModule;
 			}
 		}
+		// Try to load module info from disk cache directly.
+		IFileHandle handle = EnvironmentPathUtils.getFile(context
+				.getSourceModule());
+		if (handle != null) {
+			IContentCache coreCache = ModelManager.getModelManager()
+					.getCoreCache();
+			TclModule module = TclASTCache.restoreTclModuleFromCache(handle,
+					coreCache, collector);
+			collector.copyTo(context.getProblemReporter());
+			if (module != null) {
+				context.set(NEW_AST, module);
+				context.set(NEW_PROBLEMS, collector);
+				// Save also to memory cache.
+				return module;
+			}
+		}
 		TclParser parser = new TclParser();
-		TclErrorCollector collector = new TclErrorCollector();
+		TclErrorCollector tclCollector = new TclErrorCollector();
 		TclModule module = parser.parseModule(
-				new String(context.getContents()), collector, DefinitionManager
-						.getInstance().getCoreProcessor());
-		collector.reportAll(context.getProblemReporter(), context
+				new String(context.getContents()), tclCollector,
+				DefinitionManager.getInstance().getCoreProcessor());
+		tclCollector.reportAll(context.getProblemReporter(), context
 				.getLineTracker());
+
 		return module;
 	}
 }

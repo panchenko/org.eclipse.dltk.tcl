@@ -25,8 +25,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
@@ -37,7 +35,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptProjectUtil;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
@@ -53,7 +50,6 @@ import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclModule;
-import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
@@ -64,8 +60,6 @@ import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.internal.core.packages.Messages;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
-import org.eclipse.dltk.tcl.parser.ITclParserOptions;
-import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
@@ -93,15 +87,17 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		final TclModuleInfo moduleInfo;
 		final IProblemReporter reporter;
 		final IPath moduleLocation;
+		final ISourceModule sourceModule;
 
 		public ModuleInfo(String moduleName, ISourceLineTracker codeModel,
 				IProblemReporter reporter, TclModuleInfo moduleInfo,
-				IPath moduleLocation) {
+				IPath moduleLocation, ISourceModule sourceModule) {
 			this.name = moduleName;
 			this.lineTracker = codeModel;
 			this.reporter = reporter;
 			this.moduleInfo = moduleInfo;
 			this.moduleLocation = moduleLocation;
+			this.sourceModule = sourceModule;
 		}
 
 	}
@@ -183,6 +179,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private List<TclPackageInfo> knownInfos;
 
 	public void buildExternalModule(IBuildContext context) throws CoreException {
+
+		// Try to restore information from cache
+
 		TclModule tclModule = TclBuildContext.getStatements(context);
 		List<TclCommand> statements = tclModule.getStatements();
 		ISourceModule module = context.getSourceModule();
@@ -190,6 +189,18 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		// packageCollector.getRequireRefs().clear();
 		packageCollector.process(statements, module);
 
+		addInfoForModule(context, module);
+	}
+
+	public void build(IBuildContext context) throws CoreException {
+		TclModule tclModule = TclBuildContext.getStatements(context);
+		List<TclCommand> statements = tclModule.getStatements();
+		if (statements == null) {
+			return;
+		}
+		ISourceModule module = context.getSourceModule();
+		// packageCollector.getRequireRefs().clear();
+		packageCollector.process(statements, module);
 		addInfoForModule(context, module);
 	}
 
@@ -208,23 +219,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				}
 			}
 		}
-		modules
-				.add(new ModuleInfo(module.getElementName(), context
-						.getLineTracker(), context.getProblemReporter(),
-						packageCollector.getCreateCurrentModuleInfo(module),
-						modulePath));
-	}
-
-	public void build(IBuildContext context) throws CoreException {
-		TclModule tclModule = TclBuildContext.getStatements(context);
-		List<TclCommand> statements = tclModule.getStatements();
-		if (statements == null) {
-			return;
-		}
-		ISourceModule module = context.getSourceModule();
-		// packageCollector.getRequireRefs().clear();
-		packageCollector.process(statements, module);
-		addInfoForModule(context, module);
+		modules.add(new ModuleInfo(module.getElementName(), context
+				.getLineTracker(), context.getProblemReporter(),
+				packageCollector.getCreateCurrentModuleInfo(module),
+				modulePath, module));
 	}
 
 	public void endBuild(IProgressMonitor monitor) {
@@ -263,81 +261,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				checkPackage(toCheck, moduleInfo.reporter,
 						moduleInfo.lineTracker, newDependencies, names);
 			}
-			IPath folder = moduleInfo.moduleLocation.removeLastSegments(1);
-			// Convert path to real path.
-
-			for (TclSourceEntry source : moduleInfo.moduleInfo.getSourced()) {
-				EList<UserCorrection> corrections = moduleInfo.moduleInfo
-						.getSourceCorrections();
-				IPath sourcedPath = null;
-				boolean needToAddCorrection = false;
-				for (UserCorrection userCorrection : corrections) {
-					if (userCorrection.getOriginalValue().equals(
-							source.getValue())) {
-						String userValue = userCorrection.getUserValue();
-
-						if (environment.isLocal()) {
-							sourcedPath = Path.fromOSString(userValue);
-						} else {
-							userValue = userValue.replace('\\', '/');
-							sourcedPath = Path.fromPortableString(source
-									.getValue());
-						}
-						break;
-					}
-				}
-				if (sourcedPath == null) {
-					sourcedPath = resolveSourceValue(folder, source,
-							environment);
-					needToAddCorrection = true;
-				}
-				if (sourcedPath != null) {
-					IFileHandle file = environment.getFile(sourcedPath);
-					if (file != null) {
-						if (!file.exists()) {
-							reportSourceProblem(source, moduleInfo.reporter,
-									"Could not locate sourced file:"
-											+ file.toOSString(), source
-											.getValue(), moduleInfo.lineTracker);
-						} else {
-							if (file.isDirectory()) {
-								reportSourceProblem(
-										source,
-										moduleInfo.reporter,
-										"Sourcing of folders are not supported",
-										source.getValue(),
-										moduleInfo.lineTracker);
-							} else
-							// Add user correction if not specified yet.
-							if (needToAddCorrection) {
-								if (!isAutoAddPackages()) {
-									reportSourceProblem(
-											source,
-											moduleInfo.reporter,
-											"Source are not added to project buildpath.",
-											source.getValue(),
-											moduleInfo.lineTracker);
-								} else {
-									UserCorrection correction = TclPackagesFactory.eINSTANCE
-											.createUserCorrection();
-									correction.setOriginalValue(source
-											.getValue());
-									correction.setUserValue(file.toString());
-									corrections.add(correction);
-								}
-							}
-						}
-					}
-				} else {
-					if (!TclPackagesManager.isValidName(source.getValue())) {
-						reportSourceProblemCorrection(
-								source,
-								moduleInfo.reporter,
-								"Could not locate sourced file. Correction is required.",
-								source.getValue(), moduleInfo.lineTracker);
-					}
-				}
-			}
+			// TODO: Add option to disable checking of sourced items from here.
+			checkSources(environment, moduleInfo);
 
 			--remainingWork;
 		}
@@ -371,6 +296,78 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 								new NullProgressMonitor());
 			} catch (ModelException e) {
 				DLTKCore.error("Failed to call for model update:", e);
+			}
+		}
+	}
+
+	private void checkSources(IEnvironment environment, ModuleInfo moduleInfo) {
+		IPath folder = moduleInfo.moduleLocation.removeLastSegments(1);
+		// Convert path to real path.
+
+		for (TclSourceEntry source : moduleInfo.moduleInfo.getSourced()) {
+			EList<UserCorrection> corrections = moduleInfo.moduleInfo
+					.getSourceCorrections();
+			IPath sourcedPath = null;
+			boolean needToAddCorrection = false;
+			for (UserCorrection userCorrection : corrections) {
+				if (userCorrection.getOriginalValue().equals(source.getValue())) {
+					String userValue = userCorrection.getUserValue();
+
+					if (environment.isLocal()) {
+						sourcedPath = Path.fromOSString(userValue);
+					} else {
+						userValue = userValue.replace('\\', '/');
+						sourcedPath = Path
+								.fromPortableString(source.getValue());
+					}
+					break;
+				}
+			}
+			if (sourcedPath == null) {
+				sourcedPath = resolveSourceValue(folder, source, environment);
+				needToAddCorrection = true;
+			}
+			if (sourcedPath != null) {
+				IFileHandle file = environment.getFile(sourcedPath);
+				if (file != null) {
+					if (!file.exists()) {
+						reportSourceProblem(source, moduleInfo.reporter,
+								"Could not locate sourced file:"
+										+ file.toOSString(), source.getValue(),
+								moduleInfo.lineTracker);
+					} else {
+						if (file.isDirectory()) {
+							reportSourceProblem(source, moduleInfo.reporter,
+									"Sourcing of folders are not supported",
+									source.getValue(), moduleInfo.lineTracker);
+						} else
+						// Add user correction if not specified yet.
+						if (needToAddCorrection) {
+							if (!isAutoAddPackages()) {
+								reportSourceProblem(
+										source,
+										moduleInfo.reporter,
+										"Source are not added to project buildpath.",
+										source.getValue(),
+										moduleInfo.lineTracker);
+							} else {
+								UserCorrection correction = TclPackagesFactory.eINSTANCE
+										.createUserCorrection();
+								correction.setOriginalValue(source.getValue());
+								correction.setUserValue(file.toString());
+								corrections.add(correction);
+							}
+						}
+					}
+				}
+			} else {
+				if (!TclPackagesManager.isValidName(source.getValue())) {
+					reportSourceProblemCorrection(
+							source,
+							moduleInfo.reporter,
+							"Could not locate sourced file. Correction is required.",
+							source.getValue(), moduleInfo.lineTracker);
+				}
 			}
 		}
 	}
