@@ -22,6 +22,7 @@ import org.eclipse.dltk.ui.text.AbstractScriptScanner;
 import org.eclipse.dltk.ui.text.IColorManager;
 import org.eclipse.dltk.ui.text.ScriptPresentationReconciler;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
+import org.eclipse.dltk.ui.text.ScriptCorrectionAssistant;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
 import org.eclipse.dltk.ui.text.completion.ContentAssistProcessor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -262,7 +263,8 @@ public class TclSourceViewerConfiguration extends
 	public IQuickAssistAssistant getQuickAssistAssistant(
 			ISourceViewer sourceViewer) {
 		if (getEditor() != null)
-			return new TclCorrectionAssistant(getEditor());
+			return new ScriptCorrectionAssistant(getEditor(), fPreferenceStore,
+					getColorManager());
 		return null;
 	}
 }
