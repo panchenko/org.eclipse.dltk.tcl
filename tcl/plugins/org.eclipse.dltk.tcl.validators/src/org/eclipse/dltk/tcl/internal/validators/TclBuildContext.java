@@ -30,16 +30,29 @@ import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 
 public class TclBuildContext {
 
-	private static final String NEW_AST = "new_ast";
-	private static final String NEW_PROBLEMS = "new_ast_problems";
+	private static final String NEW_AST = "new_ast"; //$NON-NLS-1$
+	private static final String NEW_PROBLEMS = "new_ast_problems"; //$NON-NLS-1$
+
+	private static final String PROBLEMS_REPORTED = "problemsReported"; //$NON-NLS-1$
+
+	private static boolean isReported(IBuildContext context) {
+		return context.get(PROBLEMS_REPORTED) != null;
+	}
+
+	private static void setReported(IBuildContext context) {
+		context.set(PROBLEMS_REPORTED, Boolean.TRUE);
+	}
 
 	public static TclModule getStatements(IBuildContext context) {
 		Object object = context.get(NEW_AST);
 		if (object != null && object instanceof TclModule) {
-			Object object2 = context.get(NEW_PROBLEMS);
-			if (object2 instanceof ProblemCollector) {
-				ProblemCollector collector = (ProblemCollector) object2;
-				collector.copyTo(context.getProblemReporter());
+			if (!isReported(context)) {
+				Object object2 = context.get(NEW_PROBLEMS);
+				if (object2 instanceof ProblemCollector) {
+					ProblemCollector collector = (ProblemCollector) object2;
+					collector.copyTo(context.getProblemReporter());
+				}
+				setReported(context);
 			}
 			return (TclModule) object;
 		}
@@ -54,7 +67,10 @@ public class TclBuildContext {
 			TclModuleDeclaration decl = (TclModuleDeclaration) cache;
 			TclModule tclModule = decl.getTclModule();
 			if (tclModule != null) {
-				collector.copyTo(context.getProblemReporter());
+				if (!isReported(context)) {
+					collector.copyTo(context.getProblemReporter());
+					setReported(context);
+				}
 				return tclModule;
 			}
 		}
@@ -66,7 +82,10 @@ public class TclBuildContext {
 					.getCoreCache();
 			TclModule module = TclASTCache.restoreTclModuleFromCache(handle,
 					coreCache, collector);
-			collector.copyTo(context.getProblemReporter());
+			if (!isReported(context)) {
+				collector.copyTo(context.getProblemReporter());
+				setReported(context);
+			}
 			if (module != null) {
 				context.set(NEW_AST, module);
 				context.set(NEW_PROBLEMS, collector);
@@ -79,8 +98,11 @@ public class TclBuildContext {
 		TclModule module = parser.parseModule(
 				new String(context.getContents()), tclCollector,
 				DefinitionManager.getInstance().getCoreProcessor());
-		tclCollector.reportAll(context.getProblemReporter(), context
-				.getLineTracker());
+		if (!isReported(context)) {
+			tclCollector.reportAll(context.getProblemReporter(), context
+					.getLineTracker());
+			setReported(context);
+		}
 
 		return module;
 	}
