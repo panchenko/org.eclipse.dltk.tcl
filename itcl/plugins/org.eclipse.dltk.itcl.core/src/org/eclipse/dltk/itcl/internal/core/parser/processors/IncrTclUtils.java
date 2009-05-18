@@ -66,7 +66,8 @@ public class IncrTclUtils {
 			if (content.startsWith("{") && content.endsWith("}")) {
 				content = content.substring(1, content.length() - 1);
 			}
-			parser.parse(content, procCode.sourceStart() + 1- parser.getStartPos(), block);
+			parser.parse(content, procCode.sourceStart() + 1
+					- parser.getStartPos(), block);
 		}
 	}
 }
