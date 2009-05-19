@@ -59,7 +59,6 @@ import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
-import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
@@ -286,15 +285,13 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		int remainingWork = modules.size();
 		IEnvironment environment = EnvironmentManager
 				.getEnvironment(this.project);
-		TclProjectInfo projectInfo = TclPackagesManager.getTclProject(project
-				.getElementName());
 		for (ModuleInfo moduleInfo : modules) {
 			monitor.subTask(NLS.bind(Messages.TclCheckBuilder_processing,
 					moduleInfo.name, Integer.toString(remainingWork)));
 
 			for (TclSourceEntry ref : moduleInfo.moduleInfo.getRequired()) {
 				// Check for user override for selected source value
-				EList<UserCorrection> corrections = projectInfo
+				EList<UserCorrection> corrections = moduleInfo.moduleInfo
 						.getPackageCorrections();
 				TclSourceEntry toCheck = ref;
 				for (UserCorrection userCorrection : corrections) {
