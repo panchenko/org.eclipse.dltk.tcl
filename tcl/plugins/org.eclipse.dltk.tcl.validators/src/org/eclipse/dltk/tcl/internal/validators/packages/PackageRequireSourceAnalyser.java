@@ -225,14 +225,23 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		IFileHandle handle = EnvironmentPathUtils.getFile(module);
 		InputStream stream = cache.getCacheEntryAttribute(handle,
 				TclASTCache.TCL_PKG_INFO);
-		if (stream != null) {
-			Resource res = new BinaryResourceImpl();
-			try {
-				res.load(stream, null);
-				info = (TclModuleInfo) res.getContents().get(0);
-			} catch (IOException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+		try {
+			if (stream != null) {
+				Resource res = new BinaryResourceImpl();
+				try {
+					res.load(stream, null);
+					info = (TclModuleInfo) res.getContents().get(0);
+				} catch (IOException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
+			}
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
 				}
 			}
 		}
