@@ -73,6 +73,18 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		initDetectors();
 		this.tclModule = tclModule;
 		TclCodeModel model = this.tclModule.getCodeModel();
+		this.tracker = createLineTracker(tclModule);
+		this.problemReporter = reporter;
+		this.fileName = fileName;
+
+		this.moduleDeclaration = new TclModuleDeclaration(tclModule.getSize());
+		this.moduleDeclaration.setTclModule(tclModule);
+		this.parse(tclModule, moduleDeclaration);
+		return moduleDeclaration;
+	}
+
+	public static ISourceLineTracker createLineTracker(TclModule tclModule) {
+		TclCodeModel model = tclModule.getCodeModel();
 		EList<Integer> list = model.getLineOffsets();
 		int[] offsets = new int[list.size()];
 		for (int i = 0; i < list.size(); i++) {
@@ -81,15 +93,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		EList<String> delimeters = model.getDelimeters();
 		String[] delimetersAsArray = delimeters.toArray(new String[delimeters
 				.size()]);
-		this.tracker = new TextUtils.DefaultSourceLineTracker(tclModule
-				.getSize(), offsets, delimetersAsArray);
-		this.problemReporter = reporter;
-		this.fileName = fileName;
-
-		this.moduleDeclaration = new TclModuleDeclaration(tclModule.getSize());
-		this.moduleDeclaration.setTclModule(tclModule);
-		this.parse(tclModule, moduleDeclaration);
-		return moduleDeclaration;
+		return new TextUtils.DefaultSourceLineTracker(tclModule.getSize(),
+				offsets, delimetersAsArray);
 	}
 
 	private void initDetectors() {
