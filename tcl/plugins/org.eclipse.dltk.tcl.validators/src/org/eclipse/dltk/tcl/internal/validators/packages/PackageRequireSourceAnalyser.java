@@ -64,7 +64,6 @@ import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
-import org.eclipse.dltk.tcl.internal.core.packages.Messages;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
@@ -346,7 +345,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 						.checkExternalChanges(new IModelElement[] { project },
 								new NullProgressMonitor());
 			} catch (ModelException e) {
-				DLTKCore.error("Failed to call for model update:", e);
+				DLTKCore
+						.error(
+								Messages.PackageRequireSourceAnalyser_ModelUpdateFailure,
+								e);
 			}
 		}
 	}
@@ -382,14 +384,20 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				IFileHandle file = environment.getFile(sourcedPath);
 				if (file != null) {
 					if (!file.exists()) {
-						reportSourceProblem(source, moduleInfo.reporter,
-								"Could not locate sourced file:"
-										+ file.toOSString(), source.getValue(),
-								moduleInfo.lineTracker);
+						reportSourceProblem(
+								source,
+								moduleInfo.reporter,
+								NLS
+										.bind(
+												Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFile,
+												file.toOSString()), source
+										.getValue(), moduleInfo.lineTracker);
 					} else {
 						if (file.isDirectory()) {
-							reportSourceProblem(source, moduleInfo.reporter,
-									"Sourcing of folders are not supported",
+							reportSourceProblem(
+									source,
+									moduleInfo.reporter,
+									Messages.PackageRequireSourceAnalyser_FolderSourcingNotSupported,
 									source.getValue(), moduleInfo.lineTracker);
 						} else
 						// Add user correction if not specified yet.
@@ -398,7 +406,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 								reportSourceProblem(
 										source,
 										moduleInfo.reporter,
-										"Source are not added to project buildpath.",
+										Messages.PackageRequireSourceAnalyser_SourceNotAddedToBuildpath,
 										source.getValue(),
 										moduleInfo.lineTracker);
 							} else {
@@ -416,7 +424,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					reportSourceProblemCorrection(
 							source,
 							moduleInfo.reporter,
-							"Could not locate sourced file. Correction is required.",
+							Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
 							source.getValue(), moduleInfo.lineTracker);
 				}
 			}
@@ -426,22 +434,20 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private IPath resolveSourceValue(IPath folder, TclSourceEntry source,
 			IEnvironment environment) {
 		String value = source.getValue();
-		IPath valuePath = null;
+		final IPath valuePath;
 		if (environment.isLocal()) {
-			valuePath = Path.fromOSString(source.getValue());
+			valuePath = Path.fromOSString(value);
 		} else {
 			value = value.replace('\\', '/');
-			valuePath = Path.fromPortableString(source.getValue());
+			valuePath = new Path(value);
 		}
-		IPath sourcedPath = null;
 		if (valuePath.isAbsolute()) {
-			sourcedPath = valuePath;
+			return valuePath;
+		} else if (TclPackagesManager.isValidName(value)) {
+			return folder.append(valuePath);
 		} else {
-			if (TclPackagesManager.isValidName(value)) {
-				sourcedPath = folder.append(valuePath);
-			}
+			return null;
 		}
-		return sourcedPath;
 	}
 
 	private void reportPackageProblem(TclSourceEntry pkg,
@@ -525,7 +531,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 						reporter,
 						NLS
 								.bind(
-										"Could not detect required package. Correction is required",
+										Messages.PackageRequireSourceAnalyser_CouldNotDetectPackageCorrectionRequired,
 										packageName), packageName, lineTracker);
 				return;
 			} else {

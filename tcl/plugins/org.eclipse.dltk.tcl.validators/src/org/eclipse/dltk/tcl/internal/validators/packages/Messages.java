@@ -19,6 +19,12 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.validators.packages.messages"; //$NON-NLS-1$
+	public static String PackageRequireSourceAnalyser_CouldNotDetectPackageCorrectionRequired;
+	public static String PackageRequireSourceAnalyser_CouldNotLocateSourcedFile;
+	public static String PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired;
+	public static String PackageRequireSourceAnalyser_FolderSourcingNotSupported;
+	public static String PackageRequireSourceAnalyser_ModelUpdateFailure;
+	public static String PackageRequireSourceAnalyser_SourceNotAddedToBuildpath;
 	public static String TclCheckBuilder_interpreterNotFound;
 	public static String TclCheckBuilder_processing;
 	public static String TclCheckBuilder_retrievePackages;
