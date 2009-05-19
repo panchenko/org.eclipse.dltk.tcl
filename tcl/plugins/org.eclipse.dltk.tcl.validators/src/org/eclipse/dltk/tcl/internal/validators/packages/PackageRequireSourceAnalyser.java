@@ -189,34 +189,34 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 		// Try to restore information from cache
 		ISourceModule module = context.getSourceModule();
-		TclModuleInfo info = collectCachedInfo(module);
+		// TclModuleInfo info = collectCachedInfo(module);
 
-		if (info == null) {
-			TclModule tclModule = TclBuildContext.getStatements(context);
-			List<TclCommand> statements = tclModule.getStatements();
+		// if (info == null) {
+		TclModule tclModule = TclBuildContext.getStatements(context);
+		List<TclCommand> statements = tclModule.getStatements();
 
-			// packageCollector.getRequireRefs().clear();
-			packageCollector.process(statements, module);
-		}
+		// packageCollector.getRequireRefs().clear();
+		packageCollector.process(statements, module);
+		// }
 
-		addInfoForModule(context, module, info);
+		addInfoForModule(context, module, null);
 	}
 
 	public void build(IBuildContext context) throws CoreException {
 
 		ISourceModule module = context.getSourceModule();
-		TclModuleInfo info = collectCachedInfo(module);
+		// TclModuleInfo info = collectCachedInfo(module);
 		// Check cached information first
-		if (info == null) {
-			TclModule tclModule = TclBuildContext.getStatements(context);
-			List<TclCommand> statements = tclModule.getStatements();
-			if (statements == null) {
-				return;
-			}
-			// packageCollector.getRequireRefs().clear();
-			packageCollector.process(statements, module);
+		// if (info == null) {
+		TclModule tclModule = TclBuildContext.getStatements(context);
+		List<TclCommand> statements = tclModule.getStatements();
+		if (statements == null) {
+			return;
 		}
-		addInfoForModule(context, module, info);
+		// packageCollector.getRequireRefs().clear();
+		packageCollector.process(statements, module);
+		// }
+		addInfoForModule(context, module, null);
 	}
 
 	private TclModuleInfo collectCachedInfo(ISourceModule module) {

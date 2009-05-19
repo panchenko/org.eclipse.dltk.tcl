@@ -21,9 +21,11 @@ import org.eclipse.dltk.core.caching.IContentCache;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.dltk.tcl.ast.TclCodeModel;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
+import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
@@ -54,7 +56,11 @@ public class TclBuildContext {
 				}
 				setReported(context);
 			}
-			return (TclModule) object;
+			TclModule module = (TclModule) object;
+			context
+					.setLineTracker(NewTclSourceParser
+							.createLineTracker(module));
+			return module;
 		}
 		// Parse and store statements here.
 		ISourceModuleInfoCache infoCache = ModelManager.getModelManager()
@@ -71,6 +77,8 @@ public class TclBuildContext {
 					collector.copyTo(context.getProblemReporter());
 					setReported(context);
 				}
+				context.setLineTracker(NewTclSourceParser
+						.createLineTracker(tclModule));
 				return tclModule;
 			}
 		}
@@ -89,6 +97,8 @@ public class TclBuildContext {
 			if (module != null) {
 				context.set(NEW_AST, module);
 				context.set(NEW_PROBLEMS, collector);
+				context.setLineTracker(NewTclSourceParser
+						.createLineTracker(module));
 				// Save also to memory cache.
 				return module;
 			}
@@ -103,6 +113,9 @@ public class TclBuildContext {
 					.getLineTracker());
 			setReported(context);
 		}
+		context.set(NEW_AST, module);
+		context.set(NEW_PROBLEMS, collector);
+		context.setLineTracker(NewTclSourceParser.createLineTracker(module));
 
 		return module;
 	}
