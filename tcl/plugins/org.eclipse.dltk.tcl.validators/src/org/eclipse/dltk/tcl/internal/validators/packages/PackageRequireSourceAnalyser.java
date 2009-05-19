@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.validators.packages;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +43,9 @@ import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
+import org.eclipse.dltk.core.caching.IContentCache;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.core.ModelManager;
@@ -58,13 +62,16 @@ import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
+import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
+import org.eclipse.dltk.tcl.internal.core.TclASTCache;
 import org.eclipse.dltk.tcl.internal.core.packages.Messages;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
-import org.eclipse.dltk.tcl.validators.packages.PackageSourceCollector;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 import org.eclipse.osgi.util.NLS;
 
 public class PackageRequireSourceAnalyser implements IBuildParticipant,
@@ -181,30 +188,59 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	public void buildExternalModule(IBuildContext context) throws CoreException {
 
 		// Try to restore information from cache
-
-		TclModule tclModule = TclBuildContext.getStatements(context);
-		List<TclCommand> statements = tclModule.getStatements();
 		ISourceModule module = context.getSourceModule();
+		TclModuleInfo info = collectCachedInfo(module);
 
-		// packageCollector.getRequireRefs().clear();
-		packageCollector.process(statements, module);
+		if (info == null) {
+			TclModule tclModule = TclBuildContext.getStatements(context);
+			List<TclCommand> statements = tclModule.getStatements();
 
-		addInfoForModule(context, module);
+			// packageCollector.getRequireRefs().clear();
+			packageCollector.process(statements, module);
+		}
+
+		addInfoForModule(context, module, info);
 	}
 
 	public void build(IBuildContext context) throws CoreException {
-		TclModule tclModule = TclBuildContext.getStatements(context);
-		List<TclCommand> statements = tclModule.getStatements();
-		if (statements == null) {
-			return;
-		}
+
 		ISourceModule module = context.getSourceModule();
-		// packageCollector.getRequireRefs().clear();
-		packageCollector.process(statements, module);
-		addInfoForModule(context, module);
+		TclModuleInfo info = collectCachedInfo(module);
+		// Check cached information first
+		if (info == null) {
+			TclModule tclModule = TclBuildContext.getStatements(context);
+			List<TclCommand> statements = tclModule.getStatements();
+			if (statements == null) {
+				return;
+			}
+			// packageCollector.getRequireRefs().clear();
+			packageCollector.process(statements, module);
+		}
+		addInfoForModule(context, module, info);
 	}
 
-	private void addInfoForModule(IBuildContext context, ISourceModule module) {
+	private TclModuleInfo collectCachedInfo(ISourceModule module) {
+		TclModuleInfo info = null;
+		IContentCache cache = ModelManager.getModelManager().getCoreCache();
+		IFileHandle handle = EnvironmentPathUtils.getFile(module);
+		InputStream stream = cache.getCacheEntryAttribute(handle,
+				TclASTCache.TCL_PKG_INFO);
+		if (stream != null) {
+			Resource res = new BinaryResourceImpl();
+			try {
+				res.load(stream, null);
+				info = (TclModuleInfo) res.getContents().get(0);
+			} catch (IOException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return info;
+	}
+
+	private void addInfoForModule(IBuildContext context, ISourceModule module,
+			TclModuleInfo info) {
 		IPath modulePath = module.getPath();
 		IEnvironment env = EnvironmentManager.getEnvironment(project);
 		if (module.getResource() != null) {
@@ -219,9 +255,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				}
 			}
 		}
+		TclModuleInfo mInfo = packageCollector
+				.getCreateCurrentModuleInfo(module);
+		if (info != null) {
+			mInfo.getProvided().addAll(info.getProvided());
+			mInfo.getRequired().addAll(info.getRequired());
+			mInfo.getSourced().addAll(info.getSourced());
+		}
 		modules.add(new ModuleInfo(module.getElementName(), context
-				.getLineTracker(), context.getProblemReporter(),
-				packageCollector.getCreateCurrentModuleInfo(module),
+				.getLineTracker(), context.getProblemReporter(), mInfo,
 				modulePath, module));
 	}
 
