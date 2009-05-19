@@ -49,6 +49,7 @@ public class TclASTCache implements IASTCache {
 			try {
 				source = org.eclipse.dltk.compiler.util.Util
 						.getInputStreamAsCharArray(contentStream, -1, null);
+				contentStream.close();
 				TclSourceParserFactory fact = new TclSourceParserFactory();
 				ISourceParser parser = fact.createSourceParser();
 				entry.module = parser.parse(null, source, entry.problems);
@@ -81,6 +82,7 @@ public class TclASTCache implements IASTCache {
 			try {
 				TclASTLoader loader = new TclASTLoader(stream);
 				TclModule tclModule = loader.getModule(collector);
+				stream.close();
 				if (tclModule != null) {
 					return tclModule;
 				}
@@ -118,6 +120,10 @@ public class TclASTCache implements IASTCache {
 				OutputStream stream = cache.getCacheEntryAttributeOutputStream(
 						handle, TCL_AST_ATTRIBUTE);
 				storeTclEntryInCache(problems, tclModule, stream);
+				try {
+					stream.close();
+				} catch (IOException e) {
+				}
 			}
 		}
 	}
