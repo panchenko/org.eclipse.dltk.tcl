@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.4 2009/05/17 11:39:11 apanchenk Exp $
+ * $Id: TclPackagesPackage.java,v 1.5 2009/05/19 17:46:51 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -226,22 +226,13 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_PROJECT_INFO__MODULES = 1;
 
 	/**
-	 * The feature id for the '<em><b>Package Corrections</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCL_PROJECT_INFO__PACKAGE_CORRECTIONS = 2;
-
-	/**
 	 * The number of structural features of the '<em>Tcl Project Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_PROJECT_INFO_FEATURE_COUNT = 3;
+	int TCL_PROJECT_INFO_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl <em>Tcl Module Info</em>}' class.
@@ -290,13 +281,22 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_MODULE_INFO__SOURCED = 3;
 
 	/**
+	 * The feature id for the '<em><b>Package Corrections</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_MODULE_INFO__PACKAGE_CORRECTIONS = 4;
+
+	/**
 	 * The feature id for the '<em><b>Source Corrections</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_MODULE_INFO__SOURCE_CORRECTIONS = 4;
+	int TCL_MODULE_INFO__SOURCE_CORRECTIONS = 5;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -305,7 +305,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_MODULE_INFO__EXTERNAL = 5;
+	int TCL_MODULE_INFO__EXTERNAL = 6;
 
 	/**
 	 * The number of structural features of the '<em>Tcl Module Info</em>' class.
@@ -314,7 +314,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_MODULE_INFO_FEATURE_COUNT = 6;
+	int TCL_MODULE_INFO_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclSourceEntryImpl <em>Tcl Source Entry</em>}' class.
@@ -573,17 +573,6 @@ public interface TclPackagesPackage extends EPackage {
 	EReference getTclProjectInfo_Modules();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getPackageCorrections <em>Package Corrections</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Package Corrections</em>'.
-	 * @see org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getPackageCorrections()
-	 * @see #getTclProjectInfo()
-	 * @generated
-	 */
-	EReference getTclProjectInfo_PackageCorrections();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo <em>Tcl Module Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -625,6 +614,17 @@ public interface TclPackagesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTclModuleInfo_Sourced();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getPackageCorrections <em>Package Corrections</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Package Corrections</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getPackageCorrections()
+	 * @see #getTclModuleInfo()
+	 * @generated
+	 */
+	EReference getTclModuleInfo_PackageCorrections();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getSourceCorrections <em>Source Corrections</em>}'.
@@ -902,15 +902,6 @@ public interface TclPackagesPackage extends EPackage {
 				.getTclProjectInfo_Modules();
 
 		/**
-		 * The meta object literal for the '<em><b>Package Corrections</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TCL_PROJECT_INFO__PACKAGE_CORRECTIONS = eINSTANCE
-				.getTclProjectInfo_PackageCorrections();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl <em>Tcl Module Info</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -946,6 +937,15 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EReference TCL_MODULE_INFO__SOURCED = eINSTANCE
 				.getTclModuleInfo_Sourced();
+
+		/**
+		 * The meta object literal for the '<em><b>Package Corrections</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_MODULE_INFO__PACKAGE_CORRECTIONS = eINSTANCE
+				.getTclModuleInfo_PackageCorrections();
 
 		/**
 		 * The meta object literal for the '<em><b>Source Corrections</b></em>' containment reference list feature.

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclModuleInfoImpl.java,v 1.3 2009/05/05 11:16:30 asobolev Exp $
+ * $Id: TclModuleInfoImpl.java,v 1.4 2009/05/19 17:46:51 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -10,23 +10,17 @@ import java.util.Collection;
 
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
-
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -39,6 +33,7 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getRequired <em>Required</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getProvided <em>Provided</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getSourced <em>Sourced</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getPackageCorrections <em>Package Corrections</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#getSourceCorrections <em>Source Corrections</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl#isExternal <em>External</em>}</li>
  * </ul>
@@ -96,6 +91,16 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 	 * @ordered
 	 */
 	protected EList<TclSourceEntry> sourced;
+
+	/**
+	 * The cached value of the '{@link #getPackageCorrections() <em>Package Corrections</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPackageCorrections()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<UserCorrection> packageCorrections;
 
 	/**
 	 * The cached value of the '{@link #getSourceCorrections() <em>Source Corrections</em>}' containment reference list.
@@ -193,6 +198,20 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<UserCorrection> getPackageCorrections() {
+		if (packageCorrections == null) {
+			packageCorrections = new EObjectContainmentEList<UserCorrection>(
+					UserCorrection.class, this,
+					TclPackagesPackage.TCL_MODULE_INFO__PACKAGE_CORRECTIONS);
+		}
+		return packageCorrections;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<UserCorrection> getSourceCorrections() {
 		if (sourceCorrections == null) {
 			sourceCorrections = new EObjectContainmentEList<UserCorrection>(
@@ -243,6 +262,9 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			return ((InternalEList<?>) getSourced())
 					.basicRemove(otherEnd, msgs);
+		case TclPackagesPackage.TCL_MODULE_INFO__PACKAGE_CORRECTIONS:
+			return ((InternalEList<?>) getPackageCorrections()).basicRemove(
+					otherEnd, msgs);
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
 			return ((InternalEList<?>) getSourceCorrections()).basicRemove(
 					otherEnd, msgs);
@@ -289,6 +311,8 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 			return getProvided();
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			return getSourced();
+		case TclPackagesPackage.TCL_MODULE_INFO__PACKAGE_CORRECTIONS:
+			return getPackageCorrections();
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
 			return getSourceCorrections();
 		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:
@@ -324,6 +348,11 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 			getSourced()
 					.addAll((Collection<? extends TclSourceEntry>) newValue);
 			return;
+		case TclPackagesPackage.TCL_MODULE_INFO__PACKAGE_CORRECTIONS:
+			getPackageCorrections().clear();
+			getPackageCorrections().addAll(
+					(Collection<? extends UserCorrection>) newValue);
+			return;
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
 			getSourceCorrections().clear();
 			getSourceCorrections().addAll(
@@ -356,6 +385,9 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			getSourced().clear();
 			return;
+		case TclPackagesPackage.TCL_MODULE_INFO__PACKAGE_CORRECTIONS:
+			getPackageCorrections().clear();
+			return;
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
 			getSourceCorrections().clear();
 			return;
@@ -383,6 +415,8 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 			return provided != null && !provided.isEmpty();
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCED:
 			return sourced != null && !sourced.isEmpty();
+		case TclPackagesPackage.TCL_MODULE_INFO__PACKAGE_CORRECTIONS:
+			return packageCorrections != null && !packageCorrections.isEmpty();
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
 			return sourceCorrections != null && !sourceCorrections.isEmpty();
 		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:

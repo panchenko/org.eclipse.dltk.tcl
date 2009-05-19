@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProjectInfo.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: TclProjectInfo.java,v 1.3 2009/05/19 17:46:51 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getModules <em>Modules</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getPackageCorrections <em>Package Corrections</em>}</li>
  * </ul>
  * </p>
  *
@@ -72,19 +71,11 @@ public interface TclProjectInfo extends EObject {
 	EList<TclModuleInfo> getModules();
 
 	/**
-	 * Returns the value of the '<em><b>Package Corrections</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.dltk.tcl.core.packages.UserCorrection}.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Package Corrections</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Package Corrections</em>' containment reference list.
-	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclProjectInfo_PackageCorrections()
-	 * @model containment="true"
+	 * @model
 	 * @generated
 	 */
-	EList<UserCorrection> getPackageCorrections();
+	TclModuleInfo findModule(String handle);
 
 } // TclProjectInfo

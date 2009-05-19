@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProjectInfoImpl.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: TclProjectInfoImpl.java,v 1.3 2009/05/19 17:46:51 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -11,22 +11,15 @@ import java.util.Collection;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
-
-import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,7 +30,6 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl#getModules <em>Modules</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl#getPackageCorrections <em>Package Corrections</em>}</li>
  * </ul>
  * </p>
  *
@@ -73,16 +65,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 	 * @ordered
 	 */
 	protected EList<TclModuleInfo> modules;
-
-	/**
-	 * The cached value of the '{@link #getPackageCorrections() <em>Package Corrections</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPackageCorrections()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<UserCorrection> packageCorrections;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -142,15 +124,15 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
-	public EList<UserCorrection> getPackageCorrections() {
-		if (packageCorrections == null) {
-			packageCorrections = new EObjectContainmentEList<UserCorrection>(
-					UserCorrection.class, this,
-					TclPackagesPackage.TCL_PROJECT_INFO__PACKAGE_CORRECTIONS);
+	public TclModuleInfo findModule(String handle) {
+		for (TclModuleInfo moduleInfo : getModules()) {
+			if (handle.equals(moduleInfo.getHandle())) {
+				return moduleInfo;
+			}
 		}
-		return packageCorrections;
+		return null;
 	}
 
 	/**
@@ -165,9 +147,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			return ((InternalEList<?>) getModules())
 					.basicRemove(otherEnd, msgs);
-		case TclPackagesPackage.TCL_PROJECT_INFO__PACKAGE_CORRECTIONS:
-			return ((InternalEList<?>) getPackageCorrections()).basicRemove(
-					otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -184,8 +163,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 			return getName();
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			return getModules();
-		case TclPackagesPackage.TCL_PROJECT_INFO__PACKAGE_CORRECTIONS:
-			return getPackageCorrections();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -206,11 +183,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 			getModules().clear();
 			getModules().addAll((Collection<? extends TclModuleInfo>) newValue);
 			return;
-		case TclPackagesPackage.TCL_PROJECT_INFO__PACKAGE_CORRECTIONS:
-			getPackageCorrections().clear();
-			getPackageCorrections().addAll(
-					(Collection<? extends UserCorrection>) newValue);
-			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -229,9 +201,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			getModules().clear();
 			return;
-		case TclPackagesPackage.TCL_PROJECT_INFO__PACKAGE_CORRECTIONS:
-			getPackageCorrections().clear();
-			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -249,8 +218,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 					.equals(name);
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			return modules != null && !modules.isEmpty();
-		case TclPackagesPackage.TCL_PROJECT_INFO__PACKAGE_CORRECTIONS:
-			return packageCorrections != null && !packageCorrections.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

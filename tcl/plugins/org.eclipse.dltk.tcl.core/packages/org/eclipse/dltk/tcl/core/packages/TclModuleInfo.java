@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclModuleInfo.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: TclModuleInfo.java,v 1.3 2009/05/19 17:46:51 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getRequired <em>Required</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getProvided <em>Provided</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getSourced <em>Sourced</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getPackageCorrections <em>Package Corrections</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getSourceCorrections <em>Source Corrections</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#isExternal <em>External</em>}</li>
  * </ul>
@@ -79,6 +80,22 @@ public interface TclModuleInfo extends EObject {
 	 * @generated
 	 */
 	EList<TclSourceEntry> getSourced();
+
+	/**
+	 * Returns the value of the '<em><b>Package Corrections</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.dltk.tcl.core.packages.UserCorrection}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Package Corrections</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Package Corrections</em>' containment reference list.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclModuleInfo_PackageCorrections()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<UserCorrection> getPackageCorrections();
 
 	/**
 	 * Returns the value of the '<em><b>Source Corrections</b></em>' containment reference list.

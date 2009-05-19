@@ -23,11 +23,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="environment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TclProjectInfo">
+    <eOperations name="findModule" eType="#//TclModuleInfo">
+      <eParameters name="handle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
         eType="#//TclModuleInfo" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="packageCorrections" upperBound="-1"
-        eType="#//UserCorrection" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TclModuleInfo">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="handle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -37,6 +38,8 @@
         eType="#//TclSourceEntry" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourced" upperBound="-1"
         eType="#//TclSourceEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packageCorrections" upperBound="-1"
+        eType="#//UserCorrection" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceCorrections" upperBound="-1"
         eType="#//UserCorrection" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="external" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
