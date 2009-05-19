@@ -9,9 +9,9 @@ import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
+import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
-import org.eclipse.dltk.tcl.validators.packages.PackageSourceCollector;
 
 public class TclSourcePackagesTests extends AbstractModelTests {
 
