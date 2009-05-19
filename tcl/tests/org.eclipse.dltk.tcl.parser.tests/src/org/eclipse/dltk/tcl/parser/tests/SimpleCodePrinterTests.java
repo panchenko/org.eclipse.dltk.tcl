@@ -35,7 +35,7 @@ public class SimpleCodePrinterTests extends TestCase {
 	}
 
 	public void test003() throws Exception {
-		outCheck("source {$arg/beta 2.tcl}", "source $arg/beta 2.tcl");
+		outCheck("source {$arg/beta 2.tcl}", "source {$arg/beta 2.tcl}");
 	}
 
 	public void test004() throws Exception {
@@ -69,6 +69,11 @@ public class SimpleCodePrinterTests extends TestCase {
 	public void test010() throws Exception {
 		outCheck("proc hello2 {name2} {\n" + "	puts \"Hello, $name2\"\n" + "}",
 				"proc hello2 {name2} {puts \"Hello, $name2\"}");
+	}
+
+	public void test011() throws Exception {
+		outCheck("if {$DEF(cancel) == $caller} {$caller} else {.$caller}",
+				"if {$DEF(cancel) == $caller} {$caller} else {.$caller}");
 	}
 
 	private void outCheck(String source, String expected) throws Exception {
