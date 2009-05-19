@@ -18,8 +18,8 @@ public class SimpleCodePrinter {
 			// Simple absolute or relative source'ing.
 			StringArgument argument = (StringArgument) arg;
 			String value = argument.getValue();
-			value = nameFromBlock(value, '\"', '\"');
-			value = nameFromBlock(value, '{', '}');
+			//value = nameFromBlock(value, '\"', '\"');
+			//value = nameFromBlock(value, '{', '}');
 			return value;
 		} else if (arg instanceof ComplexString) {
 			ComplexString carg = (ComplexString) arg;
