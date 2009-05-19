@@ -17,11 +17,11 @@ import org.eclipse.dltk.core.ISourceModuleInfoCache;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.dltk.core.builder.IBuildContextExtension;
 import org.eclipse.dltk.core.caching.IContentCache;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.core.ModelManager;
-import org.eclipse.dltk.tcl.ast.TclCodeModel;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
@@ -57,9 +57,7 @@ public class TclBuildContext {
 				setReported(context);
 			}
 			TclModule module = (TclModule) object;
-			context
-					.setLineTracker(NewTclSourceParser
-							.createLineTracker(module));
+			restoreLineTracker(context, module);
 			return module;
 		}
 		// Parse and store statements here.
@@ -77,8 +75,7 @@ public class TclBuildContext {
 					collector.copyTo(context.getProblemReporter());
 					setReported(context);
 				}
-				context.setLineTracker(NewTclSourceParser
-						.createLineTracker(tclModule));
+				restoreLineTracker(context, tclModule);
 				return tclModule;
 			}
 		}
@@ -97,8 +94,7 @@ public class TclBuildContext {
 			if (module != null) {
 				context.set(NEW_AST, module);
 				context.set(NEW_PROBLEMS, collector);
-				context.setLineTracker(NewTclSourceParser
-						.createLineTracker(module));
+				restoreLineTracker(context, module);
 				// Save also to memory cache.
 				return module;
 			}
@@ -115,8 +111,23 @@ public class TclBuildContext {
 		}
 		context.set(NEW_AST, module);
 		context.set(NEW_PROBLEMS, collector);
-		context.setLineTracker(NewTclSourceParser.createLineTracker(module));
+		restoreLineTracker(context, module);
 
 		return module;
+	}
+
+	/**
+	 * Restores lineTracker to the context if it was not already created.
+	 * 
+	 * @param context
+	 * @param module
+	 */
+	private static void restoreLineTracker(IBuildContext context,
+			TclModule module) {
+		IBuildContextExtension eContext = (IBuildContextExtension) context;
+		if (!eContext.isLineTrackerCreated()) {
+			eContext.setLineTracker(NewTclSourceParser
+					.createLineTracker(module));
+		}
 	}
 }
