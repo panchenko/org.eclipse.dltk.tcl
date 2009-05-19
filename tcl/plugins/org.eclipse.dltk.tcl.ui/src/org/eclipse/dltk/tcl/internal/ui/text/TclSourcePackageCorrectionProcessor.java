@@ -95,7 +95,8 @@ public class TclSourcePackageCorrectionProcessor implements
 			final String pkgName = annotation.getArguments()[0];
 			context.addProposal(new AnnotationResolutionProposal(
 					new TclRequirePackageCorrectionMarkerResolution(pkgName,
-							context.getProject()), annotation));
+							context.getProject(), context.getModule()),
+					annotation));
 		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
 			final String fName = annotation.getArguments()[0];
 			context.addProposal(new AnnotationResolutionProposal(
@@ -183,7 +184,8 @@ public class TclSourcePackageCorrectionProcessor implements
 			if (addPackageName(context, pkgName)) {
 				context.addProposal(new MarkerResolutionProposal(
 						new TclRequirePackageCorrectionMarkerResolution(
-								pkgName, context.getProject()), marker));
+								pkgName, context.getProject(), context
+										.getModule()), marker));
 			}
 		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
 			final String fName = CorrectionEngine.getProblemArguments(marker)[0];

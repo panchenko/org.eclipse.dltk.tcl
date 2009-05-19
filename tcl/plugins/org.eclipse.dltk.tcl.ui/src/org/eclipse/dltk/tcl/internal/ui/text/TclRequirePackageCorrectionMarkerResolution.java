@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
@@ -25,6 +26,7 @@ import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
@@ -32,7 +34,6 @@ import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.text.IAnnotationResolution;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -46,11 +47,13 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 		IMarkerResolution, IAnnotationResolution {
 	private String pkgName;
 	private IScriptProject project;
+	private ISourceModule module;
 
 	public TclRequirePackageCorrectionMarkerResolution(String pkgName,
-			IScriptProject scriptProject) {
+			IScriptProject scriptProject, ISourceModule module) {
 		this.pkgName = pkgName;
 		this.project = scriptProject;
+		this.module = module;
 	}
 
 	public String getLabel() {
@@ -129,21 +132,29 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 				dialog.setInput(names);
 				Set pkgs = new HashSet();
 				if (dialog.open() == ListDialog.OK) {
+					TclProjectInfo info = TclPackagesManager
+							.getTclProject(this.project.getElementName());
+					TclModuleInfo moduleInfo = info.findModule(module
+							.getHandleIdentifier());
+					if (moduleInfo == null) {
+						moduleInfo = TclPackagesFactory.eINSTANCE
+								.createTclModuleInfo();
+						moduleInfo.setHandle(module.getHandleIdentifier());
+						moduleInfo
+								.setExternal(module instanceof IExternalSourceModule);
+						info.getModules().add(moduleInfo);
+					}
 					Object[] result = dialog.getResult();
 					for (int i = 0; i < result.length; i++) {
 						String pkg = (String) result[i];
 						pkgs.add(pkg);
-						// Store Module fix information
-						TclProjectInfo info = TclPackagesManager
-								.getTclProject(this.project.getElementName());
-						EList corrections = info.getPackageCorrections();
 						UserCorrection correction = TclPackagesFactory.eINSTANCE
 								.createUserCorrection();
 						correction.setOriginalValue(pkgName);
 						correction.setUserValue(pkg);
-						corrections.add(correction);
-						TclPackagesManager.save();
+						moduleInfo.getPackageCorrections().add(correction);
 					}
+					TclPackagesManager.save();
 				} else {
 					return false;
 				}
