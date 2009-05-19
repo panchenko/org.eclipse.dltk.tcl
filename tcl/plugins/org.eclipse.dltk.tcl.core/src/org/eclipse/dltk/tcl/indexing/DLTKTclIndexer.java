@@ -114,17 +114,19 @@ public class DLTKTclIndexer {
 							new ByteArrayInputStream(mixin_index));
 
 					// Store package/source cache.
-					PackageSourceCollector pkgCollector = new PackageSourceCollector();
-					pkgCollector.process(module.getStatements(), null);
-					TclModuleInfo info = pkgCollector.getCurrentModuleInfo();
-					Resource infoRes = new BinaryResourceImpl();
-					infoRes.getContents().add(info);
-					ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
-					infoRes.save(infoStream, null);
-
-					builder.addEntry(file.getName(), file.lastModified(),
-							TclASTCache.TCL_PKG_INFO, new ByteArrayInputStream(
-									infoStream.toByteArray()));
+					// PackageSourceCollector pkgCollector = new
+					// PackageSourceCollector();
+					// pkgCollector.process(module.getStatements(), null);
+					// TclModuleInfo info = pkgCollector.getCurrentModuleInfo();
+					// Resource infoRes = new BinaryResourceImpl();
+					// infoRes.getContents().add(info);
+					// ByteArrayOutputStream infoStream = new
+					// ByteArrayOutputStream();
+					// infoRes.save(infoStream, null);
+					//
+					// builder.addEntry(file.getName(), file.lastModified(),
+					// TclASTCache.TCL_PKG_INFO, new ByteArrayInputStream(
+					// infoStream.toByteArray()));
 				}
 				builder.done();
 				logEntry(indexFile, filesSize);
