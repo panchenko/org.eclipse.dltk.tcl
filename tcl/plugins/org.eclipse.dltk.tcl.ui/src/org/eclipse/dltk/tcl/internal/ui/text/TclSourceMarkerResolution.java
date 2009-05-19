@@ -4,7 +4,6 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
 import java.net.URI;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -29,12 +28,9 @@ import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
-import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.dltk.ui.text.IAnnotationResolution;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IMarkerResolution;
-import org.eclipse.ui.PlatformUI;
 
 final class TclSourceMarkerResolution implements IMarkerResolution,
 		IAnnotationResolution {
@@ -136,16 +132,8 @@ final class TclSourceMarkerResolution implements IMarkerResolution,
 
 				TclProjectInfo tclProject = TclPackagesManager
 						.getTclProject(project.getElementName());
-				EList modules = tclProject.getModules();
 				String handle = this.module.getHandleIdentifier();
-				TclModuleInfo info = null;
-				for (Iterator iterator = modules.iterator(); iterator.hasNext();) {
-					TclModuleInfo moduleInfo = (TclModuleInfo) iterator.next();
-					if (handle.equals(moduleInfo.getHandle())) {
-						info = moduleInfo;
-						break;
-					}
-				}
+				TclModuleInfo info = tclProject.findModule(handle);
 				if (info == null) {
 					// This is almost impossibly situation.
 					info = TclPackagesFactory.eINSTANCE.createTclModuleInfo();
@@ -158,7 +146,7 @@ final class TclSourceMarkerResolution implements IMarkerResolution,
 					sourceEntry.setEnd(-1);
 					sourceEntry.setValue(sourceName);
 					info.getSourced().add(sourceEntry);
-					modules.add(info);
+					tclProject.getModules().add(info);
 				}
 				UserCorrection correction = TclPackagesFactory.eINSTANCE
 						.createUserCorrection();
