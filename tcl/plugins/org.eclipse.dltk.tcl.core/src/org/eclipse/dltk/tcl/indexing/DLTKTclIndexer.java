@@ -19,15 +19,13 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.caching.ArchiveCacheIndexBuilder;
 import org.eclipse.dltk.core.caching.MixinModelCollector;
 import org.eclipse.dltk.core.caching.StructureModelCollector;
-import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.search.indexing.SourceIndexerRequestor;
-import org.eclipse.dltk.internal.core.SourceModuleElementInfo;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
+import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
 import org.eclipse.dltk.tcl.internal.core.TclSourceIndexerRequestor;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinBuildVisitor;
-import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinParser;
 import org.eclipse.dltk.tcl.internal.core.serialization.TclASTSaver;
 import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceElementRequestVisitor;
@@ -35,6 +33,8 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.utils.TextUtils;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 
 public class DLTKTclIndexer {
 	private long totalSize = 0;
@@ -112,6 +112,19 @@ public class DLTKTclIndexer {
 					builder.addEntry(file.getName(), file.lastModified(),
 							TclASTCache.TCL_MIXIN_INDEX,
 							new ByteArrayInputStream(mixin_index));
+
+					// Store package/source cache.
+					PackageSourceCollector pkgCollector = new PackageSourceCollector();
+					pkgCollector.process(module.getStatements(), null);
+					TclModuleInfo info = pkgCollector.getCurrentModuleInfo();
+					Resource infoRes = new BinaryResourceImpl();
+					infoRes.getContents().add(info);
+					ByteArrayOutputStream infoStream = new ByteArrayOutputStream();
+					infoRes.save(infoStream, null);
+
+					builder.addEntry(file.getName(), file.lastModified(),
+							TclASTCache.TCL_PKG_INFO, new ByteArrayInputStream(
+									infoStream.toByteArray()));
 				}
 				builder.done();
 				logEntry(indexFile, filesSize);

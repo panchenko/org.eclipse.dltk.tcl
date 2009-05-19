@@ -153,6 +153,10 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 					}
 				}
 				if (nde != null) {
+					// Lets store some position information
+					int globalOffset = this.globalOffset;
+					boolean userProcessor = this.useProcessors;
+					boolean useDetectors = this.useDetectors;
 					nde.traverse(new ASTVisitor() {
 						public boolean visit(TypeDeclaration s)
 								throws Exception {
@@ -206,7 +210,10 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 							return true;
 						}
 					});
-					// Re process internal elements.
+					// Restore values
+					this.useDetectors = useDetectors;
+					this.useProcessors = userProcessor;
+					this.globalOffset = globalOffset;
 				}
 			} catch (Exception e) {
 				TclPlugin.error(e);

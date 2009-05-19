@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 
 public class TclASTCache implements IASTCache {
 	public static final String TCL_AST_ATTRIBUTE = "_ast";
+	public static final String TCL_PKG_INFO = "_pinf";
 	public static final String TCL_STRUCTURE_INDEX = IContentCache.STRUCTURE_INDEX;
 	public static final String TCL_MIXIN_INDEX = IContentCache.MIXIN_INDEX;
 

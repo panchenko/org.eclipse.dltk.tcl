@@ -12,6 +12,7 @@ package org.eclipse.dltk.tcl.internal.core;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.search.indexing.SourceIndexerRequestor;
@@ -19,13 +20,14 @@ import org.eclipse.dltk.core.search.indexing.SourceIndexerRequestor;
 public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 	protected String[] realEnclosingTypeNames = new String[5];
 	protected int realdepth = 0;
+	Pattern pattern = Pattern.compile("::");
 
 	public void acceptMethodReference(char[] methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
 		// System.out.println("TclSourceIndexerRequestor:Add Method Reference: "
 		// + new String(methodName));
 		String mName = new String(methodName);
-		String[] ns = mName.split("::");
+		String[] ns = pattern.split(mName, 0);
 		if (ns.length > 0) {
 			this.indexer.addMethodReference(ns[ns.length - 1].toCharArray(),
 					argCount);
@@ -135,10 +137,10 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 	}
 
 	public void enterType(TypeInfo typeInfo) {
-		if ((typeInfo.modifiers & Modifiers.AccTest) == 0 && (typeInfo.modifiers & Modifiers.AccTestCase) == 0) {
+		if ((typeInfo.modifiers & Modifiers.AccTest) == 0
+				&& (typeInfo.modifiers & Modifiers.AccTestCase) == 0) {
 			super.enterType(typeInfo);
-		}
-		else {
+		} else {
 			this.pushTypeName(typeInfo.name.toCharArray());
 		}
 	}
