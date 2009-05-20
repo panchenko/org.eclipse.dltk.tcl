@@ -9,20 +9,20 @@
 </word>
 <word end="28" start="10" text="$EXP(row).$EXP(col)">
 <variable end="18" kind="1" name="EXP" start="10">
-<word end="0" start="0" text="$">
+<word end="17" start="15" text="row">
 <string text="row"/>
 </word>
 </variable>
 <string text="."/>
 <variable end="28" kind="1" name="EXP" start="20">
-<word end="0" start="0" text="$">
+<word end="27" start="25" text="col">
 <string text="col"/>
 </word>
 </variable>
 </word>
 <word end="75" start="30" text="$EXP(row).[expr {$EXP(col) + $chars_to_write}]">
 <variable end="38" kind="1" name="EXP" start="30">
-<word end="0" start="0" text="$">
+<word end="37" start="35" text="row">
 <string text="row"/>
 </word>
 </variable>

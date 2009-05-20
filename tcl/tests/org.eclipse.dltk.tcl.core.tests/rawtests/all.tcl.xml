@@ -111,7 +111,7 @@
 </word>
 <word end="342" start="338" text="$(10)">
 <variable end="342" kind="1" name="" start="338">
-<word end="0" start="0" text="w">
+<word end="341" start="340" text="10">
 <string text="10"/>
 </word>
 </variable>
@@ -123,7 +123,7 @@
 </word>
 <word end="354" start="349" text="$a(\))">
 <variable end="354" kind="1" name="a" start="349">
-<word end="0" start="0" text="w">
+<word end="353" start="352" text="\)">
 <normalbs text="\)"/>
 </word>
 </variable>
@@ -135,7 +135,7 @@
 </word>
 <word end="363" start="361" text="$()">
 <variable end="363" kind="1" name="" start="361">
-<word end="0" start="0" text="w"/>
+<word end="362" start="363" text=""/>
 </variable>
 </word>
 </command>
@@ -145,7 +145,7 @@
 </word>
 <word end="419" start="406" text="$abcdef_XYZ(1)">
 <variable end="419" kind="1" name="abcdef_XYZ" start="406">
-<word end="0" start="0" text="w">
+<word end="418" start="418" text="1">
 <string text="1"/>
 </word>
 </variable>
@@ -157,7 +157,7 @@
 </word>
 <word end="452" start="426" text="$abcdef_XYZ([expr {2+2}]$a)">
 <variable end="452" kind="1" name="abcdef_XYZ" start="426">
-<word end="0" start="0" text="w">
+<word end="451" start="438" text="[expr {2+2}]$a">
 <command text="[expr {2+2}]"/>
 <variable end="451" kind="0" name="a" start="450"/>
 </word>
@@ -178,7 +178,7 @@
 </word>
 <word end="520" start="497" text="$___::___::___::____(12)">
 <variable end="520" kind="1" name="___::___::___::____" start="497">
-<word end="0" start="0" text="w">
+<word end="519" start="518" text="12">
 <string text="12"/>
 </word>
 </variable>
@@ -194,7 +194,7 @@
 <variable end="532" kind="0" name="c" start="531"/>
 <command text="[doo 4]"/>
 <variable end="546" kind="1" name="b" start="540">
-<word end="0" start="0" text="w">
+<word end="545" start="543" text="123">
 <string text="123"/>
 </word>
 </variable>
@@ -202,7 +202,7 @@
 <variable end="565" kind="2" name="$%@#$^@!!!!" start="552"/>
 <string text="."/>
 <variable end="588" kind="1" name="___::___::___::____" start="567">
-<word end="0" start="0" text="w"/>
+<word end="587" start="588" text=""/>
 </variable>
 </word>
 </command>
