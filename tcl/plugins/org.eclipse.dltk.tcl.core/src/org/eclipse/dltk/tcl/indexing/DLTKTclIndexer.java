@@ -70,7 +70,14 @@ public class DLTKTclIndexer {
 
 					TclASTSaver saver = new TclASTSaver(module, bout);
 					saver.store(dltkProblems);
-					builder.addEntry(file.getName(), file.lastModified(),
+					File canonicalFile = file.getCanonicalFile();
+					long timestamp = file.lastModified();
+					if (!canonicalFile.getAbsolutePath().equals(
+							file.getAbsolutePath())) {
+						// This is symlink
+						timestamp = canonicalFile.lastModified();
+					}
+					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_AST_ATTRIBUTE,
 							new ByteArrayInputStream(bout.toByteArray()));
 
@@ -93,7 +100,7 @@ public class DLTKTclIndexer {
 						e.printStackTrace();
 					}
 					byte[] structure_index = collector.getBytes();
-					builder.addEntry(file.getName(), file.lastModified(),
+					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_STRUCTURE_INDEX,
 							new ByteArrayInputStream(structure_index));
 
@@ -109,7 +116,7 @@ public class DLTKTclIndexer {
 						}
 					}
 					byte[] mixin_index = mixinCollector.getBytes();
-					builder.addEntry(file.getName(), file.lastModified(),
+					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_MIXIN_INDEX,
 							new ByteArrayInputStream(mixin_index));
 
