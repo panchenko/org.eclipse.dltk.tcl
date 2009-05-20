@@ -2167,7 +2167,7 @@
         <groups constant="-nocommands"/>
         <groups constant="-novariables"/>
       </arguments>
-      <arguments xsi:type="tclparse:TypedArgument" name="string" type="Script"/>
+      <arguments xsi:type="tclparse:TypedArgument" name="string"/>
     </children>
     <children xsi:type="tclparse:Command" name="switch">
       <arguments xsi:type="tclparse:Switch" lowerBound="0" upperBound="-1" name="options" checkPrefix="true">
