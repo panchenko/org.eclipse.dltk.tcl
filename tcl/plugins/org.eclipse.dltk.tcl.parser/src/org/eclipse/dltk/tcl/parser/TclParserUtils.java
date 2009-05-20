@@ -138,7 +138,7 @@ public class TclParserUtils implements ITclParserOptions {
 	}
 
 	public static List<TclArgument> parseCommandArguments(int offset,
-			String content) {
+			String content, List<Integer> blockArguments) {
 		List<TclArgument> results = new ArrayList<TclArgument>();
 		try {
 			AstFactory factory = AstFactory.eINSTANCE;
@@ -198,6 +198,9 @@ public class TclParserUtils implements ITclParserOptions {
 						bl.setStart(offset + bs.getStart());
 						bl.setEnd(offset + bs.getEnd() + 1);
 						bl.setValue(wordText);
+						if (blockArguments != null) {
+							blockArguments.add(results.size());
+						}
 						exp = bl;
 					} else {
 						wordText = content.substring(word.getStart(), word
