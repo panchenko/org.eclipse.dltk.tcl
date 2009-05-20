@@ -131,6 +131,7 @@ public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
 			ComplexString carg = (ComplexString) arg;
 			// String cargValue = carg.getValue();
 			out.writeByte(TAG_COMPLEX_STRING_ARGUMENT);
+			out.writeInt(carg.getKind());
 			writeInt(arg.getStart());
 			writeInt(arg.getEnd() - arg.getStart());
 			// writeString(cargValue);
@@ -177,6 +178,7 @@ public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
 		} else if (arg instanceof TclArgumentList) {
 			TclArgumentList st = (TclArgumentList) arg;
 			out.writeByte(TAG_ARGUMENT_LIST_ARGUMENT);
+			out.writeInt(st.getKind());
 			writeInt(arg.getStart());
 			writeInt(arg.getEnd() - arg.getStart());
 			EList<TclArgument> arguments = st.getArguments();

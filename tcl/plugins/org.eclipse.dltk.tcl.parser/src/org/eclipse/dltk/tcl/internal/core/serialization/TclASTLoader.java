@@ -134,6 +134,7 @@ public class TclASTLoader extends AbstractDataLoader implements
 		}
 		case TAG_COMPLEX_STRING_ARGUMENT: {
 			ComplexString carg = AstFactory.eINSTANCE.createComplexString();
+			carg.setKind(in.readInt());
 			carg.setStart(readInt());
 			carg.setEnd(readInt() + carg.getStart());
 			// carg.setValue(readString());
@@ -182,6 +183,7 @@ public class TclASTLoader extends AbstractDataLoader implements
 		}
 		case TAG_ARGUMENT_LIST_ARGUMENT: {
 			TclArgumentList st = AstFactory.eINSTANCE.createTclArgumentList();
+			st.setKind(in.readInt());
 			st.setStart(readInt());
 			st.setEnd(readInt() + st.getStart());
 			EList<TclArgument> arguments = st.getArguments();
