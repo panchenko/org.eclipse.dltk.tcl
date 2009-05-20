@@ -282,8 +282,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 	private ASTNode stringToAST(TclArgument argument, String value) {
 		if (value.startsWith("{")
-				&& (value.endsWith("}") || argument.getEnd() == moduleDeclaration
-						.sourceEnd())) {
+				&& (value.endsWith("}") || (moduleDeclaration != null && argument
+						.getEnd() == moduleDeclaration.sourceEnd()))) {
 			// This is block argument
 			return new TclBlockExpression(argument.getStart(), argument
 					.getEnd(), value);
@@ -383,6 +383,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 	 * Assume parsing are in same module.
 	 */
 	public void parse(String content, int offset, ASTNode parent) {
+		initDetectors();
 		processedForContentNodes.clear();
 		TclParser newParser = new TclParser();
 		TclErrorCollector collector = null;

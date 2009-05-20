@@ -3,6 +3,7 @@ package org.eclipse.dltk.tcl.internal.core.parser.processors.tcl;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.ast.TclStatement;
@@ -76,8 +77,12 @@ public class TclPackageProcessor extends AbstractTclCommandProcessor implements
 			Expression script = null;
 			switch (statement.getCount()) {
 			case 5: {
-				if (statement.getAt(4) instanceof TclBlockExpression)
+				if (statement.getAt(4) instanceof TclBlockExpression) {
 					script = statement.getAt(4);
+				}
+				if (statement.getAt(4) instanceof Block) {
+					script = statement.getAt(4);
+				}
 				// no break!
 			}
 			case 4: {
