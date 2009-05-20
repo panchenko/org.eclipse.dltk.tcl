@@ -206,13 +206,26 @@ public class XOTclParserUtilTests extends TestCase {
 		assertEquals(2, levelsTo.size());
 	}
 
+	/**
+	 * @throws Throwable
+	 */
 	public void testParseUtil012() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval c {\n"
-				+ "		namespace eval d {\n" + "		}\n" + "	}"
-				+ "	namespace eval c::d {\n" + "	}\n" + "	namespace eval b {\n"
-				+ "		namespace eval c::d {\n" + "		}\n"
-				+ "		proc ::a::c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String content = 
+			"namespace eval c::d  {\n" + "}\n"
+		  + "namespace eval a {\n" + 
+		    "	namespace eval c {\n"
+		+   "		namespace eval d {\n"
+		+   "		}\n" 
+		+   "	}\n"
+		+   "	namespace eval c::d {\n" 
+		+   "	}\n" 
+		+   "	namespace eval b {\n"
+		+   "		namespace eval c::d {\n" 
+		+   "		}\n"
+		+   "		proc ::a::c::d::q { } {\n"
+		+   "		}\n"
+		+   "	}\n"
+		+   "}\n";
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::a::c::d::q");
 		assertEquals(1, nodes.length);
