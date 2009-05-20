@@ -56,6 +56,11 @@ public class TclPlugin extends Plugin {
 		return plugin;
 	}
 
+	public static void error(String message, Throwable t) {
+		plugin.getLog().log(
+				new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, message, t));
+	}
+
 	public static void error(Throwable t) {
 		plugin.getLog().log(
 				new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
