@@ -7,9 +7,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,7 +28,6 @@ import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
-import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
@@ -38,6 +39,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -52,6 +54,7 @@ public class TclPackagesManager {
 	private static final String PKG_VERSION = "v20090505";
 
 	private static Resource infos = null;
+	private static final Map<String, Resource> projectInfos = new HashMap<String, Resource>();
 
 	public static synchronized List<TclPackageInfo> getPackageInfos(
 			IInterpreterInstall install, Set<String> packageNames,
@@ -155,25 +158,26 @@ public class TclPackagesManager {
 								: TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE);
 	}
 
-	public static synchronized TclProjectInfo getTclProject(String name) {
-		initialize();
-		EList<EObject> contents = infos.getContents();
-		TclProjectInfo info = null;
-		for (EObject eObject : contents) {
-			if (eObject instanceof TclProjectInfo) {
-				TclProjectInfo pinfo = (TclProjectInfo) eObject;
-				String pname = pinfo.getName();
-				if (name != null && name.equals(pname)) {
-					info = pinfo;
+	public static TclProjectInfo getTclProject(String name) {
+		Resource resource = getProjectInfoResource(name);
+		synchronized (resource) {
+			TclProjectInfo info = null;
+			for (EObject eObject : resource.getContents()) {
+				if (eObject instanceof TclProjectInfo) {
+					TclProjectInfo pinfo = (TclProjectInfo) eObject;
+					String pname = pinfo.getName();
+					if (name != null && name.equals(pname)) {
+						info = pinfo;
+					}
 				}
 			}
+			if (info == null) {
+				info = TclPackagesFactory.eINSTANCE.createTclProjectInfo();
+				info.setName(name);
+				resource.getContents().add(info);
+			}
+			return info;
 		}
-		if (info == null) {
-			info = TclPackagesFactory.eINSTANCE.createTclProjectInfo();
-			info.setName(name);
-			infos.getContents().add(info);
-		}
-		return info;
 	}
 
 	private static void fetchPackagesForInterpreter(
@@ -192,13 +196,23 @@ public class TclPackagesManager {
 	}
 
 	public static void save() {
-		if (infos == null) {
-			return;
+		if (infos != null) {
+			try {
+				infos.save(null);
+			} catch (IOException e) {
+				TclPlugin.error(e);
+			}
 		}
-		try {
-			infos.save(null);
-		} catch (IOException e) {
-			TclPlugin.error(e);
+		synchronized (projectInfos) {
+			for (Map.Entry<String, Resource> entry : projectInfos.entrySet()) {
+				try {
+					entry.getValue().save(null);
+				} catch (IOException e) {
+					String msg = NLS.bind("Error saving {0} state: {1}", entry
+							.getKey(), e.getMessage());
+					TclPlugin.error(msg, e);
+				}
+			}
 		}
 	}
 
@@ -422,15 +436,32 @@ public class TclPackagesManager {
 		save();
 	}
 
+	private static URI getInfoLocation() {
+		final IPath path = TclPlugin.getDefault().getStateLocation().append(
+				"tclPackages_" + PKG_VERSION + ".info");
+		return URI.createFileURI(path.toOSString());
+	}
+
+	private static URI getProjectLocation(String projectName) {
+		final IPath path = TclPlugin.getDefault().getStateLocation().append(
+				"project-" + projectName + ".info");
+		return URI.createFileURI(path.toOSString());
+	}
+
+	private static boolean canLoad(URI location) {
+		if (location.isFile()) {
+			return new File(location.toFileString()).exists();
+		} else {
+			return true;
+		}
+	}
+
 	private static void initialize() {
 		if (infos == null) {
-			IPath packagesPath = TclPlugin.getDefault().getStateLocation()
-					.append("tclPackages_" + PKG_VERSION + ".info");
-			infos = new XMIResourceImpl(URI.createFileURI(packagesPath
-					.toOSString()));
+			final URI location = getInfoLocation();
+			infos = new XMIResourceImpl(location);
 			try {
-				File file = new File(packagesPath.toOSString());
-				if (file.exists()) {
+				if (canLoad(location)) {
 					infos.load(null);
 				}
 			} catch (IOException e) {
@@ -439,10 +470,44 @@ public class TclPackagesManager {
 		}
 	}
 
+	/**
+	 * @param name
+	 * @return
+	 */
+	private static Resource getProjectInfoResource(String projectName) {
+		synchronized (projectInfos) {
+			final Resource resource = projectInfos.get(projectName);
+			if (resource != null) {
+				return resource;
+			}
+		}
+		final URI location = getProjectLocation(projectName);
+		final Resource resource = new XMIResourceImpl(location);
+		try {
+			if (canLoad(location)) {
+				resource.load(null);
+			}
+		} catch (IOException e) {
+			TclPlugin.error(e);
+		}
+		synchronized (projectInfos) {
+			final Resource r = projectInfos.get(projectName);
+			if (r != null) {
+				return r;
+			} else {
+				projectInfos.put(projectName, resource);
+				return resource;
+			}
+		}
+	}
+
 	private static List<String> deployExecute(IExecutionEnvironment exeEnv,
 			String installLocation, String[] arguments,
 			EnvironmentVariable[] env) {
 		IDeployment deployment = exeEnv.createDeployment();
+		if (deployment == null) {
+			return null;
+		}
 		IFileHandle script = deploy(deployment);
 		if (script == null) {
 			return null;
@@ -509,14 +574,12 @@ public class TclPackagesManager {
 	}
 
 	public static synchronized List<TclModuleInfo> getProjectModules(String name) {
-		initialize();
 		TclProjectInfo info = getTclProject(name);
 		return Collections.unmodifiableList(info.getModules());
 	}
 
 	public static synchronized void setProjectModules(String name,
 			List<TclModuleInfo> modules) {
-		initialize();
 		TclProjectInfo info = getTclProject(name);
 		info.getModules().clear();
 		info.getModules().addAll(modules);
