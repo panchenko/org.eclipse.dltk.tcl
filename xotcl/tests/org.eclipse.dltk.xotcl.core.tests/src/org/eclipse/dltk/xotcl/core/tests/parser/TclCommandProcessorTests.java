@@ -404,7 +404,7 @@ public class TclCommandProcessorTests extends TestCase {
 	}
 
 	public void testTclSwitchProcessor005() throws TclParseException {
-		String script = "switch string {" + "set {" + "	pid" + "}"
+		String script = "switch string {" + "set {" + "	pid" + "} "
 				+ "default {puts boo}}";
 		testTclSwitchProcessor(script, 2);
 	}
