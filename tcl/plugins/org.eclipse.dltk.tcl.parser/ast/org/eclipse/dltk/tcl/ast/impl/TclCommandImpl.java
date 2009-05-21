@@ -35,21 +35,28 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getArguments <em>Arguments</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getDefinition <em>Definition</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getMatches <em>Matches</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getQualifiedName <em>Qualified Name</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#isMatched <em>Matched</em>}</li>
+ * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getName <em>Name
+ * </em>}</li>
+ * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getArguments <em>
+ * Arguments</em>}</li>
+ * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getDefinition <em>
+ * Definition</em>}</li>
+ * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getMatches <em>
+ * Matches</em>}</li>
+ * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#getQualifiedName <em>
+ * Qualified Name</em>}</li>
+ * <li>{@link org.eclipse.dltk.tcl.ast.impl.TclCommandImpl#isMatched <em>Matched
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TclCommandImpl extends NodeImpl implements TclCommand {
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' containment
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -57,8 +64,9 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected TclArgument name;
 
 	/**
-	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getArguments() <em>Arguments</em>}'
+	 * containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getArguments()
 	 * @generated
 	 * @ordered
@@ -66,8 +74,9 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected EList<TclArgument> arguments;
 
 	/**
-	 * The cached value of the '{@link #getDefinition() <em>Definition</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDefinition() <em>Definition</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDefinition()
 	 * @generated
 	 * @ordered
@@ -75,8 +84,9 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected Command definition;
 
 	/**
-	 * The cached value of the '{@link #getMatches() <em>Matches</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getMatches() <em>Matches</em>}'
+	 * containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getMatches()
 	 * @generated
 	 * @ordered
@@ -84,9 +94,10 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected EList<ArgumentMatch> matches;
 
 	/**
-	 * The default value of the '{@link #getQualifiedName() <em>Qualified Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getQualifiedName()
+	 * <em>Qualified Name</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getQualifiedName()
 	 * @generated
 	 * @ordered
@@ -94,9 +105,10 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected static final String QUALIFIED_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getQualifiedName() <em>Qualified Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getQualifiedName()
+	 * <em>Qualified Name</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getQualifiedName()
 	 * @generated
 	 * @ordered
@@ -104,8 +116,9 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected String qualifiedName = QUALIFIED_NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isMatched() <em>Matched</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #isMatched() <em>Matched</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isMatched()
 	 * @generated
 	 * @ordered
@@ -113,8 +126,9 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	protected static final boolean MATCHED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isMatched() <em>Matched</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #isMatched() <em>Matched</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isMatched()
 	 * @generated
 	 * @ordered
@@ -123,6 +137,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected TclCommandImpl() {
@@ -131,6 +146,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -140,6 +156,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public TclArgument getName() {
@@ -147,8 +164,8 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetName(TclArgument newName,
@@ -169,6 +186,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setName(TclArgument newName) {
@@ -192,6 +210,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<TclArgument> getArguments() {
@@ -204,6 +223,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Command getDefinition() {
@@ -222,6 +242,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Command basicGetDefinition() {
@@ -230,6 +251,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDefinition(Command newDefinition) {
@@ -243,6 +265,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<ArgumentMatch> getMatches() {
@@ -255,6 +278,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getQualifiedName() {
@@ -263,6 +287,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setQualifiedName(String newQualifiedName) {
@@ -276,6 +301,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isMatched() {
@@ -284,6 +310,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setMatched(boolean newMatched) {
@@ -295,8 +322,8 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -317,6 +344,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -342,6 +370,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -374,6 +403,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -403,6 +433,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -427,6 +458,7 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	@Override
@@ -440,7 +472,8 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 		result.append(", matched: ");
 		result.append(matched);
 		result.append(')');
-		result.append("\n{" + SimpleCodePrinter.getCommandString(this) + "}");
+		result.append("\n{"
+				+ SimpleCodePrinter.getCommandString(this, getStart()) + "}");
 		return result.toString();
 	}
 
