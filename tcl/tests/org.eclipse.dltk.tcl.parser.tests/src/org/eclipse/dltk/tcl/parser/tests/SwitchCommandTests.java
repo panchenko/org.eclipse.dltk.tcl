@@ -85,14 +85,22 @@ public class SwitchCommandTests extends TestCase {
 		String source = "switch -exact -- $i { \"jobs\" { set flag 1} }";
 		typedCheck(source, 0, 1);
 	}
+
 	public void test013() throws Exception {
 		String script = "switch -exact -regexp -glob \"\" {"
-			+ "	[func] {puts py!}" + "	default {puts boo}" + " }";
+				+ "	[func] {puts py!}" + "	default {puts boo}" + " }";
+		typedCheck(script, 0, 2);
+	}
+
+	public void test014() throws Exception {
+		String script = "switch string {" + "set {" + "	pid" + "} "
+				+ "default {puts boo}}";
 		typedCheck(script, 0, 2);
 	}
 
 	private void typedCheck(final String source, int errs, int code)
 			throws Exception {
+		System.out.println("=============================================");
 		processor = DefinitionManager.getInstance().createProcessor();
 		TclParser parser = new TclParser("8.4");
 		TclErrorCollector errors = new TclErrorCollector();

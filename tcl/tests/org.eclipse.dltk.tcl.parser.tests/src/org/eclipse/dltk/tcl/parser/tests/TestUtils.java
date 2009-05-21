@@ -104,9 +104,9 @@ public class TestUtils {
 
 	public static void outCode(String source, int startPos, int endPos) {
 		System.out.println("------------------code-----------------------\n"
-				+ source);
+				+ source.replace('\t', ' '));
 		outBlock(startPos, endPos);
-		System.out.println("=============================================");
+//		System.out.println("=============================================");
 	}
 
 	private static void outBlock(int startPos, int endPos) {

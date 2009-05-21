@@ -13,7 +13,6 @@ package org.eclipse.dltk.tcl.parser.tests;
 
 import java.util.List;
 
-import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -68,12 +67,38 @@ public class SimpleCodePrinterTests extends TestCase {
 
 	public void test010() throws Exception {
 		outCheck("proc hello2 {name2} {\n" + "	puts \"Hello, $name2\"\n" + "}",
-				"proc hello2 {name2} {puts \"Hello, $name2\"}");
+				"proc hello2 {name2} {  puts \"Hello, $name2\" }");
 	}
 
 	public void test011() throws Exception {
 		outCheck("if {$DEF(cancel) == $caller} {$caller} else {.$caller}",
 				"if {$DEF(cancel) == $caller} {$caller} else {.$caller}");
+	}
+
+	public void test012() throws Exception {
+		String s = "if {     $DEF(cancel)      ==      $caller     } {$caller} else {.$caller}";
+		outCheck(s, s);
+	}
+	public void test013() throws Exception {
+		String s = "if      {     $DEF(         cancel             )      ==      $caller     } {      $caller    } else {.$caller}";
+		outCheck(s, s);
+	}
+	public void test014() throws Exception {
+		String s = "proc alfa {    a    {   bbbb  }  {c {    d   }   } {    }";
+		outCheck(s, s);
+	}
+	
+	public void test015() throws Exception {
+		String s = "set a [    alfa]";
+		outCheck(s, s);
+	}
+	public void test016() throws Exception {
+		String s = "set a [    alfa      ]";
+		outCheck(s, s);
+	}
+	public void test017() throws Exception {
+		String s = "set a       [    alfa                 ]";
+		outCheck(s, s);
 	}
 
 	private void outCheck(String source, String expected) throws Exception {
