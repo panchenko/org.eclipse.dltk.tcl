@@ -244,7 +244,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			return stringToAST(argument, value);
 		} else if (arg instanceof ComplexString) {
 			ComplexString carg = (ComplexString) arg;
-			return stringToAST(carg, SimpleCodePrinter.getArgumentString(carg));
+			return stringToAST(carg, SimpleCodePrinter.getArgumentString(carg,
+					carg.getStart()));
 		} else if (arg instanceof Script) {
 			Script st = (Script) arg;
 			EList<TclCommand> eList = st.getCommands();
@@ -257,8 +258,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 		} else if (arg instanceof VariableReference) {
 			VariableReference variableReference = (VariableReference) arg;
-			String content = SimpleCodePrinter
-					.getArgumentString(variableReference);
+			String content = SimpleCodePrinter.getArgumentString(
+					variableReference, variableReference.getStart());
 			return new SimpleReference(arg.getStart(), arg.getEnd(), content);
 		} else if (arg instanceof Substitution) {
 			Substitution st = (Substitution) arg;
@@ -273,7 +274,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			return block;
 		} else if (arg instanceof TclArgumentList) {
 			TclArgumentList st = (TclArgumentList) arg;
-			String str = SimpleCodePrinter.getArgumentString(st);
+			String str = SimpleCodePrinter.getArgumentString(st, st.getStart());
 			return stringToAST(st, str);
 		}
 		throw new RuntimeException(
@@ -408,6 +409,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		if (reporter != null) {
 			collector = new TclErrorCollector();
 		}
+		newParser.setGlobalOffset(globalOffset);
 		TclModule module = newParser.parseModule(new String(source), collector,
 				coreProcessor);
 		// TODO: Add error passing to reporter here.

@@ -114,19 +114,22 @@ public class PackageSourceCollector extends TclVisitor {
 		if (style == null) {
 			return;
 		}
-		final String keyword = SimpleCodePrinter.getArgumentString(style);
+		final String keyword = SimpleCodePrinter.getArgumentString(style, style
+				.getStart());
 		if (REQUIRE.equalsIgnoreCase(keyword)) {
 			TclArgument pkgName = getStringArg(args, 1);
 			if (pkgName == null) {
 				return;
 			}
-			String packageName = SimpleCodePrinter.getArgumentString(pkgName);
+			String packageName = SimpleCodePrinter.getArgumentString(pkgName,
+					pkgName.getStart());
 			if (EXACT.equals(packageName)) {
 				pkgName = getStringArg(args, 2);
 				if (pkgName == null) {
 					return;
 				}
-				packageName = SimpleCodePrinter.getArgumentString(pkgName);
+				packageName = SimpleCodePrinter.getArgumentString(pkgName,
+						pkgName.getStart());
 			}
 			// if (TclPackagesManager.isValidPackageName(packageName)) {
 			TclSourceEntry entry = TclPackagesFactory.eINSTANCE
@@ -143,7 +146,8 @@ public class PackageSourceCollector extends TclVisitor {
 			if (pkgName == null) {
 				return;
 			}
-			String pkg = SimpleCodePrinter.getArgumentString(pkgName);
+			String pkg = SimpleCodePrinter.getArgumentString(pkgName, pkgName
+					.getStart());
 			// if (TclPackagesManager.isValidPackageName(pkg)) {
 			// packagesProvided.add(new PackageInfo(pkg, null, currentModule));
 			// }
@@ -164,7 +168,8 @@ public class PackageSourceCollector extends TclVisitor {
 			entry.setStart(tclArgument.getStart());
 			entry.setEnd(tclArgument.getEnd());
 			this.currentModuleInfo.getSourced().add(entry);
-			entry.setValue(SimpleCodePrinter.getArgumentString(tclArgument));
+			entry.setValue(SimpleCodePrinter.getArgumentString(tclArgument,
+					tclArgument.getStart()));
 		}
 	}
 
