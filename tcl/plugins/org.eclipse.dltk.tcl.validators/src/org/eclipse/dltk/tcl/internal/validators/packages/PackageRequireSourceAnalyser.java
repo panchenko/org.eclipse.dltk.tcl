@@ -59,6 +59,7 @@ import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
+import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
@@ -129,24 +130,25 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 	private int buildType;
 	private boolean autoAddPackages;
+	private TclProjectInfo projectInfo;
 	private Set<TclModuleInfo> providedByRequiredProjects = new HashSet<TclModuleInfo>();
 
 	public boolean beginBuild(int buildType) {
 		this.buildType = buildType;
 		this.autoAddPackages = ScriptProjectUtil.isBuilderEnabled(project);
-		List<TclModuleInfo> moduleInfos = new ArrayList<TclModuleInfo>();
-		moduleInfos.addAll(TclPackagesManager.getProjectModules(project
-				.getElementName()));
+		projectInfo = TclPackagesManager
+				.getTclProject(project.getElementName());
 		if (buildType == IBuildParticipantExtension.FULL_BUILD) {
 			// We need to clear all information of builds instead of correction
 			// information. Empty modules will be removed later.
-			for (TclModuleInfo tclModuleInfo : moduleInfos) {
+			for (TclModuleInfo tclModuleInfo : projectInfo.getModules()) {
 				tclModuleInfo.getProvided().clear();
 				tclModuleInfo.getRequired().clear();
 				tclModuleInfo.getSourced().clear();
 			}
 		}
-		packageCollector.getModules().put(project, moduleInfos);
+		packageCollector.getModules().put(project,
+				new ArrayList<TclModuleInfo>(projectInfo.getModules()));
 		loadProvidedPackagesFromRequiredProjects();
 		return true;
 	}
@@ -169,7 +171,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 						.lastSegment());
 				if (project.exists()) {
 					List<TclModuleInfo> list = TclPackagesManager
-							.getProjectModules(project.getName());
+							.getTclProject(project.getName()).getModules();
 					providedByRequiredProjects.addAll(list);
 				}
 			}
@@ -334,8 +336,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				}
 			}
 			// Save packages provided by the project
-			TclPackagesManager.setProjectModules(project.getElementName(),
-					result);
+			projectInfo.getModules().clear();
+			projectInfo.getModules().addAll(result);
+			TclPackagesManager.save(projectInfo);
 			// Do delta refresh
 			try {
 				ModelManager.getModelManager().getDeltaProcessor()
