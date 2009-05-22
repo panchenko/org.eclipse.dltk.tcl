@@ -3,14 +3,7 @@
  */
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.environment.EnvironmentManager;
-import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.preferences.TclBuildPathsBlock;
@@ -41,15 +34,15 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 	}
 
 	protected void postConfigureProject() throws CoreException {
-		final IProject project = getCurrProject();
-		final IEnvironment environment = EnvironmentManager
-				.getEnvironment(project);
-		if (environment != null && !environment.isLocal()) {
-			final Map options = new HashMap();
-			options.put(DLTKCore.INDEXER_ENABLED, DLTKCore.DISABLED);
-			options.put(DLTKCore.BUILDER_ENABLED, DLTKCore.DISABLED);
-			DLTKCore.create(project).setOptions(options);
-		}
+		// final IProject project = getCurrProject();
+		// final IEnvironment environment = EnvironmentManager
+		// .getEnvironment(project);
+		// if (environment != null && !environment.isLocal()) {
+		// final Map options = new HashMap();
+		// options.put(DLTKCore.INDEXER_ENABLED, DLTKCore.DISABLED);
+		// options.put(DLTKCore.BUILDER_ENABLED, DLTKCore.DISABLED);
+		// DLTKCore.create(project).setOptions(options);
+		// }
 	}
 
 }
