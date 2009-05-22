@@ -19,11 +19,11 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.ast.ITclStatementLookLike;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
@@ -54,11 +54,12 @@ public class TclFoldingStructureProvider extends
 	private List fBlockIncludeList = new ArrayList();
 	private List fBlockExcludeList = new ArrayList();
 
-	private IElementCommentResolver fElementCommentResolver = new TclElementCommentResolver();
 	private boolean fInitCollapseOtherBlocks;
 
-	public IElementCommentResolver getElementCommentResolver() {
-		return fElementCommentResolver;
+	public IElementCommentResolver createElementCommentResolver(
+			IModelElement modelElement, String contents) {
+		return new TclElementCommentResolver((ISourceModule) modelElement,
+				contents);
 	}
 
 	protected CodeBlock[] getCodeBlocks(String code, int offset) {
