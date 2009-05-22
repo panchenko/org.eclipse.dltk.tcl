@@ -59,7 +59,6 @@ import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
-import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
@@ -131,25 +130,24 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 	private int buildType;
 	private boolean autoAddPackages;
-	private TclProjectInfo projectInfo;
 	private Set<TclModuleInfo> providedByRequiredProjects = new HashSet<TclModuleInfo>();
 
 	public boolean beginBuild(int buildType) {
 		this.buildType = buildType;
 		this.autoAddPackages = ScriptProjectUtil.isBuilderEnabled(project);
-		projectInfo = TclPackagesManager
-				.getTclProject(project.getElementName());
+		List<TclModuleInfo> moduleInfos = new ArrayList<TclModuleInfo>();
+		moduleInfos.addAll(TclPackagesManager.getProjectModules(project
+				.getElementName()));
 		if (buildType == IBuildParticipantExtension.FULL_BUILD) {
 			// We need to clear all information of builds instead of correction
 			// information. Empty modules will be removed later.
-			for (TclModuleInfo tclModuleInfo : projectInfo.getModules()) {
+			for (TclModuleInfo tclModuleInfo : moduleInfos) {
 				tclModuleInfo.getProvided().clear();
 				tclModuleInfo.getRequired().clear();
 				tclModuleInfo.getSourced().clear();
 			}
 		}
-		packageCollector.getModules().put(project,
-				new ArrayList<TclModuleInfo>(projectInfo.getModules()));
+		packageCollector.getModules().put(project, moduleInfos);
 		loadProvidedPackagesFromRequiredProjects();
 		return true;
 	}
@@ -172,7 +170,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 						.lastSegment());
 				if (project.exists()) {
 					List<TclModuleInfo> list = TclPackagesManager
-							.getTclProject(project.getName()).getModules();
+							.getProjectModules(project.getName());
 					providedByRequiredProjects.addAll(list);
 				}
 			}
@@ -230,23 +228,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		IFileHandle handle = EnvironmentPathUtils.getFile(module);
 		InputStream stream = cache.getCacheEntryAttribute(handle,
 				TclASTCache.TCL_PKG_INFO);
-		try {
-			if (stream != null) {
-				Resource res = new BinaryResourceImpl();
-				try {
-					res.load(stream, null);
-					info = (TclModuleInfo) res.getContents().get(0);
-				} catch (IOException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
-				}
-			}
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
+		if (stream != null) {
+			Resource res = new BinaryResourceImpl();
+			try {
+				res.load(stream, null);
+				stream.close();
+				info = (TclModuleInfo) res.getContents().get(0);
+			} catch (IOException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -285,8 +275,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		monitor.subTask(Messages.TclCheckBuilder_retrievePackages);
 		// initialize manager caches after they are collected
 		@SuppressWarnings("unchecked")
-		final Set<String> names = InterpreterContainerHelper
-				.getInterpreterContainerDependencies(project);
+		final Set<String> names = new HashSet<String>();
+		final Set<String> autoNames = new HashSet<String>();
+		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
+				names, autoNames);
 		// process all modules
 		final Set<String> newDependencies = new HashSet<String>();
 		int remainingWork = modules.size();
@@ -313,20 +305,21 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					}
 				}
 				checkPackage(toCheck, moduleInfo.reporter,
-						moduleInfo.lineTracker, newDependencies, names);
+						moduleInfo.lineTracker, newDependencies, names,
+						autoNames);
 			}
 			// TODO: Add option to disable checking of sourced items from here.
 			checkSources(environment, moduleInfo);
 
 			--remainingWork;
 		}
-		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
-				&& isAutoAddPackages() && !newDependencies.isEmpty()) {
-			if (names.addAll(newDependencies)) {
-				InterpreterContainerHelper.setInterpreterContainerDependencies(
-						project, names);
-			}
-		}
+		// if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
+		// && isAutoAddPackages() && !newDependencies.isEmpty()) {
+		// if (names.addAll(newDependencies)) {
+		// InterpreterContainerHelper.setInterpreterContainerDependencies(
+		// project, names);
+		// }
+		// }
 		if (buildType != IBuildParticipantExtension.RECONCILE_BUILD) {
 			List<TclModuleInfo> mods = packageCollector.getModules().get(
 					project);
@@ -341,9 +334,14 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				}
 			}
 			// Save packages provided by the project
-			projectInfo.getModules().clear();
-			projectInfo.getModules().addAll(result);
-			TclPackagesManager.save(projectInfo);
+			TclPackagesManager.setProjectModules(project.getElementName(),
+					result);
+			/*
+			 * TODO: Replace with correct model update event here.
+			 */
+			InterpreterContainerHelper.setInterpreterContainerDependencies(
+					project, names, newDependencies);
+
 			// Do delta refresh
 			try {
 				ModelManager.getModelManager().getDeltaProcessor()
@@ -495,7 +493,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 	private void checkPackage(TclSourceEntry pkg, IProblemReporter reporter,
 			ISourceLineTracker lineTracker, Set<String> newDependencies,
-			Set<String> names) {
+			Set<String> names, Set<String> autoNames) {
 		final String packageName = pkg.getValue();
 
 		List<TclModuleInfo> list = new ArrayList<TclModuleInfo>();
@@ -509,12 +507,13 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		}
 
 		for (TclModuleInfo tclModuleInfo : list) {
-			IModelElement element = DLTKCore.create(tclModuleInfo.getHandle());
-			// Check for file existance
-			if (element != null && element.exists()) {
-				EList<TclSourceEntry> provided = tclModuleInfo.getProvided();
-				for (TclSourceEntry tclSourceEntry : provided) {
-					if (tclSourceEntry.getValue().equals(packageName)) {
+			EList<TclSourceEntry> provided = tclModuleInfo.getProvided();
+			for (TclSourceEntry tclSourceEntry : provided) {
+				if (tclSourceEntry.getValue().equals(packageName)) {
+					IModelElement element = DLTKCore.create(tclModuleInfo
+							.getHandle());
+					// Check for file existance
+					if (element != null && element.exists()) {
 						return; // Found provided package
 					}
 				}
@@ -551,7 +550,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		if (!isAutoAddPackages()) {
 			// Check for already added packages for case then builder is not
 			// enabled.
-			if (!names.contains(packageName)) {
+			if (!names.contains(packageName)
+					&& !autoNames.contains(packageName)) {
 				reportPackageProblem(pkg, reporter, NLS.bind(
 						Messages.TclCheckBuilder_unresolvedDependencies,
 						packageName), packageName, lineTracker);
