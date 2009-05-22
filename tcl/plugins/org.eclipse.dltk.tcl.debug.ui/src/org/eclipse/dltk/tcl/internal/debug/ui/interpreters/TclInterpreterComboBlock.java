@@ -68,6 +68,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	}
 
 	private Set<String> packages = new HashSet<String>();
+	private Set<String> autoPackages = new HashSet<String>();
 
 	public class PackagesLabelProvider extends LabelProvider {
 
@@ -350,14 +351,18 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			IBuildpathEntry[] currentEntries) {
 		this.scriptProject = project;
 		@SuppressWarnings("unchecked")
-		Set<String> set = InterpreterContainerHelper
-				.getInterpreterContainerDependencies(project);
+		Set<String> set = new HashSet<String>();
+		Set<String> autoSet = new HashSet<String>();
+		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
+				set, autoSet);
 		this.packages.addAll(set);
+		this.autoPackages.addAll(autoSet);
 	}
 
 	public IBuildpathEntry getEntry() {
 		IBuildpathEntry createPackagesContainer = InterpreterContainerHelper
-				.createPackagesContainer(this.packages, getInterpreterPath());
+				.createPackagesContainer(this.packages, this.autoPackages,
+						getInterpreterPath());
 		return createPackagesContainer;
 	}
 }

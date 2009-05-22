@@ -60,6 +60,7 @@ public class TclPackagesContainerPage extends NewElementWizardPage implements
 	}
 
 	private Set packages = new HashSet();
+	private Set autoPackages = new HashSet();
 
 	private class PackagesContentProvider implements ITreeContentProvider {
 
@@ -114,9 +115,9 @@ public class TclPackagesContainerPage extends NewElementWizardPage implements
 
 	public IBuildpathEntry getSelection() {
 		IBuildpathEntry createPackagesContainer = InterpreterContainerHelper
-				.createPackagesContainer(this.packages, new Path(
-						InterpreterContainerHelper.CONTAINER_PATH)
-						.append(this.scriptProject.getElementName()));
+				.createPackagesContainer(this.packages, this.autoPackages,
+						new Path(InterpreterContainerHelper.CONTAINER_PATH)
+								.append(this.scriptProject.getElementName()));
 		return createPackagesContainer;
 	}
 
@@ -292,8 +293,11 @@ public class TclPackagesContainerPage extends NewElementWizardPage implements
 	public void initialize(IScriptProject project,
 			IBuildpathEntry[] currentEntries) {
 		this.scriptProject = project;
-		Set set = InterpreterContainerHelper
-				.getInterpreterContainerDependencies(project);
+		Set set = new HashSet();
+		Set autoSet = new HashSet();
+		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
+				set, autoSet);
 		this.packages.addAll(set);
+		this.autoPackages.addAll(autoSet);
 	}
 }
