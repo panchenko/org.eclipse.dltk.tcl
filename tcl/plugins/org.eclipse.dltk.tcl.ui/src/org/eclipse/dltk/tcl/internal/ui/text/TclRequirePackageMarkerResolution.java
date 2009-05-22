@@ -3,6 +3,7 @@
  */
 package org.eclipse.dltk.tcl.internal.ui.text;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
@@ -39,11 +40,14 @@ final class TclRequirePackageMarkerResolution implements IMarkerResolution,
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 			if (install != null) {
-				final Set names = InterpreterContainerHelper
-						.getInterpreterContainerDependencies(project);
+				final Set names = new HashSet();
+				final Set autoNames = new HashSet();
+				InterpreterContainerHelper.getInterpreterContainerDependencies(
+						project, names, autoNames);
 				if (names.add(pkgName)) {
 					InterpreterContainerHelper
-							.setInterpreterContainerDependencies(project, names);
+							.setInterpreterContainerDependencies(project,
+									names, autoNames);
 					return true;
 				}
 			}

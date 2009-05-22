@@ -89,7 +89,7 @@ final class TclSourceCorrectionMarkerResolution implements IMarkerResolution,
 				correction.setOriginalValue(sourceName);
 				correction.setUserValue(file);
 				info.getSourceCorrections().add(correction);
-				TclPackagesManager.save(tclProject);
+				TclPackagesManager.save();
 				// We need to fire external archives change.
 				ModelManager.getModelManager().getDeltaProcessor()
 						.checkExternalChanges(new IModelElement[] { project },

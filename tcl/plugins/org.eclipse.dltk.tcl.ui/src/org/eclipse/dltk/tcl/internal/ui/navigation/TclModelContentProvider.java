@@ -25,6 +25,7 @@ public class TclModelContentProvider implements IModelContentProvider {
 
 	public void provideModelChanges(Object parentElement, List children,
 			ITreeContentProvider iTreeContentProvider) {
+		//System.out.println("CONTAINER:" + parentElement);
 		if (parentElement instanceof BuildPathContainer) {
 			BuildPathContainer container = (BuildPathContainer) parentElement;
 			IBuildpathEntry entry = container.getBuildpathEntry();

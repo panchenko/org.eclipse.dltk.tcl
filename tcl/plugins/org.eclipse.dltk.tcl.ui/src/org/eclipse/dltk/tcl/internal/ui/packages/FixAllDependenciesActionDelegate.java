@@ -219,13 +219,16 @@ public class FixAllDependenciesActionDelegate implements
 						.hasNext();) {
 					IScriptProject project = (IScriptProject) iterator2.next();
 					Set values = (Set) projectToPackages.get(project);
-					Set names = InterpreterContainerHelper
-							.getInterpreterContainerDependencies(project);
-					names.addAll(values);
+					Set names = new HashSet();
+					Set autoNames = new HashSet();
+					InterpreterContainerHelper
+							.getInterpreterContainerDependencies(project,
+									names, autoNames);
+					autoNames.addAll(values);
 					if (project != null) {
 						InterpreterContainerHelper
 								.setInterpreterContainerDependencies(project,
-										names);
+										names, autoNames);
 					}
 				}
 

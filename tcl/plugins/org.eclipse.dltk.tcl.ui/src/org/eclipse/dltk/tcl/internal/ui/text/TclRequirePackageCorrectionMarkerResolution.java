@@ -104,8 +104,10 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 			if (install != null) {
-				final Set pnames = InterpreterContainerHelper
-						.getInterpreterContainerDependencies(project);
+				final Set pnames = new HashSet();
+				final Set pAutoNames = new HashSet();
+				InterpreterContainerHelper.getInterpreterContainerDependencies(
+						project, pnames, pAutoNames);
 
 				Set packages = TclPackagesManager
 						.getPackageInfosAsString(install);
@@ -154,14 +156,14 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 						correction.setUserValue(pkg);
 						moduleInfo.getPackageCorrections().add(correction);
 					}
-					TclPackagesManager.save(info);
+					TclPackagesManager.save();
 				} else {
 					return false;
 				}
 				if (pnames.addAll(pkgs)) {
 					InterpreterContainerHelper
 							.setInterpreterContainerDependencies(project,
-									pnames);
+									pnames, pAutoNames);
 				} else {
 					ModelManager.getModelManager().getDeltaProcessor()
 							.checkExternalChanges(
