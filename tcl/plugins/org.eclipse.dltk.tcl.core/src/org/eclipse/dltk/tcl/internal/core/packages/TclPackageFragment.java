@@ -1,8 +1,10 @@
 package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -198,6 +200,28 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 	}
 
 	public long getTimeStamp() {
+		// Check for package still pressent here or not.
+		Set<String> reqs = new HashSet<String>();
+		TclPackagesModelProvider.collectRealRequirements(getScriptProject(),
+				reqs);
+		IInterpreterInstall install = TclPackagesModelProvider
+				.resolveInterpreterInstall(getScriptProject());
+		if (install == null) {
+			return 0;
+		}
+
+		List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
+				install, reqs, true);
+		boolean found = false;
+		for (TclPackageInfo packageName : infos) {
+			if (packageName.getName().equals(this.packageName)) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			return 0;
+		}
 		return currentPath.hashCode();
 	}
 }

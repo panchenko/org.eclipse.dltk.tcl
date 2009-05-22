@@ -59,8 +59,9 @@ public class TclPackagesInterpreterContainerExtension implements
 			}
 		}
 		if (install != null) {
-			Set<String> set = InterpreterContainerHelper
-					.getInterpreterContainerDependencies(project);
+			Set<String> set = new HashSet<String>();
+			InterpreterContainerHelper.getInterpreterContainerDependencies(
+					project, set, set);
 
 			List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
 					install, set, true);

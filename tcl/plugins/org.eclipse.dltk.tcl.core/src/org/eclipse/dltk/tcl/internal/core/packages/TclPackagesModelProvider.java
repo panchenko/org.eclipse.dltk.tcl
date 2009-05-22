@@ -1,5 +1,6 @@
 package org.eclipse.dltk.tcl.internal.core.packages;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelProvider;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.launching.InterpreterContainerInitializer;
@@ -38,15 +40,16 @@ public class TclPackagesModelProvider implements IModelProvider {
 				return;
 			}
 			// Add packages fragment
-			Set<String> set = InterpreterContainerHelper
-					.getInterpreterContainerDependencies(project);
+
+			Set<String> realRequirements = new HashSet<String>();
+			collectRealRequirements(project, realRequirements);
 
 			IInterpreterInstall install = resolveInterpreterInstall(project);
 			if (install == null) {
 				return;
 			}
 			List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
-					install, set, true);
+					install, realRequirements, true);
 			for (TclPackageInfo packageName : infos) {
 				TclPackageFragment pfragment = new TclPackageFragment(
 						(ScriptProject) parentElement, packageName.getName());
@@ -57,7 +60,48 @@ public class TclPackagesModelProvider implements IModelProvider {
 		}
 	}
 
-	private IInterpreterInstall resolveInterpreterInstall(ScriptProject project) {
+	public static void collectRealRequirements(IScriptProject project,
+			Set<String> realRequirements) {
+		Set<String> set = new HashSet<String>();
+		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
+				set, set);
+		// set.addAll(realRequirements);
+		realRequirements.addAll(set);
+		// TclProjectInfo projectInfo = TclPackagesManager.getTclProject(project
+		// .getElementName());
+
+		// EList<TclModuleInfo> modules = projectInfo.getModules();
+		// for (TclModuleInfo tclModuleInfo : modules) {
+		// EList<TclSourceEntry> required = tclModuleInfo.getRequired();
+		// EList<UserCorrection> corrections = tclModuleInfo
+		// .getPackageCorrections();
+		// IModelElement element = null;
+		// if (required.isEmpty()) {
+		// element = DLTKCore.create(tclModuleInfo.getHandle());
+		// // Check for file existance
+		// if (element != null && element.exists()) {
+		// if (element instanceof TclPackageSourceModule) {
+		// continue;
+		// }
+		// }
+		// }
+		// for (TclSourceEntry req : required) {
+		// String value = req.getValue();
+		// for (UserCorrection userCorrection : corrections) {
+		// if (userCorrection.getOriginalValue().equals(value)) {
+		// value = userCorrection.getUserValue();
+		// break;
+		// }
+		// }
+		// if (TclPackagesManager.isValidName(value)) {
+		// realRequirements.add(value);
+		// }
+		// }
+		// }
+	}
+
+	public static IInterpreterInstall resolveInterpreterInstall(
+			IScriptProject project) {
 		try {
 			IInterpreterInstall install = null;
 			install = ScriptRuntime.getInterpreterInstall(project);
@@ -112,6 +156,7 @@ public class TclPackagesModelProvider implements IModelProvider {
 		// if (!TclCorePreferences.USE_PACKAGE_CONCEPT) {
 		// return false;
 		// }
+
 		if (modelElement.getElementType() == IModelElement.SCRIPT_PROJECT) {
 			return true;
 		}

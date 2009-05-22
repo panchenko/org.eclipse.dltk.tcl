@@ -19,6 +19,8 @@ import org.eclipse.dltk.ast.parser.ISourceParserExtension;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformenceNode;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.Script;
@@ -39,6 +41,7 @@ import org.eclipse.dltk.tcl.core.ITclCommandDetectorExtension;
 import org.eclipse.dltk.tcl.core.ITclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.ITclSourceParser;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.ITclCommandDetector.CommandInfo;
@@ -402,6 +405,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 	public ModuleDeclaration parse(final char[] fileName, char[] source,
 			final IProblemReporter reporter) {
+		PerformenceNode node = RuntimePerformanceMonitor.begin();
 		processedForContentNodes.clear();
 		this.problemReporter = reporter;
 		TclParser newParser = new TclParser();
@@ -417,6 +421,9 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		if (collector != null) {
 			collector.reportAll(reporter, tracker);
 		}
+
+		node.done(TclNature.NATURE_ID, "new tcl source parser:time",
+				source.length);
 		return result;
 	}
 

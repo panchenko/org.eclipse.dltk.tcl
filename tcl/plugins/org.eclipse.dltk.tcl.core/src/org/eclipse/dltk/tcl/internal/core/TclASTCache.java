@@ -3,6 +3,8 @@ package org.eclipse.dltk.tcl.internal.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.IASTCache;
@@ -31,7 +33,48 @@ public class TclASTCache implements IASTCache {
 	public static final String TCL_STRUCTURE_INDEX = IContentCache.STRUCTURE_INDEX;
 	public static final String TCL_MIXIN_INDEX = IContentCache.MIXIN_INDEX;
 
+	private class StoreEntry {
+		ProblemCollector problems;
+		IFileHandle handle;
+		TclModule module;
+	}
+
+	List<StoreEntry> entriesToStore = new ArrayList<StoreEntry>();
+
+	private Thread storeASTThread = new Thread() {
+		public void run() {
+			while (true) {
+				synchronized (entriesToStore) {
+					if (entriesToStore.isEmpty()) {
+						try {
+							entriesToStore.wait(100);
+						} catch (InterruptedException e) {
+							if (DLTKCore.DEBUG) {
+								e.printStackTrace();
+							}
+						}
+					} else {
+						StoreEntry entry = entriesToStore.remove(0);
+						IContentCache cache = ModelManager.getModelManager()
+								.getCoreCache();
+						OutputStream stream = cache
+								.getCacheEntryAttributeOutputStream(
+										entry.handle, TCL_AST_ATTRIBUTE);
+
+						storeTclEntryInCache(entry.problems, entry.module,
+								stream);
+						try {
+							stream.close();
+						} catch (IOException e) {
+						}
+					}
+				}
+			}
+		};
+	};
+
 	public TclASTCache() {
+		storeASTThread.start();
 	}
 
 	public ASTCacheEntry restoreModule(ISourceModule module) {
@@ -104,9 +147,6 @@ public class TclASTCache implements IASTCache {
 
 	public void storeModule(ISourceModule module,
 			ModuleDeclaration moduleDeclaration, ProblemCollector problems) {
-		if (true) {
-			return;
-		}
 		IFileHandle handle = EnvironmentPathUtils.getFile(module);
 		if (handle == null) {
 			return;
@@ -115,14 +155,16 @@ public class TclASTCache implements IASTCache {
 			TclModuleDeclaration decl = (TclModuleDeclaration) moduleDeclaration;
 			TclModule tclModule = decl.getTclModule();
 			if (tclModule != null) {
-				IContentCache cache = ModelManager.getModelManager()
-						.getCoreCache();
-				OutputStream stream = cache.getCacheEntryAttributeOutputStream(
-						handle, TCL_AST_ATTRIBUTE);
-				storeTclEntryInCache(problems, tclModule, stream);
-				try {
-					stream.close();
-				} catch (IOException e) {
+				StoreEntry entry = new StoreEntry();
+				entry.handle = handle;
+				entry.module = tclModule;
+				if (problems != null) {
+					entry.problems = new ProblemCollector();
+					problems.copyTo(entry.problems);
+				}
+				synchronized (entriesToStore) {
+					entriesToStore.add(entry);
+					entriesToStore.notifyAll();
 				}
 			}
 		}

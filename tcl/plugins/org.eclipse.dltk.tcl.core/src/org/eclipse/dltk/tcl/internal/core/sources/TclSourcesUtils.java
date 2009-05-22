@@ -62,8 +62,9 @@ public class TclSourcesUtils {
 	public static Set<IPath> getPackages(IScriptProject project,
 			IInterpreterInstall install) {
 		Set<IPath> result = new HashSet<IPath>();
-		Set<String> packages = InterpreterContainerHelper
-				.getInterpreterContainerDependencies(project);
+		Set<String> packages = new HashSet<String>();
+		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
+				packages, packages);
 
 		List<TclPackageInfo> packageInfos = TclPackagesManager.getPackageInfos(
 				install, packages, true);
@@ -83,8 +84,8 @@ public class TclSourcesUtils {
 		Set<IPath> buildpath = getBuildpath(scriptProject, visitedProjects);
 		Set<IPath> packageFiles = getPackages(scriptProject, install);
 
-		List<TclModuleInfo> modules = TclPackagesManager.getTclProject(
-				scriptProject.getElementName()).getModules();
+		List<TclModuleInfo> modules = TclPackagesManager
+				.getProjectModules(scriptProject.getElementName());
 		for (TclModuleInfo tclModuleInfo : modules) {
 			EList<TclSourceEntry> sourced = tclModuleInfo.getSourced();
 			EList<UserCorrection> corrections = tclModuleInfo

@@ -7,16 +7,17 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
@@ -28,6 +29,7 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
 import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
+import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
@@ -36,6 +38,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
@@ -52,6 +55,7 @@ public class TclPackagesManager {
 	private static final String PKG_VERSION = "v20090505";
 
 	private static Resource infos = null;
+	private static final Map<String, Resource> projectInfos = new HashMap<String, Resource>();
 
 	public static synchronized List<TclPackageInfo> getPackageInfos(
 			IInterpreterInstall install, Set<String> packageNames,
@@ -156,21 +160,25 @@ public class TclPackagesManager {
 	}
 
 	public static TclProjectInfo getTclProject(String name) {
-		Assert.isNotNull(name);
 		Resource resource = getProjectInfoResource(name);
-		for (EObject eObject : resource.getContents()) {
-			if (eObject instanceof TclProjectInfo) {
-				TclProjectInfo pinfo = (TclProjectInfo) eObject;
-				if (name.equals(pinfo.getName())) {
-					return pinfo;
+		synchronized (resource) {
+			TclProjectInfo info = null;
+			for (EObject eObject : resource.getContents()) {
+				if (eObject instanceof TclProjectInfo) {
+					TclProjectInfo pinfo = (TclProjectInfo) eObject;
+					String pname = pinfo.getName();
+					if (name != null && name.equals(pname)) {
+						info = pinfo;
+					}
 				}
 			}
+			if (info == null) {
+				info = TclPackagesFactory.eINSTANCE.createTclProjectInfo();
+				info.setName(name);
+				resource.getContents().add(info);
+			}
+			return info;
 		}
-		TclProjectInfo info = TclPackagesFactory.eINSTANCE
-				.createTclProjectInfo();
-		info.setName(name);
-		resource.getContents().add(info);
-		return info;
 	}
 
 	private static void fetchPackagesForInterpreter(
@@ -196,16 +204,16 @@ public class TclPackagesManager {
 				TclPlugin.error(e);
 			}
 		}
-	}
-
-	public static void save(TclProjectInfo projectInfo) {
-		// TODO only if modified
-		try {
-			projectInfo.eResource().save(null);
-		} catch (IOException e) {
-			String msg = NLS.bind("Error saving {0} state: {1}", projectInfo
-					.getName(), e.getMessage());
-			TclPlugin.error(msg, e);
+		synchronized (projectInfos) {
+			for (Map.Entry<String, Resource> entry : projectInfos.entrySet()) {
+				try {
+					entry.getValue().save(null);
+				} catch (IOException e) {
+					String msg = NLS.bind("Error saving {0} state: {1}", entry
+							.getKey(), e.getMessage());
+					TclPlugin.error(msg, e);
+				}
+			}
 		}
 	}
 
@@ -468,6 +476,12 @@ public class TclPackagesManager {
 	 * @return
 	 */
 	private static Resource getProjectInfoResource(String projectName) {
+		synchronized (projectInfos) {
+			final Resource resource = projectInfos.get(projectName);
+			if (resource != null) {
+				return resource;
+			}
+		}
 		final URI location = getProjectLocation(projectName);
 		final Resource resource = new XMIResourceImpl(location);
 		try {
@@ -477,7 +491,15 @@ public class TclPackagesManager {
 		} catch (IOException e) {
 			TclPlugin.error(e);
 		}
-		return resource;
+		synchronized (projectInfos) {
+			final Resource r = projectInfos.get(projectName);
+			if (r != null) {
+				return r;
+			} else {
+				projectInfos.put(projectName, resource);
+				return resource;
+			}
+		}
 	}
 
 	private static List<String> deployExecute(IExecutionEnvironment exeEnv,
@@ -550,6 +572,32 @@ public class TclPackagesManager {
 				&& packageName.indexOf('$') == -1
 				&& packageName.indexOf('[') == -1
 				&& packageName.indexOf(']') == -1;
+	}
+
+	/**
+	 * Return copy of all modules.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static synchronized List<TclModuleInfo> getProjectModules(String name) {
+		TclProjectInfo info = getTclProject(name);
+		List<TclModuleInfo> results = new ArrayList<TclModuleInfo>();
+
+		EList<TclModuleInfo> modules = info.getModules();
+		for (TclModuleInfo tclModuleInfo : modules) {
+			TclModuleInfo copy = (TclModuleInfo) EcoreUtil.copy(tclModuleInfo);
+			results.add(copy);
+		}
+		return Collections.unmodifiableList(results);
+	}
+
+	public static synchronized void setProjectModules(String name,
+			List<TclModuleInfo> modules) {
+		TclProjectInfo info = getTclProject(name);
+		info.getModules().clear();
+		info.getModules().addAll(modules);
+		save();
 	}
 
 	public static synchronized void removeInterpreterInfo(
