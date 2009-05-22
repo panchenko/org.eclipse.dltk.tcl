@@ -40,9 +40,9 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 			return;
 		}
 		ISourceModule module = context.getSourceModule();
-		// if (module.getResource() == null) {
-		// return;
-		// }
+		if (module.getResource() == null) {
+			return;
+		}
 		if (spawnCommands.isEmpty()) {
 			return;
 		}
