@@ -64,6 +64,7 @@ import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
@@ -189,6 +190,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 		// Try to restore information from cache
 		ISourceModule module = context.getSourceModule();
+		if (module instanceof TclPackageSourceModule) {
+			/* Do not process modules which are parts of packages */
+			return;
+		}
 		// TclModuleInfo info = collectCachedInfo(module);
 
 		// if (info == null) {
