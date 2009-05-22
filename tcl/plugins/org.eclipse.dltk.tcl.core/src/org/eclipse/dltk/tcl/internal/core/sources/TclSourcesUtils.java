@@ -16,7 +16,6 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
@@ -84,8 +83,8 @@ public class TclSourcesUtils {
 		Set<IPath> buildpath = getBuildpath(scriptProject, visitedProjects);
 		Set<IPath> packageFiles = getPackages(scriptProject, install);
 
-		List<TclModuleInfo> modules = TclPackagesManager
-				.getProjectModules(scriptProject.getElementName());
+		List<TclModuleInfo> modules = TclPackagesManager.getTclProject(
+				scriptProject.getElementName()).getModules();
 		for (TclModuleInfo tclModuleInfo : modules) {
 			EList<TclSourceEntry> sourced = tclModuleInfo.getSourced();
 			EList<UserCorrection> corrections = tclModuleInfo

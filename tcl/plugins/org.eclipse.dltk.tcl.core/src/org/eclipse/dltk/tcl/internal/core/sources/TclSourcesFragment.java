@@ -185,8 +185,8 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 	public long getTimeStamp() {
 		// We need to collect all sourced items here.
 		long hash = 0;
-		List<TclModuleInfo> modules = TclPackagesManager
-				.getProjectModules(getScriptProject().getElementName());
+		List<TclModuleInfo> modules = TclPackagesManager.getTclProject(
+				getScriptProject().getElementName()).getModules();
 		for (TclModuleInfo tclModuleInfo : modules) {
 			for (TclSourceEntry info : tclModuleInfo.getSourced()) {
 				if (info.getValue() != null) {

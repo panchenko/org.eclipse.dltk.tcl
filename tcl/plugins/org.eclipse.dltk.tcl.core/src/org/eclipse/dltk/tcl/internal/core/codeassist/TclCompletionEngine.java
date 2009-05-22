@@ -64,6 +64,7 @@ import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ICompletionExtension;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
+import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordArgumentOrFunctionArgument;
@@ -318,20 +319,19 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				}
-				List<TclModuleInfo> packages = TclPackagesManager
-						.getProjectModules(project.getElementName());
-				if (packages != null) {
-					for (TclModuleInfo tclModuleInfo : packages) {
-						EList<TclSourceEntry> provided = tclModuleInfo
-								.getProvided();
-						for (TclSourceEntry userPkgs : provided) {
-							if (added.add(userPkgs.getValue())) {
-								k.add(userPkgs.getValue());
-							}
+				TclProjectInfo projectInfo = TclPackagesManager
+						.getTclProject(project.getElementName());
+				for (TclModuleInfo tclModuleInfo : projectInfo.getModules()) {
+					EList<TclSourceEntry> provided = tclModuleInfo
+							.getProvided();
+					for (TclSourceEntry userPkgs : provided) {
+						if (added.add(userPkgs.getValue())) {
+							k.add(userPkgs.getValue());
 						}
 					}
 				}
-				String kw[] = (String[]) k.toArray(new String[k.size()]);
+
+				String kw[] = k.toArray(new String[k.size()]);
 				char[][] choices = new char[kw.length][];
 				for (int i = 0; i < kw.length; ++i) {
 					choices[i] = kw[i].toCharArray();
