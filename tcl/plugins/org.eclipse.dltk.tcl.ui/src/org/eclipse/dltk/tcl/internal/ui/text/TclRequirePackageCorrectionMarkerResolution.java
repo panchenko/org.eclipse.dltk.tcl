@@ -154,7 +154,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 						correction.setUserValue(pkg);
 						moduleInfo.getPackageCorrections().add(correction);
 					}
-					TclPackagesManager.save();
+					TclPackagesManager.save(info);
 				} else {
 					return false;
 				}
