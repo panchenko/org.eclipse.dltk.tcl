@@ -60,6 +60,9 @@ public class DLTKIndexerApplication implements IApplication {
 
 		System.out.println("Total indexed resources size:"
 				+ indexer.getTotalSize());
+		System.out.println("Basic indexes size:"
+				+ indexer.getBasicIndexesSize());
+		System.out.println("AST indexes size:" + indexer.getASTIndexesSize());
 		System.out.println("Total indexes size:"
 				+ indexer.getTotalIndexesSize());
 
