@@ -20,7 +20,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
-import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformenceNode;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.Script;
@@ -405,7 +405,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 	public ModuleDeclaration parse(final char[] fileName, char[] source,
 			final IProblemReporter reporter) {
-		PerformenceNode node = RuntimePerformanceMonitor.begin();
+		PerformanceNode node = RuntimePerformanceMonitor.begin();
 		processedForContentNodes.clear();
 		this.problemReporter = reporter;
 		TclParser newParser = new TclParser();
