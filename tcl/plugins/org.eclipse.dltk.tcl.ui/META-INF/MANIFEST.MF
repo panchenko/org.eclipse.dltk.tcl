@@ -39,4 +39,4 @@ Export-Package: org.eclipse.dltk.tcl.internal.ui,
  org.eclipse.dltk.tcl.ui,
  org.eclipse.dltk.tcl.ui.semantilhighlighting,
  org.eclipse.dltk.tcl.ui.text
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

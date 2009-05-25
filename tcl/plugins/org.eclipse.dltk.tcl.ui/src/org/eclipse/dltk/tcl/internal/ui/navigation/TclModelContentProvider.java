@@ -3,19 +3,31 @@ package org.eclipse.dltk.tcl.internal.ui.navigation;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.TclModule;
+import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
+import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
+import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
+import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
 import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesElement;
 import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
+import org.eclipse.dltk.tcl.parser.TclParserUtils;
+import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.ui.IModelContentProvider;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
 public class TclModelContentProvider implements IModelContentProvider {
@@ -25,7 +37,7 @@ public class TclModelContentProvider implements IModelContentProvider {
 
 	public void provideModelChanges(Object parentElement, List children,
 			ITreeContentProvider iTreeContentProvider) {
-		//System.out.println("CONTAINER:" + parentElement);
+		// System.out.println("CONTAINER:" + parentElement);
 		if (parentElement instanceof BuildPathContainer) {
 			BuildPathContainer container = (BuildPathContainer) parentElement;
 			IBuildpathEntry entry = container.getBuildpathEntry();
