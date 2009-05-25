@@ -281,9 +281,10 @@
             <count value="1" />
             <iterate>
               <or>
-                <test
-                  args="org.eclipse.dltk.tcl.core.nature"
-                  property="org.eclipse.dltk.launching.hasProjectNature" />
+                       <test
+                             args="org.eclipse.dltk.tcl.core.nature"
+                             property="org.eclipse.dltk.launching.hasProjectNature">
+                       </test>
               </or>
             </iterate>
           </with>
