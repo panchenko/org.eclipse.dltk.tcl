@@ -44,7 +44,7 @@ public class TclLaunchConfigurationDelegate extends
 			ILaunchConfiguration configuration) throws CoreException {
 		config.removeEnvVar(TCLLIBPATH_ENV_VAR);
 
-		IPath[] paths = createBuildPath(configuration);
+		IPath[] paths = createBuildPath(configuration, config.getEnvironment());
 
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < paths.length; ++i) {
@@ -58,8 +58,9 @@ public class TclLaunchConfigurationDelegate extends
 				sb.append('}');
 			}
 		}
-
-		config.addEnvVar(TCLLIBPATH_ENV_VAR, sb.toString());
+		if (sb.length() != 0) {
+			config.addEnvVar(TCLLIBPATH_ENV_VAR, sb.toString());
+		}
 	}
 
 	protected void checkEnvVars(InterpreterConfig config,
