@@ -22,8 +22,8 @@ public class NewTclParserTests extends TestCase {
 		List childs = ast.getStatements();
 		TestCase.assertEquals(1, childs.size());
 		MethodDeclaration method = (MethodDeclaration) childs.get(0);
-		List<ASTNode> arguments = method.getArguments();
-		ASTNode arg1 = arguments.get(0);
+		List arguments = method.getArguments();
+		ASTNode arg1 = (ASTNode) arguments.get(0);
 		TestCase.assertEquals(16, arg1.sourceStart());
 	}
 }
