@@ -8,11 +8,9 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.IASTCache;
-import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.caching.IContentCache;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -23,7 +21,6 @@ import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.internal.core.serialization.TclASTLoader;
 import org.eclipse.dltk.tcl.internal.core.serialization.TclASTSaver;
 import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
-import org.eclipse.dltk.tcl.internal.parser.TclSourceParserFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 
@@ -83,23 +80,24 @@ public class TclASTCache implements IASTCache {
 			return null;
 		}
 		IContentCache cache = ModelManager.getModelManager().getCoreCache();
-		InputStream contentStream = cache.getCacheEntryAttribute(handle,
-				"content");
-		if (contentStream != null && module instanceof IExternalSourceModule) {
-			ASTCacheEntry entry = new ASTCacheEntry();
-			entry.problems = new ProblemCollector();
-			char[] source = null;
-			try {
-				source = org.eclipse.dltk.compiler.util.Util
-						.getInputStreamAsCharArray(contentStream, -1, null);
-				contentStream.close();
-				TclSourceParserFactory fact = new TclSourceParserFactory();
-				ISourceParser parser = fact.createSourceParser();
-				entry.module = parser.parse(null, source, entry.problems);
-				return entry;
-			} catch (IOException e) {
-			}
-		}
+		// InputStream contentStream = cache.getCacheEntryAttribute(handle,
+		// "content");
+		// if (contentStream != null && module instanceof IExternalSourceModule)
+		// {
+		// ASTCacheEntry entry = new ASTCacheEntry();
+		// entry.problems = new ProblemCollector();
+		// char[] source = null;
+		// try {
+		// source = org.eclipse.dltk.compiler.util.Util
+		// .getInputStreamAsCharArray(contentStream, -1, null);
+		// contentStream.close();
+		// TclSourceParserFactory fact = new TclSourceParserFactory();
+		// ISourceParser parser = fact.createSourceParser();
+		// entry.module = parser.parse(null, source, entry.problems);
+		// return entry;
+		// } catch (IOException e) {
+		// }
+		// }
 
 		ProblemCollector collector = new ProblemCollector();
 		TclModule tclModule = null;

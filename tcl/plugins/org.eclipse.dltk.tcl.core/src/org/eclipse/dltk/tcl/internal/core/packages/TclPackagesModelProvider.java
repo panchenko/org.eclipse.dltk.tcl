@@ -6,21 +6,30 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelProvider;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.launching.InterpreterContainerInitializer;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.ast.TclModule;
+import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
+import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
+import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
+import org.eclipse.emf.common.util.EList;
 
 public class TclPackagesModelProvider implements IModelProvider {
 	public TclPackagesModelProvider() {
@@ -55,6 +64,24 @@ public class TclPackagesModelProvider implements IModelProvider {
 						(ScriptProject) parentElement, packageName.getName());
 				if (!children.contains(pfragment)) {
 					children.add(pfragment);
+				}
+			}
+		} else if (parentElement.getElementType() == IModelElement.SOURCE_MODULE) {
+			if (parentElement instanceof ISourceModule) {
+				ISourceModule module = (ISourceModule) parentElement;
+				// Add required packages here.
+				ModuleDeclaration declaration = SourceParserUtil
+						.getModuleDeclaration(module);
+				if (declaration instanceof TclModuleDeclaration) {
+					TclModuleDeclaration tclDecl = (TclModuleDeclaration) declaration;
+					TclModule tclModule = tclDecl.getTclModule();
+					PackageSourceCollector collector = new PackageSourceCollector();
+					collector.process(tclModule.getStatements(), null);
+					TclModuleInfo info = collector.getCurrentModuleInfo();
+					EList<TclSourceEntry> required = info.getRequired();
+					for (TclSourceEntry tclSourceEntry : required) {
+						
+					}
 				}
 			}
 		}

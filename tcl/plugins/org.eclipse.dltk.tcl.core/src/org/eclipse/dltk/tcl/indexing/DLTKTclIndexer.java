@@ -22,7 +22,6 @@ import org.eclipse.dltk.core.caching.StructureModelCollector;
 import org.eclipse.dltk.core.search.indexing.SourceIndexerRequestor;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
-import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
 import org.eclipse.dltk.tcl.internal.core.TclSourceIndexerRequestor;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinBuildVisitor;
@@ -33,12 +32,11 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.utils.TextUtils;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 
 public class DLTKTclIndexer {
 	private long totalSize = 0;
 	private long totalIndexesSize = 0;
+	private long totalASTIndexesSize = 0;
 
 	public void buildIndexFor(File folder, boolean recursive) {
 		if (!folder.isDirectory()) {
@@ -56,20 +54,20 @@ public class DLTKTclIndexer {
 		if (!toIndex.isEmpty()) {
 			logBeginOfFolder(folder);
 			File indexFile = new File(folder, ".dltk.index");
+			File astIndexFile = new File(folder, ".dltk.index.ast");
 			long filesSize = 0;
 			try {
 				ArchiveCacheIndexBuilder builder = new ArchiveCacheIndexBuilder(
 						new FileOutputStream(indexFile));
+				ArchiveCacheIndexBuilder astIndexBuilder = new ArchiveCacheIndexBuilder(
+						new FileOutputStream(astIndexFile));
 				for (File file : toIndex) {
 					String content = new String(Util.getFileByteContent(file));
 					filesSize += content.length();
 
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
 					ProblemCollector dltkProblems = new ProblemCollector();
 					TclModule module = makeModule(content, dltkProblems);
 
-					TclASTSaver saver = new TclASTSaver(module, bout);
-					saver.store(dltkProblems);
 					File canonicalFile = file.getCanonicalFile();
 					long timestamp = file.lastModified();
 					if (!canonicalFile.getAbsolutePath().equals(
@@ -77,13 +75,13 @@ public class DLTKTclIndexer {
 						// This is symlink
 						timestamp = canonicalFile.lastModified();
 					}
-					builder.addEntry(file.getName(), timestamp,
+
+					ByteArrayOutputStream bout = new ByteArrayOutputStream();
+					TclASTSaver saver = new TclASTSaver(module, bout);
+					saver.store(dltkProblems);
+					astIndexBuilder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_AST_ATTRIBUTE,
 							new ByteArrayInputStream(bout.toByteArray()));
-
-					// builder.addEntry(file.getName(), file.lastModified(),
-					// "content", new ByteArrayInputStream(content
-					// .getBytes()));
 
 					// Store indexing information.
 					SourceIndexerRequestor req = new TclSourceIndexerRequestor();
@@ -119,26 +117,17 @@ public class DLTKTclIndexer {
 					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_MIXIN_INDEX,
 							new ByteArrayInputStream(mixin_index));
-
-					// Store package/source cache.
-					// PackageSourceCollector pkgCollector = new
-					// PackageSourceCollector();
-					// pkgCollector.process(module.getStatements(), null);
-					// TclModuleInfo info = pkgCollector.getCurrentModuleInfo();
-					// Resource infoRes = new BinaryResourceImpl();
-					// infoRes.getContents().add(info);
-					// ByteArrayOutputStream infoStream = new
-					// ByteArrayOutputStream();
-					// infoRes.save(infoStream, null);
-					//
-					// builder.addEntry(file.getName(), file.lastModified(),
-					// TclASTCache.TCL_PKG_INFO, new ByteArrayInputStream(
-					// infoStream.toByteArray()));
+					
+					builder.addEntry(file.getName(), timestamp,
+							TclASTCache.TCL_MIXIN_INDEX,
+							new ByteArrayInputStream(mixin_index));
 				}
 				builder.done();
+				astIndexBuilder.done();
 				logEntry(indexFile, filesSize);
 				totalSize += filesSize;
 				totalIndexesSize += indexFile.length();
+				totalASTIndexesSize += astIndexFile.length();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -183,7 +172,15 @@ public class DLTKTclIndexer {
 	}
 
 	public long getTotalIndexesSize() {
+		return this.totalIndexesSize + this.totalASTIndexesSize;
+	}
+
+	public long getBasicIndexesSize() {
 		return this.totalIndexesSize;
+	}
+
+	public long getASTIndexesSize() {
+		return this.totalASTIndexesSize;
 	}
 
 }
