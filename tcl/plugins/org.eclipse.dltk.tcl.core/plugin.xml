@@ -200,7 +200,7 @@
          point="org.eclipse.emf.ecore.generated_package">
       <package
             class="org.eclipse.dltk.tcl.core.packages.TclPackagesPackage"
-            genModel="/model/pacakges.genmodel"
+            genModel="/model/packages.genmodel"
             uri="http://www.eclipse.org/dltk/tcl/packages">
       </package>
    </extension>

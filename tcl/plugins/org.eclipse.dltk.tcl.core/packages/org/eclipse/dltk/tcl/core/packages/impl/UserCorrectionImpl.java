@@ -2,19 +2,22 @@
  * <copyright>
  * </copyright>
  *
- * $Id: UserCorrectionImpl.java,v 1.1 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: UserCorrectionImpl.java,v 1.2 2009/05/27 09:00:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
+import java.util.Collection;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -52,24 +55,14 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	protected String originalValue = ORIGINAL_VALUE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getUserValue() <em>User Value</em>}' attribute.
+	 * The cached value of the '{@link #getUserValue() <em>User Value</em>}' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getUserValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String USER_VALUE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getUserValue() <em>User Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getUserValue()
-	 * @generated
-	 * @ordered
-	 */
-	protected String userValue = USER_VALUE_EDEFAULT;
+	protected EList<String> userValue;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -118,22 +111,12 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getUserValue() {
+	public EList<String> getUserValue() {
+		if (userValue == null) {
+			userValue = new EDataTypeUniqueEList<String>(String.class, this,
+					TclPackagesPackage.USER_CORRECTION__USER_VALUE);
+		}
 		return userValue;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setUserValue(String newUserValue) {
-		String oldUserValue = userValue;
-		userValue = newUserValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					TclPackagesPackage.USER_CORRECTION__USER_VALUE,
-					oldUserValue, userValue));
 	}
 
 	/**
@@ -157,6 +140,7 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -164,7 +148,8 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 			setOriginalValue((String) newValue);
 			return;
 		case TclPackagesPackage.USER_CORRECTION__USER_VALUE:
-			setUserValue((String) newValue);
+			getUserValue().clear();
+			getUserValue().addAll((Collection<? extends String>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -182,7 +167,7 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 			setOriginalValue(ORIGINAL_VALUE_EDEFAULT);
 			return;
 		case TclPackagesPackage.USER_CORRECTION__USER_VALUE:
-			setUserValue(USER_VALUE_EDEFAULT);
+			getUserValue().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -200,8 +185,7 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 			return ORIGINAL_VALUE_EDEFAULT == null ? originalValue != null
 					: !ORIGINAL_VALUE_EDEFAULT.equals(originalValue);
 		case TclPackagesPackage.USER_CORRECTION__USER_VALUE:
-			return USER_VALUE_EDEFAULT == null ? userValue != null
-					: !USER_VALUE_EDEFAULT.equals(userValue);
+			return userValue != null && !userValue.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

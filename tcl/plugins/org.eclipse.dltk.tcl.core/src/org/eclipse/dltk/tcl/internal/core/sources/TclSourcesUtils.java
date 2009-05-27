@@ -90,46 +90,48 @@ public class TclSourcesUtils {
 			EList<TclSourceEntry> sourced = tclModuleInfo.getSourced();
 			EList<UserCorrection> corrections = tclModuleInfo
 					.getSourceCorrections();
-			Map<String, String> correctionMap = new HashMap<String, String>();
+			Map<String, List<String>> correctionMap = new HashMap<String, List<String>>();
 			for (UserCorrection userCorrection : corrections) {
 				correctionMap.put(userCorrection.getOriginalValue(),
 						userCorrection.getUserValue());
 			}
 			for (TclSourceEntry source : sourced) {
-				String value = null;
+				List<String> values = null;
 				if (correctionMap.containsKey(source.getValue())) {
-					value = correctionMap.get(source.getValue());
+					values = correctionMap.get(source.getValue());
 				}
 
-				if (value == null) {
+				if (values == null) {
 					continue;
 				}
-				IPath path = Path.fromPortableString(value);
-				IPath pathParent = path.removeLastSegments(1);
-				if (buildpath.contains(pathParent)) {
-					continue; // File are on buildpath
-				}
-				// Check for file in some package
-				if (packageFiles.contains(path)) {
-					continue; // File are on buildpath
-				}
-				// Check for project and it references buildpath
+				for (String value : values) {
+					IPath path = Path.fromPortableString(value);
+					IPath pathParent = path.removeLastSegments(1);
+					if (buildpath.contains(pathParent)) {
+						continue; // File are on buildpath
+					}
+					// Check for file in some package
+					if (packageFiles.contains(path)) {
+						continue; // File are on buildpath
+					}
+					// Check for project and it references buildpath
 
-				IFile file = ResourcesPlugin.getWorkspace().getRoot()
-						.getFileForLocation(path);
-				if (file != null) {
-					boolean onBuildpath = false;
-					for (IScriptProject p : visitedProjects) {
-						if (p.isOnBuildpath(file)) {
-							onBuildpath = true;
-							break;
+					IFile file = ResourcesPlugin.getWorkspace().getRoot()
+							.getFileForLocation(path);
+					if (file != null) {
+						boolean onBuildpath = false;
+						for (IScriptProject p : visitedProjects) {
+							if (p.isOnBuildpath(file)) {
+								onBuildpath = true;
+								break;
+							}
+						}
+						if (onBuildpath) {
+							continue;
 						}
 					}
-					if (onBuildpath) {
-						continue;
-					}
+					sources.add(path);
 				}
-				sources.add(path);
 			}
 		}
 	}

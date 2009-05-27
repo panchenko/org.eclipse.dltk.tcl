@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclSourceEntryImpl.java,v 1.3 2009/05/05 11:16:30 asobolev Exp $
+ * $Id: TclSourceEntryImpl.java,v 1.4 2009/05/27 09:00:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -188,9 +188,9 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__VALUE:
 			return getValue();
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__START:
-			return getStart();
+			return new Integer(getStart());
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__END:
-			return getEnd();
+			return new Integer(getEnd());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -207,10 +207,10 @@ public class TclSourceEntryImpl extends EObjectImpl implements TclSourceEntry {
 			setValue((String) newValue);
 			return;
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__START:
-			setStart((Integer) newValue);
+			setStart(((Integer) newValue).intValue());
 			return;
 		case TclPackagesPackage.TCL_SOURCE_ENTRY__END:
-			setEnd((Integer) newValue);
+			setEnd(((Integer) newValue).intValue());
 			return;
 		}
 		super.eSet(featureID, newValue);

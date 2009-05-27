@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclInterpreterInfoImpl.java,v 1.4 2009/05/19 17:46:51 apanchenk Exp $
+ * $Id: TclInterpreterInfoImpl.java,v 1.5 2009/05/27 09:00:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -336,7 +336,7 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__PACKAGES:
 			return getPackages();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
-			return isFetched();
+			return isFetched() ? Boolean.TRUE : Boolean.FALSE;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
 			return getFetchedAt();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
@@ -366,7 +366,7 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 					(Collection<? extends TclPackageInfo>) newValue);
 			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
-			setFetched((Boolean) newValue);
+			setFetched(((Boolean) newValue).booleanValue());
 			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
 			setFetchedAt((Date) newValue);

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackageInfoImpl.java,v 1.2 2009/05/05 11:16:30 asobolev Exp $
+ * $Id: TclPackageInfoImpl.java,v 1.3 2009/05/27 09:00:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -250,7 +250,7 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 		case TclPackagesPackage.TCL_PACKAGE_INFO__SOURCES:
 			return getSources();
 		case TclPackagesPackage.TCL_PACKAGE_INFO__FETCHED:
-			return isFetched();
+			return isFetched() ? Boolean.TRUE : Boolean.FALSE;
 		case TclPackagesPackage.TCL_PACKAGE_INFO__DEPENDENCIES:
 			return getDependencies();
 		}
@@ -277,7 +277,7 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 			getSources().addAll((Collection<? extends String>) newValue);
 			return;
 		case TclPackagesPackage.TCL_PACKAGE_INFO__FETCHED:
-			setFetched((Boolean) newValue);
+			setFetched(((Boolean) newValue).booleanValue());
 			return;
 		case TclPackagesPackage.TCL_PACKAGE_INFO__DEPENDENCIES:
 			getDependencies().clear();

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclModuleInfoImpl.java,v 1.4 2009/05/19 17:46:51 apanchenk Exp $
+ * $Id: TclModuleInfoImpl.java,v 1.5 2009/05/27 09:00:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -316,7 +316,7 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 		case TclPackagesPackage.TCL_MODULE_INFO__SOURCE_CORRECTIONS:
 			return getSourceCorrections();
 		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:
-			return isExternal();
+			return isExternal() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -359,7 +359,7 @@ public class TclModuleInfoImpl extends EObjectImpl implements TclModuleInfo {
 					(Collection<? extends UserCorrection>) newValue);
 			return;
 		case TclPackagesPackage.TCL_MODULE_INFO__EXTERNAL:
-			setExternal((Boolean) newValue);
+			setExternal(((Boolean) newValue).booleanValue());
 			return;
 		}
 		super.eSet(featureID, newValue);

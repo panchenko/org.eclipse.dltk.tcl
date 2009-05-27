@@ -47,6 +47,8 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -58,6 +60,7 @@ import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.ast.TclStatement;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.ast.TclPackageDeclaration;
@@ -94,6 +97,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	public void complete(ISourceModule sourceModule, int completionPosition,
 			int pos) {
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		this.sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceModule
 				.getModelElement();
 		if (VERBOSE) {
@@ -187,6 +191,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				this.requestor.acceptContext(context);
 			}
 			this.requestor.endReporting();
+			p.done(TclNature.NATURE_ID, "Completion time", 0);
 		}
 	}
 

@@ -18,9 +18,9 @@ public class PackageUtils {
 	}
 
 	static String packageToPath(String packageName, String packageVersion) {
-		String result = packageName.replaceAll(":", "_");
+		String result = packageName.replace(':', '_');
 		if (packageVersion != null) {
-			result += packageVersion.replaceAll("\\.", "_");
+			result += packageVersion.replace('.', '_');
 		}
 		return result;
 	}

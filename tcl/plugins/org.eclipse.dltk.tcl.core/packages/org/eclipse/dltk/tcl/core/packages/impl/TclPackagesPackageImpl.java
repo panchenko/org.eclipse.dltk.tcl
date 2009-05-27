@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.5 2009/05/19 17:46:51 apanchenk Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.6 2009/05/27 09:00:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -684,7 +684,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 		initEAttribute(getUserCorrection_UserValue(),
-				ecorePackage.getEString(), "userValue", null, 0, 1,
+				ecorePackage.getEString(), "userValue", null, 0, -1,
 				UserCorrection.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);

@@ -387,6 +387,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 	 * Assume parsing are in same module.
 	 */
 	public void parse(String content, int offset, ASTNode parent) {
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		initDetectors();
 		processedForContentNodes.clear();
 		TclParser newParser = new TclParser();
@@ -401,6 +402,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			collector.reportAll(problemReporter, tracker);
 		}
 		processStatements(parent, module);
+		p.done(TclNature.NATURE_ID, "New tcl parser: Parse of code", content
+				.length());
 	}
 
 	public ModuleDeclaration parse(final char[] fileName, char[] source,

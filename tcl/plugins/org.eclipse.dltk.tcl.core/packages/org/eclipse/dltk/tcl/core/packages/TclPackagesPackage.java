@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.5 2009/05/19 17:46:51 apanchenk Exp $
+ * $Id: TclPackagesPackage.java,v 1.6 2009/05/27 09:00:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -382,7 +382,7 @@ public interface TclPackagesPackage extends EPackage {
 	int USER_CORRECTION__ORIGINAL_VALUE = 0;
 
 	/**
-	 * The feature id for the '<em><b>User Value</b></em>' attribute.
+	 * The feature id for the '<em><b>User Value</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -713,10 +713,10 @@ public interface TclPackagesPackage extends EPackage {
 	EAttribute getUserCorrection_OriginalValue();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#getUserValue <em>User Value</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#getUserValue <em>User Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>User Value</em>'.
+	 * @return the meta object for the attribute list '<em>User Value</em>'.
 	 * @see org.eclipse.dltk.tcl.core.packages.UserCorrection#getUserValue()
 	 * @see #getUserCorrection()
 	 * @generated
@@ -1021,7 +1021,7 @@ public interface TclPackagesPackage extends EPackage {
 				.getUserCorrection_OriginalValue();
 
 		/**
-		 * The meta object literal for the '<em><b>User Value</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>User Value</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
