@@ -15,6 +15,8 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.ui.text.messages"; //$NON-NLS-1$
+	public static String TclRequirePackageCorrectionMarkerResolution_SpecifyPackagesResolutionLabel;
+	public static String TclRequirePackageCorrectionMarkerResolution_SpecifyPackagesTitle;
 	public static String TclRequirePackageMarkerResolution_addPackageToBuildpath;
 	static {
 		// initialize resource bundle

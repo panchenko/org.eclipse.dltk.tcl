@@ -58,7 +58,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 	}
 
 	public String getLabel() {
-		return "Specify package or set of packages to be used as argument of this 'package require'";
+		return Messages.TclRequirePackageCorrectionMarkerResolution_SpecifyPackagesResolutionLabel;
 	}
 
 	public class PackagesLabelProvider extends LabelProvider {
@@ -78,7 +78,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 			if (element instanceof String) {
 				String packageName = (String) element;
 				if (install != null) {
-					final Set names = TclPackagesManager
+					final Set<String> names = TclPackagesManager
 							.getPackageInfosAsString(install);
 
 					if (!names.contains(packageName)) {
@@ -123,7 +123,8 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 								| SWT.BORDER;
 					}
 				};
-				dialog.setTitle("Specify Packages");
+				dialog
+						.setTitle(Messages.TclRequirePackageCorrectionMarkerResolution_SpecifyPackagesTitle);
 				dialog.setContentProvider(new IStructuredContentProvider() {
 					public Object[] getElements(Object inputElement) {
 						return names.toArray();
