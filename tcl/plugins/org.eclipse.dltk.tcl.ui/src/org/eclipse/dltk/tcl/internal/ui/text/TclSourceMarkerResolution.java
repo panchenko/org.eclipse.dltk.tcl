@@ -151,7 +151,7 @@ final class TclSourceMarkerResolution implements IMarkerResolution,
 				UserCorrection correction = TclPackagesFactory.eINSTANCE
 						.createUserCorrection();
 				correction.setOriginalValue(sourceName);
-				correction.setUserValue(sourcePath.toString());
+				correction.getUserValue().add(sourcePath.toString());
 				info.getSourceCorrections().add(correction);
 				TclPackagesManager.save();
 				// We need to fire external archives change.

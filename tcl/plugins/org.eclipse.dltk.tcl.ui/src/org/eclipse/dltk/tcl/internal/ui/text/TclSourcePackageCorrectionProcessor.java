@@ -36,6 +36,7 @@ import org.eclipse.dltk.ui.text.AnnotationResolutionProposal;
 import org.eclipse.dltk.ui.text.IScriptCorrectionContext;
 import org.eclipse.dltk.ui.text.IScriptCorrectionProcessor;
 import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
 public class TclSourcePackageCorrectionProcessor implements
 		IScriptCorrectionProcessor {

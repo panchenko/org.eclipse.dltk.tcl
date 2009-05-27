@@ -693,4 +693,13 @@
          language="org.eclipse.dltk.tcl.core.nature">
    </modelCompareProvider>
 </extension>
+<!--extension
+      point="org.eclipse.dltk.ui.editorTextHovers">
+   <hover
+         activate="false"
+         class="org.eclipse.dltk.tcl.internal.ui.PackagesSourcesHover"
+         id="org.eclipse.dltk.tcl.ui.source_package_hover"
+         label="Tcl Source/Package information hover">
+   </hover>
+</extension-->
 </plugin>

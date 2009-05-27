@@ -38,6 +38,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.PlatformUI;
@@ -57,7 +58,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 	}
 
 	public String getLabel() {
-		return "Add user specified package to buildpath.";
+		return "Specify package or set of packages to be used as argument of this 'package require'";
 	}
 
 	public class PackagesLabelProvider extends LabelProvider {
@@ -104,20 +105,25 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 			if (install != null) {
-				final Set pnames = new HashSet();
-				final Set pAutoNames = new HashSet();
+				final Set<String> pnames = new HashSet<String>();
+				final Set<String> pAutoNames = new HashSet<String>();
 				InterpreterContainerHelper.getInterpreterContainerDependencies(
 						project, pnames, pAutoNames);
 
-				Set packages = TclPackagesManager
+				Set<String> packages = TclPackagesManager
 						.getPackageInfosAsString(install);
-				final List names = new ArrayList();
+				final List<String> names = new ArrayList<String>();
 				names.addAll(packages);
 				Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
 
 				ListDialog dialog = new ListDialog(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell());
-				dialog.setTitle("Specify Package");
+						.getActiveWorkbenchWindow().getShell()) {
+					protected int getTableStyle() {
+						return SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
+								| SWT.BORDER;
+					}
+				};
+				dialog.setTitle("Specify Packages");
 				dialog.setContentProvider(new IStructuredContentProvider() {
 					public Object[] getElements(Object inputElement) {
 						return names.toArray();
@@ -132,7 +138,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 				});
 				dialog.setLabelProvider(new PackagesLabelProvider(install));
 				dialog.setInput(names);
-				Set pkgs = new HashSet();
+				Set<String> pkgs = new HashSet<String>();
 				if (dialog.open() == ListDialog.OK) {
 					TclProjectInfo info = TclPackagesManager
 							.getTclProject(this.project.getElementName());
@@ -147,14 +153,14 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 						info.getModules().add(moduleInfo);
 					}
 					Object[] result = dialog.getResult();
+					UserCorrection correction = TclPackagesFactory.eINSTANCE
+							.createUserCorrection();
+					correction.setOriginalValue(pkgName);
+					moduleInfo.getPackageCorrections().add(correction);
 					for (int i = 0; i < result.length; i++) {
 						String pkg = (String) result[i];
 						pkgs.add(pkg);
-						UserCorrection correction = TclPackagesFactory.eINSTANCE
-								.createUserCorrection();
-						correction.setOriginalValue(pkgName);
-						correction.setUserValue(pkg);
-						moduleInfo.getPackageCorrections().add(correction);
+						correction.getUserValue().add(pkg);
 					}
 					TclPackagesManager.save();
 				} else {

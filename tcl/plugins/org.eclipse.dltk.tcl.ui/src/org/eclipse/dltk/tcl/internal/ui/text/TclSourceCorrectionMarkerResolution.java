@@ -3,6 +3,8 @@
  */
 package org.eclipse.dltk.tcl.internal.ui.text;
 
+import java.util.Arrays;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -23,9 +25,7 @@ import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
-import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.dltk.ui.text.IAnnotationResolution;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.PlatformUI;
@@ -53,47 +53,49 @@ final class TclSourceCorrectionMarkerResolution implements IMarkerResolution,
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 			if (install != null) {
+
 				// Ask for user correction.
 
 				IEnvironment env = EnvironmentManager
 						.getEnvironment(this.module);
-				IEnvironmentUI envUI = (IEnvironmentUI) env
-						.getAdapter(IEnvironmentUI.class);
-				String file = envUI.selectFile(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell(),
-						IEnvironmentUI.DEFAULT);
-				if (file == null) {
-					return false;
-				}
 
-				TclProjectInfo tclProject = TclPackagesManager
-						.getTclProject(project.getElementName());
-				String handle = this.module.getHandleIdentifier();
-				TclModuleInfo info = tclProject.findModule(handle);
-				if (info == null) {
-					// This is almost impossibly situation.
-					info = TclPackagesFactory.eINSTANCE.createTclModuleInfo();
-					info.setHandle(handle);
-					info
-							.setExternal(this.module instanceof IExternalSourceModule);
-					TclSourceEntry sourceEntry = TclPackagesFactory.eINSTANCE
-							.createTclSourceEntry();
-					sourceEntry.setStart(-1);
-					sourceEntry.setEnd(-1);
-					sourceEntry.setValue(sourceName);
-					info.getSourced().add(sourceEntry);
-					tclProject.getModules().add(info);
+				SourcesSelectionDialog dialog = new SourcesSelectionDialog(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getActivePage().getWorkbenchWindow(), env);
+				if (dialog.open() == SourcesSelectionDialog.OK) {
+					String[] sources = dialog.getSources();
+
+					TclProjectInfo tclProject = TclPackagesManager
+							.getTclProject(project.getElementName());
+					String handle = this.module.getHandleIdentifier();
+					TclModuleInfo info = tclProject.findModule(handle);
+					if (info == null) {
+						// This is almost impossibly situation.
+						info = TclPackagesFactory.eINSTANCE
+								.createTclModuleInfo();
+						info.setHandle(handle);
+						info
+								.setExternal(this.module instanceof IExternalSourceModule);
+						TclSourceEntry sourceEntry = TclPackagesFactory.eINSTANCE
+								.createTclSourceEntry();
+						sourceEntry.setStart(-1);
+						sourceEntry.setEnd(-1);
+						sourceEntry.setValue(sourceName);
+						info.getSourced().add(sourceEntry);
+						tclProject.getModules().add(info);
+					}
+					UserCorrection correction = TclPackagesFactory.eINSTANCE
+							.createUserCorrection();
+					info.getSourceCorrections().add(correction);
+					correction.setOriginalValue(sourceName);
+					correction.getUserValue().addAll(Arrays.asList(sources));
+					TclPackagesManager.save();
+					// We need to fire external archives change.
+					ModelManager.getModelManager().getDeltaProcessor()
+							.checkExternalChanges(
+									new IModelElement[] { project },
+									new NullProgressMonitor());
 				}
-				UserCorrection correction = TclPackagesFactory.eINSTANCE
-						.createUserCorrection();
-				correction.setOriginalValue(sourceName);
-				correction.setUserValue(file);
-				info.getSourceCorrections().add(correction);
-				TclPackagesManager.save();
-				// We need to fire external archives change.
-				ModelManager.getModelManager().getDeltaProcessor()
-						.checkExternalChanges(new IModelElement[] { project },
-								new NullProgressMonitor());
 			}
 		} catch (CoreException e) {
 			TclUI.error("require package resolve error", e); //$NON-NLS-1$
