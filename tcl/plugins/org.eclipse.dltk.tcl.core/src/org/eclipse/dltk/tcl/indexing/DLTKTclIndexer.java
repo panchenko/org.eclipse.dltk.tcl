@@ -56,7 +56,13 @@ public class DLTKTclIndexer {
 		if (!toIndex.isEmpty()) {
 			logBeginOfFolder(folder);
 			File indexFile = new File(folder, ".dltk.index");
+			if (indexFile.exists()) {
+				indexFile.delete();
+			}
 			File astIndexFile = new File(folder, ".dltk.index.ast");
+			if (astIndexFile.exists()) {
+				astIndexFile.delete();
+			}
 			long filesSize = 0;
 			try {
 				ArchiveCacheIndexBuilder builder = new ArchiveCacheIndexBuilder(
