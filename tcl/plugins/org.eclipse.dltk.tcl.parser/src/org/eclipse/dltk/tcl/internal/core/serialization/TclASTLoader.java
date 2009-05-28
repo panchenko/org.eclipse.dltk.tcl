@@ -50,7 +50,7 @@ public class TclASTLoader extends AbstractDataLoader implements
 		}
 	}
 
-	public TclModule getModule(IProblemReporter collector) throws IOException {
+	public TclModule getModule(IProblemReporter collector) throws Exception {
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		// Load strings
 		readStrings();
