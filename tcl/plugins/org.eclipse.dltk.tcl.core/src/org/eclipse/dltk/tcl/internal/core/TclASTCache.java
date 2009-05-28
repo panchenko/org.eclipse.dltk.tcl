@@ -127,7 +127,7 @@ public class TclASTCache implements IASTCache {
 				if (tclModule != null) {
 					return tclModule;
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
 				}
