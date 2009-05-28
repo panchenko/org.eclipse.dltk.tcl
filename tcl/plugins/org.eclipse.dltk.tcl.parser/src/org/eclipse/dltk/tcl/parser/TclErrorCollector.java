@@ -33,8 +33,10 @@ public class TclErrorCollector implements ITclErrorReporter {
 			if (error.getStart() == start && error.getEnd() == end) {
 				if (error.getCode() < code) {
 					errorToReplace = error;
+					break;
 				} else {
 					insertNewError = false;
+					break;
 				}
 			}
 		}
@@ -45,10 +47,32 @@ public class TclErrorCollector implements ITclErrorReporter {
 					kind));
 	}
 
+	public void report(TclError e) {
+		boolean insertNewError = true;
+		TclError errorToReplace = null;
+		int start = e.getStart();
+		int end = e.getEnd();
+		int code = e.getCode();
+		for (TclError error : errors) {
+			if (error.getStart() == start && error.getEnd() == end) {
+				if (error.getCode() < code) {
+					errorToReplace = error;
+					break;
+				} else {
+					insertNewError = false;
+					break;
+				}
+			}
+		}
+		if (errorToReplace != null)
+			errors.remove(errorToReplace);
+		if (insertNewError)
+			errors.add(e);
+	}
+
 	public void addAll(TclErrorCollector collector) {
 		for (TclError e : collector.errors) {
-			report(e.getCode(), e.getMessage(), e.getExtraArguments(), e
-					.getStart(), e.getEnd(), e.getErrorKind());
+			report(e);
 		}
 	}
 
