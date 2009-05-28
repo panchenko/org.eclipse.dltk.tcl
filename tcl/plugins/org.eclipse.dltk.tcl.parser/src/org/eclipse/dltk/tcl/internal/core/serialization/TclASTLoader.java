@@ -7,6 +7,8 @@ import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.caching.AbstractDataLoader;
 import org.eclipse.dltk.tcl.ast.AstFactory;
 import org.eclipse.dltk.tcl.ast.ComplexString;
@@ -24,6 +26,7 @@ import org.eclipse.dltk.tcl.definitions.ComplexArgument;
 import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -48,6 +51,7 @@ public class TclASTLoader extends AbstractDataLoader implements
 	}
 
 	public TclModule getModule(IProblemReporter collector) throws IOException {
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		// Load strings
 		readStrings();
 
@@ -83,8 +87,10 @@ public class TclASTLoader extends AbstractDataLoader implements
 			for (int i = 0; i < problemsSize; i++) {
 				loadProblem(collector);
 			}
+			p.done("Tcl", "Load persisted AST", 0);
 			return module;
 		}
+		p.done("Tcl", "Load persisted AST", 0);
 		return null;
 	}
 
@@ -228,6 +234,7 @@ public class TclASTLoader extends AbstractDataLoader implements
 	}
 
 	private EObject restoreERef() throws IOException {
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		EObject def = null;
 		boolean has = in.readBoolean();
 		if (!has) {
@@ -237,9 +244,15 @@ public class TclASTLoader extends AbstractDataLoader implements
 		if (definitionURI != null) {
 			for (Scope scope : scopes) {
 				Resource eResource = scope.eResource();
-				return eResource.getEObject(definitionURI);
+				URI frag = eResource.getURI().appendFragment(definitionURI);
+				EObject eObject = DefinitionManager.getInstance()
+						.getEobjectCache().get(frag);
+				if (eObject != null) {
+					return eObject;
+				}
 			}
 		}
+		p.done("Tcl", "Restore eREF", 0);
 		return def;
 	}
 }

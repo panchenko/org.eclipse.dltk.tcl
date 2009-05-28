@@ -4,15 +4,28 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.dltk.tcl.definitions.Command;
+import org.eclipse.dltk.tcl.definitions.Namespace;
 import org.eclipse.dltk.tcl.definitions.Scope;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class DefinitionManager {
 	private static DefinitionManager sInstance;
 	private Map<String, Scope> scopes;
+	private Map<URI, EObject> eobjectCache = new HashMap<URI, EObject>();
 
 	private DefinitionManager() {
+	}
+
+	public Map<URI, EObject> getEobjectCache() {
+		return eobjectCache;
 	}
 
 	private void initialize() {
@@ -26,10 +39,22 @@ public class DefinitionManager {
 				try {
 					Scope scope = DefinitionLoader.loadDefinitions(location);
 					scopes.put(extentions.get(location), scope);
+					fillEObjects(scope);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	private void fillEObjects(Scope scope) {
+		EList<Scope> children = scope.getChildren();
+		for (Scope child : children) {
+			fillEObjects(child);
+		}
+		if (scope instanceof Command) {
+			Command command = (Command) scope;
+			eobjectCache.put(EcoreUtil.getURI(command), command);
 		}
 	}
 
