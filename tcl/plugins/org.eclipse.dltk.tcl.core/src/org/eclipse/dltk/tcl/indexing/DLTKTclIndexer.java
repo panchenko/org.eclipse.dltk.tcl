@@ -125,10 +125,6 @@ public class DLTKTclIndexer {
 					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_MIXIN_INDEX,
 							new ByteArrayInputStream(mixin_index));
-
-					builder.addEntry(file.getName(), timestamp,
-							TclASTCache.TCL_MIXIN_INDEX,
-							new ByteArrayInputStream(mixin_index));
 				}
 				builder.done();
 				astIndexBuilder.done();
