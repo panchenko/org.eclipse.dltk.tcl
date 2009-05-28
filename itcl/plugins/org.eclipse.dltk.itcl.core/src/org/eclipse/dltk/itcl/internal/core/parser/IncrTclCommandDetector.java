@@ -110,11 +110,7 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 		}
 		String commandNameValue = ((SimpleReference) commandName).getName();
 		String[] names = null;
-		if (commandNameValue.startsWith("::")) {
-			names = commandNameValue.substring(2).split("::");
-		} else {
-			names = commandNameValue.split("::");
-		}
+		names = TclParseUtil.tclSplit(commandNameValue);
 
 		boolean found = false;
 		for (int i = 0; i < names.length; i++) {
@@ -193,11 +189,7 @@ public class IncrTclCommandDetector implements ITclCommandDetector,
 		}
 		if (name != null) {
 			String[] names = null;
-			if (name.startsWith("::")) {
-				names = name.substring(2).split("::");
-			} else {
-				names = name.split("::");
-			}
+			names = TclParseUtil.tclSplit(name);
 			for (int i = 0; i < names.length; i++) {
 				this.names.add(names[i]);
 			}

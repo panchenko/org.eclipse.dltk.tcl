@@ -44,7 +44,7 @@ public class IncrTclResolver {
 							.substring(IMixinRequestor.MIXIN_NAME_SEPARATOR
 									.length());
 				}
-				String[] split = superClass.split("::");
+				String[] split = TclParseUtil.tclSplit(superClass);
 				IModelElement[] types = findTypeMixin(memberkey,
 						split[split.length - 1], method.getScriptProject());
 				for (int j = 0; j < types.length; j++) {

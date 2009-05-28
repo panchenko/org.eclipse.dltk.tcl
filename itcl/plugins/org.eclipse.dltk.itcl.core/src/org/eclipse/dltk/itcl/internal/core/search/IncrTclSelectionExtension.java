@@ -112,14 +112,14 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 		if (command != null && command.startsWith("::")) {
 			String name = command.substring(2);
 			// Check class proc call
-			String[] split = name.split("::");
+			String[] split = TclParseUtil.tclSplit(name);
 			IModelElement[] typeMixin = IncrTclResolver.findTypeMixin(engine
 					.tclNameToKey(name), split[split.length - 1], engine
 					.getScriptProject());
 			checkMixinTypeForMethod(node, commandExpr, typeMixin, prefix,
 					engine);
 		} else if (command != null) {
-			String[] split = command.split("::");
+			String[] split = TclParseUtil.tclSplit(command);
 			if (parent instanceof ModuleDeclaration) {
 				IModelElement[] typeMixin = IncrTclResolver.findTypeMixin(
 						engine.tclNameToKey(command), split[split.length - 1],
@@ -194,8 +194,8 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 														superClasses[j],
 														engine
 																.getScriptProject());
-										String[] split = superClasses[j]
-												.split("::");
+										String[] split = TclParseUtil
+												.tclSplit(superClasses[j]);
 										checkMixinTypeForMethod(node,
 												commandExpr, ptypeMixin,
 												split[split.length - 1], engine);
