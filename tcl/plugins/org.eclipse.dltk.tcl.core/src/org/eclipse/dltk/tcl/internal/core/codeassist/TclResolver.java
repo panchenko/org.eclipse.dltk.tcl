@@ -197,7 +197,7 @@ public class TclResolver {
 			if ((pos = childName.indexOf("::")) != -1) {
 				nextName = childName.substring(pos + 2);
 				// childName = "";
-				String[] split = childName.split("::");
+				String[] split = TclParseUtil.tclSplit(childName);
 				if (split.length > 0) {
 					childName = split[0];
 				}
@@ -273,7 +273,8 @@ public class TclResolver {
 			 */
 			return name;
 		} else if (node instanceof TclStatement) {
-			String[] var = OldTclParserUtils.returnVariable((TclStatement) node);
+			String[] var = OldTclParserUtils
+					.returnVariable((TclStatement) node);
 			if (var != null) {
 				return var[0];
 			}

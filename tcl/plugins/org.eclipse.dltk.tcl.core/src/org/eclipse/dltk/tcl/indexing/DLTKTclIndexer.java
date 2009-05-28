@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.Path;
@@ -20,6 +21,7 @@ import org.eclipse.dltk.core.caching.ArchiveCacheIndexBuilder;
 import org.eclipse.dltk.core.caching.MixinModelCollector;
 import org.eclipse.dltk.core.caching.StructureModelCollector;
 import org.eclipse.dltk.core.search.indexing.SourceIndexerRequestor;
+import org.eclipse.dltk.internal.core.SourceModuleStructureRequestor;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
@@ -117,7 +119,7 @@ public class DLTKTclIndexer {
 					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_MIXIN_INDEX,
 							new ByteArrayInputStream(mixin_index));
-					
+
 					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_MIXIN_INDEX,
 							new ByteArrayInputStream(mixin_index));

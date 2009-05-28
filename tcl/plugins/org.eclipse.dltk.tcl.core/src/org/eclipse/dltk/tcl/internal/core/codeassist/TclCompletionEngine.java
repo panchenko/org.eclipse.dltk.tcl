@@ -1296,7 +1296,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		if (token != null && token.length >= 3 && token[0] == ':') {
 			// && token[1] == ':'
 			provideDots = true;
-			String[] tokens = to.split("::");
+			String[] tokens = TclParseUtil.tclSplit(to);
 			if (tokens.length < 2) {
 				return;
 			}
@@ -1328,7 +1328,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 		} else if (token != null && token.length >= 1 && token[0] != ':') {
 			try {
-				String[] tokens = to.split("::");
+				String[] tokens = TclParseUtil.tclSplit(to);
 				if (tokens.length == 0) {
 					return;
 				}

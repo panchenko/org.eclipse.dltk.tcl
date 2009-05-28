@@ -15,6 +15,7 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.core.ITclSourceParser;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -23,11 +24,20 @@ import org.eclipse.dltk.utils.CorePrinter;
 public class TclBlockExpression extends Expression {
 	private String fBlockContent;
 	private char[] fileName = null;
+	private TclArgument processedArgument;
 
 	public TclBlockExpression(int start, int end, String content) {
 		this.setStart(start);
 		this.setEnd(end);
 		this.fBlockContent = content;
+	}
+
+	public void setProcessedArgument(TclArgument processedArgument) {
+		this.processedArgument = processedArgument;
+	}
+
+	public TclArgument getProcessedArgument() {
+		return processedArgument;
 	}
 
 	public int getKind() {

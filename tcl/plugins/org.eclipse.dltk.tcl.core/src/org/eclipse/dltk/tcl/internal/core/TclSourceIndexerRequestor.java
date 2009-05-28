@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.search.indexing.SourceIndexerRequestor;
+import org.eclipse.dltk.tcl.core.TclParseUtil;
 
 public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 	protected String[] realEnclosingTypeNames = new String[5];
@@ -44,7 +45,7 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 	public boolean enterTypeAppend(String fullName, String delimiter) {
 		if (fullName.startsWith("::")) {
 			String name = fullName.substring(2);
-			String[] split = name.split("::");
+			String[] split = TclParseUtil.tclSplit(name);
 
 			List cEnclodingNames = new ArrayList();
 			for (int i = 0; i < split.length; i++) {
@@ -56,7 +57,7 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 		} else {
 
 			List cEnclodingNames = enclosingTypeNamesAsList();
-			String[] split = fullName.split("::");
+			String[] split = TclParseUtil.tclSplit(fullName);
 			for (int i = 0; i < split.length; i++) {
 				this.indexer.addTypeDeclaration(Modifiers.AccNameSpace,
 						this.pkgName, split[i], eclosingTypeNamesFrom(
@@ -116,7 +117,7 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 		if (depth > 0) {
 			String name = realEnclosingTypeNames[realdepth - 1];
 			realEnclosingTypeNames[--realdepth] = null;
-			String[] split = name.split("::");
+			String[] split = TclParseUtil.tclSplit(name);
 			for (int i = 0; i < split.length; ++i) {
 				super.popTypeName();
 			}
@@ -125,7 +126,7 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 
 	public void pushTypeName(char[] typeName) {
 		String type = new String(typeName);
-		String[] split = type.split("::");
+		String[] split = TclParseUtil.tclSplit(type);
 		for (int i = 0; i < split.length; i++) {
 			super.pushTypeName(split[i].toCharArray());
 		}

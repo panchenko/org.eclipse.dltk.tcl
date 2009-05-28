@@ -171,7 +171,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			entered = this.fRequestor.enterTypeAppend(e, "::");
 		}
 		if (fqn || !entered) {
-			split = fullyQualified.substring(2).split("::");
+			split = TclParseUtil.tclSplit(fullyQualified.substring(2));
 			this.fRequestor.enterModuleRoot();
 			exitFromModule = true;
 		} else {
@@ -179,7 +179,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				throw new AssertionError("can't enter to enclosing namespace!");
 			}
 			needEnterLeave++;
-			split = type.split("::");
+			split = TclParseUtil.tclSplit(type);
 		}
 
 		for (int i = 0; i < split.length; ++i) {
@@ -217,7 +217,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 
 		String fullName = s.getName();
 
-		String[] split = s.getName().split("::");
+		String[] split = TclParseUtil.tclSplit(fullName);
 		if (split.length != 0) {
 			info.name = split[split.length - 1];
 		} else {
@@ -336,8 +336,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				String value = literal.getValue();
 				pos = value.indexOf("$");
 				while (pos != -1) {
-					SimpleReference ref = OldTclParserUtils.findVariableFromString(
-							literal, pos);
+					SimpleReference ref = OldTclParserUtils
+							.findVariableFromString(literal, pos);
 					if (ref != null) {
 						this.fRequestor.acceptFieldReference(ref.getName()
 								.substring(1).toCharArray(), ref.sourceStart());
@@ -515,7 +515,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		String fullName = sName;
 
 		if (fullName.indexOf("::") != -1) {
-			String[] split = fullName.split("::");
+			String[] split = TclParseUtil.tclSplit(fullName);
 			sName = split[split.length - 1];
 		}
 

@@ -27,6 +27,7 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.tcl.core.TclMatchLocatorParser;
+import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.extensions.IMatchLocatorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 
@@ -115,7 +116,7 @@ public class TclMatchLocator extends MatchLocator {
 
 	protected IModelElement createTypeHandle(IType parent, String name) {
 		if (name.indexOf("::") != -1) {
-			String[] split = name.split("::");
+			String[] split = TclParseUtil.tclSplit(name);
 			IType e = parent;
 			for (int i = 0; i < split.length; i++) {
 				e = e.getType(split[i]);
@@ -143,7 +144,7 @@ public class TclMatchLocator extends MatchLocator {
 				|| openable instanceof BuiltinSourceModule) {
 			IParent e = ((IParent) openable);
 			if (name.indexOf("::") != -1) {
-				String[] split = name.split("::");
+				String[] split = TclParseUtil.tclSplit(name);
 				for (int i = 0; i < split.length; i++) {
 					if (e instanceof ISourceModule) {
 						e = ((ISourceModule) e).getType(split[i]);

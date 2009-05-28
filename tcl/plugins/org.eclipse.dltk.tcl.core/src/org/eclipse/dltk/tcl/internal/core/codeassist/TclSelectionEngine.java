@@ -268,7 +268,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 		String oName = name;
 		if (name.indexOf("::") != -1) {
-			String[] split = name.split("::");
+			String[] split = TclParseUtil.tclSplit(name);
 			oName = split[split.length - 1];
 		}
 		findMethodMixin(tclNameToKey(name), oName);
@@ -282,7 +282,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 		String oName = name;
 		if (name.indexOf("::") != -1) {
-			String[] split = name.split("::");
+			String[] split = TclParseUtil.tclSplit(name);
 			oName = split[split.length - 1];
 		}
 		findMethodMixinNS(tclNameToKey(name), oName, namespace);
@@ -422,7 +422,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 			}
 			String oName = name;
 			if (name.indexOf("::") != -1) {
-				String[] split = name.split("::");
+				String[] split = TclParseUtil.tclSplit(name);
 				oName = split[split.length - 1];
 			}
 			findFieldMixin(tclNameToKey(name), oName);
@@ -775,7 +775,8 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 		int start = OldTclParserUtils.startLineOrNoSymbol(selectionSourceStart,
 				source);
-		int end = OldTclParserUtils.endLineOrNoSymbol(selectionSourceEnd, source);
+		int end = OldTclParserUtils.endLineOrNoSymbol(selectionSourceEnd,
+				source);
 		if (end <= start) {
 			if (cheat)
 				return checkSelection(source, selectionSourceEnd - 1,

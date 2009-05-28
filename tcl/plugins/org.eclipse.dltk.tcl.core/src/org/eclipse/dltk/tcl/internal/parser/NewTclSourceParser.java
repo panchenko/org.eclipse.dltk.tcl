@@ -285,26 +285,30 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 	}
 
 	private ASTNode stringToAST(TclArgument argument, String value) {
-		if (value.startsWith("{")
-				&& (value.endsWith("}") || (moduleDeclaration != null && argument
-						.getEnd() == moduleDeclaration.sourceEnd()))) {
+		int slen = value.length();
+		int end = argument.getEnd();
+		int start = argument.getStart();
+		if (slen >= 2
+				&& value.charAt(0) == '{'
+				&& (value.charAt(slen - 1) == '}' || (moduleDeclaration != null && end == moduleDeclaration
+						.sourceEnd()))) {
 			// This is block argument
-			return new TclBlockExpression(argument.getStart(), argument
-					.getEnd(), value);
-		} else if (value.startsWith("\"")
-				&& (value.endsWith("\"") || argument.getEnd() == moduleDeclaration
+			TclBlockExpression bl = new TclBlockExpression(start, end, value);
+			bl.setProcessedArgument(argument);
+			return bl;
+		} else if (slen >= 2
+				&& value.charAt(0) == '"'
+				&& (value.charAt(slen - 1) == '"' || end == moduleDeclaration
 						.sourceEnd())) {
 			// This is string literal
-			return new StringLiteral(argument.getStart(), argument.getEnd(),
-					value);
+			return new StringLiteral(start, end, value);
 		} else {
-			int len = argument.getEnd() - argument.getStart();
+			int len = end - start;
 			if (value.length() > len) {
 				value = value.substring(0, len);
 			}
 			// Simple reference
-			return new SimpleReference(argument.getStart(), argument.getEnd(),
-					value);
+			return new SimpleReference(start, end, value);
 		}
 	}
 
@@ -435,5 +439,12 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 	public void setOffset(int offset) {
 		this.globalOffset = offset;
+	}
+
+	public void parse(Script script, Block bll) {
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
+		processedForContentNodes.clear();
+		processStatements(bll, script.getCommands());
+		p.done(TclNature.NATURE_ID, "New tcl parser: Parse of block", 0);
 	}
 }

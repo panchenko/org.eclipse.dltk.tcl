@@ -8,12 +8,19 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.expressions.StringLiteral;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
+import org.eclipse.dltk.tcl.ast.Script;
+import org.eclipse.dltk.tcl.ast.TclArgument;
+import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.core.AbstractTclCommandProcessor;
 import org.eclipse.dltk.tcl.core.ITclParser;
 import org.eclipse.dltk.tcl.core.ast.TclAdvancedExecuteExpression;
 import org.eclipse.dltk.tcl.core.ast.TclSwitchStatement;
+import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
+import org.eclipse.dltk.tcl.parser.TclParserUtils;
+import org.eclipse.dltk.tcl.parser.TclVisitor;
+import org.eclipse.emf.common.util.EList;
 
 public class TclSwitchCommandProcessor extends AbstractTclCommandProcessor {
 
@@ -49,28 +56,52 @@ public class TclSwitchCommandProcessor extends AbstractTclCommandProcessor {
 		if (patternsStart != -1 && patternsStart < statement.getCount()) {
 			Expression at = statement.getAt(patternsStart);
 			if (at instanceof TclBlockExpression) {
-				List list = ((TclBlockExpression) at).parseBlockSimple(false);
-				Block bll = new Block(at.sourceStart(), at.sourceEnd());
-				switchStatement.acceptBlock(bll);
-				if (list != null) {
-					for (Iterator iterator = list.iterator(); iterator
-							.hasNext();) {
-						ASTNode st = (ASTNode) iterator.next();
-						if (st instanceof Block) {
-							switchStatement.addChild((Block) st);
-						} else if (st instanceof TclBlockExpression) {
-							parserBlockAddTo(parser, switchStatement,
-									(TclBlockExpression) st);
-						} else if (st instanceof TclStatement) {
-							TclStatement stt = (TclStatement) st;
-							for (int i = 0; i < stt.getCount(); i++) {
-								ASTNode sttt = (ASTNode) stt.getAt(i);
-								if (sttt instanceof TclBlockExpression) {
-									parserBlockAddTo(parser, switchStatement,
-											(TclBlockExpression) sttt);
+				TclBlockExpression tclBlockExpression = (TclBlockExpression) at;
+				TclArgument processedArgument = tclBlockExpression
+						.getProcessedArgument();
+				if (processedArgument == null
+						|| !(parser instanceof NewTclSourceParser)) {
+					List list = tclBlockExpression.parseBlockSimple(false);
+					Block bll = new Block(at.sourceStart(), at.sourceEnd());
+					switchStatement.acceptBlock(bll);
+
+					if (list != null) {
+						for (Iterator iterator = list.iterator(); iterator
+								.hasNext();) {
+							ASTNode st = (ASTNode) iterator.next();
+							if (st instanceof Block) {
+								switchStatement.addChild((Block) st);
+							} else if (st instanceof TclBlockExpression) {
+								parserBlockAddTo(parser, switchStatement,
+										(TclBlockExpression) st);
+							} else if (st instanceof TclStatement) {
+								TclStatement stt = (TclStatement) st;
+								for (int i = 0; i < stt.getCount(); i++) {
+									ASTNode sttt = (ASTNode) stt.getAt(i);
+									if (sttt instanceof TclBlockExpression) {
+										parserBlockAddTo(parser,
+												switchStatement,
+												(TclBlockExpression) sttt);
+									}
 								}
 							}
 						}
+					}
+				} else {
+					final Block bll = new Block(at.sourceStart(), at
+							.sourceEnd());
+					switchStatement.acceptBlock(bll);
+					final NewTclSourceParser newParser = (NewTclSourceParser) parser;
+					if (processedArgument instanceof TclArgumentList) {
+						TclArgumentList list = (TclArgumentList) processedArgument;
+						EList<TclArgument> arguments = list.getArguments();
+						TclParserUtils.traverse(arguments, new TclVisitor() {
+							@Override
+							public boolean visit(Script script) {
+								newParser.parse(script, bll);
+								return super.visit(script);
+							}
+						});
 					}
 				}
 			} else {

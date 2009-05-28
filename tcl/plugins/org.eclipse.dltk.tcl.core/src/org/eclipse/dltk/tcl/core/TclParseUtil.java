@@ -60,7 +60,7 @@ public class TclParseUtil {
 		if (!name.endsWith(")")) {
 			return false;
 		}
-		if (name.indexOf("(") == -1) {
+		if (name.indexOf('(') == -1) {
 			return false;
 		}
 		return true;
@@ -274,7 +274,7 @@ public class TclParseUtil {
 			startFromTop = true;
 			name = name.substring(2);
 		}
-		String[] split = name.split("::");
+		String[] split = TclParseUtil.tclSplit(name);
 		// Set name last
 		name = split[split.length - 1];
 		if (!startFromTop) {
@@ -373,7 +373,7 @@ public class TclParseUtil {
 	public static TypeDeclaration findTypesFromASTNode(
 			ModuleDeclaration module, ASTNode node, String name) {
 		List levels = findLevelsTo(module, node);
-		String[] split = name.split("::");
+		String[] split = TclParseUtil.tclSplit(name);
 		for (int i = 0; i < levels.size() - 1; i++) {
 			ASTNode nde = (ASTNode) levels.get(levels.size() - i - 2);
 			if (nde instanceof TypeDeclaration) {
@@ -540,5 +540,38 @@ public class TclParseUtil {
 			m = m.getParent();
 		}
 		return buffer;
+	}
+
+	public static String[] tclSplit(String text) {
+		int len = text.length();
+		if (len < 2) {
+			return new String[] { text };
+		}
+		List<String> results = new ArrayList<String>();
+		int pos = 0;
+		for (int i = 0; i < len; ++i) {
+			int c = 0;
+			for (int j = i; j < len; j++) {
+				if (text.charAt(j) == ':') {
+					c++;
+				} else {
+					break;
+				}
+			}
+			if (c > 1) {
+				if (pos <= i) {
+					results.add(text.substring(pos, i));
+				}
+				pos = i + c;
+				i += (c - 1);
+			}
+		}
+		if (pos < len) {
+			results.add(text.substring(pos, len));
+		}
+		if (results.isEmpty()) {
+			results.add("");
+		}
+		return results.toArray(new String[results.size()]);
 	}
 }

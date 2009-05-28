@@ -130,7 +130,7 @@ public class TclMixinBuildVisitor extends ASTVisitor {
 				if (type != null) {
 					List levels = TclParseUtil.findLevelsTo(
 							this.moduleDeclaration, type);
-					String[] mName = name.split("::");
+					String[] mName = TclParseUtil.tclSplit(name);
 					info.key = this.getKeyFromLevels(levels)
 							+ IMixinRequestor.MIXIN_NAME_SEPARATOR
 							+ mName[mName.length - 1];

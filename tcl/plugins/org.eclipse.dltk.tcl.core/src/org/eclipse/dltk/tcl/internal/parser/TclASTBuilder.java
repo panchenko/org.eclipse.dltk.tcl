@@ -17,6 +17,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
+import org.eclipse.dltk.tcl.core.TclParseUtil;
 
 /**
  * 
@@ -28,11 +29,12 @@ public class TclASTBuilder {
 
 	public static final int TYPE_NAMESPACE = 1;
 
-	public  static final int TYPE_PROC = 2;
+	public static final int TYPE_PROC = 2;
 
 	public static final int TYPE_UNKNOWN = 3;
 
-	private static void replaceChild(ASTNode node, ASTNode statement, ASTNode nsType) {
+	private static void replaceChild(ASTNode node, ASTNode statement,
+			ASTNode nsType) {
 		if (node instanceof ModuleDeclaration) {
 			List statements = ((ModuleDeclaration) node).getStatements();
 			int index = statements.indexOf(statement);
@@ -43,8 +45,7 @@ public class TclASTBuilder {
 			int index = statements.indexOf(statement);
 			statements.remove(index);
 			statements.add(index, nsType);
-		}
-		else if (node instanceof Block) {
+		} else if (node instanceof Block) {
 			List statements = ((Block) node).getStatements();
 			int index = statements.indexOf(statement);
 			statements.remove(index);
@@ -61,27 +62,28 @@ public class TclASTBuilder {
 				rebuildMethodProcessBodies(type, unit);
 			}
 		}
-		
+
 		MethodDeclaration[] methods = unit.getFunctions();
 		if (methods != null) {
-//			PatternLocator locator = getPatternLocator();
+			// PatternLocator locator = getPatternLocator();
 			for (int i = 0; i < methods.length; i++) {
 				MethodDeclaration method = methods[i];
 				if (method instanceof MethodDeclaration) {
 					MethodDeclaration methodDeclaration = method;
 					String name = methodDeclaration.getName();
-					if( name.indexOf("::") != -1 ) {
-						if( name.startsWith("::")) {
+					if (name.indexOf("::") != -1) {
+						if (name.startsWith("::")) {
 							name = name.substring(2);
 						}
-						if( name.endsWith("::")) {
-							name = name.substring(0, name.length() - 2 );
+						if (name.endsWith("::")) {
+							name = name.substring(0, name.length() - 2);
 						}
 						name = name.replaceAll("(::)+", "::");
-						String[] split = name.split("::");
+						String[] split = TclParseUtil.tclSplit(name);
 						methodDeclaration.setName(split[split.length - 1]);
-						TypeDeclaration type = searchCreateTypeDeclaration(unit, split, method, 0);
-						if( type != null ) {
+						TypeDeclaration type = searchCreateTypeDeclaration(
+								unit, split, method, 0);
+						if (type != null) {
 							unit.getStatements().remove(methodDeclaration);
 							unit.getFunctionList().remove(methodDeclaration);
 							type.getStatements().add(methodDeclaration);
@@ -94,19 +96,23 @@ public class TclASTBuilder {
 	}
 
 	private static TypeDeclaration searchCreateTypeDeclaration(
-			TclModuleDeclaration unit, String[] split, MethodDeclaration method, int offset) {
-		if( split.length - 1 <= offset ) {
+			TclModuleDeclaration unit, String[] split,
+			MethodDeclaration method, int offset) {
+		if (split.length - 1 <= offset) {
 			return null;
 		}
 		String typeName = split[0 + offset];
 		TypeDeclaration[] types = unit.getTypes();
 		for (int i = 0; i < types.length; i++) {
-			if( types[i].getName().equals(typeName)) {
-				return searchCreateTypeDeclaration(types[i], split, method, offset + 1);
+			if (types[i].getName().equals(typeName)) {
+				return searchCreateTypeDeclaration(types[i], split, method,
+						offset + 1);
 			}
 		}
 		// not found, lets create one new.
-		TypeDeclaration decl = new TypeDeclaration(typeName, method.getNameStart(), method.getNameEnd(), method.sourceStart(), method.sourceEnd());
+		TypeDeclaration decl = new TypeDeclaration(typeName, method
+				.getNameStart(), method.getNameEnd(), method.sourceStart(),
+				method.sourceEnd());
 		unit.addStatement(decl);
 		unit.getTypeList().add(decl);
 		return searchCreateTypeDeclaration(decl, split, method, offset + 1);
@@ -114,26 +120,30 @@ public class TclASTBuilder {
 
 	private static TypeDeclaration searchCreateTypeDeclaration(
 			TypeDeclaration typeDeclaration, String[] split,
-			MethodDeclaration method, int offset ) {
-		if(offset == split.length - 1) {
+			MethodDeclaration method, int offset) {
+		if (offset == split.length - 1) {
 			return typeDeclaration;
 		}
 		String typeName = split[0 + offset];
 		TypeDeclaration[] types = typeDeclaration.getTypes();
 		for (int i = 0; i < types.length; i++) {
-			if( types[i].getName().equals(typeName)) {
-				return searchCreateTypeDeclaration(types[i], split, method, offset + 1);
+			if (types[i].getName().equals(typeName)) {
+				return searchCreateTypeDeclaration(types[i], split, method,
+						offset + 1);
 			}
 		}
 		// not found, lets create one new.
-		TypeDeclaration decl = new TypeDeclaration(typeName, method.getNameStart(), method.getNameEnd(), method.sourceStart(), method.sourceEnd());
+		TypeDeclaration decl = new TypeDeclaration(typeName, method
+				.getNameStart(), method.getNameEnd(), method.sourceStart(),
+				method.sourceEnd());
 		typeDeclaration.getStatements().add(decl);
 		typeDeclaration.getTypeList().add(decl);
 		return searchCreateTypeDeclaration(decl, split, method, offset + 1);
 	}
 
 	// Add functions to modules if then belong to top level elements.
-	protected static void rebuildMethodProcessBodies(TypeDeclaration type, TclModuleDeclaration module) {
+	protected static void rebuildMethodProcessBodies(TypeDeclaration type,
+			TclModuleDeclaration module) {
 
 		MethodDeclaration[] methods = type.getMethods();
 		if (methods != null) {
@@ -141,28 +151,28 @@ public class TclASTBuilder {
 				MethodDeclaration method = methods[i];
 				if (method instanceof MethodDeclaration) {
 					MethodDeclaration methodDeclaration = method;
-					//TODO: Add support of internal to top level modifications.
+					// TODO: Add support of internal to top level modifications.
 					String name = methodDeclaration.getName();
-					if( name.indexOf("::") != -1 ) {
+					if (name.indexOf("::") != -1) {
 						boolean start = false;
-						if( name.startsWith("::")) {
+						if (name.startsWith("::")) {
 							name = name.substring(2);
 							start = true;
 						}
-						if( name.endsWith("::")) {
-							name = name.substring(0, name.length() - 2 );
+						if (name.endsWith("::")) {
+							name = name.substring(0, name.length() - 2);
 						}
 						name = name.replaceAll("(::)+", "::");
-						String[] split = name.split("::");
-						if( start && split.length > 2 ) {
+						String[] split = TclParseUtil.tclSplit(name);
+						if (start && split.length > 2) {
 							module.getFunctionList().add(methodDeclaration);
 							type.getMethodList().remove(methodDeclaration);
 							type.getStatements().remove(methodDeclaration);
-						}
-						else {
+						} else {
 							method.setName(split[split.length - 1]);
-							TypeDeclaration decl = searchCreateTypeDeclaration(type, split, method, 0);
-							if( decl != null ) {
+							TypeDeclaration decl = searchCreateTypeDeclaration(
+									type, split, method, 0);
+							if (decl != null) {
 								type.getMethodList().remove(methodDeclaration);
 								type.getStatements().remove(methodDeclaration);
 								decl.getStatements().add(method);

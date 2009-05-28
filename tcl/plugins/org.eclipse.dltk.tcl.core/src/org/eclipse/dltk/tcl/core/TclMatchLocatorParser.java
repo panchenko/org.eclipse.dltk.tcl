@@ -55,7 +55,8 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 						.getNodeSet());
 			}
 			for (int i = 0; i < extensions.length; i++) {
-				extensions[i].visitGeneral(node, locator, TclMatchLocatorParser.this.getNodeSet());
+				extensions[i].visitGeneral(node, locator,
+						TclMatchLocatorParser.this.getNodeSet());
 			}
 
 			return true;
@@ -98,21 +99,21 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 				name = name.substring(2);
 			}
 			if (!kwMap.containsKey(name)) {
-				String[] ns = name.split("::");
+				String[] ns = TclParseUtil.tclSplit(name);
 				for (int i = 0; i < ns.length; ++i) {
 					if (ns[i].length() > 0) {
 						if (i == ns.length - 1) {
 							String namespace = null;
 							int pos = name.lastIndexOf("::");
-							if( pos !=  -1 ) {
+							if (pos != -1) {
 								namespace = name.substring(0, pos);
-								if( namespace.startsWith("::")) {
+								if (namespace.startsWith("::")) {
 									namespace = namespace.substring(2);
 								}
 							}
-							MethodCallExpression node = new MethodCallExpression(commandId
-									.sourceStart(), commandId.sourceEnd(),
-									null, ns[i], null);
+							MethodCallExpression node = new MethodCallExpression(
+									commandId.sourceStart(), commandId
+											.sourceEnd(), null, ns[i], null);
 							node.setDeclaringTypeName(namespace);
 							locator.match(node, this.getNodeSet());
 						} else {
@@ -140,8 +141,8 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 				String value = literal.getValue();
 				pos = value.indexOf("$");
 				while (pos != -1) {
-					SimpleReference ref = OldTclParserUtils.findVariableFromString(
-							literal, pos);
+					SimpleReference ref = OldTclParserUtils
+							.findVariableFromString(literal, pos);
 					if (ref != null) {
 						ref.setName(ref.getName().substring(1));
 						ref.setEnd(ref.sourceEnd() - 1);
