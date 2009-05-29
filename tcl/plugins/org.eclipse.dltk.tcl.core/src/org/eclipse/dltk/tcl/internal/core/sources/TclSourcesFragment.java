@@ -17,8 +17,12 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IProjectFragmentTimestamp;
 import org.eclipse.dltk.core.IScriptFolder;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.WorkingCopyOwner;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.core.MementoModelElementUtil;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.Openable;
@@ -32,6 +36,7 @@ import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.emf.common.util.EList;
 
 public class TclSourcesFragment extends Openable implements IProjectFragment,
 		IProjectFragmentTimestamp {
@@ -185,6 +190,7 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 	public long getTimeStamp() {
 		// We need to collect all sourced items here.
 		long hash = 0;
+		IEnvironment env = EnvironmentManager.getEnvironment(this);
 		List<TclModuleInfo> modules = TclPackagesManager
 				.getProjectModules(getScriptProject().getElementName());
 		for (TclModuleInfo tclModuleInfo : modules) {
@@ -199,8 +205,15 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 					hash += (hash * 29 + correction.getOriginalValue()
 							.hashCode()) >> 2;
 				}
-				if (correction.getUserValue() != null) {
-					hash += (hash * 29 + correction.getUserValue().hashCode()) >> 2;
+				EList<String> uval = correction.getUserValue();
+				for (String val : uval) {
+					hash += (hash * 29 + val.hashCode()) >> 2;
+					IFileHandle file = env.getFile(new Path(val));
+					if (file != null) {
+						long lmodif = file.lastModified();
+						System.out.println(lmodif);
+						hash += lmodif;
+					}
 				}
 			}
 		}

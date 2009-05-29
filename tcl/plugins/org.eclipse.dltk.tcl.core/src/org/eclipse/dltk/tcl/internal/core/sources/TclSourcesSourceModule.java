@@ -30,7 +30,7 @@ public class TclSourcesSourceModule extends ExternalSourceModule {
 		return getStorage().getFullPath();
 	}
 
-	protected IPath getBufferPath() {
+	public IPath getBufferPath() {
 		IEnvironment environment = EnvironmentManager.getEnvironment(this);
 		if (environment != null) {
 			return EnvironmentPathUtils.getFullPath(environment, getStorage()
