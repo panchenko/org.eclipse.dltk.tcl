@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.core.internal.environment.EFSFileHandle;
 import org.eclipse.dltk.internal.core.MementoModelElementUtil;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.Openable;
@@ -210,8 +211,13 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 					hash += (hash * 29 + val.hashCode()) >> 2;
 					IFileHandle file = env.getFile(new Path(val));
 					if (file != null) {
-						long lmodif = file.lastModified();
-						System.out.println(lmodif);
+						long lmodif = 0;
+						if (file instanceof EFSFileHandle) {
+							lmodif = ((EFSFileHandle) file)
+									.lastModifiedFromCache();
+						} else {
+							lmodif = file.lastModified();
+						}
 						hash += lmodif;
 					}
 				}
