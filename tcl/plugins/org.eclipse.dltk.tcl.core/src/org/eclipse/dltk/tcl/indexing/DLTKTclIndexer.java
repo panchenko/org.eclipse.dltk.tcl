@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.Path;
@@ -16,12 +15,11 @@ import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKContentTypeManager;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.caching.ArchiveCacheIndexBuilder;
+import org.eclipse.dltk.core.caching.ArchiveIndexContentChecker;
 import org.eclipse.dltk.core.caching.MixinModelCollector;
 import org.eclipse.dltk.core.caching.StructureModelCollector;
 import org.eclipse.dltk.core.search.indexing.SourceIndexerRequestor;
-import org.eclipse.dltk.internal.core.SourceModuleStructureRequestor;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.core.TclASTCache;
@@ -39,6 +37,11 @@ public class DLTKTclIndexer {
 	private long totalSize = 0;
 	private long totalIndexesSize = 0;
 	private long totalASTIndexesSize = 0;
+	public final static long VERSION = 200905291444l;
+
+	public boolean isFoderRebuild() {
+		return false;
+	}
 
 	public void buildIndexFor(File folder, boolean recursive) {
 		if (!folder.isDirectory()) {
@@ -48,27 +51,52 @@ public class DLTKTclIndexer {
 		List<File> toIndex = new ArrayList<File>();
 		for (File file : files) {
 			if (file.isDirectory() && recursive) {
+				if (!file.canWrite()) {
+					continue;
+				}
 				buildIndexFor(file, recursive);
 			} else if (needIndexing(file)) {
 				toIndex.add(file);
 			}
 		}
 		if (!toIndex.isEmpty()) {
-			logBeginOfFolder(folder);
+			// Check required rebuild or not
+			boolean buildRequired = isFoderRebuild();
 			File indexFile = new File(folder, ".dltk.index");
-			if (indexFile.exists()) {
-				indexFile.delete();
-			}
 			File astIndexFile = new File(folder, ".dltk.index.ast");
-			if (astIndexFile.exists()) {
-				astIndexFile.delete();
+			if (!buildRequired && !indexFile.exists()) {
+				buildRequired = true;
 			}
+			if (!buildRequired && !astIndexFile.exists()) {
+				buildRequired = true;
+			}
+			if (!buildRequired) {
+				// Check for existing index files
+				ArchiveIndexContentChecker checker = new ArchiveIndexContentChecker(
+						indexFile, VERSION, TclLanguageToolkit.getDefault());
+				if (checker.containChanges()) {
+					buildRequired = true;
+				}
+			}
+			if (!buildRequired) {
+				ArchiveIndexContentChecker astChecker = new ArchiveIndexContentChecker(
+						astIndexFile, VERSION, TclLanguageToolkit.getDefault());
+				if (astChecker.containChanges()) {
+					buildRequired = true;
+				}
+			}
+			if (!buildRequired) {
+				logIndexConsistent(folder);
+				return;
+			}
+			logBeginOfFolder(folder);
+			deleteIndexFiles(indexFile, astIndexFile);
 			long filesSize = 0;
 			try {
 				ArchiveCacheIndexBuilder builder = new ArchiveCacheIndexBuilder(
-						new FileOutputStream(indexFile));
+						new FileOutputStream(indexFile), VERSION);
 				ArchiveCacheIndexBuilder astIndexBuilder = new ArchiveCacheIndexBuilder(
-						new FileOutputStream(astIndexFile));
+						new FileOutputStream(astIndexFile), VERSION);
 				for (File file : toIndex) {
 					String content = new String(Util.getFileByteContent(file));
 					filesSize += content.length();
@@ -100,11 +128,8 @@ public class DLTKTclIndexer {
 					ModuleDeclaration ast = parser.parse(null, module, null);
 					SourceElementRequestVisitor requestor = new TclSourceElementRequestVisitor(
 							collector, null);
-					try {
-						ast.traverse(requestor);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					ast.traverse(requestor);
+
 					byte[] structure_index = collector.getBytes();
 					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_STRUCTURE_INDEX,
@@ -114,13 +139,7 @@ public class DLTKTclIndexer {
 					MixinModelCollector mixinCollector = new MixinModelCollector();
 					TclMixinBuildVisitor mixinVisitor = new TclMixinBuildVisitor(
 							ast, null, false, mixinCollector);
-					try {
-						ast.traverse(mixinVisitor);
-					} catch (Exception e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
-						}
-					}
+					ast.traverse(mixinVisitor);
 					byte[] mixin_index = mixinCollector.getBytes();
 					builder.addEntry(file.getName(), timestamp,
 							TclASTCache.TCL_MIXIN_INDEX,
@@ -133,21 +152,41 @@ public class DLTKTclIndexer {
 				totalIndexesSize += indexFile.length();
 				totalASTIndexesSize += astIndexFile.length();
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				// e.printStackTrace();
+				deleteIndexFiles(indexFile, astIndexFile);
 			} catch (IOException e) {
-				e.printStackTrace();
+				// e.printStackTrace();
+				deleteIndexFiles(indexFile, astIndexFile);
+			} catch (Exception e) {
+				reportUnknownError(folder);
+				deleteIndexFiles(indexFile, astIndexFile);
 			}
 		}
 	}
 
+	private void deleteIndexFiles(File indexFile, File astIndexFile) {
+		try {
+			if (indexFile.exists()) {
+				indexFile.delete();
+			}
+			if (astIndexFile.exists()) {
+				astIndexFile.delete();
+			}
+		} catch (Exception e) {
+
+		}
+	}
+
+	protected void logIndexConsistent(File folder) {
+	}
+
 	public void logBeginOfFolder(File folder) {
-		// System.out.println("Building index file for folder:"
-		// + folder.getAbsolutePath());
 	}
 
 	public void logEntry(File indexFile, long filesSize) {
-		// System.out.println("Indexing of folder is done: Original size:"
-		// + filesSize + " Index size:" + indexFile.length());
+	}
+
+	protected void reportUnknownError(File folder) {
 	}
 
 	private TclModule makeModule(String content, ProblemCollector dltkProblems) {
