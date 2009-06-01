@@ -389,51 +389,47 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					}
 				}
 			}
+			if (sourcedPaths.isEmpty()) {
+				IPath sourcedPath = resolveSourceValue(folder, source,
+						environment);
+				sourcedPaths.add(sourcedPath);
+				needToAddCorrection = true;
+			}
 			for (IPath sourcedPath : sourcedPaths) {
-				if (sourcedPath == null) {
-					sourcedPath = resolveSourceValue(folder, source,
-							environment);
-					needToAddCorrection = true;
-				}
-				if (sourcedPath != null) {
-					IFileHandle file = environment.getFile(sourcedPath);
-					if (file != null) {
-						if (!file.exists()) {
+				IFileHandle file = environment.getFile(sourcedPath);
+				if (file != null) {
+					if (!file.exists()) {
+						reportSourceProblem(
+								source,
+								moduleInfo.reporter,
+								NLS
+										.bind(
+												Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFile,
+												file.toOSString()), source
+										.getValue(), moduleInfo.lineTracker);
+					} else {
+						if (file.isDirectory()) {
 							reportSourceProblem(
 									source,
 									moduleInfo.reporter,
-									NLS
-											.bind(
-													Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFile,
-													file.toOSString()), source
-											.getValue(), moduleInfo.lineTracker);
-						} else {
-							if (file.isDirectory()) {
+									Messages.PackageRequireSourceAnalyser_FolderSourcingNotSupported,
+									source.getValue(), moduleInfo.lineTracker);
+						} else
+						// Add user correction if not specified yet.
+						if (needToAddCorrection) {
+							if (!isAutoAddPackages()) {
 								reportSourceProblem(
 										source,
 										moduleInfo.reporter,
-										Messages.PackageRequireSourceAnalyser_FolderSourcingNotSupported,
+										Messages.PackageRequireSourceAnalyser_SourceNotAddedToBuildpath,
 										source.getValue(),
 										moduleInfo.lineTracker);
-							} else
-							// Add user correction if not specified yet.
-							if (needToAddCorrection) {
-								if (!isAutoAddPackages()) {
-									reportSourceProblem(
-											source,
-											moduleInfo.reporter,
-											Messages.PackageRequireSourceAnalyser_SourceNotAddedToBuildpath,
-											source.getValue(),
-											moduleInfo.lineTracker);
-								} else {
-									UserCorrection correction = TclPackagesFactory.eINSTANCE
-											.createUserCorrection();
-									correction.setOriginalValue(source
-											.getValue());
-									correction.getUserValue().add(
-											file.toString());
-									corrections.add(correction);
-								}
+							} else {
+								UserCorrection correction = TclPackagesFactory.eINSTANCE
+										.createUserCorrection();
+								correction.setOriginalValue(source.getValue());
+								correction.getUserValue().add(file.toString());
+								corrections.add(correction);
 							}
 						}
 					}
