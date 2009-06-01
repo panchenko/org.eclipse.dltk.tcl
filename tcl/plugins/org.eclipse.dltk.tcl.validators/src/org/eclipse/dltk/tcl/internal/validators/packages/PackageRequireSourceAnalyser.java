@@ -335,10 +335,28 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			List<TclModuleInfo> result = new ArrayList<TclModuleInfo>();
 			// Clean modules without required items
 			for (TclModuleInfo tclModuleInfo : mods) {
+				// Clean old corrections.
+				EList<UserCorrection> pkgCorrections = tclModuleInfo
+						.getPackageCorrections();
+				if (!pkgCorrections.isEmpty()) {
+					List<UserCorrection> toRemove = new ArrayList<UserCorrection>();
+					EList<TclSourceEntry> required = tclModuleInfo
+							.getRequired();
+					processCleanCorrections(pkgCorrections, toRemove, required);
+				}
+				EList<UserCorrection> sourceCorrections = tclModuleInfo
+						.getSourceCorrections();
+				if (!sourceCorrections.isEmpty()) {
+					List<UserCorrection> toRemove = new ArrayList<UserCorrection>();
+					EList<TclSourceEntry> sourced = tclModuleInfo.getSourced();
+					processCleanCorrections(sourceCorrections, toRemove,
+							sourced);
+				}
 				if (!(tclModuleInfo.getProvided().isEmpty()
 						&& tclModuleInfo.getRequired().isEmpty()
-						&& tclModuleInfo.getSourced().isEmpty() && tclModuleInfo
-						.getSourceCorrections().isEmpty())) {
+						&& tclModuleInfo.getSourced().isEmpty()
+						&& sourceCorrections.isEmpty() && pkgCorrections
+						.isEmpty())) {
 					result.add(tclModuleInfo);
 				}
 			}
@@ -363,6 +381,24 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 								e);
 			}
 		}
+	}
+
+	private void processCleanCorrections(EList<UserCorrection> pkgCorrections,
+			List<UserCorrection> toRemove, EList<TclSourceEntry> required) {
+		for (UserCorrection userCorrection : pkgCorrections) {
+			boolean found = false;
+			for (TclSourceEntry tclSourceEntry : required) {
+				if (tclSourceEntry.getValue().equals(
+						userCorrection.getOriginalValue())) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				toRemove.add(userCorrection);
+			}
+		}
+		pkgCorrections.removeAll(toRemove);
 	}
 
 	private void checkSources(IEnvironment environment, ModuleInfo moduleInfo) {
