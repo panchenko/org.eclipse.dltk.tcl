@@ -48,8 +48,8 @@ public class TclPackagesModelProvider implements IModelProvider {
 			if (!TclCorePreferences.USE_PACKAGE_CONCEPT) {
 				return;
 			}
+			
 			// Add packages fragment
-
 			Set<String> realRequirements = new HashSet<String>();
 			collectRealRequirements(project, realRequirements);
 
