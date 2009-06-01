@@ -18,7 +18,7 @@ public class TclMixinModel {
 
 	private static TclMixinModel instance;
 
-	private final Map instances = new HashMap();
+	private final Map<IScriptProject, MixinModel> instances = new HashMap<IScriptProject, MixinModel>();
 
 	public static TclMixinModel getInstance() {
 		if (instance == null) {
@@ -45,7 +45,7 @@ public class TclMixinModel {
 	public MixinModel getMixin(IScriptProject project) {
 		// Assert.isNotNull(project);
 		synchronized (instances) {
-			MixinModel mixinModel = (MixinModel) instances.get(project);
+			MixinModel mixinModel = instances.get(project);
 			if (mixinModel == null) {
 				mixinModel = new MixinModel(DLTKLanguageManager
 						.getLanguageToolkit(TclNature.NATURE_ID), project);
