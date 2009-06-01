@@ -48,7 +48,7 @@ public class TclPackagesModelProvider implements IModelProvider {
 			if (!TclCorePreferences.USE_PACKAGE_CONCEPT) {
 				return;
 			}
-			
+
 			// Add packages fragment
 			Set<String> realRequirements = new HashSet<String>();
 			collectRealRequirements(project, realRequirements);
@@ -64,24 +64,6 @@ public class TclPackagesModelProvider implements IModelProvider {
 						(ScriptProject) parentElement, packageName.getName());
 				if (!children.contains(pfragment)) {
 					children.add(pfragment);
-				}
-			}
-		} else if (parentElement.getElementType() == IModelElement.SOURCE_MODULE) {
-			if (parentElement instanceof ISourceModule) {
-				ISourceModule module = (ISourceModule) parentElement;
-				// Add required packages here.
-				ModuleDeclaration declaration = SourceParserUtil
-						.getModuleDeclaration(module);
-				if (declaration instanceof TclModuleDeclaration) {
-					TclModuleDeclaration tclDecl = (TclModuleDeclaration) declaration;
-					TclModule tclModule = tclDecl.getTclModule();
-					PackageSourceCollector collector = new PackageSourceCollector();
-					collector.process(tclModule.getStatements(), null);
-					TclModuleInfo info = collector.getCurrentModuleInfo();
-					EList<TclSourceEntry> required = info.getRequired();
-					for (TclSourceEntry tclSourceEntry : required) {
-						
-					}
 				}
 			}
 		}
