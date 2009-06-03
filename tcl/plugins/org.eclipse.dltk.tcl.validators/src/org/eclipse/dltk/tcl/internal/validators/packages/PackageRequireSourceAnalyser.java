@@ -428,8 +428,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			if (sourcedPaths.isEmpty()) {
 				IPath sourcedPath = resolveSourceValue(folder, source,
 						environment);
-				sourcedPaths.add(sourcedPath);
-				needToAddCorrection = true;
+				if (sourcedPath != null) {
+					sourcedPaths.add(sourcedPath);
+					needToAddCorrection = true;
+				}
 			}
 			for (IPath sourcedPath : sourcedPaths) {
 				IFileHandle file = environment.getFile(sourcedPath);
