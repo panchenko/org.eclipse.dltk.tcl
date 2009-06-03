@@ -16,9 +16,12 @@ import org.eclipse.dltk.internal.core.ModelElement;
  * Source module used in packages
  */
 public class TclSourcesSourceModule extends ExternalSourceModule {
+	private String originalName;
+
 	public TclSourcesSourceModule(ModelElement parent, String name,
-			WorkingCopyOwner owner, IStorage storage) {
+			WorkingCopyOwner owner, IStorage storage, String originalName) {
 		super(parent, name, owner, storage);
+		this.originalName = originalName;
 	}
 
 	public IPath getPath() {
@@ -38,5 +41,9 @@ public class TclSourcesSourceModule extends ExternalSourceModule {
 		} else {
 			return getStorage().getFullPath();
 		}
+	}
+
+	public String getOriginalName() {
+		return this.originalName;
 	}
 }

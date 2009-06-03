@@ -79,7 +79,8 @@ public class TclSourcesUtils {
 	}
 
 	public static void fillSources(IInterpreterInstall install,
-			IScriptProject scriptProject, Set<IPath> sources) {
+			IScriptProject scriptProject, Set<IPath> sources,
+			Map<IPath, String> originalNames, Set<String> pseutoElements) {
 		Set<IScriptProject> visitedProjects = new HashSet<IScriptProject>();
 		Set<IPath> buildpath = getBuildpath(scriptProject, visitedProjects);
 		Set<IPath> packageFiles = getPackages(scriptProject, install);
@@ -101,7 +102,8 @@ public class TclSourcesUtils {
 					values = correctionMap.get(source.getValue());
 				}
 
-				if (values == null) {
+				if (values == null || values.isEmpty()) {
+					pseutoElements.add(source.getValue());
 					continue;
 				}
 				for (String value : values) {
@@ -129,6 +131,9 @@ public class TclSourcesUtils {
 						if (onBuildpath) {
 							continue;
 						}
+					}
+					if (originalNames != null) {
+						originalNames.put(path, source.getValue());
 					}
 					sources.add(path);
 				}

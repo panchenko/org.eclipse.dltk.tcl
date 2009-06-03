@@ -1,6 +1,7 @@
 package org.eclipse.dltk.tcl.internal.core.sources;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -102,8 +103,10 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 			// Add external source module here.
 
 			Set<IPath> sources = new HashSet<IPath>();
-
-			TclSourcesUtils.fillSources(install, scriptProject, sources);
+			Map<IPath, String> originalNames = new HashMap<IPath, String>();
+			Set<String> pseudoElements = new HashSet<String>();
+			TclSourcesUtils.fillSources(install, scriptProject, sources,
+					originalNames, pseudoElements);
 			if (!sources.isEmpty()) {
 				IPath[] paths = sources.toArray(new IPath[sources.size()]);
 				IEnvironment environment = EnvironmentManager
@@ -117,7 +120,8 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 							this, environment.convertPathToString(path)
 									.replace(environment.getSeparatorChar(),
 											'_'),
-							DefaultWorkingCopyOwner.PRIMARY, storage);
+							DefaultWorkingCopyOwner.PRIMARY, storage,
+							originalNames.get(path));
 					vChildren.add(module);
 				}
 			}

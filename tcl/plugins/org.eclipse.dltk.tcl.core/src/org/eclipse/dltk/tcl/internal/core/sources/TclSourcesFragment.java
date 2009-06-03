@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -17,7 +18,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IProjectFragmentTimestamp;
 import org.eclipse.dltk.core.IScriptFolder;
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -240,7 +240,9 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 			return false;
 		}
 		Set<IPath> sources = new HashSet<IPath>();
-		TclSourcesUtils.fillSources(install, getScriptProject(), sources);
-		return !sources.isEmpty();
+		Set<String> pseudoElements = new HashSet<String>();
+		TclSourcesUtils.fillSources(install, getScriptProject(), sources, null,
+				pseudoElements);
+		return !sources.isEmpty() || !pseudoElements.isEmpty();
 	}
 }
