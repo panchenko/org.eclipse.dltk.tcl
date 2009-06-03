@@ -28,16 +28,17 @@ public class TclTypeCompletionProposalComputer extends
 		ScriptCompletionProposalCollector collector = new TclCompletionProposalCollector(
 				context.getSourceModule());
 
-		collector.setIgnored(CompletionProposal.FIELD_REF, true);
-		collector.setIgnored(CompletionProposal.KEYWORD, true);
-		collector.setIgnored(CompletionProposal.LABEL_REF, true);
-		collector.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, true);
-		collector.setIgnored(CompletionProposal.METHOD_DECLARATION, true);
-		collector.setIgnored(CompletionProposal.METHOD_NAME_REFERENCE, true);
-		collector.setIgnored(CompletionProposal.METHOD_REF, true);
+		collector.setIgnored(CompletionProposal.FIELD_REF, false);
+		collector.setIgnored(CompletionProposal.KEYWORD, false);
+		collector.setIgnored(CompletionProposal.PACKAGE_REF, false);
+		collector.setIgnored(CompletionProposal.LABEL_REF, false);
+		collector.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, false);
+		collector.setIgnored(CompletionProposal.METHOD_DECLARATION, false);
+		collector.setIgnored(CompletionProposal.METHOD_NAME_REFERENCE, false);
+		collector.setIgnored(CompletionProposal.METHOD_REF, false);
 		collector.setIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION,
-				true);
-		collector.setIgnored(CompletionProposal.VARIABLE_DECLARATION, true);
+				false);
+		collector.setIgnored(CompletionProposal.VARIABLE_DECLARATION, false);
 
 		collector.setIgnored(CompletionProposal.TYPE_REF, false);
 

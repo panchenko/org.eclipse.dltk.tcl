@@ -30,9 +30,15 @@ public class TclModelLabelProvider extends LabelProvider {
 			IEnvironment environment = EnvironmentManager
 					.getEnvironment(((TclSourcesSourceModule) element)
 							.getScriptProject());
-			return environment
+			TclSourcesSourceModule module = (TclSourcesSourceModule) element;
+			String originalName = module.getOriginalName();
+			String convertedPath = environment
 					.convertPathToString(((TclSourcesSourceModule) element)
 							.getFullPath());
+			if (originalName != null && !originalName.equals(convertedPath)) {
+				return originalName + " (" + convertedPath + ")";
+			}
+			return convertedPath;
 		}
 		return null;
 	}
