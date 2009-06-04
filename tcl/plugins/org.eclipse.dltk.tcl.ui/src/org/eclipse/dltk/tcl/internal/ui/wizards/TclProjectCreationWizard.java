@@ -28,8 +28,8 @@ public class TclProjectCreationWizard extends NewElementWizard implements
 
 	public static final String ID_WIZARD = "org.eclipse.dltk.tcl.internal.ui.wizards.TclProjectWizard"; //$NON-NLS-1$
 
-	private TclProjectWizardFirstPage fFirstPage;
-	private TclProjectWizardSecondPage fSecondPage;
+	protected TclProjectWizardFirstPage fFirstPage;
+	protected TclProjectWizardSecondPage fSecondPage;
 
 	private IConfigurationElement fConfigElement;
 
