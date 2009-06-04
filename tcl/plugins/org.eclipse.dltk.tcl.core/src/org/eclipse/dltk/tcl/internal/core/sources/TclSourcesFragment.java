@@ -213,8 +213,7 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 					if (file != null) {
 						long lmodif = 0;
 						if (file instanceof EFSFileHandle) {
-							lmodif = ((EFSFileHandle) file)
-									.lastModifiedFromCache();
+							lmodif = ((EFSFileHandle) file).lastModified();
 						} else {
 							lmodif = file.lastModified();
 						}
@@ -243,6 +242,6 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 		Set<String> pseudoElements = new HashSet<String>();
 		TclSourcesUtils.fillSources(install, getScriptProject(), sources, null,
 				pseudoElements);
-		return !sources.isEmpty() ;//|| !pseudoElements.isEmpty();
+		return !sources.isEmpty();// || !pseudoElements.isEmpty();
 	}
 }
