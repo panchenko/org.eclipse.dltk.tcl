@@ -9,6 +9,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.launching;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -17,6 +20,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.launching.AbstractInterpreterInstall;
+import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
 import org.eclipse.dltk.launching.IInterpreterRunner;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
@@ -24,7 +28,13 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 public class GenericTclInstall extends AbstractInterpreterInstall {
-	public class BuiltinsHelper {
+	public static class BuiltinsHelper {
+		private final GenericTclInstall install;
+
+		public BuiltinsHelper(GenericTclInstall install) {
+			this.install = install;
+		}
+
 		StringBuffer source = new StringBuffer();
 
 		long lastModified;
@@ -36,7 +46,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 				protected IStatus run(final IProgressMonitor monitor) {
 					monitor.beginTask("Generate Tcl builtin file",
 							IProgressMonitor.UNKNOWN);
-					IExecutionEnvironment exeEnv = getExecEnvironment();
+					IExecutionEnvironment exeEnv = install.getExecEnvironment();
 					if (exeEnv == null)
 						return Status.CANCEL_STATUS;
 
@@ -46,8 +56,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 									exeEnv,
 									bundlePath,
 									TclLaunchingPlugin.getDefault().getBundle(),
-									GenericTclInstall.this.getInstallLocation(),
-									monitor);
+									install.getInstallLocation(), monitor);
 					if (content != null) {
 						source.append(content);
 						lastModified = System.currentTimeMillis();
@@ -66,8 +75,6 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 			}
 		}
 	}
-
-	BuiltinsHelper helper = null;
 
 	public GenericTclInstall(IInterpreterInstallType type, String id) {
 		super(type, id);
@@ -91,24 +98,34 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 		return TclNature.NATURE_ID;
 	}
 
+	private static final Map<IInterpreterInstall, BuiltinsHelper> helpers = new HashMap<IInterpreterInstall, BuiltinsHelper>();
+
 	// Builtins
 	public String getBuiltinModuleContent(String name) {
-		initialize();
+		BuiltinsHelper helper = initialize();
 		return helper.source.toString();
 	}
 
 	public long lastModified() {
-		initialize();
+		BuiltinsHelper helper = initialize();
 		return helper.lastModified;
 	}
 
-	private synchronized void initialize() {
-		if (helper == null) {
-			helper = new BuiltinsHelper();
+	private BuiltinsHelper initialize() {
+		BuiltinsHelper helper;
+		synchronized (helpers) {
+			helper = helpers.get(this);
+			if (helper == null) {
+				helper = new BuiltinsHelper(this);
+				helpers.put(this, helper);
+			}
 		}
-		if (!helper.initialized) {
-			helper.load();
+		synchronized (helper) {
+			if (!helper.initialized) {
+				helper.load();
+			}
 		}
+		return helper;
 	}
 
 	public String[] getBuiltinModules() {
