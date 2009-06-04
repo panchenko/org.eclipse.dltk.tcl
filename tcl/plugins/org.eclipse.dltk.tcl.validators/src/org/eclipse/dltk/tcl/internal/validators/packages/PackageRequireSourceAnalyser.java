@@ -418,8 +418,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 							sourcedPath = Path.fromOSString(userValue);
 						} else {
 							userValue = userValue.replace('\\', '/');
-							sourcedPath = Path.fromPortableString(source
-									.getValue());
+							sourcedPath = Path.fromPortableString(userValue);
 						}
 						sourcedPaths.add(sourcedPath);
 					}
