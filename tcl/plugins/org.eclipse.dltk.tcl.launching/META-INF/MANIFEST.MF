@@ -18,4 +18,4 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.dltk.tcl.console,
  org.eclipse.dltk.tcl.internal.launching,
  org.eclipse.dltk.tcl.launching
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
