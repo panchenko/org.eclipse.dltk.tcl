@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.tcl.internal.core.search.mixin.model.ITclMixinElement;
 
@@ -13,6 +15,7 @@ public class TclMixinUtils {
 
 	public static IModelElement[] findModelElementsFromMixin(String pattern,
 			Class mixinClass, IScriptProject project) {
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		long delta = 200;
 		long time = System.currentTimeMillis();
 		List elements = new ArrayList();
@@ -37,6 +40,7 @@ public class TclMixinUtils {
 				}
 			}
 		}
+		p.done("Tcl", "Find elements in mixin", 0);
 		return (IModelElement[]) elements.toArray(new IModelElement[elements
 				.size()]);
 	}

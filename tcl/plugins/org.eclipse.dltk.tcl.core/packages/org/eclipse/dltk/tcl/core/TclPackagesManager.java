@@ -21,6 +21,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor;
+import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
@@ -186,6 +188,7 @@ public class TclPackagesManager {
 
 	private static synchronized void fetchPackagesForInterpreter(
 			IInterpreterInstall install, TclInterpreterInfo interpreterInfo) {
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		IExecutionEnvironment exeEnv = install.getExecEnvironment();
 		List<String> content = deployExecute(exeEnv, install,
 				new String[] { "get-pkgs" }, install //$NON-NLS-1$
@@ -196,6 +199,7 @@ public class TclPackagesManager {
 			interpreterInfo.setFetchedAt(new Date());
 			save();
 		}
+		p.done("Tcl", "Fetch interpreter packages info", 0);
 	}
 
 	public static void save() {
@@ -385,6 +389,7 @@ public class TclPackagesManager {
 		if (toFetch.size() == 0) {
 			return;
 		}
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		IExecutionEnvironment exeEnv = install.getExecEnvironment();
 		IDeployment deployment = exeEnv.createDeployment();
 		if (deployment == null) {
@@ -448,6 +453,7 @@ public class TclPackagesManager {
 		}
 		deployment.dispose();
 		save();
+		p.done("Tcl", "Fetch interpreter package sources", 0);
 	}
 
 	private static URI getInfoLocation() {
