@@ -137,6 +137,7 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 				} finally {
 					releaseProject(project);
 				}
+				fireEvent();
 			}
 		}
 
