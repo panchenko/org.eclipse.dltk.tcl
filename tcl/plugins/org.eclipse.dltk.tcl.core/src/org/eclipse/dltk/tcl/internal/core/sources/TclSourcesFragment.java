@@ -243,6 +243,6 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 		Set<String> pseudoElements = new HashSet<String>();
 		TclSourcesUtils.fillSources(install, getScriptProject(), sources, null,
 				pseudoElements);
-		return !sources.isEmpty() || !pseudoElements.isEmpty();
+		return !sources.isEmpty() ;//|| !pseudoElements.isEmpty();
 	}
 }

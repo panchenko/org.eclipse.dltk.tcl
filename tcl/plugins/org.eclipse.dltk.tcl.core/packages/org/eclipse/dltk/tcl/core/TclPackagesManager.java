@@ -203,7 +203,9 @@ public class TclPackagesManager {
 			try {
 				infos.save(null);
 			} catch (IOException e) {
-				TclPlugin.error(e);
+				if (DLTKCore.DEBUG) {
+					// TclPlugin.error(e);
+				}
 			}
 		}
 		synchronized (projectInfos) {
