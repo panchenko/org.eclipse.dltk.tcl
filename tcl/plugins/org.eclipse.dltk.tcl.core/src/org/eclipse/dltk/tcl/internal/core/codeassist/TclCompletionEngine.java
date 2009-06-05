@@ -33,6 +33,7 @@ import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.CompletionContext;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -230,12 +231,13 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				token = pkg.getName().substring(0, len);
 			}
 			this.setSourceRange(pkg.getNameStart(), pkg.getNameEnd());
-			this.packageNamesCompletion(token.toCharArray(), new HashSet());
+			this.packageNamesCompletion(token.toCharArray(),
+					new HashSet<String>());
 
 		} else if (astNode instanceof CompletionOnKeywordArgumentOrFunctionArgument) {
 			CompletionOnKeywordArgumentOrFunctionArgument compl = (CompletionOnKeywordArgumentOrFunctionArgument) astNode;
 			TclStatement st = compl.getStatement();
-			Set methodNames = new HashSet();
+			Set<String> methodNames = new HashSet<String>();
 			if (st.getCount() >= 1) {
 				// Completion on two argument keywords
 				final Expression at = st.getAt(0);
@@ -301,7 +303,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	private void packageNamesCompletion(char[] token, Set methodNames) {
+	private void packageNamesCompletion(char[] token, Set<String> methodNames) {
 		IScriptProject project = this.sourceModule.getScriptProject();
 		IInterpreterInstall install;
 		try {
@@ -336,7 +338,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				}
-				String kw[] = (String[]) k.toArray(new String[k.size()]);
+				String kw[] = k.toArray(new String[k.size()]);
 				char[][] choices = new char[kw.length][];
 				for (int i = 0; i < kw.length; ++i) {
 					choices[i] = kw[i].toCharArray();
@@ -355,18 +357,18 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	protected void processPartOfKeywords(int sourceStart,
 			CompletionOnKeywordArgumentOrFunctionArgument compl, String prefix,
-			Set methodNames) {
+			Set<String> methodNames) {
 		if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
-			List k = processPartOfKeywords(compl.getPossibleKeywords(), prefix,
-					sourceStart);
+			List<String> k = processPartOfKeywords(compl.getPossibleKeywords(),
+					prefix, sourceStart);
 			if (methodNames != null) {
 				methodNames.addAll(k);
 			}
 		}
 	}
 
-	protected List processPartOfKeywords(String[] keywords, String prefix,
-			int sourceStart) {
+	protected List<String> processPartOfKeywords(String[] keywords,
+			String prefix, int sourceStart) {
 		if (prefix != null && prefix.length() != 0 && prefix.charAt(0) == ':') {
 			String[] doubleColonPrependedKeywords = new String[keywords.length];
 			for (int i = 0; i < keywords.length; ++i) {
@@ -374,15 +376,14 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 			keywords = doubleColonPrependedKeywords;
 		}
-		List k = new ArrayList();
+		List<String> k = new ArrayList<String>();
 		if (prefix == null) {
-			prefix = "";
+			prefix = Util.EMPTY_STRING;
 		}
 		prefix = prefix.trim();
 		selectKeywords(keywords, prefix, k, requestor
 				.isContextInformationMode());
-		if (k.isEmpty() && requestor.isContextInformationMode()
-				&& prefix != null) {
+		if (k.isEmpty() && requestor.isContextInformationMode()) {
 			final int p = prefix.indexOf(' ');
 			if (p > 0) {
 				selectKeywords(keywords, prefix.substring(0, p), k, requestor
@@ -397,10 +398,10 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		return k;
 	}
 
-	private void reportKeywords(String prefix, List keywords, int sourceStart) {
+	private void reportKeywords(String prefix, List<String> keywords,
+			int sourceStart) {
 		final char[] keyword = prefix.toCharArray();
-		for (Iterator i = keywords.iterator(); i.hasNext();) {
-			final String kw = (String) i.next();
+		for (final String kw : keywords) {
 			final char[] choice = kw.toCharArray();
 			int relevance = computeBaseRelevance();
 
@@ -436,7 +437,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void selectKeywords(String[] possibleKeywords, String prefix,
-			List selection, boolean preferExactMatch) {
+			List<String> selection, boolean preferExactMatch) {
 		if (preferExactMatch) {
 			for (int i = 0; i < possibleKeywords.length; i++) {
 				final String kkw = possibleKeywords[i];
@@ -864,8 +865,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		return TclParseUtil.getFQNFromModelElement(element, "::");
 	}
 
-	public List toList(Set types) {
-		return new ArrayList(types);
+	public <T> List<T> toList(Set<T> types) {
+		return new ArrayList<T>(types);
 	}
 
 	protected void search(String patternString, int searchFor, int limitTo,
