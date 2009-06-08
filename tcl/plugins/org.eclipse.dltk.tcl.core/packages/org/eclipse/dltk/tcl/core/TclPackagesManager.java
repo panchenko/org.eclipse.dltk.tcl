@@ -58,7 +58,6 @@ public class TclPackagesManager {
 
 	private static Resource infos = null;
 	private static final Map<String, Resource> projectInfos = new HashMap<String, Resource>();
-	private static Map<IInterpreterInstall, IFileHandle> deployments = new HashMap<IInterpreterInstall, IFileHandle>();
 
 	public static synchronized List<TclPackageInfo> getPackageInfos(
 			IInterpreterInstall install, Set<String> packageNames,
