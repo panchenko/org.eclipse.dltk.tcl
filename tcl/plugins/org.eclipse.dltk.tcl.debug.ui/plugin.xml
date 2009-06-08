@@ -321,7 +321,7 @@
   </extension>
 
   <extension point="org.eclipse.dltk.ui.buildpathContainerPage">
-    <buildpathContainerPath
+    <buildpathContainerPage
       class="org.eclipse.dltk.tcl.internal.debug.ui.interpreters.TclInterpreterContainerWizardPage"
       id="org.eclipse.dltk.tcl.launching.INTERPRETER_CONTAINER"
       name="Tcl Interpreter Libraries"
