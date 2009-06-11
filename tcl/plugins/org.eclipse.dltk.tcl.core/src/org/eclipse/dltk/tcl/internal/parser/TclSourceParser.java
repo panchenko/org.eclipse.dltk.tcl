@@ -30,7 +30,9 @@ import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
 import org.eclipse.dltk.utils.TextUtils;
-
+/**
+ * @deprecated
+ */
 public class TclSourceParser extends AbstractSourceParser implements
 		ITclSourceParser, ITclParser, ISourceParserExtension {
 	private IProblemReporter problemReporter;
