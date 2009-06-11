@@ -113,13 +113,53 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 							}
 							MethodCallExpression node = new MethodCallExpression(
 									commandId.sourceStart(), commandId
-											.sourceEnd(), null, ns[i], null);
+											.sourceEnd(), null, ns[i], null) {
+								public boolean equals(Object obj) {
+									if (obj == this)
+										return true;
+									if (obj instanceof ASTNode) {
+										ASTNode s = (ASTNode) obj;
+										if (s.sourceEnd() < 0
+												|| s.sourceStart() < 0) {
+											return false;
+										}
+										return sourceStart() == s.sourceStart()
+												&& sourceEnd() == s.sourceEnd();
+									}
+									return false;
+								}
+
+								public int hashCode() {
+									return this.sourceEnd() * 1001
+											+ this.sourceEnd();
+								}
+							};
 							node.setDeclaringTypeName(namespace);
 							locator.match(node, this.getNodeSet());
 						} else {
 							locator.match(new TypeReference(commandId
 									.sourceStart(), commandId.sourceEnd(),
-									ns[i]), this.getNodeSet());
+									ns[i]) {
+								public boolean equals(Object obj) {
+									if (obj == this)
+										return true;
+									if (obj instanceof ASTNode) {
+										ASTNode s = (ASTNode) obj;
+										if (s.sourceEnd() < 0
+												|| s.sourceStart() < 0) {
+											return false;
+										}
+										return sourceStart() == s.sourceStart()
+												&& sourceEnd() == s.sourceEnd();
+									}
+									return false;
+								}
+
+								public int hashCode() {
+									return this.sourceEnd() * 1001
+											+ this.sourceEnd();
+								}
+							}, this.getNodeSet());
 						}
 					}
 				}

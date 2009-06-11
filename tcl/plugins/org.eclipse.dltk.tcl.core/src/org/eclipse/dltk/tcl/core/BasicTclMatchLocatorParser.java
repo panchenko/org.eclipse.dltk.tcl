@@ -62,10 +62,28 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 		}
 	}
 
-	public MethodDeclaration processMethod(MethodDeclaration m) {
+	public MethodDeclaration processMethod(final MethodDeclaration m) {
 		String name = m.getName();
 		MethodDeclaration method = new MethodDeclaration(m.sourceStart(), m
-				.sourceEnd());
+				.sourceEnd()) {
+			public boolean equals(Object obj) {
+				if (obj == this)
+					return true;
+				if (obj instanceof ASTNode) {
+					ASTNode s = (ASTNode) obj;
+					if (s.sourceEnd() < 0 || s.sourceStart() < 0) {
+						return false;
+					}
+					return sourceStart() == s.sourceStart()
+							&& sourceEnd() == s.sourceEnd();
+				}
+				return false;
+			}
+
+			public int hashCode() {
+				return this.sourceEnd() * 1001 + this.sourceEnd();
+			}
+		};
 		method.setName(name);
 		method.setNameStart(m.getNameStart());
 		method.setNameEnd(m.getNameEnd());
@@ -88,10 +106,29 @@ public abstract class BasicTclMatchLocatorParser extends MatchLocatorParser {
 		return name;
 	}
 
-	public TypeDeclaration processType(TypeDeclaration t) {
+	public TypeDeclaration processType(final TypeDeclaration t) {
 		String name = t.getName();
 		TypeDeclaration type = new TypeDeclaration(name, t.getNameStart(), t
-				.getNameEnd(), t.sourceStart(), t.sourceEnd());
+				.getNameEnd(), t.sourceStart(), t.sourceEnd()) {
+			public boolean equals(Object obj) {
+				if (obj == this)
+					return true;
+				if (obj instanceof ASTNode) {
+					ASTNode s = (ASTNode) obj;
+					if (s.sourceEnd() < 0 || s.sourceStart() < 0) {
+						return false;
+					}
+					return sourceStart() == s.sourceStart()
+							&& sourceEnd() == s.sourceEnd();
+				}
+				return false;
+			}
+
+			public int hashCode() {
+				return this.sourceEnd() * 1001 + this.sourceEnd();
+			}
+		};
+
 		if (name.startsWith("::")) {
 			name = name.substring(2);
 		}
