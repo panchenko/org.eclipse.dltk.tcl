@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.validators.packages;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,9 +41,7 @@ import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
-import org.eclipse.dltk.core.caching.IContentCache;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.core.ModelManager;
@@ -62,15 +58,12 @@ import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
-import org.eclipse.dltk.tcl.internal.core.TclASTCache;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 import org.eclipse.osgi.util.NLS;
 
 public class PackageRequireSourceAnalyser implements IBuildParticipant,
@@ -220,27 +213,6 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		packageCollector.process(statements, module);
 		// }
 		addInfoForModule(context, module, null);
-	}
-
-	private TclModuleInfo collectCachedInfo(ISourceModule module) {
-		TclModuleInfo info = null;
-		IContentCache cache = ModelManager.getModelManager().getCoreCache();
-		IFileHandle handle = EnvironmentPathUtils.getFile(module);
-		InputStream stream = cache.getCacheEntryAttribute(handle,
-				TclASTCache.TCL_PKG_INFO);
-		if (stream != null) {
-			Resource res = new BinaryResourceImpl();
-			try {
-				res.load(stream, null);
-				stream.close();
-				info = (TclModuleInfo) res.getContents().get(0);
-			} catch (IOException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return info;
 	}
 
 	private void addInfoForModule(IBuildContext context, ISourceModule module,
