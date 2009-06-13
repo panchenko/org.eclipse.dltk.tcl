@@ -65,7 +65,7 @@ public class TclTodoTaskPreferencePage extends
 			}
 		};
 	}
-	
+
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
@@ -80,11 +80,11 @@ public class TclTodoTaskPreferencePage extends
 	}
 
 	protected String getPreferencePageId() {
-		return "org.eclipse.dltk.tcl.preferences.todo";
+		return "org.eclipse.dltk.tcl.preferences.todo"; //$NON-NLS-1$
 	}
 
 	protected String getPropertyPageId() {
-		return "org.eclipse.dltk.tcl.propertyPage.todo";
+		return "org.eclipse.dltk.tcl.propertyPage.todo"; //$NON-NLS-1$
 	}
 
 	protected PreferenceKey[] getPreferenceKeys() {
