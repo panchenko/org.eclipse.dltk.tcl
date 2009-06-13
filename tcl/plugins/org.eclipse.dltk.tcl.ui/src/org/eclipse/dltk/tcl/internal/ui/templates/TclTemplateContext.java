@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.templates;
 
+import org.eclipse.dltk.core.IPreferencesLookupDelegate;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
@@ -16,7 +17,6 @@ import org.eclipse.dltk.ui.templates.IScriptTemplateIndenter;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.TabExpandScriptTemplateIndenter;
 import org.eclipse.dltk.ui.text.util.TabStyle;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.TemplateContextType;
 
@@ -29,18 +29,14 @@ public class TclTemplateContext extends ScriptTemplateContext {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateContext#getIndenter()
 	 */
 	protected IScriptTemplateIndenter getIndenter() {
-		final IPreferenceStore store = TclUI.getDefault().getPreferenceStore();
-		final TabStyle tabStyle = TabStyle.forName(store
-				.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR),
-				TabStyle.TAB);
-		if (TabStyle.SPACES == tabStyle) {
-			return new TabExpandScriptTemplateIndenter(store
-					.getInt(CodeFormatterConstants.FORMATTER_TAB_SIZE));
+		IPreferencesLookupDelegate prefs = getPreferences();
+		if (TabStyle.SPACES == TabStyle.forName(prefs.getString(
+				TclUI.PLUGIN_ID, CodeFormatterConstants.FORMATTER_TAB_CHAR))) {
+			return new TabExpandScriptTemplateIndenter(prefs.getInt(
+					TclUI.PLUGIN_ID, CodeFormatterConstants.FORMATTER_TAB_SIZE));
 		}
 		return super.getIndenter();
 	}
