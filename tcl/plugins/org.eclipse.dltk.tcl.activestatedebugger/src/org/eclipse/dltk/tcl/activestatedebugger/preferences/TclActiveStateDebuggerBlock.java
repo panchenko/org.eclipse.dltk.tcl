@@ -316,10 +316,9 @@ public class TclActiveStateDebuggerBlock extends
 		return TclActiveStateDebuggerPreferencePage.LOG_FILE_NAME;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected IPreferenceChangeRebuildPrompt getPreferenceChangeRebuildPrompt(
-			boolean workspaceSettings, Collection changedOptions) {
+			boolean workspaceSettings, Collection<PreferenceKey> changedOptions) {
 		if (changedOptions
 				.contains(TclActiveStateDebuggerPreferencePage.PREF_SPAWNPOINTS)) {
 			return PreferenceChangeRebuildPrompt
