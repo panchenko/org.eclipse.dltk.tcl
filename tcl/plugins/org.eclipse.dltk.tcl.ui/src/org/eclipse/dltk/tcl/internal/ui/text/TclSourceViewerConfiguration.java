@@ -17,12 +17,11 @@ import org.eclipse.dltk.tcl.internal.ui.hierarchy.TclHierarchyInformationControl
 import org.eclipse.dltk.tcl.internal.ui.text.completion.TclContentAssistPreference;
 import org.eclipse.dltk.tcl.internal.ui.text.completion.TclScriptCompletionProcessor;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
-import org.eclipse.dltk.ui.CodeFormatterConstants;
 import org.eclipse.dltk.ui.text.AbstractScriptScanner;
 import org.eclipse.dltk.ui.text.IColorManager;
+import org.eclipse.dltk.ui.text.ScriptCorrectionAssistant;
 import org.eclipse.dltk.ui.text.ScriptPresentationReconciler;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
-import org.eclipse.dltk.ui.text.ScriptCorrectionAssistant;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
 import org.eclipse.dltk.ui.text.completion.ContentAssistProcessor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -64,19 +63,6 @@ public class TclSourceViewerConfiguration extends
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return TclPartitions.TCL_PARTITION_TYPES;
-	}
-
-	public String[] getIndentPrefixes(ISourceViewer sourceViewer,
-			String contentType) {
-		return new String[] { "\t", "    " }; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	public int getTabWidth(ISourceViewer sourceViewer) {
-		if (fPreferenceStore == null)
-			return super.getTabWidth(sourceViewer);
-
-		return fPreferenceStore
-				.getInt(CodeFormatterConstants.FORMATTER_TAB_SIZE);
 	}
 
 	private IInformationControlCreator getHierarchyPresenterControlCreator(
