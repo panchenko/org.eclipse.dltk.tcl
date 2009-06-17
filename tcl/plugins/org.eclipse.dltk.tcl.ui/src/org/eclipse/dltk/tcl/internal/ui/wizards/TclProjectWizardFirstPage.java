@@ -11,11 +11,15 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
@@ -23,9 +27,9 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplateOperation;
-import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.dltk.utils.LazyExtensionManager;
+import org.eclipse.dltk.utils.LazyExtensionManager.Descriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -64,104 +68,232 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		return false;
 	}
 
+	static class ProjectTemplateDescriptor extends Descriptor<IProjectTemplate> {
+		final String nature;
+		final String name;
+		final String browseButton;
+
+		/**
+		 * @param configurationElement
+		 */
+		public ProjectTemplateDescriptor(TclProjectTemplateManager manager,
+				IConfigurationElement configurationElement) {
+			super(manager, configurationElement);
+			this.nature = configurationElement.getAttribute("nature");
+			this.name = configurationElement.getAttribute("name");
+			this.browseButton = configurationElement
+					.getAttribute("browseButton");
+		}
+
+	}
+
+	static class TclProjectTemplateManager extends
+			LazyExtensionManager<IProjectTemplate> {
+
+		/**
+		 * @param extensionPoint
+		 */
+		public TclProjectTemplateManager() {
+			super(DLTKUIPlugin.PLUGIN_ID + ".projectTemplate"); //$NON-NLS-1$
+		}
+
+		@Override
+		protected boolean isValidDescriptor(
+				Descriptor<IProjectTemplate> descriptor) {
+			String natureId = ((ProjectTemplateDescriptor) descriptor).nature;
+			return natureId == null || TclNature.NATURE_ID.equals(natureId);
+		}
+
+		@Override
+		protected Descriptor<IProjectTemplate> createDescriptor(
+				IConfigurationElement confElement) {
+			return new ProjectTemplateDescriptor(this, confElement);
+		}
+
+	}
+
 	private class TclLocationGroup extends LocationGroup {
 
-		private final SelectionButtonDialogField fLinkRadio;
-		private Button fBrowseButton;
+		private class TclProjectTemplateEntry {
+			final ProjectTemplateDescriptor descriptor;
+			final SelectionButtonDialogField fLinkRadio;
+			Button fBrowseButton;
+
+			/**
+			 * @param descriptor
+			 */
+			public TclProjectTemplateEntry(ProjectTemplateDescriptor descriptor) {
+				this.descriptor = descriptor;
+				fLinkRadio = new SelectionButtonDialogField(SWT.RADIO);
+				fLinkRadio.setLabelText(descriptor.name);
+			}
+
+			/**
+			 * @param group
+			 */
+			public void createControls(Group group) {
+				fLinkRadio.doFillIntoGrid(group, 2);
+				fBrowseButton = new Button(group, SWT.PUSH);
+				fBrowseButton.setFont(group.getFont());
+				fBrowseButton.setText(this.descriptor.browseButton);
+				fBrowseButton.setEnabled(fLinkRadio.isSelected());
+				fBrowseButton.addSelectionListener(new SelectionListener() {
+					public void widgetDefaultSelected(SelectionEvent e) {
+						doLink();
+					}
+
+					public void widgetSelected(SelectionEvent e) {
+						doLink();
+					}
+				});
+				fBrowseButton.setLayoutData(StringButtonDialogField
+						.gridDataForButton(fBrowseButton, 1));
+			}
+
+			protected void doLink() {
+				final IProjectTemplate projectTemplate = descriptor.get();
+				if (projectTemplate != null) {
+					IProject project = acquireProject();
+					try {
+						IProjectTemplateOperation operation = projectTemplate
+								.configure(project, templateOperation,
+										getShell());
+						if (operation != null) {
+							templateOperation = operation;
+							fireEvent();
+						}
+					} finally {
+						releaseProject(project);
+					}
+					fireEvent();
+				}
+			}
+
+			private IProject acquireProject() {
+				return ((TclProjectCreationWizard) getWizard()).fSecondPage
+						.acquireProject();
+			}
+
+			private void releaseProject(IProject project) {
+				((TclProjectCreationWizard) getWizard()).fSecondPage
+						.releaseProject();
+			}
+
+			private IProjectTemplateOperation templateOperation;
+
+			/**
+			 * @param handle
+			 * @return
+			 */
+			public IStatus validate(IProject handle) {
+				final IProjectTemplate projectTemplate = descriptor.get();
+				if (projectTemplate != null) {
+					return projectTemplate.validate(templateOperation);
+				}
+				return Status.OK_STATUS;
+			}
+
+		}
+
+		private final List<TclProjectTemplateEntry> fOptions = new ArrayList<TclProjectTemplateEntry>();
 
 		public TclLocationGroup() {
 			super();
-			fLinkRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fLinkRadio.setDialogFieldListener(this);
-			fLinkRadio
-					.setLabelText("Link existing source into workspace project");
+			TclProjectTemplateManager manager = new TclProjectTemplateManager();
+			for (Iterator<Descriptor<IProjectTemplate>> i = manager
+					.descriptorIterator(); i.hasNext();) {
+				ProjectTemplateDescriptor d = (ProjectTemplateDescriptor) i
+						.next();
+				TclProjectTemplateEntry entry = new TclProjectTemplateEntry(d);
+				entry.fLinkRadio.setDialogFieldListener(this);
+				fOptions.add(entry);
+			}
 		}
 
 		@Override
 		protected void createControls(Group group, int numColumns) {
 			super.createControls(group, numColumns);
-			fLinkRadio.doFillIntoGrid(group, 2);
-
-			fBrowseButton = new Button(group, SWT.PUSH);
-			fBrowseButton.setFont(group.getFont());
-			fBrowseButton
-					.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_browseButton_desc);
-			fBrowseButton.setEnabled(fLinkRadio.isSelected());
-			fBrowseButton.addSelectionListener(new SelectionListener() {
-				public void widgetDefaultSelected(SelectionEvent e) {
-					doLink();
-				}
-
-				public void widgetSelected(SelectionEvent e) {
-					doLink();
-				}
-			});
-			fBrowseButton.setLayoutData(StringButtonDialogField
-					.gridDataForButton(fBrowseButton, 1));
+			for (TclProjectTemplateEntry entry : fOptions) {
+				entry.createControls(group);
+			}
 		}
 
 		@Override
 		protected boolean isModeField(DialogField field, int kind) {
-			return super.isModeField(field, kind)
-					|| ((kind == ANY || kind == WORKSPACE) && field == fLinkRadio);
+			if (super.isModeField(field, kind)) {
+				return true;
+			}
+			if (kind == ANY || kind == WORKSPACE) {
+				for (TclProjectTemplateEntry entry : fOptions) {
+					if (field == entry.fLinkRadio) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		@Override
 		public void dialogFieldChanged(DialogField field) {
 			super.dialogFieldChanged(field);
-			if (field == fLinkRadio) {
-				fBrowseButton.setEnabled(fLinkRadio.isSelected());
+			for (TclProjectTemplateEntry entry : fOptions) {
+				if (field == entry.fLinkRadio) {
+					entry.fBrowseButton.setEnabled(isValidProject()
+							&& entry.fLinkRadio.isSelected());
+					break;
+				}
 			}
 		}
 
 		@Override
 		public boolean isInWorkspace() {
-			return super.isInWorkspace() || fLinkRadio.isSelected();
-		}
-
-		protected void doLink() {
-			final String extensionPoint = DLTKUIPlugin.PLUGIN_ID
-					+ ".projectTemplate";
-			final Iterator<IProjectTemplate> iterator = new LazyExtensionManager<IProjectTemplate>(
-					extensionPoint).iterator();
-			if (iterator.hasNext()) {
-				IProjectTemplate projectTemplate = iterator.next();
-				IProject project = acquireProject();
-				try {
-					IProjectTemplateOperation operation = projectTemplate
-							.configure(project, templateOperation, getShell());
-					if (operation != null) {
-						templateOperation = operation;
-						fireEvent();
-					}
-				} finally {
-					releaseProject(project);
-				}
-				fireEvent();
+			if (super.isInWorkspace()) {
+				return true;
 			}
+			for (TclProjectTemplateEntry entry : fOptions) {
+				if (entry.fLinkRadio.isSelected()) {
+					return true;
+				}
+			}
+			return false;
 		}
-
-		private IProject acquireProject() {
-			return ((TclProjectCreationWizard) getWizard()).fSecondPage
-					.acquireProject();
-		}
-
-		private void releaseProject(IProject project) {
-			((TclProjectCreationWizard) getWizard()).fSecondPage
-					.releaseProject();
-		}
-
-		private IProjectTemplateOperation templateOperation;
 
 		@Override
 		public IStatus validate(IProject handle) {
 			IStatus status = super.validate(handle);
-			if (status.isOK() && fLinkRadio.isSelected()
-					&& templateOperation == null) {
-				return new StatusInfo(IStatus.ERROR,
-						"Specify the sources to be linked into the project");
+			if (status.isOK()) {
+				for (TclProjectTemplateEntry entry : fOptions) {
+					if (entry.fLinkRadio.isSelected()) {
+						return entry.validate(handle);
+					}
+				}
 			}
 			return status;
+		}
+
+		/**
+		 * @return
+		 */
+		IProjectTemplateOperation getSelectedTemplateOperation() {
+			for (TclProjectTemplateEntry entry : fOptions) {
+				if (entry.fLinkRadio.isSelected()) {
+					return entry.templateOperation;
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public void update(Observable o, Object arg) {
+			super.update(o, arg);
+			if (o instanceof NameGroup) {
+				for (TclProjectTemplateEntry entry : fOptions) {
+					if (entry.fLinkRadio.isSelected()) {
+						entry.fBrowseButton.setEnabled(isValidProject());
+						break;
+					}
+				}
+			}
 		}
 
 	}
@@ -172,7 +304,8 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 	}
 
 	protected IProjectTemplateOperation getProjectTemplateOperation() {
-		return ((TclLocationGroup) fLocationGroup).templateOperation;
+		return ((TclLocationGroup) fLocationGroup)
+				.getSelectedTemplateOperation();
 	}
 
 }
