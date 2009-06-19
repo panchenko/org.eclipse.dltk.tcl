@@ -669,6 +669,7 @@
          activate="false"
          class="org.eclipse.dltk.tcl.internal.ui.PackagesSourcesHover"
          id="org.eclipse.dltk.tcl.ui.source_package_hover"
+         nature="org.eclipse.dltk.tcl.core.nature"
          label="Tcl Source/Package information hover">
    </hover>
 </extension>
