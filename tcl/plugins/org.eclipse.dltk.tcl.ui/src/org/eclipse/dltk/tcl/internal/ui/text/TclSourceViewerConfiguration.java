@@ -226,18 +226,6 @@ public class TclSourceViewerConfiguration extends
 		return TclContentAssistPreference.getDefault();
 	}
 
-	protected IInformationControlCreator getOutlinePresenterControlCreator(
-			ISourceViewer sourceViewer, final String commandId) {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				int shellStyle = SWT.RESIZE;
-				int treeStyle = SWT.V_SCROLL | SWT.H_SCROLL;
-				return new TclOutlineInformationControl(parent, shellStyle,
-						treeStyle, commandId);
-			}
-		};
-	}
-
 	protected void initializeQuickOutlineContexts(
 			InformationPresenter presenter, IInformationProvider provider) {
 		presenter.setInformationProvider(provider, TclPartitions.TCL_COMMENT);
