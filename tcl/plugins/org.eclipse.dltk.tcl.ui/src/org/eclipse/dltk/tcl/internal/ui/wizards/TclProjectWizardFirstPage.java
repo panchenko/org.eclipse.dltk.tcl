@@ -25,6 +25,7 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogFi
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.dialogs.ControlStatus;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplateOperation;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
@@ -264,7 +265,12 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 			if (status.isOK()) {
 				for (TclProjectTemplateEntry entry : fOptions) {
 					if (entry.fLinkRadio.isSelected()) {
-						return entry.validate(handle);
+						final IStatus entryStatus = entry.validate(handle);
+						if (!entryStatus.isOK()) {
+							return new ControlStatus(entryStatus.getSeverity(),
+									entryStatus.getMessage(), entry.fLinkRadio
+											.getSelectionButton());
+						}
 					}
 				}
 			}
