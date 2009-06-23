@@ -110,6 +110,12 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	public PackageRequireSourceAnalyser(IScriptProject project)
 			throws CoreException, IllegalStateException {
 		this.project = project;
+		if (!project.exists()) {
+			// thrown exception is caught in the PackageRequireCheckerFactory
+			throw new IllegalStateException(NLS.bind(
+					Messages.TclCheckBuilder_interpreterNotFound, project
+							.getElementName()));
+		}
 		install = ScriptRuntime.getInterpreterInstall(project);
 		if (install == null) {
 			// thrown exception is caught in the PackageRequireCheckerFactory
