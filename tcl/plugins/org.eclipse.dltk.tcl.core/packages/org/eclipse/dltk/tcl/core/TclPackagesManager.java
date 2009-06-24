@@ -189,6 +189,9 @@ public class TclPackagesManager {
 			IInterpreterInstall install, TclInterpreterInfo interpreterInfo) {
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		IExecutionEnvironment exeEnv = install.getExecEnvironment();
+		if (exeEnv == null) {
+			return;
+		}
 		List<String> content = deployExecute(exeEnv, install,
 				new String[] { "get-pkgs" }, install //$NON-NLS-1$
 						.getEnvironmentVariables());
