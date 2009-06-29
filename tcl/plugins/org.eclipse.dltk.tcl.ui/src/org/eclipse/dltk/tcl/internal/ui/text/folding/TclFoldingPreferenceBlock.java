@@ -15,6 +15,7 @@ import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.preferences.ControlBindingManager;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
+import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.dltk.ui.text.folding.SourceCodeFoldingPreferenceBlock;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.ui.util.SWTFactory;
@@ -71,7 +72,8 @@ public class TclFoldingPreferenceBlock extends SourceCodeFoldingPreferenceBlock 
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_OTHER);
 	}
 
-	protected void addOverlayKeys(List keys) {
+	@Override
+	protected void addOverlayKeys(List<OverlayKey> keys) {
 		super.addOverlayKeys(keys);
 
 		keys.add(new OverlayPreferenceStore.OverlayKey(
