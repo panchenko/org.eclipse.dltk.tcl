@@ -82,8 +82,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		String pathKeyValue = getDebuggingPreference(delegate,
 				TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PDX_PATH_KEY);
 
-		String path = (String) EnvironmentPathUtils.decodePaths(pathKeyValue)
-				.get(env);
+		String path = EnvironmentPathUtils.decodePaths(pathKeyValue).get(env);
 
 		InterpreterConfig newConfig = (InterpreterConfig) config.clone();
 
@@ -123,7 +122,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		newConfig.addInterpreterArg(SCRIPT_KEY);
 
 		// Script arguments
-		List<?> args = config.getScriptArgs();
+		List<String> args = config.getScriptArgs();
 		newConfig.clearScriptArgs();
 		newConfig.addScriptArg(ARGS_SEPARATOR);
 		newConfig.addScriptArgs(args);
