@@ -535,15 +535,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			}
 		}
 
-		// Report unknown packages
-		boolean found = false;
-		for (TclPackageInfo info : this.knownInfos) {
-			if (info.getName().equals(packageName)) {
-				found = true;
-				break;
-			}
-		}
-		if (!found) {
+		if (!isKnownPackage(packageName)) {
 			if (!TclPackagesManager.isValidName(packageName)) {
 				reportPackageProblemCorrection(
 						pkg,
@@ -588,6 +580,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		// }
 		// }
 		// }
+	}
+
+	private boolean isKnownPackage(final String packageName) {
+		for (TclPackageInfo info : this.knownInfos) {
+			if (info.getName().equals(packageName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private final boolean isAutoAddPackages() {
