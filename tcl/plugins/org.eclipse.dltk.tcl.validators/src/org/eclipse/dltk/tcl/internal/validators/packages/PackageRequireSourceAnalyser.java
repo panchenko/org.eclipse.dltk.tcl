@@ -60,8 +60,6 @@ import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
-import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.osgi.util.NLS;
@@ -73,10 +71,6 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private final IInterpreterInstall install;
 
 	private final PackageSourceCollector packageCollector = new PackageSourceCollector();
-
-	// private final Set<IPath> buildpath;
-	// private final Map<String, Boolean> availabilityCache = new
-	// HashMap<String, Boolean>();
 
 	private final List<ModuleInfo> modules = new ArrayList<ModuleInfo>();
 
@@ -176,11 +170,6 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		}
 	}
 
-	private final NamespaceScopeProcessor processor = DefinitionManager
-			.getInstance().createProcessor();
-
-	private static final char[] PACKAGE_CHARS = PackageSourceCollector.PACKAGE
-			.toCharArray();
 	private List<TclPackageInfo> knownInfos;
 
 	public void buildExternalModule(IBuildContext context) throws CoreException {
@@ -252,7 +241,6 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	public void endBuild(IProgressMonitor monitor) {
 		monitor.subTask(Messages.TclCheckBuilder_retrievePackages);
 		// initialize manager caches after they are collected
-		@SuppressWarnings("unchecked")
 		final Set<String> names = new HashSet<String>();
 		final Set<String> autoNames = new HashSet<String>();
 		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
@@ -389,9 +377,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					.getSourceCorrections();
 			for (UserCorrection userCorrection : corrections) {
 				if (userCorrection.getOriginalValue().equals(source.getValue())) {
-					IPath sourcedPath = null;
-					EList<String> userValues = userCorrection.getUserValue();
-					for (String userValue : userValues) {
+					for (String userValue : userCorrection.getUserValue()) {
+						final IPath sourcedPath;
 						if (environment.isLocal()) {
 							sourcedPath = Path.fromOSString(userValue);
 						} else {
@@ -605,45 +592,6 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 	private final boolean isAutoAddPackages() {
 		return autoAddPackages;
-	}
-
-	/**
-	 * Returns <code>true</code> if <code>paths</code> are contained in the
-	 * <code>buildpath</code>
-	 * 
-	 * @param buildpath
-	 * @param paths
-	 * @return
-	 */
-	private static boolean isOnBuildpath(Set<IPath> buildpath, IPath[] paths) {
-		if (paths != null) {
-			for (final IPath path : paths) {
-				if (!isOnBuildpath(buildpath, path)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Returns <code>true</code> if <code>path</code> is contained in the
-	 * <code>buildpath</code>
-	 * 
-	 * @param buildpath
-	 * @param path
-	 * @return
-	 */
-	private static boolean isOnBuildpath(Set<IPath> buildpath, IPath path) {
-		if (!buildpath.contains(path)) {
-			for (IPath pp : buildpath) {
-				if (pp.isPrefixOf(path)) {
-					return true;
-				}
-			}
-			return false;
-		}
-		return true;
 	}
 
 	@SuppressWarnings("unchecked")
