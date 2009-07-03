@@ -13,8 +13,10 @@ package org.eclipse.dltk.tcl.internal.validators.packages;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -57,8 +59,11 @@ import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
+import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
+import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
+import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariableRegistry;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.emf.common.util.EList;
@@ -69,6 +74,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 	private final IScriptProject project;
 	private final IInterpreterInstall install;
+
+	private final TclVariableResolver variableResolver;
 
 	private final PackageSourceCollector packageCollector = new PackageSourceCollector();
 
@@ -118,6 +125,21 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 							.getElementName()));
 		}
 		knownInfos = TclPackagesManager.getPackageInfos(install);
+		final Map<String, VariableValue> variables = new HashMap<String, VariableValue>();
+		variables.putAll(TclPackagesManager.getVariables(install).map());
+		variables.putAll(TclPackagesManager.getVariables(
+				project.getElementName()).map());
+		// TODO use NOP resolver if no variables
+		variableResolver = new TclVariableResolver(new IVariableRegistry() {
+			public String[] getValues(String name) {
+				final VariableValue value = variables.get(name);
+				if (value != null) {
+					return new String[] { value.getValue() };
+				} else {
+					return null;
+				}
+			}
+		});
 		// buildpath = getBuildpath(project);
 	}
 
@@ -275,7 +297,21 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					}
 				}
 				if (toCheck.isEmpty()) {
-					toCheck.add(ref);
+					final Set<String> resolved = variableResolver.resolve(ref
+							.getValue());
+					if (resolved.size() == 1
+							&& resolved.contains(ref.getValue())) {
+						toCheck.add(ref);
+					} else {
+						for (String r : resolved) {
+							TclSourceEntry to = TclPackagesFactory.eINSTANCE
+									.createTclSourceEntry();
+							to.setEnd(ref.getEnd());
+							to.setStart(ref.getStart());
+							to.setValue(r);
+							toCheck.add(to);
+						}
+					}
 				}
 				for (TclSourceEntry tclSourceEntry : toCheck) {
 					checkPackage(tclSourceEntry, moduleInfo.reporter,
@@ -390,11 +426,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				}
 			}
 			if (sourcedPaths.isEmpty()) {
-				IPath sourcedPath = resolveSourceValue(folder, source,
-						environment);
-				if (sourcedPath != null) {
-					sourcedPaths.add(sourcedPath);
-					needToAddCorrection = true;
+				final Set<String> resolved = variableResolver.resolve(source
+						.getValue());
+				for (String value : resolved) {
+					final IPath sourcedPath = resolveSourceValue(folder, value,
+							environment);
+					if (sourcedPath != null) {
+						sourcedPaths.add(sourcedPath);
+						needToAddCorrection = true;
+					}
 				}
 			}
 			for (IPath sourcedPath : sourcedPaths) {
@@ -449,9 +489,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		}
 	}
 
-	private IPath resolveSourceValue(IPath folder, TclSourceEntry source,
+	private IPath resolveSourceValue(IPath folder, String value,
 			IEnvironment environment) {
-		String value = source.getValue();
 		final IPath valuePath;
 		if (environment.isLocal()) {
 			valuePath = Path.fromOSString(value);
