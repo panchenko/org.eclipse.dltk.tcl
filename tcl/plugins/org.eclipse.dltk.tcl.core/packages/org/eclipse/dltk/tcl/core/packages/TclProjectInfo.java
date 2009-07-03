@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProjectInfo.java,v 1.3 2009/05/19 17:46:51 apanchenk Exp $
+ * $Id: TclProjectInfo.java,v 1.4 2009/07/03 11:20:22 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -20,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getModules <em>Modules</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getVariables <em>Variables</em>}</li>
  * </ul>
  * </p>
  *
@@ -69,6 +71,23 @@ public interface TclProjectInfo extends EObject {
 	 * @generated
 	 */
 	EList<TclModuleInfo> getModules();
+
+	/**
+	 * Returns the value of the '<em><b>Variables</b></em>' map.
+	 * The key is of type {@link java.lang.String},
+	 * and the value is of type {@link org.eclipse.dltk.tcl.core.packages.VariableValue},
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Variables</em>' map isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Variables</em>' map.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclProjectInfo_Variables()
+	 * @model mapType="org.eclipse.dltk.tcl.core.packages.VariableMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.dltk.tcl.core.packages.VariableValue>"
+	 * @generated
+	 */
+	EMap<String, VariableValue> getVariables();
 
 	/**
 	 * <!-- begin-user-doc -->

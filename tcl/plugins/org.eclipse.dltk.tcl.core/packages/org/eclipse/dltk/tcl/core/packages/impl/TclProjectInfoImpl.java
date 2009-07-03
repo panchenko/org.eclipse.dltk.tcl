@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProjectInfoImpl.java,v 1.3 2009/05/19 17:46:51 apanchenk Exp $
+ * $Id: TclProjectInfoImpl.java,v 1.4 2009/07/03 11:20:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -11,14 +11,18 @@ import java.util.Collection;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
+import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -30,6 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl#getModules <em>Modules</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl#getVariables <em>Variables</em>}</li>
  * </ul>
  * </p>
  *
@@ -65,6 +70,16 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 	 * @ordered
 	 */
 	protected EList<TclModuleInfo> modules;
+
+	/**
+	 * The cached value of the '{@link #getVariables() <em>Variables</em>}' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVariables()
+	 * @generated
+	 * @ordered
+	 */
+	protected EMap<String, VariableValue> variables;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -124,6 +139,21 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EMap<String, VariableValue> getVariables() {
+		if (variables == null) {
+			variables = new EcoreEMap<String, VariableValue>(
+					TclPackagesPackage.Literals.VARIABLE_MAP_ENTRY,
+					VariableMapEntryImpl.class, this,
+					TclPackagesPackage.TCL_PROJECT_INFO__VARIABLES);
+		}
+		return variables;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
 	public TclModuleInfo findModule(String handle) {
@@ -147,6 +177,9 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			return ((InternalEList<?>) getModules())
 					.basicRemove(otherEnd, msgs);
+		case TclPackagesPackage.TCL_PROJECT_INFO__VARIABLES:
+			return ((InternalEList<?>) getVariables()).basicRemove(otherEnd,
+					msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -163,6 +196,11 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 			return getName();
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			return getModules();
+		case TclPackagesPackage.TCL_PROJECT_INFO__VARIABLES:
+			if (coreType)
+				return getVariables();
+			else
+				return getVariables().map();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -183,6 +221,9 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 			getModules().clear();
 			getModules().addAll((Collection<? extends TclModuleInfo>) newValue);
 			return;
+		case TclPackagesPackage.TCL_PROJECT_INFO__VARIABLES:
+			((EStructuralFeature.Setting) getVariables()).set(newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -201,6 +242,9 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			getModules().clear();
 			return;
+		case TclPackagesPackage.TCL_PROJECT_INFO__VARIABLES:
+			getVariables().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -218,6 +262,8 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 					.equals(name);
 		case TclPackagesPackage.TCL_PROJECT_INFO__MODULES:
 			return modules != null && !modules.isEmpty();
+		case TclPackagesPackage.TCL_PROJECT_INFO__VARIABLES:
+			return variables != null && !variables.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

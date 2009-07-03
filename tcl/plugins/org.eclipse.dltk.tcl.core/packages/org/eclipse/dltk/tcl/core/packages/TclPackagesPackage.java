@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.6 2009/05/27 09:00:48 asobolev Exp $
+ * $Id: TclPackagesPackage.java,v 1.7 2009/07/03 11:20:22 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -189,13 +189,22 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_INTERPRETER_INFO__ENVIRONMENT = 5;
 
 	/**
+	 * The feature id for the '<em><b>Variables</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_INTERPRETER_INFO__VARIABLES = 6;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Interpreter Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_INTERPRETER_INFO_FEATURE_COUNT = 6;
+	int TCL_INTERPRETER_INFO_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl <em>Tcl Project Info</em>}' class.
@@ -226,13 +235,22 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_PROJECT_INFO__MODULES = 1;
 
 	/**
+	 * The feature id for the '<em><b>Variables</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PROJECT_INFO__VARIABLES = 2;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Project Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_PROJECT_INFO_FEATURE_COUNT = 2;
+	int TCL_PROJECT_INFO_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl <em>Tcl Module Info</em>}' class.
@@ -400,6 +418,71 @@ public interface TclPackagesPackage extends EPackage {
 	int USER_CORRECTION_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl <em>Variable Map Entry</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl
+	 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableMapEntry()
+	 * @generated
+	 */
+	int VARIABLE_MAP_ENTRY = 6;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_MAP_ENTRY__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_MAP_ENTRY__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Variable Map Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_MAP_ENTRY_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl <em>Variable Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl
+	 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableValue()
+	 * @generated
+	 */
+	int VARIABLE_VALUE = 7;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_VALUE__VALUE = 0;
+
+	/**
+	 * The number of structural features of the '<em>Variable Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_VALUE_FEATURE_COUNT = 1;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclPackageInfo <em>Tcl Package Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -541,6 +624,17 @@ public interface TclPackagesPackage extends EPackage {
 	EAttribute getTclInterpreterInfo_Environment();
 
 	/**
+	 * Returns the meta object for the map '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getVariables <em>Variables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the map '<em>Variables</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getVariables()
+	 * @see #getTclInterpreterInfo()
+	 * @generated
+	 */
+	EReference getTclInterpreterInfo_Variables();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo <em>Tcl Project Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -571,6 +665,17 @@ public interface TclPackagesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTclProjectInfo_Modules();
+
+	/**
+	 * Returns the meta object for the map '{@link org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getVariables <em>Variables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the map '<em>Variables</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getVariables()
+	 * @see #getTclProjectInfo()
+	 * @generated
+	 */
+	EReference getTclProjectInfo_Variables();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo <em>Tcl Module Info</em>}'.
@@ -724,6 +829,61 @@ public interface TclPackagesPackage extends EPackage {
 	EAttribute getUserCorrection_UserValue();
 
 	/**
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Variable Map Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Variable Map Entry</em>'.
+	 * @see java.util.Map.Entry
+	 * @model keyDataType="org.eclipse.emf.ecore.EString"
+	 *        valueType="org.eclipse.dltk.tcl.core.packages.VariableValue" valueContainment="true"
+	 * @generated
+	 */
+	EClass getVariableMapEntry();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getVariableMapEntry()
+	 * @generated
+	 */
+	EAttribute getVariableMapEntry_Key();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link java.util.Map.Entry <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Value</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getVariableMapEntry()
+	 * @generated
+	 */
+	EReference getVariableMapEntry_Value();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.VariableValue <em>Variable Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Variable Value</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.VariableValue
+	 * @generated
+	 */
+	EClass getVariableValue();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.VariableValue#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.VariableValue#getValue()
+	 * @see #getVariableValue()
+	 * @generated
+	 */
+	EAttribute getVariableValue_Value();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.TclModuleInfo#getHandle <em>Handle</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -875,6 +1035,15 @@ public interface TclPackagesPackage extends EPackage {
 				.getTclInterpreterInfo_Environment();
 
 		/**
+		 * The meta object literal for the '<em><b>Variables</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_INTERPRETER_INFO__VARIABLES = eINSTANCE
+				.getTclInterpreterInfo_Variables();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl <em>Tcl Project Info</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -900,6 +1069,15 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EReference TCL_PROJECT_INFO__MODULES = eINSTANCE
 				.getTclProjectInfo_Modules();
+
+		/**
+		 * The meta object literal for the '<em><b>Variables</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TCL_PROJECT_INFO__VARIABLES = eINSTANCE
+				.getTclProjectInfo_Variables();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclModuleInfoImpl <em>Tcl Module Info</em>}' class.
@@ -1028,6 +1206,52 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EAttribute USER_CORRECTION__USER_VALUE = eINSTANCE
 				.getUserCorrection_UserValue();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl <em>Variable Map Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl
+		 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableMapEntry()
+		 * @generated
+		 */
+		EClass VARIABLE_MAP_ENTRY = eINSTANCE.getVariableMapEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute VARIABLE_MAP_ENTRY__KEY = eINSTANCE
+				.getVariableMapEntry_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VARIABLE_MAP_ENTRY__VALUE = eINSTANCE
+				.getVariableMapEntry_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl <em>Variable Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl
+		 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableValue()
+		 * @generated
+		 */
+		EClass VARIABLE_VALUE = eINSTANCE.getVariableValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute VARIABLE_VALUE__VALUE = eINSTANCE.getVariableValue_Value();
 
 		/**
 		 * The meta object literal for the '<em><b>Handle</b></em>' attribute feature.

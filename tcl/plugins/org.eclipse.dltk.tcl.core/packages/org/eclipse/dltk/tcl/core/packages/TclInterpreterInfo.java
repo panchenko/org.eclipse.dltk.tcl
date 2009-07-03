@@ -2,13 +2,14 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclInterpreterInfo.java,v 1.3 2009/05/17 11:39:12 apanchenk Exp $
+ * $Id: TclInterpreterInfo.java,v 1.4 2009/07/03 11:20:22 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
 import java.util.Date;
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -25,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#isFetched <em>Fetched</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getFetchedAt <em>Fetched At</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getEnvironment <em>Environment</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getVariables <em>Variables</em>}</li>
  * </ul>
  * </p>
  *
@@ -179,5 +181,22 @@ public interface TclInterpreterInfo extends EObject {
 	 * @generated
 	 */
 	void setEnvironment(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Variables</b></em>' map.
+	 * The key is of type {@link java.lang.String},
+	 * and the value is of type {@link org.eclipse.dltk.tcl.core.packages.VariableValue},
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Variables</em>' map isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Variables</em>' map.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclInterpreterInfo_Variables()
+	 * @model mapType="org.eclipse.dltk.tcl.core.packages.VariableMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.dltk.tcl.core.packages.VariableValue>"
+	 * @generated
+	 */
+	EMap<String, VariableValue> getVariables();
 
 } // TclInterpreterInfo

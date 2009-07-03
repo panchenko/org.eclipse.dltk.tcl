@@ -2,9 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.6 2009/05/27 09:00:48 asobolev Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.7 2009/07/03 11:20:19 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
+
+import java.util.Map;
 
 import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
@@ -12,15 +14,14 @@ import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
-
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
+import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
@@ -72,6 +73,20 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * @generated
 	 */
 	private EClass userCorrectionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass variableMapEntryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass variableValueEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -279,6 +294,16 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getTclInterpreterInfo_Variables() {
+		return (EReference) tclInterpreterInfoEClass.getEStructuralFeatures()
+				.get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTclProjectInfo() {
 		return tclProjectInfoEClass;
 	}
@@ -301,6 +326,16 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	public EReference getTclProjectInfo_Modules() {
 		return (EReference) tclProjectInfoEClass.getEStructuralFeatures()
 				.get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTclProjectInfo_Variables() {
+		return (EReference) tclProjectInfoEClass.getEStructuralFeatures()
+				.get(2);
 	}
 
 	/**
@@ -439,6 +474,53 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getVariableMapEntry() {
+		return variableMapEntryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVariableMapEntry_Key() {
+		return (EAttribute) variableMapEntryEClass.getEStructuralFeatures()
+				.get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getVariableMapEntry_Value() {
+		return (EReference) variableMapEntryEClass.getEStructuralFeatures()
+				.get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVariableValue() {
+		return variableValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVariableValue_Value() {
+		return (EAttribute) variableValueEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getTclModuleInfo_Handle() {
 		return (EAttribute) tclModuleInfoEClass.getEStructuralFeatures().get(0);
 	}
@@ -491,10 +573,13 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				TCL_INTERPRETER_INFO__FETCHED_AT);
 		createEAttribute(tclInterpreterInfoEClass,
 				TCL_INTERPRETER_INFO__ENVIRONMENT);
+		createEReference(tclInterpreterInfoEClass,
+				TCL_INTERPRETER_INFO__VARIABLES);
 
 		tclProjectInfoEClass = createEClass(TCL_PROJECT_INFO);
 		createEAttribute(tclProjectInfoEClass, TCL_PROJECT_INFO__NAME);
 		createEReference(tclProjectInfoEClass, TCL_PROJECT_INFO__MODULES);
+		createEReference(tclProjectInfoEClass, TCL_PROJECT_INFO__VARIABLES);
 
 		tclModuleInfoEClass = createEClass(TCL_MODULE_INFO);
 		createEAttribute(tclModuleInfoEClass, TCL_MODULE_INFO__HANDLE);
@@ -515,6 +600,13 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 		userCorrectionEClass = createEClass(USER_CORRECTION);
 		createEAttribute(userCorrectionEClass, USER_CORRECTION__ORIGINAL_VALUE);
 		createEAttribute(userCorrectionEClass, USER_CORRECTION__USER_VALUE);
+
+		variableMapEntryEClass = createEClass(VARIABLE_MAP_ENTRY);
+		createEAttribute(variableMapEntryEClass, VARIABLE_MAP_ENTRY__KEY);
+		createEReference(variableMapEntryEClass, VARIABLE_MAP_ENTRY__VALUE);
+
+		variableValueEClass = createEClass(VARIABLE_VALUE);
+		createEAttribute(variableValueEClass, VARIABLE_VALUE__VALUE);
 	}
 
 	/**
@@ -604,6 +696,11 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+		initEReference(getTclInterpreterInfo_Variables(), this
+				.getVariableMapEntry(), null, "variables", null, 0, -1,
+				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tclProjectInfoEClass, TclProjectInfo.class,
 				"TclProjectInfo", !IS_ABSTRACT, !IS_INTERFACE,
@@ -617,6 +714,11 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+		initEReference(getTclProjectInfo_Variables(), this
+				.getVariableMapEntry(), null, "variables", null, 0, -1,
+				TclProjectInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = addEOperation(tclProjectInfoEClass, this
 				.getTclModuleInfo(), "findModule", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -688,6 +790,24 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				UserCorrection.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+
+		initEClass(variableMapEntryEClass, Map.Entry.class, "VariableMapEntry",
+				!IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getVariableMapEntry_Key(), ecorePackage.getEString(),
+				"key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getVariableMapEntry_Value(), this.getVariableValue(),
+				null, "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(variableValueEClass, VariableValue.class, "VariableValue",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getVariableValue_Value(), ecorePackage.getEString(),
+				"value", null, 0, 1, VariableValue.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

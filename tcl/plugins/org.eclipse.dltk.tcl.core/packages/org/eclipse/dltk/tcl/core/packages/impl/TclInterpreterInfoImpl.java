@@ -2,29 +2,28 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclInterpreterInfoImpl.java,v 1.5 2009/05/27 09:00:48 asobolev Exp $
+ * $Id: TclInterpreterInfoImpl.java,v 1.6 2009/07/03 11:20:20 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
 import java.util.Collection;
-
 import java.util.Date;
+
 import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
-
+import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -40,6 +39,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#isFetched <em>Fetched</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#getFetchedAt <em>Fetched At</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#getEnvironment <em>Environment</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl#getVariables <em>Variables</em>}</li>
  * </ul>
  * </p>
  *
@@ -156,6 +156,16 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 	 * @ordered
 	 */
 	protected String environment = ENVIRONMENT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getVariables() <em>Variables</em>}' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVariables()
+	 * @generated
+	 * @ordered
+	 */
+	protected EMap<String, VariableValue> variables;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -310,12 +320,30 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EMap<String, VariableValue> getVariables() {
+		if (variables == null) {
+			variables = new EcoreEMap<String, VariableValue>(
+					TclPackagesPackage.Literals.VARIABLE_MAP_ENTRY,
+					VariableMapEntryImpl.class, this,
+					TclPackagesPackage.TCL_INTERPRETER_INFO__VARIABLES);
+		}
+		return variables;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd,
 			int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__PACKAGES:
 			return ((InternalEList<?>) getPackages()).basicRemove(otherEnd,
+					msgs);
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__VARIABLES:
+			return ((InternalEList<?>) getVariables()).basicRemove(otherEnd,
 					msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -336,11 +364,16 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__PACKAGES:
 			return getPackages();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
-			return isFetched() ? Boolean.TRUE : Boolean.FALSE;
+			return isFetched();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
 			return getFetchedAt();
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			return getEnvironment();
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__VARIABLES:
+			if (coreType)
+				return getVariables();
+			else
+				return getVariables().map();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -366,13 +399,16 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 					(Collection<? extends TclPackageInfo>) newValue);
 			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED:
-			setFetched(((Boolean) newValue).booleanValue());
+			setFetched((Boolean) newValue);
 			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__FETCHED_AT:
 			setFetchedAt((Date) newValue);
 			return;
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			setEnvironment((String) newValue);
+			return;
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__VARIABLES:
+			((EStructuralFeature.Setting) getVariables()).set(newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -404,6 +440,9 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			setEnvironment(ENVIRONMENT_EDEFAULT);
 			return;
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__VARIABLES:
+			getVariables().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -432,6 +471,8 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 		case TclPackagesPackage.TCL_INTERPRETER_INFO__ENVIRONMENT:
 			return ENVIRONMENT_EDEFAULT == null ? environment != null
 					: !ENVIRONMENT_EDEFAULT.equals(environment);
+		case TclPackagesPackage.TCL_INTERPRETER_INFO__VARIABLES:
+			return variables != null && !variables.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

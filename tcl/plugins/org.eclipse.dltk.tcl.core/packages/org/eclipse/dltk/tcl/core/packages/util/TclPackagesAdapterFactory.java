@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesAdapterFactory.java,v 1.2 2009/04/28 11:00:05 asobolev Exp $
+ * $Id: TclPackagesAdapterFactory.java,v 1.3 2009/07/03 11:20:21 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
+import java.util.Map;
 import org.eclipse.dltk.tcl.core.packages.*;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -98,6 +99,17 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseUserCorrection(UserCorrection object) {
 			return createUserCorrectionAdapter();
+		}
+
+		@Override
+		public Adapter caseVariableMapEntry(
+				Map.Entry<String, VariableValue> object) {
+			return createVariableMapEntryAdapter();
+		}
+
+		@Override
+		public Adapter caseVariableValue(VariableValue object) {
+			return createVariableValueAdapter();
 		}
 
 		@Override
@@ -200,6 +212,34 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUserCorrectionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Variable Map Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see java.util.Map.Entry
+	 * @generated
+	 */
+	public Adapter createVariableMapEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.core.packages.VariableValue <em>Variable Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.core.packages.VariableValue
+	 * @generated
+	 */
+	public Adapter createVariableValueAdapter() {
 		return null;
 	}
 

@@ -35,8 +35,11 @@ import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
+import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.internal.core.packages.ProcessOutputCollector;
+import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -133,6 +136,11 @@ public class TclPackagesManager {
 
 	private static TclInterpreterInfo getTclInterpreter(
 			IInterpreterInstall install) {
+		return getTclInterpreter(install, true);
+	}
+
+	private static TclInterpreterInfo getTclInterpreter(
+			IInterpreterInstall install, boolean allowCreate) {
 		TclInterpreterInfo interpreterInfo = null;
 		String interpreterLocation = install.getInstallLocation().toOSString();
 		String environmentId = install.getInstallLocation().getEnvironmentId();
@@ -153,6 +161,9 @@ public class TclPackagesManager {
 				}
 			}
 			if (interpreterInfo == null) {
+				if (!allowCreate) {
+					return null;
+				}
 				interpreterInfo = TclPackagesFactory.eINSTANCE
 						.createTclInterpreterInfo();
 				interpreterInfo.setInstallLocation(interpreterLocation);
@@ -653,7 +664,8 @@ public class TclPackagesManager {
 		initialize();
 		TclInterpreterInfo info = getTclInterpreter(install);
 		info.getPackages().clear();
-		infos.getContents().remove(info);
+		info.setFetched(false);
+		info.setFetchedAt(null);
 		save();
 	}
 
@@ -667,4 +679,40 @@ public class TclPackagesManager {
 		}
 		return result;
 	}
+
+	public static synchronized EMap<String, VariableValue> getVariables(
+			IInterpreterInstall install) {
+		initialize();
+		TclInterpreterInfo interpreterInfo = getTclInterpreter(install, false);
+		if (interpreterInfo != null) {
+			return ECollections
+					.unmodifiableEMap(interpreterInfo.getVariables());
+		} else {
+			return ECollections.emptyEMap();
+		}
+	}
+
+	public static synchronized void setVariables(IInterpreterInstall install,
+			EMap<String, VariableValue> variables) {
+		initialize();
+		TclInterpreterInfo interpreterInfo = getTclInterpreter(install);
+		interpreterInfo.getVariables().clear();
+		interpreterInfo.getVariables().putAll(variables);
+		save();
+	}
+
+	public static synchronized EMap<String, VariableValue> getVariables(
+			String projectName) {
+		TclProjectInfo projectInfo = getTclProject(projectName);
+		return ECollections.unmodifiableEMap(projectInfo.getVariables());
+	}
+
+	public static synchronized void setVariables(String projectName,
+			EMap<String, VariableValue> variables) {
+		TclProjectInfo projectInfo = getTclProject(projectName);
+		projectInfo.getVariables().clear();
+		projectInfo.getVariables().putAll(variables);
+		save();
+	}
+
 }

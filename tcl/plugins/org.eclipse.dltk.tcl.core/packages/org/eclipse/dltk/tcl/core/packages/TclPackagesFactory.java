@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesFactory.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: TclPackagesFactory.java,v 1.3 2009/07/03 11:20:22 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -79,6 +79,15 @@ public interface TclPackagesFactory extends EFactory {
 	 * @generated
 	 */
 	UserCorrection createUserCorrection();
+
+	/**
+	 * Returns a new object of class '<em>Variable Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Variable Value</em>'.
+	 * @generated
+	 */
+	VariableValue createVariableValue();
 
 	/**
 	 * Returns the package supported by this factory.

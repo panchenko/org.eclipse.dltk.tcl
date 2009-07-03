@@ -2,12 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesSwitch.java,v 1.2 2009/04/28 11:00:05 asobolev Exp $
+ * $Id: TclPackagesSwitch.java,v 1.3 2009/07/03 11:20:21 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.dltk.tcl.core.packages.*;
 
 import org.eclipse.emf.ecore.EClass;
@@ -126,6 +127,21 @@ public class TclPackagesSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case TclPackagesPackage.VARIABLE_MAP_ENTRY: {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String, VariableValue> variableMapEntry = (Map.Entry<String, VariableValue>) theEObject;
+			T result = caseVariableMapEntry(variableMapEntry);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case TclPackagesPackage.VARIABLE_VALUE: {
+			VariableValue variableValue = (VariableValue) theEObject;
+			T result = caseVariableValue(variableValue);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -218,6 +234,36 @@ public class TclPackagesSwitch<T> {
 	 * @generated
 	 */
 	public T caseUserCorrection(UserCorrection object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Variable Map Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Variable Map Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVariableMapEntry(Map.Entry<String, VariableValue> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Variable Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Variable Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVariableValue(VariableValue object) {
 		return null;
 	}
 

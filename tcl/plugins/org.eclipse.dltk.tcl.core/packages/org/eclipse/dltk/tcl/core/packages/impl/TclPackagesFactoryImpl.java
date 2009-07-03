@@ -2,10 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesFactoryImpl.java,v 1.2 2009/04/28 11:00:04 asobolev Exp $
+ * $Id: TclPackagesFactoryImpl.java,v 1.3 2009/07/03 11:20:19 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
+import java.util.Map;
 import org.eclipse.dltk.tcl.core.packages.*;
 
 import org.eclipse.emf.ecore.EClass;
@@ -73,6 +74,10 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 			return createTclSourceEntry();
 		case TclPackagesPackage.USER_CORRECTION:
 			return createUserCorrection();
+		case TclPackagesPackage.VARIABLE_MAP_ENTRY:
+			return (EObject) createVariableMapEntry();
+		case TclPackagesPackage.VARIABLE_VALUE:
+			return createVariableValue();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName()
 					+ "' is not a valid classifier");
@@ -137,6 +142,26 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 	public UserCorrection createUserCorrection() {
 		UserCorrectionImpl userCorrection = new UserCorrectionImpl();
 		return userCorrection;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Map.Entry<String, VariableValue> createVariableMapEntry() {
+		VariableMapEntryImpl variableMapEntry = new VariableMapEntryImpl();
+		return variableMapEntry;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VariableValue createVariableValue() {
+		VariableValueImpl variableValue = new VariableValueImpl();
+		return variableValue;
 	}
 
 	/**
