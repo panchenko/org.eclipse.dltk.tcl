@@ -406,8 +406,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private void checkSources(IEnvironment environment, ModuleInfo moduleInfo) {
 		IPath folder = moduleInfo.moduleLocation.removeLastSegments(1);
 		// Convert path to real path.
-		boolean needToAddCorrection = false;
 		for (TclSourceEntry source : moduleInfo.moduleInfo.getSourced()) {
+			boolean needToAddCorrection = false;
 			Set<IPath> sourcedPaths = new HashSet<IPath>();
 			EList<UserCorrection> corrections = moduleInfo.moduleInfo
 					.getSourceCorrections();
@@ -428,12 +428,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			if (sourcedPaths.isEmpty()) {
 				final Set<String> resolved = variableResolver.resolve(source
 						.getValue());
+				if (resolved.size() == 1
+						&& resolved.contains(source.getValue())) {
+					needToAddCorrection = true;
+				}
 				for (String value : resolved) {
 					final IPath sourcedPath = resolveSourceValue(folder, value,
 							environment);
 					if (sourcedPath != null) {
 						sourcedPaths.add(sourcedPath);
-						needToAddCorrection = true;
 					}
 				}
 			}
