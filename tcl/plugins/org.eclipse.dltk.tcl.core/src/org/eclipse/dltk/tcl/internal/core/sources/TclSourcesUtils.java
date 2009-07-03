@@ -1,5 +1,7 @@
 package org.eclipse.dltk.tcl.internal.core.sources;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +25,9 @@ import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
+import org.eclipse.dltk.tcl.core.packages.VariableValue;
+import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
+import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariableRegistry;
 import org.eclipse.emf.common.util.EList;
 
 public class TclSourcesUtils {
@@ -85,6 +90,22 @@ public class TclSourcesUtils {
 		Set<IPath> buildpath = getBuildpath(scriptProject, visitedProjects);
 		Set<IPath> packageFiles = getPackages(scriptProject, install);
 
+		final Map<String, VariableValue> variables = new HashMap<String, VariableValue>();
+		variables.putAll(TclPackagesManager.getVariables(install).map());
+		variables.putAll(TclPackagesManager.getVariables(
+				scriptProject.getElementName()).map());
+		// TODO use NOP resolver if no variables
+		final TclVariableResolver variableResolver = new TclVariableResolver(
+				new IVariableRegistry() {
+					public String[] getValues(String name) {
+						final VariableValue value = variables.get(name);
+						if (value != null) {
+							return new String[] { value.getValue() };
+						} else {
+							return null;
+						}
+					}
+				});
 		List<TclModuleInfo> modules = TclPackagesManager
 				.getProjectModules(scriptProject.getElementName());
 		for (TclModuleInfo tclModuleInfo : modules) {
@@ -97,17 +118,23 @@ public class TclSourcesUtils {
 						userCorrection.getUserValue());
 			}
 			for (TclSourceEntry source : sourced) {
-				List<String> values = null;
+				Collection<String> values = null;
 				if (correctionMap.containsKey(source.getValue())) {
 					values = correctionMap.get(source.getValue());
 				}
 
 				if (values == null || values.isEmpty()) {
-					pseutoElements.add(source.getValue());
-					continue;
+					final Set<String> resolved = variableResolver
+							.resolve(source.getValue());
+					if (resolved.size() == 1
+							&& resolved.contains(source.getValue())) {
+						pseutoElements.add(source.getValue());
+						continue;
+					}
+					values = resolved;
 				}
 				for (String value : values) {
-					IPath path = Path.fromPortableString(value);
+					IPath path = new Path(value);
 					IPath pathParent = path.removeLastSegments(1);
 					if (buildpath.contains(pathParent)) {
 						continue; // File are on buildpath
