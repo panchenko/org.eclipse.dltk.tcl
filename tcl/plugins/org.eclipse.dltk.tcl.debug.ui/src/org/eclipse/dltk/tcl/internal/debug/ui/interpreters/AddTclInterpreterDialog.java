@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
@@ -50,9 +49,8 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 	private GlobalVariableBlock globals;
 
 	@Override
-	protected void createDialogControls(Composite parent, int numColumns) {
-		super.createDialogControls(parent, numColumns);
-
+	protected void createDialogBlocks(Composite parent, int numColumns) {
+		super.createDialogBlocks(parent, numColumns);
 		Label l = new Label(parent, SWT.NONE);
 		l.setText(TclInterpreterMessages.AddTclInterpreterDialog_0);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -60,10 +58,7 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		l.setLayoutData(gd);
 
 		globals = new GlobalVariableBlock(this);
-		final Control globalBlock = globals.createControl(parent);
-		final GridData blockGD = new GridData(GridData.FILL_BOTH);
-		blockGD.horizontalSpan = numColumns;
-		globalBlock.setLayoutData(blockGD);
+		globals.createControlsIn(parent);
 	}
 
 	@Override

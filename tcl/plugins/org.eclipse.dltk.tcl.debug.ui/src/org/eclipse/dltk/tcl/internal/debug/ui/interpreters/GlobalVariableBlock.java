@@ -38,7 +38,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 /**
  * Control used to edit the environment variables associated with a Interpreter
@@ -69,20 +68,11 @@ public class GlobalVariableBlock implements SelectionListener,
 	 * @param parent
 	 *            the parent widget of this control
 	 */
-	public Control createControl(Composite parent) {
+	public void createControlsIn(Composite parent) {
 		Font font = parent.getFont();
 
-		Composite comp = new Composite(parent, SWT.NONE);
-		GridLayout topLayout = new GridLayout();
-		topLayout.numColumns = 2;
-		topLayout.marginHeight = 0;
-		topLayout.marginWidth = 0;
-		comp.setLayout(topLayout);
+		fVariablesViewer = new TreeViewer(parent);
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		comp.setLayoutData(gd);
-
-		fVariablesViewer = new TreeViewer(comp);
-		gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 6;
 		fVariablesViewer.getControl().setLayoutData(gd);
 		fContentProvider = new GlobalVariableContentProvider();
@@ -91,7 +81,7 @@ public class GlobalVariableBlock implements SelectionListener,
 		fVariablesViewer.setInput(this);
 		fVariablesViewer.addSelectionChangedListener(this);
 
-		Composite pathButtonComp = new Composite(comp, SWT.NONE);
+		Composite pathButtonComp = new Composite(parent, SWT.NONE);
 		GridLayout pathButtonLayout = new GridLayout();
 		pathButtonLayout.marginHeight = 0;
 		pathButtonLayout.marginWidth = 0;
@@ -112,8 +102,6 @@ public class GlobalVariableBlock implements SelectionListener,
 		fRemoveButton = createPushButton(pathButtonComp,
 				TclInterpreterMessages.GlobalVariableBlock_Remove);
 		fRemoveButton.addSelectionListener(this);
-
-		return comp;
 	}
 
 	/**
