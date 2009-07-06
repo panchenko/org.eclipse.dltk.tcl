@@ -13,6 +13,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 public class TclDebugUIPlugin extends AbstractUIPlugin {
+	
+	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.debug.ui"; //$NON-NLS-1$
 
 	public TclDebugUIPlugin() {
 		plugin = this;
