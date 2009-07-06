@@ -19,16 +19,6 @@ public class TclInterpreterMessages extends NLS {
 	public static String AddTclInterpreterDialog_RebuildJobName;
 	public static String AddTclInterpreterDialog_RebuildProjectsTaskName;
 	public static String AddTclInterpreterDialog_RebuildProjectTaskName;
-	public static String GlobalVariableBlock_Add;
-	public static String GlobalVariableBlock_AddTitle;
-	public static String GlobalVariableBlock_Edit;
-	public static String GlobalVariableBlock_EditTitle;
-	public static String GlobalVariableBlock_ErrorNoValue;
-	public static String GlobalVariableBlock_Name;
-	public static String GlobalVariableBlock_Remove;
-	public static String GlobalVariableBlock_Value;
-	public static String GlobalVariableContentProvider_overwriteMessage;
-	public static String GlobalVariableContentProvider_overwriteTitle;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, TclInterpreterMessages.class);
