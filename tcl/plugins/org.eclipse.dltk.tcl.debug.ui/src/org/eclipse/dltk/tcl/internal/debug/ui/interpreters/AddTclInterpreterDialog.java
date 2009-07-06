@@ -107,14 +107,14 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 	private static final IInterpreterAttribute VARIABLES_ATTRIBUTE = new IInterpreterAttribute() {
 
 		public Object load(IInterpreterInstall install) {
-			return TclPackagesManager.getVariables(install);
+			return TclPackagesManager.getVariablesEMap(install);
 		}
 
 		public void save(IInterpreterInstall install, Object value) {
 			@SuppressWarnings("unchecked")
 			final EMap<String, VariableValue> newVars = (EMap<String, VariableValue>) value;
 			final EMap<String, VariableValue> oldVars = TclPackagesManager
-					.getVariables(install);
+					.getVariablesEMap(install);
 			if (!equalsEMap(newVars, oldVars)) {
 				TclPackagesManager.setVariables(install, newVars);
 				new RebuildProjectsJob(install).schedule();
