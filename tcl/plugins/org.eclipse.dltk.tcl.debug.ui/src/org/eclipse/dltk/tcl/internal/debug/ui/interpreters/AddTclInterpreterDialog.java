@@ -11,17 +11,33 @@ package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
 import java.util.Map;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterEnvironmentVariablesBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibraryBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialog;
 import org.eclipse.dltk.internal.debug.ui.interpreters.IAddInterpreterDialogRequestor;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
+import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
+import org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPlugin;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -122,6 +138,74 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 				.getVariables(install);
 		if (!equalsEMap(newVars, oldVars)) {
 			TclPackagesManager.setVariables(install, newVars);
+			new RebuildProjectsJob(install).schedule();
 		}
 	}
+
+	private static class RebuildProjectsJob extends Job {
+
+		private final IInterpreterInstall install;
+
+		public RebuildProjectsJob(IInterpreterInstall install) {
+			super(
+					NLS
+							.bind(
+									TclInterpreterMessages.AddTclInterpreterDialog_RebuildJobName,
+									install.getName()));
+			this.install = install;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			final SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+			final IScriptProject[] projects;
+			try {
+				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace()
+						.getRoot();
+				projects = DLTKCore.create(root).getScriptProjects(
+						TclNature.NATURE_ID);
+			} catch (ModelException e) {
+				TclDebugUIPlugin.getDefault().getLog().log(
+						new Status(IStatus.ERROR, TclDebugUIPlugin.PLUGIN_ID, e
+								.getMessage(), e));
+				return e.getStatus();
+			}
+			subMonitor.worked(20);
+			final SubMonitor buildingMonitor = subMonitor.newChild(80);
+			buildingMonitor
+					.beginTask(
+							TclInterpreterMessages.AddTclInterpreterDialog_RebuildProjectsTaskName,
+							projects.length);
+			for (int i = 0; i < projects.length; ++i) {
+				final IScriptProject project = projects[i];
+				try {
+					bulidProject(project, buildingMonitor.newChild(1));
+				} catch (CoreException e) {
+					TclDebugUIPlugin.getDefault().getLog().log(
+							new Status(IStatus.ERROR,
+									TclDebugUIPlugin.PLUGIN_ID, e.getMessage(),
+									e));
+				}
+			}
+			subMonitor.done();
+			return Status.OK_STATUS;
+		}
+
+		private void bulidProject(final IScriptProject project,
+				SubMonitor monitor) throws CoreException {
+			final IInterpreterInstall projectInterpreterInstall = ScriptRuntime
+					.getInterpreterInstall(project);
+			if (projectInterpreterInstall != null
+					&& projectInterpreterInstall.equals(install)) {
+				monitor
+						.setTaskName(NLS
+								.bind(
+										TclInterpreterMessages.AddTclInterpreterDialog_RebuildProjectTaskName,
+										project.getElementName()));
+				project.getProject().build(
+						IncrementalProjectBuilder.FULL_BUILD, monitor);
+			}
+		}
+	}
+
 }
