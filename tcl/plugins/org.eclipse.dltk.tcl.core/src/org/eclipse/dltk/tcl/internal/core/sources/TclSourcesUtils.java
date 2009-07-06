@@ -90,8 +90,8 @@ public class TclSourcesUtils {
 		Set<IPath> packageFiles = getPackages(scriptProject, install);
 
 		final Map<String, VariableValue> variables = new HashMap<String, VariableValue>();
-		variables.putAll(TclPackagesManager.getVariables(install).map());
-		variables.putAll(TclPackagesManager.getVariables(
+		variables.putAll(TclPackagesManager.getVariablesEMap(install).map());
+		variables.putAll(TclPackagesManager.getVariablesEMap(
 				scriptProject.getElementName()).map());
 		// TODO use NOP resolver if no variables
 		final TclVariableResolver variableResolver = new TclVariableResolver(

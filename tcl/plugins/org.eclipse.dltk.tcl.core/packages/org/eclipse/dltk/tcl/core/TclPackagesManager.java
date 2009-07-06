@@ -680,7 +680,7 @@ public class TclPackagesManager {
 		return result;
 	}
 
-	public static synchronized EMap<String, VariableValue> getVariables(
+	public static synchronized EMap<String, VariableValue> getVariablesEMap(
 			IInterpreterInstall install) {
 		initialize();
 		TclInterpreterInfo interpreterInfo = getTclInterpreter(install, false);
@@ -701,7 +701,7 @@ public class TclPackagesManager {
 		save();
 	}
 
-	public static synchronized EMap<String, VariableValue> getVariables(
+	public static synchronized EMap<String, VariableValue> getVariablesEMap(
 			String projectName) {
 		TclProjectInfo projectInfo = getTclProject(projectName);
 		return ECollections.unmodifiableEMap(projectInfo.getVariables());
