@@ -126,8 +126,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		}
 		knownInfos = TclPackagesManager.getPackageInfos(install);
 		final Map<String, VariableValue> variables = new HashMap<String, VariableValue>();
-		variables.putAll(TclPackagesManager.getVariables(install).map());
-		variables.putAll(TclPackagesManager.getVariables(
+		variables.putAll(TclPackagesManager.getVariablesEMap(install).map());
+		variables.putAll(TclPackagesManager.getVariablesEMap(
 				project.getElementName()).map());
 		// TODO use NOP resolver if no variables
 		variableResolver = new TclVariableResolver(new IVariableRegistry() {
