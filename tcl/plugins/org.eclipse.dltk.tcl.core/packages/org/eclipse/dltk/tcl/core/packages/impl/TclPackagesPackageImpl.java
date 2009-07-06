@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.7 2009/07/03 11:20:19 apanchenk Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.8 2009/07/06 08:55:52 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -474,6 +474,16 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getUserCorrection_Variable() {
+		return (EAttribute) userCorrectionEClass.getEStructuralFeatures()
+				.get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getVariableMapEntry() {
 		return variableMapEntryEClass;
 	}
@@ -600,6 +610,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 		userCorrectionEClass = createEClass(USER_CORRECTION);
 		createEAttribute(userCorrectionEClass, USER_CORRECTION__ORIGINAL_VALUE);
 		createEAttribute(userCorrectionEClass, USER_CORRECTION__USER_VALUE);
+		createEAttribute(userCorrectionEClass, USER_CORRECTION__VARIABLE);
 
 		variableMapEntryEClass = createEClass(VARIABLE_MAP_ENTRY);
 		createEAttribute(variableMapEntryEClass, VARIABLE_MAP_ENTRY__KEY);
@@ -787,6 +798,11 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				IS_ORDERED);
 		initEAttribute(getUserCorrection_UserValue(),
 				ecorePackage.getEString(), "userValue", null, 0, -1,
+				UserCorrection.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getUserCorrection_Variable(),
+				ecorePackage.getEBoolean(), "variable", null, 0, 1,
 				UserCorrection.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);

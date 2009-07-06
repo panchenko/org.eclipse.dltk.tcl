@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: UserCorrection.java,v 1.2 2009/05/27 09:00:48 asobolev Exp $
+ * $Id: UserCorrection.java,v 1.3 2009/07/06 08:55:52 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#getOriginalValue <em>Original Value</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#getUserValue <em>User Value</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#isVariable <em>Variable</em>}</li>
  * </ul>
  * </p>
  *
@@ -68,5 +69,31 @@ public interface UserCorrection extends EObject {
 	 * @generated
 	 */
 	EList<String> getUserValue();
+
+	/**
+	 * Returns the value of the '<em><b>Variable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Variable</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Variable</em>' attribute.
+	 * @see #setVariable(boolean)
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getUserCorrection_Variable()
+	 * @model
+	 * @generated
+	 */
+	boolean isVariable();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#isVariable <em>Variable</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Variable</em>' attribute.
+	 * @see #isVariable()
+	 * @generated
+	 */
+	void setVariable(boolean value);
 
 } // UserCorrection

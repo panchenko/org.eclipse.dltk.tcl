@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.7 2009/07/03 11:20:22 apanchenk Exp $
+ * $Id: TclPackagesPackage.java,v 1.8 2009/07/06 08:55:52 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -409,13 +409,22 @@ public interface TclPackagesPackage extends EPackage {
 	int USER_CORRECTION__USER_VALUE = 1;
 
 	/**
+	 * The feature id for the '<em><b>Variable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER_CORRECTION__VARIABLE = 2;
+
+	/**
 	 * The number of structural features of the '<em>User Correction</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int USER_CORRECTION_FEATURE_COUNT = 2;
+	int USER_CORRECTION_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl <em>Variable Map Entry</em>}' class.
@@ -829,6 +838,17 @@ public interface TclPackagesPackage extends EPackage {
 	EAttribute getUserCorrection_UserValue();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.core.packages.UserCorrection#isVariable <em>Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Variable</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.UserCorrection#isVariable()
+	 * @see #getUserCorrection()
+	 * @generated
+	 */
+	EAttribute getUserCorrection_Variable();
+
+	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Variable Map Entry</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1206,6 +1226,15 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EAttribute USER_CORRECTION__USER_VALUE = eINSTANCE
 				.getUserCorrection_UserValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Variable</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute USER_CORRECTION__VARIABLE = eINSTANCE
+				.getUserCorrection_Variable();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl <em>Variable Map Entry</em>}' class.

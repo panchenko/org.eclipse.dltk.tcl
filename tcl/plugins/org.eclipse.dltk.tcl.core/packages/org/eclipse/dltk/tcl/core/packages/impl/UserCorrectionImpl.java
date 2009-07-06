@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: UserCorrectionImpl.java,v 1.2 2009/05/27 09:00:48 asobolev Exp $
+ * $Id: UserCorrectionImpl.java,v 1.3 2009/07/06 08:55:52 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl#getOriginalValue <em>Original Value</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl#getUserValue <em>User Value</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl#isVariable <em>Variable</em>}</li>
  * </ul>
  * </p>
  *
@@ -63,6 +64,26 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * @ordered
 	 */
 	protected EList<String> userValue;
+
+	/**
+	 * The default value of the '{@link #isVariable() <em>Variable</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVariable()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean VARIABLE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isVariable() <em>Variable</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVariable()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean variable = VARIABLE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -124,6 +145,29 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isVariable() {
+		return variable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setVariable(boolean newVariable) {
+		boolean oldVariable = variable;
+		variable = newVariable;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					TclPackagesPackage.USER_CORRECTION__VARIABLE, oldVariable,
+					variable));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -131,6 +175,8 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 			return getOriginalValue();
 		case TclPackagesPackage.USER_CORRECTION__USER_VALUE:
 			return getUserValue();
+		case TclPackagesPackage.USER_CORRECTION__VARIABLE:
+			return isVariable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -151,6 +197,9 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 			getUserValue().clear();
 			getUserValue().addAll((Collection<? extends String>) newValue);
 			return;
+		case TclPackagesPackage.USER_CORRECTION__VARIABLE:
+			setVariable((Boolean) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -169,6 +218,9 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 		case TclPackagesPackage.USER_CORRECTION__USER_VALUE:
 			getUserValue().clear();
 			return;
+		case TclPackagesPackage.USER_CORRECTION__VARIABLE:
+			setVariable(VARIABLE_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -186,6 +238,8 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 					: !ORIGINAL_VALUE_EDEFAULT.equals(originalValue);
 		case TclPackagesPackage.USER_CORRECTION__USER_VALUE:
 			return userValue != null && !userValue.isEmpty();
+		case TclPackagesPackage.USER_CORRECTION__VARIABLE:
+			return variable != VARIABLE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -205,6 +259,8 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 		result.append(originalValue);
 		result.append(", userValue: ");
 		result.append(userValue);
+		result.append(", variable: ");
+		result.append(variable);
 		result.append(')');
 		return result.toString();
 	}
