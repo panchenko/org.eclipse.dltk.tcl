@@ -16,6 +16,9 @@ import org.eclipse.osgi.util.NLS;
 public class TclInterpreterMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.debug.ui.interpreters.tclInterpeterMessages"; //$NON-NLS-1$
 	public static String AddTclInterpreterDialog_0;
+	public static String AddTclInterpreterDialog_RebuildJobName;
+	public static String AddTclInterpreterDialog_RebuildProjectsTaskName;
+	public static String AddTclInterpreterDialog_RebuildProjectTaskName;
 	public static String GlobalVariableBlock_Add;
 	public static String GlobalVariableBlock_AddTitle;
 	public static String GlobalVariableBlock_Edit;
