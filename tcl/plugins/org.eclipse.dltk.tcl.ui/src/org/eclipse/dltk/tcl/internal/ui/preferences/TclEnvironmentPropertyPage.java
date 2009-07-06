@@ -1,7 +1,6 @@
 package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,29 +23,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 public class TclEnvironmentPropertyPage extends PropertyPage {
-
-	private static class ProjectBuildJob extends Job {
-
-		private final IProject project;
-
-		public ProjectBuildJob(IProject project) {
-			super(
-					NLS
-							.bind(
-									TclPreferencesMessages.TclEnvironmentPropertyPage_BuildingJobName,
-									project.getName()));
-			this.project = project;
-		}
-
-		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
-				return Status.OK_STATUS;
-			} catch (CoreException e) {
-				return e.getStatus();
-			}
-		}
-	}
 
 	private static class ProjectIndexJob extends Job {
 

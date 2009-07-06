@@ -294,6 +294,17 @@
       </enabledWhen>
     </page>
     <page
+      category="org.eclipse.dltk.tcl.propertyPage"
+      name="%TclGlobalVariablesPropertyPage.name"
+      class="org.eclipse.dltk.tcl.internal.ui.preferences.TclGlobalVariablesPropertyPage"
+      id="org.eclipse.dltk.tcl.globalVariables.propertyPage">
+      <enabledWhen>
+        <adapt type="org.eclipse.core.resources.IProject">
+          <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.dltk.tcl.core.nature"/>
+        </adapt>         
+      </enabledWhen>
+    </page>
+    <page
       name="%TclPropertyPage.name"
       class="org.eclipse.dltk.tcl.internal.ui.preferences.TclPropertyPage"
       id="org.eclipse.dltk.tcl.propertyPage">

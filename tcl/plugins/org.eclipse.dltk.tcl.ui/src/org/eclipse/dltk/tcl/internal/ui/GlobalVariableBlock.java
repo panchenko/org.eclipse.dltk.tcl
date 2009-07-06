@@ -24,6 +24,7 @@ import org.eclipse.dltk.ui.dialogs.MultipleInputDialog;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -267,6 +268,23 @@ public class GlobalVariableBlock implements SelectionListener,
 
 	protected void setButtonLayoutData(Button button) {
 		fDialog.setButtonLayoutData(button);
+	}
+
+	public static boolean equalsEMap(EMap<String, VariableValue> a,
+			EMap<String, VariableValue> b) {
+		if (a.size() != b.size()) {
+			return false;
+		}
+		for (Map.Entry<String, VariableValue> entry : a.entrySet()) {
+			final VariableValue value = b.get(entry.getKey());
+			if (value == null) {
+				return false;
+			}
+			if (!EcoreUtil.equals(entry.getValue(), value)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
