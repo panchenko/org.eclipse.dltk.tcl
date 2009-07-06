@@ -9,8 +9,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
-import java.util.Map;
-
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -38,7 +36,6 @@ import org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPlugin;
 import org.eclipse.dltk.tcl.internal.ui.GlobalVariableBlock;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -116,7 +113,7 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 			final EMap<String, VariableValue> newVars = (EMap<String, VariableValue>) value;
 			final EMap<String, VariableValue> oldVars = TclPackagesManager
 					.getVariablesEMap(install);
-			if (!equalsEMap(newVars, oldVars)) {
+			if (!GlobalVariableBlock.equalsEMap(newVars, oldVars)) {
 				TclPackagesManager.setVariables(install, newVars);
 				new RebuildProjectsJob(install).schedule();
 			}
@@ -135,23 +132,6 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		} else {
 			globals.setValues(ECollections.<String, VariableValue> emptyEMap());
 		}
-	}
-
-	private static boolean equalsEMap(EMap<String, VariableValue> a,
-			EMap<String, VariableValue> b) {
-		if (a.size() != b.size()) {
-			return false;
-		}
-		for (Map.Entry<String, VariableValue> entry : a.entrySet()) {
-			final VariableValue value = b.get(entry.getKey());
-			if (value == null) {
-				return false;
-			}
-			if (!EcoreUtil.equals(entry.getValue(), value)) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	@Override
