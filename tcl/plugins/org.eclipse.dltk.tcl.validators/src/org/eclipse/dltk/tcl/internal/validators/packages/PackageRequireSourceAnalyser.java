@@ -408,11 +408,14 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		// Convert path to real path.
 		for (TclSourceEntry source : moduleInfo.moduleInfo.getSourced()) {
 			boolean needToAddCorrection = false;
+			boolean isVariable = false;
 			Set<IPath> sourcedPaths = new HashSet<IPath>();
 			EList<UserCorrection> corrections = moduleInfo.moduleInfo
 					.getSourceCorrections();
 			for (UserCorrection userCorrection : corrections) {
-				if (userCorrection.getOriginalValue().equals(source.getValue())) {
+				if (!userCorrection.isVariable()
+						&& userCorrection.getOriginalValue().equals(
+								source.getValue())) {
 					for (String userValue : userCorrection.getUserValue()) {
 						final IPath sourcedPath;
 						if (environment.isLocal()) {
@@ -426,12 +429,11 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				}
 			}
 			if (sourcedPaths.isEmpty()) {
+				needToAddCorrection = true;
 				final Set<String> resolved = variableResolver.resolve(source
 						.getValue());
-				if (resolved.size() == 1
-						&& resolved.contains(source.getValue())) {
-					needToAddCorrection = true;
-				}
+				isVariable = resolved.size() != 1
+						|| !resolved.contains(source.getValue());
 				for (String value : resolved) {
 					final IPath sourcedPath = resolveSourceValue(folder, value,
 							environment);
@@ -474,6 +476,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 										.createUserCorrection();
 								correction.setOriginalValue(source.getValue());
 								correction.getUserValue().add(file.toString());
+								correction.setVariable(isVariable);
 								corrections.add(correction);
 							}
 						}
@@ -487,6 +490,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 							moduleInfo.reporter,
 							Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
 							source.getValue(), moduleInfo.lineTracker);
+				}
+				if (!corrections.isEmpty()) {
+					corrections.clear();
 				}
 			}
 		}
