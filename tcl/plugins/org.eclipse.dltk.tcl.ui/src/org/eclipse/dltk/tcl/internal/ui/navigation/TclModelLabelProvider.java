@@ -25,7 +25,9 @@ public class TclModelLabelProvider extends LabelProvider {
 			}
 			return result;
 		} else if (element instanceof TclPackageSourceModule) {
-			return ((TclPackageSourceModule) element).getElementName();
+			final TclPackageSourceModule module = (TclPackageSourceModule) element;
+			return module.getElementName() + " ("
+					+ module.getStorage().getFullPath().toString() + ")";
 		} else if (element instanceof TclSourcesSourceModule) {
 			IEnvironment environment = EnvironmentManager
 					.getEnvironment(((TclSourcesSourceModule) element)
