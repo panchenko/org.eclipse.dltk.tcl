@@ -611,7 +611,7 @@
       point="org.eclipse.ui.views">
    <view
          category="org.eclipse.dltk.tcl.ui"
-         class="org.eclipse.dltk.ui.browsing.ProjectsView:org.eclipse.dltk.tcl.core.nature"
+         class="org.eclipse.dltk.tcl.internal.ui.browsing.TclProjectsView:org.eclipse.dltk.tcl.core.nature"
          icon="icons/eview16/tcl_persp.gif"
          id="org.eclipse.dltk.tcl.ui.Projects"
          name="%TclProjectsView.name">
