@@ -145,8 +145,7 @@ public class TclPackagesManager {
 		String interpreterLocation = install.getInstallLocation().toOSString();
 		String environmentId = install.getInstallLocation().getEnvironmentId();
 		synchronized (TclPackagesManager.class) {
-			EList<EObject> contents = infos.getContents();
-			for (EObject eObject : contents) {
+			for (EObject eObject : infos.getContents()) {
 				if (eObject instanceof TclInterpreterInfo) {
 					TclInterpreterInfo info = (TclInterpreterInfo) eObject;
 					String location = info.getInstallLocation();
@@ -662,11 +661,13 @@ public class TclPackagesManager {
 	public static synchronized void removeInterpreterInfo(
 			IInterpreterInstall install) {
 		initialize();
-		TclInterpreterInfo info = getTclInterpreter(install);
-		info.getPackages().clear();
-		info.setFetched(false);
-		info.setFetchedAt(null);
-		save();
+		final TclInterpreterInfo info = getTclInterpreter(install, false);
+		if (info != null) {
+			info.getPackages().clear();
+			info.setFetched(false);
+			info.setFetchedAt(null);
+			save();
+		}
 	}
 
 	public static Set<String> getPackageInfosAsString(
