@@ -540,7 +540,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			ISourceLineTracker lineTracker) {
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_SOURCE, new String[] { pkgName },
-				ProblemSeverities.Error, pkg.getStart(), pkg.getEnd(),
+				ProblemSeverities.Warning, pkg.getStart(), pkg.getEnd(),
 				lineTracker.getLineNumberOfOffset(pkg.getStart())));
 	}
 
@@ -549,7 +549,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			ISourceLineTracker lineTracker) {
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_SOURCE_CORRECTION,
-				new String[] { pkgName }, ProblemSeverities.Error, pkg
+				new String[] { pkgName }, ProblemSeverities.Warning, pkg
 						.getStart(), pkg.getEnd(), lineTracker
 						.getLineNumberOfOffset(pkg.getStart())));
 	}
