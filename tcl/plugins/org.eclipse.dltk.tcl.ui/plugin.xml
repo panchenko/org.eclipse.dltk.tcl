@@ -567,6 +567,26 @@
          </action>
       </editorContribution>
 </extension>
+<extension
+      point="org.eclipse.ui.popupMenus">
+   <objectContribution
+         adaptable="false"
+         id="org.eclipse.dltk.tcl.ui.fixdeps"
+         objectClass="org.eclipse.dltk.core.IModelElement">
+         <filter
+               name="org.eclipse.dltk.ui.nature"
+               value="org.eclipse.dltk.tcl.core.nature">
+         </filter>
+      <action
+            class="org.eclipse.dltk.tcl.internal.ui.packages.FixAllDependenciesActionDelegate"
+            icon="icons/etool16/newpack_wiz.gif"
+            id="org.eclipse.dltk.tcl.ui.fixDependencies"
+            label="Fix package dependencies"
+            menubarPath="org.eclipse.dltk.ui.refactoring.menu"
+            style="push">
+      </action>
+   </objectContribution>
+</extension>
 
 <!-- =========================================================================== -->
 <!-- Tcl Compare                                                                -->
