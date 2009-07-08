@@ -34,7 +34,9 @@ import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
+import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
+import org.eclipse.dltk.tcl.core.packages.VariableMap;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.internal.core.packages.ProcessOutputCollector;
 import org.eclipse.emf.common.util.BasicEMap;
@@ -713,13 +715,13 @@ public class TclPackagesManager {
 	/**
 	 * @since 2.0
 	 */
-	public static synchronized EMap<String, VariableValue> getVariablesEMap(
+	public static EMap<String, VariableValue> getVariablesEMap(
 			IInterpreterInstall install) {
-		initialize();
-		TclInterpreterInfo interpreterInfo = getTclInterpreter(install, false);
-		if (interpreterInfo != null) {
-			return ECollections
-					.unmodifiableEMap(interpreterInfo.getVariables());
+		final EObject variables = install
+				.findExtension(TclPackagesPackage.Literals.VARIABLE_MAP);
+		if (variables != null) {
+			return ECollections.unmodifiableEMap(((VariableMap) variables)
+					.getVariables());
 		} else {
 			return ECollections.emptyEMap();
 		}
@@ -736,13 +738,13 @@ public class TclPackagesManager {
 	/**
 	 * @since 2.0
 	 */
-	public static synchronized void setVariables(IInterpreterInstall install,
+	public static void setVariables(IInterpreterInstall install,
 			EMap<String, VariableValue> variables) {
-		initialize();
-		TclInterpreterInfo interpreterInfo = getTclInterpreter(install);
-		interpreterInfo.getVariables().clear();
-		interpreterInfo.getVariables().putAll(variables);
-		save();
+		final VariableMap variableMap = TclPackagesFactory.eINSTANCE
+				.createVariableMap();
+		variableMap.getVariables().putAll(variables);
+		install.replaceExtension(TclPackagesPackage.Literals.VARIABLE_MAP,
+				variableMap);
 	}
 
 	/**

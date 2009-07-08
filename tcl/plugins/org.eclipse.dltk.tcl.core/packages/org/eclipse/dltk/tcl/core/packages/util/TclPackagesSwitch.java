@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesSwitch.java,v 1.4 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: TclPackagesSwitch.java,v 1.5 2009/07/08 10:53:16 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
@@ -142,6 +142,13 @@ public class TclPackagesSwitch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case TclPackagesPackage.VARIABLE_MAP: {
+			VariableMap variableMap = (VariableMap) theEObject;
+			T result = caseVariableMap(variableMap);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -266,6 +273,21 @@ public class TclPackagesSwitch<T> {
 	 * @since 2.0
 	 */
 	public T caseVariableValue(VariableValue object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Variable Map</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Variable Map</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVariableMap(VariableMap object) {
 		return null;
 	}
 

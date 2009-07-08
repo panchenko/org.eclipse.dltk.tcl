@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.9 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.10 2009/07/08 10:53:12 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -16,6 +16,7 @@ import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
+import org.eclipse.dltk.tcl.core.packages.VariableMap;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -87,6 +88,13 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * @generated
 	 */
 	private EClass variableValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass variableMapEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -294,16 +302,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @since 2.0
-	 */
-	public EReference getTclInterpreterInfo_Variables() {
-		return (EReference) tclInterpreterInfoEClass.getEStructuralFeatures()
-				.get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public EClass getTclProjectInfo() {
 		return tclProjectInfoEClass;
@@ -539,6 +537,24 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getVariableMap() {
+		return variableMapEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getVariableMap_Variables() {
+		return (EReference) variableMapEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getTclModuleInfo_Handle() {
 		return (EAttribute) tclModuleInfoEClass.getEStructuralFeatures().get(0);
 	}
@@ -591,8 +607,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				TCL_INTERPRETER_INFO__FETCHED_AT);
 		createEAttribute(tclInterpreterInfoEClass,
 				TCL_INTERPRETER_INFO__ENVIRONMENT);
-		createEReference(tclInterpreterInfoEClass,
-				TCL_INTERPRETER_INFO__VARIABLES);
 
 		tclProjectInfoEClass = createEClass(TCL_PROJECT_INFO);
 		createEAttribute(tclProjectInfoEClass, TCL_PROJECT_INFO__NAME);
@@ -626,6 +640,9 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 
 		variableValueEClass = createEClass(VARIABLE_VALUE);
 		createEAttribute(variableValueEClass, VARIABLE_VALUE__VALUE);
+
+		variableMapEClass = createEClass(VARIABLE_MAP);
+		createEReference(variableMapEClass, VARIABLE_MAP__VARIABLES);
 	}
 
 	/**
@@ -715,11 +732,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
-		initEReference(getTclInterpreterInfo_Variables(), this
-				.getVariableMapEntry(), null, "variables", null, 0, -1,
-				TclInterpreterInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tclProjectInfoEClass, TclProjectInfo.class,
 				"TclProjectInfo", !IS_ABSTRACT, !IS_INTERFACE,
@@ -832,6 +844,14 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				"value", null, 0, 1, VariableValue.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
+
+		initEClass(variableMapEClass, VariableMap.class, "VariableMap",
+				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getVariableMap_Variables(), this.getVariableMapEntry(),
+				null, "variables", null, 0, -1, VariableMap.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesFactoryImpl.java,v 1.4 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: TclPackagesFactoryImpl.java,v 1.5 2009/07/08 10:53:09 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -78,6 +78,8 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 			return (EObject) createVariableMapEntry();
 		case TclPackagesPackage.VARIABLE_VALUE:
 			return createVariableValue();
+		case TclPackagesPackage.VARIABLE_MAP:
+			return createVariableMap();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName()
 					+ "' is not a valid classifier");
@@ -164,6 +166,16 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 	public VariableValue createVariableValue() {
 		VariableValueImpl variableValue = new VariableValueImpl();
 		return variableValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VariableMap createVariableMap() {
+		VariableMapImpl variableMap = new VariableMapImpl();
+		return variableMap;
 	}
 
 	/**

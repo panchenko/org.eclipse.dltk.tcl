@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesAdapterFactory.java,v 1.4 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: TclPackagesAdapterFactory.java,v 1.5 2009/07/08 10:53:15 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
@@ -110,6 +110,11 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseVariableValue(VariableValue object) {
 			return createVariableValueAdapter();
+		}
+
+		@Override
+		public Adapter caseVariableMap(VariableMap object) {
+			return createVariableMapAdapter();
 		}
 
 		@Override
@@ -242,6 +247,20 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 	 * @since 2.0
 	 */
 	public Adapter createVariableValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.core.packages.VariableMap <em>Variable Map</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.core.packages.VariableMap
+	 * @generated
+	 */
+	public Adapter createVariableMapAdapter() {
 		return null;
 	}
 
