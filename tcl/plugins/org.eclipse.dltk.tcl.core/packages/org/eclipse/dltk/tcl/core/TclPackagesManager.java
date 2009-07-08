@@ -37,6 +37,7 @@ import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclProjectInfo;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.internal.core.packages.ProcessOutputCollector;
+import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
@@ -681,6 +682,31 @@ public class TclPackagesManager {
 		return result;
 	}
 
+	private static EMap<String, VariableValue> convertVariablesToEMap(
+			Map<String, String> variables) {
+		final EMap<String, VariableValue> result = new BasicEMap<String, VariableValue>();
+		for (Map.Entry<String, String> entry : variables.entrySet()) {
+			final VariableValue value = TclPackagesFactory.eINSTANCE
+					.createVariableValue();
+			value.setValue(entry.getValue());
+			result.put(entry.getKey(), value);
+		}
+		return result;
+	}
+
+	private static Map<String, String> convertVariablesToMap(
+			EMap<String, VariableValue> variables) {
+		final Map<String, String> result = new HashMap<String, String>();
+		for (Map.Entry<String, VariableValue> entry : variables.entrySet()) {
+			result.put(entry.getKey(), entry.getValue().getValue());
+		}
+		return result;
+	}
+
+	public static Map<String, String> getVariables(IInterpreterInstall install) {
+		return convertVariablesToMap(getVariablesEMap(install));
+	}
+
 	public static synchronized EMap<String, VariableValue> getVariablesEMap(
 			IInterpreterInstall install) {
 		initialize();
@@ -693,6 +719,11 @@ public class TclPackagesManager {
 		}
 	}
 
+	public static void setVariables(IInterpreterInstall install,
+			Map<String, String> variables) {
+		setVariables(install, convertVariablesToEMap(variables));
+	}
+
 	public static synchronized void setVariables(IInterpreterInstall install,
 			EMap<String, VariableValue> variables) {
 		initialize();
@@ -702,10 +733,19 @@ public class TclPackagesManager {
 		save();
 	}
 
+	public static Map<String, String> getVariables(String projectName) {
+		return convertVariablesToMap(getVariablesEMap(projectName));
+	}
+
 	public static synchronized EMap<String, VariableValue> getVariablesEMap(
 			String projectName) {
 		TclProjectInfo projectInfo = getTclProject(projectName);
 		return ECollections.unmodifiableEMap(projectInfo.getVariables());
+	}
+
+	public static void setVariables(String projectName,
+			Map<String, String> variables) {
+		setVariables(projectName, convertVariablesToEMap(variables));
 	}
 
 	public static synchronized void setVariables(String projectName,
