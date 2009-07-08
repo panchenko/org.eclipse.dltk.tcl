@@ -48,6 +48,9 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 		return "Packages@" + packageName;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getPackageName() {
 		return packageName;
 	}

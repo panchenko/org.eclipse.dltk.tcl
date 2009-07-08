@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: VariableMapEntryImpl.java,v 1.1 2009/07/03 11:20:19 apanchenk Exp $
+ * $Id: VariableMapEntryImpl.java,v 1.2 2009/07/08 08:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * </p>
  *
  * @generated
+ * @since 2.0
  */
 public class VariableMapEntryImpl extends EObjectImpl implements
 		BasicEMap.Entry<String, VariableValue> {

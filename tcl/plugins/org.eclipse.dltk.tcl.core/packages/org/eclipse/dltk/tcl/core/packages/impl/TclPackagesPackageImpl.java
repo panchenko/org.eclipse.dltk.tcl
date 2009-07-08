@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.8 2009/07/06 08:55:52 apanchenk Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.9 2009/07/08 08:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -293,6 +293,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EReference getTclInterpreterInfo_Variables() {
 		return (EReference) tclInterpreterInfoEClass.getEStructuralFeatures()
@@ -332,6 +333,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EReference getTclProjectInfo_Variables() {
 		return (EReference) tclProjectInfoEClass.getEStructuralFeatures()
@@ -473,6 +475,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EAttribute getUserCorrection_Variable() {
 		return (EAttribute) userCorrectionEClass.getEStructuralFeatures()
@@ -483,6 +486,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EClass getVariableMapEntry() {
 		return variableMapEntryEClass;
@@ -492,6 +496,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EAttribute getVariableMapEntry_Key() {
 		return (EAttribute) variableMapEntryEClass.getEStructuralFeatures()
@@ -502,6 +507,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EReference getVariableMapEntry_Value() {
 		return (EReference) variableMapEntryEClass.getEStructuralFeatures()
@@ -512,6 +518,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EClass getVariableValue() {
 		return variableValueEClass;
@@ -521,6 +528,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EAttribute getVariableValue_Value() {
 		return (EAttribute) variableValueEClass.getEStructuralFeatures().get(0);

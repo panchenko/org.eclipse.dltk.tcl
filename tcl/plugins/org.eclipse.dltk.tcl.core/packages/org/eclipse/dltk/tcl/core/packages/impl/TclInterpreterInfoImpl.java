@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclInterpreterInfoImpl.java,v 1.6 2009/07/03 11:20:20 apanchenk Exp $
+ * $Id: TclInterpreterInfoImpl.java,v 1.7 2009/07/08 08:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -164,6 +164,7 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 	 * @see #getVariables()
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	protected EMap<String, VariableValue> variables;
 
@@ -319,6 +320,7 @@ public class TclInterpreterInfoImpl extends EObjectImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EMap<String, VariableValue> getVariables() {
 		if (variables == null) {

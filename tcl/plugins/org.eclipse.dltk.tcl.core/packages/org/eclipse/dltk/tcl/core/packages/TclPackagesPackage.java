@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.8 2009/07/06 08:55:52 apanchenk Exp $
+ * $Id: TclPackagesPackage.java,v 1.9 2009/07/08 08:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -194,6 +194,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int TCL_INTERPRETER_INFO__VARIABLES = 6;
 
@@ -240,6 +241,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int TCL_PROJECT_INFO__VARIABLES = 2;
 
@@ -414,6 +416,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int USER_CORRECTION__VARIABLE = 2;
 
@@ -433,6 +436,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl
 	 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableMapEntry()
 	 * @generated
+	 * @since 2.0
 	 */
 	int VARIABLE_MAP_ENTRY = 6;
 
@@ -442,6 +446,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int VARIABLE_MAP_ENTRY__KEY = 0;
 
@@ -451,6 +456,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int VARIABLE_MAP_ENTRY__VALUE = 1;
 
@@ -460,6 +466,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int VARIABLE_MAP_ENTRY_FEATURE_COUNT = 2;
 
@@ -470,6 +477,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl
 	 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableValue()
 	 * @generated
+	 * @since 2.0
 	 */
 	int VARIABLE_VALUE = 7;
 
@@ -479,6 +487,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int VARIABLE_VALUE__VALUE = 0;
 
@@ -488,6 +497,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 2.0
 	 */
 	int VARIABLE_VALUE_FEATURE_COUNT = 1;
 
@@ -640,6 +650,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo#getVariables()
 	 * @see #getTclInterpreterInfo()
 	 * @generated
+	 * @since 2.0
 	 */
 	EReference getTclInterpreterInfo_Variables();
 
@@ -683,6 +694,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.core.packages.TclProjectInfo#getVariables()
 	 * @see #getTclProjectInfo()
 	 * @generated
+	 * @since 2.0
 	 */
 	EReference getTclProjectInfo_Variables();
 
@@ -845,6 +857,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.core.packages.UserCorrection#isVariable()
 	 * @see #getUserCorrection()
 	 * @generated
+	 * @since 2.0
 	 */
 	EAttribute getUserCorrection_Variable();
 
@@ -857,6 +870,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @model keyDataType="org.eclipse.emf.ecore.EString"
 	 *        valueType="org.eclipse.dltk.tcl.core.packages.VariableValue" valueContainment="true"
 	 * @generated
+	 * @since 2.0
 	 */
 	EClass getVariableMapEntry();
 
@@ -868,6 +882,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see java.util.Map.Entry
 	 * @see #getVariableMapEntry()
 	 * @generated
+	 * @since 2.0
 	 */
 	EAttribute getVariableMapEntry_Key();
 
@@ -879,6 +894,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see java.util.Map.Entry
 	 * @see #getVariableMapEntry()
 	 * @generated
+	 * @since 2.0
 	 */
 	EReference getVariableMapEntry_Value();
 
@@ -889,6 +905,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @return the meta object for class '<em>Variable Value</em>'.
 	 * @see org.eclipse.dltk.tcl.core.packages.VariableValue
 	 * @generated
+	 * @since 2.0
 	 */
 	EClass getVariableValue();
 
@@ -900,6 +917,7 @@ public interface TclPackagesPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.core.packages.VariableValue#getValue()
 	 * @see #getVariableValue()
 	 * @generated
+	 * @since 2.0
 	 */
 	EAttribute getVariableValue_Value();
 
@@ -1059,6 +1077,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
+		 * @since 2.0
 		 */
 		EReference TCL_INTERPRETER_INFO__VARIABLES = eINSTANCE
 				.getTclInterpreterInfo_Variables();
@@ -1095,6 +1114,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
+		 * @since 2.0
 		 */
 		EReference TCL_PROJECT_INFO__VARIABLES = eINSTANCE
 				.getTclProjectInfo_Variables();
@@ -1232,6 +1252,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
+		 * @since 2.0
 		 */
 		EAttribute USER_CORRECTION__VARIABLE = eINSTANCE
 				.getUserCorrection_Variable();
@@ -1243,6 +1264,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl
 		 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableMapEntry()
 		 * @generated
+		 * @since 2.0
 		 */
 		EClass VARIABLE_MAP_ENTRY = eINSTANCE.getVariableMapEntry();
 
@@ -1251,6 +1273,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
+		 * @since 2.0
 		 */
 		EAttribute VARIABLE_MAP_ENTRY__KEY = eINSTANCE
 				.getVariableMapEntry_Key();
@@ -1260,6 +1283,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
+		 * @since 2.0
 		 */
 		EReference VARIABLE_MAP_ENTRY__VALUE = eINSTANCE
 				.getVariableMapEntry_Value();
@@ -1271,6 +1295,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * @see org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl
 		 * @see org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl#getVariableValue()
 		 * @generated
+		 * @since 2.0
 		 */
 		EClass VARIABLE_VALUE = eINSTANCE.getVariableValue();
 
@@ -1279,6 +1304,7 @@ public interface TclPackagesPackage extends EPackage {
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
+		 * @since 2.0
 		 */
 		EAttribute VARIABLE_VALUE__VALUE = eINSTANCE.getVariableValue_Value();
 

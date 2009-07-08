@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: VariableValue.java,v 1.1 2009/07/03 11:20:22 apanchenk Exp $
+ * $Id: VariableValue.java,v 1.2 2009/07/08 08:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getVariableValue()
  * @model
  * @generated
+ * @since 2.0
  */
 public interface VariableValue extends EObject {
 	/**

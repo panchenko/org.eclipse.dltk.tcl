@@ -703,10 +703,16 @@ public class TclPackagesManager {
 		return result;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static Map<String, String> getVariables(IInterpreterInstall install) {
 		return convertVariablesToMap(getVariablesEMap(install));
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static synchronized EMap<String, VariableValue> getVariablesEMap(
 			IInterpreterInstall install) {
 		initialize();
@@ -719,11 +725,17 @@ public class TclPackagesManager {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static void setVariables(IInterpreterInstall install,
 			Map<String, String> variables) {
 		setVariables(install, convertVariablesToEMap(variables));
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static synchronized void setVariables(IInterpreterInstall install,
 			EMap<String, VariableValue> variables) {
 		initialize();
@@ -733,21 +745,33 @@ public class TclPackagesManager {
 		save();
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static Map<String, String> getVariables(String projectName) {
 		return convertVariablesToMap(getVariablesEMap(projectName));
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static synchronized EMap<String, VariableValue> getVariablesEMap(
 			String projectName) {
 		TclProjectInfo projectInfo = getTclProject(projectName);
 		return ECollections.unmodifiableEMap(projectInfo.getVariables());
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static void setVariables(String projectName,
 			Map<String, String> variables) {
 		setVariables(projectName, convertVariablesToEMap(variables));
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static synchronized void setVariables(String projectName,
 			EMap<String, VariableValue> variables) {
 		TclProjectInfo projectInfo = getTclProject(projectName);

@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @since 2.0
+ */
 public class TclVariableResolver {
 
 	public static interface IVariableRegistry {

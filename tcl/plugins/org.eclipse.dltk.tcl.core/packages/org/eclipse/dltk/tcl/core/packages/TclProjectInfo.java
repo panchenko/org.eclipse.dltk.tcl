@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProjectInfo.java,v 1.4 2009/07/03 11:20:22 apanchenk Exp $
+ * $Id: TclProjectInfo.java,v 1.5 2009/07/08 08:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -86,6 +86,7 @@ public interface TclProjectInfo extends EObject {
 	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclProjectInfo_Variables()
 	 * @model mapType="org.eclipse.dltk.tcl.core.packages.VariableMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.dltk.tcl.core.packages.VariableValue>"
 	 * @generated
+	 * @since 2.0
 	 */
 	EMap<String, VariableValue> getVariables();
 
