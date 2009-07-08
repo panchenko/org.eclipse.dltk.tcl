@@ -25,12 +25,13 @@ import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterEnviro
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibraryBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialog;
 import org.eclipse.dltk.internal.debug.ui.interpreters.IAddInterpreterDialogRequestor;
-import org.eclipse.dltk.internal.debug.ui.interpreters.IInterpreterAttribute;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
+import org.eclipse.dltk.tcl.core.packages.VariableMap;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPlugin;
 import org.eclipse.dltk.tcl.internal.ui.GlobalVariableBlock;
@@ -102,33 +103,18 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		return "ADD_TCL_SCRIPT_INTERPRETER_DIALOG_SECTION"; //$NON-NLS-1$
 	}
 
-	private static final IInterpreterAttribute VARIABLES_ATTRIBUTE = new IInterpreterAttribute() {
-
-		public Object load(IInterpreterInstall install) {
-			return TclPackagesManager.getVariablesEMap(install);
-		}
-
-		public void save(IInterpreterInstall install, Object value) {
-			@SuppressWarnings("unchecked")
-			final EMap<String, VariableValue> newVars = (EMap<String, VariableValue>) value;
-			final EMap<String, VariableValue> oldVars = TclPackagesManager
-					.getVariablesEMap(install);
-			if (!GlobalVariableBlock.equalsEMap(newVars, oldVars)) {
-				TclPackagesManager.setVariables(install, newVars);
-				new RebuildProjectsJob(install).schedule();
-			}
-		}
-
-	};
-
 	@Override
 	protected void initializeFields(IInterpreterInstall install) {
 		super.initializeFields(install);
 		if (install != null) {
-			@SuppressWarnings("unchecked")
-			final EMap<String, VariableValue> variables = (EMap<String, VariableValue>) fRequestor
-					.get(install, VARIABLES_ATTRIBUTE);
-			globals.setValues(variables);
+			VariableMap variableMap = (VariableMap) install
+					.findExtension(TclPackagesPackage.Literals.VARIABLE_MAP);
+			if (variableMap != null) {
+				globals.setValues(variableMap.getVariables());
+			} else {
+				globals.setValues(ECollections
+						.<String, VariableValue> emptyEMap());
+			}
 		} else {
 			globals.setValues(ECollections.<String, VariableValue> emptyEMap());
 		}
@@ -138,7 +124,14 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 	protected void setFieldValuesToInterpreter(IInterpreterInstall install) {
 		super.setFieldValuesToInterpreter(install);
 		final EMap<String, VariableValue> newVars = globals.getValues();
-		fRequestor.put(install, VARIABLES_ATTRIBUTE, newVars);
+		// final EMap<String, VariableValue> newVars = (EMap<String,
+		// VariableValue>) value;
+		final EMap<String, VariableValue> oldVars = TclPackagesManager
+				.getVariablesEMap(install);
+		if (!GlobalVariableBlock.equalsEMap(newVars, oldVars)) {
+			TclPackagesManager.setVariables(install, newVars);
+			// FIXME new RebuildProjectsJob(install).schedule();
+		}
 	}
 
 	private static class RebuildProjectsJob extends Job {
