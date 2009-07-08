@@ -26,6 +26,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+/**
+ * @since 2.0
+ */
 public class TclGlobalVariablesPropertyPage extends PropertyPage {
 
 	private class StatusDialogAdapter implements IStatusDialog {

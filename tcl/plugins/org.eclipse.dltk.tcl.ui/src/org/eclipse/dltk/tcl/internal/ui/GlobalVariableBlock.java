@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Control used to edit the environment variables associated with a Interpreter
  * install
+ * @since 2.0
  */
 public class GlobalVariableBlock implements SelectionListener,
 		ISelectionChangedListener {

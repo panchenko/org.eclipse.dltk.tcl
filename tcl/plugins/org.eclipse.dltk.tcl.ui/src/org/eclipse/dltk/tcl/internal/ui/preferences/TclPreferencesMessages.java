@@ -29,6 +29,9 @@ public class TclPreferencesMessages extends NLS {
 	public static String TclCorePreferencePage_local;
 	public static String TclCorePreferencePage_remote;
 	public static String TclEnvironmentPropertyPage_BuilderEnabled;
+	/**
+	 * @since 2.0
+	 */
 	public static String ProjectBuildJob_BuildingJobName;
 	public static String TclEnvironmentPropertyPage_IndexingJobName;
 	public static String TclEnvironmentPropertyPage_detectAutomatically;

@@ -13,6 +13,9 @@ package org.eclipse.dltk.tcl.internal.ui;
 
 import org.eclipse.core.runtime.Assert;
 
+/**
+ * @since 2.0
+ */
 public class GlobalVariableEntry {
 	private final String name;
 	private String value;

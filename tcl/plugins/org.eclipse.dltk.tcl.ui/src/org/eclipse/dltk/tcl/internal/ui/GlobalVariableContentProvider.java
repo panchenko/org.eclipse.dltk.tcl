@@ -22,6 +22,9 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @since 2.0
+ */
 public class GlobalVariableContentProvider implements ITreeContentProvider {
 
 	private Viewer fViewer;

@@ -15,6 +15,9 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * @since 2.0
+ */
 public class GlobalVariableLabelProvider extends LabelProvider {
 
 	@Override

@@ -13,6 +13,9 @@ package org.eclipse.dltk.tcl.internal.ui;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @since 2.0
+ */
 public class TclInterpreterMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.ui.globalVariableMessages"; //$NON-NLS-1$
 	public static String GlobalVariableBlock_Add;
