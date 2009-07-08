@@ -14,6 +14,9 @@ import org.osgi.framework.BundleContext;
 
 public class TclDebugUIPlugin extends AbstractUIPlugin {
 	
+	/**
+	 * @since 2.0
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.debug.ui"; //$NON-NLS-1$
 
 	public TclDebugUIPlugin() {
