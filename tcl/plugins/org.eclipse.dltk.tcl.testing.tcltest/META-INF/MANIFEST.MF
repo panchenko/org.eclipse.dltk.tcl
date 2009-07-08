@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.dltk.tcl.core,
- org.eclipse.dltk.tcl.launching
+ org.eclipse.dltk.tcl.launching,
+ org.eclipse.ui
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
