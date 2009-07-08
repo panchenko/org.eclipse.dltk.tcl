@@ -124,79 +124,10 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 	protected void setFieldValuesToInterpreter(IInterpreterInstall install) {
 		super.setFieldValuesToInterpreter(install);
 		final EMap<String, VariableValue> newVars = globals.getValues();
-		// final EMap<String, VariableValue> newVars = (EMap<String,
-		// VariableValue>) value;
 		final EMap<String, VariableValue> oldVars = TclPackagesManager
 				.getVariablesEMap(install);
 		if (!GlobalVariableBlock.equalsEMap(newVars, oldVars)) {
 			TclPackagesManager.setVariables(install, newVars);
-			// FIXME new RebuildProjectsJob(install).schedule();
-		}
-	}
-
-	private static class RebuildProjectsJob extends Job {
-
-		private final IInterpreterInstall install;
-
-		public RebuildProjectsJob(IInterpreterInstall install) {
-			super(
-					NLS
-							.bind(
-									TclInterpreterMessages.AddTclInterpreterDialog_RebuildJobName,
-									install.getName()));
-			this.install = install;
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			final SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
-			final IScriptProject[] projects;
-			try {
-				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace()
-						.getRoot();
-				projects = DLTKCore.create(root).getScriptProjects(
-						TclNature.NATURE_ID);
-			} catch (ModelException e) {
-				TclDebugUIPlugin.getDefault().getLog().log(
-						new Status(IStatus.ERROR, TclDebugUIPlugin.PLUGIN_ID, e
-								.getMessage(), e));
-				return e.getStatus();
-			}
-			subMonitor.worked(20);
-			final SubMonitor buildingMonitor = subMonitor.newChild(80);
-			buildingMonitor
-					.beginTask(
-							TclInterpreterMessages.AddTclInterpreterDialog_RebuildProjectsTaskName,
-							projects.length);
-			for (int i = 0; i < projects.length; ++i) {
-				final IScriptProject project = projects[i];
-				try {
-					bulidProject(project, buildingMonitor.newChild(1));
-				} catch (CoreException e) {
-					TclDebugUIPlugin.getDefault().getLog().log(
-							new Status(IStatus.ERROR,
-									TclDebugUIPlugin.PLUGIN_ID, e.getMessage(),
-									e));
-				}
-			}
-			subMonitor.done();
-			return Status.OK_STATUS;
-		}
-
-		private void bulidProject(final IScriptProject project,
-				SubMonitor monitor) throws CoreException {
-			final IInterpreterInstall projectInterpreterInstall = ScriptRuntime
-					.getInterpreterInstall(project);
-			if (projectInterpreterInstall != null
-					&& projectInterpreterInstall.equals(install)) {
-				monitor
-						.setTaskName(NLS
-								.bind(
-										TclInterpreterMessages.AddTclInterpreterDialog_RebuildProjectTaskName,
-										project.getElementName()));
-				project.getProject().build(
-						IncrementalProjectBuilder.FULL_BUILD, monitor);
-			}
 		}
 	}
 
