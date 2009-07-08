@@ -28,8 +28,11 @@ import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.IInterpreterInstallChangedListener;
 import org.eclipse.dltk.launching.InterpreterConfig;
+import org.eclipse.dltk.launching.PropertyChangeEvent;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
+import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
@@ -64,6 +67,8 @@ public class TclPackagesManager {
 
 	private static Resource infos = null;
 	private static final Map<String, Resource> projectInfos = new HashMap<String, Resource>();
+
+	private static IInterpreterInstallChangedListener installChangedListener = null;
 
 	public static List<TclPackageInfo> getPackageInfos(
 			IInterpreterInstall install, Set<String> packageNames,
@@ -516,7 +521,60 @@ public class TclPackagesManager {
 		}
 	}
 
+	private static class InterpreterInstallChangedListener implements
+			IInterpreterInstallChangedListener {
+
+		public void defaultInterpreterInstallChanged(
+				IInterpreterInstall previous, IInterpreterInstall current) {
+			// NOP
+		}
+
+		public void interpreterAdded(IInterpreterInstall Interpreter) {
+			// TODO Auto-generated method stub
+		}
+
+		public void interpreterChanged(PropertyChangeEvent event) {
+			if (IInterpreterInstallChangedListener.PROPERTY_EXTENSIONS
+					.equals(event.getProperty())) {
+				VariableMap oldVars = locateVariableMap(event.getOldValue());
+				VariableMap newVars = locateVariableMap(event.getNewValue());
+				if (oldVars != null || newVars != null) {
+					if (oldVars != null && newVars != null) {
+						if (!EcoreUtil.equals(oldVars, newVars)) {
+							new RebuildProjectsJob((IInterpreterInstall) event
+									.getSource()).schedule(500);
+						}
+					} else {
+						new RebuildProjectsJob((IInterpreterInstall) event
+								.getSource()).schedule(500);
+					}
+				}
+			}
+		}
+
+		private VariableMap locateVariableMap(Object value) {
+			if (value instanceof List<?>) {
+				for (Object item : (List<?>) value) {
+					if (item instanceof VariableMap) {
+						return (VariableMap) item;
+					}
+				}
+			}
+			return null;
+		}
+
+		public void interpreterRemoved(IInterpreterInstall Interpreter) {
+			// TODO Auto-generated method stub
+		}
+
+	}
+
 	private synchronized static void initialize() {
+		if (installChangedListener == null) {
+			installChangedListener = new InterpreterInstallChangedListener();
+			ScriptRuntime
+					.addInterpreterInstallChangedListener(installChangedListener);
+		}
 		if (infos == null) {
 			final URI location = getInfoLocation();
 			infos = new XMIResourceImpl(location);
@@ -666,10 +724,13 @@ public class TclPackagesManager {
 		initialize();
 		final TclInterpreterInfo info = getTclInterpreter(install, false);
 		if (info != null) {
-			info.getPackages().clear();
-			info.setFetched(false);
-			info.setFetchedAt(null);
-			save();
+			if (!info.getPackages().isEmpty() || info.isFetched()
+					|| info.getFetchedAt() != null) {
+				info.getPackages().clear();
+				info.setFetched(false);
+				info.setFetchedAt(null);
+				save();
+			}
 		}
 	}
 
@@ -740,11 +801,16 @@ public class TclPackagesManager {
 	 */
 	public static void setVariables(IInterpreterInstall install,
 			EMap<String, VariableValue> variables) {
-		final VariableMap variableMap = TclPackagesFactory.eINSTANCE
-				.createVariableMap();
-		variableMap.getVariables().putAll(variables);
-		install.replaceExtension(TclPackagesPackage.Literals.VARIABLE_MAP,
-				variableMap);
+		if (variables != null && !variables.isEmpty()) {
+			final VariableMap variableMap = TclPackagesFactory.eINSTANCE
+					.createVariableMap();
+			variableMap.getVariables().putAll(variables);
+			install.replaceExtension(TclPackagesPackage.Literals.VARIABLE_MAP,
+					variableMap);
+		} else {
+			install.replaceExtension(TclPackagesPackage.Literals.VARIABLE_MAP,
+					null);
+		}
 	}
 
 	/**
