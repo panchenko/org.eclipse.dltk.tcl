@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
@@ -40,6 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
+@SuppressWarnings("restriction")
 public class TclCorePreferencePage extends
 		AbstractConfigurationBlockPropertyAndPreferencePage {
 
@@ -51,6 +53,15 @@ public class TclCorePreferencePage extends
 
 		private class TclCheckContentAdapter implements IListAdapter,
 				IDialogFieldListener {
+
+			private final PreferenceKey listKey;
+			private final char itemSeparator;
+
+			public TclCheckContentAdapter(PreferenceKey listKey,
+					char listSeparator) {
+				this.listKey = listKey;
+				this.itemSeparator = listSeparator;
+			}
 
 			public void customButtonPressed(ListDialogField field, int index) {
 				String edited = null;
@@ -70,7 +81,7 @@ public class TclCorePreferencePage extends
 				}
 			}
 
-			private boolean canEdit(List selectedElements) {
+			private boolean canEdit(List<?> selectedElements) {
 				return selectedElements.size() == 1;
 			}
 
@@ -81,39 +92,43 @@ public class TclCorePreferencePage extends
 			}
 
 			public void selectionChanged(ListDialogField field) {
-				List selectedElements = field.getSelectedElements();
+				List<?> selectedElements = field.getSelectedElements();
 				field.enableButton(IDX_EDIT, canEdit(selectedElements));
 			}
 
 			public void dialogFieldChanged(DialogField field) {
-				updateExcludes();
+				savePatterns((ListDialogField) field);
+			}
+
+			public void loadPatterns(ListDialogField field) {
+				final List<String> excludePatterns = new ArrayList<String>();
+				final String[] patterns = TextUtils.split(getString(listKey),
+						itemSeparator);
+				if (patterns != null) {
+					excludePatterns.addAll(Arrays.asList(patterns));
+				}
+				field.setElements(excludePatterns);
+			}
+
+			private void savePatterns(ListDialogField field) {
+				setString(listKey, TextUtils.join(field.getElements(),
+						itemSeparator));
 			}
 
 		}
 
+		@Override
 		protected void initialize() {
 			super.initialize();
-			initExcludePatterns();
+			includeAdapter.loadPatterns(includeDialog);
+			excludeAdapter.loadPatterns(excludeDialog);
 		}
 
+		@Override
 		public void performDefaults() {
 			super.performDefaults();
-			initExcludePatterns();
-		}
-
-		private void initExcludePatterns() {
-			final List excludePatterns = new ArrayList();
-			final String[] patterns = TextUtils.split(getString(KEYS[4]),
-					TclCorePreferences.CHECK_CONTENT_EXCLUDE_SEPARATOR);
-			if (patterns != null) {
-				excludePatterns.addAll(Arrays.asList(patterns));
-			}
-			excludeDialog.setElements(excludePatterns);
-		}
-
-		private void updateExcludes() {
-			setString(KEYS[4], TextUtils.join(excludeDialog.getElements(),
-					TclCorePreferences.CHECK_CONTENT_EXCLUDE_SEPARATOR));
+			includeAdapter.loadPatterns(includeDialog);
+			excludeAdapter.loadPatterns(excludeDialog);
 		}
 
 		private static final PreferenceKey[] KEYS = new PreferenceKey[] {
@@ -126,7 +141,9 @@ public class TclCorePreferencePage extends
 				new PreferenceKey(TclPlugin.PLUGIN_ID,
 						TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_REMOTE),
 				new PreferenceKey(TclPlugin.PLUGIN_ID,
-						TclCorePreferences.CHECK_CONTENT_EXCLUDES) };
+						TclCorePreferences.CHECK_CONTENT_EXCLUDES),
+				new PreferenceKey(TclPlugin.PLUGIN_ID,
+						DLTKCore.LANGUAGE_FILENAME_ASSOCIATIONS) };
 
 		/**
 		 * @param context
@@ -137,6 +154,10 @@ public class TclCorePreferencePage extends
 		public TclCorePreferenceBlock(IStatusChangeListener context,
 				IProject project, IWorkbenchPreferenceContainer container) {
 			super(context, project, KEYS, container);
+			excludeAdapter = new TclCheckContentAdapter(KEYS[4],
+					TclCorePreferences.CHECK_CONTENT_EXCLUDE_SEPARATOR);
+			includeAdapter = new TclCheckContentAdapter(KEYS[5],
+					DLTKCore.LANGUAGE_FILENAME_ASSOCIATION_SEPARATOR);
 		}
 
 		private void createCheckbox(Composite block, String label,
@@ -149,8 +170,13 @@ public class TclCorePreferencePage extends
 			bindControl(checkButton, key, null);
 		}
 
+		private final TclCheckContentAdapter excludeAdapter;
 		private ListDialogField excludeDialog;
 
+		private final TclCheckContentAdapter includeAdapter;
+		private ListDialogField includeDialog;
+
+		@Override
 		protected Control createOptionsBlock(Composite parent) {
 			Composite block = SWTFactory.createComposite(parent, parent
 					.getFont(), 1, 1, GridData.FILL_BOTH);
@@ -174,43 +200,70 @@ public class TclCorePreferencePage extends
 			createCheckbox(block,
 					TclPreferencesMessages.TclCorePreferencePage_remote,
 					KEYS[3]);
-			SWTFactory
-					.createLabel(
-							block,
-							TclPreferencesMessages.TclCorePreferencePage_checkContentExcludes,
-							1);
 
-			final Composite excludeComposite = SWTFactory.createComposite(
+			final Composite patternComposite = SWTFactory.createComposite(
 					block, block.getFont(), 1, 1, GridData.FILL_BOTH);
-			final GridLayout excludeLayout = new GridLayout();
-			excludeLayout.numColumns = 2;
-			excludeComposite.setLayout(excludeLayout);
+			final GridLayout patternLayout = new GridLayout();
+			patternLayout.numColumns = 2;
+			patternLayout.marginHeight = 0;
+			patternLayout.marginWidth = 0;
+			patternComposite.setLayout(patternLayout);
 
-			final TclCheckContentAdapter adapter = new TclCheckContentAdapter();
 			final String[] buttons = new String[] {
 					TclPreferencesMessages.TclCorePreferencePage_checkContentAddExclude,
 					TclPreferencesMessages.TclCorePreferencePage_checkContentEditExclude,
 					TclPreferencesMessages.TclCorePreferencePage_checkContentRemoveExclude };
-			excludeDialog = new ListDialogField(adapter, buttons,
-					new LabelProvider());
-			excludeDialog.setDialogFieldListener(adapter);
-			excludeDialog.setRemoveButtonIndex(IDX_REMOVE);
+			{
+				SWTFactory
+						.createLabel(
+								patternComposite,
+								TclPreferencesMessages.TclCorePreferencePage_Associations,
+								2);
+				includeDialog = new ListDialogField(includeAdapter, buttons,
+						new LabelProvider());
+				includeDialog.setDialogFieldListener(includeAdapter);
+				includeDialog.setRemoveButtonIndex(IDX_REMOVE);
 
-			excludeDialog.setViewerSorter(new ViewerSorter());
-			final Control listControl = excludeDialog
-					.getListControl(excludeComposite);
-			final GridData listControlLayoutData = new GridData(
-					GridData.FILL_BOTH);
-			listControlLayoutData.heightHint = new PixelConverter(listControl)
-					.convertHeightInCharsToPixels(6);
-			listControl.setLayoutData(listControlLayoutData);
-			excludeDialog.getButtonBox(excludeComposite).setLayoutData(
-					new GridData(GridData.HORIZONTAL_ALIGN_FILL
-							| GridData.VERTICAL_ALIGN_BEGINNING));
+				includeDialog.setViewerSorter(new ViewerSorter());
+				final Control listControl = includeDialog
+						.getListControl(patternComposite);
+				final GridData listControlLayoutData = new GridData(
+						GridData.FILL_BOTH);
+				listControlLayoutData.heightHint = new PixelConverter(
+						listControl).convertHeightInCharsToPixels(6);
+				listControl.setLayoutData(listControlLayoutData);
+				includeDialog.getButtonBox(patternComposite).setLayoutData(
+						new GridData(GridData.HORIZONTAL_ALIGN_FILL
+								| GridData.VERTICAL_ALIGN_BEGINNING));
+			}
+			{
+				SWTFactory
+						.createLabel(
+								patternComposite,
+								TclPreferencesMessages.TclCorePreferencePage_checkContentExcludes,
+								2);
+				excludeDialog = new ListDialogField(excludeAdapter, buttons,
+						new LabelProvider());
+				excludeDialog.setDialogFieldListener(excludeAdapter);
+				excludeDialog.setRemoveButtonIndex(IDX_REMOVE);
+
+				excludeDialog.setViewerSorter(new ViewerSorter());
+				final Control listControl = excludeDialog
+						.getListControl(patternComposite);
+				final GridData listControlLayoutData = new GridData(
+						GridData.FILL_BOTH);
+				listControlLayoutData.heightHint = new PixelConverter(
+						listControl).convertHeightInCharsToPixels(6);
+				listControl.setLayoutData(listControlLayoutData);
+				excludeDialog.getButtonBox(patternComposite).setLayoutData(
+						new GridData(GridData.HORIZONTAL_ALIGN_FILL
+								| GridData.VERTICAL_ALIGN_BEGINNING));
+			}
 			return block;
 		}
 	}
 
+	@Override
 	protected AbstractOptionsBlock createOptionsBlock(
 			IStatusChangeListener newStatusChangedListener, IProject project,
 			IWorkbenchPreferenceContainer container) {
@@ -226,6 +279,7 @@ public class TclCorePreferencePage extends
 		return null;
 	}
 
+	@Override
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
