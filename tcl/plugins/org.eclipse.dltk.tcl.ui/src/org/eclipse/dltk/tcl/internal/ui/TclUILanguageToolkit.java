@@ -10,10 +10,12 @@
 package org.eclipse.dltk.tcl.internal.ui;
 
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IImportContainer;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.internal.core.ImportContainer;
 import org.eclipse.dltk.tcl.core.TclConstants;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
@@ -53,28 +55,20 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 			buf.append(s);
 		}
 
-//		public void getProjectFragmentLabel(IProjectFragment root, long flags,
-//				StringBuffer buf) {
-//			if (root instanceof TclPackagesFragment) {
-//				buf.append("Packages");
-//				return;
-//			}
-//			super.getProjectFragmentLabel(root, flags, buf);
-//		}
-
-//		protected void getScriptFolderLabel(IScriptFolder folder,
-//				StringBuffer buf) {
-//			if (folder instanceof TclPackageElement) {
-//				TclPackageElement pkg = (TclPackageElement) folder;
-//				buf.append(pkg.getPackageName());
-//				if (pkg.getVersion() != null) {
-//					buf.append(" ").append(pkg.getVersion());
-//				}
-//
-//				return;
-//			}
-//			super.getScriptFolderLabel(folder, buf);
-//		}
+		@Override
+		protected void getImportContainerLabel(IModelElement element,
+				long flags, StringBuffer buf) {
+			IImportContainer container = (ImportContainer) element;
+			if (TclConstants.SOURCE_CONTAINER.equals(container
+					.getContainerName())) {
+				buf.append("sourced files");
+			} else if (TclConstants.REQUIRE_CONTAINER.equals(container
+					.getContainerName())) {
+				buf.append("required packages");
+			} else {
+				super.getImportContainerLabel(element, flags, buf);
+			}
+		}
 
 		protected char getTypeDelimiter() {
 			return '$';
