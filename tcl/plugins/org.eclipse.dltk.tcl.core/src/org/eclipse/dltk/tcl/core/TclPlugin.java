@@ -21,6 +21,9 @@ public class TclPlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.dltk.tcl.core"; //$NON-NLS-1$
 
+	public static final String PREF_LOCAL_VALIDATOR = PLUGIN_ID
+			+ ".localValidator"; //$NON-NLS-1$					
+
 	// The shared instance.
 	private static TclPlugin plugin;
 
