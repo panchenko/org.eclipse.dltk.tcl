@@ -20,6 +20,9 @@ public class TclPreferencesMessages extends NLS {
 	public static String TclCheckContentExcludeDialog_invalidPatternError;
 	public static String TclCheckContentExcludeDialog_newTitle;
 	public static String TclCheckContentExcludeDialog_pattern;
+	/**
+	 * @since 2.0
+	 */
 	public static String TclCorePreferencePage_Associations;
 	public static String TclCorePreferencePage_checkContentWithoutExtension;
 	public static String TclCorePreferencePage_checkContentAddExclude;
