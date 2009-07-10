@@ -1,6 +1,7 @@
 package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -11,6 +12,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -48,6 +50,7 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 
 	private Button indexerEnabled;
 	private Button builderEnabled;
+	private Button localValidator;
 
 	protected Control createContents(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
@@ -89,12 +92,20 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 		builderEnabled = new Button(composite, SWT.CHECK);
 		final GridData builderData = new GridData(GridData.FILL_HORIZONTAL);
 		builderData.horizontalSpan = 2;
-		builderEnabled.setLayoutData(indexerData);
+		builderEnabled.setLayoutData(builderData);
 		builderEnabled
 				.setText(TclPreferencesMessages.TclEnvironmentPropertyPage_BuilderEnabled);
 		builderEnabled.setSelection(!DLTKCore.DISABLED.equals(scriptProject
 				.getOption(DLTKCore.BUILDER_ENABLED, false)));
 
+		localValidator = new Button(composite, SWT.CHECK);
+		final GridData localData = new GridData(GridData.FILL_HORIZONTAL);
+		localData.horizontalSpan = 2;
+		localValidator.setLayoutData(localData);
+		localValidator.setText("Local TclChecker");
+		localValidator.setSelection(DLTKCore.ENABLED.equals(new ProjectScope(
+				project).getNode(TclPlugin.PLUGIN_ID).get(
+				TclPlugin.PREF_LOCAL_VALIDATOR, DLTKCore.DISABLED)));
 		return composite;
 	}
 
@@ -134,6 +145,10 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 				new ProjectBuildJob(project).schedule(500);
 			}
 		}
+		new ProjectScope(project).getNode(TclPlugin.PLUGIN_ID).put(
+				TclPlugin.PREF_LOCAL_VALIDATOR,
+				localValidator.getSelection() ? DLTKCore.ENABLED
+						: DLTKCore.DISABLED);
 		return super.performOk();
 	}
 
