@@ -190,12 +190,20 @@ public class TclPackagesManager {
 	}
 
 	private static long getPackagesRefreshInterval(IInterpreterInstall install) {
-		return TclPlugin
-				.getDefault()
-				.getPluginPreferences()
-				.getLong(
-						install.getEnvironment().isLocal() ? TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL
-								: TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE);
+		try {
+			if (install == null) {
+				return 0;
+			}
+			return TclPlugin
+					.getDefault()
+					.getPluginPreferences()
+					.getLong(
+							install.getEnvironment().isLocal() ? TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL
+
+									: TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE);
+		} catch (Exception e) {
+		}
+		return 0;
 	}
 
 	public static TclProjectInfo getTclProject(String name) {

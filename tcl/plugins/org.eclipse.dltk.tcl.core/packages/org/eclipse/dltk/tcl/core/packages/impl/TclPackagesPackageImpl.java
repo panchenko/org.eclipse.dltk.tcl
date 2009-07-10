@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.10 2009/07/08 10:53:12 apanchenk Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.11 2009/07/10 07:49:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -536,6 +536,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EClass getVariableMap() {
 		return variableMapEClass;
@@ -545,6 +546,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 2.0
 	 */
 	public EReference getVariableMap_Variables() {
 		return (EReference) variableMapEClass.getEStructuralFeatures().get(0);

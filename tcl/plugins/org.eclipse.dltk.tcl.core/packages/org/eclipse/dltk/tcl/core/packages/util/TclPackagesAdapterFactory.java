@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesAdapterFactory.java,v 1.5 2009/07/08 10:53:15 apanchenk Exp $
+ * $Id: TclPackagesAdapterFactory.java,v 1.6 2009/07/10 07:49:49 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
@@ -259,6 +259,7 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 	 * @return the new adapter.
 	 * @see org.eclipse.dltk.tcl.core.packages.VariableMap
 	 * @generated
+	 * @since 2.0
 	 */
 	public Adapter createVariableMapAdapter() {
 		return null;

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: VariableMapImpl.java,v 1.1 2009/07/08 10:53:11 apanchenk Exp $
+ * $Id: VariableMapImpl.java,v 1.2 2009/07/10 07:49:48 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  *
  * @generated
+ * @since 2.0
  */
 public class VariableMapImpl extends EObjectImpl implements VariableMap {
 	/**
