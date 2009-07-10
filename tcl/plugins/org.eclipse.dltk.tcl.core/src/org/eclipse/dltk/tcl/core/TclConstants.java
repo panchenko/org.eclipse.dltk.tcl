@@ -10,6 +10,9 @@
 package org.eclipse.dltk.tcl.core;
 
 public class TclConstants {
+	public static final String REQUIRE_CONTAINER = "require";
+	public static final String SOURCE_CONTAINER = "source";
+
 	protected TclConstants() {
 
 	}

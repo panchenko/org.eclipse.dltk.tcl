@@ -15,10 +15,12 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.expressions.StringLiteral;
+import org.eclipse.dltk.ast.references.Reference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
+import org.eclipse.dltk.compiler.ISourceElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.ast.TclStatement;
@@ -297,6 +299,20 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			if (name.startsWith("::")) {
 				name = name.substring(2);
 			}
+			if ("source".equals(name)) {
+				if (statement.getCount() > 1) {
+					Expression sourceFile = statement.getAt(1);
+					if (sourceFile instanceof Reference) {
+						ImportInfo importInfo = new ImportInfo();
+						importInfo.sourceStart = statement.sourceStart();
+						importInfo.sourceEnd = statement.sourceEnd();
+						importInfo.containerName = org.eclipse.dltk.tcl.core.TclConstants.SOURCE_CONTAINER;
+						importInfo.name = ((Reference) sourceFile)
+								.getStringRepresentation();
+						this.fRequestor.acceptImport(importInfo);
+					}
+				}
+			}
 			if (!kwMap.containsKey(name)) {
 				int argCount = statement.getCount() - 1;
 				if (name.length() > 0) {
@@ -379,6 +395,16 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
 						.getNameEnd(), (pack.getName() + "*").toCharArray());
 			}
+		} else if (pack.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
+			ImportInfo importInfo = new ImportInfo();
+			importInfo.sourceStart = pack.getNameStart();
+			importInfo.sourceEnd = pack.getNameEnd();
+			importInfo.containerName = org.eclipse.dltk.tcl.core.TclConstants.REQUIRE_CONTAINER;
+			importInfo.name = pack.getName();
+			importInfo.version = version instanceof SimpleReference ? ((SimpleReference) version)
+					.getName()
+					: null;
+			this.fRequestor.acceptImport(importInfo);
 		}
 	}
 
