@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
@@ -27,6 +28,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerInstance;
@@ -168,8 +170,24 @@ public class TclCheckerConfigUtils {
 				project).getString(ValidatorsCore.PLUGIN_ID,
 				ValidatorRuntime.PREF_CONFIGURATION);
 		final Resource resource = loadConfiguration(configurationContent);
+		IEnvironment environment = EnvironmentManager
+				.getEnvironmentById(environmentId);
+		if (environment == null) {
+			environment = EnvironmentManager.getLocalEnvironment();
+		} else if (!environment.isLocal()) {
+			final ProjectScope context = new ProjectScope(project);
+			if (DLTKCore.ENABLED.equals(context.getNode(TclPlugin.PLUGIN_ID)
+					.get(TclPlugin.PREF_LOCAL_VALIDATOR, DLTKCore.DISABLED))) {
+				final ValidatorInstanceResponse response = new ValidatorInstanceResponse(
+						EnvironmentManager.getLocalEnvironment(), resource);
+				findConfiguration(response, predicate);
+				if (!response.instances.isEmpty()) {
+					return response;
+				}
+			}
+		}
 		final ValidatorInstanceResponse response = new ValidatorInstanceResponse(
-				EnvironmentManager.getEnvironmentById(environmentId), resource);
+				environment, resource);
 		findConfiguration(response, predicate);
 		return response;
 	}
@@ -302,7 +320,11 @@ public class TclCheckerConfigUtils {
 				final String pathName = "/" + element.getContributor().getName() //$NON-NLS-1$
 						+ "/" + element.getAttribute("resource"); //$NON-NLS-1$ //$NON-NLS-2$
 				final URI uri = URI.createPlatformPluginURI(pathName, true);
-				final Resource r = resourceSet.createResource(uri);
+				Resource r = resourceSet.getResource(uri, false);
+				if (r != null) {
+					continue;
+				}
+				r = resourceSet.createResource(uri);
 				try {
 					r.load(null);
 					result.add(r);

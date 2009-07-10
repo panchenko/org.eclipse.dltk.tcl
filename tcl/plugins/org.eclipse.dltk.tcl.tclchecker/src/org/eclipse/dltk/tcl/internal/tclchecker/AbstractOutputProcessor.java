@@ -49,20 +49,13 @@ public abstract class AbstractOutputProcessor implements IOutputProcessor {
 				throw new OperationCanceledException();
 			}
 			final IResource resource = module.getResource();
-			final IPath location = resource.getLocation();
-			final String loc;
-			if (location == null) {
-				final IFileHandle file = environment.getFile(resource
-						.getLocationURI());
-				if (file != null) {
-					loc = file.toString();
-				} else {
-					loc = null;
-				}
-			} else {
-				loc = location.toString();
+			if (resource == null) {
+				continue;
 			}
-			if (loc != null) {
+			final IFileHandle file = environment.getFile(resource
+					.getLocationURI());
+			if (file != null) {
+				final String loc = file.toString();
 				pathToSource.put(loc, module);
 				filenames.add(loc);
 			}
