@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.launching,
  org.eclipse.dltk.tcl.parser,
  org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.core.filesystem
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.dltk.tcl.ast,
  org.eclipse.dltk.tcl.ast.expressions,
