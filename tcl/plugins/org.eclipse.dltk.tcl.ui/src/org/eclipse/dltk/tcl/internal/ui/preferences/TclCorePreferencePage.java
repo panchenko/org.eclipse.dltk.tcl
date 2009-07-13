@@ -13,10 +13,13 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
@@ -31,9 +34,14 @@ import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.dltk.utils.TextUtils;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -54,6 +62,7 @@ public class TclCorePreferencePage extends
 		private class TclCheckContentAdapter implements IListAdapter,
 				IDialogFieldListener {
 
+			private Set<String> contributedElements = null;
 			private final PreferenceKey listKey;
 			private final char itemSeparator;
 
@@ -82,7 +91,9 @@ public class TclCorePreferencePage extends
 			}
 
 			private boolean canEdit(List<?> selectedElements) {
-				return selectedElements.size() == 1;
+				return selectedElements.size() == 1
+						&& (contributedElements == null || !contributedElements
+								.containsAll(selectedElements));
 			}
 
 			public void doubleClicked(ListDialogField field) {
@@ -101,20 +112,64 @@ public class TclCorePreferencePage extends
 			}
 
 			public void loadPatterns(ListDialogField field) {
-				final List<String> excludePatterns = new ArrayList<String>();
+				final List<String> elements = new ArrayList<String>();
+				if (contributedElements != null) {
+					elements.addAll(contributedElements);
+				}
 				final String[] patterns = TextUtils.split(getString(listKey),
 						itemSeparator);
 				if (patterns != null) {
-					excludePatterns.addAll(Arrays.asList(patterns));
+					elements.addAll(Arrays.asList(patterns));
 				}
-				field.setElements(excludePatterns);
+				field.setElements(elements);
+				selectionChanged(field);
 			}
 
 			private void savePatterns(ListDialogField field) {
-				setString(listKey, TextUtils.join(field.getElements(),
-						itemSeparator));
+				final List<?> elements = field.getElements();
+				if (contributedElements != null) {
+					elements.removeAll(contributedElements);
+				}
+				setString(listKey, TextUtils.join(elements, itemSeparator));
 			}
 
+			public void setContributedElements(Set<String> value) {
+				this.contributedElements = value;
+			}
+
+		}
+
+		private static class AssociationViwerSorter extends ViewerSorter {
+
+			private final Set<String> highlighted;
+
+			public AssociationViwerSorter(Set<String> highlighted) {
+				this.highlighted = highlighted;
+			}
+
+			@Override
+			public int category(Object element) {
+				return highlighted.contains(element) ? 0 : 1;
+			}
+
+		}
+
+		private static class AssociationLabelProvider extends LabelProvider
+				implements IFontProvider {
+
+			private final Set<String> highlighted;
+
+			public AssociationLabelProvider(Set<String> highlighted) {
+				this.highlighted = highlighted;
+			}
+
+			public Font getFont(Object element) {
+				if (highlighted.contains(element)) {
+					return JFaceResources.getFontRegistry().getBold(
+							JFaceResources.DIALOG_FONT);
+				}
+				return null;
+			}
 		}
 
 		@Override
@@ -219,12 +274,34 @@ public class TclCorePreferencePage extends
 								patternComposite,
 								TclPreferencesMessages.TclCorePreferencePage_Associations,
 								2);
+				final Set<String> associations = DLTKLanguageManager
+						.loadFilenameAssociations(TclNature.NATURE_ID);
+				includeAdapter.setContributedElements(associations);
 				includeDialog = new ListDialogField(includeAdapter, buttons,
-						new LabelProvider());
+						new AssociationLabelProvider(associations)) {
+					@Override
+					protected boolean canRemove(ISelection selection) {
+						if (selection instanceof IStructuredSelection) {
+							if (includeAdapter.contributedElements != null) {
+								for (Iterator<?> i = ((IStructuredSelection) selection)
+										.iterator(); i.hasNext();) {
+									final Object element = i.next();
+									if (includeAdapter.contributedElements
+											.contains(element)) {
+										return false;
+									}
+								}
+							}
+							return true;
+						}
+						return false;
+					}
+				};
 				includeDialog.setDialogFieldListener(includeAdapter);
 				includeDialog.setRemoveButtonIndex(IDX_REMOVE);
 
-				includeDialog.setViewerSorter(new ViewerSorter());
+				includeDialog.setViewerSorter(new AssociationViwerSorter(
+						associations));
 				final Control listControl = includeDialog
 						.getListControl(patternComposite);
 				final GridData listControlLayoutData = new GridData(
