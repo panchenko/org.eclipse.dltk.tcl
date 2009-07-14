@@ -41,6 +41,7 @@ import org.eclipse.dltk.launching.debug.DbgpConnectionConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.TclActiveStateDebuggerEnvironment;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
+import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationConstants;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 
 /**
@@ -257,6 +258,11 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 						TclActiveStateDebuggerConstants.LOG_ENABLE_KEY));
 		final Boolean b = values.get(getInstall().getEnvironmentId());
 		return b == null || b.booleanValue();
+	}
+
+	@Override
+	protected String getProcessType() {
+		return TclLaunchConfigurationConstants.ID_TCL_PROCESS_TYPE;
 	}
 
 }
