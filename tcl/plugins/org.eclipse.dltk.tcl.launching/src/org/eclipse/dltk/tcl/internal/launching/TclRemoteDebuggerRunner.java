@@ -10,10 +10,9 @@ public class TclRemoteDebuggerRunner extends RemoteDebuggingEngineRunner {
 		super(install);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.launching.DebuggingEngineRunner#getDebugPreferenceQualifier()
-	 */
+	@Override
 	protected String getDebugPreferenceQualifier() {
-		return TclDebugPlugin.PLUGIN_ID;		
+		return TclDebugPlugin.PLUGIN_ID;
 	}
+
 }
