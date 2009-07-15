@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.SimpleVariableRegistry;
 
+@SuppressWarnings("nls")
 public class VariableResolverTests extends TestCase {
 
 	private static TclVariableResolver createResolver() {
