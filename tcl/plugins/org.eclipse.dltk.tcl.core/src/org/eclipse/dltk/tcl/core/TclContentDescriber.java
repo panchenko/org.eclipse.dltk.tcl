@@ -9,7 +9,7 @@ public class TclContentDescriber extends ScriptContentDescriber {
 			Pattern.compile("^#!.*(tclsh|wish|expect)", Pattern.MULTILINE),
 			Pattern
 					.compile(
-							"^#!\\s*/bin/(ba|tc)?sh\\s*\r?\n(.*\r?\n){0,4}exec .*(tclsh|expect|wish) .*",
+							"^#!\\s*/bin/(ba|tc)?sh\\s*\r?\n(.*\r?\n){0,4}exec .*(tclsh|expect|wish)",
 							Pattern.MULTILINE),
 			Pattern
 					.compile(
