@@ -27,6 +27,8 @@ public class AllTests {
 		suite.addTest(PACompletionTests.suite());
 		suite.addTest(PASelectionTests.suite());
 		suite.addTest(TclLaunchingTests.suite());
+		suite.addTestSuite(VariableResolverTests.class);
+		suite.addTestSuite(TclContentDescriberTests.class);
 		// $JUnit-END$
 		return suite;
 	}
