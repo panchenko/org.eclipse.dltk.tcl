@@ -742,6 +742,20 @@ public class TclPackagesManager {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	public static synchronized void markInterprterAsNotFetched(
+			IInterpreterInstall install) {
+		initialize();
+		final TclInterpreterInfo info = getTclInterpreter(install, false);
+		if (info != null) {
+			info.setFetched(false);
+			info.setFetchedAt(null);
+			save();
+		}
+	}
+
 	public static Set<String> getPackageInfosAsString(
 			IInterpreterInstall install) {
 		initialize();

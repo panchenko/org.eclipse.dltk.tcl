@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
@@ -181,6 +182,10 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				if (DEBUG) {
 					this.printDebug(this.problem);
 				}
+			}
+		} catch (OperationCanceledException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
 			}
 		} finally {
 			if (!contextAccepted) {
@@ -798,7 +803,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		String pattern = tok.replaceAll("::",
 				IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		IModelElement[] elements = TclMixinUtils.findModelElementsFromMixin(
-				pattern, mixinClass, this.scriptProject);
+				pattern, mixinClass, this.scriptProject, getProgressMonitor());
 		elements = TclResolver.complexFilter(elements, this.scriptProject,
 				this.packageCollector, false);
 		final Set completionNames = calculateCompletionNames(completions);
@@ -817,7 +822,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		String pattern = tok.replaceAll("::",
 				IMixinRequestor.MIXIN_NAME_SEPARATOR);
 		IModelElement[] elements = TclMixinUtils.findModelElementsFromMixin(
-				pattern, mixinClass, this.scriptProject);
+				pattern, mixinClass, this.scriptProject, getProgressMonitor());
 		// long start = System.currentTimeMillis();
 		for (int i = 0; i < elements.length; i++) {
 			// We should filter external source modules with same
