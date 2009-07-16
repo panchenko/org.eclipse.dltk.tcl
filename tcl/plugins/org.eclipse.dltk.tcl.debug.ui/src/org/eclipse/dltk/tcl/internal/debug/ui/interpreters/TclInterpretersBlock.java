@@ -105,6 +105,7 @@ public class TclInterpretersBlock extends InterpretersBlock {
 
 					List<TclPackageInfo> list = null;
 					try {
+						TclPackagesManager.markInterprterAsNotFetched(install);
 						list = TclPackagesManager.getPackageInfos(install);
 					} catch (Exception e) {
 						// Try one more time
