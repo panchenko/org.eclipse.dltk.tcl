@@ -215,6 +215,16 @@ public class TclCorePreferencePage extends
 					DLTKCore.LANGUAGE_FILENAME_ASSOCIATION_SEPARATOR);
 		}
 
+		@Override
+		protected void validateValuePresenceFor(PreferenceKey key) {
+			if (TclPlugin.PLUGIN_ID.equals(key.getQualifier())
+					&& DLTKCore.LANGUAGE_FILENAME_ASSOCIATIONS.equals(key
+							.getName())) {
+				return;
+			}
+			super.validateValuePresenceFor(key);
+		}
+
 		private void createCheckbox(Composite block, String label,
 				PreferenceKey key) {
 			final Button checkButton = SWTFactory.createCheckButton(block,
