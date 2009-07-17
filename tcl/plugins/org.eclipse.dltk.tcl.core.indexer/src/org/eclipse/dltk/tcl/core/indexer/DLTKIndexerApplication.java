@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.tcl.indexing.DLTKEFSTclIndexer;
 import org.eclipse.dltk.tcl.indexing.DLTKTclIndexer;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -66,41 +70,52 @@ public class DLTKIndexerApplication implements IApplication {
 			return versionMsg();
 		}
 
-		DLTKTclIndexer indexer = new DLTKTclIndexer() {
-			public void logBeginOfFolder(File folder) {
+		DLTKEFSTclIndexer indexer = new DLTKEFSTclIndexer() {
+			@Override
+			public void logBeginOfFolder(IFileStore folder) {
 				if (verbose) {
 					System.out.println("Building index file for folder:"
-							+ folder.getAbsolutePath());
+							+ folder.toURI().getPath());
 				}
 			}
 
-			public void logEntry(File indexFile, long filesSize) {
+			@Override
+			public void logEntry(IFileStore indexFile, long filesSize) {
 				if (verbose) {
 					System.out
 							.println("Indexing of folder is done: Original size:"
 									+ filesSize
 									+ " Index size:"
-									+ indexFile.length());
+									+ indexFile.fetchInfo().getLength());
 				}
 			}
 
-			protected void reportUnknownError(File folder) {
+			@Override
+			protected void reportUnknownError(IFileStore folder) {
 				if (verbose) {
 					System.out.println("ERROR: Failed to index folder:"
-							+ folder.getAbsolutePath());
+							+ folder.toURI().getPath());
 				}
 			}
 
 			@Override
-			protected void logIndexConsistent(File folder) {
+			protected void logIndexConsistent(IFileStore folder) {
 				if (verbose) {
 					System.out.println("Folder indexes are consistent:"
-							+ folder.getAbsolutePath());
+							+ folder.toURI().getPath());
 				}
 			}
 
 			@Override
-			public boolean isFoderRebuild() {
+			public void logReadonlyFolder(IFileStore folder) {
+				if (verbose) {
+					System.out.println("Skipping readonly folder:"
+							+ folder.toURI().getPath());
+				}
+			}
+
+			@Override
+			public boolean isForceRebuild() {
 				return force;
 			}
 		};
@@ -110,12 +125,8 @@ public class DLTKIndexerApplication implements IApplication {
 			}
 			for (File path : foldersToRebuildIndex) {
 				if (path.exists() && path.isDirectory() && path.canWrite()) {
-					// if (verbose) {
-					// System.out.println("Path:" + path.getAbsolutePath()
-					// + " is accepted for indexing...");
-					// }
-					// foldersToRebuildIndex.add(f.getAbsoluteFile());
-					indexer.buildIndexFor(path, recursive);
+					indexer.buildIndexFor(EFS.getLocalFileSystem().getStore(
+							new Path(path.getAbsolutePath())), recursive);
 				} else {
 					if (verbose) {
 						System.out.println("Path:" + path.getAbsolutePath()
