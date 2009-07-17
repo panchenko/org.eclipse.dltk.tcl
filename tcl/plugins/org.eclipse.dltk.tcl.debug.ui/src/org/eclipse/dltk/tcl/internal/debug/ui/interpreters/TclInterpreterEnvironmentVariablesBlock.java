@@ -21,5 +21,4 @@ public class TclInterpreterEnvironmentVariablesBlock extends
 	public TclInterpreterEnvironmentVariablesBlock(AddScriptInterpreterDialog d) {
 		super(d);
 	}
-
 }

@@ -10,7 +10,6 @@
 package org.eclipse.dltk.tcl.internal.debug.ui.launchConfigurations;
 
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
-import org.eclipse.debug.ui.EnvironmentTab;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.dltk.debug.ui.launchConfigurations.ScriptCommonTab;
@@ -22,7 +21,7 @@ public class TclTabGroup extends AbstractLaunchConfigurationTabGroup {
 				mode);
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { main,
 				new TclScriptArgumentsTab(), new TclInterpreterTab(main),
-				new EnvironmentTab(),
+				new TclEnvironmentTab(),
 				// new SourceContainerLookupTab(),
 				// new CommonTab()
 				new ScriptCommonTab(main) };
