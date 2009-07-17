@@ -9,10 +9,13 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.launching;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -42,11 +45,14 @@ public class TclLaunchConfigurationDelegate extends
 
 	protected void addLibpathEnvVar(InterpreterConfig config,
 			ILaunchConfiguration configuration) throws CoreException {
-		config.removeEnvVar(TCLLIBPATH_ENV_VAR);
+		String currentValue = config.removeEnvVar(TCLLIBPATH_ENV_VAR);
 
 		IPath[] paths = createBuildPath(configuration, config.getEnvironment());
 
 		StringBuffer sb = new StringBuffer();
+		if (currentValue != null) {
+			sb.append(currentValue).append(" ");
+		}
 		for (int i = 0; i < paths.length; ++i) {
 			final IFileHandle file = config.getEnvironment().getFile(paths[i]);
 			if (file != null) {
