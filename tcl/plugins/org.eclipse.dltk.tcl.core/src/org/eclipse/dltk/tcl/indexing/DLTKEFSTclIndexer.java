@@ -46,7 +46,7 @@ public class DLTKEFSTclIndexer {
 	private long totalASTIndexesSize = 0;
 	public final static long VERSION = 200905291444l;
 
-	public boolean isFoderRebuild() {
+	public boolean isForceRebuild() {
 		return false;
 	}
 
@@ -66,17 +66,18 @@ public class DLTKEFSTclIndexer {
 		for (IFileStore file : files) {
 			IFileInfo fileInfo = file.fetchInfo();
 			if (fileInfo.isDirectory() && recursive) {
-				// if (!fileInfo.getAttribute(EFS)) {
-				// continue;
-				// }
 				buildIndexFor(file, recursive);
 			} else if (needIndexing(file)) {
 				toIndex.add(file);
 			}
 		}
-		if (!toIndex.isEmpty()) {
+		boolean readonly = folderInfo.getAttribute(EFS.ATTRIBUTE_READ_ONLY);
+		if (readonly) {
+			logReadonlyFolder(folder);
+		}
+		if (!toIndex.isEmpty() && !readonly) {
 			// Check required rebuild or not
-			boolean buildRequired = isFoderRebuild();
+			boolean buildRequired = isForceRebuild();
 			IFileStore indexFile = folder.getChild(".dltk.index");
 			IFileStore astIndexFile = folder.getChild(".dltk.index.ast");
 			IFileInfo indexFileInfo = indexFile.fetchInfo();
@@ -133,55 +134,7 @@ public class DLTKEFSTclIndexer {
 						astIndexFile.openOutputStream(EFS.NONE,
 								new NullProgressMonitor()), VERSION);
 				for (IFileStore file : toIndex) {
-					String content = new String(Util.getFileByteContent(file));
-					filesSize += content.length();
-
-					ProblemCollector dltkProblems = new ProblemCollector();
-					TclModule module = makeModule(content, dltkProblems);
-
-					IFileInfo fileInfo = file.fetchInfo();
-					long timestamp = fileInfo.getLastModified();
-					if (fileInfo.getAttribute(EFS.ATTRIBUTE_SYMLINK)) {
-						String target = fileInfo
-								.getStringAttribute(EFS.ATTRIBUTE_LINK_TARGET);
-						IFileStore linkTarget = file.getFileStore(new Path(
-								target));
-						IFileInfo info = linkTarget.fetchInfo();
-						timestamp = info.getLastModified();
-					}
-
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					TclASTSaver saver = new TclASTSaver(module, bout);
-					saver.store(dltkProblems);
-					astIndexBuilder.addEntry(file.getName(), timestamp,
-							TclASTCache.TCL_AST_ATTRIBUTE,
-							new ByteArrayInputStream(bout.toByteArray()));
-
-					// Store indexing information.
-					SourceIndexerRequestor req = new TclSourceIndexerRequestor();
-					req.setIndexer(new NullIndexer());
-					StructureModelCollector collector = new StructureModelCollector(
-							req);
-					NewTclSourceParser parser = new NewTclSourceParser();
-					ModuleDeclaration ast = parser.parse(null, module, null);
-					SourceElementRequestVisitor requestor = new TclSourceElementRequestVisitor(
-							collector, null);
-					ast.traverse(requestor);
-
-					byte[] structure_index = collector.getBytes();
-					builder.addEntry(file.getName(), timestamp,
-							TclASTCache.TCL_STRUCTURE_INDEX,
-							new ByteArrayInputStream(structure_index));
-
-					// Store mixin index information.
-					MixinModelCollector mixinCollector = new MixinModelCollector();
-					TclMixinBuildVisitor mixinVisitor = new TclMixinBuildVisitor(
-							ast, null, false, mixinCollector);
-					ast.traverse(mixinVisitor);
-					byte[] mixin_index = mixinCollector.getBytes();
-					builder.addEntry(file.getName(), timestamp,
-							TclASTCache.TCL_MIXIN_INDEX,
-							new ByteArrayInputStream(mixin_index));
+					filesSize += indexFile(builder, astIndexBuilder, file);
 				}
 				builder.done();
 				astIndexBuilder.done();
@@ -202,6 +155,61 @@ public class DLTKEFSTclIndexer {
 				deleteIndexFiles(indexFile, astIndexFile);
 			}
 		}
+	}
+
+	public void logReadonlyFolder(IFileStore folder) {
+	}
+
+	private long indexFile(ArchiveCacheIndexBuilder builder,
+			ArchiveCacheIndexBuilder astIndexBuilder, IFileStore file)
+			throws CoreException, IOException, Exception {
+		String content = new String(Util.getFileByteContent(file));
+
+		ProblemCollector dltkProblems = new ProblemCollector();
+		TclModule module = makeModule(content, dltkProblems);
+
+		IFileInfo fileInfo = file.fetchInfo();
+		long timestamp = fileInfo.getLastModified();
+		if (fileInfo.getAttribute(EFS.ATTRIBUTE_SYMLINK)) {
+			String target = fileInfo
+					.getStringAttribute(EFS.ATTRIBUTE_LINK_TARGET);
+			IFileStore linkTarget = file.getFileStore(new Path(target));
+			IFileInfo info = linkTarget.fetchInfo();
+			timestamp = info.getLastModified();
+		}
+
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		TclASTSaver saver = new TclASTSaver(module, bout);
+		saver.store(dltkProblems);
+		astIndexBuilder.addEntry(file.getName(), timestamp,
+				TclASTCache.TCL_AST_ATTRIBUTE, new ByteArrayInputStream(bout
+						.toByteArray()));
+
+		// Store indexing information.
+		SourceIndexerRequestor req = new TclSourceIndexerRequestor();
+		req.setIndexer(new NullIndexer());
+		StructureModelCollector collector = new StructureModelCollector(req);
+		NewTclSourceParser parser = new NewTclSourceParser();
+		ModuleDeclaration ast = parser.parse(null, module, null);
+		SourceElementRequestVisitor requestor = new TclSourceElementRequestVisitor(
+				collector, null);
+		ast.traverse(requestor);
+
+		byte[] structure_index = collector.getBytes();
+		builder.addEntry(file.getName(), timestamp,
+				TclASTCache.TCL_STRUCTURE_INDEX, new ByteArrayInputStream(
+						structure_index));
+
+		// Store mixin index information.
+		MixinModelCollector mixinCollector = new MixinModelCollector();
+		TclMixinBuildVisitor mixinVisitor = new TclMixinBuildVisitor(ast, null,
+				false, mixinCollector);
+		ast.traverse(mixinVisitor);
+		byte[] mixin_index = mixinCollector.getBytes();
+		builder.addEntry(file.getName(), timestamp,
+				TclASTCache.TCL_MIXIN_INDEX, new ByteArrayInputStream(
+						mixin_index));
+		return content.length();
 	}
 
 	private void deleteIndexFiles(IFileStore indexFile, IFileStore astIndexFile) {
