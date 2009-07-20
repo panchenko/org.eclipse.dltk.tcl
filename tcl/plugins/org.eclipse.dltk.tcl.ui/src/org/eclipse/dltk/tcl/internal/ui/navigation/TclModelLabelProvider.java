@@ -1,7 +1,9 @@
 package org.eclipse.dltk.tcl.internal.ui.navigation;
 
 import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
@@ -37,10 +39,13 @@ public class TclModelLabelProvider extends LabelProvider {
 			String convertedPath = environment
 					.convertPathToString(((TclSourcesSourceModule) element)
 							.getFullPath());
+			IFileHandle file = EnvironmentPathUtils.getFile(module);
+			boolean exists = file.exists();
+			String postFix = exists ? "" : " [Not available]";
 			if (originalName != null && !originalName.equals(convertedPath)) {
-				return originalName + " (" + convertedPath + ")";
+				return originalName + " (" + convertedPath + ")" + postFix;
 			}
-			return convertedPath;
+			return convertedPath + postFix;
 		}
 		return null;
 	}
