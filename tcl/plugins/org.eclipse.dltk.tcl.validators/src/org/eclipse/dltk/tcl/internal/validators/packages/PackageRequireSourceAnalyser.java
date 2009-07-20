@@ -241,10 +241,14 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			if (modulePath == null) {
 				URI uri = module.getResource().getLocationURI();
 				if (uri != null) {
-					IFileHandle file = env.getFile(uri);
-					if (file != null) {
-						modulePath = file.getPath();
-					}
+					// Resolve URI using uri resolver to real file location
+					modulePath = updateModulePath(modulePath, env, uri);
+				}
+			} else {
+				// Try to resolve local path to some remote one.
+				URI uri = module.getResource().getLocationURI();
+				if (uri != null) {
+					modulePath = updateModulePath(modulePath, env, uri);
 				}
 			}
 		}
@@ -258,6 +262,17 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		modules.add(new ModuleInfo(module.getElementName(), context
 				.getLineTracker(), context.getProblemReporter(), mInfo,
 				modulePath, module));
+	}
+
+	private IPath updateModulePath(IPath modulePath, IEnvironment env, URI uri) {
+		URI[] uris = EnvironmentManager.resolve(uri);
+		if (uris.length > 0) {
+			IFileHandle file = env.getFile(uris[0]);
+			if (file != null) {
+				return file.getPath();
+			}
+		}
+		return modulePath;
 	}
 
 	public void endBuild(IProgressMonitor monitor) {
@@ -435,6 +450,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				isVariable = resolved.size() != 1
 						|| !resolved.contains(source.getValue());
 				for (String value : resolved) {
+
 					final IPath sourcedPath = resolveSourceValue(folder, value,
 							environment);
 					if (sourcedPath != null) {
@@ -501,6 +517,13 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private IPath resolveSourceValue(IPath folder, String value,
 			IEnvironment environment) {
 		final IPath valuePath;
+		value = value.trim();
+		if (value.startsWith("\"") && value.endsWith("\"")) {
+			value = value.substring(1, value.length() - 1);
+		}
+		if (value.startsWith("'") && value.endsWith("'")) {
+			value = value.substring(1, value.length() - 1);
+		}
 		if (environment.isLocal()) {
 			valuePath = Path.fromOSString(value);
 		} else {
