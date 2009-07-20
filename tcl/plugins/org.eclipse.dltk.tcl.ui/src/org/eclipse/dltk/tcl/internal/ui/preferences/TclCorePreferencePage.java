@@ -18,8 +18,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.internal.core.ProjectRefreshOperation;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
@@ -184,6 +192,31 @@ public class TclCorePreferencePage extends
 			super.performDefaults();
 			includeAdapter.loadPatterns(includeDialog);
 			excludeAdapter.loadPatterns(excludeDialog);
+		}
+
+		@Override
+		protected boolean saveValues() {
+			final boolean value = super.saveValues();
+			/*
+			 * TODO start job only if associations changed. Listen for
+			 * preference change instead?
+			 */
+			new Job(TclPreferencesMessages.TclCorePreferencePage_0) {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						final IScriptProject[] projects = DLTKCore.create(
+								ResourcesPlugin.getWorkspace().getRoot())
+								.getScriptProjects(TclNature.NATURE_ID);
+						ResourcesPlugin.getWorkspace().run(
+								new ProjectRefreshOperation(projects), monitor);
+					} catch (CoreException e) {
+						DLTKCore.error(TclPreferencesMessages.TclCorePreferencePage_1, e);
+					}
+					return Status.OK_STATUS;
+				}
+			}.schedule(500);
+			return value;
 		}
 
 		private static final PreferenceKey[] KEYS = new PreferenceKey[] {
