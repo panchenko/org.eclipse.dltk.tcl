@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.text;
 
-
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -32,6 +31,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class CodeTemplateTclSourceViewerConfiguration extends
@@ -80,9 +80,8 @@ public class CodeTemplateTclSourceViewerConfiguration extends
 				.setInformationControlCreator(new IInformationControlCreator() {
 					public IInformationControl createInformationControl(
 							Shell parent) {
-						return new DefaultInformationControl(parent,
-								DLTKUIPlugin
-										.getAdditionalInfoAffordanceString());
+						return new DefaultInformationControl(parent, EditorsUI
+								.getTooltipAffordanceString());
 					}
 				});
 
