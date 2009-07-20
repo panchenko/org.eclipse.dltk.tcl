@@ -215,6 +215,9 @@ public class TclCorePreferencePage extends
 					DLTKCore.LANGUAGE_FILENAME_ASSOCIATION_SEPARATOR);
 		}
 
+		/**
+		 * @since 2.0
+		 */
 		@Override
 		protected void validateValuePresenceFor(PreferenceKey key) {
 			if (TclPlugin.PLUGIN_ID.equals(key.getQualifier())
