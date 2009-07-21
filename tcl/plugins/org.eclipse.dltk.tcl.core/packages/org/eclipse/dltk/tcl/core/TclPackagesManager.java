@@ -444,6 +444,9 @@ public class TclPackagesManager {
 		}
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		IExecutionEnvironment exeEnv = install.getExecEnvironment();
+		if (exeEnv == null) {
+			return;
+		}
 		IDeployment deployment = exeEnv.createDeployment();
 		if (deployment == null) {
 			return;
