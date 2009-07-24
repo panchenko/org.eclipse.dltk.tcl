@@ -171,14 +171,18 @@ public class InstrumentationSetup {
 			}
 		} else if (entry.include && entry.exclude) {
 			final IFileHandle[] children = entry.fileHandle.getChildren();
-			for (IFileHandle child : children) {
-				final IPath path = child.getPath();
-				final Entry childEntry = entry.children.get(path);
-				if (childEntry == null) {
-					patterns.add(new PatternEntry(path, child.isDirectory(),
-							entry.leaf.booleanValue()));
-				} else {
-					walk(childEntry, patterns);
+			if (children != null) {
+				for (IFileHandle child : children) {
+					final IPath path = child.getPath();
+					final Entry childEntry = entry.children.get(path);
+					if (childEntry == null) {
+						patterns
+								.add(new PatternEntry(path,
+										child.isDirectory(), entry.leaf
+												.booleanValue()));
+					} else {
+						walk(childEntry, patterns);
+					}
 				}
 			}
 		} else if (entry.exclude) {
