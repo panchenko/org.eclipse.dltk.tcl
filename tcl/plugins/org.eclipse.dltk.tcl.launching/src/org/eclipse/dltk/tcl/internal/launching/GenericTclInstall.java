@@ -18,7 +18,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.caching.IContentCache;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.launching.AbstractInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
@@ -29,6 +31,8 @@ import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 public class GenericTclInstall extends AbstractInterpreterInstall {
 	public static class BuiltinsHelper {
+		private static final String BUILTINST_INFORMATION = "tcl_builtins_information";
+
 		private final GenericTclInstall install;
 
 		public BuiltinsHelper(GenericTclInstall install) {
@@ -42,6 +46,16 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 		boolean initialized = false;
 
 		void load() {
+			final IContentCache cache = ModelManager.getModelManager()
+					.getCoreCache();
+			String builtins = cache.getCacheEntryAttributeString(install
+					.getInstallLocation(), BUILTINST_INFORMATION);
+			if (builtins != null) {
+				source.append(builtins);
+				lastModified = System.currentTimeMillis();
+				initialized = true;
+				return;
+			}
 			Job loadTclBuiltin = new Job("Generate Tcl builtin file...") {
 				protected IStatus run(final IProgressMonitor monitor) {
 					monitor.beginTask("Generate Tcl builtin file",
@@ -57,11 +71,14 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 									bundlePath,
 									TclLaunchingPlugin.getDefault().getBundle(),
 									install.getInstallLocation(), monitor);
+					cache.setCacheEntryAttribute(install.getInstallLocation(),
+							BUILTINST_INFORMATION, content);
 					if (content != null) {
 						source.append(content);
 						lastModified = System.currentTimeMillis();
 						initialized = true;
 					}
+					monitor.done();
 					return Status.OK_STATUS;
 				}
 			};
