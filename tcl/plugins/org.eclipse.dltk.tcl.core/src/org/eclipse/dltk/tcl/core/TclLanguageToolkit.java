@@ -52,18 +52,20 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 		IFileHandle file = environment.getFile(path);
 		if (file.isDirectory()) {
 			IFileHandle members[] = file.getChildren();
-			for (int i = 0; i < members.length; i++) {
-				String name = members[i].getName();
-				if (DLTKContentTypeManager.isValidFileNameForContentType(this,
-						members[i].getPath())) {
-					return true;
-				}
-				if (name.toLowerCase().equals("pkgindex.tcl")
-						|| name.toLowerCase().equals("tclindex")) {
-					return true;
-				}
-				if (acceptDir(members[i], environment)) {
-					return true;
+			if (members != null) {
+				for (int i = 0; i < members.length; i++) {
+					String name = members[i].getName();
+					if (DLTKContentTypeManager.isValidFileNameForContentType(
+							this, members[i].getPath())) {
+						return true;
+					}
+					if (name.toLowerCase().equals("pkgindex.tcl")
+							|| name.toLowerCase().equals("tclindex")) {
+						return true;
+					}
+					if (acceptDir(members[i], environment)) {
+						return true;
+					}
 				}
 			}
 		}
@@ -145,7 +147,7 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 						isEmptyExtension(file.getName()) ? TclCorePreferences.CHECK_CONTENT_EMPTY_EXTENSION_REMOTE
 								: TclCorePreferences.CHECK_CONTENT_ANY_EXTENSION_REMOTE);
 	}
-	
+
 	public String getPreferenceQualifier() {
 		return TclPlugin.PLUGIN_ID;
 	}
