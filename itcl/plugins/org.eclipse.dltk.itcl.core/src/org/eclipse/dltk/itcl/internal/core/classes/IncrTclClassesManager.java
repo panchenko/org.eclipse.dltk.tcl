@@ -96,8 +96,10 @@ public class IncrTclClassesManager implements IResourceChangeListener {
 			DocumentBuilder builder;
 			try {
 				builder = factory.newDocumentBuilder();
-				Document document = builder.parse(new BufferedInputStream(
-						new FileInputStream(packagesFile), 2048));
+				BufferedInputStream stream = new BufferedInputStream(
+						new FileInputStream(packagesFile));
+				Document document = builder.parse(stream);
+				stream.close();
 				populate(document.getDocumentElement());
 			} catch (ParserConfigurationException e) {
 				if (DLTKCore.DEBUG) {
