@@ -123,13 +123,17 @@ public class TclASTCache implements IASTCache {
 			try {
 				TclASTLoader loader = new TclASTLoader(stream);
 				TclModule tclModule = loader.getModule(collector);
-				stream.close();
 				if (tclModule != null) {
 					return tclModule;
 				}
 			} catch (Exception e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
+				}
+			} finally {
+				try {
+					stream.close();
+				} catch (IOException e) {
 				}
 			}
 		}
@@ -175,7 +179,9 @@ public class TclASTCache implements IASTCache {
 			saver = new TclASTSaver(tclModule, stream);
 			saver.store(problems);
 		} catch (IOException e) {
-			e.printStackTrace();
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
