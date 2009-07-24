@@ -48,6 +48,7 @@ public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
 		this.collector = collector;
 		storeContent();
 		storeStringIndex();
+		out.close();
 	}
 
 	protected void storeContent() throws IOException {

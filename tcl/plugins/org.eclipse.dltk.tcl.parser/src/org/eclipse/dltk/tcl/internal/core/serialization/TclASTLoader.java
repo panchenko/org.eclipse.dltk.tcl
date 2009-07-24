@@ -88,9 +88,11 @@ public class TclASTLoader extends AbstractDataLoader implements
 				loadProblem(collector);
 			}
 			p.done("Tcl", "Load persisted AST", 0);
+			in.close();
 			return module;
 		}
 		p.done("Tcl", "Load persisted AST", 0);
+		in.close();
 		return null;
 	}
 
