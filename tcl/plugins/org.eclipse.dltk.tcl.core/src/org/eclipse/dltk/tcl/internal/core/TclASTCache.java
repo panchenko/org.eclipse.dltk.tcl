@@ -80,24 +80,6 @@ public class TclASTCache implements IASTCache {
 			return null;
 		}
 		IContentCache cache = ModelManager.getModelManager().getCoreCache();
-		// InputStream contentStream = cache.getCacheEntryAttribute(handle,
-		// "content");
-		// if (contentStream != null && module instanceof IExternalSourceModule)
-		// {
-		// ASTCacheEntry entry = new ASTCacheEntry();
-		// entry.problems = new ProblemCollector();
-		// char[] source = null;
-		// try {
-		// source = org.eclipse.dltk.compiler.util.Util
-		// .getInputStreamAsCharArray(contentStream, -1, null);
-		// contentStream.close();
-		// TclSourceParserFactory fact = new TclSourceParserFactory();
-		// ISourceParser parser = fact.createSourceParser();
-		// entry.module = parser.parse(null, source, entry.problems);
-		// return entry;
-		// } catch (IOException e) {
-		// }
-		// }
 
 		ProblemCollector collector = new ProblemCollector();
 		TclModule tclModule = null;
