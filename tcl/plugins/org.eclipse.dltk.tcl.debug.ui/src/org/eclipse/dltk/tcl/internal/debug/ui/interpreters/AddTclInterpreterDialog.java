@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.caching.IContentCache;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterEnvironmentVariablesBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibraryBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialog;
@@ -94,6 +96,9 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		// interpreter.
 		IInterpreterInstall install = getLastInterpreterInstall();
 		if (install != null) {
+			IContentCache coreCache = ModelManager.getModelManager()
+					.getCoreCache();
+			coreCache.clearCacheEntryAttributes(install.getInstallLocation());
 			TclPackagesManager.removeInterpreterInfo(install);
 		}
 	}
