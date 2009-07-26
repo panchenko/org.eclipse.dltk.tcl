@@ -3,8 +3,12 @@
  */
 package org.eclipse.dltk.tcl.internal.core.sources;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IModelStatus;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -45,5 +49,11 @@ public class TclSourcesSourceModule extends ExternalSourceModule {
 
 	public String getOriginalName() {
 		return this.originalName;
+	}
+
+	@Override
+	protected IStatus validateSourceModule(IDLTKLanguageToolkit toolkit,
+			IResource resource) {
+		return IModelStatus.VERIFIED_OK;
 	}
 }

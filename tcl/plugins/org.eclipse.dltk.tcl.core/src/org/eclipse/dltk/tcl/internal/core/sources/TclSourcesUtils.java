@@ -13,12 +13,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.DLTKContentTypeManager;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
+import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
@@ -149,7 +151,11 @@ public class TclSourcesUtils {
 					if (file != null) {
 						boolean onBuildpath = false;
 						for (IScriptProject p : visitedProjects) {
-							if (p.isOnBuildpath(file)) {
+							if (p.isOnBuildpath(file)
+									&& DLTKContentTypeManager
+											.isValidResourceForContentType(
+													TclLanguageToolkit
+															.getDefault(), file)) {
 								onBuildpath = true;
 								break;
 							}
