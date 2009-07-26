@@ -118,12 +118,12 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 					IFileHandle file = EnvironmentPathUtils.getFile(
 							environment, path);
 					ExternalEntryFile storage = new ExternalEntryFile(file);
+					String modulePath = environment.convertPathToString(path)
+							.replace(environment.getSeparatorChar(), '_')
+							.replace(':', '_');
 					ExternalSourceModule module = new TclSourcesSourceModule(
-							this, environment.convertPathToString(path)
-									.replace(environment.getSeparatorChar(),
-											'_'),
-							DefaultWorkingCopyOwner.PRIMARY, storage,
-							originalNames.get(path));
+							this, modulePath, DefaultWorkingCopyOwner.PRIMARY,
+							storage, originalNames.get(path));
 					vChildren.add(module);
 				}
 			}
