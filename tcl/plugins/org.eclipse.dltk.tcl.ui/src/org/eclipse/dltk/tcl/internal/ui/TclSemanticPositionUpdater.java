@@ -2,8 +2,19 @@ package org.eclipse.dltk.tcl.internal.ui;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.tcl.ast.StringArgument;
+import org.eclipse.dltk.tcl.ast.TclModule;
+import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.core.TclNature;
+import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
+import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.TclParserUtils;
+import org.eclipse.dltk.tcl.parser.TclVisitor;
+import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.ui.semantilhighlighting.ISemanticHighlightingExtension;
 import org.eclipse.dltk.ui.editor.highlighting.ASTSemanticHighlighter;
 import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlightingRequestor;
@@ -63,5 +74,17 @@ public class TclSemanticPositionUpdater extends ASTSemanticHighlighter {
 
 	protected String getNature() {
 		return TclNature.NATURE_ID;
+	}
+
+	@Override
+	protected boolean doHighlighting(ISourceModule code) throws Exception {
+		boolean result = super.doHighlighting(code);
+		for( int i = 0; i < extensions.length;++i) {
+			if( extensions[i] instanceof DefaultTclSemanticHighlightingExtension ) {
+				DefaultTclSemanticHighlightingExtension hl = (DefaultTclSemanticHighlightingExtension) extensions[i];
+				hl.doOtherHighlighting(code, requestors[i]);
+			}
+		}
+		return result;
 	}
 }
