@@ -535,11 +535,14 @@ public class TclParser implements ITclParserOptions {
 		literal.setEnd(offset + end + 1 + globalOffset);
 		String value = content.substring(offset + start, offset + end + 1);
 		literal.setKind(0);
+		int add = 0;
 		if (value.startsWith("{") && value.endsWith("}")) {
 			literal.setKind(1);
+			add = 1;
 		}
 		if (value.startsWith("\"") && value.endsWith("\"")) {
 			literal.setKind(2);
+			add = 1;
 		}
 		// literal.setValue(value);
 		int pos = start;
@@ -549,9 +552,10 @@ public class TclParser implements ITclParserOptions {
 				String st = (String) oo;
 				StringArgument a = factory.createStringArgument();
 				a.setValue(st);
-				a.setStart(pos + offset + globalOffset);
+				a.setStart(pos + offset + globalOffset + (i!=0?add:0));
 				pos += st.length();
-				a.setEnd(pos + offset + globalOffset);
+				a.setEnd(pos + offset + globalOffset + add
+						+ ((add > 0 && (i == contents.size() - 1)) ? 1 : 0));
 				literal.getArguments().add(a);
 			} else if (oo instanceof ISubstitution && oo instanceof TclElement) {
 				TclElement bs = (TclElement) oo;
