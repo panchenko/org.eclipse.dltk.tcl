@@ -91,12 +91,19 @@ public class TclLaunchConfigurationDelegate extends
 	}
 
 	private static String convertToTCLLIBPATH(String value) {
-		String[] values = value.split(" ");
+		String replacement = "%%11213@@";
+		if (value.contains("\\ ")) {
+			if (value.contains(replacement)) {
+				replacement = replacement + System.currentTimeMillis() + "#";
+			}
+			value = value.replace("\\ ", replacement);
+		}
+		String[] values = value.split("\\s");
 		StringBuffer sb = new StringBuffer();
 		for (String val : values) {
 			if (!(val.startsWith("{") && val.endsWith("}"))) {
 				sb.append('{');
-				sb.append(val);
+				sb.append(val.replace(replacement, "\\ "));
 				sb.append('}').append(" ");
 			} else {
 				sb.append(val).append(" ");
