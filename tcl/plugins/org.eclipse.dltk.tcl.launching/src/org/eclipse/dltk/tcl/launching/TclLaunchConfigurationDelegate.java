@@ -9,13 +9,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.launching;
 
-import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate;
 import org.eclipse.dltk.launching.InterpreterConfig;
@@ -24,7 +21,7 @@ import org.eclipse.dltk.tcl.core.TclNature;
 public class TclLaunchConfigurationDelegate extends
 		AbstractScriptLaunchConfigurationDelegate {
 
-	private static final String TCLLIBPATH_ENV_VAR = "TCLLIBPATH"; //$NON-NLS-1$
+	public static final String TCLLIBPATH_ENV_VAR = "TCLLIBPATH"; //$NON-NLS-1$
 
 	public String getLanguageId() {
 		return TclNature.NATURE_ID;
@@ -46,12 +43,12 @@ public class TclLaunchConfigurationDelegate extends
 	protected void addLibpathEnvVar(InterpreterConfig config,
 			ILaunchConfiguration configuration) throws CoreException {
 		String currentValue = config.removeEnvVar(TCLLIBPATH_ENV_VAR);
-
 		IPath[] paths = createBuildPath(configuration, config.getEnvironment());
 
 		StringBuffer sb = new StringBuffer();
 		if (currentValue != null) {
-			sb.append(currentValue).append(" ");
+			sb.append(convertToTclLibPathFormat(currentValue));
+			// sb.append(currentValue).append(" ");
 		}
 		for (int i = 0; i < paths.length; ++i) {
 			final IFileHandle file = config.getEnvironment().getFile(paths[i]);
@@ -67,6 +64,21 @@ public class TclLaunchConfigurationDelegate extends
 		if (sb.length() != 0) {
 			config.addEnvVar(TCLLIBPATH_ENV_VAR, sb.toString());
 		}
+	}
+
+	public static String convertToTclLibPathFormat(String currentValue) {
+		String[] values = currentValue.split(" ");
+		StringBuffer sb = new StringBuffer();
+		for (String val : values) {
+			if (!(val.startsWith("{") && val.endsWith("}"))) {
+				sb.append('{');
+				sb.append(val);
+				sb.append('}').append(" ");
+			} else {
+				sb.append(val).append(" ");
+			}
+		}
+		return sb.toString();
 	}
 
 	protected void checkEnvVars(InterpreterConfig config,

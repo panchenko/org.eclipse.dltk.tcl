@@ -10,6 +10,8 @@
 package org.eclipse.dltk.tcl.internal.launching;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -24,12 +26,15 @@ import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
+import org.eclipse.dltk.internal.launching.EnvironmentResolver;
 import org.eclipse.dltk.internal.launching.execution.DeploymentManager;
 import org.eclipse.dltk.launching.AbstractInterpreterRunner;
+import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationConstants;
+import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 public class TclInterpreterRunner extends AbstractInterpreterRunner {
@@ -39,6 +44,35 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 
 	protected String getProcessType() {
 		return TclLaunchConfigurationConstants.ID_TCL_PROCESS_TYPE;
+	}
+
+	@Override
+	protected String[] getEnvironmentVariablesAsStrings(InterpreterConfig config) {
+		EnvironmentVariable[] vars = getInstall().getEnvironmentVariables();
+		String var = config
+				.getEnvVar(TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR);
+		if (var != null) {
+			List<EnvironmentVariable> resultingVars = new ArrayList<EnvironmentVariable>();
+			for (EnvironmentVariable envVar : vars) {
+				if (envVar.getName().equals(
+						TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR)) {
+					EnvironmentVariable[] variables = EnvironmentResolver
+							.resolve(config.getEnvVars(),
+									new EnvironmentVariable[] { envVar }, true);
+					String newValue = TclLaunchConfigurationDelegate
+							.convertToTclLibPathFormat(variables[0].getValue())
+							+ " " + var;
+					config.addEnvVar(
+							TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR,
+							newValue);
+				} else {
+					resultingVars.add(envVar);
+				}
+			}
+			return config.getEnvironmentAsStringsIncluding(resultingVars
+					.toArray(new EnvironmentVariable[resultingVars.size()]));
+		}
+		return config.getEnvironmentAsStringsIncluding(vars);
 	}
 
 	protected void alterConfig(ILaunch launch, InterpreterConfig config) {
@@ -65,7 +99,8 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 							.getExecutionEnvironment();
 					IDeployment deployment = executionEnvironment
 							.createDeployment();
-					DeploymentManager.getInstance().addDeployment(launch, deployment);
+					DeploymentManager.getInstance().addDeployment(launch,
+							deployment);
 					IPath path = deployment.add(TclLaunchingPlugin.getDefault()
 							.getBundle(), TclLaunchingPlugin.getDefault()
 							.getConsoleProxy());
