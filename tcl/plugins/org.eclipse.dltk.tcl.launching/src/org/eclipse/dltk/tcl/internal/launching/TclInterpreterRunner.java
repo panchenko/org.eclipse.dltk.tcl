@@ -49,28 +49,36 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 	@Override
 	protected String[] getEnvironmentVariablesAsStrings(InterpreterConfig config) {
 		EnvironmentVariable[] vars = getInstall().getEnvironmentVariables();
-		String var = config
-				.getEnvVar(TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR);
-		if (var != null) {
-			List<EnvironmentVariable> resultingVars = new ArrayList<EnvironmentVariable>();
-			for (EnvironmentVariable envVar : vars) {
-				if (envVar.getName().equals(
-						TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR)) {
-					EnvironmentVariable[] variables = EnvironmentResolver
-							.resolve(config.getEnvVars(),
-									new EnvironmentVariable[] { envVar }, true);
-					String newValue = TclLaunchConfigurationDelegate
-							.convertToTclLibPathFormat(variables[0].getValue())
-							+ " " + var;
-					config.addEnvVar(
-							TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR,
-							newValue);
-				} else {
-					resultingVars.add(envVar);
+		if (vars != null) {
+			String var = config
+					.getEnvVar(TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR);
+			if (var != null) {
+				List<EnvironmentVariable> resultingVars = new ArrayList<EnvironmentVariable>();
+				for (EnvironmentVariable envVar : vars) {
+					if (envVar.getName().equals(
+							TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR)) {
+						EnvironmentVariable[] variables = EnvironmentResolver
+								.resolve(config.getEnvVars(),
+										new EnvironmentVariable[] { envVar },
+										true);
+						String newValue = var
+								+ " "
+								+ TclLaunchConfigurationDelegate
+										.convertToTclLibPathFormat(variables[0]
+												.getValue());
+						config
+								.addEnvVar(
+										TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR,
+										newValue);
+					} else {
+						resultingVars.add(envVar);
+					}
 				}
+				return config
+						.getEnvironmentAsStringsIncluding(resultingVars
+								.toArray(new EnvironmentVariable[resultingVars
+										.size()]));
 			}
-			return config.getEnvironmentAsStringsIncluding(resultingVars
-					.toArray(new EnvironmentVariable[resultingVars.size()]));
 		}
 		return config.getEnvironmentAsStringsIncluding(vars);
 	}
