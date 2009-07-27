@@ -6,6 +6,7 @@ import java.util.Set;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,7 +55,6 @@ public class SourcesSelectionDialog extends Dialog {
 	private Set<String> sources = new HashSet<String>();
 	private IEnvironmentUI environmentUI;
 	private IEnvironment environment;
-	private Button edit;
 	private Button remove;
 	private Button add;
 
@@ -103,12 +103,22 @@ public class SourcesSelectionDialog extends Dialog {
 			}
 		});
 		add.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
-		edit = new Button(buttons, SWT.PUSH);
-		edit.setText("Edit");
-		edit.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
 		remove = new Button(buttons, SWT.PUSH);
 		remove.setText("Remove");
 		remove.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
+		remove.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				String path = getSelection();
+				if (path != null) {
+					sources.remove(path);
+					sourcesViewer.refresh();
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
 		updateEnablement();
 		sourcesViewer
 				.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -119,13 +129,14 @@ public class SourcesSelectionDialog extends Dialog {
 		getShell().layout();
 		return contents;
 	}
+
 	@Override
 	protected Point getInitialSize() {
 		Point size = super.getInitialSize();
-		if( size.x < 400) {
+		if (size.x < 400) {
 			size.x = 400;
 		}
-		if( size.y < 300) {
+		if (size.y < 300) {
 			size.y = 300;
 		}
 		return size;
@@ -143,10 +154,10 @@ public class SourcesSelectionDialog extends Dialog {
 	private void updateEnablement() {
 		String path = getSelection();
 		if (path == null) {
-			edit.setEnabled(false);
+			// edit.setEnabled(false);
 			remove.setEnabled(false);
 		} else {
-			edit.setEnabled(true);
+			// edit.setEnabled(true);
 			remove.setEnabled(true);
 		}
 	}
