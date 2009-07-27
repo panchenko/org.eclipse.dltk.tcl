@@ -31,7 +31,6 @@ import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.OpenableElementInfo;
 import org.eclipse.dltk.internal.core.ScriptFolderInfo;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
-import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
@@ -250,5 +249,13 @@ public class TclPackageElement extends Openable implements IScriptFolder {
 
 	public String getPackageName() {
 		return this.packageName;
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	public boolean isReadOnly() {
+		return true;
 	}
 }

@@ -68,12 +68,12 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="getVariableMapEntry_Value()"/>
+                <message_argument value="VARIABLE_MAP_FEATURE_COUNT"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_MAP_FEATURE_COUNT"/>
+                <message_argument value="getVariableMapEntry_Value()"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
@@ -83,12 +83,12 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="getVariableValue()"/>
+                <message_argument value="VARIABLE_MAP"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_MAP"/>
+                <message_argument value="getVariableValue()"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
@@ -98,12 +98,12 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="getVariableMap_Variables()"/>
+                <message_argument value="getVariableMap()"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="getVariableMap()"/>
+                <message_argument value="getVariableMap_Variables()"/>
             </message_arguments>
         </filter>
     </resource>
@@ -115,12 +115,12 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_VALUE__VALUE"/>
+                <message_argument value="VARIABLE_MAP_ENTRY__VALUE"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_MAP_ENTRY__VALUE"/>
+                <message_argument value="VARIABLE_VALUE__VALUE"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">

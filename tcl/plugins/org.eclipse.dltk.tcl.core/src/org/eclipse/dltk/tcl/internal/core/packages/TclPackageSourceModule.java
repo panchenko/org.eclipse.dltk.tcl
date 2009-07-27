@@ -44,6 +44,9 @@ public class TclPackageSourceModule extends ExternalSourceModule {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	@Override
 	protected IStatus validateSourceModule(IDLTKLanguageToolkit toolkit,
 			IResource resource) {

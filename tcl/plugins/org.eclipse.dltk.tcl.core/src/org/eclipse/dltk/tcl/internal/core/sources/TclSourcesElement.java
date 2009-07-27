@@ -255,4 +255,12 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 		}
 		return null;
 	}
+
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	public boolean isReadOnly() {
+		return true;
+	}
 }
