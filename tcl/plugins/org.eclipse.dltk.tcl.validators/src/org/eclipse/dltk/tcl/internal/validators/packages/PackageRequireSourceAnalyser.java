@@ -419,7 +419,11 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	}
 
 	private void checkSources(IEnvironment environment, ModuleInfo moduleInfo) {
-		IPath folder = moduleInfo.moduleLocation.removeLastSegments(1);
+		IPath moduleLocation = moduleInfo.moduleLocation;
+		if (moduleLocation == null) {
+			return;
+		}
+		IPath folder = moduleLocation.removeLastSegments(1);
 		// Convert path to real path.
 		for (TclSourceEntry source : moduleInfo.moduleInfo.getSourced()) {
 			boolean needToAddCorrection = false;
@@ -507,9 +511,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 							Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
 							source.getValue(), moduleInfo.lineTracker);
 				}
-//				if (!corrections.isEmpty()) {
-//					corrections.clear();
-//				}
+				// if (!corrections.isEmpty()) {
+				// corrections.clear();
+				// }
 			}
 		}
 	}
