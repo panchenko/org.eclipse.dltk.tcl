@@ -507,9 +507,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 							Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
 							source.getValue(), moduleInfo.lineTracker);
 				}
-				if (!corrections.isEmpty()) {
-					corrections.clear();
-				}
+//				if (!corrections.isEmpty()) {
+//					corrections.clear();
+//				}
 			}
 		}
 	}
