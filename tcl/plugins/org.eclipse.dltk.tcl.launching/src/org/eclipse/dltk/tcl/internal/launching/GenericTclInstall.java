@@ -71,8 +71,11 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 									bundlePath,
 									TclLaunchingPlugin.getDefault().getBundle(),
 									install.getInstallLocation(), monitor);
-					cache.setCacheEntryAttribute(install.getInstallLocation(),
-							BUILTINST_INFORMATION, content);
+					if (content != null) {
+						cache.setCacheEntryAttribute(install
+								.getInstallLocation(), BUILTINST_INFORMATION,
+								content);
+					}
 					if (content != null) {
 						source.append(content);
 						lastModified = System.currentTimeMillis();
