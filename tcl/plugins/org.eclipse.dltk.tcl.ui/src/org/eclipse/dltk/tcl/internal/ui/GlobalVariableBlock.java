@@ -49,8 +49,8 @@ import org.eclipse.swt.widgets.Composite;
 public class GlobalVariableBlock implements SelectionListener,
 		ISelectionChangedListener {
 
-	private static final String NAME_LABEL = TclInterpreterMessages.GlobalVariableBlock_Value;
-	private static final String VALUE_LABEL = TclInterpreterMessages.GlobalVariableBlock_Name;
+	private static final String NAME_LABEL = TclInterpreterMessages.GlobalVariableBlock_Name;
+	private static final String VALUE_LABEL = TclInterpreterMessages.GlobalVariableBlock_Value;
 
 	// widgets
 	protected GlobalVariableContentProvider fContentProvider;
