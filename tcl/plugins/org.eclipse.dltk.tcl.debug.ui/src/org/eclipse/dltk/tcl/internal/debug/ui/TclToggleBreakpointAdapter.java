@@ -46,6 +46,7 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
 	private static final IScriptBreakpointLineValidator validator = ScriptBreakpointLineValidatorFactory
 			.createNonEmptyNoCommentValidator("#"); //$NON-NLS-1$
 
+	@Override
 	protected String getDebugModelId() {
 		return TclDebugConstants.DEBUG_MODEL_ID;
 	}
@@ -90,7 +91,7 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
 			resource = BreakpointUtils
 					.getBreakpointResource((ITextEditor) part);
 		}
-		List fields;
+		List<?> fields;
 		if (selection instanceof IStructuredSelection) {
 			fields = getFields((IStructuredSelection) selection);
 		} else {
@@ -131,7 +132,7 @@ public class TclToggleBreakpointAdapter extends ScriptToggleBreakpointAdapter
 			report(ActionMessages.ToggleBreakpointAdapter_10, part);
 			return;
 		}
-		for (Iterator i = fields.iterator(); i.hasNext();) {
+		for (Iterator<?> i = fields.iterator(); i.hasNext();) {
 			final Object element = i.next();
 			int start = -1;
 			int end = -1;
