@@ -14,11 +14,11 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
-import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.ast.VariableReference;
+import org.eclipse.dltk.tcl.internal.ui.text.TclAutoEditStrategy;
 import org.eclipse.dltk.tcl.internal.ui.text.TclTextTools;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
@@ -123,12 +123,16 @@ public class DefaultTclSemanticHighlightingExtension implements
 		return highlightings;
 	}
 
+	/**
+	 * Perform strings highlighting.
+	 * 
+	 * @since 2.0
+	 */
 	public void doOtherHighlighting(ISourceModule code,
 			final ISemanticHighlightingRequestor semanticHighlightingRequestor) {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) (code
 						.getModelElement()));
-		// Collect all string regions and filter out bad regions.
 		if (moduleDeclaration instanceof TclModuleDeclaration) {
 			TclModuleDeclaration tclModule = (TclModuleDeclaration) moduleDeclaration;
 			TclModule module = tclModule.getTclModule();
@@ -191,9 +195,9 @@ public class DefaultTclSemanticHighlightingExtension implements
 
 							@Override
 							public boolean visit(VariableReference list) {
-								//semanticHighlightingRequestor.addPosition(list
-								// .getStart(), list.getEnd(),
-								// HL_VARIABLES);
+								semanticHighlightingRequestor.addPosition(list
+										.getStart(), list.getEnd(),
+										HL_VARIABLES);
 								return super.visit(list);
 							}
 
@@ -229,6 +233,9 @@ public class DefaultTclSemanticHighlightingExtension implements
 											if (i == arguments.size() - 1) {
 												addLast = true;
 											}
+										}
+										if (tclArgument instanceof ComplexString) {
+											visit((ComplexString) tclArgument);
 										}
 									}
 									if (addFirst) {
