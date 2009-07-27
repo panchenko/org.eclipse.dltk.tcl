@@ -703,4 +703,20 @@
          label="Tcl Source/Package information hover">
    </hover>
 </extension>
+<extension
+      point="org.eclipse.ui.popupMenus">
+   <objectContribution
+         adaptable="true"
+         id="org.eclipse.dltk.tcl.ui.sourcesContribution"
+         objectClass="org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule">
+      <action
+            class="org.eclipse.dltk.tcl.internal.ui.actions.RemoveSourceAssociation"
+            enablesFor="1"
+            icon="icons/etool16/delete.gif"
+            id="org.eclipse.dltk.tcl.ui.removeSource"
+            label="Remove source association"
+            menubarPath="org.eclipse.dltk.ui.refactoring.menu">
+      </action>
+   </objectContribution>
+</extension>
 </plugin>
