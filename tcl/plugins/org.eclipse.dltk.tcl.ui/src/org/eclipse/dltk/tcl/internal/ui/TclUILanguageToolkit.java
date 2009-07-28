@@ -34,7 +34,7 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 
 	private static TclUILanguageToolkit sToolkit = null;
 
-	public static IDLTKUILanguageToolkit getInstance() {
+	public static synchronized IDLTKUILanguageToolkit getInstance() {
 		if (sToolkit == null) {
 			sToolkit = new TclUILanguageToolkit();
 		}

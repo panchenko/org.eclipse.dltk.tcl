@@ -22,7 +22,7 @@ public class TclTemplateAccess extends ScriptTemplateAccess {
 
 	private static TclTemplateAccess instance;
 
-	public static TclTemplateAccess getInstance() {
+	public static synchronized TclTemplateAccess getInstance() {
 		if (instance == null) {
 			instance = new TclTemplateAccess();
 		}
