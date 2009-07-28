@@ -31,16 +31,14 @@ public class TclModelLabelProvider extends LabelProvider {
 			return module.getElementName() + " ("
 					+ module.getStorage().getFullPath().toString() + ")";
 		} else if (element instanceof TclSourcesSourceModule) {
-			IEnvironment environment = EnvironmentManager
-					.getEnvironment(((TclSourcesSourceModule) element)
-							.getScriptProject());
 			TclSourcesSourceModule module = (TclSourcesSourceModule) element;
+			IEnvironment environment = EnvironmentManager.getEnvironment(module
+					.getScriptProject());
 			String originalName = module.getOriginalName();
-			String convertedPath = environment
-					.convertPathToString(((TclSourcesSourceModule) element)
-							.getFullPath());
+			String convertedPath = environment.convertPathToString(module
+					.getFullPath());
 			IFileHandle file = EnvironmentPathUtils.getFile(module);
-			boolean exists = file.exists();
+			boolean exists = file != null && file.exists();
 			String postFix = exists ? "" : " [Not available]";
 			if (originalName != null && !originalName.equals(convertedPath)) {
 				return originalName + " (" + convertedPath + ")" + postFix;
