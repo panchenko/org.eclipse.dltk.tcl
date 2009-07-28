@@ -20,7 +20,7 @@ public class TclMixinModel {
 
 	private final Map<IScriptProject, MixinModel> instances = new HashMap<IScriptProject, MixinModel>();
 
-	public static TclMixinModel getInstance() {
+	public static synchronized TclMixinModel getInstance() {
 		if (instance == null) {
 			instance = new TclMixinModel();
 		}

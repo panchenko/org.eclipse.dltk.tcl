@@ -76,7 +76,7 @@ public class CommandManager {
 
 	private static CommandManager sInstance = null;
 
-	public static CommandManager getInstance() {
+	public static synchronized CommandManager getInstance() {
 		if (sInstance == null) {
 			sInstance = new CommandManager();
 		}
