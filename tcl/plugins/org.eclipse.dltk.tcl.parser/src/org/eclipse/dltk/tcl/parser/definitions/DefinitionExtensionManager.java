@@ -64,7 +64,7 @@ public class DefinitionExtensionManager {
 		return extentions;
 	}
 
-	public static DefinitionExtensionManager getInstance() {
+	public static synchronized DefinitionExtensionManager getInstance() {
 		if (sInstance == null) {
 			sInstance = new DefinitionExtensionManager();
 		}

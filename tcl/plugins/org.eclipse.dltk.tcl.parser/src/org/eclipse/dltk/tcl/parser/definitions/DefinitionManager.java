@@ -99,7 +99,7 @@ public class DefinitionManager {
 		return new NamespaceScopeProcessor(coreProcessor);
 	}
 
-	public static DefinitionManager getInstance() {
+	public static synchronized DefinitionManager getInstance() {
 		if (sInstance == null) {
 			sInstance = new DefinitionManager();
 		}
