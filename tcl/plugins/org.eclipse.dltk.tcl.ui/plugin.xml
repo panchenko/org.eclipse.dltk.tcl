@@ -492,6 +492,9 @@
     	    class="org.eclipse.dltk.tcl.internal.ui.text.completion.TclTypeCompletionProposalComputer"
 	        toolkitId="org.eclipse.dltk.tcl.core.nature">
 			<partition type="__dftl_partition_content_type"/>
+   <partition
+         type="__tcl_string">
+   </partition>
 		</scriptCompletionProposalComputer>
 	</extension> 
   <extension

@@ -30,7 +30,7 @@ public class TclPartitionScanner extends RuleBasedPartitionScanner {
 	public TclPartitionScanner() {
 		super();
 
-		// IToken string = new Token(TclPartitions.TCL_STRING);
+		IToken string = new Token(TclPartitions.TCL_STRING);
 		IToken comment = new Token(TclPartitions.TCL_COMMENT);
 		IToken stuff = new Token("dummy");
 
@@ -41,7 +41,7 @@ public class TclPartitionScanner extends RuleBasedPartitionScanner {
 
 		rules.add(new TclEscapedCharRule(stuff, '\\'));
 
-		// rules.add(new SingleLineRule("\"", "\"", string, '\\'));
+		rules.add(new SingleLineRule("\"", "\"", string, '\\'));
 		// rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 
 		IPredicateRule[] result = new IPredicateRule[rules.size()];
