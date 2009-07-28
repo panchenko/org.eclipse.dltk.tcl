@@ -106,7 +106,7 @@ public class ChecksExtensionManager {
 		return this.checks.toArray(new TclCheckInfo[this.checks.size()]);
 	}
 
-	public static ChecksExtensionManager getInstance() {
+	public static synchronized ChecksExtensionManager getInstance() {
 		if (sInstance == null) {
 			sInstance = new ChecksExtensionManager();
 		}
