@@ -107,6 +107,12 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 							.getExecutionEnvironment();
 					IDeployment deployment = executionEnvironment
 							.createDeployment();
+					if (deployment == null) {
+						throw new CoreException(
+								new Status(IStatus.ERROR,
+										TclLaunchingPlugin.PLUGIN_ID,
+										"Could not establish connection with environment."));
+					}
 					DeploymentManager.getInstance().addDeployment(launch,
 							deployment);
 					IPath path = deployment.add(TclLaunchingPlugin.getDefault()

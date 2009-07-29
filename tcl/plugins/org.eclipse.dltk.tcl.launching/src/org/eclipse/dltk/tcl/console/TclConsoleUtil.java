@@ -43,6 +43,9 @@ public class TclConsoleUtil {
 				.getLocalEnvironment().getAdapter(IExecutionEnvironment.class);
 
 		IDeployment deployment = exeEnv.createDeployment();
+		if (deployment == null) {
+			return null;
+		}
 		IPath path = deployment.add(
 				TclLaunchingPlugin.getDefault().getBundle(), TclLaunchingPlugin
 						.getDefault().getConsoleProxy());
