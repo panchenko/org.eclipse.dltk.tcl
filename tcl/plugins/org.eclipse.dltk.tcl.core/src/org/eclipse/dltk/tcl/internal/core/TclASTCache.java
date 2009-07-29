@@ -131,7 +131,7 @@ public class TclASTCache implements IASTCache {
 
 	public void storeModule(ISourceModule module,
 			ModuleDeclaration moduleDeclaration, ProblemCollector problems) {
-		IFileHandle handle = EnvironmentPathUtils.getFile(module);
+		IFileHandle handle = EnvironmentPathUtils.getFile(module, false);
 		if (handle == null) {
 			return;
 		}
