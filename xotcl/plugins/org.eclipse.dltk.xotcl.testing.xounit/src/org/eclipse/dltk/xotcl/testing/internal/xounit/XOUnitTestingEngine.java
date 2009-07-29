@@ -126,6 +126,9 @@ public class XOUnitTestingEngine implements ITclTestingEngine {
 		try {
 			IDeployment deployment = config.getExecutionEnvironment()
 					.createDeployment();
+			if (deployment == null) {
+				return;
+			}
 			IPath runner = deployment.add(Activator.getDefault().getBundle(),
 					"scripts/xounitTestingEngine.tcl");
 			IPath scriptFilePath = config.getScriptFilePath();
