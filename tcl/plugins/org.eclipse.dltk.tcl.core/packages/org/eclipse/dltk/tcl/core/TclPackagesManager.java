@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
@@ -194,13 +195,12 @@ public class TclPackagesManager {
 			if (install == null) {
 				return 0;
 			}
-			return TclPlugin
-					.getDefault()
-					.getPluginPreferences()
-					.getLong(
-							install.getEnvironment().isLocal() ? TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL
-
-									: TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE);
+			final String refreshIntervalKey = install.getEnvironment()
+					.isLocal() ? TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL
+					: TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE;
+			return Platform.getPreferencesService().getLong(
+					TclPlugin.PLUGIN_ID, refreshIntervalKey, 15 * 60 * 1000,
+					null);
 		} catch (Exception e) {
 		}
 		return 0;
