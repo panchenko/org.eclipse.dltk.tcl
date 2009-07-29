@@ -117,6 +117,9 @@ public class TclChecker extends AbstractExternalValidator implements
 			final IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 					.getAdapter(IExecutionEnvironment.class);
 			final IDeployment deployment = execEnvironment.createDeployment();
+			if (deployment == null) {
+				return;
+			}
 			try {
 				final IPath pattern = deployFileList(deployment, filenames);
 				if (pattern == null) {
