@@ -49,7 +49,7 @@ public class GenericTclInstall extends AbstractInterpreterInstall {
 			final IContentCache cache = ModelManager.getModelManager()
 					.getCoreCache();
 			String builtins = cache.getCacheEntryAttributeString(install
-					.getInstallLocation(), BUILTINST_INFORMATION);
+					.getInstallLocation(), BUILTINST_INFORMATION, true);
 			if (builtins != null) {
 				source.append(builtins);
 				lastModified = System.currentTimeMillis();
