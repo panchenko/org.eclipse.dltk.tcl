@@ -39,6 +39,7 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 			this.project = project;
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			ProjectIndexerManager.indexProject(project);
 			return Status.OK_STATUS;
@@ -52,6 +53,7 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 	private Button builderEnabled;
 	private Button localValidator;
 
+	@Override
 	protected Control createContents(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
@@ -102,13 +104,14 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 		final GridData localData = new GridData(GridData.FILL_HORIZONTAL);
 		localData.horizontalSpan = 2;
 		localValidator.setLayoutData(localData);
-		localValidator.setText("Local TclChecker");
+		localValidator.setText(TclPreferencesMessages.TclEnvironmentPropertyPage_localTclChecker);
 		localValidator.setSelection(DLTKCore.ENABLED.equals(new ProjectScope(
 				project).getNode(TclPlugin.PLUGIN_ID).get(
 				TclPlugin.PREF_LOCAL_VALIDATOR, DLTKCore.DISABLED)));
 		return composite;
 	}
 
+	@Override
 	public boolean performOk() {
 		final IProject project = (IProject) getElement().getAdapter(
 				IProject.class);
