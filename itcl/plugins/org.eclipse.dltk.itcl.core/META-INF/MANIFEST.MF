@@ -7,8 +7,8 @@ Bundle-Activator: org.eclipse.dltk.itcl.internal.core.IncrTCLPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.dltk.core,
- org.eclipse.dltk.tcl.core,
+ org.eclipse.dltk.core;bundle-version="2.0.0",
+ org.eclipse.dltk.tcl.core;bundle-version="2.0.0",
  org.eclipse.core.resources
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
