@@ -4,5 +4,5 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.dltk.tcl.tcllib;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %pluginProvider
-Require-Bundle: org.eclipse.dltk.tcl.parser
+Require-Bundle: org.eclipse.dltk.tcl.parser;bundle-version="1.0.0"
 Bundle-Localization: plugin
