@@ -91,6 +91,10 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 				executionEnvironment, "scripts/test.tcl", TclLaunchingPlugin
 						.getDefault().getBundle(), installLocation,
 				new NullProgressMonitor());
+		if (output == null) {
+			return createStatus(IStatus.ERROR,
+					InterpreterMessages.errNoInterpreterExecutablesFound, null);
+		}
 		String[] lines = output.split("\\n");
 		boolean correct = false;
 		for (int i = 0; i < lines.length; i++) {
