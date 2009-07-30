@@ -121,6 +121,16 @@ public class TclLanguageToolkit extends AbstractLanguageToolkit {
 		if (environment == null) {
 			return false;
 		}
+
+		// Check for mixed project local file
+		IPath location = resource.getLocation();
+		if (location != null) {
+			IFileHandle file = EnvironmentManager.getLocalEnvironment()
+					.getFile(location);
+			if (file.exists()) {
+				return local;
+			}
+		}
 		return environment.isLocal() ? local : remote;
 	}
 
