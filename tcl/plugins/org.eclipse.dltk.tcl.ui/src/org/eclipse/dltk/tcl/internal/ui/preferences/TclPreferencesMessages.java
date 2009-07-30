@@ -49,6 +49,9 @@ public class TclPreferencesMessages extends NLS {
 	public static String TclEnvironmentPropertyPage_detectAutomatically;
 	public static String TclEnvironmentPropertyPage_environmentLabel;
 	public static String TclEnvironmentPropertyPage_IndexerEnabled;
+	/**
+	 * @since 2.0
+	 */
 	public static String TclEnvironmentPropertyPage_localTclChecker;
 	public static String TCLGlobalPreferencePage_description;
 	public static String TCLEditorPreferencePage_general;
