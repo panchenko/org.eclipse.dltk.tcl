@@ -64,9 +64,17 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 			while (true) {
 				c = input.read();
 				if (c == ICodeScanner.EOF) {
-					throw new TclParseException(
+					boolean cont = parser.handleError(new ErrorDescription(
 							Messages.VariableSubstitution_BracesVariableName,
-							input.getPosition());
+							getStart(), input.getPosition(),
+							ErrorDescription.ERROR));
+					if (!cont) {
+						throw new TclParseException(
+								Messages.VariableSubstitution_BracesVariableName,
+								input.getPosition());
+					} else {
+						break;
+					}
 				}
 				if (c == '}')
 					break;

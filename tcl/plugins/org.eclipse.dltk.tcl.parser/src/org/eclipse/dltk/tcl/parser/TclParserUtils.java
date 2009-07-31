@@ -239,6 +239,9 @@ public class TclParserUtils implements ITclParserOptions {
 			} else if (nde instanceof TclCommand) {
 				TclCommand command = (TclCommand) nde;
 				if (visitor.visit(command)) {
+					 List<TclArgument> nameList = new ArrayList<TclArgument>();
+	                    nameList.add(command.getName());
+	                    traverse(nameList, visitor);
 					traverse(command.getArguments(), visitor);
 					visitor.endVisit(command);
 				}
