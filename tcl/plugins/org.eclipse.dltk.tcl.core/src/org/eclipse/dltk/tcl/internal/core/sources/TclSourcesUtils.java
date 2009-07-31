@@ -1,5 +1,6 @@
 package org.eclipse.dltk.tcl.internal.core.sources;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
+import org.eclipse.dltk.tcl.internal.core.packages.DefaultVariablesRegistry;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariableRegistry;
 import org.eclipse.emf.common.util.EList;
@@ -91,22 +93,8 @@ public class TclSourcesUtils {
 		Set<IPath> buildpath = getBuildpath(scriptProject, visitedProjects);
 		Set<IPath> packageFiles = getPackages(scriptProject, install);
 
-		final Map<String, VariableValue> variables = new HashMap<String, VariableValue>();
-		variables.putAll(TclPackagesManager.getVariablesEMap(install).map());
-		variables.putAll(TclPackagesManager.getVariablesEMap(
-				scriptProject.getElementName()).map());
-		// TODO use NOP resolver if no variables
 		final TclVariableResolver variableResolver = new TclVariableResolver(
-				new IVariableRegistry() {
-					public String[] getValues(String name) {
-						final VariableValue value = variables.get(name);
-						if (value != null) {
-							return new String[] { value.getValue() };
-						} else {
-							return null;
-						}
-					}
-				});
+				new DefaultVariablesRegistry(scriptProject));
 		List<TclModuleInfo> modules = TclPackagesManager
 				.getProjectModules(scriptProject.getElementName());
 		for (TclModuleInfo tclModuleInfo : modules) {
@@ -125,14 +113,16 @@ public class TclSourcesUtils {
 				}
 
 				if (values == null || values.isEmpty()) {
-					final Set<String> resolved = variableResolver
-							.resolve(source.getValue());
-					if (resolved.size() == 1
-							&& resolved.contains(source.getValue())) {
+					final String resolved = variableResolver.resolve(source
+							.getValue());
+					if (resolved != null && resolved.equals(source.getValue())) {
 						pseutoElements.add(source.getValue());
 						continue;
 					}
-					values = resolved;
+					values = new ArrayList<String>();
+					if (resolved != null) {
+						values.add(resolved);
+					}
 				}
 				for (String value : values) {
 					IPath path = new Path(value);

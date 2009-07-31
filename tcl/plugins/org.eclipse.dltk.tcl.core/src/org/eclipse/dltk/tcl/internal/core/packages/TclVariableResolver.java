@@ -11,9 +11,24 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.core.packages;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import org.eclipse.dltk.tcl.ast.AstFactory;
+import org.eclipse.dltk.tcl.ast.ComplexString;
+import org.eclipse.dltk.tcl.ast.StringArgument;
+import org.eclipse.dltk.tcl.ast.TclArgument;
+import org.eclipse.dltk.tcl.ast.TclArgumentList;
+import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.ast.VariableReference;
+import org.eclipse.dltk.tcl.parser.TclErrorCollector;
+import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.TclParserUtils;
+import org.eclipse.dltk.tcl.parser.TclVisitor;
+import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @since 2.0
@@ -22,26 +37,39 @@ public class TclVariableResolver {
 
 	public static interface IVariableRegistry {
 		/**
-		 * Returns values for the specified variable or <code>null</code> if not
+		 * Returns value for the specified variable or <code>null</code> if not
 		 * defined
 		 * 
 		 * @param name
 		 * @return
 		 */
-		String[] getValues(String name);
+		String getValue(String name, String index);
 	}
 
 	public static class SimpleVariableRegistry implements IVariableRegistry {
 
-		private final Map<String, String> values;
+		private final Map<String, Object> values;
 
-		public SimpleVariableRegistry(Map<String, String> values) {
+		/**
+		 * Accept String or Map<String, String> values
+		 * 
+		 * @param values
+		 */
+		public SimpleVariableRegistry(Map<String, Object> values) {
 			this.values = values;
 		}
 
-		public String[] getValues(String name) {
-			final String value = values.get(name);
-			return value != null ? new String[] { value } : null;
+		@SuppressWarnings("unchecked")
+		public String getValue(String name, String index) {
+			Object value = values.get(name);
+			if (value instanceof Map) {
+				if (index == null) {
+					index = "";
+				}
+				Map<String, String> map = (Map<String, String>) value;
+				return map.get(index);
+			}
+			return (String) value;
 		}
 
 	}
@@ -56,66 +84,72 @@ public class TclVariableResolver {
 	public static final char SUBST_PREFIX = '{';
 	public static final char SUBST_SUFFIX = '}';
 
-	public Set<String> resolve(String value) {
-		final StringBuffer sb = new StringBuffer();
-		int prev = 0;
-		int pos;
-		// search for the next instance of $ from the 'prev' position
-		while ((pos = value.indexOf(SUBST_START, prev)) >= 0) {
-			// if there was any text before this, add it as a fragment
-			if (pos > prev) {
-				sb.append(value.substring(prev, pos));
+	public String resolve(String value) {
+		TclParser parser = new TclParser();
+		TclErrorCollector collector = new TclErrorCollector();
+		List<TclCommand> result = parser.parse(value, collector, null);
+		if (collector.getCount() > 0) {
+			return value;
+		}
+		final List<VariableReference> variables = new ArrayList<VariableReference>();
+		TclParserUtils.traverse(result, new TclVisitor() {
+			@Override
+			public boolean visit(VariableReference list) {
+				variables.add(list);
+				return super.visit(list);
 			}
-			// if we are at the end of the string, we tack on a $ then move past
-			// it
-			if (pos == (value.length() - 1)) {
-				sb.append(SUBST_START);
-				prev = pos + 1;
-			} else if (value.charAt(pos + 1) != SUBST_PREFIX) {
-				if (isVarStart(value.charAt(pos + 1))) {
-					int endName = pos + 1;
-					while (endName < value.length()
-							&& isVarPart(value.charAt(endName))) {
-						++endName;
-					}
-					final String propertyName = value.substring(pos + 1,
-							endName);
-					final String[] varValue = registry.getValues(propertyName);
-					if (varValue != null && varValue.length != 0) {
-						// TODO handle all values?
-						sb.append(varValue[0]);
+		});
+		boolean hasModifications = false;
+		for (VariableReference variableReference : variables) {
+			EObject container = variableReference.eContainer();
+			if (container == null) {
+				continue;
+			}
+			String name = variableReference.getName();
+			TclArgument index = variableReference.getIndex();
+			String indexValue = null;
+			if (index instanceof StringArgument) {
+				indexValue = ((StringArgument) index).getValue();
+			} else if (index != null) {
+				indexValue = resolve(SimpleCodePrinter.getArgumentString(index,
+						0, false));
+			}
+			String resultValue = registry.getValue(name, indexValue);
+			if (resultValue != null) {
+				StringArgument string = AstFactory.eINSTANCE
+						.createStringArgument();
+				string.setValue(resultValue);
+				string.setStart(variableReference.getStart());
+				string.setEnd(variableReference.getEnd());
+				// Replace parent with StringArgument
+				if (container instanceof TclCommand) {
+					TclCommand cmd = (TclCommand) container;
+					EList<TclArgument> args = cmd.getArguments();
+					if (args.contains(variableReference)) {
+						args.set(args.indexOf(variableReference), string);
 					} else {
-						sb.append(value.substring(pos, endName));
+						cmd.setName(string);
 					}
-					prev = endName;
-				} else {
-					sb.append(SUBST_START);
-					prev = pos + 1;
+					hasModifications = true;
+				} else if (container instanceof TclArgumentList) {
+					TclArgumentList cmd = (TclArgumentList) container;
+					EList<TclArgument> args = cmd.getArguments();
+					args.set(args.indexOf(variableReference), string);
+					hasModifications = true;
+				} else if (container instanceof ComplexString) {
+					ComplexString cmd = (ComplexString) container;
+					EList<TclArgument> args = cmd.getArguments();
+					args.set(args.indexOf(variableReference), string);
+					hasModifications = true;
 				}
-			} else {
-				// property found, extract its name or bail on a typo
-				final int endName = value.indexOf(SUBST_SUFFIX, pos);
-				if (endName < 0) {
-					prev = pos;
-					break;
-				}
-				final String propertyName = value.substring(pos + 2, endName);
-				final String[] varValue = registry.getValues(propertyName);
-				if (varValue != null && varValue.length != 0) {
-					// TODO handle all values?
-					sb.append(varValue[0]);
-				} else {
-					sb.append(value.substring(pos, endName + 1));
-				}
-				prev = endName + 1;
 			}
 		}
-		// no more $ signs found
-		// if there is any tail to the file, append it
-		if (prev < value.length()) {
-			sb.append(value.substring(prev));
+		if (hasModifications) {
+			String resultString = SimpleCodePrinter.getCommandsString(result,
+					false).trim();
+			return resultString;
 		}
-		return Collections.singleton(sb.toString());
+		return value;
 	}
 
 	/**
