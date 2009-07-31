@@ -1,22 +1,14 @@
 package org.eclipse.dltk.tcl.internal.ui.actions;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.launching.IInterpreterInstall;
-import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.core.TclPackagesManager;
-import org.eclipse.dltk.tcl.core.packages.VariableValue;
+import org.eclipse.dltk.tcl.internal.core.packages.DefaultVariablesRegistry;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
-import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariableRegistry;
 import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -70,39 +62,17 @@ public class RemoveSourceAssociation implements IWorkbenchWindowActionDelegate {
 				return false;
 			}
 			// Check for global variable related references
-			final Map<String, VariableValue> variables = new HashMap<String, VariableValue>();
-			IScriptProject scriptProject = module.getScriptProject();
-			IInterpreterInstall install = null;
-			try {
-				install = ScriptRuntime.getInterpreterInstall(scriptProject);
-			} catch (CoreException e) {
-				DLTKCore.error("Failed to locate interpreter", e);
-			}
-			if (install != null) {
-				variables.putAll(TclPackagesManager.getVariablesEMap(install)
-						.map());
-			}
-			variables.putAll(TclPackagesManager.getVariablesEMap(
-					scriptProject.getElementName()).map());
-			// TODO use NOP resolver if no variables
-			final TclVariableResolver variableResolver = new TclVariableResolver(
-					new IVariableRegistry() {
-						public String[] getValues(String name) {
-							final VariableValue value = variables.get(name);
-							if (value != null) {
-								return new String[] { value.getValue() };
-							} else {
-								return null;
-							}
-						}
-					});
-			Set<String> resolve = variableResolver.resolve(originalName);
-			for (String value : resolve) {
-				// if( value.equals())
-				if (!value.contains("$")) {
-					return false; // This is resolved variable. We can't delete
-									// such associations.
-				}
+
+			IScriptProject scriptProject = ((ISourceModule) module)
+					.getScriptProject();
+			TclVariableResolver variableResolver = new TclVariableResolver(
+					new DefaultVariablesRegistry(scriptProject));
+			String value = variableResolver.resolve(originalName);
+
+			// if( value.equals())
+			if (value == null || !value.contains("$")) {
+				return false; // This is resolved variable. We can't delete
+				// such associations.
 			}
 		}
 		return true;
