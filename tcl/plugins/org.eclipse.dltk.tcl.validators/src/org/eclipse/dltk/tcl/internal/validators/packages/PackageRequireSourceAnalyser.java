@@ -61,6 +61,7 @@ import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
+import org.eclipse.dltk.tcl.internal.core.packages.DefaultVariablesRegistry;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariableRegistry;
@@ -125,21 +126,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 							.getElementName()));
 		}
 		knownInfos = TclPackagesManager.getPackageInfos(install);
-		final Map<String, VariableValue> variables = new HashMap<String, VariableValue>();
-		variables.putAll(TclPackagesManager.getVariablesEMap(install).map());
-		variables.putAll(TclPackagesManager.getVariablesEMap(
-				project.getElementName()).map());
-		// TODO use NOP resolver if no variables
-		variableResolver = new TclVariableResolver(new IVariableRegistry() {
-			public String[] getValues(String name) {
-				final VariableValue value = variables.get(name);
-				if (value != null) {
-					return new String[] { value.getValue() };
-				} else {
-					return null;
-				}
-			}
-		});
+		variableResolver = new TclVariableResolver(
+				new DefaultVariablesRegistry(project));
 		// buildpath = getBuildpath(project);
 	}
 
@@ -312,20 +300,17 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					}
 				}
 				if (toCheck.isEmpty()) {
-					final Set<String> resolved = variableResolver.resolve(ref
+					final String resolved = variableResolver.resolve(ref
 							.getValue());
-					if (resolved.size() == 1
-							&& resolved.contains(ref.getValue())) {
+					if (resolved != null && resolved.equals(ref.getValue())) {
 						toCheck.add(ref);
-					} else {
-						for (String r : resolved) {
-							TclSourceEntry to = TclPackagesFactory.eINSTANCE
-									.createTclSourceEntry();
-							to.setEnd(ref.getEnd());
-							to.setStart(ref.getStart());
-							to.setValue(r);
-							toCheck.add(to);
-						}
+					} else if (resolved != null) {
+						TclSourceEntry to = TclPackagesFactory.eINSTANCE
+								.createTclSourceEntry();
+						to.setEnd(ref.getEnd());
+						to.setStart(ref.getStart());
+						to.setValue(resolved);
+						toCheck.add(to);
 					}
 				}
 				for (TclSourceEntry tclSourceEntry : toCheck) {
@@ -449,14 +434,13 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			}
 			if (sourcedPaths.isEmpty()) {
 				needToAddCorrection = true;
-				final Set<String> resolved = variableResolver.resolve(source
+				final String resolved = variableResolver.resolve(source
 						.getValue());
-				isVariable = resolved.size() != 1
+				isVariable = resolved == null
 						|| !resolved.contains(source.getValue());
-				for (String value : resolved) {
-
-					final IPath sourcedPath = resolveSourceValue(folder, value,
-							environment);
+				if (resolved != null) {
+					final IPath sourcedPath = resolveSourceValue(folder,
+							resolved, environment);
 					if (sourcedPath != null) {
 						sourcedPaths.add(sourcedPath);
 					}
