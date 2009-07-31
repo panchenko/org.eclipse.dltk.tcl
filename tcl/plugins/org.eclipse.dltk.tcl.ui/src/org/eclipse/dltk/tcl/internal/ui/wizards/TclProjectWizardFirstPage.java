@@ -156,6 +156,9 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 				if (projectTemplate != null) {
 					IProject project = acquireProject();
 					try {
+
+						projectTemplate
+								.setCurrentEnvironment(getInterpreterEnvironment());
 						IProjectTemplateOperation operation = projectTemplate
 								.configure(project, templateOperation,
 										getShell());

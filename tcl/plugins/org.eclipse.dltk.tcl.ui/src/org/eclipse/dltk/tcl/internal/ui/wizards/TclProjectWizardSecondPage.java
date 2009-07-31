@@ -5,6 +5,7 @@ package org.eclipse.dltk.tcl.internal.ui.wizards;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -38,7 +39,8 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 		return TclUI.getDefault().getPreferenceStore();
 	}
 
-	protected void postConfigureProject() throws CoreException {
+	protected void postConfigureProject(IProgressMonitor monitor)
+			throws CoreException, InterruptedException {
 		// final IProject project = getCurrProject();
 		// final IEnvironment environment = EnvironmentManager
 		// .getEnvironment(project);
@@ -52,11 +54,15 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 				.getProjectTemplateOperation();
 		if (templateOperation != null) {
 			final IStatus status = templateOperation.execute(getCurrProject(),
-					getShell());
+					getShell(), monitor);
 			if (!status.isOK()) {
+				if (status.getException() instanceof InterruptedException) {
+					throw (InterruptedException) status.getException();
+				}
 				throw new CoreException(status);
 			}
 		}
+		monitor.done();
 	}
 
 	protected IProject acquireProject() {
