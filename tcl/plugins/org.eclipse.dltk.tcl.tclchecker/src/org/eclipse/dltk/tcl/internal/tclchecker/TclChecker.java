@@ -177,6 +177,9 @@ public class TclChecker extends AbstractExternalValidator implements
 
 	private String[] prepareEnvironment(IExecutionEnvironment execEnvironment) {
 		Map<?, ?> map = execEnvironment.getEnvironmentVariables(false);
+		if (map == null) {
+			return null;
+		}
 		String[] env = new String[map.size()];
 		int i = 0;
 		for (Iterator<?> iterator = map.keySet().iterator(); iterator.hasNext();) {
