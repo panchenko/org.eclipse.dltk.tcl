@@ -9,7 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.console.ui.actions;
 
-import org.eclipse.dltk.console.ui.ScriptConsole;
+import org.eclipse.dltk.console.ui.IScriptConsole;
 import org.eclipse.dltk.console.ui.ScriptConsoleManager;
 import org.eclipse.dltk.tcl.internal.console.ui.TclConsole;
 import org.eclipse.jface.action.IAction;
@@ -20,7 +20,6 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
-
 
 public class PasteTclTextToConsoleAction implements IEditorActionDelegate {
 
@@ -44,7 +43,7 @@ public class PasteTclTextToConsoleAction implements IEditorActionDelegate {
 	public void run(IAction action) {
 		ScriptConsoleManager manager = ScriptConsoleManager.getInstance();
 
-		ScriptConsole console = manager
+		IScriptConsole console = manager
 				.getActiveScriptConsole(TclConsole.CONSOLE_TYPE);
 
 		if (console == null) {
@@ -53,8 +52,8 @@ public class PasteTclTextToConsoleAction implements IEditorActionDelegate {
 
 		if (selection instanceof ITextSelection) {
 			String text = ((ITextSelection) selection).getText();
-			console.getInput().insertText(text);
-		}		
+			console.insertText(text);
+		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

@@ -14,6 +14,7 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.dltk.console.IScriptInterpreter;
 import org.eclipse.dltk.console.ScriptConsolePrompt;
+import org.eclipse.dltk.console.ui.IScriptConsole;
 import org.eclipse.dltk.console.ui.IScriptConsoleFactory;
 import org.eclipse.dltk.console.ui.ScriptConsole;
 import org.eclipse.dltk.console.ui.ScriptConsoleFactoryBase;
@@ -124,6 +125,7 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 		return console;
 	}
 
+	@Override
 	protected ScriptConsole createConsoleInstance() {
 		return createConsoleInstance(null, null);
 	}
@@ -131,10 +133,14 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 	public TclConsoleFactory() {
 	}
 
-	public void openConsole(IScriptInterpreter interpreter, String id,
-			ILaunch launch) {
+	/**
+	 * @since 2.0
+	 */
+	public IScriptConsole openConsole(IScriptInterpreter interpreter,
+			String id, ILaunch launch) {
 		TclConsole tclConsole = createConsoleInstance(interpreter, id);
 		tclConsole.setLaunch(launch);
 		registerAndOpenConsole(tclConsole);
+		return tclConsole;
 	}
 }

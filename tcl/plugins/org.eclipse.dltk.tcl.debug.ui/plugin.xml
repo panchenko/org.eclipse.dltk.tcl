@@ -301,6 +301,19 @@
     </shortcut>
   </extension>
 
+<extension point="org.eclipse.ui.actionSets">
+	<actionSet label="Tcl Console" visible="true" id="org.eclipse.dltk.tcl.ui.debug.consoleActionSet">
+         <action
+               id="org.eclipse.debug.internal.ui.actions.RunDropDownAction"
+               toolbarPath="debug"
+               class="org.eclipse.dltk.tcl.internal.console.ui.OpenConsoleAction"
+               icon="icons/obj16/console_obj.gif"
+               label="Open Console"
+               style="pulldown">
+         </action>
+	</actionSet>
+</extension>
+
   <extension point="org.eclipse.debug.ui.debugModelContextBindings">
     <modelContextBinding
       contextId="org.eclipse.dltk.debug.ui.debugging"

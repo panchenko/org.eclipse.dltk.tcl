@@ -11,7 +11,7 @@ package org.eclipse.dltk.tcl.internal.console.ui.actions;
 
 import java.util.Iterator;
 
-import org.eclipse.dltk.console.ui.ScriptConsole;
+import org.eclipse.dltk.console.ui.IScriptConsole;
 import org.eclipse.dltk.console.ui.ScriptConsoleManager;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
@@ -27,15 +27,15 @@ import org.eclipse.ui.IWorkbenchPart;
 public class PasteTclScriptToConsole implements IObjectActionDelegate {
 
 	private ISelection selection;
-	
+
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-			
+
 	}
 
 	public void run(IAction action) {
 		ScriptConsoleManager manager = ScriptConsoleManager.getInstance();
 
-		ScriptConsole console = manager
+		IScriptConsole console = manager
 				.getActiveScriptConsole(TclConsole.CONSOLE_TYPE);
 
 		if (console == null) {
@@ -44,33 +44,33 @@ public class PasteTclScriptToConsole implements IObjectActionDelegate {
 
 		if (selection instanceof ITextSelection) {
 			String text = ((ITextSelection) selection).getText();
-			console.getInput().insertText(text);
+			console.insertText(text);
 		}
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 
-			for (Iterator iterator2 = sel.iterator(); iterator2
-					.hasNext();) {
+			for (Iterator iterator2 = sel.iterator(); iterator2.hasNext();) {
 				Object obj = iterator2.next();
 				String text = null;
-				if( obj instanceof ISourceModule ) {
+				if (obj instanceof ISourceModule) {
 					ISourceModule mo = (ISourceModule) obj;
 					try {
-						text = "#Tcl source:" + mo.getElementName() + "\n" + mo.getSource() + "\n";
+						text = "#Tcl source:" + mo.getElementName() + "\n"
+								+ mo.getSource() + "\n";
 					} catch (ModelException e) {
-						if( DLTKCore.DEBUG ) {
+						if (DLTKCore.DEBUG) {
 							e.printStackTrace();
 						}
 					}
 				}
-				if(text != null) {
-					console.getInput().insertText(text);
+				if (text != null) {
+					console.insertText(text);
 				}
 			}
 		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;		
+		this.selection = selection;
 	}
 }
