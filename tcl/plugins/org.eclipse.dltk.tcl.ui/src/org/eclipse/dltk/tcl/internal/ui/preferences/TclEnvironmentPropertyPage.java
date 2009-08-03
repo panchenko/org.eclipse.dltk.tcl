@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class TclEnvironmentPropertyPage extends PropertyPage {
 
@@ -148,10 +150,16 @@ public class TclEnvironmentPropertyPage extends PropertyPage {
 				new ProjectBuildJob(project).schedule(500);
 			}
 		}
-		new ProjectScope(project).getNode(TclPlugin.PLUGIN_ID).put(
-				TclPlugin.PREF_LOCAL_VALIDATOR,
+		final IEclipsePreferences node = new ProjectScope(project)
+				.getNode(TclPlugin.PLUGIN_ID);
+		node.put(TclPlugin.PREF_LOCAL_VALIDATOR,
 				localValidator.getSelection() ? DLTKCore.ENABLED
 						: DLTKCore.DISABLED);
+		try {
+			node.flush();
+		} catch (BackingStoreException e) {
+			// TODO Auto-generated catch block
+		}
 		return super.performOk();
 	}
 
