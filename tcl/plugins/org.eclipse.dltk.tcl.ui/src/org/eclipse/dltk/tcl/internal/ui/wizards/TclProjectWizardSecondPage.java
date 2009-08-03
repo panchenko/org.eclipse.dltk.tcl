@@ -6,13 +6,11 @@ package org.eclipse.dltk.tcl.internal.ui.wizards;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.preferences.TclBuildPathsBlock;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.dialogs.IProjectTemplateOperation;
 import org.eclipse.dltk.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
@@ -39,6 +37,7 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 		return TclUI.getDefault().getPreferenceStore();
 	}
 
+	@Override
 	protected void postConfigureProject(IProgressMonitor monitor)
 			throws CoreException, InterruptedException {
 		// final IProject project = getCurrProject();
@@ -50,18 +49,9 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 		// options.put(DLTKCore.BUILDER_ENABLED, DLTKCore.DISABLED);
 		// DLTKCore.create(project).setOptions(options);
 		// }
-		IProjectTemplateOperation templateOperation = ((TclProjectCreationWizard) getWizard()).fFirstPage
-				.getProjectTemplateOperation();
-		if (templateOperation != null) {
-			final IStatus status = templateOperation.execute(getCurrProject(),
-					getShell(), monitor);
-			if (!status.isOK()) {
-				if (status.getException() instanceof InterruptedException) {
-					throw (InterruptedException) status.getException();
-				}
-				throw new CoreException(status);
-			}
-		}
+		final IProject project = getCurrProject();
+		((TclProjectCreationWizard) getWizard()).fFirstPage.postConfigure(
+				monitor, project);
 		monitor.done();
 	}
 

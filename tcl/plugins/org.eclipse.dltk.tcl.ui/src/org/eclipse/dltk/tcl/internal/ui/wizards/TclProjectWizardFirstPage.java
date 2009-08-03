@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Observable;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
@@ -28,12 +30,15 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.dialogs.ControlStatus;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplateOperation;
+import org.eclipse.dltk.ui.wizards.IProjectWizardExtension;
+import org.eclipse.dltk.ui.wizards.IProjectWizardExtensionContext;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.dltk.utils.LazyExtensionManager;
 import org.eclipse.dltk.utils.LazyExtensionManager.Descriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -109,6 +114,65 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		protected Descriptor<IProjectTemplate> createDescriptor(
 				IConfigurationElement confElement) {
 			return new ProjectTemplateDescriptor(this, confElement);
+		}
+
+	}
+
+	static class ProjectWizardExtensionDescriptor extends
+			Descriptor<IProjectWizardExtension> {
+
+		final String nature;
+
+		public ProjectWizardExtensionDescriptor(
+				TclProjectWizardExtensionManager manager,
+				IConfigurationElement configurationElement) {
+			super(manager, configurationElement);
+			this.nature = configurationElement.getAttribute("nature");
+		}
+
+	}
+
+	static class TclProjectWizardExtensionManager extends
+			LazyExtensionManager<IProjectWizardExtension> {
+
+		/**
+		 * @param extensionPoint
+		 */
+		public TclProjectWizardExtensionManager() {
+			super(DLTKUIPlugin.PLUGIN_ID + ".projectWizardExtension"); //$NON-NLS-1$
+		}
+
+		@Override
+		protected boolean isValidDescriptor(
+				Descriptor<IProjectWizardExtension> descriptor) {
+			String natureId = ((ProjectWizardExtensionDescriptor) descriptor).nature;
+			return natureId == null || TclNature.NATURE_ID.equals(natureId);
+		}
+
+		@Override
+		protected Descriptor<IProjectWizardExtension> createDescriptor(
+				IConfigurationElement confElement) {
+			return new ProjectWizardExtensionDescriptor(this, confElement);
+		}
+
+	}
+
+	private class TclProjectWizardExtensionContext implements
+			IProjectWizardExtensionContext {
+
+		private final Composite composite;
+
+		public TclProjectWizardExtensionContext(Composite composite) {
+			this.composite = composite;
+		}
+
+		public Composite getControl() {
+			return composite;
+		}
+
+		public GridLayout initGridLayout(GridLayout layout, boolean margins) {
+			return TclProjectWizardFirstPage.this.initGridLayout(layout,
+					margins);
 		}
 
 	}
@@ -312,9 +376,42 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		return new TclLocationGroup();
 	}
 
+	public void postConfigure(IProgressMonitor monitor, final IProject project)
+			throws InterruptedException, CoreException {
+		IProjectTemplateOperation templateOperation = ((TclProjectCreationWizard) getWizard()).fFirstPage
+				.getProjectTemplateOperation();
+		if (templateOperation != null) {
+			final IStatus status = templateOperation.execute(project,
+					getShell(), monitor);
+			if (!status.isOK()) {
+				if (status.getException() instanceof InterruptedException) {
+					throw (InterruptedException) status.getException();
+				}
+				throw new CoreException(status);
+			}
+		}
+		for (IProjectWizardExtension extension : wizardExtensions) {
+			extension.postConfigure(project, monitor);
+		}
+	}
+
 	protected IProjectTemplateOperation getProjectTemplateOperation() {
 		return ((TclLocationGroup) fLocationGroup)
 				.getSelectedTemplateOperation();
 	}
 
+	private List<IProjectWizardExtension> wizardExtensions = new ArrayList<IProjectWizardExtension>();
+
+	@Override
+	protected void createCustomGroups(Composite composite) {
+		super.createCustomGroups(composite);
+		final TclProjectWizardExtensionContext context = new TclProjectWizardExtensionContext(
+				composite);
+		for (Iterator<IProjectWizardExtension> i = new TclProjectWizardExtensionManager()
+				.iterator(); i.hasNext();) {
+			final IProjectWizardExtension extension = i.next();
+			wizardExtensions.add(extension);
+			extension.createControls(context);
+		}
+	}
 }
