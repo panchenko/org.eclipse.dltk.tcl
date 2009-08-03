@@ -12,6 +12,7 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
@@ -31,12 +32,12 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.TclProblems;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
+import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.text.AnnotationResolutionProposal;
 import org.eclipse.dltk.ui.text.IScriptCorrectionContext;
 import org.eclipse.dltk.ui.text.IScriptCorrectionProcessor;
 import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
 public class TclSourcePackageCorrectionProcessor implements
 		IScriptCorrectionProcessor {
@@ -98,11 +99,13 @@ public class TclSourcePackageCorrectionProcessor implements
 					new TclRequirePackageCorrectionMarkerResolution(pkgName,
 							context.getProject(), context.getModule()),
 					annotation));
+			addGlobalVariableProposals(annotation, context, pkgName);
 		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
 			final String fName = annotation.getArguments()[0];
 			context.addProposal(new AnnotationResolutionProposal(
 					new TclSourceCorrectionMarkerResolution(fName, context
 							.getProject(), context.getModule()), annotation));
+			addGlobalVariableProposals(annotation, context, fName);
 		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE) {
 			final String fName = annotation.getArguments()[0];
 			if (TclSourceMarkerResolution.fixAvailable(context.getModule(),
@@ -112,6 +115,24 @@ public class TclSourcePackageCorrectionProcessor implements
 								new TclSourceMarkerResolution(fName, context
 										.getProject(), context.getModule()),
 								annotation));
+			}
+		}
+	}
+
+	private void addGlobalVariableProposals(IScriptAnnotation annotation,
+			IScriptCorrectionContext context, final String fName) {
+		String[] names = TclVariableResolver.extractVariableNames(fName);
+		Map<String, String> eMap = TclPackagesManager.getVariables(context
+				.getProject().getElementName());
+		if (names != null) {
+			for (String var : names) {
+				if (!eMap.containsKey(var)) {
+					context
+							.addProposal(new AnnotationResolutionProposal(
+									new TclGlobalVariableSourceCorrectionMarkerResolution(
+											var, context.getProject()),
+									annotation));
+				}
 			}
 		}
 	}
@@ -141,7 +162,8 @@ public class TclSourcePackageCorrectionProcessor implements
 	}
 
 	public static boolean isFixable(IMarker marker) {
-		if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
+		int idValue = marker.getAttribute(IScriptModelMarker.ID, 0);
+		if (idValue == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
 			final String[] args = CorrectionEngine.getProblemArguments(marker);
 			if (args != null && args.length != 0 && args[0] != null) {
 				IResource resource = marker.getResource();
@@ -151,11 +173,11 @@ public class TclSourcePackageCorrectionProcessor implements
 					return true;
 				}
 			}
-		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION) {
+		} else if (idValue == TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION) {
 			return true;
-		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
+		} else if (idValue == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
 			return true;
-		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE) {
+		} else if (idValue == TclProblems.UNKNOWN_SOURCE) {
 			final String[] args = CorrectionEngine.getProblemArguments(marker);
 			if (args != null && args.length != 0 && args[0] != null) {
 				IResource resource = marker.getResource();
@@ -187,12 +209,15 @@ public class TclSourcePackageCorrectionProcessor implements
 						new TclRequirePackageCorrectionMarkerResolution(
 								pkgName, context.getProject(), context
 										.getModule()), marker));
+				addGlobalVariablesProposals(marker, context, pkgName);
 			}
+			addGlobalVariablesProposals(marker, context, pkgName);
 		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
 			final String fName = CorrectionEngine.getProblemArguments(marker)[0];
 			context.addProposal(new MarkerResolutionProposal(
 					new TclSourceCorrectionMarkerResolution(fName, context
 							.getProject(), context.getModule()), marker));
+
 		} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE) {
 			final String fName = CorrectionEngine.getProblemArguments(marker)[0];
 			if (TclSourceMarkerResolution.fixAvailable(context.getModule(),
@@ -200,6 +225,23 @@ public class TclSourcePackageCorrectionProcessor implements
 				context.addProposal(new MarkerResolutionProposal(
 						new TclSourceMarkerResolution(fName, context
 								.getProject(), context.getModule()), marker));
+			}
+		}
+	}
+
+	private void addGlobalVariablesProposals(IMarker marker,
+			IScriptCorrectionContext context, final String pkgName) {
+		String[] names = TclVariableResolver.extractVariableNames(pkgName);
+		Map<String, String> eMap = TclPackagesManager.getVariables(context
+				.getProject().getElementName());
+		if (names != null) {
+			for (String var : names) {
+				if (!eMap.containsKey(var)) {
+					context
+							.addProposal(new MarkerResolutionProposal(
+									new TclGlobalVariableSourceCorrectionMarkerResolution(
+											var, context.getProject()), marker));
+				}
 			}
 		}
 	}

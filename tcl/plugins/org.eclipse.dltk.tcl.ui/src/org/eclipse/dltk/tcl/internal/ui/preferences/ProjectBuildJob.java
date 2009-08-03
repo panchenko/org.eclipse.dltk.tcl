@@ -20,7 +20,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 
-class ProjectBuildJob extends Job {
+/**
+ * @since 2.0
+ */
+public class ProjectBuildJob extends Job {
 
 	private final IProject project;
 
