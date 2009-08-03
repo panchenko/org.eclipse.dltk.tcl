@@ -118,14 +118,12 @@ public class TclSourcesUtils {
 				if (values == null || values.isEmpty()) {
 					final String resolved = variableResolver.resolve(source
 							.getValue());
-					if (resolved != null && resolved.equals(source.getValue())) {
+					if (resolved == null || resolved.equals(source.getValue())) {
 						pseutoElements.add(source.getValue());
 						continue;
 					}
 					values = new ArrayList<String>();
-					if (resolved != null) {
-						values.add(resolved);
-					}
+					values.add(resolved);
 				}
 				for (String value : values) {
 					IPath path = new Path(value);
