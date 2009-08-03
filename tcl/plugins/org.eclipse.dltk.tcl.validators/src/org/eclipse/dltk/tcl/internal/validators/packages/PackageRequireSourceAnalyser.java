@@ -302,7 +302,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				if (toCheck.isEmpty()) {
 					final String resolved = variableResolver.resolve(ref
 							.getValue());
-					if (resolved != null && resolved.equals(ref.getValue())) {
+					if (resolved == null || resolved.equals(ref.getValue())) {
 						toCheck.add(ref);
 					} else if (resolved != null) {
 						TclSourceEntry to = TclPackagesFactory.eINSTANCE
