@@ -19,6 +19,9 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
@@ -157,7 +160,13 @@ public class TclSourcesUtils {
 					if (originalNames != null) {
 						originalNames.put(path, source.getValue());
 					}
-					sources.add(path);
+					// Check what file are really exists
+					IEnvironment environment = EnvironmentManager
+							.getEnvironment(scriptProject);
+					IFileHandle handle = environment.getFile(path);
+					if (handle.exists()) {
+						sources.add(path);
+					}
 				}
 			}
 		}

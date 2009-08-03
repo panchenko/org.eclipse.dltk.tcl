@@ -151,7 +151,8 @@ public class TclPackagesManager {
 	private static TclInterpreterInfo getTclInterpreter(
 			IInterpreterInstall install, boolean allowCreate) {
 		TclInterpreterInfo interpreterInfo = null;
-		String interpreterLocation = install.getInstallLocation().getPath().toString();
+		String interpreterLocation = install.getInstallLocation().getPath()
+				.toString();
 		String environmentId = install.getInstallLocation().getEnvironmentId();
 		synchronized (TclPackagesManager.class) {
 			for (EObject eObject : infos.getContents()) {
