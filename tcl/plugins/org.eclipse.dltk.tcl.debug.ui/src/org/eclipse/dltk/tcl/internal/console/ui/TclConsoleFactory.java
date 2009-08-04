@@ -16,7 +16,6 @@ import org.eclipse.dltk.console.IScriptInterpreter;
 import org.eclipse.dltk.console.ScriptConsolePrompt;
 import org.eclipse.dltk.console.ui.IScriptConsole;
 import org.eclipse.dltk.console.ui.IScriptConsoleFactory;
-import org.eclipse.dltk.console.ui.ScriptConsole;
 import org.eclipse.dltk.console.ui.ScriptConsoleFactoryBase;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
@@ -126,7 +125,7 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 	}
 
 	@Override
-	protected ScriptConsole createConsoleInstance() {
+	protected IScriptConsole createConsoleInstance() {
 		return createConsoleInstance(null, null);
 	}
 
