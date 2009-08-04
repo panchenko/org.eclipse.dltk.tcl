@@ -38,7 +38,7 @@ public class TclASTCache implements IASTCache {
 
 	List<StoreEntry> entriesToStore = new ArrayList<StoreEntry>();
 
-	private Thread storeASTThread = new Thread() {
+	private Thread storeASTThread = new Thread("Tcl Cache Saver") {
 		public void run() {
 			while (true) {
 				synchronized (entriesToStore) {
@@ -71,6 +71,7 @@ public class TclASTCache implements IASTCache {
 	};
 
 	public TclASTCache() {
+		storeASTThread.setDaemon(true);
 		storeASTThread.start();
 	}
 
