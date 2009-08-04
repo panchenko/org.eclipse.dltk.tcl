@@ -13,13 +13,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
+import org.eclipse.dltk.internal.launching.LaunchConfigurationUtils;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.dltk.launching.sourcelookup.IProjectLookupResult;
+import org.eclipse.dltk.launching.sourcelookup.ProjectSourceLookup;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
@@ -134,6 +141,31 @@ public class TclFileHyperlink implements IHyperlink {
 	}
 
 	protected Object getSourceModule(String fileName) throws CoreException {
+		if (fConsole instanceof org.eclipse.debug.ui.console.IConsole) {
+			final IProcess process = ((org.eclipse.debug.ui.console.IConsole) fConsole)
+					.getProcess();
+			if (process != null) {
+				final ILaunch launch = process.getLaunch();
+				if (launch != null) {
+					final ILaunchConfiguration configuration = launch
+							.getLaunchConfiguration();
+					if (configuration != null) {
+						final IProject project = LaunchConfigurationUtils
+								.getProject(configuration);
+						if (project != null) {
+							final ProjectSourceLookup lookup = new ProjectSourceLookup(
+									project);
+							final IProjectLookupResult result = lookup
+									.find(new Path(fileName));
+							if (result != null) {
+								return result.toArray()[0];
+							}
+						}
+					}
+				}
+			}
+		}
+		// compatibility: search local workspace files
 		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(
 				new Path(fileName));
 		return f;
