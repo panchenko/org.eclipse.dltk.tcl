@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.console.ui;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamsProxy;
@@ -19,6 +21,7 @@ import org.eclipse.dltk.console.ui.IScriptConsoleFactory;
 import org.eclipse.dltk.console.ui.ScriptConsoleFactoryBase;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
+import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.LaunchingMessages;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
@@ -29,9 +32,11 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPlugin;
 import org.eclipse.dltk.ui.DLTKUILanguageManager;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
@@ -142,4 +147,34 @@ public class TclConsoleFactory extends ScriptConsoleFactoryBase implements
 		registerAndOpenConsole(tclConsole);
 		return tclConsole;
 	}
+
+	/**
+	 * @since 2.0
+	 */
+	public void openConsole(IInterpreterInstall install, String consoleName) {
+		final TclInterpreter interpreter = new TclInterpreter();
+		final ILaunch launch;
+		try {
+			launch = TclConsoleUtil.runTclInterpreter(install, interpreter);
+		} catch (Exception e) {
+			ErrorDialog.openError(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getShell(),
+					"Error Launching Tcl Console", e.toString(), new Status(
+							IStatus.ERROR, TclDebugUIPlugin.PLUGIN_ID, e
+									.getMessage(), e));
+			return;
+		}
+		if (launch != null) {
+			IScriptConsole console = openConsole(interpreter, consoleName,
+					launch);
+			final IProcess[] processes = launch.getProcesses();
+			for (IProcess process : processes) {
+				final IStreamsProxy proxy = process.getStreamsProxy();
+				if (proxy != null) {
+					console.connect(proxy);
+				}
+			}
+		}
+	}
+
 }

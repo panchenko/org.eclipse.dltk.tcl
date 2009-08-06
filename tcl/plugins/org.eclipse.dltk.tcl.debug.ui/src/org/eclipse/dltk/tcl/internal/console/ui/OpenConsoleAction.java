@@ -19,12 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStreamsProxy;
-import org.eclipse.dltk.console.ui.IScriptConsole;
 import org.eclipse.dltk.core.environment.EnvironmentChangedListener;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -33,17 +27,12 @@ import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallChangedListener;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
 import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.console.TclConsoleUtil;
-import org.eclipse.dltk.tcl.console.TclInterpreter;
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.tcl.internal.debug.ui.TclDebugUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @since 2.0
@@ -96,31 +85,9 @@ public class OpenConsoleAction extends AbstractPulldownAction {
 
 		@Override
 		public void run() {
-			final TclInterpreter interpreter = new TclInterpreter();
-			final ILaunch launch;
-			try {
-				launch = TclConsoleUtil.runTclInterpreter(install, interpreter);
-			} catch (Exception e) {
-				ErrorDialog.openError(PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell(),
-						"Error Launching Tcl Console", e.toString(),
-						new Status(IStatus.ERROR, TclDebugUIPlugin.PLUGIN_ID, e
-								.getMessage(), e));
-				return;
-			}
-			if (launch != null) {
-				IScriptConsole console = new TclConsoleFactory().openConsole(
-						interpreter, NLS.bind("{0} - {1}", install
-								.getEnvironment().getName(), install
-								.getInstallLocation().toOSString()), launch);
-				final IProcess[] processes = launch.getProcesses();
-				for (IProcess process : processes) {
-					final IStreamsProxy proxy = process.getStreamsProxy();
-					if (proxy != null) {
-						console.connect(proxy);
-					}
-				}
-			}
+			new TclConsoleFactory().openConsole(install, NLS.bind("{0} - {1}",
+					install.getEnvironment().getName(), install
+							.getInstallLocation().toOSString()));
 		}
 	}
 
