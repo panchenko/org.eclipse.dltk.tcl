@@ -81,6 +81,13 @@ public class TclVariableResolver {
 		this.registry = registry;
 	}
 
+	/**
+	 * Returns resolved string or <code>null</code>
+	 * 
+	 * @param value
+	 * @return resolved string or <code>null</code> if unknown variable is
+	 *         encountered
+	 */
 	public String resolve(String value) {
 		TclParser parser = new TclParser();
 		TclErrorCollector collector = new TclErrorCollector();
