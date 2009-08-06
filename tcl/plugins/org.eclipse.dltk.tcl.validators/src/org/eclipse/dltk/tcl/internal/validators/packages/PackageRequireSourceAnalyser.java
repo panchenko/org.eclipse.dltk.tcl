@@ -446,7 +446,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				IFileHandle file = environment.getFile(sourcedPath);
 				if (file != null) {
 					if (!file.exists()) {
-						reportSourceProblem(
+						reportSourceProblemCorrection(
 								source,
 								moduleInfo.reporter,
 								NLS
@@ -456,7 +456,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 										.getValue(), moduleInfo.lineTracker);
 					} else {
 						if (file.isDirectory()) {
-							reportSourceProblem(
+							reportSourceProblemCorrection(
 									source,
 									moduleInfo.reporter,
 									Messages.PackageRequireSourceAnalyser_FolderSourcingNotSupported,
