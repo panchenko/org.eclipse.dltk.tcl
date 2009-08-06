@@ -3,8 +3,6 @@
  */
 package org.eclipse.dltk.tcl.internal.ui.text;
 
-import java.util.Arrays;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -56,39 +54,25 @@ final class TclSourceCorrectionMarkerResolution implements IMarkerResolution,
 
 				// Ask for user correction.
 
+				// obtain environment for project, so it works correctly for
+				// mixed projects
 				IEnvironment env = EnvironmentManager
-						.getEnvironment(this.module);
+						.getEnvironment(this.project);
 
 				SourcesSelectionDialog dialog = new SourcesSelectionDialog(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 								.getActivePage().getWorkbenchWindow(), env);
+				final TclProjectInfo tclProject = TclPackagesManager
+						.getTclProject(project.getElementName());
+				UserCorrection correction = findUserCorrection(tclProject,
+						false);
+				if (correction != null) {
+					dialog.setSources(correction.getUserValue());
+				}
 				if (dialog.open() == SourcesSelectionDialog.OK) {
-					String[] sources = dialog.getSources();
-
-					TclProjectInfo tclProject = TclPackagesManager
-							.getTclProject(project.getElementName());
-					String handle = this.module.getHandleIdentifier();
-					TclModuleInfo info = tclProject.findModule(handle);
-					if (info == null) {
-						// This is almost impossibly situation.
-						info = TclPackagesFactory.eINSTANCE
-								.createTclModuleInfo();
-						info.setHandle(handle);
-						info
-								.setExternal(this.module instanceof IExternalSourceModule);
-						TclSourceEntry sourceEntry = TclPackagesFactory.eINSTANCE
-								.createTclSourceEntry();
-						sourceEntry.setStart(-1);
-						sourceEntry.setEnd(-1);
-						sourceEntry.setValue(sourceName);
-						info.getSourced().add(sourceEntry);
-						tclProject.getModules().add(info);
-					}
-					UserCorrection correction = TclPackagesFactory.eINSTANCE
-							.createUserCorrection();
-					info.getSourceCorrections().add(correction);
-					correction.setOriginalValue(sourceName);
-					correction.getUserValue().addAll(Arrays.asList(sources));
+					correction = findUserCorrection(tclProject, true);
+					correction.getUserValue().clear();
+					correction.getUserValue().addAll(dialog.getSources());
 					TclPackagesManager.save();
 					// We need to fire external archives change.
 					ModelManager.getModelManager().getDeltaProcessor()
@@ -101,6 +85,42 @@ final class TclSourceCorrectionMarkerResolution implements IMarkerResolution,
 			TclUI.error("require package resolve error", e); //$NON-NLS-1$
 		}
 		return false;
+	}
+
+	private UserCorrection findUserCorrection(final TclProjectInfo tclProject,
+			boolean create) {
+		final String handle = module.getHandleIdentifier();
+		TclModuleInfo info = tclProject.findModule(handle);
+		if (info != null) {
+			for (UserCorrection correction : info.getSourceCorrections()) {
+				if (!correction.isVariable()
+						&& sourceName.equals(correction.getOriginalValue())) {
+					return correction;
+				}
+			}
+		}
+		if (create) {
+			if (info == null) {
+				// This is almost impossible situation.
+				info = TclPackagesFactory.eINSTANCE.createTclModuleInfo();
+				info.setHandle(handle);
+				info.setExternal(this.module instanceof IExternalSourceModule);
+				TclSourceEntry sourceEntry = TclPackagesFactory.eINSTANCE
+						.createTclSourceEntry();
+				sourceEntry.setStart(-1);
+				sourceEntry.setEnd(-1);
+				sourceEntry.setValue(sourceName);
+				info.getSourced().add(sourceEntry);
+				tclProject.getModules().add(info);
+			}
+			UserCorrection correction = TclPackagesFactory.eINSTANCE
+					.createUserCorrection();
+			info.getSourceCorrections().add(correction);
+			correction.setOriginalValue(sourceName);
+			return correction;
+		} else {
+			return null;
+		}
 	}
 
 	public void run(final IMarker marker) {

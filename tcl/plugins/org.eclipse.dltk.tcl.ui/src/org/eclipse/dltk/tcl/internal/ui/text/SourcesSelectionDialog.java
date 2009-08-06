@@ -1,12 +1,13 @@
 package org.eclipse.dltk.tcl.internal.ui.text;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -19,7 +20,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -34,7 +34,7 @@ public class SourcesSelectionDialog extends Dialog {
 			if (element instanceof String) {
 				return (String) element;
 			}
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -66,13 +66,14 @@ public class SourcesSelectionDialog extends Dialog {
 				.getAdapter(IEnvironmentUI.class);
 	}
 
+	@Override
 	protected boolean isResizable() {
 		return true;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Files selection dialog.");
+		getShell().setText("Files Selection Dialog");
 		Composite contents = (Composite) super.createDialogArea(parent);
 		contents.setLayout(new GridLayout(2, false));
 		sourcesViewer = new ListViewer(contents, SWT.SINGLE | SWT.BORDER);
@@ -162,7 +163,18 @@ public class SourcesSelectionDialog extends Dialog {
 		}
 	}
 
-	public String[] getSources() {
-		return (String[]) sources.toArray(new String[sources.size()]);
+	/**
+	 * @since 2.0
+	 */
+	public void setSources(Collection<String> value) {
+		sources.clear();
+		sources.addAll(value);
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public Collection<String> getSources() {
+		return Collections.unmodifiableCollection(sources);
 	}
 }
