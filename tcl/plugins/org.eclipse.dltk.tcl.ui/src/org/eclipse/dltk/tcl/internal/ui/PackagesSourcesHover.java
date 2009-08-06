@@ -1,5 +1,7 @@
 package org.eclipse.dltk.tcl.internal.ui;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -23,9 +25,6 @@ import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.text.AbstractReusableInformationControlCreator;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
@@ -102,8 +101,9 @@ public class PackagesSourcesHover extends AbstractScriptEditorTextHover {
 						for (UserCorrection userCorrection : sourceCorrections) {
 							if (userCorrection.getOriginalValue().equals(
 									tclSourceEntry.getValue())) {
-								EList<String> userValue = userCorrection
-										.getUserValue();
+								List<String> userValue = new ArrayList<String>(
+										userCorrection.getUserValue());
+								Collections.sort(userValue);
 								buffer.append("<ul>");
 								for (String value : userValue) {
 									buffer.append("<li>").append(value).append(
