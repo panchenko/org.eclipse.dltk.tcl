@@ -13,10 +13,8 @@ package org.eclipse.dltk.tcl.internal.validators.packages;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -59,12 +57,10 @@ import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesFactory;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
-import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.internal.core.packages.DefaultVariablesRegistry;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
-import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariableRegistry;
 import org.eclipse.dltk.tcl.internal.validators.TclBuildContext;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.emf.common.util.EList;
@@ -659,7 +655,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			Set externalElements, Set oldExternalFolders, Set externalFolders) {
 		if (buildType == IBuildParticipantExtension.FULL_BUILD
 				|| !oldExternalFolders.equals(externalFolders)) {
-			return DependencyResponse.FULL_EXTERNAL_BUILD;
+			return null;
+			// TODO return DependencyResponse.FULL_EXTERNAL_BUILD;
 		} else {
 			return null;
 		}
