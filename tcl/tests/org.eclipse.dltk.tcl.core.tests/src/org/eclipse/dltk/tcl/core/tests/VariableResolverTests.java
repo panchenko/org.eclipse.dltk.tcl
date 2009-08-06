@@ -25,57 +25,57 @@ public class VariableResolverTests extends TestCase {
 
 	private static TclVariableResolver createResolver() {
 		return new TclVariableResolver(new SimpleVariableRegistry(Collections
-                .<String, Object> emptyMap()));
+				.<String, Object> emptyMap()));
 	}
 
-    private static TclVariableResolver createResolver(String key, Object value) {
+	private static TclVariableResolver createResolver(String key, Object value) {
 		return new TclVariableResolver(new SimpleVariableRegistry(Collections
 				.singletonMap(key, value)));
 	}
 
 	public void testNop() {
 		TclVariableResolver resolver = createResolver();
-        assertEquals(("a"), resolver.resolve("a"));
-        assertEquals(("$a"), resolver.resolve("$a"));
-        assertEquals(("${a"), resolver.resolve("${a"));
-        assertEquals(("${a}"), resolver.resolve("${a}"));
-        assertEquals("$a(alfa)", resolver.resolve("$a(alfa)"));
+		assertEquals(("a"), resolver.resolve("a"));
+		assertNull(resolver.resolve("$a"));
+		assertEquals(("${a"), resolver.resolve("${a"));
+		assertNull(resolver.resolve("${a}"));
+		assertNull(resolver.resolve("$a(alfa)"));
 	}
 
 	public void testSingle() {
 		TclVariableResolver resolver = createResolver("name", "NAME");
-        assertEquals(("NAME"), resolver.resolve("$name"));
-        assertEquals(("NAME"), resolver.resolve("${name}"));
+		assertEquals(("NAME"), resolver.resolve("$name"));
+		assertEquals(("NAME"), resolver.resolve("${name}"));
 	}
 
 	public void testSingleMixed() {
 		TclVariableResolver resolver = createResolver("name", "NAME");
-        assertEquals(("/NAME/"), resolver.resolve("/$name/"));
-        assertEquals(("/NAME/"), resolver.resolve("/${name}/"));
-    }
+		assertEquals(("/NAME/"), resolver.resolve("/$name/"));
+		assertEquals(("/NAME/"), resolver.resolve("/${name}/"));
+	}
 
-    public void testComplex() {
-        TclVariableResolver resolver = createResolver("name", "VERY_VERY_BIG");
-        assertEquals(("zaa/VERY_VERY_BIG/bbb"), resolver
-                .resolve("zaa/$name/bbb"));
-    }
+	public void testComplex() {
+		TclVariableResolver resolver = createResolver("name", "VERY_VERY_BIG");
+		assertEquals(("zaa/VERY_VERY_BIG/bbb"), resolver
+				.resolve("zaa/$name/bbb"));
+	}
 
-    public void testSmaller() {
-        TclVariableResolver resolver = createResolver("longVariable", "small");
-        assertEquals(("zaa/small/bbb"), resolver
-                .resolve("zaa/$longVariable/bbb"));
-    }
+	public void testSmaller() {
+		TclVariableResolver resolver = createResolver("longVariable", "small");
+		assertEquals(("zaa/small/bbb"), resolver
+				.resolve("zaa/$longVariable/bbb"));
+	}
 
-    public void testEnvironmentResolve() {
-        Map<String, String> envValues = new HashMap<String, String>();
-        Map<String, Object> variables = new HashMap<String, Object>();
-        envValues.put("mytest", "myvalue");
-        variables.put("env", envValues);
-        variables.put("gamma", "mytest");
+	public void testEnvironmentResolve() {
+		Map<String, String> envValues = new HashMap<String, String>();
+		Map<String, Object> variables = new HashMap<String, Object>();
+		envValues.put("mytest", "myvalue");
+		variables.put("env", envValues);
+		variables.put("gamma", "mytest");
 
-        TclVariableResolver resolver = new TclVariableResolver(
-                new SimpleVariableRegistry(variables));
-        assertEquals("myvalue", resolver.resolve("$env(mytest)"));
-        assertEquals("myvalue", resolver.resolve("$env($gamma)"));
+		TclVariableResolver resolver = new TclVariableResolver(
+				new SimpleVariableRegistry(variables));
+		assertEquals("myvalue", resolver.resolve("$env(mytest)"));
+		assertEquals("myvalue", resolver.resolve("$env($gamma)"));
 	}
 }
