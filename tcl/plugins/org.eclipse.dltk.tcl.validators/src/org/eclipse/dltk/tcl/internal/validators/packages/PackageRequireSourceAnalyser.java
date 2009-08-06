@@ -14,6 +14,7 @@ package org.eclipse.dltk.tcl.internal.validators.packages;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -336,20 +337,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				// Clean old corrections.
 				EList<UserCorrection> pkgCorrections = tclModuleInfo
 						.getPackageCorrections();
-				if (!pkgCorrections.isEmpty()) {
-					List<UserCorrection> toRemove = new ArrayList<UserCorrection>();
-					EList<TclSourceEntry> required = tclModuleInfo
-							.getRequired();
-					processCleanCorrections(pkgCorrections, toRemove, required);
-				}
+				cleanCorrections(pkgCorrections, tclModuleInfo.getRequired());
 				EList<UserCorrection> sourceCorrections = tclModuleInfo
 						.getSourceCorrections();
-				if (!sourceCorrections.isEmpty()) {
-					List<UserCorrection> toRemove = new ArrayList<UserCorrection>();
-					EList<TclSourceEntry> sourced = tclModuleInfo.getSourced();
-					processCleanCorrections(sourceCorrections, toRemove,
-							sourced);
-				}
+				cleanCorrections(sourceCorrections, tclModuleInfo.getSourced());
 				if (!(tclModuleInfo.getProvided().isEmpty()
 						&& tclModuleInfo.getRequired().isEmpty()
 						&& tclModuleInfo.getSourced().isEmpty()
@@ -381,22 +372,19 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		}
 	}
 
-	private void processCleanCorrections(EList<UserCorrection> pkgCorrections,
-			List<UserCorrection> toRemove, EList<TclSourceEntry> required) {
-		for (UserCorrection userCorrection : pkgCorrections) {
-			boolean found = false;
-			for (TclSourceEntry tclSourceEntry : required) {
+	private void cleanCorrections(EList<UserCorrection> corrections,
+			EList<TclSourceEntry> entries) {
+		TOP: for (Iterator<UserCorrection> i = corrections.iterator(); i
+				.hasNext();) {
+			final UserCorrection userCorrection = i.next();
+			for (TclSourceEntry tclSourceEntry : entries) {
 				if (tclSourceEntry.getValue().equals(
 						userCorrection.getOriginalValue())) {
-					found = true;
-					break;
+					continue TOP;
 				}
 			}
-			if (!found) {
-				toRemove.add(userCorrection);
-			}
+			i.remove();
 		}
-		pkgCorrections.removeAll(toRemove);
 	}
 
 	private void checkSources(IEnvironment environment, ModuleInfo moduleInfo) {
@@ -661,5 +649,4 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			return null;
 		}
 	}
-
 }
