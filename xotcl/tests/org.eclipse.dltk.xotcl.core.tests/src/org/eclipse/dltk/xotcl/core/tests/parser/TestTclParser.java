@@ -7,6 +7,7 @@ class TestTclParser extends NewTclSourceParser {
 
 	public TestTclParser(String content) {
 		setProcessorsState(false);
+		setUseDetectors(false);
 	}
 
 	public char[] getFileName() {
