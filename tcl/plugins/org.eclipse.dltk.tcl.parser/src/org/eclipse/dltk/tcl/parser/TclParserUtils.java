@@ -12,7 +12,6 @@
 package org.eclipse.dltk.tcl.parser;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -155,61 +154,48 @@ public class TclParserUtils implements ITclParserOptions {
 			for (int i = 0; i < commands.size(); i++) {
 				org.eclipse.dltk.tcl.internal.parser.raw.TclCommand command = commands
 						.get(i);
-				List<TclWord> words = command.getWords();
-				int start = -1;
-				for (Iterator<TclWord> iterator = words.iterator(); iterator
-						.hasNext();) {
-					TclWord word = iterator.next();
-					String wordText = null;
-					if (start == -1) {
-						start = word.getStart();
-					}
+				for (final TclWord word : command.getWords()) {
 
-					TclArgument exp = null;
-					// wordText = SimpleTclParser.magicSubstitute(wordText);
+					final TclArgument exp;
 					Object o = word.getContents().get(0);
 					if (o instanceof QuotesSubstitution) {
-						wordText = content.substring(word.getStart(), word
-								.getEnd() + 1);
 						QuotesSubstitution qs = (QuotesSubstitution) o;
 
 						StringArgument literal = factory.createStringArgument();
 						literal.setStart(offset + qs.getStart());
 						literal.setEnd(offset + qs.getEnd() + 1);
-						literal.setValue(wordText);
+						literal.setValue(content.substring(word.getStart(),
+								word.getEnd() + 1));
 						exp = literal;
 					} else if (o instanceof BracesSubstitution) {
-						wordText = content.substring(word.getStart(), word
-								.getEnd() + 1);
 						BracesSubstitution bs = (BracesSubstitution) o;
 
 						StringArgument block = factory.createStringArgument();
 						block.setStart(offset + bs.getStart());
 						block.setEnd(offset + bs.getEnd() + 1);
-						block.setValue(wordText);
+						block.setValue(content.substring(word.getStart(), word
+								.getEnd() + 1));
 						exp = block;
 					} else if (o instanceof CommandSubstitution
-							&& (word.getContents().size() == 1)) {
-						wordText = content.substring(word.getStart(), word
-								.getEnd() + 1);
+							&& word.getContents().size() == 1) {
 						CommandSubstitution bs = (CommandSubstitution) o;
 
 						StringArgument bl = factory.createStringArgument();
 						bl.setStart(offset + bs.getStart());
 						bl.setEnd(offset + bs.getEnd() + 1);
-						bl.setValue(wordText);
+						bl.setValue(content.substring(word.getStart(), word
+								.getEnd() + 1));
 						if (blockArguments != null) {
 							blockArguments.add(results.size());
 						}
 						exp = bl;
 					} else {
-						wordText = content.substring(word.getStart(), word
-								.getEnd() + 1);
 						StringArgument reference = factory
 								.createStringArgument();
 						reference.setStart(offset + word.getStart());
 						reference.setEnd(offset + word.getEnd() + 1);
-						reference.setValue(wordText);
+						reference.setValue(content.substring(word.getStart(),
+								word.getEnd() + 1));
 						exp = reference;
 					}
 					results.add(exp);
