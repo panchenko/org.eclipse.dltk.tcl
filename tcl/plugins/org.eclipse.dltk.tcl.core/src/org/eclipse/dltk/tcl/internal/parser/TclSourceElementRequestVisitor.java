@@ -35,8 +35,8 @@ import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 
 public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor {
 
-	protected Stack namespacesLevel = new Stack();
-	protected Stack exitStack = new Stack();
+	protected Stack<String> namespacesLevel = new Stack<String>();
+	protected Stack<ExitFromType> exitStack = new Stack<ExitFromType>();
 	protected IProblemReporter fReporter;
 
 	protected ISourceElementRequestVisitorExtension[] extensions = TclExtensionManager
@@ -98,7 +98,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	}
 
 	protected String getEnclosingNamespace() {
-		String s = (String) this.namespacesLevel.peek();
+		String s = this.namespacesLevel.peek();
 		return s;
 
 	}
@@ -252,7 +252,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	}
 
 	public boolean endvisit(TypeDeclaration typeDeclaration) throws Exception {
-		ExitFromType exit = (ExitFromType) this.exitStack.pop();
+		ExitFromType exit = this.exitStack.pop();
 		exit.go();
 		this.fInClass = false;
 		this.onEndVisitClass(typeDeclaration);
@@ -261,7 +261,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	}
 
 	private static String[] kw = TclKeywordsManager.getKeywords();
-	private static Map kwMap = new HashMap();
+	private static Map<String, Boolean> kwMap = new HashMap<String, Boolean>();
 	static {
 		for (int q = 0; q < kw.length; ++q) {
 			kwMap.put(kw[q], Boolean.TRUE);
@@ -587,7 +587,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			}
 		}
 		super.endvisit(method);
-		ExitFromType exit = (ExitFromType) this.exitStack.pop();
+		ExitFromType exit = this.exitStack.pop();
 		exit.go();
 		return true;
 	}
