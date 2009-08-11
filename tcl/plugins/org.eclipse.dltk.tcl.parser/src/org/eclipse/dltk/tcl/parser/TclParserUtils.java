@@ -47,14 +47,14 @@ import org.eclipse.emf.common.util.EList;
 public class TclParserUtils implements ITclParserOptions {
 
 	public static final Pattern VERSION_PATTERN = Pattern
-			.compile("([\\(\\[][^\\(\\)]*[\\)\\]])");
+			.compile("([\\(\\[][^\\(\\)]*[\\)\\]])"); //$NON-NLS-1$
 	public static final Pattern INTERVAL_PATTERN = Pattern
-			.compile("([\\(\\[])(.*)[:;](.*)([\\)\\]])");
+			.compile("([\\(\\[])(.*)[:;](.*)([\\)\\]])"); //$NON-NLS-1$
 	public static final Pattern VALID_VERSION_PATTERN = Pattern
-			.compile("([\\(\\[](([0-9]+(\\.[0-9]+)*)|-)[;:](([0-9]+(\\.[0-9]+)*)|-)[\\)\\]]\\s*)*");
+			.compile("([\\(\\[](([0-9]+(\\.[0-9]+)*)|-)[;:](([0-9]+(\\.[0-9]+)*)|-)[\\)\\]]\\s*)*"); //$NON-NLS-1$
 
 	public static boolean isVersionValid(String version) {
-		if (version == null || version.equals(""))
+		if (version == null || version.length() == 0)
 			return true;
 		version = version.trim();
 		Matcher matcher = VALID_VERSION_PATTERN.matcher(version);
@@ -63,7 +63,7 @@ public class TclParserUtils implements ITclParserOptions {
 
 	public static boolean parseVersion(String version, String currentVersion) {
 
-		if (version == null || version.equals(""))
+		if (version == null || version.length() == 0)
 			return false;
 
 		Matcher versionMatcher = VERSION_PATTERN.matcher(version);
@@ -84,27 +84,27 @@ public class TclParserUtils implements ITclParserOptions {
 				String upperVersion = intervalMatcher.group(3);
 				String upperType = intervalMatcher.group(4);
 
-				if (!lowerVersion.equals("-")) {
-					if (lowerType.equals("(")
+				if (!lowerVersion.equals("-")) { //$NON-NLS-1$
+					if (lowerType.equals("(") //$NON-NLS-1$
 							&& compareVersions(currentVersion, lowerVersion) <= 0) {
 						isIntervalValid = false;
 						continue;
 					}
 
-					if (lowerType.equals("[")
+					if (lowerType.equals("[") //$NON-NLS-1$
 							&& compareVersions(currentVersion, lowerVersion) < 0) {
 						isIntervalValid = false;
 						continue;
 					}
 				}
-				if (!upperVersion.equals("-")) {
-					if (upperType.equals(")")
+				if (!upperVersion.equals("-")) { //$NON-NLS-1$
+					if (upperType.equals(")") //$NON-NLS-1$
 							&& compareVersions(currentVersion, upperVersion) >= 0) {
 						isIntervalValid = false;
 						continue;
 					}
 
-					if (upperType.equals("]")
+					if (upperType.equals("]") //$NON-NLS-1$
 							&& compareVersions(currentVersion, upperVersion) > 0) {
 						isIntervalValid = false;
 						continue;
@@ -120,8 +120,8 @@ public class TclParserUtils implements ITclParserOptions {
 	}
 
 	public static int compareVersions(String v1, String v2) {
-		String[] splited1 = v1.split("\\.");
-		String[] splited2 = v2.split("\\.");
+		String[] splited1 = v1.split("\\."); //$NON-NLS-1$
+		String[] splited2 = v2.split("\\."); //$NON-NLS-1$
 
 		int res = splited1.length - splited2.length;
 
@@ -239,9 +239,9 @@ public class TclParserUtils implements ITclParserOptions {
 			} else if (nde instanceof TclCommand) {
 				TclCommand command = (TclCommand) nde;
 				if (visitor.visit(command)) {
-					 List<TclArgument> nameList = new ArrayList<TclArgument>();
-	                    nameList.add(command.getName());
-	                    traverse(nameList, visitor);
+					List<TclArgument> nameList = new ArrayList<TclArgument>();
+					nameList.add(command.getName());
+					traverse(nameList, visitor);
 					traverse(command.getArguments(), visitor);
 					visitor.endVisit(command);
 				}
@@ -283,7 +283,7 @@ public class TclParserUtils implements ITclParserOptions {
 		List<StringBuilder> list = new ArrayList<StringBuilder>();
 		StringBuilder synopsis = new StringBuilder();
 		String name = command.getName();
-		if (name != null && !name.equals("")) {
+		if (name != null && name.length() != 0) {
 			list.add(new StringBuilder(name));
 		} else {
 			// TODO error : bad definition
@@ -295,7 +295,7 @@ public class TclParserUtils implements ITclParserOptions {
 		boolean first = true;
 		for (StringBuilder str : list) {
 			if (!first)
-				synopsis.append("\n");
+				synopsis.append("\n"); //$NON-NLS-1$
 			else
 				first = false;
 			synopsis.append(str.toString());
@@ -316,7 +316,7 @@ public class TclParserUtils implements ITclParserOptions {
 			list.add(new StringBuilder(((TypedArgument) arg).getName()));
 		} else if (arg instanceof Group) {
 			String constant = ((Group) arg).getConstant();
-			if (constant != null && !constant.equals(""))
+			if (constant != null && constant.length() != 0)
 				list.add(new StringBuilder(constant));
 			for (Argument sub : ((Group) arg).getArguments()) {
 				list = concatSynopsises(list, getSynopsisArgInfo(sub, pos + 1));
@@ -326,16 +326,16 @@ public class TclParserUtils implements ITclParserOptions {
 				list = concatSynopsises(list, getSynopsisArgInfo(sub, pos + 1));
 			}
 			for (StringBuilder sub : list) {
-				sub.insert(0, "{");
-				sub.append("}");
+				sub.insert(0, "{"); //$NON-NLS-1$
+				sub.append("}"); //$NON-NLS-1$
 			}
 		} else if (arg instanceof Switch) {
 			int type = REGULAR;
 			String constant = null;
 			if (((Switch) arg).getGroups() != null) {
 				constant = ((Switch) arg).getGroups().get(0).getConstant();
-				if (constant != null && !constant.equals("")) {
-					if (constant.startsWith("-")) {
+				if (constant != null && constant.length() != 0) {
+					if (constant.startsWith("-")) { //$NON-NLS-1$
 						type = OPTIONS;
 					} else {
 						if (pos == 0)
@@ -350,7 +350,7 @@ public class TclParserUtils implements ITclParserOptions {
 			switch (type) {
 			case REGULAR:
 				if (arg.getLowerBound() == 0) {
-					list.add(new StringBuilder(""));
+					list.add(new StringBuilder());
 				}
 			case SUBCOMMAND:
 				for (Group group : ((Switch) arg).getGroups()) {
@@ -361,17 +361,17 @@ public class TclParserUtils implements ITclParserOptions {
 			case MODE:
 				boolean first = true;
 				StringBuilder options = new StringBuilder();
-				options.append("<");
+				options.append("<"); //$NON-NLS-1$
 				for (Group group : ((Switch) arg).getGroups()) {
 					for (StringBuilder str : getSynopsisArgInfo(group, pos + 1)) {
 						if (!first)
-							options.append("|");
+							options.append("|"); //$NON-NLS-1$
 						else
 							first = false;
 						options.append(str);
 					}
 				}
-				options.append(">");
+				options.append(">"); //$NON-NLS-1$
 				list.add(options);
 			}
 		}
@@ -380,24 +380,24 @@ public class TclParserUtils implements ITclParserOptions {
 				// TODO error : bad definition
 			} else if (arg.getUpperBound() == -1) {
 				if (arg.getLowerBound() == 0) {
-					res.append(" ...");
-					res.insert(0, "?");
-					res.append("?");
+					res.append(" ..."); //$NON-NLS-1$
+					res.insert(0, "?"); //$NON-NLS-1$
+					res.append("?"); //$NON-NLS-1$
 				} else {
 					String value = res.toString();
 					for (int i = 0; i < arg.getUpperBound() - 1; i++)
-						res.append(" ").append(value);
-					res.append(" ?").append(value).append(" ...?");
+						res.append(" ").append(value); //$NON-NLS-1$
+					res.append(" ?").append(value).append(" ...?"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else if (arg.getUpperBound() == 1) {
 				if (arg.getLowerBound() == 0) {
-					res.insert(0, "?");
-					res.append("?");
+					res.insert(0, "?"); //$NON-NLS-1$
+					res.append("?"); //$NON-NLS-1$
 				}
 			} else {
 				String value = res.toString();
 				for (int i = 0; i < arg.getUpperBound(); i++)
-					res.append(" ").append(value);
+					res.append(" ").append(value); //$NON-NLS-1$
 			}
 		}
 		return list;
@@ -410,8 +410,8 @@ public class TclParserUtils implements ITclParserOptions {
 			return ss;
 		for (StringBuilder prefix : prefixes) {
 			for (StringBuilder s : ss) {
-				StringBuilder str = new StringBuilder(prefix);
-				newList.add(str.append(" ").append(s.toString()));
+				newList.add(new StringBuilder(prefix.length() + s.length() + 1)
+						.append(prefix).append(" ").append(s)); //$NON-NLS-1$
 			}
 		}
 		return newList;
