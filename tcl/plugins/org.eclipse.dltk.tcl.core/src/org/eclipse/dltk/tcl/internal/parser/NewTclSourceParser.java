@@ -63,10 +63,10 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 	private boolean useDetectors = true;
 
 	private TclModuleDeclaration moduleDeclaration;
-	private TclModule tclModule;
+	// private TclModule tclModule;
 	private ISourceLineTracker tracker;
 
-	private Set<ASTNode> processedForContentNodes = new HashSet();
+	private Set<ASTNode> processedForContentNodes = new HashSet<ASTNode>();
 	private NamespaceScopeProcessor coreProcessor = DefinitionManager
 			.getInstance().getCoreProcessor();;
 
@@ -74,8 +74,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			IProblemReporter reporter) {
 		processedForContentNodes.clear();
 		initDetectors();
-		this.tclModule = tclModule;
-		TclCodeModel model = this.tclModule.getCodeModel();
+		// this.tclModule = tclModule;
+		// TclCodeModel model = this.tclModule.getCodeModel();
 		this.tracker = createLineTracker(tclModule);
 		this.problemReporter = reporter;
 		this.fileName = fileName;
