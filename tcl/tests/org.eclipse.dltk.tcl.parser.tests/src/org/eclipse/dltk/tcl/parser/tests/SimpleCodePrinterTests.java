@@ -66,7 +66,8 @@ public class SimpleCodePrinterTests extends TestCase {
 	}
 
 	public void test010() throws Exception {
-		outCheck("proc hello2 {name2} {\n" + "	puts \"Hello, $name2\"\n" + "}",
+		outCheck(
+				"proc hello2 {name2} {\n\t" + "puts \"Hello, $name2\"\n" + "}",
 				"proc hello2 {name2} {  puts \"Hello, $name2\" }");
 	}
 
@@ -79,23 +80,27 @@ public class SimpleCodePrinterTests extends TestCase {
 		String s = "if {     $DEF(cancel)      ==      $caller     } {$caller} else {.$caller}";
 		outCheck(s, s);
 	}
+
 	public void test013() throws Exception {
 		String s = "if      {     $DEF(         cancel             )      ==      $caller     } {      $caller    } else {.$caller}";
 		outCheck(s, s);
 	}
+
 	public void test014() throws Exception {
 		String s = "proc alfa {    a    {   bbbb  }  {c {    d   }   } {    }";
 		outCheck(s, s);
 	}
-	
+
 	public void test015() throws Exception {
 		String s = "set a [    alfa]";
 		outCheck(s, s);
 	}
+
 	public void test016() throws Exception {
 		String s = "set a [    alfa      ]";
 		outCheck(s, s);
 	}
+
 	public void test017() throws Exception {
 		String s = "set a       [    alfa                 ]";
 		outCheck(s, s);
