@@ -13,6 +13,14 @@ import org.eclipse.dltk.tcl.ast.VariableReference;
 import org.eclipse.emf.common.util.EList;
 
 public class SimpleCodePrinter {
+
+	private static final String SPACE = " "; //$NON-NLS-1$
+	private static final String QUOTE = "\""; //$NON-NLS-1$
+	private static final String LEFT_BRACKET = "["; //$NON-NLS-1$
+	private static final String RIGHT_BRACKET = "]"; //$NON-NLS-1$
+	private static final String LEFT_BRACE = "{"; //$NON-NLS-1$
+	private static final String RIGHT_BRACE = "}"; //$NON-NLS-1$
+
 	public static String getArgumentString(TclArgument arg, int pos) {
 		return getArgumentString(arg, pos, true);
 	}
@@ -22,11 +30,11 @@ public class SimpleCodePrinter {
 	 */
 	public static String getArgumentString(TclArgument arg, int pos,
 			boolean addSpaces) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		int start = arg.getStart();
 		if (addSpaces && start > pos) {
 			for (int i = 0; i < (start - pos); ++i) {
-				buff.append(" ");
+				buff.append(SPACE);
 			}
 		}
 		if (arg instanceof StringArgument) {
@@ -44,9 +52,9 @@ public class SimpleCodePrinter {
 			// }
 			EList<TclArgument> eList = carg.getArguments();
 			if (carg.getKind() == 1) {
-				buff.append("{");
+				buff.append(LEFT_BRACE);
 			} else if (carg.getKind() == 2) {
-				buff.append("\"");
+				buff.append(QUOTE);
 			}
 			for (TclArgument tclArgument : eList) {
 				buff.append(getArgumentString(tclArgument, pos + buff.length(),
@@ -60,37 +68,36 @@ public class SimpleCodePrinter {
 			int npos = pos + buff.length();
 			if (addSpaces && end > npos) {
 				for (int i = 0; i < ((end) - npos); ++i) {
-					buff.append(" ");
+					buff.append(SPACE);
 				}
 			}
 			if (carg.getKind() == 1) {
-				buff.append("}");
+				buff.append(RIGHT_BRACE);
 			} else if (carg.getKind() == 2) {
-				buff.append("\"");
+				buff.append(QUOTE);
 			}
 			return buff.toString();
 		} else if (arg instanceof Script) {
 			Script st = (Script) arg;
-			EList<TclCommand> eList = st.getCommands();
-			buff.append("{");
+			buff.append(LEFT_BRACE);
 			boolean added = false;
-			for (TclCommand tclArgument : eList) {
+			for (TclCommand command : st.getCommands()) {
 				if (!added) {
 					added = true;
 				} else {
-					buff.append("\n    ");
+					buff.append("\n    "); //$NON-NLS-1$
 				}
-				buff.append(getCommandString(tclArgument, pos + buff.length(),
+				buff.append(getCommandString(command, pos + buff.length(),
 						addSpaces));
 			}
 			int end = arg.getEnd();
 			int npos = pos + buff.length();
 			if (addSpaces && end - 1 > npos) {
 				for (int i = 0; i < ((end - 1) - npos); ++i) {
-					buff.append(" ");
+					buff.append(SPACE);
 				}
 			}
-			buff.append("}");
+			buff.append(RIGHT_BRACE);
 			return buff.toString();
 
 		} else if (arg instanceof VariableReference) {
@@ -104,34 +111,33 @@ public class SimpleCodePrinter {
 			return buff.toString();
 		} else if (arg instanceof Substitution) {
 			Substitution st = (Substitution) arg;
-			EList<TclCommand> eList = st.getCommands();
-			buff.append("[");
+			buff.append(LEFT_BRACKET);
 			boolean added = false;
-			for (TclCommand tclArgument : eList) {
+			for (TclCommand command : st.getCommands()) {
 				if (!added) {
 					added = true;
 				} else {
-					buff.append("\n    ");
+					buff.append("\n    "); //$NON-NLS-1$
 				}
-				buff.append(getCommandString(tclArgument, pos + buff.length()));
+				buff.append(getCommandString(command, pos + buff.length()));
 			}
 			int end = arg.getEnd() - 1;
 			int npos = pos + buff.length();
 			if (addSpaces && end > npos) {
 				for (int i = 0; i < ((end) - npos); ++i) {
-					buff.append(" ");
+					buff.append(SPACE);
 				}
 			}
-			buff.append("]");
+			buff.append(RIGHT_BRACKET);
 			return buff.toString();
 		} else if (arg instanceof TclArgumentList) {
 			// We need to correct with appropriate number of spaces
 			TclArgumentList st = (TclArgumentList) arg;
 			EList<TclArgument> eList = st.getArguments();
 			if (st.getKind() == 1) {
-				buff.append("{");
+				buff.append(LEFT_BRACE);
 			} else if (st.getKind() == 2) {
-				buff.append("\"");
+				buff.append(QUOTE);
 			}
 			// boolean first = true;
 			for (TclArgument tclArgument : eList) {
@@ -145,14 +151,14 @@ public class SimpleCodePrinter {
 			int npos = pos + buff.length();
 			if (addSpaces && end > npos) {
 				for (int i = 0; i < ((end) - npos); ++i) {
-					buff.append(" ");
+					buff.append(SPACE);
 				}
 			}
 
 			if (st.getKind() == 1) {
-				buff.append("}");
+				buff.append(RIGHT_BRACE);
 			} else if (st.getKind() == 2) {
-				buff.append("\"");
+				buff.append(QUOTE);
 			}
 			return buff.toString();
 		}
@@ -168,16 +174,15 @@ public class SimpleCodePrinter {
 	 */
 	public static String getCommandString(TclCommand command, int pos,
 			boolean addSpaces) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		int start = command.getStart();
 		if (addSpaces && start > pos) {
 			for (int i = 0; i < (start - pos); ++i) {
-				buff.append(" ");
+				buff.append(SPACE);
 			}
 		}
-		EList<TclArgument> eList = command.getArguments();
 		buff.append(getArgumentString(command.getName(), start, addSpaces));
-		for (TclArgument tclArgument : eList) {
+		for (TclArgument tclArgument : command.getArguments()) {
 			buff.append(getArgumentString(tclArgument, pos + buff.length(),
 					addSpaces));
 		}
@@ -193,16 +198,16 @@ public class SimpleCodePrinter {
 	 */
 	public static String getCommandsString(List<TclCommand> commands,
 			boolean addSpaces) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		boolean first = false;
 		int pos = 0;
-		for (TclCommand tclArgument : commands) {
+		for (TclCommand command : commands) {
 			if (!first) {
 				first = true;
 			} else {
 				buff.append("\n");
 			}
-			String text = getCommandString(tclArgument, pos, addSpaces);
+			String text = getCommandString(command, pos, addSpaces);
 			buff.append(text);
 			pos += text.length();
 		}
