@@ -6,6 +6,7 @@ import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.Substitution;
+import org.eclipse.dltk.tcl.ast.TclArgumentKind;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -51,9 +52,9 @@ public class SimpleCodePrinter {
 			// return carg.getValue();
 			// }
 			EList<TclArgument> eList = carg.getArguments();
-			if (carg.getKind() == 1) {
+			if (carg.getKind() == TclArgumentKind.BRACED) {
 				buff.append(LEFT_BRACE);
-			} else if (carg.getKind() == 2) {
+			} else if (carg.getKind() == TclArgumentKind.QUOTED) {
 				buff.append(QUOTE);
 			}
 			for (TclArgument tclArgument : eList) {
@@ -62,7 +63,7 @@ public class SimpleCodePrinter {
 			}
 
 			int end = arg.getEnd() - 1;
-			if (carg.getKind() == 0) {
+			if (carg.getKind() == TclArgumentKind.SIMPLE) {
 				end++;
 			}
 			int npos = pos + buff.length();
@@ -71,9 +72,9 @@ public class SimpleCodePrinter {
 					buff.append(SPACE);
 				}
 			}
-			if (carg.getKind() == 1) {
+			if (carg.getKind() == TclArgumentKind.BRACED) {
 				buff.append(RIGHT_BRACE);
-			} else if (carg.getKind() == 2) {
+			} else if (carg.getKind() == TclArgumentKind.QUOTED) {
 				buff.append(QUOTE);
 			}
 			return buff.toString();
@@ -134,9 +135,9 @@ public class SimpleCodePrinter {
 			// We need to correct with appropriate number of spaces
 			TclArgumentList st = (TclArgumentList) arg;
 			EList<TclArgument> eList = st.getArguments();
-			if (st.getKind() == 1) {
+			if (st.getKind() == TclArgumentKind.BRACED) {
 				buff.append(LEFT_BRACE);
-			} else if (st.getKind() == 2) {
+			} else if (st.getKind() == TclArgumentKind.QUOTED) {
 				buff.append(QUOTE);
 			}
 			// boolean first = true;
@@ -145,7 +146,7 @@ public class SimpleCodePrinter {
 						addSpaces));
 			}
 			int end = arg.getEnd() - 1;
-			if (st.getKind() == 0) {
+			if (st.getKind() == TclArgumentKind.SIMPLE) {
 				end++;
 			}
 			int npos = pos + buff.length();
@@ -155,9 +156,9 @@ public class SimpleCodePrinter {
 				}
 			}
 
-			if (st.getKind() == 1) {
+			if (st.getKind() == TclArgumentKind.BRACED) {
 				buff.append(RIGHT_BRACE);
-			} else if (st.getKind() == 2) {
+			} else if (st.getKind() == TclArgumentKind.QUOTED) {
 				buff.append(QUOTE);
 			}
 			return buff.toString();
