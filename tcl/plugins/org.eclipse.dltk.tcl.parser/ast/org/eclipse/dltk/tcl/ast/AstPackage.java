@@ -38,7 +38,7 @@ public interface AstPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNAME = "ast";
+	String eNAME = "ast"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI.
@@ -46,7 +46,7 @@ public interface AstPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http:///org/eclipse/dltk/tcl/ast.ecore";
+	String eNS_URI = "http:///org/eclipse/dltk/tcl/ast.ecore"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
@@ -54,7 +54,7 @@ public interface AstPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "org.eclipse.dltk.tcl.ast";
+	String eNS_PREFIX = "org.eclipse.dltk.tcl.ast"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.
