@@ -336,7 +336,7 @@ public class TclParser implements ITclParserOptions {
 				String value = sArg.getValue();
 				list.setKind(TclArgumentKind.SIMPLE);
 				if (value.startsWith("{") && value.endsWith("}")) {
-					list.setKind(TclArgumentKind.QUOTED);
+					list.setKind(TclArgumentKind.BRACED);
 				}
 				if (value.startsWith("\"") && value.endsWith("\"")) {
 					list.setKind(TclArgumentKind.QUOTED);
