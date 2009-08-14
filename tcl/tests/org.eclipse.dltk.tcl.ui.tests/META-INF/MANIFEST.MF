@@ -24,4 +24,4 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.dltk.tcl.ui.tests,
  org.eclipse.dltk.tcl.ui.tests.folding,
  org.eclipse.dltk.tcl.ui.tests.indenting
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
