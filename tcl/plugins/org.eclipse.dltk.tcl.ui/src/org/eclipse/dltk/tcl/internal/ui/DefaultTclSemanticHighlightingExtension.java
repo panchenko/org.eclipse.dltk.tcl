@@ -14,11 +14,11 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
+import org.eclipse.dltk.tcl.ast.TclArgumentKind;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.ast.TclModuleDeclaration;
 import org.eclipse.dltk.tcl.ast.VariableReference;
-import org.eclipse.dltk.tcl.internal.ui.text.TclAutoEditStrategy;
 import org.eclipse.dltk.tcl.internal.ui.text.TclTextTools;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
@@ -203,7 +203,7 @@ public class DefaultTclSemanticHighlightingExtension implements
 
 							@Override
 							public boolean visit(ComplexString list) {
-								if (list.getKind() == 2) {
+								if (list.getKind() == TclArgumentKind.QUOTED) {
 									EList<TclArgument> arguments = list
 											.getArguments();
 									//
