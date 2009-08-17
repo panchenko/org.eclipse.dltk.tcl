@@ -13,6 +13,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelStatus;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -79,10 +80,13 @@ public class TclSourcesSourceModule extends ExternalSourceModule {
 	@Override
 	public void delete(boolean force, IProgressMonitor monitor) {
 		// Remove correction for this module from all places.
-		TclProjectInfo project = TclPackagesManager
-				.getTclProject(getScriptProject().getElementName());
+		final IScriptProject scriptProject = getScriptProject();
+		final IEnvironment environment = EnvironmentManager
+				.getEnvironment(scriptProject);
+		TclProjectInfo project = TclPackagesManager.getTclProject(scriptProject
+				.getElementName());
 		EList<TclModuleInfo> modules = project.getModules();
-		String path = getFullPath().toString();
+		String path = environment.convertPathToString(getFullPath()).toString();
 		for (TclModuleInfo tclModuleInfo : modules) {
 			EList<UserCorrection> corrections = tclModuleInfo
 					.getSourceCorrections();
