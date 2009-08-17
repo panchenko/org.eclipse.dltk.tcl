@@ -47,13 +47,12 @@ public class RemoveSourceAssociation implements IWorkbenchWindowActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection != null && selection instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) selection;
-			action.setEnabled(checkEnablement(this.selection));
+			action.setEnabled(checkEnablement());
 		}
 	}
 
-	private boolean checkEnablement(IStructuredSelection selection2) {
-		Iterator iterator = selection.iterator();
-		for (; iterator.hasNext();) {
+	private boolean checkEnablement() {
+		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			TclSourcesSourceModule module = (TclSourcesSourceModule) iterator
 					.next();
 			// Check for direct source references
@@ -70,7 +69,7 @@ public class RemoveSourceAssociation implements IWorkbenchWindowActionDelegate {
 			String value = variableResolver.resolve(originalName);
 
 			// if( value.equals())
-			if (value == null || !value.contains("$")) {
+			if (value != null && !value.contains("$")) {
 				return false; // This is resolved variable. We can't delete
 				// such associations.
 			}
