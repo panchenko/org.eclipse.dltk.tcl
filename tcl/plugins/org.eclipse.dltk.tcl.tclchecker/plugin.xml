@@ -106,4 +106,12 @@
 		</page>
 	</extension>
 -->
+<extension
+      point="org.eclipse.dltk.core.loggingOptions">
+   <loggingOption
+         category="Tcl"
+         id="logCommandLine"
+         name="Tcl Checker log command line before execution">
+   </loggingOption>
+</extension>
 </plugin>

@@ -41,11 +41,13 @@ import org.eclipse.dltk.tcl.tclchecker.TclCheckerPlugin;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerConfig;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerEnvironmentInstance;
 import org.eclipse.dltk.tcl.tclchecker.model.configs.CheckerVersion;
+import org.eclipse.dltk.utils.DLTKLoggingOption;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.dltk.validators.core.AbstractExternalValidator;
 import org.eclipse.dltk.validators.core.CommandLine;
 import org.eclipse.dltk.validators.core.ISourceModuleValidator;
 import org.eclipse.dltk.validators.core.IValidatorOutput;
+import org.eclipse.osgi.util.NLS;
 
 public class TclChecker extends AbstractExternalValidator implements
 		ISourceModuleValidator, ITclCheckerReporter, ILineTrackerFactory {
@@ -131,6 +133,12 @@ public class TclChecker extends AbstractExternalValidator implements
 				monitor.subTask(Messages.TclChecker_launching);
 				console.setAttribute(IValidatorOutput.COMMAND_LINE, cmdLine
 						.toString());
+				if (LOG_COMMAND_LINE.isEnabled()) {
+					final String message = NLS.bind("[{0}:{1}] {2}", //$NON-NLS-1$
+							new Object[] { instance.getInstance().getName(),
+									config.getName(), cmdLine.toString() });
+					TclCheckerPlugin.log(IStatus.INFO, message);
+				}
 				executeProcess(processor, execEnvironment, cmdLine.toArray());
 			} catch (CoreException e) {
 				TclCheckerPlugin.log(IStatus.ERROR,
@@ -142,6 +150,9 @@ public class TclChecker extends AbstractExternalValidator implements
 			monitor.done();
 		}
 	}
+
+	private static final DLTKLoggingOption LOG_COMMAND_LINE = new DLTKLoggingOption(
+			TclCheckerPlugin.PLUGIN_ID, "logCommandLine"); //$NON-NLS-1$
 
 	public void executeProcess(final IOutputProcessor processor,
 			final IExecutionEnvironment execEnvironment,
