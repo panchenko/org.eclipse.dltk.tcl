@@ -39,6 +39,7 @@ import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.launching.debug.DbgpConnectionConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.TclActiveStateDebuggerEnvironment;
+import org.eclipse.dltk.tcl.internal.activestatedebugger.TclDebuggerUtils;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationConstants;
@@ -272,6 +273,27 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	@Override
 	protected String getProcessType() {
 		return TclLaunchConfigurationConstants.ID_TCL_PROCESS_TYPE;
+	}
+
+	@Override
+	protected IFileHandle getDebuggingEnginePath(
+			PreferencesLookupDelegate delegate) {
+		IFileHandle handle = super.getDebuggingEnginePath(delegate);
+		if (handle == null) {
+			final String paths = delegate.getString(
+					getDebuggingEnginePreferenceQualifier(),
+					getDebuggingEnginePreferenceKey());
+			final IEnvironment env = getInstall().getEnvironment();
+			String path = EnvironmentPathUtils.decodePaths(paths).get(env);
+			if (path == null) {
+				path = TclDebuggerUtils.getDefaultEnginePath(env);
+				if (path != null && path.length() != 0) {
+					return PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(
+							env, new Path(path));
+				}
+			}
+		}
+		return handle;
 	}
 
 }

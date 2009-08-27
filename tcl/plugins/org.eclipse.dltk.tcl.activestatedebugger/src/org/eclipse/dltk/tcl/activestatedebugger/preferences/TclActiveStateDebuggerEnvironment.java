@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.tcl.activestatedebugger.ITclActiveStateDebuggerEnvironment;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
+import org.eclipse.dltk.tcl.internal.activestatedebugger.TclDebuggerUtils;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -35,7 +36,11 @@ public class TclActiveStateDebuggerEnvironment implements
 	}
 
 	public String getDebuggerPath() {
-		return getEnviromentPath(TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY);
+		final String path = getEnviromentPath(TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY);
+		if (path == null) {
+			return TclDebuggerUtils.getDefaultEnginePath(environment);
+		}
+		return path;
 	}
 
 	public boolean isLoggingEnabled() {
@@ -141,9 +146,9 @@ public class TclActiveStateDebuggerEnvironment implements
 	 */
 	private String getEnviromentPath(String key) {
 		final IPreferenceStore store = getPreferenceStore();
-		final Map<?, ?> paths = EnvironmentPathUtils.decodePaths(store
-				.getString(key));
-		return (String) paths.get(environment);
+		final Map<IEnvironment, String> paths = EnvironmentPathUtils
+				.decodePaths(store.getString(key));
+		return paths.get(environment);
 	}
 
 	/**
@@ -152,7 +157,6 @@ public class TclActiveStateDebuggerEnvironment implements
 	 */
 	private void setEnvironmentPath(String key, String path) {
 		final IPreferenceStore store = getPreferenceStore();
-		@SuppressWarnings("unchecked")
 		final Map<IEnvironment, String> paths = EnvironmentPathUtils
 				.decodePaths(store.getString(key));
 		final String oldPath = paths.get(environment);

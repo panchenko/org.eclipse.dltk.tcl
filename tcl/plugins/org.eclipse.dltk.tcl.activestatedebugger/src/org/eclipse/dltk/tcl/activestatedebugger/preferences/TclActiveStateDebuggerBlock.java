@@ -14,6 +14,7 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock
 import org.eclipse.dltk.debug.ui.preferences.ScriptDebugPreferencesMessages;
 import org.eclipse.dltk.tcl.activestatedebugger.ErrorAction;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationFeature;
+import org.eclipse.dltk.tcl.internal.activestatedebugger.TclDebuggerUtils;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.preferences.IPreferenceChangeRebuildPrompt;
 import org.eclipse.dltk.ui.preferences.PreferenceChangeRebuildPrompt;
@@ -337,4 +339,18 @@ public class TclActiveStateDebuggerBlock extends
 		}
 	}
 
+	@Override
+	protected Map<IEnvironment, String> getEnvironmentPaths() {
+		return new HashMap<IEnvironment, String>(super.getEnvironmentPaths()) {
+			@Override
+			public String get(Object key) {
+				final String value = super.get(key);
+				if (value == null) {
+					return TclDebuggerUtils
+							.getDefaultEnginePath((IEnvironment) key);
+				}
+				return value;
+			}
+		};
+	}
 }
