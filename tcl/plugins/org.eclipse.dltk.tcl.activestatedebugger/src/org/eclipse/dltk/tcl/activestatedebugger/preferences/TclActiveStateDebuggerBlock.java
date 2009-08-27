@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
 import org.eclipse.dltk.debug.ui.preferences.ScriptDebugPreferencesMessages;
 import org.eclipse.dltk.tcl.activestatedebugger.ErrorAction;
@@ -219,11 +220,13 @@ public class TclActiveStateDebuggerBlock extends
 		initValues();
 	}
 
+	@Override
 	protected void createEngineBlock(Composite parent) {
 		super.createEngineBlock(parent);
 		createPDXGroup(parent);
 	}
 
+	@Override
 	protected void createOtherBlock(Composite parent) {
 		addDownloadLink(parent, PreferenceMessages.DebuggingEngineDownloadPage,
 				PreferenceMessages.DebuggingEngineDownloadPageLink);
@@ -238,7 +241,7 @@ public class TclActiveStateDebuggerBlock extends
 				GridData.FILL_BOTH);
 		loggingBlock = new TclLoggingPathBlock();
 		loggingBlock.createControl(group, getRelevantEnvironments());
-		Map<?, ?> paths = EnvironmentPathUtils
+		Map<IEnvironment, String> paths = EnvironmentPathUtils
 				.decodePaths(getString(getLogFileNamePreferenceKey()));
 		loggingBlock.setPaths(paths);
 		loggingBlock
@@ -263,11 +266,12 @@ public class TclActiveStateDebuggerBlock extends
 				GridData.FILL_BOTH);
 		pdxPath = new EnvironmentPathBlock(true);
 		pdxPath.createControl(group, getRelevantEnvironments());
-		Map<?, ?> paths = EnvironmentPathUtils
+		Map<IEnvironment, String> paths = EnvironmentPathUtils
 				.decodePaths(getString(TclActiveStateDebuggerPreferencePage.PDX_PATH));
 		pdxPath.setPaths(paths);
 	}
 
+	@Override
 	protected boolean processChanges(IWorkbenchPreferenceContainer container) {
 		// PDX paths
 		String pdxPathKeyValue = EnvironmentPathUtils.encodePaths(pdxPath
@@ -308,10 +312,12 @@ public class TclActiveStateDebuggerBlock extends
 		return super.processChanges(container);
 	}
 
+	@Override
 	protected PreferenceKey getDebuggingEnginePathKey() {
 		return TclActiveStateDebuggerPreferencePage.ENGINE_PATH;
 	}
 
+	@Override
 	protected PreferenceKey getLogFileNamePreferenceKey() {
 		return TclActiveStateDebuggerPreferencePage.LOG_FILE_NAME;
 	}
