@@ -71,6 +71,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	/*
 	 * @see ExternalDebuggingEngineRunner#alterConfig(InterpreterConfig,String)
 	 */
+	@Override
 	protected InterpreterConfig alterConfig(InterpreterConfig config,
 			PreferencesLookupDelegate delegate) {
 
@@ -131,6 +132,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 		return newConfig;
 	}
 
+	@Override
 	protected IScriptDebugTarget createDebugTarget(ILaunch launch,
 			IDbgpService dbgpService) throws CoreException {
 		final ScriptDebugTarget target = new ScriptDebugTarget(
@@ -150,6 +152,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 
 		private static final String CONSOLE = "<console>"; //$NON-NLS-1$
 
+		@Override
 		public boolean get(BooleanOption option) {
 			if (option == DebugOption.DBGP_ASYNC) {
 				return false;
@@ -196,6 +199,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	/*
 	 * @see DebuggingEngineRunner#getDebuggingEngineId()
 	 */
+	@Override
 	protected String getDebuggingEngineId() {
 		return ENGINE_ID;
 	}
@@ -203,6 +207,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	/*
 	 * @see ExternalDebuggingEngineRunner#getDebuggingEnginePreferenceKey()
 	 */
+	@Override
 	protected String getDebuggingEnginePreferenceKey() {
 		return TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY;
 	}
@@ -210,6 +215,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	/*
 	 * @see DebuggingEngineRunner#getDebuggingEnginePreferenceQualifier()
 	 */
+	@Override
 	protected String getDebuggingEnginePreferenceQualifier() {
 		return TclActiveStateDebuggerPlugin.PLUGIN_ID;
 	}
@@ -217,6 +223,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	/*
 	 * @see DebuggingEngineRunner#getDebugPreferenceQualifier()
 	 */
+	@Override
 	protected String getDebugPreferenceQualifier() {
 		return TclDebugPlugin.PLUGIN_ID;
 	}
@@ -224,6 +231,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 	/*
 	 * @see DebuggingEngineRunner#getLogFileNamePreferenceKey()
 	 */
+	@Override
 	protected String getLogFileNamePreferenceKey() {
 		return TclActiveStateDebuggerConstants.LOG_FILE_NAME;
 	}
@@ -236,6 +244,7 @@ public class TclActiveStateDebuggerRunner extends ExternalDebuggingEngineRunner 
 				.create(project), new PreferencesLookupDelegate(project));
 	}
 
+	@Override
 	protected void abort(String message, Throwable exception, int code)
 			throws CoreException {
 		if (code == ScriptLaunchConfigurationConstants.ERR_DEBUGGING_ENGINE_NOT_CONFIGURED) {

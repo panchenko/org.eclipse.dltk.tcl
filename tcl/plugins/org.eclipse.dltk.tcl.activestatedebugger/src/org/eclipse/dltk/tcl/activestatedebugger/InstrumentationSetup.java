@@ -52,6 +52,7 @@ public class InstrumentationSetup {
 			return path;
 		}
 
+		@Override
 		public String toString() {
 			return path.toString() + (include ? "[include]" : "") //$NON-NLS-1$ //$NON-NLS-2$
 					+ (exclude ? "[exclude]" : ""); //$NON-NLS-1$ //$NON-NLS-2$
