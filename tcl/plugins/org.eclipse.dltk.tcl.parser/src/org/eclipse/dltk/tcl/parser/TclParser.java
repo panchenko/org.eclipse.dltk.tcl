@@ -375,6 +375,7 @@ public class TclParser implements ITclParserOptions {
 			script.setEnd(blockCode.getEnd() + globalOffset);
 			String wordText = blockCode.getValue();
 			if (wordText.startsWith("{") && wordText.endsWith("}")
+					|| wordText.startsWith("[") && wordText.endsWith("]")
 					|| wordText.startsWith("\"") && wordText.endsWith("\"")) {
 				script.setContentStart(script.getStart() + 1 + globalOffset);
 				script.setContentEnd(script.getEnd() - 1 + globalOffset);
@@ -574,10 +575,10 @@ public class TclParser implements ITclParserOptions {
 	private void reportCommandNameSubstitution(TclArgument commandName) {
 		if (this.reporter == null)
 			return;
-		// this.reporter.report(ITclErrorReporter.COMMAND_WITH_NAME_SUBSTITUTION,
-		// Messages.TclParser_Command_Name_Is_Substitution, null,
-		// commandName.getStart(), commandName.getEnd(),
-		// ITclErrorReporter.WARNING);
+		this.reporter.report(ITclErrorReporter.COMMAND_WITH_NAME_SUBSTITUTION,
+				Messages.TclParser_Command_Name_Is_Substitution, null,
+				commandName.getStart(), commandName.getEnd(),
+				ITclErrorReporter.WARNING);
 	}
 
 	private void reportDeprecatedError(TclCommand st, String commandValue,
