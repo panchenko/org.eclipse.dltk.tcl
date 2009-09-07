@@ -72,6 +72,9 @@ public class TclCheckerType extends AbstractValidatorType {
 	public IValidator[] getAllValidators(IProject project) {
 		final ValidatorInstanceResponse response = TclCheckerConfigUtils
 				.getConfiguration(project, TclCheckerConfigUtils.ALL);
+		if (response == null) {
+			return new IValidator[0];
+		}
 		final List<IValidator> result = new ArrayList<IValidator>();
 		for (ValidatorInstanceRef pair : response.instances) {
 			final List<CheckerConfig> configs = new ArrayList<CheckerConfig>();
