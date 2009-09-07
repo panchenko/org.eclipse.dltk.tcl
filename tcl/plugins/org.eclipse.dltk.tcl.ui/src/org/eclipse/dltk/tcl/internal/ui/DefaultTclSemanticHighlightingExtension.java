@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -130,9 +131,12 @@ public class DefaultTclSemanticHighlightingExtension implements
 	 */
 	public void doOtherHighlighting(ISourceModule code,
 			final ISemanticHighlightingRequestor semanticHighlightingRequestor) {
+		IModelElement modelElement = code.getModelElement();
+		if (modelElement == null) {
+			return;
+		}
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) (code
-						.getModelElement()));
+				.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) modelElement);
 		if (moduleDeclaration instanceof TclModuleDeclaration) {
 			TclModuleDeclaration tclModule = (TclModuleDeclaration) moduleDeclaration;
 			TclModule module = tclModule.getTclModule();
