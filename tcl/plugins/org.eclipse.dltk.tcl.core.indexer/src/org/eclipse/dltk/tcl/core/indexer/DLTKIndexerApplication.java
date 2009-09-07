@@ -157,7 +157,7 @@ public class DLTKIndexerApplication implements IApplication {
 
 	private Object versionMsg() {
 		System.out.println("DLTK Tcl Offline index creation tool version:"
-				+ DLTKTclIndexer.VERSION);
+				+ DLTKTclIndexer.VERSION + " build for: 2.0 WAVE 1.6");
 		return IApplication.EXIT_OK;
 	}
 
