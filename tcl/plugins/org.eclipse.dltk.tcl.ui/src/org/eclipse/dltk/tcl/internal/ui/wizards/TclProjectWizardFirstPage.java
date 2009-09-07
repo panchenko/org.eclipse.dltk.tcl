@@ -33,6 +33,7 @@ import org.eclipse.dltk.ui.dialogs.IProjectTemplateOperation;
 import org.eclipse.dltk.ui.wizards.IProjectWizardExtension;
 import org.eclipse.dltk.ui.wizards.IProjectWizardExtensionContext;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
+import org.eclipse.dltk.ui.wizards.IProjectWizardExtension.IValidationRequestor;
 import org.eclipse.dltk.utils.LazyExtensionManager;
 import org.eclipse.dltk.utils.LazyExtensionManager.Descriptor;
 import org.eclipse.swt.SWT;
@@ -43,7 +44,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
+final class TclProjectWizardFirstPage extends ProjectWizardFirstPage implements
+		IValidationRequestor {
 
 	public TclProjectWizardFirstPage() {
 		setTitle(TclWizardMessages.ProjectCreationWizardFirstPage_title);
@@ -356,6 +358,18 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 			return null;
 		}
 
+		/**
+		 * @return
+		 */
+		IProjectTemplate getSelectedTemplate() {
+			for (TclProjectTemplateEntry entry : fOptions) {
+				if (entry.fLinkRadio.isSelected()) {
+					return entry.descriptor.get();
+				}
+			}
+			return null;
+		}
+
 		@Override
 		public void update(Observable o, Object arg) {
 			super.update(o, arg);
@@ -369,6 +383,28 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 			}
 		}
 
+	}
+
+	@Override
+	protected IStatus validateProject() {
+		IStatus status = super.validateProject();
+		if (status != null && !status.isOK()) {
+			return status;
+		}
+		for (IProjectWizardExtension extension : wizardExtensions) {
+			IProject project = null;
+			if (fNameGroup.getName().length() != 0) {
+				project = getProjectHandle();
+			}
+			IProjectTemplate template = ((TclLocationGroup) fLocationGroup)
+					.getSelectedTemplate();
+			IStatus extensionStatus = extension.validate(project,
+					getInterpreterEnvironment(), template);
+			if (!extensionStatus.isOK()) {
+				return extensionStatus;
+			}
+		}
+		return status;
 	}
 
 	@Override
@@ -412,6 +448,11 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 			final IProjectWizardExtension extension = i.next();
 			wizardExtensions.add(extension);
 			extension.createControls(context);
+			extension.setValidationRequestor(this);
 		}
+	}
+
+	public void validate() {
+		fNameGroup.dialogFieldChanged(null);
 	}
 }
