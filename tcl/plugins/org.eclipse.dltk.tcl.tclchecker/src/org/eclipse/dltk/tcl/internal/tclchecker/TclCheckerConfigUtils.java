@@ -58,12 +58,22 @@ public class TclCheckerConfigUtils {
 			return true;
 		}
 
+		@Override
+		public String toString() {
+			return "TclCheckerConfigUtils.ALL"; //$NON-NLS-1$
+		}
+
 	};
 
 	public static final ICheckerPredicate AUTO = new ICheckerPredicate() {
 
 		public boolean evaluate(CheckerInstance instance) {
 			return instance.isAutomatic();
+		}
+
+		@Override
+		public String toString() {
+			return "TclCheckerConfigUtils.AUTO"; //$NON-NLS-1$
 		}
 
 	};
