@@ -26,9 +26,10 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.debug.ui.preferences.ExternalDebuggingEngineOptionsBlock;
 import org.eclipse.dltk.debug.ui.preferences.ScriptDebugPreferencesMessages;
+import org.eclipse.dltk.launching.debug.DebuggingUtils;
 import org.eclipse.dltk.tcl.activestatedebugger.ErrorAction;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationFeature;
-import org.eclipse.dltk.tcl.internal.activestatedebugger.TclDebuggerUtils;
+import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerRunner;
 import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.preferences.IPreferenceChangeRebuildPrompt;
 import org.eclipse.dltk.ui.preferences.PreferenceChangeRebuildPrompt;
@@ -346,8 +347,9 @@ public class TclActiveStateDebuggerBlock extends
 			public String get(Object key) {
 				final String value = super.get(key);
 				if (value == null) {
-					return TclDebuggerUtils
-							.getDefaultEnginePath((IEnvironment) key);
+					return DebuggingUtils.getDefaultEnginePath(
+							(IEnvironment) key,
+							TclActiveStateDebuggerRunner.ENGINE_ID);
 				}
 				return value;
 			}

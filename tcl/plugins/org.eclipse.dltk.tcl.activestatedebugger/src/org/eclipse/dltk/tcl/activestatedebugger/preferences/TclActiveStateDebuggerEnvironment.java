@@ -16,10 +16,11 @@ import java.util.Map;
 
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.launching.debug.DebuggingUtils;
 import org.eclipse.dltk.tcl.activestatedebugger.ITclActiveStateDebuggerEnvironment;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
-import org.eclipse.dltk.tcl.internal.activestatedebugger.TclDebuggerUtils;
+import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerRunner;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -38,7 +39,8 @@ public class TclActiveStateDebuggerEnvironment implements
 	public String getDebuggerPath() {
 		final String path = getEnviromentPath(TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY);
 		if (path == null) {
-			return TclDebuggerUtils.getDefaultEnginePath(environment);
+			return DebuggingUtils.getDefaultEnginePath(environment,
+					TclActiveStateDebuggerRunner.ENGINE_ID);
 		}
 		return path;
 	}
