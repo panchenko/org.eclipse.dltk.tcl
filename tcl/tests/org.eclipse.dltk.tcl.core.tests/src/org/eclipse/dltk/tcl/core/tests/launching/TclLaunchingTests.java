@@ -181,7 +181,6 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 		Map<IEnvironment, String> map = new HashMap<IEnvironment, String>();
 		map.put(LocalEnvironment.getInstance(), getTclDebuggerPath());
 		String keyValue = EnvironmentPathUtils.encodePaths(map);
-		System.out.println(keyValue);
 		pluginPreferences.setValue(
 				TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY,
 				keyValue);
