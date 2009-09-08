@@ -9,11 +9,12 @@ import java.util.Map;
 import junit.framework.Test;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.core.tests.launching.IFileVisitor;
@@ -28,17 +29,17 @@ import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerRunner;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
-import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
 
 public class TclLaunchingTests extends ScriptLaunchingTests {
-	private static final String DBGP_TCLDEBUG = "/home/dltk/apps/tcl_debug/dbgp_tcldebug";
+	private static final String DBGP_TCLDEBUG_PATH = "/home/dltk/apps/tcl_debug";
+	private static final String DBGP_TCLDEBUG_FILE = "dbgp_tcldebug";
 
 	class Searcher implements IFileVisitor {
 		private String debuggingEnginePath = null;
 
 		public boolean visit(IFileHandle file) {
-			if (file.isFile() && file.getName().startsWith("dbgp_tcldebug")) {
+			if (file.isFile() && file.getName().startsWith(DBGP_TCLDEBUG_FILE)) {
 				debuggingEnginePath = file.toOSString();
 			}
 
@@ -143,37 +144,41 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 
 	private boolean initialized = false;
 
+	protected String getTclDebuggerPath() {
+		String path = DBGP_TCLDEBUG_PATH + "."
+				+ System.getProperty("os.name").toLowerCase() + "."
+				+ System.getProperty("os.arch") + "/" + DBGP_TCLDEBUG_FILE;
+		if (new File(path).exists()) {
+			return path;
+		}
+		path = DBGP_TCLDEBUG_PATH + "/" + DBGP_TCLDEBUG_FILE;
+		if (new File(path).exists()) {
+			return path;
+		}
+		// Lets search if we could not found in default location.
+		PathFilesContainer container = new PathFilesContainer(
+				EnvironmentManager.getLocalEnvironment());
+		Searcher searcher = new Searcher();
+		container.accept(searcher);
+		path = searcher.getPath();
+		assertNotNull("Couldn't find ActiveState debugger", path);
+		return path;
+	}
+
 	private void initializeActiveStateDebugEngine() {
 		if (initialized) {
 			return;
 		}
-		TclDebugPlugin.getDefault().getPluginPreferences().setValue(
-				TclDebugConstants.DEBUGGING_ENGINE_ID_KEY,
+		Preferences pluginPreferences = TclActiveStateDebuggerPlugin
+				.getDefault().getPluginPreferences();
+		pluginPreferences.setValue(TclDebugConstants.DEBUGGING_ENGINE_ID_KEY,
 				TclActiveStateDebuggerRunner.ENGINE_ID);
 
-		// PathFilesContainer container = new PathFilesContainer();
-		Plugin plugin = TclActiveStateDebuggerPlugin.getDefault();
-
-		String path = DBGP_TCLDEBUG;
-		File file = new File(path);
-		// Lets search if we could not found in default location.
-		boolean inDefault = true;
-		if (!file.exists()) {
-			PathFilesContainer container = new PathFilesContainer(
-					EnvironmentManager.getLocalEnvironment());
-			Searcher searcher = new Searcher();
-			container.accept(searcher);
-			path = searcher.getPath();
-			inDefault = false;
-		}
-		if (!inDefault && path == null) {
-			assertNotNull("Couldn't find ActiveState debugger", path);
-		}
-
-		Map map = new HashMap();
-		map.put(LocalEnvironment.getInstance(), path);
+		Map<IEnvironment, String> map = new HashMap<IEnvironment, String>();
+		map.put(LocalEnvironment.getInstance(), getTclDebuggerPath());
 		String keyValue = EnvironmentPathUtils.encodePaths(map);
-		plugin.getPluginPreferences().setValue(
+		System.out.println(keyValue);
+		pluginPreferences.setValue(
 				TclActiveStateDebuggerConstants.DEBUGGING_ENGINE_PATH_KEY,
 				keyValue);
 		initialized = true;
@@ -183,7 +188,7 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 		IInterpreterInstallType[] installTypes = ScriptRuntime
 				.getInterpreterInstallTypes(TclNature.NATURE_ID);
 		int id = 0;
-		List installs = new ArrayList();
+		List<IInterpreterInstall> installs = new ArrayList<IInterpreterInstall>();
 		for (int i = 0; i < installTypes.length; i++) {
 			String installId = getNatureId() + "_";
 			createAddInstall(installs, "/usr/bin/tclsh", installId
@@ -194,8 +199,7 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 					+ Integer.toString(++id), installTypes[i]);
 		}
 		if (installs.size() > 0) {
-			return (IInterpreterInstall[]) installs
-					.toArray(new IInterpreterInstall[installs.size()]);
+			return installs.toArray(new IInterpreterInstall[installs.size()]);
 		}
 		return searchInstalls(TclNature.NATURE_ID);
 	}
