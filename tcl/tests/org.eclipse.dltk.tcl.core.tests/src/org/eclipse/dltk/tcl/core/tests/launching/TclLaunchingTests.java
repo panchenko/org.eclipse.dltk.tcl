@@ -9,9 +9,11 @@ import java.util.Map;
 import junit.framework.Test;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -31,9 +33,12 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugConstants;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
 
+@SuppressWarnings("nls")
 public class TclLaunchingTests extends ScriptLaunchingTests {
-	private static final String DBGP_TCLDEBUG_PATH = "/home/dltk/apps/tcl_debug";
-	private static final String DBGP_TCLDEBUG_FILE = "dbgp_tcldebug";
+	private static final String DBGP_TCLDEBUG_PATH = "/home/dltk/apps/tcl_debug"; //$NON-NLS-1$
+	private static final String DBGP_TCLDEBUG_SUFFIX = Platform.OS_WIN32
+			.equals(Platform.getOS()) ? ".exe" : Util.EMPTY_STRING; //$NON-NLS-1$
+	private static final String DBGP_TCLDEBUG_FILE = "dbgp_tcldebug" + DBGP_TCLDEBUG_SUFFIX; //$NON-NLS-1$
 
 	class Searcher implements IFileVisitor {
 		private String debuggingEnginePath = null;
@@ -145,9 +150,8 @@ public class TclLaunchingTests extends ScriptLaunchingTests {
 	private boolean initialized = false;
 
 	protected String getTclDebuggerPath() {
-		String path = DBGP_TCLDEBUG_PATH + "."
-				+ System.getProperty("os.name").toLowerCase() + "."
-				+ System.getProperty("os.arch") + "/" + DBGP_TCLDEBUG_FILE;
+		String path = DBGP_TCLDEBUG_PATH + "." + Platform.getOS() + "."
+				+ Platform.getOSArch() + "/" + DBGP_TCLDEBUG_FILE;
 		if (new File(path).exists()) {
 			return path;
 		}
