@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.console.ScriptConsoleServer;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.IDeployment;
@@ -85,6 +86,10 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 
 	protected void alterConfig(ILaunch launch, InterpreterConfig config) {
 		super.alterConfig(launch, config);
+		if (!ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
+			return;
+		}
+		// use interactive console only in RUN mode.
 		ILaunchConfiguration configuration = launch.getLaunchConfiguration();
 		if (configuration != null) {
 			boolean useTclConsole = false;
