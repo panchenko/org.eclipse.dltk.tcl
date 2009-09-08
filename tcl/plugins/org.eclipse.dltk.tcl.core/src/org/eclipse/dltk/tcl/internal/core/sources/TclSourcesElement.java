@@ -127,6 +127,12 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 					vChildren.add(module);
 				}
 			}
+			if (pseudoElements.size() > 0) {
+				for (String name : pseudoElements) {
+					vChildren.add(new TclSourcesPseudoSourceModule(this,
+							name, DefaultWorkingCopyOwner.PRIMARY));
+				}
+			}
 			info.setChildren(vChildren.toArray(new IModelElement[vChildren
 					.size()]));
 		}
