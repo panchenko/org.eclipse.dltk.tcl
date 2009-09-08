@@ -220,12 +220,10 @@ public class TclChecker extends AbstractExternalValidator implements
 			return deployment.add(
 					new ByteArrayInputStream(baros.toByteArray()), PATTERN_TXT);
 		} catch (IOException e) {
+			TclCheckerPlugin.log(IStatus.ERROR,
+					Messages.TclChecker_filelist_deploy_failed, e);
 			if (DLTKCore.DEBUG) {
-				TclCheckerPlugin.log(IStatus.ERROR,
-						Messages.TclChecker_filelist_deploy_failed, e);
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
+				e.printStackTrace();
 			}
 			return null;
 		}
