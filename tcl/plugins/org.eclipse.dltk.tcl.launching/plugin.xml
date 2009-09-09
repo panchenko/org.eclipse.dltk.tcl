@@ -6,6 +6,7 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
          <launchConfigurationType
                delegate="org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate"
+               migrationDelegate="org.eclipse.dltk.internal.launching.ScriptLaunchConfigurationMigrationDelegate"               
                id="org.eclipse.dltk.tcl.launching.TCLLaunchConfigurationType"
                modes="run,debug"
                name="%TclLaunchConfigurationType.name"
@@ -15,6 +16,7 @@
 		  </launchConfigurationType>
          <launchConfigurationType
                delegate="org.eclipse.dltk.tcl.launching.TclRemoteLaunchConfigurationDelegate"
+               migrationDelegate="org.eclipse.dltk.internal.launching.ScriptLaunchConfigurationMigrationDelegate"
                id="org.eclipse.dltk.tcl.launching.TCLRemoteLaunchConfigurationType"
                modes="debug"
                name="%TclRemoteLaunchConfigurationType.name"
