@@ -370,7 +370,7 @@
             class="org.eclipse.dltk.tcl.internal.ui.actions.TclOpenMethodAction"
             definitionId="org.eclipse.dltk.tcl.ui.navigate.open.method"
             icon="icons/etool16/openmethod.gif"
-            id="openType"
+            id="openMethod"
             label="%OpenMethodAction.label"
             menubarPath="navigate/open.ext2"
             tooltip="%OpenMethodAction.tooltip">
