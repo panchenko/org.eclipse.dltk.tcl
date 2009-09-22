@@ -3,6 +3,7 @@ package org.eclipse.dltk.tcl.internal.core.sources;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -206,7 +207,7 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 	}
 
 	public ISourceModule[] getSourceModules() throws ModelException {
-		ArrayList list = getChildrenOfType(SOURCE_MODULE);
+		List<IModelElement> list = getChildrenOfType(SOURCE_MODULE);
 		ISourceModule[] array = new ISourceModule[list.size()];
 		list.toArray(array);
 		return array;

@@ -186,7 +186,7 @@ public class TclPackageElement extends Openable implements IScriptFolder {
 	}
 
 	public ISourceModule[] getSourceModules() throws ModelException {
-		ArrayList list = getChildrenOfType(SOURCE_MODULE);
+		List<IModelElement> list = getChildrenOfType(SOURCE_MODULE);
 		ISourceModule[] array = new ISourceModule[list.size()];
 		list.toArray(array);
 		return array;

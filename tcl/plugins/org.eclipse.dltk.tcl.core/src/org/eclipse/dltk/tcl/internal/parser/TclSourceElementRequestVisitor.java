@@ -20,7 +20,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
-import org.eclipse.dltk.compiler.ISourceElementRequestor.ImportInfo;
+import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.ast.TclStatement;
