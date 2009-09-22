@@ -166,7 +166,14 @@
             id="while">
       </processor>
    </extension>
- <extension
+   <extension
+      point="org.eclipse.dltk.core.projectIndexer">
+      <enable
+            indexer="org.eclipse.dltk.core.indexer.mixin"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </enable>
+   </extension>
+   <extension
          point="org.eclipse.dltk.core.mixin">
       <mixin
             class="org.eclipse.dltk.tcl.internal.core.search.mixin.TclMixinParser"
