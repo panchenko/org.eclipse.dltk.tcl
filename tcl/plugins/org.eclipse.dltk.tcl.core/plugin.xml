@@ -83,7 +83,7 @@
         point="org.eclipse.core.runtime.contentTypes">
      <content-type
            base-type="org.eclipse.core.runtime.text"
-           file-extensions="tcl,test,exp,tm"
+           file-extensions="tcl,test,exp,tm,pcx,pdx"
            id="org.eclipse.dltk.tclContentType"
            name="%tclContentType"
            priority="high">
