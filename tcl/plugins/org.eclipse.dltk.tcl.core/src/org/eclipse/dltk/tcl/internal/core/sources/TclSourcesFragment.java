@@ -244,4 +244,10 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 				pseudoElements);
 		return !sources.isEmpty() || !pseudoElements.isEmpty();
 	}
+	/**
+	 * @since 2.0
+	 */
+	public boolean isBinary() {
+		return false;
+	}
 }

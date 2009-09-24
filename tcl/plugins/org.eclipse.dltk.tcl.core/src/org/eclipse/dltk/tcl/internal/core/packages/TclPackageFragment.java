@@ -231,4 +231,10 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 		}
 		return currentPath.hashCode();
 	}
+	/**
+	 * @since 2.0
+	 */
+	public boolean isBinary() {
+		return false;
+	}
 }
