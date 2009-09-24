@@ -20,10 +20,13 @@ import org.eclipse.dltk.ui.environment.EnvironmentPathBlock;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
@@ -110,6 +113,9 @@ public class TclLoggingPathBlock extends EnvironmentPathBlock {
 
 	@Override
 	protected void initColumns(TableViewer viewer, PixelConverter conv) {
+		TableViewerEditor.create(viewer,
+				new ColumnViewerEditorActivationStrategy(viewer),
+				ColumnViewerEditor.KEEP_EDITOR_ON_DOUBLE_CLICK);
 		initEnvironmentColumn(viewer, conv);
 		initEnableLoggingColumn(viewer, conv);
 		initPathColumn(viewer, conv);
