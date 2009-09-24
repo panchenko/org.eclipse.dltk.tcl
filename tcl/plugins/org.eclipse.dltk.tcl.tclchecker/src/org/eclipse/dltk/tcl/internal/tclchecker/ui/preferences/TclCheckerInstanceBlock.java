@@ -106,6 +106,9 @@ public class TclCheckerInstanceBlock extends AbstractValidatorEditBlock {
 		createCommandLineOptions(nameComposite);
 		SWTFactory.createHorizontalSpacer(nameComposite, 2);
 
+		SWTFactory.createLabel(parent,
+				Messages.TclCheckerInstanceDialog_Environment, 2);
+
 		final Composite hostList = new Composite(parent, SWT.NONE);
 		final GridData hostListLayoutData = new GridData(GridData.FILL_VERTICAL);
 		hostListLayoutData.widthHint = new PixelConverter(parent)
@@ -142,8 +145,6 @@ public class TclCheckerInstanceBlock extends AbstractValidatorEditBlock {
 	}
 
 	private void createEnvironment(Composite parent) {
-		SWTFactory.createLabel(parent,
-				Messages.TclCheckerInstanceDialog_Environment, 1);
 		Composite environmentFieldParent = new Composite(parent, SWT.NONE);
 		environmentFieldParent.setLayoutData(new GridData(GridData.FILL_BOTH));
 		final TableColumnLayout environmentTableLayout = new TableColumnLayout();
