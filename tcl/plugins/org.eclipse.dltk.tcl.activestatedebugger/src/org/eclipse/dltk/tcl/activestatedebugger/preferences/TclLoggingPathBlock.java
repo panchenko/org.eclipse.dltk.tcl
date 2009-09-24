@@ -74,20 +74,24 @@ public class TclLoggingPathBlock extends EnvironmentPathBlock {
 					SWT.READ_ONLY);
 		}
 
+		@Override
 		protected boolean canEdit(Object element) {
 			return true;
 		}
 
+		@Override
 		protected CellEditor getCellEditor(Object element) {
 			return editor;
 		}
 
+		@Override
 		protected Object getValue(Object element) {
 			final Boolean value = enableLogging.get(((IEnvironment) element)
 					.getId());
 			return value == null || value.booleanValue() ? 1 : 0;
 		}
 
+		@Override
 		protected void setValue(Object element, Object value) {
 			enableLogging.put(((IEnvironment) element).getId(), Boolean
 					.valueOf(((Integer) value).intValue() != 0));
