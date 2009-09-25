@@ -35,7 +35,8 @@ public class TclPackagesInterpreterContainerExtension implements
 	public TclPackagesInterpreterContainerExtension() {
 	}
 
-	public void processEntres(IScriptProject project, List buildpathEntries) {
+	public void processEntres(IScriptProject project,
+			List<IBuildpathEntry> buildpathEntries) {
 		if (TclCorePreferences.USE_PACKAGE_CONCEPT) {
 			return;
 		}
@@ -150,5 +151,14 @@ public class TclPackagesInterpreterContainerExtension implements
 				}
 			}
 		}
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public void preProcessEntries(IScriptProject project,
+			List<IBuildpathEntry> entries) {
+		// TODO Auto-generated method stub
+		
 	}
 }
