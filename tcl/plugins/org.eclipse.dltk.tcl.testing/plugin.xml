@@ -48,7 +48,7 @@
             label="%TclLaunchShortcut.name"
             modes="run,debug">
          <configurationType
-               id="org.eclipse.dltk.testing.test.launchConfigurationType">
+               id="org.eclipse.dltk.tcl.testing.launchConfig">
          </configurationType>
          <contextualLaunch>
            <enablement>
