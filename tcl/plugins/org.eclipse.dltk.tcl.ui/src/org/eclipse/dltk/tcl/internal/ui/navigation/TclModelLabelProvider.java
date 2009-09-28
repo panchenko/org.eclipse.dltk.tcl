@@ -1,5 +1,6 @@
 package org.eclipse.dltk.tcl.internal.ui.navigation;
 
+import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -12,6 +13,8 @@ import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 public class TclModelLabelProvider extends LabelProvider {
 	public String getText(Object element) {
@@ -48,10 +51,22 @@ public class TclModelLabelProvider extends LabelProvider {
 		return null;
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof TclSourcesFragment) {
 			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_LIBRARY_SRC);
+		} else if (element instanceof IScriptFolder) {
+			return getScriptFolderIcon();
 		}
 		return null;
 	}
+
+	/**
+	 * @return
+	 */
+	private Image getScriptFolderIcon() {
+		return PlatformUI.getWorkbench().getSharedImages().getImage(
+				ISharedImages.IMG_OBJ_FOLDER);
+	}
+
 }
