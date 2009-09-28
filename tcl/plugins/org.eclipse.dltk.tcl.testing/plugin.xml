@@ -2,6 +2,15 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="tclTestEngine" name="tclTestEngine" schema="schema/tclTestEngine.exsd"/>
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            properties="isTest,canLaunchAsTest"
+            namespace="org.eclipse.dltk.tcl"
+            type="org.eclipse.core.runtime.IAdaptable"
+            class="org.eclipse.dltk.tcl.internal.testing.TclTestingPropertyTester"
+            id="org.eclipse.dltk.tcl.TestPropertyTester">
+      </propertyTester>
+   </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
@@ -55,11 +64,16 @@
 					<with variable="selection">
 						<count value="1" />
 						<iterate>
-							<or>
+							<and>
 								<test
+									property="org.eclipse.dltk.launching.hasProjectNature" 
 									args="org.eclipse.dltk.tcl.core.nature"
-									property="org.eclipse.dltk.launching.hasProjectNature" />
-							</or>
+									/>
+								<test
+									property="org.eclipse.dltk.tcl.canLaunchAsTest"
+									args="org.eclipse.dltk.tcl.canLaunchAsTest"
+									/>
+							</and>
 						</iterate>
 					</with>
 				</enablement>
