@@ -1,5 +1,8 @@
 package org.eclipse.dltk.tcl.internal.ui.navigation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -10,11 +13,11 @@ import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
 import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
 import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule;
+import org.eclipse.dltk.tcl.internal.ui.TclImages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 public class TclModelLabelProvider extends LabelProvider {
 	public String getText(Object element) {
@@ -65,8 +68,20 @@ public class TclModelLabelProvider extends LabelProvider {
 	 * @return
 	 */
 	private Image getScriptFolderIcon() {
-		return PlatformUI.getWorkbench().getSharedImages().getImage(
-				ISharedImages.IMG_OBJ_FOLDER);
+		return getImageFor(TclImages.DESC_OBJS_FOLDER);
+		// return PlatformUI.getWorkbench().getSharedImages().getImage(
+		// ISharedImages.IMG_OBJ_FOLDER);
 	}
+
+	private Image getImageFor(ImageDescriptor descriptor) {
+		Image image = registry.get(descriptor);
+		if (image == null) {
+			image = descriptor.createImage();
+			registry.put(descriptor, image);
+		}
+		return image;
+	}
+
+	private Map<ImageDescriptor, Image> registry = new HashMap<ImageDescriptor, Image>();
 
 }

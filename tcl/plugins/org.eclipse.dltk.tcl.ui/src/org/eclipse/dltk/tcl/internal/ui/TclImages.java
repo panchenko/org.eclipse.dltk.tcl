@@ -28,4 +28,7 @@ public class TclImages {
 			.createUnManaged(PluginImagesHelper.T_OBJ, "test_obj.png");
 	public static final ImageDescriptor DESC_OBJS_TESTCASE = helper
 			.createUnManaged(PluginImagesHelper.T_OBJ, "testcase_obj.png");
+	public static final ImageDescriptor DESC_OBJS_FOLDER = helper
+			.createUnManaged(PluginImagesHelper.T_OBJ,
+					"tcl_packagefolder_obj.gif");
 }
