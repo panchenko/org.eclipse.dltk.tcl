@@ -255,6 +255,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	private void refreshView() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				if (fElements.getControl().isDisposed())
+					return;
 				fElements.refresh();
 				IInterpreterInstall install = getInterpreter();
 				if (install == null) {
