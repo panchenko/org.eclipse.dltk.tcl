@@ -5,7 +5,7 @@
    <extension point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
             properties="isTest,canLaunchAsTest"
-            namespace="org.eclipse.dltk.tcl"
+            namespace="org.eclipse.dltk.tcl.testing"
             type="org.eclipse.core.runtime.IAdaptable"
             class="org.eclipse.dltk.tcl.internal.testing.TclTestingPropertyTester"
             id="org.eclipse.dltk.tcl.TestPropertyTester">
@@ -64,16 +64,16 @@
 					<with variable="selection">
 						<count value="1" />
 						<iterate>
-							<and>
+							<adapt type="org.eclipse.dltk.core.IModelElement">
 								<test
 									property="org.eclipse.dltk.launching.hasProjectNature" 
 									args="org.eclipse.dltk.tcl.core.nature"
 									/>
 								<test
-									property="org.eclipse.dltk.tcl.canLaunchAsTest"
-									args="org.eclipse.dltk.tcl.canLaunchAsTest"
+									property="org.eclipse.dltk.tcl.testing.canLaunchAsTest"
+									forcePluginActivation="true"
 									/>
-							</and>
+							</adapt>
 						</iterate>
 					</with>
 				</enablement>
