@@ -58,13 +58,14 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage implements
 			super(composite);
 		}
 
-		protected String getCurrentLanguageNature() {
-			return TclNature.NATURE_ID;
-		}
-
 		protected String getIntereprtersPreferencePageId() {
 			return "org.eclipse.dltk.tcl.preferences.interpreters"; //$NON-NLS-1$
 		}
+	}
+
+	@Override
+	public String getScriptNature() {
+		return TclNature.NATURE_ID;
 	}
 
 	protected IInterpreterGroup createInterpreterGroup(Composite parent) {

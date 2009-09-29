@@ -23,14 +23,11 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 		super(mainPage);
 	}
 
+	@Override
 	protected BuildpathsBlock createBuildpathBlock(
 			IStatusChangeListener listener) {
 		return new TclBuildPathsBlock(new BusyIndicatorRunnableContext(),
 				listener, 0, useNewSourcePage(), null);
-	}
-
-	protected String getScriptNature() {
-		return TclNature.NATURE_ID;
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
