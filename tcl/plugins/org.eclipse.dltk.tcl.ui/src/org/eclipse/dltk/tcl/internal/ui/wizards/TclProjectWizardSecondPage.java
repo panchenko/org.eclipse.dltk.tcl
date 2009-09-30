@@ -7,31 +7,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.tcl.internal.ui.TclUI;
-import org.eclipse.dltk.tcl.internal.ui.preferences.TclBuildPathsBlock;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.util.BusyIndicatorRunnableContext;
-import org.eclipse.dltk.ui.util.IStatusChangeListener;
-import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.dltk.ui.wizards.ProjectWizardSecondPage;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 	TclProjectWizardSecondPage(ProjectWizardFirstPage mainPage) {
 		super(mainPage);
-	}
-
-	@Override
-	protected BuildpathsBlock createBuildpathBlock(
-			IStatusChangeListener listener) {
-		return new TclBuildPathsBlock(new BusyIndicatorRunnableContext(),
-				listener, 0, useNewSourcePage(), null);
-	}
-
-	protected IPreferenceStore getPreferenceStore() {
-		return TclUI.getDefault().getPreferenceStore();
 	}
 
 	@Override
