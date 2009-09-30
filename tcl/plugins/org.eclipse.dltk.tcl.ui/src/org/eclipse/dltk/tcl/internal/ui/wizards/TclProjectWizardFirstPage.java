@@ -57,12 +57,6 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage implements
 		return TclNature.NATURE_ID;
 	}
 
-	@Override
-	protected IInterpreterGroup createInterpreterGroup(Composite parent) {
-		return new DefaultInterpreterGroup(parent,
-				"org.eclipse.dltk.tcl.preferences.interpreters"); //$NON-NLS-1$
-	}
-
 	protected boolean interpeterRequired() {
 		/* Specially allow to create TCL project without interpreter */
 		return false;
