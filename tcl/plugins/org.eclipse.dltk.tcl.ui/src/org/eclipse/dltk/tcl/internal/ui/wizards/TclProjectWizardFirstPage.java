@@ -52,24 +52,15 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage implements
 		setDescription(TclWizardMessages.ProjectCreationWizardFirstPage_description);
 	}
 
-	final class TclInterpreterGroup extends AbstractInterpreterGroup {
-
-		public TclInterpreterGroup(Composite composite) {
-			super(composite);
-		}
-
-		protected String getIntereprtersPreferencePageId() {
-			return "org.eclipse.dltk.tcl.preferences.interpreters"; //$NON-NLS-1$
-		}
-	}
-
 	@Override
 	public String getScriptNature() {
 		return TclNature.NATURE_ID;
 	}
 
+	@Override
 	protected IInterpreterGroup createInterpreterGroup(Composite parent) {
-		return new TclInterpreterGroup(parent);
+		return new DefaultInterpreterGroup(parent,
+				"org.eclipse.dltk.tcl.preferences.interpreters"); //$NON-NLS-1$
 	}
 
 	protected boolean interpeterRequired() {
