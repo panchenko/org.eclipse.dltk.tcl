@@ -95,7 +95,6 @@ public class NewTclProjectWizardPage extends NewElementWizardPage {
 				updateStatus(status);
 			}
 
-			@Override
 			public IDLTKLanguageToolkit getLanguageToolkit() {
 				return TclLanguageToolkit.getDefault();
 			}
