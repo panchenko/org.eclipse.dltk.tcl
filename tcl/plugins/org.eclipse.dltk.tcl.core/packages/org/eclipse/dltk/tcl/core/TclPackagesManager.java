@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.environment.IDeployment;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.launching.EnvironmentVariable;
@@ -192,19 +193,18 @@ public class TclPackagesManager {
 	}
 
 	private static long getPackagesRefreshInterval(IInterpreterInstall install) {
-		try {
-			if (install == null) {
-				return 0;
-			}
-			final String refreshIntervalKey = install.getEnvironment()
-					.isLocal() ? TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL
-					: TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE;
-			return Platform.getPreferencesService().getLong(
-					TclPlugin.PLUGIN_ID, refreshIntervalKey, 15 * 60 * 1000,
-					null);
-		} catch (Exception e) {
+		if (install == null) {
+			return 0;
 		}
-		return 0;
+		final String refreshIntervalKey;
+		final IEnvironment environment = install.getEnvironment();
+		if (environment != null && environment.isLocal()) {
+			refreshIntervalKey = TclCorePreferences.PACKAGES_REFRESH_INTERVAL_LOCAL;
+		} else {
+			refreshIntervalKey = TclCorePreferences.PACKAGES_REFRESH_INTERVAL_REMOTE;
+		}
+		return Platform.getPreferencesService().getLong(TclPlugin.PLUGIN_ID,
+				refreshIntervalKey, 15 * 60 * 1000, null);
 	}
 
 	public static TclProjectInfo getTclProject(String name) {
