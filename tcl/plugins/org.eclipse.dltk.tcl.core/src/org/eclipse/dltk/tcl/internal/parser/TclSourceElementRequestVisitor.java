@@ -152,7 +152,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		}
 
 		// first, try existent
-		if (this.fRequestor.enterTypeAppend(type, "::")) {
+		if (((ISourceElementRequestor) this.fRequestor).enterTypeAppend(type,
+				"::")) {
 			this.namespacesLevel.push(fullyQualified);
 			return new ExitFromType(1/* split.length */, decl.sourceEnd(),
 					false, true);
@@ -170,7 +171,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		boolean exitFromModule = false;
 		if (e.length() > 0 && !fqn) {
 			// We need to report warning here.
-			entered = this.fRequestor.enterTypeAppend(e, "::");
+			entered = ((ISourceElementRequestor) this.fRequestor)
+					.enterTypeAppend(e, "::");
 		}
 		if (fqn || !entered) {
 			split = TclParseUtil.tclSplit(fullyQualified.substring(2));
@@ -187,7 +189,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		for (int i = 0; i < split.length; ++i) {
 			if (split[i].length() > 0) {
 				needEnterLeave++;
-				if (!this.fRequestor.enterTypeAppend(split[i], "::")) {
+				if (!((ISourceElementRequestor) this.fRequestor)
+						.enterTypeAppend(split[i], "::")) {
 					ISourceElementRequestor.TypeInfo ti = new ISourceElementRequestor.TypeInfo();
 					if (decl instanceof TypeDeclaration) {
 						ti.modifiers = getModifiers(decl);
@@ -441,7 +444,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			exit = this.resolveType(decl, fullName, false);
 		}
 
-		needExit = this.fRequestor.enterFieldCheckDuplicates(fi);
+		needExit = ((ISourceElementRequestor) this.fRequestor)
+				.enterFieldCheckDuplicates(fi);
 
 		int end = decl.sourceEnd();
 		if (needExit) {
@@ -453,7 +457,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				fiIndex.declarationStart = decl.sourceStart();
 				fiIndex.modifiers = TclConstants.TCL_FIELD_TYPE_INDEX
 						| this.getModifiers(decl);
-				if (this.fRequestor.enterFieldCheckDuplicates(fiIndex)) {
+				if (((ISourceElementRequestor) this.fRequestor)
+						.enterFieldCheckDuplicates(fiIndex)) {
 					this.fRequestor.exitField(end);
 				}
 			}
@@ -574,7 +579,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		// }
 		// }
 		// }
-		this.fRequestor.enterMethodRemoveSame(mi);
+		((ISourceElementRequestor) this.fRequestor).enterMethodRemoveSame(mi);
 		this.exitStack.push(exit);
 		return true;
 	}
@@ -593,7 +598,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 	}
 
 	public ISourceElementRequestor getRequestor() {
-		return this.fRequestor;
+		return ((ISourceElementRequestor) this.fRequestor);
 	}
 
 }
