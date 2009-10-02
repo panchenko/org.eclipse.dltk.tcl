@@ -39,9 +39,11 @@ import org.eclipse.dltk.utils.LazyExtensionManager.Descriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 
 final class TclProjectWizardFirstPage extends ProjectWizardFirstPage implements
 		IValidationRequestor {
@@ -273,11 +275,31 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage implements
 		}
 
 		@Override
-		protected void createModeControls(Composite group, int numColumns) {
-			super.createModeControls(group, numColumns);
+		public void createControls(Composite composite) {
+			if (fOptions.isEmpty()) {
+				super.createControls(composite);
+				return;
+			}
+			final int numColumns = 3;
+			final Group group = new Group(composite, SWT.NONE);
+			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
+					true));
+			group
+					.setText(TclWizardMessages.TclProjectWizardFirstPage_LocationGroup_modeTitle);
+			createModeControls(group, numColumns);
 			for (TclProjectTemplateEntry entry : fOptions) {
 				entry.createControls(group);
 			}
+
+			final Group groupLocation = new Group(composite, SWT.NONE);
+			groupLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			groupLocation.setLayout(initGridLayout(new GridLayout(numColumns,
+					false), true));
+			groupLocation
+					.setText(TclWizardMessages.TclProjectWizardFirstPage_LocationGroup_locationTitle);
+			createEnvironmentControls(groupLocation, numColumns);
+			createLocationControls(groupLocation, numColumns);
 		}
 
 		@Override
@@ -316,8 +338,8 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage implements
 		}
 
 		@Override
-		public boolean canChangeEnvironment() {
-			return getSelectedEntry() != null;
+		protected boolean canChangeEnvironment() {
+			return super.canChangeEnvironment() || getSelectedEntry() != null;
 		}
 
 		@Override

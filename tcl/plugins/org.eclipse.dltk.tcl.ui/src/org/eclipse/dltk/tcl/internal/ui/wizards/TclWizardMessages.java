@@ -31,6 +31,15 @@ public class TclWizardMessages extends NLS {
 	public static String TclProjectWizardFirstPage_packageDetector_checkbox;
 	public static String TclProjectWizardFirstPage_packageDetector_description;
 
+	/**
+	 * @since 2.0
+	 */
+	public static String TclProjectWizardFirstPage_LocationGroup_modeTitle;
+	/**
+	 * @since 2.0
+	 */
+	public static String TclProjectWizardFirstPage_LocationGroup_locationTitle;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, TclWizardMessages.class);
 	}
