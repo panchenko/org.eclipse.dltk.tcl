@@ -56,12 +56,14 @@ public class TclFoldingStructureProvider extends
 
 	private boolean fInitCollapseOtherBlocks;
 
+	@Override
 	public IElementCommentResolver createElementCommentResolver(
 			IModelElement modelElement, String contents) {
 		return new TclElementCommentResolver((ISourceModule) modelElement,
 				contents);
 	}
 
+	@Override
 	protected CodeBlock[] getCodeBlocks(String code, int offset) {
 		/*
 		 * if an ASTVisitor implementation is created for this, just override
@@ -199,30 +201,37 @@ public class TclFoldingStructureProvider extends
 		}
 	}
 
+	@Override
 	protected String getCommentPartition() {
 		return TclPartitions.TCL_COMMENT;
 	}
 
+	@Override
 	protected ILog getLog() {
 		return TclUI.getDefault().getLog();
 	}
 
+	@Override
 	protected String getPartition() {
 		return TclPartitions.TCL_PARTITIONING;
 	}
 
+	@Override
 	protected IPartitionTokenScanner getPartitionScanner() {
 		return new TclPartitionScanner();
 	}
 
+	@Override
 	protected String[] getPartitionTypes() {
 		return TclPartitions.TCL_PARTITION_TYPES;
 	}
 
+	@Override
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
 
+	@Override
 	protected void initializePreferences(IPreferenceStore store) {
 		super.initializePreferences(store);
 
@@ -238,14 +247,17 @@ public class TclFoldingStructureProvider extends
 				TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST);
 	}
 
+	@Override
 	protected String getInitiallyFoldClassesKey() {
 		return TclPreferenceConstants.EDITOR_FOLDING_INIT_NAMESPACES;
 	}
 
+	@Override
 	protected String getInitiallyFoldMethodsKey() {
 		return TclPreferenceConstants.EDITOR_FOLDING_INIT_BLOCKS;
 	}
 
+	@Override
 	protected boolean initiallyCollapse(ASTNode s) {
 		if (s instanceof TclStatement || s instanceof ITclStatementLookLike) {
 			TclStatement statement = null;
@@ -302,6 +314,7 @@ public class TclFoldingStructureProvider extends
 		return false;
 	}
 
+	@Override
 	protected boolean mayCollapse(ASTNode s,
 			FoldingStructureComputationContext ctx) {
 		return mayCollapse(s);
@@ -315,9 +328,9 @@ public class TclFoldingStructureProvider extends
 		} else if (s instanceof IfStatement) {
 			return canFold("if");
 		} else if (s instanceof TclSwitchStatement) {
-			return canFold("swith");
+			return canFold("switch");
 		} else if (s instanceof TclFoldBlock) {
-			return canFold("swith");
+			return canFold("switch");
 		} else if (s instanceof TclCatchStatement) {
 			return canFold("catch");
 		} else if (s instanceof TclWhileStatement) {
@@ -340,17 +353,16 @@ public class TclFoldingStructureProvider extends
 		return false;
 	}
 
-	private List initializeList(IPreferenceStore store, String key) {
+	private List<String> initializeList(IPreferenceStore store, String key) {
 		String t = store.getString(key);
-		String[] items = t.split(",");
+		String[] items = t.split(","); //$NON-NLS-1$
 
-		ArrayList list = new ArrayList(items.length);
+		List<String> list = new ArrayList<String>(items.length);
 		for (int i = 0; i < items.length; i++) {
 			if (items[i].trim().length() > 0) {
 				list.add(items[i]);
 			}
 		}
-
 		return list;
 	}
 
