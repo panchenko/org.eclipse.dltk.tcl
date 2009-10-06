@@ -1,6 +1,5 @@
 package org.eclipse.dltk.tcl.internal.core.sources;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +39,7 @@ import org.eclipse.dltk.utils.CorePrinter;
 /**
  * Element to represent sourced files.
  */
+@SuppressWarnings("restriction")
 public class TclSourcesElement extends Openable implements IScriptFolder {
 	private String name;
 
@@ -130,8 +130,8 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 			}
 			if (pseudoElements.size() > 0) {
 				for (String name : pseudoElements) {
-					vChildren.add(new TclSourcesPseudoSourceModule(this,
-							name, DefaultWorkingCopyOwner.PRIMARY));
+					vChildren.add(new TclSourcesPseudoSourceModule(this, name,
+							DefaultWorkingCopyOwner.PRIMARY));
 				}
 			}
 			info.setChildren(vChildren.toArray(new IModelElement[vChildren
