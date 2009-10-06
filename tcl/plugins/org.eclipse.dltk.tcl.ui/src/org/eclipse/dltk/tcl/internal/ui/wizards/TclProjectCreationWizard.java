@@ -9,9 +9,17 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.dltk.tcl.internal.ui.TclImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
 import org.eclipse.dltk.ui.wizards.ProjectWizard;
+import org.eclipse.dltk.utils.LazyExtensionManager.Descriptor;
+import org.eclipse.jface.wizard.IWizardPage;
 
 public class TclProjectCreationWizard extends ProjectWizard {
 
@@ -26,12 +34,52 @@ public class TclProjectCreationWizard extends ProjectWizard {
 		setWindowTitle(TclWizardMessages.ProjectCreationWizard_title);
 	}
 
+	private final List<TclProjectTemplateEntry> fOptions = new ArrayList<TclProjectTemplateEntry>();
+
+	private boolean optionsLoaded = false;
+
+	private void loadOptions() {
+		final TclProjectTemplateManager manager = new TclProjectTemplateManager();
+		for (Descriptor<IProjectTemplate> descriptor : manager.descriptors()) {
+			final IProjectTemplate template = descriptor.get();
+			if (template != null) {
+				final String name = descriptor
+						.getAttribute(TclProjectTemplateManager.ATTR_NAME);
+				final TclProjectTemplateEntry entry = new TclProjectTemplateEntry(
+						name, template);
+				fOptions.add(entry);
+			}
+		}
+	}
+
+	@Override
 	public void addPages() {
 		super.addPages();
-		fFirstPage = new TclProjectWizardFirstPage();
+		if (!optionsLoaded) {
+			loadOptions();
+			optionsLoaded = true;
+		}
+		fFirstPage = new TclProjectWizardFirstPage(fOptions);
 		addPage(fFirstPage);
+		for (TclProjectTemplateEntry entry : fOptions) {
+			for (IWizardPage page : entry.getTemplate().getPages()) {
+				addPage(page);
+				optional.put(page, entry);
+			}
+		}
 		fSecondPage = new TclProjectWizardSecondPage(fFirstPage);
 		addPage(fSecondPage);
+	}
+
+	private final Map<IWizardPage, TclProjectTemplateEntry> optional = new IdentityHashMap<IWizardPage, TclProjectTemplateEntry>();
+
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	public boolean isEnabledPage(IWizardPage page) {
+		final TclProjectTemplateEntry entry = optional.get(page);
+		return entry == null || entry.isSelected();
 	}
 
 }
