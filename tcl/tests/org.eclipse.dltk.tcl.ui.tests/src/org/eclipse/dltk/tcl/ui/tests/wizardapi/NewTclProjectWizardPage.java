@@ -29,6 +29,7 @@ import org.eclipse.dltk.core.IScriptLanguageProvider;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
@@ -58,7 +59,7 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
  */
 public class NewTclProjectWizardPage extends NewElementWizardPage {
 
-	public static final String TCL_NATURE = "org.eclipse.dltk.tcl.core.nature";
+	public static final String TCL_NATURE = TclNature.NATURE_ID;
 
 	private static final String PAGE_NAME = "NewScriptProjectWizardPage"; //$NON-NLS-1$
 
