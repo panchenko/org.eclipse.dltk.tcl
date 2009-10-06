@@ -10,7 +10,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -26,6 +25,7 @@ import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.internal.environment.EFSFileHandle;
 import org.eclipse.dltk.internal.core.MementoModelElementUtil;
 import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.ModelElementInfo;
 import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.OpenableElementInfo;
 import org.eclipse.dltk.internal.core.ScriptProject;
@@ -39,6 +39,7 @@ import org.eclipse.dltk.tcl.core.packages.UserCorrection;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.emf.common.util.EList;
 
+@SuppressWarnings("restriction")
 public class TclSourcesFragment extends Openable implements IProjectFragment,
 		IProjectFragmentTimestamp {
 	public static final IPath PATH = new Path(IBuildpathEntry.BUILDPATH_SPECIAL
@@ -68,12 +69,9 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 	protected boolean buildStructure(OpenableElementInfo info,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource)
 			throws ModelException {
-		List children = new ArrayList();
-
+		List<IModelElement> children = new ArrayList<IModelElement>(1);
 		children.add(new TclSourcesElement(this));
-
-		info.setChildren((IModelElement[]) children
-				.toArray(new IModelElement[children.size()]));
+		info.setChildren(children.toArray(new IModelElement[children.size()]));
 		return true;
 	}
 
@@ -119,7 +117,7 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 	}
 
 	public Object[] getForeignResources() throws ModelException {
-		return new Object[0];
+		return ModelElementInfo.NO_NON_SCRIPT_RESOURCES;
 	}
 
 	public int getKind() throws ModelException {
@@ -133,7 +131,7 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 
 	public IScriptFolder getScriptFolder(IPath path) {
 		if (path.segmentCount() != 1) {
-			return null;
+			return new TclSourcesElement(this, path.toString());
 		}
 		String name = path.segment(0);
 		return getScriptFolder(name);
@@ -152,7 +150,7 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 				e.printStackTrace();
 			}
 		}
-		return null;
+		return new TclSourcesElement(this, name);
 	}
 
 	public boolean isArchive() {
@@ -244,6 +242,7 @@ public class TclSourcesFragment extends Openable implements IProjectFragment,
 				pseudoElements);
 		return !sources.isEmpty() || !pseudoElements.isEmpty();
 	}
+
 	/**
 	 * @since 2.0
 	 */

@@ -45,7 +45,16 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 
 	protected TclSourcesElement(ModelElement parent) {
 		super(parent);
-		this.name = "Sourced files@" + getScriptProject().getElementName();
+		this.name = generateDefaultName(getScriptProject());
+	}
+
+	private static String generateDefaultName(IScriptProject project) {
+		return "Sourced files@" + project.getElementName();
+	}
+
+	protected TclSourcesElement(ModelElement parent, String name) {
+		super(parent);
+		this.name = name;
 	}
 
 	public String getElementName() {
@@ -85,9 +94,12 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 		return true;
 	}
 
+	@Override
 	protected boolean buildStructure(OpenableElementInfo info,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource)
 			throws ModelException {
+		if (!exists())
+			throw newNotPresentException();
 		// check whether this folder can be opened
 		IInterpreterInstall install = null;
 		IScriptProject scriptProject = getScriptProject();
@@ -203,7 +215,7 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 	}
 
 	public boolean exists() {
-		return true;
+		return name.equals(generateDefaultName(getScriptProject()));
 	}
 
 	public ISourceModule[] getSourceModules() throws ModelException {
