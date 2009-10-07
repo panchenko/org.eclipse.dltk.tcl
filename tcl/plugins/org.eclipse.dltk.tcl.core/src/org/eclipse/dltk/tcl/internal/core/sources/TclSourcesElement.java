@@ -52,6 +52,9 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 		return "Sourced files@" + project.getElementName();
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected TclSourcesElement(ModelElement parent, String name) {
 		super(parent);
 		this.name = name;
