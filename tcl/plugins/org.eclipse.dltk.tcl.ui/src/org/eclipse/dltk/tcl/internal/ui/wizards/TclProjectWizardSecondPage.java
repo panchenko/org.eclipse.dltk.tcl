@@ -12,16 +12,6 @@ final class TclProjectWizardSecondPage extends ProjectWizardSecondPage {
 		super(firstPage);
 	}
 
-	// @Override
-	// protected void postConfigureProject(IProgressMonitor monitor)
-	// throws CoreException, InterruptedException {
-	// final IProject project = getCurrProject();
-	// FIXME
-	// ((TclProjectCreationWizard) getWizard()).fFirstPage.postConfigure(
-	// monitor, project);
-	// monitor.done();
-	// }
-
 	/*
 	 * (non-Javadoc)
 	 * 
