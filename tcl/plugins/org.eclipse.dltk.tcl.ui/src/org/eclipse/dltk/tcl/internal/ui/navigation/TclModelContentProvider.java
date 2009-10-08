@@ -54,19 +54,18 @@ public class TclModelContentProvider implements IModelContentProvider {
 		if (parentElement instanceof IScriptProject) {
 			// Show packages element
 			IScriptProject prj = (IScriptProject) parentElement;
-			IProjectFragment[] fragments = null;
 			try {
-				fragments = prj.getProjectFragments();
-			} catch (ModelException e) {
-				DLTKCore.error("Error resolving project fragments", e);
-			}
-			for (int i = 0; i < fragments.length; i++) {
-				if (fragments[i] instanceof TclSourcesFragment) {
-					TclSourcesFragment fragment = (TclSourcesFragment) fragments[i];
-					if (fragment.containChildrens()) {
-						children.add(fragment);
+				IProjectFragment[] fragments = prj.getProjectFragments();
+				for (int i = 0; i < fragments.length; i++) {
+					if (fragments[i] instanceof TclSourcesFragment) {
+						TclSourcesFragment fragment = (TclSourcesFragment) fragments[i];
+						if (fragment.containChildrens()) {
+							children.add(fragment);
+						}
 					}
 				}
+			} catch (ModelException e) {
+				DLTKCore.error("Error resolving project fragments", e);
 			}
 		}
 		if (parentElement instanceof TclSourcesFragment) {
