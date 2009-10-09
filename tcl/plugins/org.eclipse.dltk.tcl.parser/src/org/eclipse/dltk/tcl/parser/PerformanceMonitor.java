@@ -11,79 +11,72 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
-import java.util.ArrayList;
-import java.util.Formatter;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class PerformanceMonitor {
-	Map<String, Long> values = new HashMap<String, Long>();
-	Map<String, Long> operations = new HashMap<String, Long>();
-	Map<String, Long> startTime = new HashMap<String, Long>();
 
-	public static boolean PERFOMANCE_MONITORING_IS_ACTIVE = true;
+	private final Map<String, Entry> entries = new HashMap<String, Entry>();
 
-	private static PerformanceMonitor mon = new PerformanceMonitor();
+	private static class Entry {
+		long value;
+		long operations;
+		long startTime;
+	}
+
+	public static final boolean PERFOMANCE_MONITORING_IS_ACTIVE = true;
+
+	private static final PerformanceMonitor mon = new PerformanceMonitor();
 
 	public static PerformanceMonitor getDefault() {
 		return mon;
 	}
 
-	public void begin(String id) {
-		startTime.put(id, System.currentTimeMillis());
-		if (!values.containsKey(id)) {
-			values.put(id, 0L);
+	public synchronized void begin(String id) {
+		Entry entry = entries.get(id);
+		if (entry == null) {
+			entry = new Entry();
+			entries.put(id, entry);
 		}
+		entry.startTime = System.currentTimeMillis();
 	}
 
-	public void end(String id) {
-		long cur = System.currentTimeMillis();
-		if (startTime.containsKey(id)) {
-			long start = startTime.get(id);
-			long ctime = values.get(id);
-			values.put(id, ctime + (cur - start));
-			incrOperations(id);
-		}
-	}
-
-	private void incrOperations(String id) {
-		if (operations.containsKey(id)) {
-			operations.put(id, operations.get(id) + 1);
-		} else {
-			operations.put(id, 1L);
+	public synchronized void end(String id) {
+		final long cur = System.currentTimeMillis();
+		Entry entry = entries.get(id);
+		if (entry != null) {
+			entry.value += cur - entry.startTime;
+			++entry.operations;
 		}
 	}
 
 	public void print() {
-		Set<String> okeys = this.values.keySet();
-		List<String> keys = new ArrayList<String>();
-		keys.addAll(okeys);
-		java.util.Collections.sort(keys);
+		final Map<String, Entry> copy;
+		synchronized (this) {
+			copy = new HashMap<String, Entry>(entries);
+		}
+		final String[] keys = copy.keySet().toArray(new String[copy.size()]);
+		Arrays.sort(keys);
 		for (String id : keys) {
-			if (operations.containsKey(id) && operations.get(id) > 1) {
-				System.out.println("(" + id + ") \t:" + to_(values.get(id))
-						+ " /" + to_(values.get(id) / operations.get(id))
-						+ " ops:" + operations.get(id));
+			Entry entry = copy.get(id);
+			if (entry.operations > 1) {
+				System.out.println("(" + id + ") \t:" + entry.value + " /"
+						+ (entry.value / entry.operations) + " ops:"
+						+ entry.operations);
 			} else {
-				System.out.println("(" + id + ") \t:" + to_(values.get(id)));
+				System.out.println("(" + id + ") \t:" + entry.value);
 			}
 		}
 	}
 
-	private String to_(long time) {
-		return new Formatter().format("%d", time).toString();
-	}
-
-	public void add(String id, long value) {
-		if (this.values.containsKey(id)) {
-			long old = values.get(id);
-			values.put(id, old + value);
-			incrOperations(id);
-		} else {
-			this.values.put(id, value);
-			incrOperations(id);
+	public synchronized void add(String id, long value) {
+		Entry entry = entries.get(id);
+		if (entry == null) {
+			entry = new Entry();
+			entries.put(id, entry);
 		}
+		entry.value += value;
+		++entry.operations;
 	}
 }
