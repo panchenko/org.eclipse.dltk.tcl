@@ -9,8 +9,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.text;
 
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
@@ -166,7 +166,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 	 * Block is and opening char seq. and closing char seq. Each block have it's
 	 * own indent
 	 */
-	private abstract class TclBlock {
+	private static abstract class TclBlock {
 		private int offset;
 		public char openingPeer;
 		public char closingPeer;
@@ -848,7 +848,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			String content = d.get(0, cmd.offset) + cmd.text;
 			Document temp = new Document(content);
 			installStuff(temp);
-			Vector blocks = new Vector();
+			List<TclBlock> blocks = new ArrayList<TclBlock>();
 			int figs = 0; // count of braces
 			int cmdLine = d.getLineOfOffset(cmd.offset);
 			int cmdLineStart = d.getLineOffset(cmdLine);
@@ -880,7 +880,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 					if (c == '}')
 						figs--;
 					if (blocks.size() > 0) {
-						blocks.removeElementAt(blocks.size() - 1);
+						blocks.remove(blocks.size() - 1);
 					}
 					break;
 				}
@@ -892,9 +892,7 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 						&& offset == temp.getLineOffset(line)
 								+ currentIndent.length()) {
 					StringBuffer newIndentBuf = new StringBuffer();
-					Iterator iter = blocks.iterator();
-					while (iter.hasNext()) {
-						TclBlock b = (TclBlock) iter.next();
+					for (TclBlock b : blocks) {
 						newIndentBuf.append(b.indent);
 					}
 					String newIndent = newIndentBuf.toString();
