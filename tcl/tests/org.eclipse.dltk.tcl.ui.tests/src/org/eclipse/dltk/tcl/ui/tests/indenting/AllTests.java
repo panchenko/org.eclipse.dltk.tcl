@@ -16,10 +16,10 @@ public class AllTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.dltk.tcl.ui.tests.indenting");
-		//$JUnit-BEGIN$
+				"Test for org.eclipse.dltk.tcl.ui.tests.indenting"); //$NON-NLS-1$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(SimpleIndentingTest.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 
