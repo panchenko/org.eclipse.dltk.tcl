@@ -410,7 +410,8 @@ public class SimpleIndentingTest extends TestCase {
 		c.offset = 0;
 		c.text = text0;
 
-		fStore.setValue(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE, 2);
+		fStore.setValue(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE,
+				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_FULL);
 		strategy.customizeDocumentCommand(temp, c);
 
 		// execute
