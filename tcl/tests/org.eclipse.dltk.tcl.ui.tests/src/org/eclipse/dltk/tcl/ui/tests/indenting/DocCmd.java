@@ -19,6 +19,7 @@ import org.eclipse.jface.text.DocumentCommand;
  */
 public class DocCmd extends DocumentCommand {
 	public DocCmd() {
+		this.doit = true;
 	}
 
 	public DocCmd(int offset, int length, String text) {

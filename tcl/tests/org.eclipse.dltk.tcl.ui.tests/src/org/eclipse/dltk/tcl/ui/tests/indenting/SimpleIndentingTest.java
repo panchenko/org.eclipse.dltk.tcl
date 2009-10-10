@@ -166,7 +166,6 @@ public class SimpleIndentingTest extends TestCase {
 		int offset = temp.getLineOffset(3) + temp.getLineLength(3) - 1;
 
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -205,7 +204,6 @@ public class SimpleIndentingTest extends TestCase {
 		int offset = temp.getLineOffset(3) + temp.getLineLength(3);
 
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -235,7 +233,7 @@ public class SimpleIndentingTest extends TestCase {
 		session = temp
 				.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
 
-		c.doit = true;
+		c = new DocCmd();
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -272,7 +270,6 @@ public class SimpleIndentingTest extends TestCase {
 		int offset = temp.getLineOffset(0) + temp.getLineLength(0);
 
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -308,7 +305,6 @@ public class SimpleIndentingTest extends TestCase {
 		int offset = temp.getLineOffset(0) + temp.getLineLength(0);
 
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -341,7 +337,6 @@ public class SimpleIndentingTest extends TestCase {
 				.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
 		installStuff(temp);
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -409,7 +404,6 @@ public class SimpleIndentingTest extends TestCase {
 		installStuff(temp);
 
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -438,7 +432,6 @@ public class SimpleIndentingTest extends TestCase {
 		installStuff(temp);
 
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -473,7 +466,6 @@ public class SimpleIndentingTest extends TestCase {
 		installStuff(temp);
 
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
@@ -612,7 +604,6 @@ public class SimpleIndentingTest extends TestCase {
 		String content = TclUITestsPlugin.getDefault().getPluginFileContent(
 				"/tcls/bug289072.tcl");
 		DocumentCommand c = new DocCmd();
-		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
 		c.length = 0;
