@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.ui.tests.indenting;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
 import org.eclipse.dltk.tcl.internal.ui.text.TclAutoEditStrategy;
@@ -17,6 +19,7 @@ import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.tests.TclUITestsPlugin;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.DocumentRewriteSession;
@@ -601,6 +604,27 @@ public class SimpleIndentingTest extends TestCase {
 		assertEquals("proc foo{} {\n" + "	set a 5\n" + "	set b 6\n" + "}\n\n",
 				d.get());
 
+	}
+
+	public void testSmartPaste289072() throws IOException, BadLocationException {
+		fStore.setValue(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE,
+				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_FULL);
+		String content = TclUITestsPlugin.getDefault().getPluginFileContent(
+				"/tcls/bug289072.tcl");
+		DocumentCommand c = new DocCmd();
+		c.doit = true;
+		c.caretOffset = -1;
+		c.shiftsCaret = true;
+		c.length = 0;
+		c.offset = content.indexOf("[]") + 1;
+		c.text = "fakeproc";
+		String expected = content.replaceAll("\\[\\]", "\\[" + c.text + "\\]");
+
+		Document doc = new Document(content);
+
+		strategy.customizeDocumentCommand(doc, c);
+		doc.replace(c.offset, c.length, c.text);
+		assertEquals(expected, doc.get());
 	}
 
 }
