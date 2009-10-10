@@ -407,8 +407,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	 * 
 	 */
 	public final static String EDITOR_SMART_PASTE_MODE = "smartPasteMode"; //$NON-NLS-1$
-	public final static int EDITOR_SMART_PASTE_MODE_SIMPLE = 1; //$NON-NLS-1$
-	public final static int EDITOR_SMART_PASTE_MODE_FULL = 2; //$NON-NLS-1$
+	public final static int EDITOR_SMART_PASTE_MODE_SIMPLE = 1;
+	public final static int EDITOR_SMART_PASTE_MODE_FULL = 2;
 
 	/**
 	 * A named preference that stores the value for imports folding for the
@@ -506,7 +506,8 @@ public class TclPreferenceConstants extends PreferenceConstants {
 		store.setDefault(TclPreferenceConstants.EDITOR_CLOSE_BRACKETS, true);
 		store.setDefault(TclPreferenceConstants.EDITOR_CLOSE_BRACES, true);
 		store.setDefault(TclPreferenceConstants.EDITOR_SMART_TAB, true);
-		store.setDefault(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE, "");
+		store.setDefault(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE,
+				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_SIMPLE);
 
 		store.setDefault(PreferenceConstants.EDITOR_SMART_INDENT, true);
 		store.setDefault(PreferenceConstants.EDITOR_TAB_WIDTH, 4);
