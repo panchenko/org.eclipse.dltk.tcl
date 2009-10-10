@@ -26,6 +26,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.rules.FastPartitioner;
 
+@SuppressWarnings("nls")
 public class SimpleIndentingTest extends TestCase {
 
 	private IPreferenceStore fStore;
@@ -161,8 +162,7 @@ public class SimpleIndentingTest extends TestCase {
 
 		int offset = temp.getLineOffset(3) + temp.getLineLength(3) - 1;
 
-		DocumentCommand c = new DocumentCommand() {
-		};
+		DocumentCommand c = new DocCmd();
 		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
@@ -201,8 +201,7 @@ public class SimpleIndentingTest extends TestCase {
 
 		int offset = temp.getLineOffset(3) + temp.getLineLength(3);
 
-		DocumentCommand c = new DocumentCommand() {
-		};
+		DocumentCommand c = new DocCmd();
 		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
@@ -269,8 +268,7 @@ public class SimpleIndentingTest extends TestCase {
 
 		int offset = temp.getLineOffset(0) + temp.getLineLength(0);
 
-		DocumentCommand c = new DocumentCommand() {
-		};
+		DocumentCommand c = new DocCmd();
 		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
@@ -306,8 +304,7 @@ public class SimpleIndentingTest extends TestCase {
 
 		int offset = temp.getLineOffset(0) + temp.getLineLength(0);
 
-		DocumentCommand c = new DocumentCommand() {
-		};
+		DocumentCommand c = new DocCmd();
 		c.doit = true;
 		c.caretOffset = -1;
 		c.shiftsCaret = true;
@@ -340,16 +337,13 @@ public class SimpleIndentingTest extends TestCase {
 		DocumentRewriteSession session = temp
 				.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
 		installStuff(temp);
-		DocumentCommand c = new DocumentCommand() {
-			{
-				this.doit = true;
-				this.caretOffset = -1;
-				this.shiftsCaret = true;
-				this.length = 0;
-				this.offset = temp.getLineOffset(1) + temp.getLineLength(1);
-				this.text = "\n";
-			}
-		};
+		DocumentCommand c = new DocCmd();
+		c.doit = true;
+		c.caretOffset = -1;
+		c.shiftsCaret = true;
+		c.length = 0;
+		c.offset = temp.getLineOffset(1) + temp.getLineLength(1);
+		c.text = "\n";
 
 		strategy.customizeDocumentCommand(temp, c);
 
@@ -411,16 +405,13 @@ public class SimpleIndentingTest extends TestCase {
 				.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
 		installStuff(temp);
 
-		DocumentCommand c = new DocumentCommand() {
-			{
-				this.doit = true;
-				this.caretOffset = -1;
-				this.shiftsCaret = true;
-				this.length = 0;
-				this.offset = 0;
-				this.text = text0;
-			}
-		};
+		DocumentCommand c = new DocCmd();
+		c.doit = true;
+		c.caretOffset = -1;
+		c.shiftsCaret = true;
+		c.length = 0;
+		c.offset = 0;
+		c.text = text0;
 
 		fStore.setValue(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE, 2);
 		strategy.customizeDocumentCommand(temp, c);
@@ -443,16 +434,13 @@ public class SimpleIndentingTest extends TestCase {
 				.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
 		installStuff(temp);
 
-		DocumentCommand c = new DocumentCommand() {
-			{
-				this.doit = true;
-				this.caretOffset = -1;
-				this.shiftsCaret = true;
-				this.length = 0;
-				this.offset = temp.getLineOffset(2);
-				this.text = "\t";
-			}
-		};
+		DocumentCommand c = new DocCmd();
+		c.doit = true;
+		c.caretOffset = -1;
+		c.shiftsCaret = true;
+		c.length = 0;
+		c.offset = temp.getLineOffset(2);
+		c.text = "\t";
 
 		strategy.customizeDocumentCommand(temp, c);
 
@@ -481,16 +469,13 @@ public class SimpleIndentingTest extends TestCase {
 				.startRewriteSession(DocumentRewriteSessionType.STRICTLY_SEQUENTIAL);
 		installStuff(temp);
 
-		DocumentCommand c = new DocumentCommand() {
-			{
-				this.doit = true;
-				this.caretOffset = -1;
-				this.shiftsCaret = true;
-				this.length = 0;
-				this.offset = temp.getLineOffset(1) + 15;
-				this.text = "\n";
-			}
-		};
+		DocumentCommand c = new DocCmd();
+		c.doit = true;
+		c.caretOffset = -1;
+		c.shiftsCaret = true;
+		c.length = 0;
+		c.offset = temp.getLineOffset(1) + 15;
+		c.text = "\n";
 
 		strategy.customizeDocumentCommand(temp, c);
 
