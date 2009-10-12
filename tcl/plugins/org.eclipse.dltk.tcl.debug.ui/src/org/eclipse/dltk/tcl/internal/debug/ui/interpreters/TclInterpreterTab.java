@@ -21,10 +21,12 @@ public class TclInterpreterTab extends InterpreterTab {
 		super(listenerManager);
 	}
 
+	@Override
 	protected AbstractInterpreterComboBlock getInterpreterBlock() {
 		return new TclInterpreterComboBlock(getMainTab());
 	}
 
+	@Override
 	protected String getNature() {
 		return TclNature.NATURE_ID;
 	}
