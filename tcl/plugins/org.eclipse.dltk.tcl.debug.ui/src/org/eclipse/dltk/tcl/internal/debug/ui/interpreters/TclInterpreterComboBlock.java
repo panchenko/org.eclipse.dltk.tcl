@@ -72,6 +72,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 	public class PackagesLabelProvider extends LabelProvider {
 
+		@Override
 		public Image getImage(Object element) {
 			if (element instanceof String) {
 				String packageName = (String) element;
@@ -96,6 +97,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
 		}
 
+		@Override
 		public String getText(Object element) {
 			if (element instanceof String) {
 				return (String) element;
@@ -144,14 +146,12 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	private Button addButton;
 	private Button addAllButton;
 
-	protected void showInterpreterPreferencePage() {
-		showPrefPage(TclInterpreterPreferencePage.PAGE_ID);
-	}
-
+	@Override
 	protected String getCurrentLanguageNature() {
 		return TclNature.NATURE_ID;
 	}
 
+	@Override
 	public void createControl(Composite ancestor) {
 		super.createControl(ancestor);
 		// use Composite created in super to place additional controls.
@@ -181,6 +181,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		addButton.setLayoutData(data2);
 		addButton.setText("Add");
 		addButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				addPackage();
 			}
@@ -190,12 +191,14 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		addAllButton.setLayoutData(data2);
 		addAllButton.setText("Add all");
 		addAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				addAllPackages();
 			}
 		});
 		final Button remove = new Button(buttons, SWT.PUSH);
 		remove.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				removePackage();
 			}
@@ -275,8 +278,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	}
 
 	protected void addPackage() {
-		IInterpreterInstall install = null;
-		install = this.getInterpreter();
+		IInterpreterInstall install = this.getInterpreter();
 		if (install == null) {
 			install = ScriptRuntime
 					.getDefaultInterpreterInstall(new DefaultInterpreterEntry(
@@ -352,7 +354,6 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	public void initialize(IScriptProject project,
 			IBuildpathEntry[] currentEntries) {
 		this.scriptProject = project;
-		@SuppressWarnings("unchecked")
 		Set<String> set = new HashSet<String>();
 		Set<String> autoSet = new HashSet<String>();
 		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
@@ -361,6 +362,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		this.autoPackages.addAll(autoSet);
 	}
 
+	@Override
 	public IBuildpathEntry getEntry() {
 		IBuildpathEntry createPackagesContainer = InterpreterContainerHelper
 				.createPackagesContainer(this.packages, this.autoPackages,
