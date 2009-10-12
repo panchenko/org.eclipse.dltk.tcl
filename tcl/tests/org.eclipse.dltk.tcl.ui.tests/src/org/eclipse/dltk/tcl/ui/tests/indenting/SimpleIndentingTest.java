@@ -25,6 +25,7 @@ import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.rules.FastPartitioner;
@@ -32,7 +33,8 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 @SuppressWarnings("nls")
 public class SimpleIndentingTest extends TestCase {
 
-	private IPreferenceStore fStore;
+	private final IPreferenceStore fStore = TclUITestsPlugin.getDefault()
+			.getPreferenceStore();
 
 	private TclAutoEditStrategy strategy;
 
@@ -52,12 +54,12 @@ public class SimpleIndentingTest extends TestCase {
 				partitioner);
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		fStore = TclUITestsPlugin.getDefault().getPreferenceStore();
 		TclPreferenceConstants.initializeDefaultValues(fStore);
-		String fPartitioning = TclPartitions.TCL_PARTITIONING;
-		strategy = new TclAutoEditStrategy(fStore, fPartitioning);
+		strategy = new TclAutoEditStrategy(fStore,
+				TclPartitions.TCL_PARTITIONING);
 	}
 
 	public void testParts() throws Exception {
@@ -421,8 +423,14 @@ public class SimpleIndentingTest extends TestCase {
 
 		// check document
 		assertEquals('#', temp.getChar(0));
-		assertEquals('i', temp.getChar(temp.getLineOffset(2944) + 1));
-		assertEquals('a', temp.getChar(temp.getLineOffset(1990) + 1));
+		// line numbers are starting at 0
+		final IRegion line2944 = temp.getLineInformation(2944);
+		assertEquals("\t" + "interp delete $i", temp.get(line2944.getOffset(),
+				line2944.getLength()));
+		final IRegion line1990 = temp.getLineInformation(1990);
+		assertEquals("\t" + "a alias exec foo" + "\t\t"
+				+ ";# Relies on exec being a string command!", temp.get(
+				line1990.getOffset(), line1990.getLength()));
 	}
 
 	public void testIndent06_jumping() throws Exception {
