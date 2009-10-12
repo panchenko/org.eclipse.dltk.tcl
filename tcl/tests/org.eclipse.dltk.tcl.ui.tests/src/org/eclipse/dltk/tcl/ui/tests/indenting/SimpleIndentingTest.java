@@ -627,4 +627,26 @@ public class SimpleIndentingTest extends TestCase {
 		assertEquals(expected, doc.get());
 	}
 
+	public void testSmartPaste289072a() throws IOException,
+			BadLocationException {
+		fStore.setValue(TclPreferenceConstants.EDITOR_SMART_PASTE_MODE,
+				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_FULL);
+		String content = TclUITestsPlugin.getDefault().getPluginFileContent(
+				"/tcls/bug289072.tcl");
+		Document doc = new Document(content);
+
+		DocumentCommand c = new DocCmd();
+		c.caretOffset = -1;
+		c.shiftsCaret = true;
+		c.length = 0;
+		c.offset = doc.getLineOffset(doc.getLineOfOffset(content
+				.indexOf("set x")) + 1);
+		c.text = "fakeproc\n";
+		String expected = content.substring(0, c.offset) + ("\t\t" + c.text)
+				+ content.substring(c.offset);
+		strategy.customizeDocumentCommand(doc, c);
+		doc.replace(c.offset, c.length, c.text);
+		assertEquals(expected, doc.get());
+	}
+
 }
