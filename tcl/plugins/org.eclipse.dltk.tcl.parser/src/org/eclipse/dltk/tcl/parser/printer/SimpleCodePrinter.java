@@ -27,7 +27,7 @@ public class SimpleCodePrinter {
 	}
 
 	/**
-	 * @since 1.1
+	 * @since 2.0
 	 */
 	public static String getArgumentString(TclArgument arg, int pos,
 			boolean addSpaces) {
@@ -171,7 +171,7 @@ public class SimpleCodePrinter {
 	}
 
 	/**
-	 * @since 1.1
+	 * @since 2.0
 	 */
 	public static String getCommandString(TclCommand command, int pos,
 			boolean addSpaces) {
@@ -195,7 +195,7 @@ public class SimpleCodePrinter {
 	}
 
 	/**
-	 * @since 1.1
+	 * @since 2.0
 	 */
 	public static String getCommandsString(List<TclCommand> commands,
 			boolean addSpaces) {
