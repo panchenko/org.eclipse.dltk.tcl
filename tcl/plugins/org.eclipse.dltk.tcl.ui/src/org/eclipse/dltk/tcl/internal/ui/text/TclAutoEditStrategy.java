@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
@@ -850,15 +851,15 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 			installStuff(temp);
 			List<TclBlock> blocks = new ArrayList<TclBlock>();
 			int figs = 0; // count of braces
+			int newOffset = cmd.offset;
 			int cmdLine = d.getLineOfOffset(cmd.offset);
 			int cmdLineStart = d.getLineOffset(cmdLine);
 			int startLine = d.getLineOfOffset(cmd.offset) + 1;
-			if (d.get(cmdLineStart, cmd.offset - cmdLineStart).trim().length() == 0) // we
-				// are
-				// inserting
-				// lines
-				// block
+			if (d.get(cmdLineStart, cmd.offset - cmdLineStart).trim().length() == 0) {
+				// we are inserting lines block
 				startLine--;
+				newOffset = cmdLineStart;
+			}
 			int offset = 0;
 			while (offset < temp.getLength()) {
 				ITypedRegion region = TextUtilities.getPartition(temp,
@@ -916,11 +917,11 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 
 				offset++;
 			}
-			cmd.text = temp.get(cmdLineStart, temp.getLength() - cmdLineStart);
-			cmd.offset = cmdLineStart;
+			cmd.text = temp.get(newOffset, temp.getLength() - newOffset);
+			cmd.offset = newOffset;
 			removeStuff(temp);
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			TclUI.error("Error in TclAutoEditStrategy.smartPaste2", e); //$NON-NLS-1$
 		}
 	}
 
