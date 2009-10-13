@@ -18,13 +18,16 @@ import org.eclipse.swt.widgets.Composite;
 
 class TclProjectTemplateEntry {
 	private final IProjectTemplate template;
+	final String id;
 	final SelectionButtonDialogField fLinkRadio;
 
 	/**
 	 * @param descriptor
 	 */
-	public TclProjectTemplateEntry(String name, IProjectTemplate template) {
+	public TclProjectTemplateEntry(String id, String name,
+			IProjectTemplate template) {
 		this.template = template;
+		this.id = id;
 		fLinkRadio = new SelectionButtonDialogField(SWT.RADIO);
 		fLinkRadio.setLabelText(name);
 	}

@@ -13,24 +13,24 @@ package org.eclipse.dltk.tcl.internal.ui.wizards;
 
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
+import org.eclipse.dltk.ui.wizards.IProjectWizardInitializer;
 import org.eclipse.dltk.utils.LazyExtensionManager;
 
-class TclProjectTemplateManager extends LazyExtensionManager<IProjectTemplate> {
+class TclProjectWizardInitializerManager extends
+		LazyExtensionManager<IProjectWizardInitializer> {
 
 	static final String ATTR_NATURE = "nature"; //$NON-NLS-1$
-	static final String ATTR_ID = "id"; //$NON-NLS-1$
-	static final String ATTR_NAME = "name"; //$NON-NLS-1$
 
 	/**
 	 * @param extensionPoint
 	 */
-	public TclProjectTemplateManager() {
-		super(DLTKUIPlugin.PLUGIN_ID + ".projectTemplate"); //$NON-NLS-1$
+	public TclProjectWizardInitializerManager() {
+		super(DLTKUIPlugin.PLUGIN_ID + ".projectWizardInitializer"); //$NON-NLS-1$
 	}
 
 	@Override
-	protected boolean isValidDescriptor(Descriptor<IProjectTemplate> descriptor) {
+	protected boolean isValidDescriptor(
+			Descriptor<IProjectWizardInitializer> descriptor) {
 		final String natureId = descriptor.getAttribute(ATTR_NATURE);
 		return natureId == null || TclNature.NATURE_ID.equals(natureId);
 	}

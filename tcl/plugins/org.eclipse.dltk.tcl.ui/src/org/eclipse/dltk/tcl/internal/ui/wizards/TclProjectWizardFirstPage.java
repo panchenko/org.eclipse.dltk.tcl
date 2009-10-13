@@ -11,13 +11,18 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.wizards;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
+import org.eclipse.dltk.ui.wizards.IProjectWizardInitializer;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
+import org.eclipse.dltk.ui.wizards.IProjectWizardInitializer.IProjectWizardState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -43,6 +48,21 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 	protected boolean interpeterRequired() {
 		/* Specially allow to create TCL project without interpreter */
 		return false;
+	}
+
+	private static class ProjectWizardState implements IProjectWizardState {
+
+		String mode;
+		final Map<String, String> tooltips = new HashMap<String, String>();
+
+		public void setMode(String mode) {
+			this.mode = mode;
+		}
+
+		public void setToolTipText(String mode, String tooltip) {
+			tooltips.put(mode, tooltip);
+		}
+
 	}
 
 	private class TclLocationGroup extends LocationGroup {
@@ -89,6 +109,40 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 				}
 			}
 			return false;
+		}
+
+		@Override
+		protected void initialize() {
+			final ProjectWizardState state = new ProjectWizardState();
+			for (IProjectWizardInitializer initializer : new TclProjectWizardInitializerManager()) {
+				initializer.initialize(state);
+			}
+			if (state.mode == null) {
+				super.initialize();
+			} else {
+				fWorkspaceRadio.setSelection(IProjectWizardState.MODE_WORKSPACE
+						.equals(state.mode));
+				fExternalRadio.setSelection(IProjectWizardState.MODE_EXTERNAL
+						.equals(state.mode));
+				for (TclProjectTemplateEntry entry : fOptions) {
+					entry.fLinkRadio.setSelection(entry.id.equals(state.mode));
+				}
+			}
+			setTooltip(fWorkspaceRadio, state.tooltips
+					.get(IProjectWizardState.MODE_WORKSPACE));
+			setTooltip(fExternalRadio, state.tooltips
+					.get(IProjectWizardState.MODE_EXTERNAL));
+			for (TclProjectTemplateEntry entry : fOptions) {
+				setTooltip(entry.fLinkRadio, state.tooltips.get(entry.id));
+			}
+		}
+
+		/**
+		 * @param radio
+		 * @param tooltip
+		 */
+		private void setTooltip(SelectionButtonDialogField radio, String tooltip) {
+			radio.getSelectionButton().setToolTipText(tooltip);
 		}
 
 		@Override

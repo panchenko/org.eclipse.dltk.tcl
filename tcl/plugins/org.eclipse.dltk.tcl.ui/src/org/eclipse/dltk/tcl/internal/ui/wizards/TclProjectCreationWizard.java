@@ -43,10 +43,12 @@ public class TclProjectCreationWizard extends ProjectWizard {
 		for (Descriptor<IProjectTemplate> descriptor : manager.descriptors()) {
 			final IProjectTemplate template = descriptor.get();
 			if (template != null) {
+				final String id = descriptor
+						.getAttribute(TclProjectTemplateManager.ATTR_ID);
 				final String name = descriptor
 						.getAttribute(TclProjectTemplateManager.ATTR_NAME);
 				final TclProjectTemplateEntry entry = new TclProjectTemplateEntry(
-						name, template);
+						id, name, template);
 				fOptions.add(entry);
 			}
 		}
