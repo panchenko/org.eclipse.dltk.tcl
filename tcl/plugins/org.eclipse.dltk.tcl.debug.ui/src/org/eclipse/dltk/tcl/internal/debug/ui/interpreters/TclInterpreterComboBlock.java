@@ -22,8 +22,8 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
-import org.eclipse.dltk.debug.ui.launchConfigurations.IMainLaunchConfigurationTabListenerManager;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterComboBlock;
+import org.eclipse.dltk.internal.debug.ui.interpreters.IInterpreterComboBlockContext;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -31,6 +31,7 @@ import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -62,9 +63,11 @@ import org.eclipse.ui.dialogs.ListDialog;
  * modified but value is not saved anywhere.
  */
 public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
-	protected TclInterpreterComboBlock(
-			IMainLaunchConfigurationTabListenerManager tab) {
-		super(tab);
+	/**
+	 * @since 2.0
+	 */
+	protected TclInterpreterComboBlock(IInterpreterComboBlockContext context) {
+		super(context);
 	}
 
 	private Set<String> packages = new HashSet<String>();
@@ -145,11 +148,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	private IScriptProject scriptProject;
 	private Button addButton;
 	private Button addAllButton;
-
-	@Override
-	protected String getCurrentLanguageNature() {
-		return TclNature.NATURE_ID;
-	}
+	private Button remove;
 
 	@Override
 	public void createControl(Composite ancestor) {
@@ -166,45 +165,59 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 		this.fElements = new TreeViewer(composite);
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		data.heightHint = new PixelConverter(ancestor)
+				.convertHeightInCharsToPixels(8);
 
 		this.fElements.getTree().setLayoutData(data);
 
 		Composite buttons = new Composite(composite, SWT.NONE);
-		GridData data2 = new GridData(SWT.FILL, SWT.FILL, false, false);
-		buttons.setLayoutData(data2);
+		buttons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 
-		GridLayout gridLayout2 = new GridLayout(1, true);
-		buttons.setLayout(gridLayout2);
+		buttons.setLayout(new GridLayout(1, true));
+
+		final boolean editablePackages = getContext().getMode() == IInterpreterComboBlockContext.M_BUILDPATH;
 
 		addButton = new Button(buttons, SWT.PUSH);
-		data2 = new GridData(SWT.FILL, SWT.FILL, false, false);
-		addButton.setLayoutData(data2);
+		addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		addButton.setText("Add");
-		addButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addPackage();
-			}
-		});
+		if (editablePackages) {
+			addButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					addPackage();
+				}
+			});
+		} else {
+			addButton.setEnabled(false);
+		}
 		addAllButton = new Button(buttons, SWT.PUSH);
-		data2 = new GridData(SWT.FILL, SWT.FILL, false, false);
-		addAllButton.setLayoutData(data2);
+		addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
+				false));
 		addAllButton.setText("Add all");
-		addAllButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addAllPackages();
-			}
-		});
-		final Button remove = new Button(buttons, SWT.PUSH);
-		remove.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removePackage();
-			}
-		});
+		if (editablePackages) {
+			addAllButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					addAllPackages();
+				}
+			});
+		} else {
+			addAllButton.setEnabled(false);
+		}
+		remove = new Button(buttons, SWT.PUSH);
 		remove.setText("Remove");
-		remove.setLayoutData(data2);
+		remove.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		if (editablePackages) {
+			remove.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					removePackage();
+				}
+			});
+			remove.setEnabled(false); // disable initially
+		} else {
+			remove.setEnabled(false);
+		}
 
 		// setTitle("Packages");
 		// setMessage("Package dependencies list");
@@ -212,19 +225,17 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 		this.fElements.setContentProvider(new PackagesContentProvider());
 		this.fElements.setLabelProvider(new PackagesLabelProvider());
-		this.fElements.setInput(this.packages);
-		this.fElements
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent event) {
-						ISelection selection = event.getSelection();
-						if (selection instanceof IStructuredSelection) {
-							IStructuredSelection sel = (IStructuredSelection) selection;
-							remove.setEnabled(!sel.isEmpty());
+		if (editablePackages) {
+			this.fElements
+					.addSelectionChangedListener(new ISelectionChangedListener() {
+						public void selectionChanged(SelectionChangedEvent event) {
+							ISelection selection = event.getSelection();
+							remove.setEnabled(!selection.isEmpty());
 						}
-					}
-				});
+					});
+		}
 		this.fElements.setComparator(new ViewerComparator());
-		remove.setEnabled(false);
+		showPackages();
 
 		this.addPropertyChangeListener(new IPropertyChangeListener() {
 
@@ -234,6 +245,15 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 				}
 			}
 		});
+	}
+
+	/**
+	 * 
+	 */
+	private void showPackages() {
+		if (fElements != null) {
+			fElements.setInput(this.packages);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -261,18 +281,6 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 				if (fElements.getControl().isDisposed())
 					return;
 				fElements.refresh();
-				IInterpreterInstall install = getInterpreter();
-				if (install == null) {
-					try {
-						install = ScriptRuntime
-								.getInterpreterInstall(scriptProject);
-					} catch (CoreException e) {
-						if (DLTKCore.DEBUG) {
-							e.printStackTrace();
-						}
-					}
-				}
-				addButton.setEnabled(install != null);
 			}
 		});
 	}
@@ -351,15 +359,20 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		}
 	}
 
-	public void initialize(IScriptProject project,
-			IBuildpathEntry[] currentEntries) {
+	/**
+	 * @since 2.0
+	 */
+	public void initialize(IScriptProject project) {
 		this.scriptProject = project;
-		Set<String> set = new HashSet<String>();
-		Set<String> autoSet = new HashSet<String>();
+		final Set<String> set = new HashSet<String>();
+		final Set<String> autoSet = new HashSet<String>();
 		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
 				set, autoSet);
+		this.packages.clear();
 		this.packages.addAll(set);
+		this.autoPackages.clear();
 		this.autoPackages.addAll(autoSet);
+		showPackages();
 	}
 
 	@Override

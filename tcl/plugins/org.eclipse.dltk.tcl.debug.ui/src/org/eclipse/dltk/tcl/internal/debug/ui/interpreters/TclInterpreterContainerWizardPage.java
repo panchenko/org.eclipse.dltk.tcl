@@ -9,30 +9,27 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
-import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterComboBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterContainerWizardPage;
+import org.eclipse.dltk.internal.debug.ui.interpreters.IInterpreterComboBlockContext;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.wizards.IBuildpathContainerPageExtension;
 
 public class TclInterpreterContainerWizardPage extends
 		AbstractInterpreterContainerWizardPage implements
 		IBuildpathContainerPageExtension {
-	private TclInterpreterComboBlock block;
 
-	protected AbstractInterpreterComboBlock getInterpreterBlock() {
-		if (block == null) {
-			block = new TclInterpreterComboBlock(null);
-		}
-		block.initialize(getScriptProject(), getCurrentEntries());
+	@Override
+	protected AbstractInterpreterComboBlock createInterpreterBlock(
+			IInterpreterComboBlockContext context) {
+		final TclInterpreterComboBlock block = new TclInterpreterComboBlock(
+				context);
+		block.initialize(getScriptProject());
 		return block;
 	}
 
-	public void initialize(IScriptProject project,
-			IBuildpathEntry[] currentEntries) {
-		super.initialize(project, currentEntries);
-		if (block != null) {
-			block.initialize(project, currentEntries);
-		}
+	@Override
+	public String getScriptNature() {
+		return TclNature.NATURE_ID;
 	}
 }
