@@ -30,10 +30,8 @@ import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.core.packages.TclSourceEntry;
 import org.eclipse.dltk.tcl.core.packages.UserCorrection;
-import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.internal.core.packages.DefaultVariablesRegistry;
 import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver;
-import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariableRegistry;
 import org.eclipse.emf.common.util.EList;
 
 public class TclSourcesUtils {
