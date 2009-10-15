@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -41,7 +42,7 @@ import org.eclipse.dltk.utils.CorePrinter;
  */
 @SuppressWarnings("restriction")
 public class TclSourcesElement extends Openable implements IScriptFolder {
-	private String name;
+	private final String name;
 
 	protected TclSourcesElement(ModelElement parent) {
 		super(parent);
@@ -57,6 +58,7 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 	 */
 	protected TclSourcesElement(ModelElement parent, String name) {
 		super(parent);
+		Assert.isNotNull(name);
 		this.name = name;
 	}
 
@@ -84,17 +86,10 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (!(obj instanceof TclSourcesElement))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TclSourcesElement other = (TclSourcesElement) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		final TclSourcesElement other = (TclSourcesElement) obj;
+		return name.equals(other.name) && this.parent.equals(other.parent);
 	}
 
 	@Override
