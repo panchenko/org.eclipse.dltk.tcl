@@ -59,6 +59,10 @@ public class TclModelLabelProvider extends LabelProvider {
 		if (element instanceof TclSourcesFragment) {
 			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_LIBRARY_SRC);
 		} else if (element instanceof IScriptFolder) {
+			if (element instanceof TclPackageElement
+					|| element instanceof TclSourcesFragment) {
+				return null;
+			}
 			return getScriptFolderIcon();
 		}
 		return null;
