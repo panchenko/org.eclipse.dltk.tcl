@@ -128,7 +128,7 @@ public class TclMatchLocator extends MatchLocator {
 				return e;
 			}
 		}
-		return super.createTypeHandle(parent, name);
+		return parent.getType(name);
 	}
 
 	protected IType createTypeHandle(String name) {
@@ -162,6 +162,11 @@ public class TclMatchLocator extends MatchLocator {
 				}
 			}
 		}
-		return super.createTypeHandle(name);
+		// return super.createTypeHandle(name);
+		IType type = null;
+		if (openable instanceof ISourceModule) {
+			type = ((ISourceModule) openable).getType(name);
+		}
+		return type;
 	}
 }
