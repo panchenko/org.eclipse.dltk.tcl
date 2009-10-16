@@ -197,7 +197,7 @@ public class TclPackageElement extends Openable implements IScriptFolder {
 	}
 
 	public boolean isRootFolder() {
-		return false;
+		return true;
 	}
 
 	public IPath getPath() {

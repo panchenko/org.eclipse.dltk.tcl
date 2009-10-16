@@ -84,6 +84,9 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof TclSourcesElement)) {
+			return false;
+		}
 		if (this == obj)
 			return true;
 		if (!(obj instanceof TclSourcesElement))
@@ -228,7 +231,7 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 	}
 
 	public boolean isRootFolder() {
-		return false;
+		return true;
 	}
 
 	public IPath getPath() {
