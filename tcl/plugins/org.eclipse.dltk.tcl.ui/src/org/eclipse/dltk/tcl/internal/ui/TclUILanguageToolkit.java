@@ -20,6 +20,10 @@ import org.eclipse.dltk.tcl.core.TclConstants;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageSourceModule;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesElement;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule;
 import org.eclipse.dltk.tcl.internal.ui.text.SimpleTclSourceViewerConfiguration;
 import org.eclipse.dltk.ui.AbstractDLTKUILanguageToolkit;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
@@ -73,15 +77,108 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 		protected char getTypeDelimiter() {
 			return '$';
 		}
-		// protected void getTypeLabel(IType type, long flags, StringBuffer buf)
-		// {
-		// StringBuffer buffer = new StringBuffer(60);
-		// super.getTypeLabel(type, flags, buffer);
-		// if( type.getParent() instanceof ISourceModule ) {
-		// buf.append("$");
-		// }
-		// buf.append(buffer);
-		// }
+
+		public void getScriptFolderLabel(IProjectFragment pack, long flags,
+				StringBuffer buf) {
+			if (pack instanceof TclPackageFragment
+					|| pack instanceof TclSourcesFragment) {
+				// buf.append(((IProjectFragment)
+				// pack).getPath().lastSegment());
+				// buf.append(' ');
+				return;
+			}
+			super.getScriptFolderLabel(pack, flags, buf);
+		}
+
+		public void getProjectFragmentLabel(IProjectFragment root, long flags,
+				StringBuffer buf) {
+			if (root instanceof TclPackageFragment) {
+				buf.append(((TclPackageFragment) root).getPackageName());
+				buf.append(' ');
+				return;
+			}
+			// if (root instanceof TclSourcesFragment) {
+			// return;
+			// }
+			super.getProjectFragmentLabel(root, flags, buf);
+		};
+
+		protected void getScriptFolderLabel(IScriptFolder folder, long flags,
+				StringBuffer buf) {
+			// if( folder instanceof PodSourcesFolder ) {
+			// return;
+			// }
+			// boolean podFolder = true;// folder instanceof PodSourcesFolder;
+			if (getFlag(flags, P_QUALIFIED)) {
+				getProjectFragmentLabel((IProjectFragment) folder.getParent(),
+						ROOT_QUALIFIED, buf);
+				buf.append('/');
+			}
+			// refreshPackageNamePattern();
+			if (folder.isRootFolder()) {
+				// if (!podFolder) {
+				// buf.append(DEFAULT_PACKAGE);
+				// }
+			} else if (getFlag(flags, P_COMPRESSED) && fgPkgNameLength >= 0) {
+				String name = folder.getElementName();
+				int start = 0;
+				int dot = name.indexOf(IScriptFolder.PACKAGE_DELIMITER, start);
+				while (dot > 0) {
+					if (dot - start > fgPkgNameLength - 1) {
+						buf.append(fgPkgNamePrefix);
+						if (fgPkgNameChars > 0)
+							buf.append(name.substring(start, Math.min(start
+									+ fgPkgNameChars, dot)));
+						buf.append(fgPkgNamePostfix);
+					} else
+						buf.append(name.substring(start, dot + 1));
+					start = dot + 1;
+					dot = name.indexOf(IScriptFolder.PACKAGE_DELIMITER, start);
+				}
+				buf.append(name.substring(start));
+			} else {
+				getScriptFolderLabel(folder, buf);
+			}
+			if (getFlag(flags, P_POST_QUALIFIED)) {
+				// if (!podFolder) {
+				// buf.append(CONCAT_STRING);
+				// }
+				getProjectFragmentLabel((IProjectFragment) folder.getParent(),
+						ROOT_QUALIFIED, buf);
+			}
+		}
+
+		protected void getScriptFolderLabel(IScriptFolder folder,
+				StringBuffer buf) {
+			if (folder instanceof TclPackageElement
+					|| folder instanceof TclSourcesElement) {
+				return;
+			}
+			String name = folder.getElementName();
+			name = name.replace(IScriptFolder.PACKAGE_DELIMITER, '.');
+			buf.append(name);
+		}
+
+		protected void getSourceModule(ISourceModule module, long flags,
+				StringBuffer buf) {
+			if (getFlag(flags, CU_QUALIFIED)) {
+				IScriptFolder pack = (IScriptFolder) module.getParent();
+
+				getScriptFolderLabel(pack, (flags & QUALIFIER_FLAGS), buf);
+				// if (!(module instanceof PodModule)) {
+				// buf.append(getTypeDelimiter(module));
+				// }
+			}
+			buf.append(module.getElementName());
+
+			if (getFlag(flags, CU_POST_QUALIFIED)) {
+				if ((!(module instanceof TclPackageSourceModule || module instanceof TclSourcesSourceModule))) {
+					buf.append(CONCAT_STRING);
+				}
+				getScriptFolderLabel((IScriptFolder) module.getParent(), flags
+						& QUALIFIER_FLAGS, buf);
+			}
+		};
 	};
 
 	private static TclScriptElementLabels sInstance = new TclScriptElementLabels();
