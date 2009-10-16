@@ -84,9 +84,6 @@ public class TclSourcesElement extends Openable implements IScriptFolder {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof TclSourcesElement)) {
-			return false;
-		}
 		if (this == obj)
 			return true;
 		if (!(obj instanceof TclSourcesElement))
