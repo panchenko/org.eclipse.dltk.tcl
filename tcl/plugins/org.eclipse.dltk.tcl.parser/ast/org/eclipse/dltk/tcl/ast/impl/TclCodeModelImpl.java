@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclCodeModelImpl.java,v 1.1 2009/05/12 09:39:43 asobolev Exp $
+ * $Id: TclCodeModelImpl.java,v 1.2 2009/10/18 15:25:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.ast.impl;
 
@@ -10,14 +10,10 @@ import java.util.Collection;
 
 import org.eclipse.dltk.tcl.ast.AstPackage;
 import org.eclipse.dltk.tcl.ast.TclCodeModel;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -80,7 +76,7 @@ public class TclCodeModelImpl extends EObjectImpl implements TclCodeModel {
 	 */
 	public EList<String> getDelimeters() {
 		if (delimeters == null) {
-			delimeters = new EDataTypeUniqueEList<String>(String.class, this,
+			delimeters = new EDataTypeEList<String>(String.class, this,
 					AstPackage.TCL_CODE_MODEL__DELIMETERS);
 		}
 		return delimeters;
@@ -93,8 +89,8 @@ public class TclCodeModelImpl extends EObjectImpl implements TclCodeModel {
 	 */
 	public EList<Integer> getLineOffsets() {
 		if (lineOffsets == null) {
-			lineOffsets = new EDataTypeUniqueEList<Integer>(Integer.class,
-					this, AstPackage.TCL_CODE_MODEL__LINE_OFFSETS);
+			lineOffsets = new EDataTypeEList<Integer>(Integer.class, this,
+					AstPackage.TCL_CODE_MODEL__LINE_OFFSETS);
 		}
 		return lineOffsets;
 	}
@@ -181,9 +177,9 @@ public class TclCodeModelImpl extends EObjectImpl implements TclCodeModel {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (delimeters: ");
+		result.append(" (delimeters: "); //$NON-NLS-1$
 		result.append(delimeters);
-		result.append(", lineOffsets: ");
+		result.append(", lineOffsets: "); //$NON-NLS-1$
 		result.append(lineOffsets);
 		result.append(')');
 		return result.toString();

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclCodeModel.java,v 1.1 2009/05/12 09:39:43 asobolev Exp $
+ * $Id: TclCodeModel.java,v 1.2 2009/10/18 15:25:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.ast;
 
@@ -39,7 +39,7 @@ public interface TclCodeModel extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Delimeters</em>' attribute list.
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclCodeModel_Delimeters()
-	 * @model
+	 * @model unique="false"
 	 * @generated
 	 */
 	EList<String> getDelimeters();
@@ -55,7 +55,7 @@ public interface TclCodeModel extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Line Offsets</em>' attribute list.
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclCodeModel_LineOffsets()
-	 * @model
+	 * @model unique="false"
 	 * @generated
 	 */
 	EList<Integer> getLineOffsets();

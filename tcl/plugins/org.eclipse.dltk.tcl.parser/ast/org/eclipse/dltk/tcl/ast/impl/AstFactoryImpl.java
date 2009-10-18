@@ -37,7 +37,7 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 	public static AstFactory init() {
 		try {
 			AstFactory theAstFactory = (AstFactory) EPackage.Registry.INSTANCE
-					.getEFactory("http:///org/eclipse/dltk/tcl/ast.ecore");
+					.getEFactory("http:///org/eclipse/dltk/tcl/ast.ecore"); //$NON-NLS-1$ 
 			if (theAstFactory != null) {
 				return theAstFactory;
 			}
@@ -94,8 +94,8 @@ public class AstFactoryImpl extends EFactoryImpl implements AstFactory {
 		case AstPackage.TCL_PROBLEM:
 			return createTclProblem();
 		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName()
-					+ "' is not a valid classifier");
+			throw new IllegalArgumentException(
+					"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

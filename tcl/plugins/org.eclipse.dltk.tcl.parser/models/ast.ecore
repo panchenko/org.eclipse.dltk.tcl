@@ -40,8 +40,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArgumentMatch">
     <eStructuralFeatures xsi:type="ecore:EReference" name="definition" eType="ecore:EClass definitions.ecore#//Argument"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
-        eType="#//TclArgument"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" unique="false"
+        upperBound="-1" eType="#//TclArgument"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ComplexString" eSuperTypes="#//TclArgument #//ISubstitution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
@@ -62,18 +62,18 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TclCodeModel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="delimeters" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lineOffsets" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="delimeters" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lineOffsets" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TclProblemModel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="problems" upperBound="-1"
         eType="#//TclProblem" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TclProblem">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="arguments" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="arguments" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceStart" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>

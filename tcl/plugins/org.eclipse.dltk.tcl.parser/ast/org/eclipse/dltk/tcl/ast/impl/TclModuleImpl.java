@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclModuleImpl.java,v 1.2 2009/05/14 16:06:34 asobolev Exp $
+ * $Id: TclModuleImpl.java,v 1.3 2009/10/18 15:25:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.ast.impl;
 
@@ -207,7 +207,7 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 		case AstPackage.TCL_MODULE__STATEMENTS:
 			return getStatements();
 		case AstPackage.TCL_MODULE__SIZE:
-			return new Integer(getSize());
+			return getSize();
 		case AstPackage.TCL_MODULE__CODE_MODEL:
 			return getCodeModel();
 		}
@@ -227,7 +227,7 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 			getStatements().addAll((Collection<? extends TclCommand>) newValue);
 			return;
 		case AstPackage.TCL_MODULE__SIZE:
-			setSize(((Integer) newValue).intValue());
+			setSize((Integer) newValue);
 			return;
 		case AstPackage.TCL_MODULE__CODE_MODEL:
 			setCodeModel((TclCodeModel) newValue);

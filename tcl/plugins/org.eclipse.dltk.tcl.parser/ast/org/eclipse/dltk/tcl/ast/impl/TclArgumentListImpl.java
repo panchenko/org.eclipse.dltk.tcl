@@ -212,7 +212,7 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 				return getDefinitionArgument();
 			return basicGetDefinitionArgument();
 		case AstPackage.TCL_ARGUMENT_LIST__KIND:
-			return new Integer(getKind());
+			return getKind();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -234,7 +234,7 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 			setDefinitionArgument((ComplexArgument) newValue);
 			return;
 		case AstPackage.TCL_ARGUMENT_LIST__KIND:
-			setKind(((Integer) newValue).intValue());
+			setKind((Integer) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -290,7 +290,7 @@ public class TclArgumentListImpl extends TclArgumentImpl implements
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (kind: ");
+		result.append(" (kind: "); //$NON-NLS-1$
 		result.append(kind);
 		result.append(')');
 		return result.toString();

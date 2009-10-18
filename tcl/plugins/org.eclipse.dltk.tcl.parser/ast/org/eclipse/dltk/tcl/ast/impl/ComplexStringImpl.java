@@ -153,7 +153,7 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 		case AstPackage.COMPLEX_STRING__ARGUMENTS:
 			return getArguments();
 		case AstPackage.COMPLEX_STRING__KIND:
-			return new Integer(getKind());
+			return getKind();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -172,7 +172,7 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 			getArguments().addAll((Collection<? extends TclArgument>) newValue);
 			return;
 		case AstPackage.COMPLEX_STRING__KIND:
-			setKind(((Integer) newValue).intValue());
+			setKind((Integer) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -223,7 +223,7 @@ public class ComplexStringImpl extends TclArgumentImpl implements ComplexString 
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (kind: ");
+		result.append(" (kind: "); //$NON-NLS-1$
 		result.append(kind);
 		result.append(')');
 		return result.toString();

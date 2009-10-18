@@ -193,9 +193,9 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 		case AstPackage.SCRIPT__COMMANDS:
 			return getCommands();
 		case AstPackage.SCRIPT__CONTENT_START:
-			return new Integer(getContentStart());
+			return getContentStart();
 		case AstPackage.SCRIPT__CONTENT_END:
-			return new Integer(getContentEnd());
+			return getContentEnd();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -214,10 +214,10 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 			getCommands().addAll((Collection<? extends TclCommand>) newValue);
 			return;
 		case AstPackage.SCRIPT__CONTENT_START:
-			setContentStart(((Integer) newValue).intValue());
+			setContentStart((Integer) newValue);
 			return;
 		case AstPackage.SCRIPT__CONTENT_END:
-			setContentEnd(((Integer) newValue).intValue());
+			setContentEnd((Integer) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -273,9 +273,9 @@ public class ScriptImpl extends TclArgumentImpl implements Script {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (contentStart: ");
+		result.append(" (contentStart: "); //$NON-NLS-1$
 		result.append(contentStart);
-		result.append(", contentEnd: ");
+		result.append(", contentEnd: "); //$NON-NLS-1$
 		result.append(contentEnd);
 		result.append(')');
 		return result.toString();

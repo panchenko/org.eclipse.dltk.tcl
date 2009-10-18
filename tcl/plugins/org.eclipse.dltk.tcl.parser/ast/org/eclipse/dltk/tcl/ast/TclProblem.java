@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProblem.java,v 1.1 2009/05/14 16:06:33 asobolev Exp $
+ * $Id: TclProblem.java,v 1.2 2009/10/18 15:25:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.ast;
 
@@ -46,7 +46,7 @@ public interface TclProblem extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Arguments</em>' attribute list.
 	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getTclProblem_Arguments()
-	 * @model
+	 * @model unique="false"
 	 * @generated
 	 */
 	EList<String> getArguments();

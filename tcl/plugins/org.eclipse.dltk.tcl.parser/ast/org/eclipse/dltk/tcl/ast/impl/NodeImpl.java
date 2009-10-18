@@ -145,9 +145,9 @@ public class NodeImpl extends EObjectImpl implements Node {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case AstPackage.NODE__START:
-			return new Integer(getStart());
+			return getStart();
 		case AstPackage.NODE__END:
-			return new Integer(getEnd());
+			return getEnd();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -161,10 +161,10 @@ public class NodeImpl extends EObjectImpl implements Node {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 		case AstPackage.NODE__START:
-			setStart(((Integer) newValue).intValue());
+			setStart((Integer) newValue);
 			return;
 		case AstPackage.NODE__END:
-			setEnd(((Integer) newValue).intValue());
+			setEnd((Integer) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -215,9 +215,9 @@ public class NodeImpl extends EObjectImpl implements Node {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (start: ");
+		result.append(" (start: "); //$NON-NLS-1$
 		result.append(start);
-		result.append(", end: ");
+		result.append(", end: "); //$NON-NLS-1$
 		result.append(end);
 		result.append(')');
 		return result.toString();

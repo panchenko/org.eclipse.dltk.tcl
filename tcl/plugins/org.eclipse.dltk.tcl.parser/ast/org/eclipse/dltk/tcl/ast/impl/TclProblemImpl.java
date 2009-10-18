@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProblemImpl.java,v 1.1 2009/05/14 16:06:34 asobolev Exp $
+ * $Id: TclProblemImpl.java,v 1.2 2009/10/18 15:25:41 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.ast.impl;
 
@@ -10,17 +10,12 @@ import java.util.Collection;
 
 import org.eclipse.dltk.tcl.ast.AstPackage;
 import org.eclipse.dltk.tcl.ast.TclProblem;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -240,7 +235,7 @@ public class TclProblemImpl extends EObjectImpl implements TclProblem {
 	 */
 	public EList<String> getArguments() {
 		if (arguments == null) {
-			arguments = new EDataTypeUniqueEList<String>(String.class, this,
+			arguments = new EDataTypeEList<String>(String.class, this,
 					AstPackage.TCL_PROBLEM__ARGUMENTS);
 		}
 		return arguments;
@@ -435,21 +430,21 @@ public class TclProblemImpl extends EObjectImpl implements TclProblem {
 		case AstPackage.TCL_PROBLEM__ARGUMENTS:
 			return getArguments();
 		case AstPackage.TCL_PROBLEM__ID:
-			return new Integer(getId());
+			return getId();
 		case AstPackage.TCL_PROBLEM__MESSAGE:
 			return getMessage();
 		case AstPackage.TCL_PROBLEM__SOURCE_START:
-			return new Integer(getSourceStart());
+			return getSourceStart();
 		case AstPackage.TCL_PROBLEM__SOURCE_END:
-			return new Integer(getSourceEnd());
+			return getSourceEnd();
 		case AstPackage.TCL_PROBLEM__ERROR:
-			return isError() ? Boolean.TRUE : Boolean.FALSE;
+			return isError();
 		case AstPackage.TCL_PROBLEM__WARNING:
-			return isWarning() ? Boolean.TRUE : Boolean.FALSE;
+			return isWarning();
 		case AstPackage.TCL_PROBLEM__FILE_NAME:
 			return getFileName();
 		case AstPackage.TCL_PROBLEM__LINE_NUMBER:
-			return new Integer(getLineNumber());
+			return getLineNumber();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -468,28 +463,28 @@ public class TclProblemImpl extends EObjectImpl implements TclProblem {
 			getArguments().addAll((Collection<? extends String>) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__ID:
-			setId(((Integer) newValue).intValue());
+			setId((Integer) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__MESSAGE:
 			setMessage((String) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__SOURCE_START:
-			setSourceStart(((Integer) newValue).intValue());
+			setSourceStart((Integer) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__SOURCE_END:
-			setSourceEnd(((Integer) newValue).intValue());
+			setSourceEnd((Integer) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__ERROR:
-			setError(((Boolean) newValue).booleanValue());
+			setError((Boolean) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__WARNING:
-			setWarning(((Boolean) newValue).booleanValue());
+			setWarning((Boolean) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__FILE_NAME:
 			setFileName((String) newValue);
 			return;
 		case AstPackage.TCL_PROBLEM__LINE_NUMBER:
-			setLineNumber(((Integer) newValue).intValue());
+			setLineNumber((Integer) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -577,23 +572,23 @@ public class TclProblemImpl extends EObjectImpl implements TclProblem {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (arguments: ");
+		result.append(" (arguments: "); //$NON-NLS-1$
 		result.append(arguments);
-		result.append(", id: ");
+		result.append(", id: "); //$NON-NLS-1$
 		result.append(id);
-		result.append(", message: ");
+		result.append(", message: "); //$NON-NLS-1$
 		result.append(message);
-		result.append(", sourceStart: ");
+		result.append(", sourceStart: "); //$NON-NLS-1$
 		result.append(sourceStart);
-		result.append(", sourceEnd: ");
+		result.append(", sourceEnd: "); //$NON-NLS-1$
 		result.append(sourceEnd);
-		result.append(", error: ");
+		result.append(", error: "); //$NON-NLS-1$
 		result.append(error);
-		result.append(", warning: ");
+		result.append(", warning: "); //$NON-NLS-1$
 		result.append(warning);
-		result.append(", fileName: ");
+		result.append(", fileName: "); //$NON-NLS-1$
 		result.append(fileName);
-		result.append(", lineNumber: ");
+		result.append(", lineNumber: "); //$NON-NLS-1$
 		result.append(lineNumber);
 		result.append(')');
 		return result.toString();
