@@ -32,11 +32,8 @@ class RebuildProjectsJob extends Job {
 	private final IInterpreterInstall install;
 
 	public RebuildProjectsJob(IInterpreterInstall install) {
-		super(
-				NLS
-						.bind(
-								TclInterpreterMessages.AddTclInterpreterDialog_RebuildJobName,
-								install.getName()));
+		super(NLS.bind(Messages.AddTclInterpreterDialog_RebuildJobName, install
+				.getName()));
 		this.install = install;
 	}
 
@@ -57,10 +54,9 @@ class RebuildProjectsJob extends Job {
 		}
 		subMonitor.worked(20);
 		final SubMonitor buildingMonitor = subMonitor.newChild(80);
-		buildingMonitor
-				.beginTask(
-						TclInterpreterMessages.AddTclInterpreterDialog_RebuildProjectsTaskName,
-						projects.length);
+		buildingMonitor.beginTask(
+				Messages.AddTclInterpreterDialog_RebuildProjectsTaskName,
+				projects.length);
 		for (int i = 0; i < projects.length; ++i) {
 			final IScriptProject project = projects[i];
 			try {
@@ -75,19 +71,17 @@ class RebuildProjectsJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	private void bulidProject(final IScriptProject project,
-			SubMonitor monitor) throws CoreException {
+	private void bulidProject(final IScriptProject project, SubMonitor monitor)
+			throws CoreException {
 		final IInterpreterInstall projectInterpreterInstall = ScriptRuntime
 				.getInterpreterInstall(project);
 		if (projectInterpreterInstall != null
 				&& projectInterpreterInstall.equals(install)) {
-			monitor
-					.setTaskName(NLS
-							.bind(
-									TclInterpreterMessages.AddTclInterpreterDialog_RebuildProjectTaskName,
-									project.getElementName()));
-			project.getProject().build(
-					IncrementalProjectBuilder.FULL_BUILD, monitor);
+			monitor.setTaskName(NLS.bind(
+					Messages.AddTclInterpreterDialog_RebuildProjectTaskName,
+					project.getElementName()));
+			project.getProject().build(IncrementalProjectBuilder.FULL_BUILD,
+					monitor);
 		}
 	}
 }

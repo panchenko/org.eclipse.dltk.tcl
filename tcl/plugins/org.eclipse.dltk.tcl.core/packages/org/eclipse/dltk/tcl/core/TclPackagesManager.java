@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ProgressMonitoringJob;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.environment.IDeployment;
@@ -64,13 +65,15 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class TclPackagesManager {
 	private static final String DLTK_TCL = "scripts/dltk.tcl"; //$NON-NLS-1$
-	public static final String END_OF_STREAM = "DLTK-TCL-HELPER-9E7A168E-5EEF-4a46-A86D-0C82E90686E4-END-OF-STREAM";
-	private static final String PKG_VERSION = "v20090505";
+	public static final String END_OF_STREAM = "DLTK-TCL-HELPER-9E7A168E-5EEF-4a46-A86D-0C82E90686E4-END-OF-STREAM"; //$NON-NLS-1$
+	private static final String PKG_VERSION = "v20090505"; //$NON-NLS-1$
 
 	private static Resource infos = null;
 	private static final Map<String, Resource> projectInfos = new HashMap<String, Resource>();
 
 	private static IInterpreterInstallChangedListener installChangedListener = null;
+	private static Set<IInterpreterInstall> packageFetchingSet = new HashSet<IInterpreterInstall>();
+	private static Set<IInterpreterInstall> sourcesFetchingSet = new HashSet<IInterpreterInstall>();
 
 	public static List<TclPackageInfo> getPackageInfos(
 			IInterpreterInstall install, Set<String> packageNames,
@@ -179,16 +182,12 @@ public class TclPackagesManager {
 				interpreterInfo.setInstallLocation(interpreterLocation);
 				interpreterInfo.setName(install.getName());
 				interpreterInfo.setEnvironment(environmentId);
+				interpreterInfo.setFetched(false);
 				infos.getContents().add(interpreterInfo);
 			}
 		}
-		if (!interpreterInfo.isFetched()
-				|| interpreterInfo.getFetchedAt() == null
-				|| interpreterInfo.getFetchedAt().getTime()
-						+ getPackagesRefreshInterval(install) < System
-						.currentTimeMillis()) {
-			fetchPackagesForInterpreter(install, interpreterInfo);
-		}
+		fetchPackagesForInterpreter(install, interpreterInfo);
+
 		return interpreterInfo;
 	}
 
@@ -231,23 +230,62 @@ public class TclPackagesManager {
 
 	private static void fetchPackagesForInterpreter(
 			IInterpreterInstall install, TclInterpreterInfo interpreterInfo) {
-		PerformanceNode p = RuntimePerformanceMonitor.begin();
-		IExecutionEnvironment exeEnv = install.getExecEnvironment();
-		if (exeEnv == null) {
-			return;
-		}
-		List<String> content = deployExecute(exeEnv, install,
-				new String[] { "get-pkgs" }, install //$NON-NLS-1$
-						.getEnvironmentVariables());
 		synchronized (TclPackagesManager.class) {
-			if (content != null) {
-				processContent(content, false, true, interpreterInfo);
-				interpreterInfo.setFetched(true);
-				interpreterInfo.setFetchedAt(new Date());
-				save();
+			while (packageFetchingSet.contains(install)) {
+				// White until it will be removed from fetches list
+				try {
+					TclPackagesManager.class.wait(50);
+				} catch (InterruptedException e) {
+					TclPlugin.error(e);
+				}
+			}
+			if (!(!interpreterInfo.isFetched()
+					|| interpreterInfo.getFetchedAt() == null || interpreterInfo
+					.getFetchedAt().getTime()
+					+ getPackagesRefreshInterval(install) < System
+					.currentTimeMillis())) {
+				return; // Info already fetched and ok
+			}
+			packageFetchingSet.add(install);
+		}
+		try {
+			PerformanceNode p = RuntimePerformanceMonitor.begin();
+			IExecutionEnvironment exeEnv = install.getExecEnvironment();
+			if (exeEnv == null) {
+				return;
+			}
+			ProgressMonitoringJob monitor = new ProgressMonitoringJob(
+					Messages.TclInterpreterMessages_RetrieveListOfAvailablePackages
+							+ " " + install.getName(), 100);
+			try {
+				List<String> content = deployExecute(exeEnv, install,
+						new String[] { "get-pkgs" }, install //$NON-NLS-1$
+								.getEnvironmentVariables(), monitor);
+				synchronized (TclPackagesManager.class) {
+					if (content != null) {
+						/* Progress monitoring */monitor
+								.subTask(Messages.TclInterpreterMessages_ProcessingPackagesInfo);
+						processContent(content, false, true, interpreterInfo);
+						/* Progress monitoring */monitor.worked(20);
+						interpreterInfo.setFetched(true);
+						interpreterInfo.setFetchedAt(new Date());
+						monitor
+								.subTask(Messages.TclInterpreterMessages_SavePackagesInfo);
+						save();
+						monitor.worked(10);
+					}
+				}
+				String msg = Messages.TclInterpreterMessages_FetchInterpreterPackagesInfo;
+				p.done("Tcl", msg, 0); //$NON-NLS-1$
+			} finally {
+				monitor.done();
+			}
+		} finally {
+			synchronized (TclPackagesManager.class) {
+				packageFetchingSet.remove(install);
+				TclPackagesManager.class.notifyAll();
 			}
 		}
-		p.done("Tcl", "Fetch interpreter packages info", 0);
 	}
 
 	public static void save() {
@@ -265,8 +303,8 @@ public class TclPackagesManager {
 				try {
 					entry.getValue().save(null);
 				} catch (IOException e) {
-					String msg = NLS.bind("Error saving {0} state: {1}", entry
-							.getKey(), e.getMessage());
+					String msg = NLS.bind(Messages.TclInterpreterMessages_6,
+							entry.getKey(), e.getMessage());
 					TclPlugin.error(msg, e);
 				}
 			}
@@ -331,7 +369,7 @@ public class TclPackagesManager {
 						Node pkgNde = elChilds.item(j);
 						if (isElementName(pkgNde, "package")) { //$NON-NLS-1$
 							Element pkgElement = (Element) pkgNde;
-							String name = pkgElement.getAttribute("name");
+							String name = pkgElement.getAttribute("name"); //$NON-NLS-1$
 							processedPackages.add(name);
 							TclPackageInfo pkg = getCreatePackage(info, name);
 							if (markAsFetched) {
@@ -376,7 +414,7 @@ public class TclPackagesManager {
 			TclInterpreterInfo interpreterInfo) {
 		Element pkg = (Element) pkgNde;
 
-		info.setVersion(pkg.getAttribute("version"));
+		info.setVersion(pkg.getAttribute("version")); //$NON-NLS-1$
 		NodeList childs = pkg.getChildNodes();
 		for (int i = 0; i < childs.getLength(); i++) {
 			Node nde = childs.item(i);
@@ -440,88 +478,140 @@ public class TclPackagesManager {
 
 	private static void fetchSources(Set<TclPackageInfo> toFetch,
 			IInterpreterInstall install, TclInterpreterInfo interpreterInfo) {
-		if (toFetch.size() == 0) {
-			return;
+		synchronized (TclPackagesManager.class) {
+			while (sourcesFetchingSet.contains(install)) {
+				// White until it will be removed from fetches list
+				try {
+					TclPackagesManager.class.wait(50);
+				} catch (InterruptedException e) {
+					TclPlugin.error(e);
+				}
+			}
+			// Check for consistency
+			Set<TclPackageInfo> toRemove = new HashSet<TclPackageInfo>();
+			for (TclPackageInfo tclPackageInfo : toFetch) {
+				if (tclPackageInfo.isFetched()) {
+					toRemove.add(tclPackageInfo);
+				}
+			}
+			toFetch.removeAll(toRemove);
+			if (toFetch.size() == 0) {
+				return;
+			}
+			sourcesFetchingSet.add(install);
 		}
-		PerformanceNode p = RuntimePerformanceMonitor.begin();
-		IExecutionEnvironment exeEnv = install.getExecEnvironment();
-		if (exeEnv == null) {
-			return;
-		}
-		IDeployment deployment = exeEnv.createDeployment();
-		if (deployment == null) {
-			return;
-		}
-		IFileHandle script = deploy(deployment);
 
-		if (script == null) {
-			deployment.dispose();
-			return;
-		}
-
-		IFileHandle workingDir = script.getParent();
-		InterpreterConfig config = ScriptLaunchUtil.createInterpreterConfig(
-				exeEnv, script, workingDir, install.getEnvironmentVariables());
-		StringBuffer buf = new StringBuffer();
-		for (TclPackageInfo tclPackageInfo : toFetch) {
-			buf.append(tclPackageInfo.getName()).append(" "); //$NON-NLS-1$
-		}
-		String names = buf.toString();
-		ByteArrayInputStream bais = new ByteArrayInputStream(names.getBytes());
-		IPath packagesPath = null;
+		/* Progress monitoring */ProgressMonitoringJob monitor = new ProgressMonitoringJob(
+				Messages.TclInterpreterMessages_RetrievePackageInformationSources
+						+ " " + install.getName(), 100);
 		try {
-			packagesPath = deployment.add(bais, "packages.txt"); //$NON-NLS-1$
-		} catch (IOException e1) {
-			if (DLTKCore.DEBUG) {
-				e1.printStackTrace();
+			PerformanceNode p = RuntimePerformanceMonitor.begin();
+			IExecutionEnvironment exeEnv = install.getExecEnvironment();
+			if (exeEnv == null) {
+				return;
+			}
+			String envName = install.getEnvironment().getName();
+			/* Progress monitoring */monitor
+					.subTask(Messages.TclInterpreterMessages_DeployingPackageInformationScript);
+			IDeployment deployment = exeEnv.createDeployment();
+			if (deployment == null) {
+				return;
+			}
+			IFileHandle script = deploy(deployment);
+
+			if (script == null) {
+				deployment.dispose();
+				return;
+			}
+			/* Progress monitoring */monitor.worked(10);
+
+			IFileHandle workingDir = script.getParent();
+			InterpreterConfig config = ScriptLaunchUtil
+					.createInterpreterConfig(exeEnv, script, workingDir,
+							install.getEnvironmentVariables());
+			StringBuffer buf = new StringBuffer();
+			for (TclPackageInfo tclPackageInfo : toFetch) {
+				buf.append(tclPackageInfo.getName()).append(" "); //$NON-NLS-1$
+			}
+			String names = buf.toString();
+			ByteArrayInputStream bais = new ByteArrayInputStream(names
+					.getBytes());
+			/* Progress monitoring */monitor
+					.subTask(Messages.TclInterpreterMessages_DeployingFileWithListOfPackages);
+			IPath packagesPath = null;
+			try {
+				packagesPath = deployment.add(bais, "packages.txt"); //$NON-NLS-1$
+			} catch (IOException e1) {
+				if (DLTKCore.DEBUG) {
+					e1.printStackTrace();
+				}
+				deployment.dispose();
+				return;
+			}
+			/* Progress monitoring */monitor.worked(10);
+			IFileHandle file = deployment.getFile(packagesPath);
+			// For wish
+			config.removeEnvVar("DISPLAY"); //$NON-NLS-1$
+			String[] arguments = new String[] { "get-srcs", "-fpkgs", //$NON-NLS-1$ //$NON-NLS-2$
+					file.toOSString() };
+
+			config.addScriptArgs(arguments);
+
+			/* Progress monitoring */monitor
+					.subTask(Messages.TclInterpreterMessages_RunningPackageInfoScript);// MONITORING
+			Process process = null;
+			try {
+				process = ScriptLaunchUtil.runScriptWithInterpreter(exeEnv,
+						install.getInstallLocation().toOSString(), config);
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+				deployment.dispose();
+			}
+			if (process == null) {
+				deployment.dispose();
+				return;
+			}
+			/* Progress monitoring */monitor.worked(10);
+			List<String> output = ProcessOutputCollector.execute(process);
+			/* Progress monitoring */monitor.worked(40);
+			// deployment.dispose();
+			/* Progress monitoring */monitor
+					.subTask(Messages.TclInterpreterMessages_ProcessingPackagesInfo);
+			processContent(output, true, false, interpreterInfo);
+			/* Progress monitoring */monitor.worked(20);
+
+			// Mark all toFetch as fetched.
+			for (TclPackageInfo info : toFetch) {
+				info.setFetched(true);
 			}
 			deployment.dispose();
-			return;
-		}
-		IFileHandle file = deployment.getFile(packagesPath);
-		// For wish
-		config.removeEnvVar("DISPLAY"); //$NON-NLS-1$
-		String[] arguments = new String[] { "get-srcs", "-fpkgs", //$NON-NLS-1$ //$NON-NLS-2$
-				file.toOSString() };
-
-		config.addScriptArgs(arguments);
-
-		Process process = null;
-		try {
-			process = ScriptLaunchUtil.runScriptWithInterpreter(exeEnv, install
-					.getInstallLocation().toOSString(), config);
-		} catch (CoreException e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
+			/* Progress monitoring */monitor
+					.subTask(Messages.TclInterpreterMessages_SavePackagesInfo);
+			save();
+			/* Progress monitoring */monitor.worked(10);
+			p
+					.done(
+							"Tcl", Messages.TclInterpreterMessages_FetchInterpreterSources, 0); //$NON-NLS-1$
+		} finally {
+			monitor.done();
+			synchronized (TclPackagesManager.class) {
+				sourcesFetchingSet.remove(install);
+				TclPackagesManager.class.notifyAll();
 			}
-			deployment.dispose();
 		}
-		if (process == null) {
-			deployment.dispose();
-			return;
-		}
-		List<String> output = ProcessOutputCollector.execute(process);
-		// deployment.dispose();
-		processContent(output, true, false, interpreterInfo);
-
-		// Mark all toFetch as fetched.
-		for (TclPackageInfo info : toFetch) {
-			info.setFetched(true);
-		}
-		deployment.dispose();
-		save();
-		p.done("Tcl", "Fetch interpreter package sources", 0);
 	}
 
 	private static URI getInfoLocation() {
 		final IPath path = TclPlugin.getDefault().getStateLocation().append(
-				"tclPackages_" + PKG_VERSION + ".info");
+				"tclPackages_" + PKG_VERSION + ".info"); //$NON-NLS-2$ //$NON-NLS-2$
 		return URI.createFileURI(path.toOSString());
 	}
 
 	private static URI getProjectLocation(String projectName) {
 		final IPath path = TclPlugin.getDefault().getStateLocation().append(
-				"project-" + projectName + ".info");
+				"project-" + projectName + ".info"); //$NON-NLS-1$ //$NON-NLS-2$
 		return URI.createFileURI(path.toOSString());
 	}
 
@@ -633,7 +723,11 @@ public class TclPackagesManager {
 
 	private static List<String> deployExecute(IExecutionEnvironment exeEnv,
 			IInterpreterInstall install, String[] arguments,
-			EnvironmentVariable[] env) {
+			EnvironmentVariable[] env, ProgressMonitoringJob monitor) {
+		/* Progress monitoring */String envName = install.getEnvironment()
+				.getName();
+		monitor
+				.subTask(Messages.TclInterpreterMessages_DeployingPackageInformationScript);
 		IDeployment deployment = exeEnv.createDeployment();
 		if (deployment == null) {
 			return null;
@@ -643,7 +737,10 @@ public class TclPackagesManager {
 			deployment.dispose();
 			return null;
 		}
+		/* Progress monitoring */monitor.worked(10);
 
+		/* Progress monitoring */monitor
+				.subTask(Messages.TclInterpreterMessages_RunningPackageInfoScript);
 		IFileHandle workingDir = script.getParent();
 		InterpreterConfig config = ScriptLaunchUtil.createInterpreterConfig(
 				exeEnv, script, workingDir, env);
@@ -668,6 +765,7 @@ public class TclPackagesManager {
 			return null;
 		}
 		List<String> output = ProcessOutputCollector.execute(process);
+		/* Progress monitoring */monitor.worked(70);
 		deployment.dispose();
 		return output;
 	}
