@@ -5,6 +5,9 @@ import java.util.List;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
+/**
+ * @since 1.1
+ */
 public class StatusWithPackages extends Status {
 
 	private List<String> packages;

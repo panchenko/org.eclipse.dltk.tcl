@@ -45,6 +45,9 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 	private static final String CORRECT_INTERPRETER_PATTERN = TclPackagesManager.END_OF_STREAM;
 
 	private static final String INSTALL_TYPE_NAME = "Generic Tcl";
+	/**
+	 * @since 1.1
+	 */
 	public static final String TYPE_ID = "org.eclipse.dltk.internal.debug.ui.launcher.GenericTclInstallType";
 	private static final String[] INTERPRETER_NAMES = { "tclsh", "tclsh84",
 			"tclsh8.4", "tclsh85", "tclsh8.5", "tclsh8.6",
