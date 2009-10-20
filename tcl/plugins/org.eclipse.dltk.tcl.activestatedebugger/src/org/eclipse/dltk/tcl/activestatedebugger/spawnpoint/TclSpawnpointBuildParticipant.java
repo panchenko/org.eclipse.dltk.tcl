@@ -54,9 +54,14 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 		SpawnpointCollector collector = new SpawnpointCollector(context,
 				spawnCommands);
 		TclParserUtils.traverse(commands, collector);
-		file.deleteMarkers(
+		IMarker[] markers = file.findMarkers(
 				TclActiveStateDebuggerConstants.SPAWNPOINT_MARKER_TYPE, true,
 				IResource.DEPTH_ZERO);
+		if (markers != null && markers.length > 0) {
+			file.deleteMarkers(
+					TclActiveStateDebuggerConstants.SPAWNPOINT_MARKER_TYPE,
+					true, IResource.DEPTH_ZERO);
+		}
 		if (!collector.spawnpoints.isEmpty()) {
 			for (Map.Entry<Integer, SpawnpointInfo> entry : collector.spawnpoints
 					.entrySet()) {
