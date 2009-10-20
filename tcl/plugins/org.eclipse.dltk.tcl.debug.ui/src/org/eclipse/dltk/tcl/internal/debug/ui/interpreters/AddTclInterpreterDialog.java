@@ -9,16 +9,12 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
-import javax.crypto.spec.OAEPParameterSpec;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.caching.IContentCache;
-import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterEnvironmentVariablesBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibraryBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialog;
-import org.eclipse.dltk.internal.debug.ui.interpreters.ExpandableBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.IAddInterpreterDialogRequestor;
 import org.eclipse.dltk.internal.debug.ui.interpreters.InterpretersMessages;
 import org.eclipse.dltk.launching.IInterpreterInstall;
@@ -27,16 +23,13 @@ import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.VariableMap;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
-import org.eclipse.dltk.tcl.internal.launching.StatusWithPackages;
 import org.eclipse.dltk.tcl.internal.ui.GlobalVariableBlock;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EMap;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
