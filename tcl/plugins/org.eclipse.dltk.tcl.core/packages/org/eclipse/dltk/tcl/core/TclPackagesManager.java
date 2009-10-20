@@ -392,6 +392,34 @@ public class TclPackagesManager {
 		}
 	}
 
+	public static List<String> extractPackagesFromContent(List<String> content) {
+		String text = getXMLContent(content);
+		Document document = getDocument(text);
+		Set<String> packages = new HashSet<String>();
+
+		if (document != null) {
+			Element element = document.getDocumentElement();
+			NodeList childNodes = element.getChildNodes();
+			int len = childNodes.getLength();
+			for (int i = 0; i < len; i++) {
+				Node nde = childNodes.item(i);
+				if (isElementName(nde, "path")) { //$NON-NLS-1$
+					Element el = (Element) nde;
+					NodeList elChilds = el.getChildNodes();
+					for (int j = 0; j < elChilds.getLength(); j++) {
+						Node pkgNde = elChilds.item(j);
+						if (isElementName(pkgNde, "package")) { //$NON-NLS-1$
+							Element pkgElement = (Element) pkgNde;
+							String name = pkgElement.getAttribute("name"); //$NON-NLS-1$
+							packages.add(name);
+						}
+					}
+				}
+			}
+		}
+		return new ArrayList<String>(packages);
+	}
+
 	private static synchronized TclPackageInfo getCreatePackage(
 			TclInterpreterInfo info, String name) {
 		TclPackageInfo packageInfo = null;

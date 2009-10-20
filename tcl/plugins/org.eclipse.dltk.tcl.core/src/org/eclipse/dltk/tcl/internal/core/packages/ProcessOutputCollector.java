@@ -76,6 +76,7 @@ public class ProcessOutputCollector {
 						break;
 					}
 					if (line.indexOf(endOfStreamMarker) >= 0) {
+						output.add(line);
 						break;
 					}
 					output.add(line);
