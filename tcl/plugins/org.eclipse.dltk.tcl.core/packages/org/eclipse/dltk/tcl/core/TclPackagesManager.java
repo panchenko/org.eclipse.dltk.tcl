@@ -392,6 +392,9 @@ public class TclPackagesManager {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public static List<String> extractPackagesFromContent(List<String> content) {
 		String text = getXMLContent(content);
 		Document document = getDocument(text);
