@@ -21,7 +21,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IDeployment;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IExecutionEnvironment;
@@ -38,7 +40,9 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.internal.core.packages.ProcessOutputCollector;
+import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
+import org.omg.CORBA.Environment;
 import org.osgi.framework.Bundle;
 
 public class GenericTclInstallType extends AbstractInterpreterInstallType {
@@ -137,7 +141,7 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 
 				config.addEnvVars(envVars);
 				config.removeEnvVar("DISPLAY"); //$NON-NLS-1$
-				final StringBuffer source = new StringBuffer();
+				addTclLibPath(config, libraries, environment);
 				/* Progress monitoring */monitor
 						.subTask("Running validation script");
 				String[] cmdLine = config.renderCommandLine(
@@ -205,6 +209,46 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 			}
 		} finally {
 			monitor.done();
+		}
+	}
+
+	private void addTclLibPath(InterpreterConfig config,
+			LibraryLocation[] libraries, IEnvironment environment) {
+		if (libraries == null) {
+			return;
+		}
+		String currentValue = config
+				.removeEnvVar(TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR);
+
+		IPath paths[] = new IPath[libraries.length];
+		int i = 0;
+		for (LibraryLocation loc : libraries) {
+			paths[i++] = EnvironmentPathUtils
+					.getLocalPath(loc.getLibraryPath());
+		}
+		StringBuffer sb = new StringBuffer();
+		for (i = 0; i < paths.length; ++i) {
+			final IFileHandle file = config.getEnvironment().getFile(paths[i]);
+			if (file != null) {
+				if (sb.length() != 0) {
+					sb.append(' ');
+				}
+				sb.append('{');
+				sb.append(file.toOSString());
+				sb.append('}');
+			}
+		}
+		if (currentValue != null) {
+			if (sb.length() != 0) {
+				sb.append(' ');
+			}
+			sb.append(TclLaunchConfigurationDelegate
+					.convertToTclLibPathFormat(currentValue));
+			// sb.append(currentValue).append(" ");
+		}
+		if (sb.length() != 0) {
+			config.addEnvVar(TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR,
+					sb.toString());
 		}
 	}
 
