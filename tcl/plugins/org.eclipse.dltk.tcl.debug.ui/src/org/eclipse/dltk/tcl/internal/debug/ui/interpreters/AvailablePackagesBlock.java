@@ -1,7 +1,6 @@
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +14,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * @since 2.0
+ */
 public class AvailablePackagesBlock {
 	private List<String> elements = new ArrayList<String>();
 	private TreeViewer viewer;
