@@ -25,7 +25,8 @@ Require-Bundle: org.eclipse.debug.ui,
  org.eclipse.dltk.debug;bundle-version="1.0.0",
  org.eclipse.dltk.tcl.ui;bundle-version="2.0.0",
  org.eclipse.ui.editors,
- org.eclipse.emf.ecore
+ org.eclipse.emf.ecore,
+ org.eclipse.ui.forms;bundle-version="3.4.0"
 Export-Package: org.eclipse.dltk.tcl.internal.console.ui,
  org.eclipse.dltk.tcl.internal.console.ui.actions,
  org.eclipse.dltk.tcl.internal.console.ui.preferences,
