@@ -155,7 +155,7 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 				return;
 			}
 			String name = folder.getElementName();
-			name = name.replace(IScriptFolder.PACKAGE_DELIMITER, '.');
+			// name = name.replace(IScriptFolder.PACKAGE_DELIMITER, '.');
 			buf.append(name);
 		}
 
