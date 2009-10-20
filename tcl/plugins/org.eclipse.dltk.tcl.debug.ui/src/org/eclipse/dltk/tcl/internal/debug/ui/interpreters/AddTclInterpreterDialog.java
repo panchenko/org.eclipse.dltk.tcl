@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.caching.IContentCache;
 import org.eclipse.dltk.internal.core.ModelManager;
@@ -108,6 +110,9 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		if (status instanceof StatusWithPackages) {
 			StatusWithPackages swp = (StatusWithPackages) status;
 			packagesBlock.updatePackages(swp.getPackages());
+		} else {
+			// Make it empty if not detected.
+			packagesBlock.updatePackages(new ArrayList<String>());
 		}
 	}
 
