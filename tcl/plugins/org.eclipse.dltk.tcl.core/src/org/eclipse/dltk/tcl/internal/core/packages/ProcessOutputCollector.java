@@ -18,9 +18,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 
 public class ProcessOutputCollector {
+
+	private static final int TIMEOUT = 50000;
 
 	private static class ErrorStreamReaderThread extends Thread {
 
@@ -54,13 +58,17 @@ public class ProcessOutputCollector {
 		final InputStream stream;
 		final String endOfStreamMarker;
 		final List<String> output = new ArrayList<String>();
+		private IProgressMonitor monitor;
 
 		/**
 		 * @param stream
+		 * @param monitor
 		 */
-		public OutputReaderThread(InputStream stream, String endOfStreamMarker) {
+		public OutputReaderThread(InputStream stream, String endOfStreamMarker,
+				IProgressMonitor monitor) {
 			this.stream = stream;
 			this.endOfStreamMarker = endOfStreamMarker;
+			this.monitor = monitor;
 		}
 
 		/*
@@ -80,6 +88,7 @@ public class ProcessOutputCollector {
 						break;
 					}
 					output.add(line);
+					monitor.worked(1);
 				}
 			} catch (IOException e) {
 				// ignore
@@ -88,6 +97,13 @@ public class ProcessOutputCollector {
 	}
 
 	public static List<String> execute(Process process) {
+		return execute(process, new NullProgressMonitor());
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public static List<String> execute(Process process, IProgressMonitor monitor) {
 		try {
 			process.getOutputStream().close();
 		} catch (Exception e) {
@@ -97,11 +113,11 @@ public class ProcessOutputCollector {
 		new ErrorStreamReaderThread(errorStream).start();
 		final InputStream inputStream = process.getInputStream();
 		final OutputReaderThread output = new OutputReaderThread(inputStream,
-				TclPackagesManager.END_OF_STREAM);
+				TclPackagesManager.END_OF_STREAM, monitor);
 		output.start();
 		// TODO also we should check if process is terminated
 		try {
-			output.join(50000);
+			output.join(TIMEOUT);
 		} catch (InterruptedException e) {
 			//
 		}
