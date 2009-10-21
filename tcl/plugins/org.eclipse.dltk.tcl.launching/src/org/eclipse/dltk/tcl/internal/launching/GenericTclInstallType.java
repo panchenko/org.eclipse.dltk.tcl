@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IDeployment;
@@ -42,7 +41,6 @@ import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.internal.core.packages.ProcessOutputCollector;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
-import org.omg.CORBA.Environment;
 import org.osgi.framework.Bundle;
 
 public class GenericTclInstallType extends AbstractInterpreterInstallType {
