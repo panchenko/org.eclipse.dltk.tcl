@@ -217,6 +217,7 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 			return 0;
 		}
 
+		long fetchTime = TclPackagesManager.getTclInterpreterFetchDate(install);
 		List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
 				install, reqs, true);
 		boolean found = false;
@@ -229,8 +230,9 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 		if (!found) {
 			return 0;
 		}
-		return currentPath.hashCode();
+		return currentPath.hashCode() * 17 + fetchTime;
 	}
+
 	/**
 	 * @since 2.0
 	 */

@@ -152,6 +152,19 @@ public class TclPackagesManager {
 		return getTclInterpreter(install, true);
 	}
 
+	/**
+	 * @since 2.0
+	 * @param install
+	 * @return
+	 */
+	public static long getTclInterpreterFetchDate(IInterpreterInstall install) {
+		TclInterpreterInfo interpreter = getTclInterpreter(install, true);
+		if (interpreter != null) {
+			return interpreter.getFetchedAt().getTime();
+		}
+		return 0;
+	}
+
 	private static TclInterpreterInfo getTclInterpreter(
 			IInterpreterInstall install, boolean allowCreate) {
 		TclInterpreterInfo interpreterInfo = null;
