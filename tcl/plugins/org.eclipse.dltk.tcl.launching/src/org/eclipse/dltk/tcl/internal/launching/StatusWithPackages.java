@@ -13,7 +13,7 @@ public class StatusWithPackages extends Status {
 	private List<String> packages;
 
 	public StatusWithPackages(List<String> packages) {
-		super(OK, TclLaunchingPlugin.PLUGIN_ID, 0, "OK", null);
+		super(OK, TclLaunchingPlugin.PLUGIN_ID, OK_STATUS.getMessage());
 		this.packages = packages;
 	}
 
@@ -24,11 +24,12 @@ public class StatusWithPackages extends Status {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
-		buf.append("[");
+		buf.append(super.toString());
+		buf.append("["); //$NON-NLS-1$
 		for (String pkg : packages) {
-			buf.append(" " + pkg);
+			buf.append(" " + pkg); //$NON-NLS-1$
 		}
-		buf.append("]");
-		return super.toString() + buf.toString();
+		buf.append("]"); //$NON-NLS-1$
+		return buf.toString();
 	}
 }
