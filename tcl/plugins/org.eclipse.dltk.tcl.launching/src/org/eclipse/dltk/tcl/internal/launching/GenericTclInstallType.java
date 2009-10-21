@@ -158,11 +158,11 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 						workingDirectoryPath, environmentAsStrings);
 				/* Progress monitoring */monitor.worked(10);
 
-				SubProgressMonitor sm = new SubProgressMonitor(monitor, 80);
+				SubProgressMonitor sm = new SubProgressMonitor(monitor, 70);
 				sm.beginTask("Running validation script",
 						IProgressMonitor.UNKNOWN);
 				sm.done();
-				output = ProcessOutputCollector.execute(process);
+				output = ProcessOutputCollector.execute(process, sm);
 
 				int exitValue = process.exitValue();
 				if (exitValue != 0) {
@@ -196,9 +196,11 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 			}
 
 			if (correct) {
+				monitor.subTask("Processing validation result");
 				// Parse list of packages from output
 				List<String> list = TclPackagesManager
 						.extractPackagesFromContent(output);
+				monitor.worked(10);
 				return new StatusWithPackages(list);
 			} else {
 				return createStatus(IStatus.ERROR,
