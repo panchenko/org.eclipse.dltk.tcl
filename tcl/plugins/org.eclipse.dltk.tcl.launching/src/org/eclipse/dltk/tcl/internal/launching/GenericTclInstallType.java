@@ -164,7 +164,12 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 				sm.done();
 				output = ProcessOutputCollector.execute(process, sm);
 
-				int exitValue = process.exitValue();
+				int exitValue = 0;
+				try {
+					exitValue = process.exitValue();
+				} catch (IllegalThreadStateException e) {
+					exitValue = -1;
+				}
 				if (exitValue != 0) {
 					return createStatus(IStatus.ERROR,
 							"Interpreter return abnormal exit code:"
