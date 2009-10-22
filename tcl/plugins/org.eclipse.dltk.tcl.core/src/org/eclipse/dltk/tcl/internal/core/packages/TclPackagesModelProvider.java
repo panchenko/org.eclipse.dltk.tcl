@@ -52,7 +52,9 @@ public class TclPackagesModelProvider implements IModelProvider {
 			List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
 					install, realRequirements, true);
 			if (infos.size() == 0 && realRequirements.size() != 0) {
-				TclPlugin.error("Failed to retrive pacakges information", null);
+				TclPlugin.error("Retrived empty packages list for request:"
+						+ realRequirements + " for interpreter:"
+						+ install.getInstallLocation().toOSString(), null);
 			}
 			for (TclPackageInfo packageName : infos) {
 				TclPackageFragment pfragment = new TclPackageFragment(
