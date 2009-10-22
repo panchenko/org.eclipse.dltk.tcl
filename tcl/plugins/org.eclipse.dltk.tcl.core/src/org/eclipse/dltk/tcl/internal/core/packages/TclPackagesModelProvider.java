@@ -19,7 +19,6 @@ import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
-import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
 
@@ -51,11 +50,11 @@ public class TclPackagesModelProvider implements IModelProvider {
 			}
 			List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
 					install, realRequirements, true);
-			if (infos.size() == 0 && realRequirements.size() != 0) {
-				TclPlugin.error("Retrived empty packages list for request:"
-						+ realRequirements + " for interpreter:"
-						+ install.getInstallLocation().toOSString(), null);
-			}
+			// if (infos.size() == 0 && realRequirements.size() != 0) {
+			// TclPlugin.error("Retrived empty packages list for request:"
+			// + realRequirements + " for interpreter:"
+			// + install.getInstallLocation().toOSString(), null);
+			// }
 			for (TclPackageInfo packageName : infos) {
 				TclPackageFragment pfragment = new TclPackageFragment(
 						(ScriptProject) parentElement, packageName.getName());
