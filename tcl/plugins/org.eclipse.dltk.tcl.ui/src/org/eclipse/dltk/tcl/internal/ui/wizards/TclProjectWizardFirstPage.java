@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
 import org.eclipse.dltk.ui.wizards.IProjectWizardInitializer;
 import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.dltk.ui.wizards.IProjectWizardInitializer.IProjectWizardState;
@@ -158,6 +157,10 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 			return super.canChangeEnvironment() || getSelectedEntry() != null;
 		}
 
+		boolean getDetect() {
+			final TclProjectTemplateEntry entry = getSelectedEntry();
+			return entry != null && entry.getTemplate().getDetect();
+		}
 	}
 
 	protected TclProjectTemplateEntry getSelectedEntry() {
@@ -179,15 +182,17 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 		if (entry == null) {
 			return status;
 		}
-		final IProjectTemplate template = entry.getTemplate();
-		if (template == null) {
-			return status;
-		}
 		return status;
 	}
 
 	@Override
 	protected LocationGroup createLocationGroup() {
 		return new TclLocationGroup();
+	}
+
+	@Override
+	public boolean getDetect() {
+		return super.getDetect()
+				|| ((TclLocationGroup) fLocationGroup).getDetect();
 	}
 }
