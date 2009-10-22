@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 
 public class ProcessOutputCollector {
@@ -59,13 +60,16 @@ public class ProcessOutputCollector {
 		final String endOfStreamMarker;
 		final List<String> output = new ArrayList<String>();
 		private IProgressMonitor monitor;
+		private Process process;
 
 		/**
+		 * @param process
 		 * @param stream
 		 * @param monitor
 		 */
-		public OutputReaderThread(InputStream stream, String endOfStreamMarker,
-				IProgressMonitor monitor) {
+		public OutputReaderThread(Process process, InputStream stream,
+				String endOfStreamMarker, IProgressMonitor monitor) {
+			this.process = process;
 			this.stream = stream;
 			this.endOfStreamMarker = endOfStreamMarker;
 			this.monitor = monitor;
@@ -93,6 +97,12 @@ public class ProcessOutputCollector {
 			} catch (IOException e) {
 				// ignore
 			}
+			// Wait for termination of process
+			try {
+				process.waitFor();
+			} catch (InterruptedException e) {
+				DLTKCore.error(e);
+			}
 		}
 	}
 
@@ -112,8 +122,8 @@ public class ProcessOutputCollector {
 		final InputStream errorStream = process.getErrorStream();
 		new ErrorStreamReaderThread(errorStream).start();
 		final InputStream inputStream = process.getInputStream();
-		final OutputReaderThread output = new OutputReaderThread(inputStream,
-				TclPackagesManager.END_OF_STREAM, monitor);
+		final OutputReaderThread output = new OutputReaderThread(process,
+				inputStream, TclPackagesManager.END_OF_STREAM, monitor);
 		output.start();
 		// TODO also we should check if process is terminated
 		try {
