@@ -321,6 +321,53 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 			--remainingWork;
 		}
+		// Collect other project items
+		List<TclModuleInfo> list = packageCollector.getModules().get(project);
+		if (list != null) {
+			for (TclModuleInfo moduleInfo : list) {
+				for (TclSourceEntry ref : moduleInfo.getRequired()) {
+					// Check for user override for selected source value
+					EList<UserCorrection> corrections = moduleInfo
+							.getPackageCorrections();
+					List<TclSourceEntry> toCheck = new ArrayList<TclSourceEntry>();
+
+					for (UserCorrection userCorrection : corrections) {
+						if (userCorrection.getOriginalValue().equals(
+								ref.getValue())) {
+							for (String correction : userCorrection
+									.getUserValue()) {
+								TclSourceEntry to = TclPackagesFactory.eINSTANCE
+										.createTclSourceEntry();
+								to.setEnd(ref.getEnd());
+								to.setStart(ref.getStart());
+								to.setValue(correction);
+								toCheck.add(to);
+							}
+							break;
+						}
+					}
+					if (toCheck.isEmpty()) {
+						final String resolved = variableResolver.resolve(ref
+								.getValue());
+						if (resolved == null || resolved.equals(ref.getValue())) {
+							toCheck.add(ref);
+						} else if (resolved != null) {
+							TclSourceEntry to = TclPackagesFactory.eINSTANCE
+									.createTclSourceEntry();
+							to.setEnd(ref.getEnd());
+							to.setStart(ref.getStart());
+							to.setValue(resolved);
+							toCheck.add(to);
+						}
+					}
+					for (TclSourceEntry tclSourceEntry : toCheck) {
+						checkPackage(tclSourceEntry, null, null,
+								newDependencies, names, autoNames);
+					}
+				}
+			}
+		}
+
 		// if (buildType != IBuildParticipantExtension.RECONCILE_BUILD
 		// && isAutoAddPackages() && !newDependencies.isEmpty()) {
 		// if (names.addAll(newDependencies)) {
@@ -514,6 +561,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private void reportPackageProblem(TclSourceEntry pkg,
 			IProblemReporter reporter, String message, String pkgName,
 			ISourceLineTracker lineTracker) {
+		if (reporter == null) {
+			return;
+		}
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_REQUIRED_PACKAGE, new String[] { pkgName },
 				ProblemSeverities.Warning, pkg.getStart(), pkg.getEnd(),
