@@ -34,4 +34,9 @@ public class TclImages {
 	public static final ImageDescriptor DESC_OBJS_FOLDER = helper
 			.createUnManaged(PluginImagesHelper.T_OBJ,
 					"tcl_packagefolder_obj.gif");
+	/**
+	 * @since 2.0
+	 */
+	public static final ImageDescriptor DESC_OBJS_TCL = helper.createUnManaged(
+			PluginImagesHelper.T_OBJ, "tcl_obj.gif");
 }
