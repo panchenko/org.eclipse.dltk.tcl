@@ -22,7 +22,7 @@ import org.eclipse.swt.graphics.Image;
 public class TclModelLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof TclPackageFragment) {
-			return "Packages";
+			return ((TclPackageFragment) element).getPackageName();
 		} else if (element instanceof TclSourcesFragment) {
 			return "Sources";
 		} else if (element instanceof TclPackageElement) {
