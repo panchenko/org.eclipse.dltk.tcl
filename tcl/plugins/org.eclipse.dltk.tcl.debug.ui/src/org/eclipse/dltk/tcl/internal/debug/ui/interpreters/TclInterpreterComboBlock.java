@@ -57,10 +57,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 
 /**
- * FIXME this class is used on Interpreter tab in Launch Configurations and
+ * This class is used on Interpreter tab in Launch Configurations and
  * AbstractInterpreterContainerWizardPage. Configured packages are saved only on
- * the later on via getEntry() method. On Interpreter tab packages could be
- * modified but value is not saved anywhere.
+ * the later one. On Interpreter tab packages could not be modified.
  */
 public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	/**
@@ -103,9 +102,17 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		@Override
 		public String getText(Object element) {
 			if (element instanceof String) {
-				return (String) element;
+				final String pkg = (String) element;
+				if (isAutoPackage(pkg)) {
+					return pkg + " [auto]";
+				}
+				return pkg;
 			}
 			return super.getText(element);
+		}
+
+		protected boolean isAutoPackage(final String pkg) {
+			return false;
 		}
 
 	}
@@ -156,11 +163,11 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		// use Composite created in super to place additional controls.
 		final Composite mainComposite = (Composite) getControl();
 		Composite composite = new Composite(mainComposite, SWT.NONE);
-		GridData compositeData = new GridData(GridData.FILL, SWT.FILL, true,
-				true);
+		GridData compositeData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		compositeData.horizontalSpan = ((GridLayout) mainComposite.getLayout()).numColumns;
 		composite.setLayoutData(compositeData);
 		GridLayout gridLayout = new GridLayout(2, false);
+		gridLayout.marginWidth = 0;
 		composite.setLayout(gridLayout);
 
 		this.fElements = new TreeViewer(composite);
@@ -173,7 +180,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		Composite buttons = new Composite(composite, SWT.NONE);
 		buttons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 
-		buttons.setLayout(new GridLayout(1, true));
+		GridLayout buttonsLayout = new GridLayout(1, true);
+		buttonsLayout.marginLeft = buttonsLayout.marginWidth;
+		buttonsLayout.marginWidth = 0;
+		buttons.setLayout(buttonsLayout);
 
 		final boolean editablePackages = getContext().getMode() == IInterpreterComboBlockContext.M_BUILDPATH;
 
@@ -224,13 +234,17 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		// this.setDescription("Package dependencies list");
 
 		this.fElements.setContentProvider(new PackagesContentProvider());
-		this.fElements.setLabelProvider(new PackagesLabelProvider());
+		this.fElements.setLabelProvider(new PackagesLabelProvider() {
+			@Override
+			protected boolean isAutoPackage(String pkg) {
+				return !packages.contains(pkg) && autoPackages.contains(pkg);
+			}
+		});
 		if (editablePackages) {
 			this.fElements
 					.addSelectionChangedListener(new ISelectionChangedListener() {
 						public void selectionChanged(SelectionChangedEvent event) {
-							ISelection selection = event.getSelection();
-							remove.setEnabled(!selection.isEmpty());
+							remove.setEnabled(canRemove(event.getSelection()));
 						}
 					});
 		}
@@ -250,26 +264,44 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	private void showPackages() {
 		if (fElements != null) {
-			fElements.setInput(this.packages);
+			fElements.setInput(new CombinedSet<String>(this.packages,
+					this.autoPackages));
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	protected boolean canRemove(ISelection selection) {
+		if (!selection.isEmpty()) {
+			if (selection instanceof IStructuredSelection) {
+				final IStructuredSelection ss = (IStructuredSelection) selection;
+				for (@SuppressWarnings("unchecked")
+				Iterator<String> iterator = ss.iterator(); iterator.hasNext();) {
+					final String pkg = iterator.next();
+					if (!this.packages.contains(pkg)) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
 	protected void removePackage() {
-		ISelection selection = this.fElements.getSelection();
+		final ISelection selection = this.fElements.getSelection();
 		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			boolean update = false;
-			for (Iterator<String> iterator = sel.iterator(); iterator.hasNext();) {
-				String pkg = iterator.next();
-				boolean res = this.packages.remove(pkg);
-				if (res) {
-					update = res;
+			final IStructuredSelection ss = (IStructuredSelection) selection;
+			int updates = 0;
+			for (@SuppressWarnings("unchecked")
+			Iterator<String> iterator = ss.iterator(); iterator.hasNext();) {
+				final String pkg = iterator.next();
+				if (this.packages.remove(pkg)) {
+					++updates;
 				}
 			}
-			if (update) {
+			if (updates != 0) {
 				refreshView();
 			}
 		}
