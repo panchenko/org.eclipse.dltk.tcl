@@ -1,6 +1,5 @@
 package org.eclipse.dltk.tcl.internal.core.packages;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
