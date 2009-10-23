@@ -9,10 +9,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.caching.IContentCache;
+import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterEnvironmentVariablesBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.AbstractInterpreterLibraryBlock;
@@ -20,14 +21,18 @@ import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialo
 import org.eclipse.dltk.internal.debug.ui.interpreters.ExpandableBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.IAddInterpreterDialogRequestor;
 import org.eclipse.dltk.internal.debug.ui.interpreters.InterpretersMessages;
+import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
+import org.eclipse.dltk.launching.InterpreterStandin;
+import org.eclipse.dltk.launching.LibraryLocation;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
 import org.eclipse.dltk.tcl.core.packages.TclPackagesPackage;
 import org.eclipse.dltk.tcl.core.packages.VariableMap;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.internal.launching.StatusWithPackages;
 import org.eclipse.dltk.tcl.internal.ui.GlobalVariableBlock;
+import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.swt.SWT;
@@ -56,48 +61,52 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 
 	private GlobalVariableBlock globals;
 	private AvailablePackagesBlock packagesBlock;
+	private ExpandableBlock globalsExpandableNode;
+	private ExpandableBlock libraryExpandableNode;
+	private ExpandableBlock environmentExpandableNode;
 
 	protected Composite createEnvironmentVariablesBlockParent(Composite parent,
 			int numColumns) {
-		ExpandableBlock block = new ExpandableBlock(parent, 0);
-		block
+		environmentExpandableNode = new ExpandableBlock(parent, 0);
+		environmentExpandableNode
 				.setText(InterpretersMessages.AddScriptInterpreterDialog_interpreterEnvironmentVariables);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = numColumns;
-		block.setLayoutData(gd);
-		block.setExpanded(true);
-		return block.getContent();
+		environmentExpandableNode.setLayoutData(gd);
+		environmentExpandableNode.setExpanded(true);
+		return environmentExpandableNode.getContent();
 	}
 
 	protected Composite createLibraryBlockParent(Composite parent,
 			int numColumns) {
-		ExpandableBlock block = new ExpandableBlock(parent, 0);
-		block
-				.setText(InterpretersMessages.AddInterpreterDialog_Interpreter_system_libraries__1);
+		libraryExpandableNode = new ExpandableBlock(parent, 0);
+		libraryExpandableNode
+				.setText("Custom library locations (addition to TCLLIBPATH):");
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = numColumns;
-		block.setLayoutData(gd);
-		return block.getContent();
+		libraryExpandableNode.setLayoutData(gd);
+		return libraryExpandableNode.getContent();
 	}
 
 	@Override
 	protected void createDialogBlocks(final Composite parent, int numColumns) {
 		super.createDialogBlocks(parent, numColumns);
-		ExpandableBlock node = new ExpandableBlock(parent, 0);
-		node.setText(TclInterpreterMessages.AddTclInterpreterDialog_0);
+		globalsExpandableNode = new ExpandableBlock(parent, 0);
+		globalsExpandableNode
+				.setText(TclInterpreterMessages.AddTclInterpreterDialog_0);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = numColumns;
-		node.setLayoutData(gd);
+		globalsExpandableNode.setLayoutData(gd);
 		globals = new GlobalVariableBlock(this);
-		globals.createControlsIn(node.getContent());
-		node.setExpanded(true);
+		globals.createControlsIn(globalsExpandableNode.getContent());
+		globalsExpandableNode.setExpanded(true);
 		// Available packages
 		ExpandableBlock node2 = new ExpandableBlock(parent, 0);
 		node2.setText("Available packages:");
 		GridData gd2 = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd2.horizontalSpan = numColumns;
 		node2.setLayoutData(gd2);
-		packagesBlock = new AvailablePackagesBlock();
+		packagesBlock = new AvailablePackagesBlock(this);
 		packagesBlock.createIn(node2.getContent());
 		node2.setExpanded(true);
 	}
@@ -109,10 +118,10 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		IStatus status = getInterpreterLocationStatus();
 		if (status instanceof StatusWithPackages) {
 			StatusWithPackages swp = (StatusWithPackages) status;
-			packagesBlock.updatePackages(swp.getPackages());
+			packagesBlock.updatePackages(swp.getInterpreter());
 		} else {
 			// Make it empty if not detected.
-			packagesBlock.updatePackages(new ArrayList<String>());
+			packagesBlock.updatePackages(null);
 		}
 	}
 
@@ -123,7 +132,9 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		Shell shell = getShell();
 		Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		Point size2 = shell.getSize();
-		shell.setSize(size2.x, size.y);
+		if (size.y > size2.y) {
+			shell.setSize(size2.x, size.y);
+		}
 	}
 
 	@Override
@@ -170,6 +181,11 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		} else {
 			globals.setValues(ECollections.<String, VariableValue> emptyEMap());
 		}
+
+		// Set initial expanding
+		globalsExpandableNode.setExpanded(!globals.getValues().isEmpty());
+		environmentExpandableNode.setExpanded(fEnvironmentVariablesBlock
+				.getEnvironmentVariables().length > 0);
 	}
 
 	@Override
@@ -181,5 +197,33 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		if (!GlobalVariableBlock.equalsEMap(newVars, oldVars)) {
 			TclPackagesManager.setVariables(install, newVars);
 		}
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public InterpreterStandin getInterpreterStandin() {
+		InterpreterStandin standin = new InterpreterStandin(
+				fSelectedInterpreterType, "$fake$");
+		IEnvironment selectedEnv = getEnvironment();
+		String locationName = getInterpreterPath();
+		final IFileHandle file;
+		if (locationName.length() == 0) {
+			file = null;
+			return null;
+		} else {
+			file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(
+					selectedEnv, new Path(locationName));
+			EnvironmentVariable[] environmentVariables = null;
+			if (fEnvironmentVariablesBlock != null) {
+				environmentVariables = fEnvironmentVariablesBlock
+						.getEnvironmentVariables();
+			}
+			LibraryLocation[] locations = fLibraryBlock.getLibraryLocations();
+			standin.setInstallLocation(file);
+			standin.setLibraryLocations(locations);
+			standin.setEnvironmentVariables(environmentVariables);
+		}
+		return standin;
 	}
 }

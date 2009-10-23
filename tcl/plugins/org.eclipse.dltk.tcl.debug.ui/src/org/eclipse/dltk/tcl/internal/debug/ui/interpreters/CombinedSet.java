@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * @since 2.0
+ */
 public class CombinedSet<E> extends AbstractSet<E> {
 
 	private final Set<E>[] children;

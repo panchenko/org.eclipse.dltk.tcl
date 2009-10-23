@@ -111,6 +111,9 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			return super.getText(element);
 		}
 
+		/**
+		 * @since 2.0
+		 */
 		protected boolean isAutoPackage(final String pkg) {
 			return false;
 		}
@@ -272,6 +275,9 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected boolean canRemove(ISelection selection) {
 		if (!selection.isEmpty()) {
 			if (selection instanceof IStructuredSelection) {
