@@ -1,8 +1,8 @@
 package org.eclipse.dltk.tcl.internal.launching;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 /**
@@ -10,15 +10,15 @@ import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
  */
 public class StatusWithPackages extends Status {
 
-	private List<String> packages;
+	private TclInterpreterInfo info;
 
-	public StatusWithPackages(List<String> packages) {
+	public StatusWithPackages(TclInterpreterInfo info) {
 		super(OK, TclLaunchingPlugin.PLUGIN_ID, OK_STATUS.getMessage());
-		this.packages = packages;
+		this.info = info;
 	}
 
-	public List<String> getPackages() {
-		return packages;
+	public TclInterpreterInfo getInterpreter() {
+		return info;
 	}
 
 	@Override
@@ -26,8 +26,8 @@ public class StatusWithPackages extends Status {
 		StringBuilder buf = new StringBuilder();
 		buf.append(super.toString());
 		buf.append("["); //$NON-NLS-1$
-		for (String pkg : packages) {
-			buf.append(" " + pkg); //$NON-NLS-1$
+		for (TclPackageInfo pkg : info.getPackages()) {
+			buf.append(" " + pkg.getName()); //$NON-NLS-1$
 		}
 		buf.append("]"); //$NON-NLS-1$
 		return buf.toString();

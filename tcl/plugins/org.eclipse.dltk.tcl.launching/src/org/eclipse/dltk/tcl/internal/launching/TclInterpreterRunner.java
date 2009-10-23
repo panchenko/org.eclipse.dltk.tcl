@@ -34,8 +34,8 @@ import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterConfig;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
+import org.eclipse.dltk.tcl.core.TclLibpathUtils;
 import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationConstants;
-import org.eclipse.dltk.tcl.launching.TclLaunchConfigurationDelegate;
 import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 
 public class TclInterpreterRunner extends AbstractInterpreterRunner {
@@ -51,26 +51,21 @@ public class TclInterpreterRunner extends AbstractInterpreterRunner {
 	protected String[] getEnvironmentVariablesAsStrings(InterpreterConfig config) {
 		EnvironmentVariable[] vars = getInstall().getEnvironmentVariables();
 		if (vars != null) {
-			String var = config
-					.getEnvVar(TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR);
+			String var = config.getEnvVar(TclLibpathUtils.TCLLIBPATH);
 			if (var != null) {
 				List<EnvironmentVariable> resultingVars = new ArrayList<EnvironmentVariable>();
 				for (EnvironmentVariable envVar : vars) {
-					if (envVar.getName().equals(
-							TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR)) {
+					if (envVar.getName().equals(TclLibpathUtils.TCLLIBPATH)) {
 						EnvironmentVariable[] variables = EnvironmentResolver
 								.resolve(config.getEnvVars(),
 										new EnvironmentVariable[] { envVar },
 										true);
 						String newValue = var
 								+ " "
-								+ TclLaunchConfigurationDelegate
+								+ TclLibpathUtils
 										.convertToTclLibPathFormat(variables[0]
 												.getValue());
-						config
-								.addEnvVar(
-										TclLaunchConfigurationDelegate.TCLLIBPATH_ENV_VAR,
-										newValue);
+						config.addEnvVar(TclLibpathUtils.TCLLIBPATH, newValue);
 					} else {
 						resultingVars.add(envVar);
 					}
