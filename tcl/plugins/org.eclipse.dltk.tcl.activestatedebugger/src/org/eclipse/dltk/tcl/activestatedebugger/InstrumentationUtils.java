@@ -18,12 +18,19 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IParent;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesElement;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule;
 
 public class InstrumentationUtils {
 
@@ -65,7 +72,9 @@ public class InstrumentationUtils {
 		for (IScriptProject project : projects) {
 			try {
 				for (IProjectFragment fragment : project.getProjectFragments()) {
-					if (fragment.isExternal() && !fragment.isBuiltin()) {
+					if (fragment.isExternal() && !fragment.isBuiltin()
+							&& !(fragment instanceof TclPackageFragment)
+							&& !(fragment instanceof TclSourcesFragment)) {
 						libraries.add(fragment);
 					}
 				}
@@ -88,6 +97,59 @@ public class InstrumentationUtils {
 
 	protected static IWorkspaceRoot getWorkspaceRoot() {
 		return ResourcesPlugin.getWorkspace().getRoot();
+	}
+
+	public static Set<TclPackageElement> collectPackages(
+			Set<IScriptProject> projects) {
+		final Set<TclPackageElement> packages = new HashSet<TclPackageElement>();
+		for (IScriptProject project : projects) {
+			try {
+				for (IProjectFragment fragment : project.getProjectFragments()) {
+					if (!(fragment instanceof TclPackageFragment)) {
+						continue;
+					}
+					for (IModelElement element : fragment.getChildren()) {
+						if (element instanceof TclPackageElement) {
+							packages.add((TclPackageElement) element);
+						}
+					}
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return packages;
+	}
+
+	public static Set<TclSourcesSourceModule> collectSources(
+			Set<IScriptProject> projects) {
+		final Set<TclSourcesSourceModule> sources = new HashSet<TclSourcesSourceModule>();
+		for (IScriptProject project : projects) {
+			try {
+				for (IProjectFragment fragment : project.getProjectFragments()) {
+					if (!(fragment instanceof TclSourcesFragment)) {
+						continue;
+					}
+					for (IModelElement element : fragment.getChildren()) {
+						if (element instanceof TclSourcesElement) {
+							for (IModelElement ee : ((IParent) element)
+									.getChildren()) {
+								if (ee instanceof TclSourcesSourceModule) {
+									sources.add((TclSourcesSourceModule) ee);
+								}
+							}
+						}
+					}
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return sources;
 	}
 
 }

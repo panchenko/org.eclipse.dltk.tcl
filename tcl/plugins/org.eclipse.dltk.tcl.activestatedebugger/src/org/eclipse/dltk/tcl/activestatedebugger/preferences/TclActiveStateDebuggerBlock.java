@@ -128,7 +128,6 @@ public class TclActiveStateDebuggerBlock extends
 				GridData.FILL_HORIZONTAL);
 		final GridLayout optionsLayout = (GridLayout) options.getLayout();
 		optionsLayout.marginHeight = 0;
-		optionsLayout.makeColumnsEqualWidth = true;
 		// error action
 		Composite compositeErrorAction = SWTFactory.createComposite(options,
 				options.getFont(), 2, 2, 0);

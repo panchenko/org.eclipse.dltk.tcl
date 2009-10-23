@@ -13,44 +13,19 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
 import java.util.Set;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 
-class LibraryContainerElement implements IAdaptable, IWorkbenchAdapter {
-
-	private final SelectionDialogInput input;
+class LibraryContainerElement extends WorkbenchAdaptable {
 
 	/**
 	 * @param input
 	 */
 	public LibraryContainerElement(SelectionDialogInput input) {
-		this.input = input;
-	}
-
-	@Override
-	public int hashCode() {
-		return input.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof LibraryContainerElement) {
-			return input.equals(((LibraryContainerElement) obj).input);
-		} else {
-			return false;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public Object getAdapter(Class adapter) {
-		if (adapter == IWorkbenchAdapter.class)
-			return this;
-		return null;
+		super(input);
 	}
 
 	public Object[] getChildren(Object o) {
@@ -66,10 +41,6 @@ class LibraryContainerElement implements IAdaptable, IWorkbenchAdapter {
 
 	public String getLabel(Object o) {
 		return PreferenceMessages.InstrumentationLabelProvider_Libraries;
-	}
-
-	public Object getParent(Object o) {
-		return null;
 	}
 
 }

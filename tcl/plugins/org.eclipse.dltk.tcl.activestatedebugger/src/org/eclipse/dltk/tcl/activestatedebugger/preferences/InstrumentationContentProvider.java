@@ -24,8 +24,11 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule;
 import org.eclipse.dltk.ui.StandardModelElementContentProvider2;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 
 public class InstrumentationContentProvider extends
 		StandardModelElementContentProvider2 {
@@ -55,6 +58,16 @@ public class InstrumentationContentProvider extends
 			if (!libraries.isEmpty()) {
 				result.add(new LibraryContainerElement(input));
 			}
+			final Set<TclPackageElement> packages = InstrumentationUtils
+					.collectPackages(projects);
+			if (!packages.isEmpty()) {
+				result.add(new PackageContainerElement(input));
+			}
+			final Set<TclSourcesSourceModule> sources = InstrumentationUtils
+					.collectSources(projects);
+			if (!sources.isEmpty()) {
+				result.add(new SourceContainerElement(input));
+			}
 			return result.toArray();
 		}
 		return NO_CHILDREN;
@@ -82,16 +95,8 @@ public class InstrumentationContentProvider extends
 
 	@Override
 	public Object[] getChildren(Object element) {
-		if (element instanceof LibraryContainerElement) {
-			if (input instanceof SelectionDialogInput) {
-				final Set<IScriptProject> projects = ((SelectionDialogInput) input)
-						.collectProjects();
-				final Set<IProjectFragment> libraries = InstrumentationUtils
-						.collectExternalFragments(projects);
-				return libraries.toArray();
-			} else {
-				return NO_CHILDREN;
-			}
+		if (element instanceof IWorkbenchAdapter) {
+			return ((IWorkbenchAdapter) element).getChildren(element);
 		}
 		return super.getChildren(element);
 	}
