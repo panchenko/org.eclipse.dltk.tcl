@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: UserCorrectionImpl.java,v 1.4 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: UserCorrectionImpl.java,v 1.5 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -72,7 +72,6 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * @see #isVariable()
 	 * @generated
 	 * @ordered
-	 * @since 2.0
 	 */
 	protected static final boolean VARIABLE_EDEFAULT = false;
 
@@ -83,7 +82,6 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * @see #isVariable()
 	 * @generated
 	 * @ordered
-	 * @since 2.0
 	 */
 	protected boolean variable = VARIABLE_EDEFAULT;
 
@@ -146,7 +144,6 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public boolean isVariable() {
 		return variable;
@@ -156,7 +153,6 @@ public class UserCorrectionImpl extends EObjectImpl implements UserCorrection {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public void setVariable(boolean newVariable) {
 		boolean oldVariable = variable;

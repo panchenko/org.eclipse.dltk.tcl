@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackageImpl.java,v 1.11 2009/07/10 07:49:48 asobolev Exp $
+ * $Id: TclPackagesPackageImpl.java,v 1.12 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -123,20 +123,10 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this
-	 * model, and for any others upon which it depends.  Simple
-	 * dependencies are satisfied by calling this method on all
-	 * dependent packages before doing anything else.  This method drives
-	 * initialization for interdependent packages directly, in parallel
-	 * with this package, itself.
-	 * <p>Of this package and its interdependencies, all packages which
-	 * have not yet been registered by their URI values are first created
-	 * and registered.  The packages are then initialized in two steps:
-	 * meta-model objects for all of the packages are created before any
-	 * are initialized, since one package's meta-model objects may refer to
-	 * those of another.
-	 * <p>Invocation of this method will not affect any packages that have
-	 * already been initialized.
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+	 * 
+	 * <p>This method is used to initialize {@link TclPackagesPackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #eNS_URI
@@ -151,8 +141,8 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 
 		// Obtain or create and register package
 		TclPackagesPackageImpl theTclPackagesPackage = (TclPackagesPackageImpl) (EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI) instanceof TclPackagesPackageImpl ? EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI)
+				.get(eNS_URI) instanceof TclPackagesPackageImpl ? EPackage.Registry.INSTANCE
+				.get(eNS_URI)
 				: new TclPackagesPackageImpl());
 
 		isInited = true;
@@ -166,6 +156,9 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 		// Mark meta-data to indicate it can't be changed
 		theTclPackagesPackage.freeze();
 
+		// Update the registry and return the package
+		EPackage.Registry.INSTANCE.put(TclPackagesPackage.eNS_URI,
+				theTclPackagesPackage);
 		return theTclPackagesPackage;
 	}
 
@@ -226,6 +219,16 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	public EReference getTclPackageInfo_Dependencies() {
 		return (EReference) tclPackageInfoEClass.getEStructuralFeatures()
 				.get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTclPackageInfo_Libraries() {
+		return (EAttribute) tclPackageInfoEClass.getEStructuralFeatures()
+				.get(5);
 	}
 
 	/**
@@ -301,7 +304,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EClass getTclProjectInfo() {
 		return tclProjectInfoEClass;
@@ -331,7 +333,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EReference getTclProjectInfo_Variables() {
 		return (EReference) tclProjectInfoEClass.getEStructuralFeatures()
@@ -473,7 +474,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EAttribute getUserCorrection_Variable() {
 		return (EAttribute) userCorrectionEClass.getEStructuralFeatures()
@@ -484,7 +484,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EClass getVariableMapEntry() {
 		return variableMapEntryEClass;
@@ -494,7 +493,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EAttribute getVariableMapEntry_Key() {
 		return (EAttribute) variableMapEntryEClass.getEStructuralFeatures()
@@ -505,7 +503,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EReference getVariableMapEntry_Value() {
 		return (EReference) variableMapEntryEClass.getEStructuralFeatures()
@@ -516,7 +513,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EClass getVariableValue() {
 		return variableValueEClass;
@@ -526,7 +522,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EAttribute getVariableValue_Value() {
 		return (EAttribute) variableValueEClass.getEStructuralFeatures().get(0);
@@ -536,7 +531,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EClass getVariableMap() {
 		return variableMapEClass;
@@ -546,7 +540,6 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EReference getVariableMap_Variables() {
 		return (EReference) variableMapEClass.getEStructuralFeatures().get(0);
@@ -596,6 +589,7 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 		createEAttribute(tclPackageInfoEClass, TCL_PACKAGE_INFO__SOURCES);
 		createEAttribute(tclPackageInfoEClass, TCL_PACKAGE_INFO__FETCHED);
 		createEReference(tclPackageInfoEClass, TCL_PACKAGE_INFO__DEPENDENCIES);
+		createEAttribute(tclPackageInfoEClass, TCL_PACKAGE_INFO__LIBRARIES);
 
 		tclInterpreterInfoEClass = createEClass(TCL_INTERPRETER_INFO);
 		createEAttribute(tclInterpreterInfoEClass,
@@ -702,6 +696,11 @@ public class TclPackagesPackageImpl extends EPackageImpl implements
 				TclPackageInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTclPackageInfo_Libraries(),
+				ecorePackage.getEString(), "libraries", null, 0, -1,
+				TclPackageInfo.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
 		initEClass(tclInterpreterInfoEClass, TclInterpreterInfo.class,
 				"TclInterpreterInfo", !IS_ABSTRACT, !IS_INTERFACE,

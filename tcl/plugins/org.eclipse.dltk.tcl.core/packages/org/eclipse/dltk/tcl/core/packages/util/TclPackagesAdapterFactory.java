@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesAdapterFactory.java,v 1.6 2009/07/10 07:49:49 asobolev Exp $
+ * $Id: TclPackagesAdapterFactory.java,v 1.7 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
@@ -229,7 +229,6 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 	 * @return the new adapter.
 	 * @see java.util.Map.Entry
 	 * @generated
-	 * @since 2.0
 	 */
 	public Adapter createVariableMapEntryAdapter() {
 		return null;
@@ -244,7 +243,6 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 	 * @return the new adapter.
 	 * @see org.eclipse.dltk.tcl.core.packages.VariableValue
 	 * @generated
-	 * @since 2.0
 	 */
 	public Adapter createVariableValueAdapter() {
 		return null;
@@ -259,7 +257,6 @@ public class TclPackagesAdapterFactory extends AdapterFactoryImpl {
 	 * @return the new adapter.
 	 * @see org.eclipse.dltk.tcl.core.packages.VariableMap
 	 * @generated
-	 * @since 2.0
 	 */
 	public Adapter createVariableMapAdapter() {
 		return null;

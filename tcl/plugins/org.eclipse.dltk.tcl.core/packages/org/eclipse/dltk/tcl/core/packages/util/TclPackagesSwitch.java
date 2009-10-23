@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesSwitch.java,v 1.6 2009/07/10 07:49:49 asobolev Exp $
+ * $Id: TclPackagesSwitch.java,v 1.7 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.util;
 
@@ -254,7 +254,6 @@ public class TclPackagesSwitch<T> {
 	 * @return the result of interpreting the object as an instance of '<em>Variable Map Entry</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
-	 * @since 2.0
 	 */
 	public T caseVariableMapEntry(Map.Entry<String, VariableValue> object) {
 		return null;
@@ -270,7 +269,6 @@ public class TclPackagesSwitch<T> {
 	 * @return the result of interpreting the object as an instance of '<em>Variable Value</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
-	 * @since 2.0
 	 */
 	public T caseVariableValue(VariableValue object) {
 		return null;
@@ -286,7 +284,6 @@ public class TclPackagesSwitch<T> {
 	 * @return the result of interpreting the object as an instance of '<em>Variable Map</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
-	 * @since 2.0
 	 */
 	public T caseVariableMap(VariableMap object) {
 		return null;

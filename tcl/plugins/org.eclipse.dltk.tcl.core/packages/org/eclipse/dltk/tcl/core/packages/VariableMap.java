@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: VariableMap.java,v 1.2 2009/07/10 07:49:47 asobolev Exp $
+ * $Id: VariableMap.java,v 1.3 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getVariableMap()
  * @model
  * @generated
- * @since 2.0
  */
 public interface VariableMap extends EObject {
 	/**

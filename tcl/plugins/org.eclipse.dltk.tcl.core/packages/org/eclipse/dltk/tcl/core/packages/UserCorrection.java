@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: UserCorrection.java,v 1.4 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: UserCorrection.java,v 1.5 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -83,7 +83,6 @@ public interface UserCorrection extends EObject {
 	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getUserCorrection_Variable()
 	 * @model
 	 * @generated
-	 * @since 2.0
 	 */
 	boolean isVariable();
 
@@ -94,7 +93,6 @@ public interface UserCorrection extends EObject {
 	 * @param value the new value of the '<em>Variable</em>' attribute.
 	 * @see #isVariable()
 	 * @generated
-	 * @since 2.0
 	 */
 	void setVariable(boolean value);
 

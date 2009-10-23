@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesPackage.java,v 1.10 2009/07/08 10:53:03 apanchenk Exp $
+ * $Id: TclPackagesPackage.java,v 1.11 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -116,13 +116,22 @@ public interface TclPackagesPackage extends EPackage {
 	int TCL_PACKAGE_INFO__DEPENDENCIES = 4;
 
 	/**
+	 * The feature id for the '<em><b>Libraries</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCL_PACKAGE_INFO__LIBRARIES = 5;
+
+	/**
 	 * The number of structural features of the '<em>Tcl Package Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCL_PACKAGE_INFO_FEATURE_COUNT = 5;
+	int TCL_PACKAGE_INFO_FEATURE_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl <em>Tcl Interpreter Info</em>}' class.
@@ -576,6 +585,17 @@ public interface TclPackagesPackage extends EPackage {
 	EReference getTclPackageInfo_Dependencies();
 
 	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.dltk.tcl.core.packages.TclPackageInfo#getLibraries <em>Libraries</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Libraries</em>'.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackageInfo#getLibraries()
+	 * @see #getTclPackageInfo()
+	 * @generated
+	 */
+	EAttribute getTclPackageInfo_Libraries();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo <em>Tcl Interpreter Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1018,6 +1038,15 @@ public interface TclPackagesPackage extends EPackage {
 		 */
 		EReference TCL_PACKAGE_INFO__DEPENDENCIES = eINSTANCE
 				.getTclPackageInfo_Dependencies();
+
+		/**
+		 * The meta object literal for the '<em><b>Libraries</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TCL_PACKAGE_INFO__LIBRARIES = eINSTANCE
+				.getTclPackageInfo_Libraries();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.core.packages.impl.TclInterpreterInfoImpl <em>Tcl Interpreter Info</em>}' class.

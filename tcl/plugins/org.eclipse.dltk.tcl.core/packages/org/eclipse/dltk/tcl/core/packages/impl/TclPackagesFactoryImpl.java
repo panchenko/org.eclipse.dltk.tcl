@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesFactoryImpl.java,v 1.6 2009/07/10 07:49:48 asobolev Exp $
+ * $Id: TclPackagesFactoryImpl.java,v 1.7 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -150,7 +150,6 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public Map.Entry<String, VariableValue> createVariableMapEntry() {
 		VariableMapEntryImpl variableMapEntry = new VariableMapEntryImpl();
@@ -161,7 +160,6 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public VariableValue createVariableValue() {
 		VariableValueImpl variableValue = new VariableValueImpl();
@@ -172,7 +170,6 @@ public class TclPackagesFactoryImpl extends EFactoryImpl implements
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public VariableMap createVariableMap() {
 		VariableMapImpl variableMap = new VariableMapImpl();

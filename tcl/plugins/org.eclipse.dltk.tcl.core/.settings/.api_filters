@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.dltk.tcl.core" version="2">
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/TclPackageInfo.java" type="org.eclipse.dltk.tcl.core.packages.TclPackageInfo">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getLibraries()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/TclPackagesFactory.java" type="org.eclipse.dltk.tcl.core.packages.TclPackagesFactory">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="createVariableMap()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="createVariableValue()"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="packages/org/eclipse/dltk/tcl/core/packages/TclPackagesPackage.java" type="org.eclipse.dltk.tcl.core.packages.TclPackagesPackage">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="TCL_PACKAGE_INFO__LIBRARIES"/>
+            </message_arguments>
+        </filter>
         <filter id="1211105284">
             <message_arguments>
                 <message_argument value="VARIABLE_MAP_ENTRY__VALUE"/>
@@ -53,6 +77,11 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
+                <message_argument value="getTclPackageInfo_Libraries()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
                 <message_argument value="VARIABLE_VALUE__VALUE"/>
             </message_arguments>
         </filter>
@@ -68,12 +97,12 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_MAP_FEATURE_COUNT"/>
+                <message_argument value="getVariableMapEntry_Value()"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="getVariableMapEntry_Value()"/>
+                <message_argument value="VARIABLE_MAP_FEATURE_COUNT"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
@@ -83,22 +112,17 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_MAP"/>
-            </message_arguments>
-        </filter>
-        <filter id="1211105284">
-            <message_arguments>
                 <message_argument value="getVariableValue()"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="TCL_PROJECT_INFO__VARIABLES"/>
+                <message_argument value="VARIABLE_MAP"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="getVariableMap()"/>
+                <message_argument value="TCL_PROJECT_INFO__VARIABLES"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
@@ -106,8 +130,18 @@
                 <message_argument value="getVariableMap_Variables()"/>
             </message_arguments>
         </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getVariableMap()"/>
+            </message_arguments>
+        </filter>
     </resource>
     <resource path="packages/org/eclipse/dltk/tcl/core/packages/TclPackagesPackage.java" type="org.eclipse.dltk.tcl.core.packages.TclPackagesPackage$Literals">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="TCL_PACKAGE_INFO__LIBRARIES"/>
+            </message_arguments>
+        </filter>
         <filter id="1211105284">
             <message_arguments>
                 <message_argument value="TCL_PROJECT_INFO__VARIABLES"/>
@@ -115,12 +149,12 @@
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_MAP_ENTRY__VALUE"/>
+                <message_argument value="VARIABLE_VALUE__VALUE"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
             <message_arguments>
-                <message_argument value="VARIABLE_VALUE__VALUE"/>
+                <message_argument value="VARIABLE_MAP_ENTRY__VALUE"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
@@ -151,6 +185,209 @@
         <filter id="1211105284">
             <message_arguments>
                 <message_argument value="VARIABLE_MAP"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/TclProjectInfo.java" type="org.eclipse.dltk.tcl.core.packages.TclProjectInfo">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getVariables()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/UserCorrection.java" type="org.eclipse.dltk.tcl.core.packages.UserCorrection">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="isVariable()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="setVariable(boolean)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/VariableMap.java" type="org.eclipse.dltk.tcl.core.packages.VariableMap">
+        <filter id="1110441988">
+            <message_arguments>
+                <message_argument value="org.eclipse.dltk.tcl.core.packages.VariableMap"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/VariableValue.java" type="org.eclipse.dltk.tcl.core.packages.VariableValue">
+        <filter id="1110441988">
+            <message_arguments>
+                <message_argument value="org.eclipse.dltk.tcl.core.packages.VariableValue"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/TclPackageInfoImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.TclPackageInfoImpl">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getLibraries()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="libraries"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/TclPackagesFactoryImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.TclPackagesFactoryImpl">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="createVariableMap()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="createVariableValue()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="createVariableMapEntry()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/TclPackagesPackageImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.TclPackagesPackageImpl">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariableMap_Variables()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariableMap()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariableMapEntry()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getTclProjectInfo_Variables()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariableMapEntry_Key()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariableValue()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getUserCorrection_Variable()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariableMapEntry_Value()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariableValue_Value()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getTclPackageInfo_Libraries()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/TclProjectInfoImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.TclProjectInfoImpl">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="variables"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getVariables()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/UserCorrectionImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.UserCorrectionImpl">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="VARIABLE_EDEFAULT"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="isVariable()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="setVariable(boolean)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="variable"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/VariableMapEntryImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl">
+        <filter id="1110441988">
+            <message_arguments>
+                <message_argument value="org.eclipse.dltk.tcl.core.packages.impl.VariableMapEntryImpl"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/VariableMapImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.VariableMapImpl">
+        <filter id="1110441988">
+            <message_arguments>
+                <message_argument value="org.eclipse.dltk.tcl.core.packages.impl.VariableMapImpl"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/impl/VariableValueImpl.java" type="org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl">
+        <filter id="1110441988">
+            <message_arguments>
+                <message_argument value="org.eclipse.dltk.tcl.core.packages.impl.VariableValueImpl"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/util/TclPackagesAdapterFactory.java" type="org.eclipse.dltk.tcl.core.packages.util.TclPackagesAdapterFactory">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="createVariableMapEntryAdapter()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="createVariableMapAdapter()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="createVariableValueAdapter()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="packages/org/eclipse/dltk/tcl/core/packages/util/TclPackagesSwitch.java" type="org.eclipse.dltk.tcl.core.packages.util.TclPackagesSwitch">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="caseVariableValue(VariableValue)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="caseVariableMapEntry(Map.Entry&lt;String,VariableValue&gt;)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="caseVariableMap(VariableMap)"/>
             </message_arguments>
         </filter>
     </resource>

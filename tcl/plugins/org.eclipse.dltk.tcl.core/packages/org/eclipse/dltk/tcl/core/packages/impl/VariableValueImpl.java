@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: VariableValueImpl.java,v 1.2 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: VariableValueImpl.java,v 1.3 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * </p>
  *
  * @generated
- * @since 2.0
  */
 public class VariableValueImpl extends EObjectImpl implements VariableValue {
 	/**

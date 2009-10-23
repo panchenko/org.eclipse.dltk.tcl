@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackageInfo.java,v 1.1 2009/04/23 10:58:25 asobolev Exp $
+ * $Id: TclPackageInfo.java,v 1.2 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclPackageInfo#getSources <em>Sources</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclPackageInfo#isFetched <em>Fetched</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclPackageInfo#getDependencies <em>Dependencies</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.TclPackageInfo#getLibraries <em>Libraries</em>}</li>
  * </ul>
  * </p>
  *
@@ -140,5 +141,21 @@ public interface TclPackageInfo extends EObject {
 	 * @generated
 	 */
 	EList<TclPackageInfo> getDependencies();
+
+	/**
+	 * Returns the value of the '<em><b>Libraries</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Libraries</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Libraries</em>' attribute list.
+	 * @see org.eclipse.dltk.tcl.core.packages.TclPackagesPackage#getTclPackageInfo_Libraries()
+	 * @model
+	 * @generated
+	 */
+	EList<String> getLibraries();
 
 } // TclPackageInfo

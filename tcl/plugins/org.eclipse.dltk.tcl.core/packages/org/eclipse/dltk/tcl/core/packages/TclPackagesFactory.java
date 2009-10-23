@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackagesFactory.java,v 1.6 2009/07/10 07:49:47 asobolev Exp $
+ * $Id: TclPackagesFactory.java,v 1.7 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages;
 
@@ -86,7 +86,6 @@ public interface TclPackagesFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Variable Value</em>'.
 	 * @generated
-	 * @since 2.0
 	 */
 	VariableValue createVariableValue();
 
@@ -96,7 +95,6 @@ public interface TclPackagesFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Variable Map</em>'.
 	 * @generated
-	 * @since 2.0
 	 */
 	VariableMap createVariableMap();
 

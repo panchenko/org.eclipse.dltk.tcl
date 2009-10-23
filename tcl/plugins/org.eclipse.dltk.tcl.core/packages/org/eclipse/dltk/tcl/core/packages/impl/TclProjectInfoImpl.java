@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclProjectInfoImpl.java,v 1.5 2009/07/08 08:26:10 asobolev Exp $
+ * $Id: TclProjectInfoImpl.java,v 1.6 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -78,7 +78,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 	 * @see #getVariables()
 	 * @generated
 	 * @ordered
-	 * @since 2.0
 	 */
 	protected EMap<String, VariableValue> variables;
 
@@ -141,7 +140,6 @@ public class TclProjectInfoImpl extends EObjectImpl implements TclProjectInfo {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
-	 * @since 2.0
 	 */
 	public EMap<String, VariableValue> getVariables() {
 		if (variables == null) {

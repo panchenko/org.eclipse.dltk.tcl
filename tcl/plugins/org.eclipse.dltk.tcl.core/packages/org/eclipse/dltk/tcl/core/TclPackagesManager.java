@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ProgressMonitoringJob;
@@ -33,6 +34,7 @@ import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallChangedListener;
 import org.eclipse.dltk.launching.InterpreterConfig;
+import org.eclipse.dltk.launching.InterpreterStandin;
 import org.eclipse.dltk.launching.PropertyChangeEvent;
 import org.eclipse.dltk.launching.ScriptLaunchUtil;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -118,7 +120,7 @@ public class TclPackagesManager {
 						return tclPackageInfo;
 					} else {
 						toFetch.add(tclPackageInfo);
-						fetchSources(toFetch, install, interpreterInfo);
+						fetchSources(toFetch, install, interpreterInfo, null);
 						result = tclPackageInfo;
 						break;
 					}
@@ -138,7 +140,7 @@ public class TclPackagesManager {
 			processPackage(info, result, toFetch, fetchIfRequired);
 			if (toFetch.size() > 0) {
 				TclInterpreterInfo interpreter = getTclInterpreter(install);
-				fetchSources(toFetch, install, interpreter);
+				fetchSources(toFetch, install, interpreter, null);
 				processPackage(info, result, toFetch, fetchIfRequired);
 			}
 			result.remove(info);
@@ -405,37 +407,6 @@ public class TclPackagesManager {
 		}
 	}
 
-	/**
-	 * @since 2.0
-	 */
-	public static List<String> extractPackagesFromContent(List<String> content) {
-		String text = getXMLContent(content);
-		Document document = getDocument(text);
-		Set<String> packages = new HashSet<String>();
-
-		if (document != null) {
-			Element element = document.getDocumentElement();
-			NodeList childNodes = element.getChildNodes();
-			int len = childNodes.getLength();
-			for (int i = 0; i < len; i++) {
-				Node nde = childNodes.item(i);
-				if (isElementName(nde, "path")) { //$NON-NLS-1$
-					Element el = (Element) nde;
-					NodeList elChilds = el.getChildNodes();
-					for (int j = 0; j < elChilds.getLength(); j++) {
-						Node pkgNde = elChilds.item(j);
-						if (isElementName(pkgNde, "package")) { //$NON-NLS-1$
-							Element pkgElement = (Element) pkgNde;
-							String name = pkgElement.getAttribute("name"); //$NON-NLS-1$
-							packages.add(name);
-						}
-					}
-				}
-			}
-		}
-		return new ArrayList<String>(packages);
-	}
-
 	private static synchronized TclPackageInfo getCreatePackage(
 			TclInterpreterInfo info, String name) {
 		TclPackageInfo packageInfo = null;
@@ -471,6 +442,10 @@ public class TclPackagesManager {
 				String name = el.getAttribute("name"); //$NON-NLS-1$
 				info.getDependencies().add(
 						getCreatePackage(interpreterInfo, name));
+			} else if (isElementName(nde, "load")) { //$NON-NLS-1$
+				Element el = (Element) nde;
+				String name = el.getAttribute("name"); //$NON-NLS-1$
+				info.getLibraries().add(name);
 			}
 		}
 	}
@@ -488,7 +463,7 @@ public class TclPackagesManager {
 				}
 			}
 		}
-		fetchSources(toFetch, install, interpreterInfo);
+		fetchSources(toFetch, install, interpreterInfo, null);
 		synchronized (TclPackagesManager.class) {
 			for (TclPackageInfo tclPackageInfo : interpreterInfo.getPackages()) {
 				if (packageName.contains(tclPackageInfo.getName())) {
@@ -521,7 +496,8 @@ public class TclPackagesManager {
 	}
 
 	private static void fetchSources(Set<TclPackageInfo> toFetch,
-			IInterpreterInstall install, TclInterpreterInfo interpreterInfo) {
+			IInterpreterInstall install, TclInterpreterInfo interpreterInfo,
+			IProgressMonitor topMonitor) {
 		synchronized (TclPackagesManager.class) {
 			while (sourcesFetchingSet.contains(install)) {
 				// White until it will be removed from fetches list
@@ -545,9 +521,12 @@ public class TclPackagesManager {
 			sourcesFetchingSet.add(install);
 		}
 
-		/* Progress monitoring */ProgressMonitoringJob monitor = new ProgressMonitoringJob(
-				Messages.TclInterpreterMessages_RetrievePackageInformationSources
-						+ " " + install.getName(), 100);
+		/* Progress monitoring */IProgressMonitor monitor = topMonitor;
+		if (monitor == null) {
+			monitor = new ProgressMonitoringJob(
+					Messages.TclInterpreterMessages_RetrievePackageInformationSources
+							+ " " + install.getName(), 100);
+		}
 		try {
 			PerformanceNode p = RuntimePerformanceMonitor.begin();
 			IExecutionEnvironment exeEnv = install.getExecEnvironment();
@@ -573,6 +552,8 @@ public class TclPackagesManager {
 			InterpreterConfig config = ScriptLaunchUtil
 					.createInterpreterConfig(exeEnv, script, workingDir,
 							install.getEnvironmentVariables());
+			TclLibpathUtils.addTclLibPath(config,
+					install.getLibraryLocations(), install.getEnvironment());
 			StringBuffer buf = new StringBuffer();
 			for (TclPackageInfo tclPackageInfo : toFetch) {
 				buf.append(tclPackageInfo.getName()).append(" "); //$NON-NLS-1$
@@ -768,8 +749,8 @@ public class TclPackagesManager {
 	private static List<String> deployExecute(IExecutionEnvironment exeEnv,
 			IInterpreterInstall install, String[] arguments,
 			EnvironmentVariable[] env, ProgressMonitoringJob monitor) {
-		/* Progress monitoring */String envName = install.getEnvironment()
-				.getName();
+		// /* Progress monitoring */String envName = install.getEnvironment()
+		// .getName();
 		monitor
 				.subTask(Messages.TclInterpreterMessages_DeployingPackageInformationScript);
 		IDeployment deployment = exeEnv.createDeployment();
@@ -788,6 +769,8 @@ public class TclPackagesManager {
 		IFileHandle workingDir = script.getParent();
 		InterpreterConfig config = ScriptLaunchUtil.createInterpreterConfig(
 				exeEnv, script, workingDir, env);
+		TclLibpathUtils.addTclLibPath(config, install.getLibraryLocations(),
+				install.getEnvironment());
 		// For wish
 		config.removeEnvVar("DISPLAY"); //$NON-NLS-1$
 
@@ -1016,4 +999,67 @@ public class TclPackagesManager {
 		save();
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	public static void fillPackagesFromContent(List<String> content,
+			TclInterpreterInfo info) {
+		String text = getXMLContent(content);
+		Document document = getDocument(text);
+		Set<TclPackageInfo> packages = new HashSet<TclPackageInfo>();
+
+		if (document != null) {
+			Element element = document.getDocumentElement();
+			NodeList childNodes = element.getChildNodes();
+			int len = childNodes.getLength();
+			for (int i = 0; i < len; i++) {
+				Node nde = childNodes.item(i);
+				if (isElementName(nde, "path")) { //$NON-NLS-1$
+					Element el = (Element) nde;
+					NodeList elChilds = el.getChildNodes();
+					for (int j = 0; j < elChilds.getLength(); j++) {
+						Node pkgNde = elChilds.item(j);
+						if (isElementName(pkgNde, "package")) { //$NON-NLS-1$
+							Element pkgElement = (Element) pkgNde;
+							String name = pkgElement.getAttribute("name"); //$NON-NLS-1$
+
+							TclPackageInfo pkg = getCreatePackage(info, name);
+							populatePackage(pkg, pkgNde, info);
+							packages.add(pkg);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * Fetch only one package information to info
+	 * 
+	 * @since 2.0
+	 */
+	public static TclPackageInfo getPackageInfo(InterpreterStandin install,
+			String name, boolean fetch, TclInterpreterInfo info,
+			IProgressMonitor monitor) {
+		EList<TclPackageInfo> packages = info.getPackages();
+		Set<TclPackageInfo> toFetch = new HashSet<TclPackageInfo>();
+		TclPackageInfo result = null;
+
+		synchronized (TclPackagesManager.class) {
+			for (TclPackageInfo tclPackageInfo : packages) {
+				if (name.equals(tclPackageInfo.getName())) {
+					if (tclPackageInfo.isFetched()) {
+						return tclPackageInfo;
+					} else {
+						toFetch.add(tclPackageInfo);
+						fetchSources(toFetch, install, info, monitor);
+						result = tclPackageInfo;
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	}
 }

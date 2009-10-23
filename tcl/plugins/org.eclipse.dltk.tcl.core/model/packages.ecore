@@ -11,6 +11,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fetched" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" upperBound="-1"
         eType="#//TclPackageInfo"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="libraries" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TclInterpreterInfo">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="installLocation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

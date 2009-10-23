@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclPackageInfoImpl.java,v 1.4 2009/07/08 10:52:12 apanchenk Exp $
+ * $Id: TclPackageInfoImpl.java,v 1.5 2009/10/23 11:26:10 asobolev Exp $
  */
 package org.eclipse.dltk.tcl.core.packages.impl;
 
@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclPackageInfoImpl#getSources <em>Sources</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclPackageInfoImpl#isFetched <em>Fetched</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclPackageInfoImpl#getDependencies <em>Dependencies</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.core.packages.impl.TclPackageInfoImpl#getLibraries <em>Libraries</em>}</li>
  * </ul>
  * </p>
  *
@@ -120,6 +121,16 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 	 * @ordered
 	 */
 	protected EList<TclPackageInfo> dependencies;
+
+	/**
+	 * The cached value of the '{@link #getLibraries() <em>Libraries</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLibraries()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<String> libraries;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -240,6 +251,19 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<String> getLibraries() {
+		if (libraries == null) {
+			libraries = new EDataTypeUniqueEList<String>(String.class, this,
+					TclPackagesPackage.TCL_PACKAGE_INFO__LIBRARIES);
+		}
+		return libraries;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -253,6 +277,8 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 			return isFetched();
 		case TclPackagesPackage.TCL_PACKAGE_INFO__DEPENDENCIES:
 			return getDependencies();
+		case TclPackagesPackage.TCL_PACKAGE_INFO__LIBRARIES:
+			return getLibraries();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -284,6 +310,10 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 			getDependencies().addAll(
 					(Collection<? extends TclPackageInfo>) newValue);
 			return;
+		case TclPackagesPackage.TCL_PACKAGE_INFO__LIBRARIES:
+			getLibraries().clear();
+			getLibraries().addAll((Collection<? extends String>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -311,6 +341,9 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 		case TclPackagesPackage.TCL_PACKAGE_INFO__DEPENDENCIES:
 			getDependencies().clear();
 			return;
+		case TclPackagesPackage.TCL_PACKAGE_INFO__LIBRARIES:
+			getLibraries().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -335,6 +368,8 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 			return fetched != FETCHED_EDEFAULT;
 		case TclPackagesPackage.TCL_PACKAGE_INFO__DEPENDENCIES:
 			return dependencies != null && !dependencies.isEmpty();
+		case TclPackagesPackage.TCL_PACKAGE_INFO__LIBRARIES:
+			return libraries != null && !libraries.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -358,6 +393,8 @@ public class TclPackageInfoImpl extends EObjectImpl implements TclPackageInfo {
 		result.append(sources);
 		result.append(", fetched: ");
 		result.append(fetched);
+		result.append(", libraries: ");
+		result.append(libraries);
 		result.append(')');
 		return result.toString();
 	}
