@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.dltk.core.IPreferencesLookupDelegate;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerPlugin;
 import org.eclipse.dltk.tcl.internal.debug.TclDebugPlugin;
@@ -91,8 +92,9 @@ public class SpawnpointCommandManager {
 	private static final char VALUE_SEPARATOR = '=';
 	private static final String VALUE_FALSE = "0"; //$NON-NLS-1$
 
-	public static SpawnpointCommands loadFromPreferences() {
-		return decode(getPluginPreferences().getString(
+	public static SpawnpointCommands load(IPreferencesLookupDelegate delegate) {
+		return decode(delegate.getString(
+				TclActiveStateDebuggerPlugin.PLUGIN_ID,
 				TclActiveStateDebuggerConstants.PREF_SPAWNPOINT_COMMANDS));
 	}
 

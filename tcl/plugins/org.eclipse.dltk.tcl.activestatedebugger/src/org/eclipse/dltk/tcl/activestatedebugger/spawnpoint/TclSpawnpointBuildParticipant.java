@@ -7,9 +7,11 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.tcl.activestatedebugger.TclActiveStateDebuggerConstants;
@@ -26,9 +28,9 @@ public class TclSpawnpointBuildParticipant implements IBuildParticipant {
 
 	private final Set<String> spawnCommands = new HashSet<String>();
 
-	public TclSpawnpointBuildParticipant() {
-		spawnCommands.addAll(SpawnpointCommandManager.loadFromPreferences()
-				.getSelectedCommands());
+	public TclSpawnpointBuildParticipant(IProject project) {
+		spawnCommands.addAll(SpawnpointCommandManager.load(
+				new PreferencesLookupDelegate(project)).getSelectedCommands());
 	}
 
 	public void build(IBuildContext context) throws CoreException {

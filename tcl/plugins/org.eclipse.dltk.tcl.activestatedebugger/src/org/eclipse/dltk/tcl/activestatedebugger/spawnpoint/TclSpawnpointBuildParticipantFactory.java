@@ -11,7 +11,7 @@ public class TclSpawnpointBuildParticipantFactory extends
 	@Override
 	public IBuildParticipant createBuildParticipant(IScriptProject project)
 			throws CoreException {
-		return new TclSpawnpointBuildParticipant();
+		return new TclSpawnpointBuildParticipant(project.getProject());
 	}
 
 }
