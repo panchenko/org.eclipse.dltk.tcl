@@ -46,7 +46,6 @@ import org.eclipse.dltk.tcl.launching.TclLaunchingPlugin;
 import org.osgi.framework.Bundle;
 
 public class GenericTclInstallType extends AbstractInterpreterInstallType {
-	private static final String CORRECT_INTERPRETER_PATTERN = TclPackagesManager.END_OF_STREAM;
 
 	private static final String INSTALL_TYPE_NAME = "Generic Tcl";
 	/**
@@ -195,12 +194,7 @@ public class GenericTclInstallType extends AbstractInterpreterInstallType {
 						InterpreterMessages.errNoInterpreterExecutablesFound,
 						null);
 			}
-			boolean correct = false;
-			for (String s : output) {
-				if (CORRECT_INTERPRETER_PATTERN.equals(s)) {
-					correct = true;
-				}
-			}
+			boolean correct = output.contains(TclPackagesManager.END_OF_STREAM);
 
 			if (correct) {
 				monitor.subTask("Processing validation result");
