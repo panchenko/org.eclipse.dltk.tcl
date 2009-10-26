@@ -205,7 +205,8 @@ public class InstrumentationPatternList {
 		if (object instanceof IModelElement) {
 			final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
 					.createModelElementPattern();
-			pattern.setHandleIdentifier((String) object);
+			pattern.setHandleIdentifier(((IModelElement) object)
+					.getHandleIdentifier());
 			return pattern;
 		} else if (object instanceof PackageElement) {
 			final PackagePattern pattern = PreferencesFactory.eINSTANCE
