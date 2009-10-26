@@ -8,6 +8,9 @@ import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 
+/**
+ * @since 1.1
+ */
 public class PackageContainerElement extends WorkbenchAdaptable {
 
 	public PackageContainerElement(SelectionDialogInput input) {

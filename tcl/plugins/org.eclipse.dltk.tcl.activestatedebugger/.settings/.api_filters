@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.dltk.tcl.activestatedebugger" version="2">
+    <resource path="src/org/eclipse/dltk/tcl/activestatedebugger/preferences/PreferenceMessages.java" type="org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferenceMessages">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="InstrumentationLabelProvider_Packages"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="InstrumentationLabelProvider_Sources"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

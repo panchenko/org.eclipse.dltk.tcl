@@ -99,6 +99,9 @@ public class InstrumentationUtils {
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
+	/**
+	 * @since 1.1
+	 */
 	public static Set<TclPackageElement> collectPackages(
 			Set<IScriptProject> projects) {
 		final Set<TclPackageElement> packages = new HashSet<TclPackageElement>();
@@ -123,6 +126,9 @@ public class InstrumentationUtils {
 		return packages;
 	}
 
+	/**
+	 * @since 1.1
+	 */
 	public static Set<TclSourcesSourceModule> collectSources(
 			Set<IScriptProject> projects) {
 		final Set<TclSourcesSourceModule> sources = new HashSet<TclSourcesSourceModule>();
