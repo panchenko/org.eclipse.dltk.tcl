@@ -14,7 +14,7 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
- * @since 1.1
+ * @since 2.0
  */
 public class PackageContainerElement extends WorkbenchAdaptable {
 
