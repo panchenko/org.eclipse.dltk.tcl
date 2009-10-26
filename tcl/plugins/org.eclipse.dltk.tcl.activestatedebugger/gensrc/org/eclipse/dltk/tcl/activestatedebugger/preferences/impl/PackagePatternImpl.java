@@ -10,11 +10,11 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PatternImpl.java,v 1.4 2009/10/26 12:41:50 apanchenk Exp $
+ * $Id: PackagePatternImpl.java,v 1.1 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -22,48 +22,47 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Pattern</b></em>'.
+ * An implementation of the model object '<em><b>Package Pattern</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl#isInclude <em>Include</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PackagePatternImpl#getPackageName <em>Package Name</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PatternImpl extends EObjectImpl implements Pattern {
+public class PackagePatternImpl extends PatternImpl implements PackagePattern {
 	/**
-	 * The default value of the '{@link #isInclude() <em>Include</em>}' attribute.
+	 * The default value of the '{@link #getPackageName() <em>Package Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInclude()
+	 * @see #getPackageName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean INCLUDE_EDEFAULT = false;
+	protected static final String PACKAGE_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #isInclude() <em>Include</em>}' attribute.
+	 * The cached value of the '{@link #getPackageName() <em>Package Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInclude()
+	 * @see #getPackageName()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean include = INCLUDE_EDEFAULT;
+	protected String packageName = PACKAGE_NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PatternImpl() {
+	public PackagePatternImpl() {
 		super();
 	}
 
@@ -74,7 +73,7 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return PreferencesPackage.Literals.PATTERN;
+		return PreferencesPackage.Literals.PACKAGE_PATTERN;
 	}
 
 	/**
@@ -82,8 +81,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isInclude() {
-		return include;
+	public String getPackageName() {
+		return packageName;
 	}
 
 	/**
@@ -91,11 +90,11 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setInclude(boolean newInclude) {
-		boolean oldInclude = include;
-		include = newInclude;
+	public void setPackageName(String newPackageName) {
+		String oldPackageName = packageName;
+		packageName = newPackageName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.PATTERN__INCLUDE, oldInclude, include));
+			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.PACKAGE_PATTERN__PACKAGE_NAME, oldPackageName, packageName));
 	}
 
 	/**
@@ -106,8 +105,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				return isInclude();
+			case PreferencesPackage.PACKAGE_PATTERN__PACKAGE_NAME:
+				return getPackageName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -120,8 +119,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude((Boolean)newValue);
+			case PreferencesPackage.PACKAGE_PATTERN__PACKAGE_NAME:
+				setPackageName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -135,8 +134,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude(INCLUDE_EDEFAULT);
+			case PreferencesPackage.PACKAGE_PATTERN__PACKAGE_NAME:
+				setPackageName(PACKAGE_NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -150,8 +149,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				return include != INCLUDE_EDEFAULT;
+			case PreferencesPackage.PACKAGE_PATTERN__PACKAGE_NAME:
+				return PACKAGE_NAME_EDEFAULT == null ? packageName != null : !PACKAGE_NAME_EDEFAULT.equals(packageName);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -166,10 +165,10 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (include: "); //$NON-NLS-1$
-		result.append(include);
+		result.append(" (packageName: "); //$NON-NLS-1$
+		result.append(packageName);
 		result.append(')');
 		return result.toString();
 	}
 
-} //PatternImpl
+} //PackagePatternImpl

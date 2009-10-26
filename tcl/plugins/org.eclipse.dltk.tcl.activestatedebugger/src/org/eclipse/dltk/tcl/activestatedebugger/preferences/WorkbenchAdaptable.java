@@ -46,6 +46,14 @@ abstract class WorkbenchAdaptable implements IAdaptable, IWorkbenchAdapter {
 		return null;
 	}
 
+	public abstract ContainerType getContainerType();
+
+	public abstract Object[] getChildren();
+
+	public final Object[] getChildren(Object o) {
+		return getChildren();
+	}
+
 	public Object getParent(Object o) {
 		return null;
 	}

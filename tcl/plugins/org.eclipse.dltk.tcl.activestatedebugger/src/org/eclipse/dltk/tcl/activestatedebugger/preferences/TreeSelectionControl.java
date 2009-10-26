@@ -33,7 +33,7 @@ import org.eclipse.swt.custom.BusyIndicator;
 public class TreeSelectionControl implements ITreeViewerListener,
 		ICheckStateListener {
 
-	static final boolean DEBUG = false;
+	static final boolean DEBUG = true;
 
 	/**
 	 * @param viewer

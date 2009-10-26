@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesFactoryImpl.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: PreferencesFactoryImpl.java,v 1.5 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
@@ -73,6 +73,9 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 			case PreferencesPackage.INSTRUMENTATION_CONFIG: return createInstrumentationConfig();
 			case PreferencesPackage.PATTERN: return createPattern();
 			case PreferencesPackage.LIBRARY_PATTERN: return createLibraryPattern();
+			case PreferencesPackage.PACKAGE_PATTERN: return createPackagePattern();
+			case PreferencesPackage.SOURCE_PATTERN: return createSourcePattern();
+			case PreferencesPackage.CONTAINER_PATTERN: return createContainerPattern();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -88,6 +91,8 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 		switch (eDataType.getClassifierID()) {
 			case PreferencesPackage.INSTRUMENTATION_MODE:
 				return createInstrumentationModeFromString(eDataType, initialValue);
+			case PreferencesPackage.CONTAINER_TYPE:
+				return createContainerTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -103,6 +108,8 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 		switch (eDataType.getClassifierID()) {
 			case PreferencesPackage.INSTRUMENTATION_MODE:
 				return convertInstrumentationModeToString(eDataType, instanceValue);
+			case PreferencesPackage.CONTAINER_TYPE:
+				return convertContainerTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -153,6 +160,36 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public PackagePattern createPackagePattern() {
+		PackagePatternImpl packagePattern = new PackagePatternImpl();
+		return packagePattern;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SourcePattern createSourcePattern() {
+		SourcePatternImpl sourcePattern = new SourcePatternImpl();
+		return sourcePattern;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ContainerPattern createContainerPattern() {
+		ContainerPatternImpl containerPattern = new ContainerPatternImpl();
+		return containerPattern;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public InstrumentationMode createInstrumentationModeFromString(EDataType eDataType, String initialValue) {
 		InstrumentationMode result = InstrumentationMode.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -165,6 +202,26 @@ public class PreferencesFactoryImpl extends EFactoryImpl implements PreferencesF
 	 * @generated
 	 */
 	public String convertInstrumentationModeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ContainerType createContainerTypeFromString(EDataType eDataType, String initialValue) {
+		ContainerType result = ContainerType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertContainerTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

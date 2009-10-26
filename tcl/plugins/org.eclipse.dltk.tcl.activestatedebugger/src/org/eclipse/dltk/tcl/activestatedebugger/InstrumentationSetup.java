@@ -289,4 +289,5 @@ public class InstrumentationSetup {
 	public void addProject(IScriptProject project, boolean include) {
 		addWorkspace(project.getPath(), true, include);
 	}
+
 }

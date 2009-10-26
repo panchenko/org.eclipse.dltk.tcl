@@ -10,60 +10,57 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PatternImpl.java,v 1.4 2009/10/26 12:41:50 apanchenk Exp $
+ * $Id: ContainerPatternImpl.java,v 1.1 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Pattern</b></em>'.
+ * An implementation of the model object '<em><b>Container Pattern</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl#isInclude <em>Include</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ContainerPatternImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PatternImpl extends EObjectImpl implements Pattern {
+public class ContainerPatternImpl extends PatternImpl implements ContainerPattern {
 	/**
-	 * The default value of the '{@link #isInclude() <em>Include</em>}' attribute.
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInclude()
+	 * @see #getType()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean INCLUDE_EDEFAULT = false;
-
+	protected static final ContainerType TYPE_EDEFAULT = ContainerType.LIBRARIES;
 	/**
-	 * The cached value of the '{@link #isInclude() <em>Include</em>}' attribute.
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInclude()
+	 * @see #getType()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean include = INCLUDE_EDEFAULT;
+	protected ContainerType type = TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PatternImpl() {
+	public ContainerPatternImpl() {
 		super();
 	}
 
@@ -74,7 +71,7 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return PreferencesPackage.Literals.PATTERN;
+		return PreferencesPackage.Literals.CONTAINER_PATTERN;
 	}
 
 	/**
@@ -82,8 +79,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isInclude() {
-		return include;
+	public ContainerType getType() {
+		return type;
 	}
 
 	/**
@@ -91,11 +88,11 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setInclude(boolean newInclude) {
-		boolean oldInclude = include;
-		include = newInclude;
+	public void setType(ContainerType newType) {
+		ContainerType oldType = type;
+		type = newType == null ? TYPE_EDEFAULT : newType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.PATTERN__INCLUDE, oldInclude, include));
+			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.CONTAINER_PATTERN__TYPE, oldType, type));
 	}
 
 	/**
@@ -106,8 +103,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				return isInclude();
+			case PreferencesPackage.CONTAINER_PATTERN__TYPE:
+				return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -120,8 +117,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude((Boolean)newValue);
+			case PreferencesPackage.CONTAINER_PATTERN__TYPE:
+				setType((ContainerType)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -135,8 +132,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude(INCLUDE_EDEFAULT);
+			case PreferencesPackage.CONTAINER_PATTERN__TYPE:
+				setType(TYPE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -150,8 +147,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				return include != INCLUDE_EDEFAULT;
+			case PreferencesPackage.CONTAINER_PATTERN__TYPE:
+				return type != TYPE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -166,10 +163,10 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (include: "); //$NON-NLS-1$
-		result.append(include);
+		result.append(" (type: "); //$NON-NLS-1$
+		result.append(type);
 		result.append(')');
 		return result.toString();
 	}
 
-} //PatternImpl
+} //ContainerPatternImpl

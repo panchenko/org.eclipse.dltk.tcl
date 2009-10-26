@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackage.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: PreferencesPackage.java,v 1.5 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -144,22 +144,22 @@ public interface PreferencesPackage extends EPackage {
 	int INSTRUMENTATION_CONFIG = 1;
 
 	/**
-	 * The feature id for the '<em><b>Model Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INSTRUMENTATION_CONFIG__MODEL_ELEMENTS = 0;
-
-	/**
 	 * The feature id for the '<em><b>Mode</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INSTRUMENTATION_CONFIG__MODE = 1;
+	int INSTRUMENTATION_CONFIG__MODE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Model Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INSTRUMENTATION_CONFIG__MODEL_ELEMENTS = 1;
 
 	/**
 	 * The number of structural features of the '<em>Instrumentation Config</em>' class.
@@ -169,6 +169,43 @@ public interface PreferencesPackage extends EPackage {
 	 * @ordered
 	 */
 	int INSTRUMENTATION_CONFIG_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ContainerPatternImpl <em>Container Pattern</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ContainerPatternImpl
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getContainerPattern()
+	 * @generated
+	 */
+	int CONTAINER_PATTERN = 6;
+
+	/**
+	 * The feature id for the '<em><b>Include</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_PATTERN__INCLUDE = PATTERN__INCLUDE;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_PATTERN__TYPE = PATTERN_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Container Pattern</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.LibraryPatternImpl <em>Library Pattern</em>}' class.
@@ -187,7 +224,16 @@ public interface PreferencesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LIBRARY_PATTERN__INCLUDE = PATTERN__INCLUDE;
+	int LIBRARY_PATTERN__INCLUDE = CONTAINER_PATTERN__INCLUDE;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LIBRARY_PATTERN__TYPE = CONTAINER_PATTERN__TYPE;
 
 	/**
 	 * The number of structural features of the '<em>Library Pattern</em>' class.
@@ -196,7 +242,81 @@ public interface PreferencesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LIBRARY_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 0;
+	int LIBRARY_PATTERN_FEATURE_COUNT = CONTAINER_PATTERN_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PackagePatternImpl <em>Package Pattern</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PackagePatternImpl
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getPackagePattern()
+	 * @generated
+	 */
+	int PACKAGE_PATTERN = 4;
+
+	/**
+	 * The feature id for the '<em><b>Include</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PACKAGE_PATTERN__INCLUDE = PATTERN__INCLUDE;
+
+	/**
+	 * The feature id for the '<em><b>Package Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PACKAGE_PATTERN__PACKAGE_NAME = PATTERN_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Package Pattern</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PACKAGE_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.SourcePatternImpl <em>Source Pattern</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.SourcePatternImpl
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getSourcePattern()
+	 * @generated
+	 */
+	int SOURCE_PATTERN = 5;
+
+	/**
+	 * The feature id for the '<em><b>Include</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_PATTERN__INCLUDE = PATTERN__INCLUDE;
+
+	/**
+	 * The feature id for the '<em><b>Source Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_PATTERN__SOURCE_PATH = PATTERN_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Source Pattern</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode <em>Instrumentation Mode</em>}' enum.
@@ -206,7 +326,18 @@ public interface PreferencesPackage extends EPackage {
 	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getInstrumentationMode()
 	 * @generated
 	 */
-	int INSTRUMENTATION_MODE = 4;
+	int INSTRUMENTATION_MODE = 7;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType <em>Container Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getContainerType()
+	 * @generated
+	 */
+	int CONTAINER_TYPE = 8;
 
 
 	/**
@@ -294,6 +425,69 @@ public interface PreferencesPackage extends EPackage {
 	EClass getLibraryPattern();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern <em>Package Pattern</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Package Pattern</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern
+	 * @generated
+	 */
+	EClass getPackagePattern();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern#getPackageName <em>Package Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Package Name</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern#getPackageName()
+	 * @see #getPackagePattern()
+	 * @generated
+	 */
+	EAttribute getPackagePattern_PackageName();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern <em>Source Pattern</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Source Pattern</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern
+	 * @generated
+	 */
+	EClass getSourcePattern();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern#getSourcePath <em>Source Path</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Source Path</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern#getSourcePath()
+	 * @see #getSourcePattern()
+	 * @generated
+	 */
+	EAttribute getSourcePattern_SourcePath();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern <em>Container Pattern</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Container Pattern</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern
+	 * @generated
+	 */
+	EClass getContainerPattern();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern#getType()
+	 * @see #getContainerPattern()
+	 * @generated
+	 */
+	EAttribute getContainerPattern_Type();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode <em>Instrumentation Mode</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -302,6 +496,16 @@ public interface PreferencesPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getInstrumentationMode();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType <em>Container Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Container Type</em>'.
+	 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType
+	 * @generated
+	 */
+	EEnum getContainerType();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -398,6 +602,60 @@ public interface PreferencesPackage extends EPackage {
 		EClass LIBRARY_PATTERN = eINSTANCE.getLibraryPattern();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PackagePatternImpl <em>Package Pattern</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PackagePatternImpl
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getPackagePattern()
+		 * @generated
+		 */
+		EClass PACKAGE_PATTERN = eINSTANCE.getPackagePattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Package Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PACKAGE_PATTERN__PACKAGE_NAME = eINSTANCE.getPackagePattern_PackageName();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.SourcePatternImpl <em>Source Pattern</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.SourcePatternImpl
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getSourcePattern()
+		 * @generated
+		 */
+		EClass SOURCE_PATTERN = eINSTANCE.getSourcePattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Source Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SOURCE_PATTERN__SOURCE_PATH = eINSTANCE.getSourcePattern_SourcePath();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ContainerPatternImpl <em>Container Pattern</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.ContainerPatternImpl
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getContainerPattern()
+		 * @generated
+		 */
+		EClass CONTAINER_PATTERN = eINSTANCE.getContainerPattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONTAINER_PATTERN__TYPE = eINSTANCE.getContainerPattern_Type();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode <em>Instrumentation Mode</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -406,6 +664,16 @@ public interface PreferencesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum INSTRUMENTATION_MODE = eINSTANCE.getInstrumentationMode();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType <em>Container Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType
+		 * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PreferencesPackageImpl#getContainerType()
+		 * @generated
+		 */
+		EEnum CONTAINER_TYPE = eINSTANCE.getContainerType();
 
 	}
 

@@ -10,60 +10,59 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PatternImpl.java,v 1.4 2009/10/26 12:41:50 apanchenk Exp $
+ * $Id: SourcePatternImpl.java,v 1.1 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Pattern</b></em>'.
+ * An implementation of the model object '<em><b>Source Pattern</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.PatternImpl#isInclude <em>Include</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.SourcePatternImpl#getSourcePath <em>Source Path</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PatternImpl extends EObjectImpl implements Pattern {
+public class SourcePatternImpl extends PatternImpl implements SourcePattern {
 	/**
-	 * The default value of the '{@link #isInclude() <em>Include</em>}' attribute.
+	 * The default value of the '{@link #getSourcePath() <em>Source Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInclude()
+	 * @see #getSourcePath()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean INCLUDE_EDEFAULT = false;
+	protected static final String SOURCE_PATH_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #isInclude() <em>Include</em>}' attribute.
+	 * The cached value of the '{@link #getSourcePath() <em>Source Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isInclude()
+	 * @see #getSourcePath()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean include = INCLUDE_EDEFAULT;
+	protected String sourcePath = SOURCE_PATH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PatternImpl() {
+	public SourcePatternImpl() {
 		super();
 	}
 
@@ -74,7 +73,7 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return PreferencesPackage.Literals.PATTERN;
+		return PreferencesPackage.Literals.SOURCE_PATTERN;
 	}
 
 	/**
@@ -82,8 +81,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isInclude() {
-		return include;
+	public String getSourcePath() {
+		return sourcePath;
 	}
 
 	/**
@@ -91,11 +90,11 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setInclude(boolean newInclude) {
-		boolean oldInclude = include;
-		include = newInclude;
+	public void setSourcePath(String newSourcePath) {
+		String oldSourcePath = sourcePath;
+		sourcePath = newSourcePath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.PATTERN__INCLUDE, oldInclude, include));
+			eNotify(new ENotificationImpl(this, Notification.SET, PreferencesPackage.SOURCE_PATTERN__SOURCE_PATH, oldSourcePath, sourcePath));
 	}
 
 	/**
@@ -106,8 +105,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				return isInclude();
+			case PreferencesPackage.SOURCE_PATTERN__SOURCE_PATH:
+				return getSourcePath();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -120,8 +119,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude((Boolean)newValue);
+			case PreferencesPackage.SOURCE_PATTERN__SOURCE_PATH:
+				setSourcePath((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -135,8 +134,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				setInclude(INCLUDE_EDEFAULT);
+			case PreferencesPackage.SOURCE_PATTERN__SOURCE_PATH:
+				setSourcePath(SOURCE_PATH_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -150,8 +149,8 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.PATTERN__INCLUDE:
-				return include != INCLUDE_EDEFAULT;
+			case PreferencesPackage.SOURCE_PATTERN__SOURCE_PATH:
+				return SOURCE_PATH_EDEFAULT == null ? sourcePath != null : !SOURCE_PATH_EDEFAULT.equals(sourcePath);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -166,10 +165,10 @@ public class PatternImpl extends EObjectImpl implements Pattern {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (include: "); //$NON-NLS-1$
-		result.append(include);
+		result.append(" (sourcePath: "); //$NON-NLS-1$
+		result.append(sourcePath);
 		result.append(')');
 		return result.toString();
 	}
 
-} //PatternImpl
+} //SourcePatternImpl

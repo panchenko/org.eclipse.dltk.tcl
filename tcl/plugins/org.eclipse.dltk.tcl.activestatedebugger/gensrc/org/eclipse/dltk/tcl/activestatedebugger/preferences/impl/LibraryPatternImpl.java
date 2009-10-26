@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: LibraryPatternImpl.java,v 1.1 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: LibraryPatternImpl.java,v 1.2 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class LibraryPatternImpl extends PatternImpl implements LibraryPattern {
+public class LibraryPatternImpl extends ContainerPatternImpl implements LibraryPattern {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: InstrumentationConfigImpl.java,v 1.2 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: InstrumentationConfigImpl.java,v 1.3 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
@@ -18,8 +18,10 @@ import java.util.Collection;
 
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -37,24 +39,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.InstrumentationConfigImpl#getModelElements <em>Model Elements</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.InstrumentationConfigImpl#getMode <em>Mode</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.activestatedebugger.preferences.impl.InstrumentationConfigImpl#getModelElements <em>Model Elements</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class InstrumentationConfigImpl extends EObjectImpl implements InstrumentationConfig {
-	/**
-	 * The cached value of the '{@link #getModelElements() <em>Model Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModelElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Pattern> modelElements;
-
 	/**
 	 * The default value of the '{@link #getMode() <em>Mode</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -74,6 +66,16 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 	 * @ordered
 	 */
 	protected InstrumentationMode mode = MODE_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getModelElements() <em>Model Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModelElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Pattern> modelElements;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -149,10 +151,10 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
-				return getModelElements();
 			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODE:
 				return getMode();
+			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
+				return getModelElements();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -166,12 +168,12 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODE:
+				setMode((InstrumentationMode)newValue);
+				return;
 			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
 				getModelElements().clear();
 				getModelElements().addAll((Collection<? extends Pattern>)newValue);
-				return;
-			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODE:
-				setMode((InstrumentationMode)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -185,11 +187,11 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
-				getModelElements().clear();
-				return;
 			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODE:
 				setMode(MODE_EDEFAULT);
+				return;
+			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
+				getModelElements().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -203,10 +205,10 @@ public class InstrumentationConfigImpl extends EObjectImpl implements Instrument
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
-				return modelElements != null && !modelElements.isEmpty();
 			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODE:
 				return mode != MODE_EDEFAULT;
+			case PreferencesPackage.INSTRUMENTATION_CONFIG__MODEL_ELEMENTS:
+				return modelElements != null && !modelElements.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

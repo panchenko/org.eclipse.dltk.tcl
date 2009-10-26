@@ -10,17 +10,21 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackageImpl.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: PreferencesPackageImpl.java,v 1.5 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.LibraryPattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesFactory;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -68,7 +72,35 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass packagePatternEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass sourcePatternEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass containerPatternEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum instrumentationModeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum containerTypeEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -97,20 +129,10 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	private static boolean isInited = false;
 
 	/**
-	 * Creates, registers, and initializes the <b>Package</b> for this
-	 * model, and for any others upon which it depends.  Simple
-	 * dependencies are satisfied by calling this method on all
-	 * dependent packages before doing anything else.  This method drives
-	 * initialization for interdependent packages directly, in parallel
-	 * with this package, itself.
-	 * <p>Of this package and its interdependencies, all packages which
-	 * have not yet been registered by their URI values are first created
-	 * and registered.  The packages are then initialized in two steps:
-	 * meta-model objects for all of the packages are created before any
-	 * are initialized, since one package's meta-model objects may refer to
-	 * those of another.
-	 * <p>Invocation of this method will not affect any packages that have
-	 * already been initialized.
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+	 * 
+	 * <p>This method is used to initialize {@link PreferencesPackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #eNS_URI
@@ -122,7 +144,7 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		if (isInited) return (PreferencesPackage)EPackage.Registry.INSTANCE.getEPackage(PreferencesPackage.eNS_URI);
 
 		// Obtain or create and register package
-		PreferencesPackageImpl thePreferencesPackage = (PreferencesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof PreferencesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new PreferencesPackageImpl());
+		PreferencesPackageImpl thePreferencesPackage = (PreferencesPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof PreferencesPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new PreferencesPackageImpl());
 
 		isInited = true;
 
@@ -135,6 +157,9 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		// Mark meta-data to indicate it can't be changed
 		thePreferencesPackage.freeze();
 
+  
+		// Update the registry and return the package
+		EPackage.Registry.INSTANCE.put(PreferencesPackage.eNS_URI, thePreferencesPackage);
 		return thePreferencesPackage;
 	}
 
@@ -171,7 +196,7 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * @generated
 	 */
 	public EReference getInstrumentationConfig_ModelElements() {
-		return (EReference)instrumentationConfigEClass.getEStructuralFeatures().get(0);
+		return (EReference)instrumentationConfigEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -180,7 +205,7 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * @generated
 	 */
 	public EAttribute getInstrumentationConfig_Mode() {
-		return (EAttribute)instrumentationConfigEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)instrumentationConfigEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -215,8 +240,71 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getPackagePattern() {
+		return packagePatternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPackagePattern_PackageName() {
+		return (EAttribute)packagePatternEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSourcePattern() {
+		return sourcePatternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSourcePattern_SourcePath() {
+		return (EAttribute)sourcePatternEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getContainerPattern() {
+		return containerPatternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getContainerPattern_Type() {
+		return (EAttribute)containerPatternEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getInstrumentationMode() {
 		return instrumentationModeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getContainerType() {
+		return containerTypeEEnum;
 	}
 
 	/**
@@ -251,16 +339,26 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 		createEAttribute(modelElementPatternEClass, MODEL_ELEMENT_PATTERN__HANDLE_IDENTIFIER);
 
 		instrumentationConfigEClass = createEClass(INSTRUMENTATION_CONFIG);
-		createEReference(instrumentationConfigEClass, INSTRUMENTATION_CONFIG__MODEL_ELEMENTS);
 		createEAttribute(instrumentationConfigEClass, INSTRUMENTATION_CONFIG__MODE);
+		createEReference(instrumentationConfigEClass, INSTRUMENTATION_CONFIG__MODEL_ELEMENTS);
 
 		patternEClass = createEClass(PATTERN);
 		createEAttribute(patternEClass, PATTERN__INCLUDE);
 
 		libraryPatternEClass = createEClass(LIBRARY_PATTERN);
 
+		packagePatternEClass = createEClass(PACKAGE_PATTERN);
+		createEAttribute(packagePatternEClass, PACKAGE_PATTERN__PACKAGE_NAME);
+
+		sourcePatternEClass = createEClass(SOURCE_PATTERN);
+		createEAttribute(sourcePatternEClass, SOURCE_PATTERN__SOURCE_PATH);
+
+		containerPatternEClass = createEClass(CONTAINER_PATTERN);
+		createEAttribute(containerPatternEClass, CONTAINER_PATTERN__TYPE);
+
 		// Create enums
 		instrumentationModeEEnum = createEEnum(INSTRUMENTATION_MODE);
+		containerTypeEEnum = createEEnum(CONTAINER_TYPE);
 	}
 
 	/**
@@ -292,26 +390,43 @@ public class PreferencesPackageImpl extends EPackageImpl implements PreferencesP
 
 		// Add supertypes to classes
 		modelElementPatternEClass.getESuperTypes().add(this.getPattern());
-		libraryPatternEClass.getESuperTypes().add(this.getPattern());
+		libraryPatternEClass.getESuperTypes().add(this.getContainerPattern());
+		packagePatternEClass.getESuperTypes().add(this.getPattern());
+		sourcePatternEClass.getESuperTypes().add(this.getPattern());
+		containerPatternEClass.getESuperTypes().add(this.getPattern());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(modelElementPatternEClass, ModelElementPattern.class, "ModelElementPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getModelElementPattern_HandleIdentifier(), ecorePackage.getEString(), "handleIdentifier", null, 1, 1, ModelElementPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(instrumentationConfigEClass, InstrumentationConfig.class, "InstrumentationConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(getInstrumentationConfig_ModelElements(), this.getPattern(), null, "modelElements", null, 0, -1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getInstrumentationConfig_Mode(), this.getInstrumentationMode(), "mode", null, 0, 1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(getInstrumentationConfig_ModelElements(), this.getPattern(), null, "modelElements", null, 0, -1, InstrumentationConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(patternEClass, Pattern.class, "Pattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getPattern_Include(), ecorePackage.getEBoolean(), "include", null, 1, 1, Pattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(libraryPatternEClass, LibraryPattern.class, "LibraryPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
+		initEClass(packagePatternEClass, PackagePattern.class, "PackagePattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getPackagePattern_PackageName(), ecorePackage.getEString(), "packageName", null, 0, 1, PackagePattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(sourcePatternEClass, SourcePattern.class, "SourcePattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getSourcePattern_SourcePath(), ecorePackage.getEString(), "sourcePath", null, 0, 1, SourcePattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(containerPatternEClass, ContainerPattern.class, "ContainerPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getContainerPattern_Type(), this.getContainerType(), "type", null, 0, 1, ContainerPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
 		// Initialize enums and add enum literals
 		initEEnum(instrumentationModeEEnum, InstrumentationMode.class, "InstrumentationMode"); //$NON-NLS-1$
 		addEEnumLiteral(instrumentationModeEEnum, InstrumentationMode.DEFAULT);
 		addEEnumLiteral(instrumentationModeEEnum, InstrumentationMode.SOURCES);
 		addEEnumLiteral(instrumentationModeEEnum, InstrumentationMode.SELECTION);
+
+		initEEnum(containerTypeEEnum, ContainerType.class, "ContainerType"); //$NON-NLS-1$
+		addEEnumLiteral(containerTypeEEnum, ContainerType.LIBRARIES);
+		addEEnumLiteral(containerTypeEEnum, ContainerType.PACKAGES);
+		addEEnumLiteral(containerTypeEEnum, ContainerType.SOURCES);
 
 		// Create resource
 		createResource(eNS_URI);

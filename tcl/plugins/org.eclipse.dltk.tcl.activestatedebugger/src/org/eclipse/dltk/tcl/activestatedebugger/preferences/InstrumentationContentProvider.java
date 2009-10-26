@@ -23,9 +23,6 @@ import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
-import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
-import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesSourceModule;
 import org.eclipse.dltk.ui.StandardModelElementContentProvider2;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -53,20 +50,20 @@ public class InstrumentationContentProvider extends
 			final Set<IScriptProject> projects = input.collectProjects();
 			final List<Object> result = new ArrayList<Object>();
 			result.addAll(projects);
-			final Set<IProjectFragment> libraries = InstrumentationUtils
-					.collectExternalFragments(projects);
-			if (!libraries.isEmpty()) {
-				result.add(new LibraryContainerElement(input));
+			final LibraryContainerElement libContainer = new LibraryContainerElement(
+					input);
+			if (libContainer.getChildren().length != 0) {
+				result.add(libContainer);
 			}
-			final Set<TclPackageElement> packages = InstrumentationUtils
-					.collectPackages(projects);
-			if (!packages.isEmpty()) {
-				result.add(new PackageContainerElement(input));
+			final PackageContainerElement packageContainer = new PackageContainerElement(
+					input);
+			if (packageContainer.getChildren().length != 0) {
+				result.add(packageContainer);
 			}
-			final Set<TclSourcesSourceModule> sources = InstrumentationUtils
-					.collectSources(projects);
-			if (!sources.isEmpty()) {
-				result.add(new SourceContainerElement(input));
+			final SourceContainerElement sourceContainer = new SourceContainerElement(
+					input);
+			if (sourceContainer.getChildren().length != 0) {
+				result.add(sourceContainer);
 			}
 			return result.toArray();
 		}
@@ -84,8 +81,14 @@ public class InstrumentationContentProvider extends
 			return null;
 		}
 		if (element instanceof IProjectFragment
-				&& ((IProjectFragment) element).isExternal()) {
+				&& LibraryContainerElement.isValid((IProjectFragment) element)) {
 			return new LibraryContainerElement((SelectionDialogInput) input);
+		}
+		if (element instanceof PackageElement) {
+			return new PackageContainerElement((SelectionDialogInput) input);
+		}
+		if (element instanceof SourceElement) {
+			return new SourceContainerElement((SelectionDialogInput) input);
 		}
 		if (!fIsFlatLayout && element instanceof IScriptFolder) {
 			return getHierarchicalPackageParent((IScriptFolder) element);
@@ -97,8 +100,9 @@ public class InstrumentationContentProvider extends
 	public Object[] getChildren(Object element) {
 		if (element instanceof IWorkbenchAdapter) {
 			return ((IWorkbenchAdapter) element).getChildren(element);
+		} else {
+			return super.getChildren(element);
 		}
-		return super.getChildren(element);
 	}
 
 	@Override
@@ -119,6 +123,7 @@ public class InstrumentationContentProvider extends
 		return result.toArray();
 	}
 
+	@Override
 	protected Object[] getScriptFolderContent(final IScriptFolder fragment)
 			throws ModelException {
 		if (fIsFlatLayout) {

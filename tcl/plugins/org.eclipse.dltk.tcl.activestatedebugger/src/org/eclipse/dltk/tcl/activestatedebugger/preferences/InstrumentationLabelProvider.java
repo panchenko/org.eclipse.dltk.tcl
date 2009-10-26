@@ -15,9 +15,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
+import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Provides the labels for the Package Explorer.
@@ -42,6 +45,11 @@ public class InstrumentationLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	private String getSpecificText(Object element) {
+		if (element instanceof PackageElement) {
+			return ((PackageElement) element).packageName;
+		} else if (element instanceof SourceElement) {
+			return ((SourceElement) element).path.toString();
+		}
 		if (!fIsFlatLayout && element instanceof IScriptFolder) {
 			IScriptFolder fragment = (IScriptFolder) element;
 			Object parent = fContentProvider
@@ -90,6 +98,18 @@ public class InstrumentationLabelProvider extends AppearanceAwareLabelProvider {
 
 	public void setIsFlatLayout(boolean state) {
 		fIsFlatLayout = state;
+	}
+
+	@Override
+	public Image getImage(Object element) {
+		if (element instanceof PackageElement) {
+			return DLTKUIPlugin.getImageDescriptorRegistry().get(
+					DLTKPluginImages.DESC_OBJS_PACKAGE);
+		} else if (element instanceof SourceElement) {
+			return DLTKUIPlugin.getImageDescriptorRegistry().get(
+					DLTKPluginImages.DESC_OBJS_CUNIT);
+		}
+		return super.getImage(element);
 	}
 
 }

@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesSwitch.java,v 1.4 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: PreferencesSwitch.java,v 1.5 2009/10/26 12:41:51 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.util;
 
@@ -117,7 +117,29 @@ public class PreferencesSwitch<T> {
 			case PreferencesPackage.LIBRARY_PATTERN: {
 				LibraryPattern libraryPattern = (LibraryPattern)theEObject;
 				T result = caseLibraryPattern(libraryPattern);
+				if (result == null) result = caseContainerPattern(libraryPattern);
 				if (result == null) result = casePattern(libraryPattern);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PreferencesPackage.PACKAGE_PATTERN: {
+				PackagePattern packagePattern = (PackagePattern)theEObject;
+				T result = casePackagePattern(packagePattern);
+				if (result == null) result = casePattern(packagePattern);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PreferencesPackage.SOURCE_PATTERN: {
+				SourcePattern sourcePattern = (SourcePattern)theEObject;
+				T result = caseSourcePattern(sourcePattern);
+				if (result == null) result = casePattern(sourcePattern);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PreferencesPackage.CONTAINER_PATTERN: {
+				ContainerPattern containerPattern = (ContainerPattern)theEObject;
+				T result = caseContainerPattern(containerPattern);
+				if (result == null) result = casePattern(containerPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -182,6 +204,51 @@ public class PreferencesSwitch<T> {
 	 * @generated
 	 */
 	public T caseLibraryPattern(LibraryPattern object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Package Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Package Pattern</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePackagePattern(PackagePattern object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Source Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Source Pattern</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSourcePattern(SourcePattern object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Container Pattern</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Container Pattern</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseContainerPattern(ContainerPattern object) {
 		return null;
 	}
 

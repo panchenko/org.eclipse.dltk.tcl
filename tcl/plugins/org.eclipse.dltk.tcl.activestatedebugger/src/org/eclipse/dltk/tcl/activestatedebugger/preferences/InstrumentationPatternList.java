@@ -151,27 +151,18 @@ public class InstrumentationPatternList {
 				for (Pattern pattern : config.getModelElements()) {
 					final List<Object> output = pattern.isInclude() ? includes
 							: excludes;
-					final Object element;
-					if (pattern instanceof ModelElementPattern) {
-						element = DLTKCore
-								.create(((ModelElementPattern) pattern)
-										.getHandleIdentifier());
-					} else if (pattern instanceof LibraryPattern) {
-						element = new LibraryContainerElement(treeInput);
-					} else {
-						element = null;
-					}
+					final Object element = convert(pattern, treeInput);
 					if (element != null) {
 						output.add(element);
 					}
 				}
 				if (TreeSelectionControl.DEBUG) {
-					// for (IModelElement element : includes) {
-					//						System.out.println("+" + element.getPath()); //$NON-NLS-1$
-					// }
-					// for (IModelElement element : excludes) {
-					//						System.out.println("-" + element.getPath()); //$NON-NLS-1$
-					// }
+					for (Object element : includes) {
+						System.out.println("+" + element); //$NON-NLS-1$
+					}
+					for (Object element : excludes) {
+						System.out.println("-" + element); //$NON-NLS-1$
+					}
 				}
 				fSelectionControl.setInitialState(includes, excludes);
 			} else {
@@ -182,6 +173,57 @@ public class InstrumentationPatternList {
 			fSelectionControl.aboutToOpen();
 		} finally {
 			endUpdate();
+		}
+	}
+
+	protected static Object convert(Pattern pattern,
+			final SelectionDialogInput treeInput) {
+		if (pattern instanceof ModelElementPattern) {
+			return DLTKCore.create(((ModelElementPattern) pattern)
+					.getHandleIdentifier());
+		} else if (pattern instanceof ContainerPattern) {
+			final ContainerType containerType = ((ContainerPattern) pattern)
+					.getType();
+			if (containerType == ContainerType.PACKAGES) {
+				return new PackageContainerElement(treeInput);
+			} else if (containerType == ContainerType.SOURCES) {
+				return new SourceContainerElement(treeInput);
+			} else {
+				return new LibraryContainerElement(treeInput);
+			}
+		} else if (pattern instanceof PackagePattern) {
+			return new PackageElement(((PackagePattern) pattern)
+					.getPackageName());
+		} else if (pattern instanceof SourcePattern) {
+			return new SourceElement(((SourcePattern) pattern).getSourcePath());
+		} else {
+			return null;
+		}
+	}
+
+	protected static Pattern unconvert(Object object) {
+		if (object instanceof IModelElement) {
+			final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
+					.createModelElementPattern();
+			pattern.setHandleIdentifier((String) object);
+			return pattern;
+		} else if (object instanceof PackageElement) {
+			final PackagePattern pattern = PreferencesFactory.eINSTANCE
+					.createPackagePattern();
+			pattern.setPackageName(((PackageElement) object).packageName);
+			return pattern;
+		} else if (object instanceof SourceElement) {
+			final SourcePattern pattern = PreferencesFactory.eINSTANCE
+					.createSourcePattern();
+			pattern.setSourcePath(((SourceElement) object).path.toString());
+			return pattern;
+		} else if (object instanceof WorkbenchAdaptable) {
+			final ContainerPattern pattern = PreferencesFactory.eINSTANCE
+					.createContainerPattern();
+			pattern.setType(((WorkbenchAdaptable) object).getContainerType());
+			return pattern;
+		} else {
+			return null;
 		}
 	}
 
@@ -197,42 +239,26 @@ public class InstrumentationPatternList {
 					.createInstrumentationConfig();
 		}
 		if (fSelectionMode.getSelection()) {
-			final Object LIBRARY_CONTAINER = new Object();
 			configValue.setMode(InstrumentationMode.SELECTION);
 			final Set<Object> includes = new HashSet<Object>();
 			final Set<Object> excludes = new HashSet<Object>();
 			fSelectionControl.collectCheckedItems(new ICollector() {
+
 				public void include(Object object) {
-					if (object instanceof IModelElement) {
-						includes.add(((IModelElement) object)
-								.getHandleIdentifier());
-					} else if (object instanceof LibraryContainerElement) {
-						includes.add(LIBRARY_CONTAINER);
-					}
+					includes.add(object);
 				}
 
 				public void exclude(Object object) {
-					if (object instanceof IModelElement) {
-						excludes.add(((IModelElement) object)
-								.getHandleIdentifier());
-					} else if (object instanceof LibraryContainerElement) {
-						excludes.add(LIBRARY_CONTAINER);
-					}
+					excludes.add(object);
 				}
 			});
+			final SelectionDialogInput treeInput = new ProjectSelectionDialogInput(
+					parentProject);
 			final List<Pattern> toRemove = new ArrayList<Pattern>();
 			for (Pattern pattern : configValue.getModelElements()) {
 				final Set<Object> input = pattern.isInclude() ? includes
 						: excludes;
-				final Object oldItem;
-				if (pattern instanceof ModelElementPattern) {
-					oldItem = ((ModelElementPattern) pattern)
-							.getHandleIdentifier();
-				} else if (pattern instanceof LibraryPattern) {
-					oldItem = LIBRARY_CONTAINER;
-				} else {
-					oldItem = null;
-				}
+				final Object oldItem = convert(pattern, treeInput);
 				if (!input.remove(oldItem)) {
 					toRemove.add(pattern);
 				}
@@ -241,29 +267,15 @@ public class InstrumentationPatternList {
 				configValue.getModelElements().remove(pattern);
 			}
 			for (Object include : includes) {
-				if (include instanceof String) {
-					final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
-							.createModelElementPattern();
-					pattern.setInclude(true);
-					pattern.setHandleIdentifier((String) include);
-					configValue.getModelElements().add(pattern);
-				} else if (include == LIBRARY_CONTAINER) {
-					final LibraryPattern pattern = PreferencesFactory.eINSTANCE
-							.createLibraryPattern();
+				final Pattern pattern = unconvert(include);
+				if (pattern != null) {
 					pattern.setInclude(true);
 					configValue.getModelElements().add(pattern);
 				}
 			}
 			for (Object exclude : excludes) {
-				if (exclude instanceof String) {
-					final ModelElementPattern pattern = PreferencesFactory.eINSTANCE
-							.createModelElementPattern();
-					pattern.setInclude(false);
-					pattern.setHandleIdentifier((String) exclude);
-					configValue.getModelElements().add(pattern);
-				} else if (exclude == LIBRARY_CONTAINER) {
-					final LibraryPattern pattern = PreferencesFactory.eINSTANCE
-							.createLibraryPattern();
+				final Pattern pattern = unconvert(exclude);
+				if (pattern != null) {
 					pattern.setInclude(false);
 					configValue.getModelElements().add(pattern);
 				}
@@ -277,5 +289,4 @@ public class InstrumentationPatternList {
 		}
 		return configValue;
 	}
-
 }

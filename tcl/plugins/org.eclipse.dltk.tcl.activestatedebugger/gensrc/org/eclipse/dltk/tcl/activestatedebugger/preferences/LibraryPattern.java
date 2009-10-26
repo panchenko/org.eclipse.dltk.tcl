@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: LibraryPattern.java,v 1.1 2009/04/09 12:09:30 apanchenk Exp $
+ * $Id: LibraryPattern.java,v 1.2 2009/10/26 12:41:50 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -25,5 +25,5 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
  * @model
  * @generated
  */
-public interface LibraryPattern extends Pattern {
+public interface LibraryPattern extends ContainerPattern {
 } // LibraryPattern

@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
@@ -49,13 +50,21 @@ import org.eclipse.dltk.debug.core.model.IScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
+import org.eclipse.dltk.launching.IInterpreterInstall;
+import org.eclipse.dltk.launching.ScriptRuntime;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationContentProvider;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.LibraryPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.LibraryContainerElement;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
+import org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern;
+import org.eclipse.dltk.tcl.core.TclPackagesManager;
+import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 
 public class TclActiveStateDebugThreadConfigurator implements
 		IScriptDebugThreadConfigurator {
@@ -84,64 +93,73 @@ public class TclActiveStateDebugThreadConfigurator implements
 			if (tclFeature.isSupported()) {
 				ActiveStateInstrumentCommands commands = new ActiveStateInstrumentCommands(
 						engine.getSession().getCommunicator());
-				initializeDebugger(commands);
-			}
-		} catch (DbgpException e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private static abstract class PatternRef {
-		final boolean include;
-
-		public PatternRef(boolean include) {
-			this.include = include;
-		}
-
-	}
-
-	private static class LibraryContainerRef extends PatternRef {
-
-		public LibraryContainerRef(boolean include) {
-			super(include);
-		}
-
-	}
-
-	private static class ModelElementRef extends PatternRef {
-		final IModelElement element;
-
-		public ModelElementRef(IModelElement element, boolean include) {
-			super(include);
-			this.element = element;
-		}
-
-	}
-
-	private static List<PatternRef> parsePatterns(InstrumentationConfig config) {
-		List<PatternRef> result = new ArrayList<PatternRef>();
-		if (config != null) {
-			for (Pattern pattern : config.getModelElements()) {
-				if (pattern instanceof ModelElementPattern) {
-					final IModelElement element = DLTKCore
-							.create(((ModelElementPattern) pattern)
-									.getHandleIdentifier());
-					if (element != null) {
-						result.add(new ModelElementRef(element, pattern
-								.isInclude()));
+				final ILaunchConfiguration launchConf = scriptThread
+						.getLaunch().getLaunchConfiguration();
+				if (launchConf != null) {
+					final IInterpreterInstall install = ScriptRuntime
+							.computeInterpreterInstall(launchConf);
+					if (install != null) {
+						initializeDebugger(commands, install);
 					}
-				} else if (pattern instanceof LibraryPattern) {
-					result.add(new LibraryContainerRef(pattern.isInclude()));
 				}
 			}
+		} catch (DbgpException e) {
+			TclActiveStateDebuggerPlugin.warn(e);
+		} catch (CoreException e) {
+			TclActiveStateDebuggerPlugin.warn(e);
 		}
-		return result;
 	}
 
-	private void initializeDebugger(ActiveStateInstrumentCommands commands)
-			throws DbgpException {
+	// private static abstract class PatternRef {
+	// final boolean include;
+	//
+	// public PatternRef(boolean include) {
+	// this.include = include;
+	// }
+	//
+	// }
+	//
+	// private static class LibraryContainerRef extends PatternRef {
+	//
+	// public LibraryContainerRef(boolean include) {
+	// super(include);
+	// }
+	//
+	// }
+	//
+	// private static class ModelElementRef extends PatternRef {
+	// final IModelElement element;
+	//
+	// public ModelElementRef(IModelElement element, boolean include) {
+	// super(include);
+	// this.element = element;
+	// }
+	//
+	// }
+
+	// private static List<PatternRef> parsePatterns(InstrumentationConfig
+	// config) {
+	// List<PatternRef> result = new ArrayList<PatternRef>();
+	// if (config != null) {
+	// for (Pattern pattern : config.getModelElements()) {
+	// if (pattern instanceof ModelElementPattern) {
+	// final IModelElement element = DLTKCore
+	// .create(((ModelElementPattern) pattern)
+	// .getHandleIdentifier());
+	// if (element != null) {
+	// result.add(new ModelElementRef(element, pattern
+	// .isInclude()));
+	// }
+	// } else if (pattern instanceof LibraryPattern) {
+	// result.add(new LibraryContainerRef(pattern.isInclude()));
+	// }
+	// }
+	// }
+	// return result;
+	// }
+
+	private void initializeDebugger(ActiveStateInstrumentCommands commands,
+			IInterpreterInstall install) throws DbgpException {
 		final Set<InstrumentationFeature> selectedFeatures = InstrumentationFeature
 				.decode(getString(TclActiveStateDebuggerConstants.INSTRUMENTATION_FEATURES));
 		for (InstrumentationFeature feature : InstrumentationFeature.values()) {
@@ -169,40 +187,54 @@ public class TclActiveStateDebugThreadConfigurator implements
 		final Set<IModelElement> processed = new HashSet<IModelElement>();
 		final Set<IScriptProject> projects = new HashSet<IScriptProject>();
 		InstrumentationUtils.collectProjects(projects, project);
-		boolean libraryInclude = false;
+		final Map<ContainerType, Boolean> containerIncludes = new HashMap<ContainerType, Boolean>();
 		if (mode == InstrumentationMode.SOURCES) {
 			for (IScriptProject project : projects) {
 				collect(provider, processed, project);
 				configurator.addProject(project, true);
 			}
 		} else {
-			for (PatternRef pattern : parsePatterns(config)) {
-				if (pattern instanceof ModelElementRef) {
-					final IModelElement element = ((ModelElementRef) pattern).element;
+			for (Pattern pattern : config.getModelElements()) {
+				if (pattern instanceof ModelElementPattern) {
+					final IModelElement element = DLTKCore
+							.create(((ModelElementPattern) pattern)
+									.getHandleIdentifier());
+					if (element == null) {
+						continue;
+					}
 					collect(provider, processed, element);
 					if (element instanceof ISourceModule) {
 						configurator.addSourceModule((ISourceModule) element,
-								pattern.include);
+								pattern.isInclude());
 					} else if (element instanceof IScriptFolder) {
 						configurator.addScriptFolder((IScriptFolder) element,
-								pattern.include);
+								pattern.isInclude());
 					} else if (element instanceof IProjectFragment) {
 						final IProjectFragment fragment = (IProjectFragment) element;
-						configurator.addProjectFragment(fragment,
-								pattern.include);
+						configurator.addProjectFragment(fragment, pattern
+								.isInclude());
 					} else if (element instanceof IScriptProject) {
 						configurator.addProject((IScriptProject) element,
-								pattern.include);
+								pattern.isInclude());
 					}
-				} else if (pattern instanceof LibraryContainerRef) {
-					libraryInclude = pattern.include;
-					// for (IProjectFragment fragment : InstrumentationUtils
-					// .collectExternalFragments(projects)) {
-					// if (processed.add(fragment)) {
-					// configurator.addProjectFragment(fragment,
-					// );
-					// }
-					// }
+				} else if (pattern instanceof PackagePattern) {
+					final PackagePattern pp = (PackagePattern) pattern;
+					final TclPackageInfo info = TclPackagesManager
+							.getPackageInfo(install, pp.getPackageName(), true);
+					if (info != null) {
+						for (String source : info.getSources()) {
+							configurator.addFileHandle(environment
+									.getFile(new Path(source)), false, pattern
+									.isInclude());
+						}
+					}
+				} else if (pattern instanceof SourcePattern) {
+					final SourcePattern sp = (SourcePattern) pattern;
+					configurator.addFileHandle(environment.getFile(new Path(sp
+							.getSourcePath())), false, pattern.isInclude());
+				} else if (pattern instanceof ContainerPattern) {
+					final ContainerPattern c = (ContainerPattern) pattern;
+					containerIncludes.put(c.getType(), pattern.isInclude());
 				}
 			}
 			for (IScriptProject project : projects) {
@@ -211,13 +243,21 @@ public class TclActiveStateDebugThreadConfigurator implements
 				}
 			}
 		}
-		for (IProjectFragment fragment : InstrumentationUtils
+		// process remaining external libraries
+		for (IProjectFragment fragment : LibraryContainerElement
 				.collectExternalFragments(projects)) {
 			if (processed.add(fragment)) {
-				configurator.addProjectFragment(fragment, libraryInclude);
+				configurator.addProjectFragment(fragment, isIncluded(
+						containerIncludes, ContainerType.LIBRARIES));
 			}
 		}
 		configurator.send(commands);
+	}
+
+	private boolean isIncluded(Map<ContainerType, Boolean> containerIncludes,
+			ContainerType containerType) {
+		final Boolean value = containerIncludes.get(containerType);
+		return value != null && value.booleanValue();
 	}
 
 	/**

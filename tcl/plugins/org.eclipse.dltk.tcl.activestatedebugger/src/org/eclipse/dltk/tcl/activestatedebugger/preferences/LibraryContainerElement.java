@@ -11,15 +11,19 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.tcl.internal.core.packages.TclPackageFragment;
+import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-class LibraryContainerElement extends WorkbenchAdaptable {
+public class LibraryContainerElement extends WorkbenchAdaptable {
 
 	/**
 	 * @param input
@@ -28,10 +32,15 @@ class LibraryContainerElement extends WorkbenchAdaptable {
 		super(input);
 	}
 
-	public Object[] getChildren(Object o) {
+	@Override
+	public ContainerType getContainerType() {
+		return ContainerType.LIBRARIES;
+	}
+
+	@Override
+	public Object[] getChildren() {
 		final Set<IScriptProject> projects = input.collectProjects();
-		final Set<IProjectFragment> libraries = InstrumentationUtils
-				.collectExternalFragments(projects);
+		final Set<IProjectFragment> libraries = collectExternalFragments(projects);
 		return libraries.toArray();
 	}
 
@@ -41,6 +50,31 @@ class LibraryContainerElement extends WorkbenchAdaptable {
 
 	public String getLabel(Object o) {
 		return PreferenceMessages.InstrumentationLabelProvider_Libraries;
+	}
+
+	public static Set<IProjectFragment> collectExternalFragments(
+			final Set<IScriptProject> projects) {
+		final Set<IProjectFragment> libraries = new HashSet<IProjectFragment>();
+		for (IScriptProject project : projects) {
+			try {
+				for (IProjectFragment fragment : project.getProjectFragments()) {
+					if (LibraryContainerElement.isValid(fragment)) {
+						libraries.add(fragment);
+					}
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return libraries;
+	}
+
+	public static boolean isValid(IProjectFragment fragment) {
+		return fragment.isExternal() && !fragment.isBuiltin()
+				&& !(fragment instanceof TclPackageFragment)
+				&& !(fragment instanceof TclSourcesFragment);
 	}
 
 }
