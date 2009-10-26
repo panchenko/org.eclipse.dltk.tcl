@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: InstrumentationConfigImpl.java,v 1.3 2009/10/26 12:41:50 apanchenk Exp $
+ * $Id: InstrumentationConfigImpl.java,v 1.4 2009/10/26 13:41:49 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences.impl;
 
@@ -18,10 +18,8 @@ import java.util.Collection;
 
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
