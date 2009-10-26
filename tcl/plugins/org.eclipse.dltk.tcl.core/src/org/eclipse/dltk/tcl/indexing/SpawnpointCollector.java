@@ -1,6 +1,5 @@
 package org.eclipse.dltk.tcl.indexing;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,8 +8,6 @@ import java.util.Set;
 
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
-import org.eclipse.dltk.core.caching.AbstractDataLoader;
-import org.eclipse.dltk.core.caching.AbstractDataSaver;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
