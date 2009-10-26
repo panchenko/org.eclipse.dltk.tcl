@@ -109,7 +109,7 @@ public class InstrumentationSetup {
 			entry = new Entry(path, file);
 			entry.leaf = Boolean.valueOf(include);
 			entries.put(path, entry);
-			entry.directory = true;
+			entry.directory = isDirectory;
 			if (include) {
 				entry.include = true;
 			} else {
