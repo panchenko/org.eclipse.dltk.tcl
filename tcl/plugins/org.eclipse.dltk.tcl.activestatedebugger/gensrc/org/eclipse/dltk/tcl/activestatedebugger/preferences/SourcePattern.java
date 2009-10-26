@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: SourcePattern.java,v 1.1 2009/10/26 12:41:50 apanchenk Exp $
+ * $Id: SourcePattern.java,v 1.2 2009/10/26 13:41:25 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -30,6 +30,7 @@ package org.eclipse.dltk.tcl.activestatedebugger.preferences;
  * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage#getSourcePattern()
  * @model
  * @generated
+ * @since 2.0
  */
 public interface SourcePattern extends Pattern {
 	/**

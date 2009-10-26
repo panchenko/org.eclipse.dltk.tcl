@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: ContainerType.java,v 1.1 2009/10/26 12:41:50 apanchenk Exp $
+ * $Id: ContainerType.java,v 1.2 2009/10/26 13:41:25 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * @see org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage#getContainerType()
  * @model
  * @generated
+ * @since 2.0
  */
 public enum ContainerType implements Enumerator {
 	/**
