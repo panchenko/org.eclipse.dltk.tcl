@@ -183,9 +183,9 @@ public class TclActiveStateDebuggerBlock extends
 	private void initValues() {
 		// patterns
 		if (patterns != null) {
-			patterns
-					.setValue(PatternListIO
-							.decode(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS)));
+			instrumentation = PatternListIO
+					.decode(getString(TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS));
+			patterns.setValue(instrumentation);
 		}
 		// instrumentation features
 		Set<InstrumentationFeature> result = InstrumentationFeature
@@ -273,6 +273,8 @@ public class TclActiveStateDebuggerBlock extends
 		pdxPath.setPaths(paths);
 	}
 
+	private InstrumentationConfig instrumentation;
+
 	@Override
 	protected boolean processChanges(IWorkbenchPreferenceContainer container) {
 		// PDX paths
@@ -282,9 +284,14 @@ public class TclActiveStateDebuggerBlock extends
 				pdxPathKeyValue);
 		// patterns
 		if (patterns != null) {
+			if (instrumentation == null) {
+				instrumentation = PreferencesFactory.eINSTANCE
+						.createInstrumentationConfig();
+			}
+			patterns.getValue(instrumentation);
 			setString(
 					TclActiveStateDebuggerPreferencePage.INSTRUMENTATION_PATTERNS,
-					PatternListIO.encode(patterns.getValue()));
+					PatternListIO.encode(instrumentation));
 		}
 		// Instrumentation features
 		Set<InstrumentationFeature> selectedFeatures = new HashSet<InstrumentationFeature>();

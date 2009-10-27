@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,13 +29,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.compiler.util.Util;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IPreferencesLookupDelegate;
-import org.eclipse.dltk.core.IProjectFragment;
-import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.dbgp.IDbgpFeature;
@@ -52,19 +46,9 @@ import org.eclipse.dltk.internal.debug.core.model.ScriptThread;
 import org.eclipse.dltk.internal.debug.core.model.operations.DbgpDebugger;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerPattern;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.ContainerType;
+import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationSetup.PatternEntry;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationConfig;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationContentProvider;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.InstrumentationMode;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.LibraryContainerElement;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.ModelElementPattern;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.PackagePattern;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.Pattern;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.PatternListIO;
-import org.eclipse.dltk.tcl.activestatedebugger.preferences.SourcePattern;
-import org.eclipse.dltk.tcl.core.TclPackagesManager;
-import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 
 public class TclActiveStateDebugThreadConfigurator implements
 		IScriptDebugThreadConfigurator {
@@ -172,105 +156,14 @@ public class TclActiveStateDebugThreadConfigurator implements
 		}
 		final InstrumentationConfig config = PatternListIO
 				.decode(getString(TclActiveStateDebuggerConstants.INSTRUMENTATION_PATTERNS));
-		final InstrumentationMode mode = InstrumentationUtils.getMode(config);
-		if (mode == InstrumentationMode.DEFAULT) {
-			return;
-		}
-		final IEnvironment environment = EnvironmentManager
-				.getEnvironment(project);
-		if (environment == null) {
-			return;
-		}
-		final InstrumentationSetup configurator = new InstrumentationSetup(
-				environment);
-		final InstrumentationContentProvider provider = new InstrumentationContentProvider();
-		final Set<IModelElement> processed = new HashSet<IModelElement>();
-		final Set<IScriptProject> projects = new HashSet<IScriptProject>();
-		InstrumentationUtils.collectProjects(projects, project);
-		final Map<ContainerType, Boolean> containerIncludes = new HashMap<ContainerType, Boolean>();
-		if (mode == InstrumentationMode.SOURCES) {
-			for (IScriptProject project : projects) {
-				collect(provider, processed, project);
-				configurator.addProject(project, true);
-			}
-		} else {
-			for (Pattern pattern : config.getModelElements()) {
-				if (pattern instanceof ModelElementPattern) {
-					final IModelElement element = DLTKCore
-							.create(((ModelElementPattern) pattern)
-									.getHandleIdentifier());
-					if (element == null) {
-						continue;
-					}
-					collect(provider, processed, element);
-					if (element instanceof ISourceModule) {
-						configurator.addSourceModule((ISourceModule) element,
-								pattern.isInclude());
-					} else if (element instanceof IScriptFolder) {
-						configurator.addScriptFolder((IScriptFolder) element,
-								pattern.isInclude());
-					} else if (element instanceof IProjectFragment) {
-						final IProjectFragment fragment = (IProjectFragment) element;
-						configurator.addProjectFragment(fragment, pattern
-								.isInclude());
-					} else if (element instanceof IScriptProject) {
-						configurator.addProject((IScriptProject) element,
-								pattern.isInclude());
-					}
-				} else if (pattern instanceof PackagePattern) {
-					final PackagePattern pp = (PackagePattern) pattern;
-					final TclPackageInfo info = TclPackagesManager
-							.getPackageInfo(install, pp.getPackageName(), true);
-					if (info != null) {
-						for (String source : info.getSources()) {
-							configurator.addFileHandle(environment
-									.getFile(new Path(source)), false, pattern
-									.isInclude());
-						}
-					}
-				} else if (pattern instanceof SourcePattern) {
-					final SourcePattern sp = (SourcePattern) pattern;
-					configurator.addFileHandle(environment.getFile(new Path(sp
-							.getSourcePath())), false, pattern.isInclude());
-				} else if (pattern instanceof ContainerPattern) {
-					final ContainerPattern c = (ContainerPattern) pattern;
-					containerIncludes.put(c.getType(), pattern.isInclude());
-				}
-			}
-			for (IScriptProject project : projects) {
-				if (processed.add(project)) {
-					configurator.addProject(project, false);
-				}
-			}
-		}
-		// process remaining external libraries
-		for (IProjectFragment fragment : LibraryContainerElement
-				.collectExternalFragments(projects)) {
-			if (processed.add(fragment)) {
-				configurator.addProjectFragment(fragment, isIncluded(
-						containerIncludes, ContainerType.LIBRARIES));
-			}
-		}
-		configurator.send(commands);
-	}
-
-	private boolean isIncluded(Map<ContainerType, Boolean> containerIncludes,
-			ContainerType containerType) {
-		final Boolean value = containerIncludes.get(containerType);
-		return value != null && value.booleanValue();
-	}
-
-	/**
-	 * @param provider
-	 * @param processed
-	 * @param element
-	 */
-	private static void collect(InstrumentationContentProvider provider,
-			Set<IModelElement> processed, IModelElement element) {
-		if (processed.add(element)) {
-			Object parent = provider.getParent(element);
-			if (parent != null && parent instanceof IModelElement) {
-				collect(provider, processed, (IModelElement) parent);
+		final InstrumentationConfigProcessor configurator = new InstrumentationConfigProcessor(
+				project, install);
+		configurator.configure(config);
+		for (PatternEntry entry : configurator.getPatterns()) {
+			if (entry.isInclude()) {
+				commands.instrumentInclude(entry.getPatternText());
+			} else {
+				commands.instrumentExclude(entry.getPatternText());
 			}
 		}
 	}

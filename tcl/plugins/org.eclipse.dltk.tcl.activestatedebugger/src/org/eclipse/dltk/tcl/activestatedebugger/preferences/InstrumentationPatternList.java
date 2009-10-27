@@ -17,18 +17,21 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationConfigProcessor;
 import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationUtils;
+import org.eclipse.dltk.tcl.activestatedebugger.InstrumentationSetup.PatternEntry;
 import org.eclipse.dltk.tcl.activestatedebugger.preferences.TreeSelectionControl.ICollector;
 import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.dltk.ui.util.SWTFactory;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -64,9 +67,15 @@ public class InstrumentationPatternList {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		comp.setLayoutData(gd);
 
+		final boolean useShowPatterns = true;
 		fMode = new Composite(comp, SWT.NONE);
 		fMode.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		fMode.setLayout(new FillLayout());
+		final GridLayout modeLayout = new GridLayout(3, false);
+		if (useShowPatterns) {
+			++modeLayout.numColumns;
+		}
+		modeLayout.marginHeight = 0;
+		fMode.setLayout(modeLayout);
 		fSourceModulesMode = SWTFactory.createRadioButtonNoLayoutData(fMode,
 				PreferenceMessages.InstrumentationPatternList_ModeSources);
 		fSelectionMode = SWTFactory.createRadioButtonNoLayoutData(fMode,
@@ -87,6 +96,38 @@ public class InstrumentationPatternList {
 		fDefaultMode.addSelectionListener(modeListener);
 		fSourceModulesMode.addSelectionListener(modeListener);
 		fSelectionMode.addSelectionListener(modeListener);
+
+		if (useShowPatterns) {
+			final Button btnShowPatterns = SWTFactory
+					.createPushButtonNoLayoutData(
+							fMode,
+							PreferenceMessages.InstrumentationPatternList_ButtonShowPatterns);
+			btnShowPatterns.setLayoutData(new GridData(SWT.END, SWT.CENTER,
+					true, false));
+			btnShowPatterns.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					final InstrumentationConfig instrumentation = PreferencesFactory.eINSTANCE
+							.createInstrumentationConfig();
+					getValue(instrumentation);
+					final InstrumentationConfigProcessor processor = new InstrumentationConfigProcessor(
+							parentProject);
+					processor.configure(instrumentation);
+					StringBuilder sb = new StringBuilder();
+					for (PatternEntry pattern : processor.getPatterns()) {
+						if (sb.length() != 0) {
+							sb.append(Util.LINE_SEPARATOR);
+						}
+						sb.append(pattern.toString());
+					}
+					MessageDialog
+							.openInformation(
+									btnShowPatterns.getShell(),
+									PreferenceMessages.InstrumentationPatternList_PatternsMessageDialogitle,
+									sb.toString());
+				}
+			});
+		}
 
 		fViewer = new CheckboxTreeViewer(comp, SWT.BORDER);
 		final GridData viewerLayoutData = new GridData(GridData.FILL_BOTH);
@@ -125,15 +166,12 @@ public class InstrumentationPatternList {
 		--updateCount;
 	}
 
-	private InstrumentationConfig configValue;
-
 	/**
 	 * @param value
 	 */
 	public void setValue(InstrumentationConfig config) {
 		beginUpdate();
 		try {
-			this.configValue = config;
 			final InstrumentationMode mode = InstrumentationUtils
 					.getMode(config);
 			final SelectionDialogInput treeInput = parentProject == null ? new WorkspaceSelectionDialogInput()
@@ -236,14 +274,11 @@ public class InstrumentationPatternList {
 
 	/**
 	 * @return
+	 * @since 2.0
 	 */
-	public InstrumentationConfig getValue() {
+	public void getValue(InstrumentationConfig configValue) {
 		if (TreeSelectionControl.DEBUG) {
 			fSelectionControl.dump("onSave"); //$NON-NLS-1$
-		}
-		if (configValue == null) {
-			configValue = PreferencesFactory.eINSTANCE
-					.createInstrumentationConfig();
 		}
 		if (fSelectionMode.getSelection()) {
 			configValue.setMode(InstrumentationMode.SELECTION);
@@ -294,6 +329,5 @@ public class InstrumentationPatternList {
 			configValue.setMode(InstrumentationMode.DEFAULT);
 			configValue.getModelElements().clear();
 		}
-		return configValue;
 	}
 }

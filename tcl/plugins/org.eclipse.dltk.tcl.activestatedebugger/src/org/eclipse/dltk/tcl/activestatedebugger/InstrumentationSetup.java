@@ -30,7 +30,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
-import org.eclipse.dltk.dbgp.exceptions.DbgpException;
 
 public class InstrumentationSetup {
 
@@ -229,18 +228,14 @@ public class InstrumentationSetup {
 		};
 	}
 
-	public void send(ActiveStateInstrumentCommands commands)
-			throws DbgpException {
+	/**
+	 * @since 2.0
+	 */
+	public List<PatternEntry> getPatterns() {
 		final List<PatternEntry> patterns = new ArrayList<PatternEntry>();
 		walk(root, patterns);
 		Collections.sort(patterns, createPatternEntryComparator());
-		for (PatternEntry entry : patterns) {
-			if (entry.include) {
-				commands.instrumentInclude(entry.getPatternText());
-			} else {
-				commands.instrumentExclude(entry.getPatternText());
-			}
-		}
+		return patterns;
 	}
 
 	/**
