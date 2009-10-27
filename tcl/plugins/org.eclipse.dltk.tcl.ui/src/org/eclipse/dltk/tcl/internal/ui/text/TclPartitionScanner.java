@@ -17,7 +17,6 @@ import org.eclipse.dltk.tcl.internal.ui.rules.TclEscapedCharRule;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
@@ -32,16 +31,16 @@ public class TclPartitionScanner extends RuleBasedPartitionScanner {
 
 		IToken string = new Token(TclPartitions.TCL_STRING);
 		IToken comment = new Token(TclPartitions.TCL_COMMENT);
-		IToken stuff = new Token("dummy");
+		IToken stuff = new Token("dummy"); //$NON-NLS-1$
 
-		List/* < IPredicateRule > */rules = new ArrayList/* <IPredicateRule> */();
+		List<IPredicateRule> rules = new ArrayList<IPredicateRule>();
 
 		// rules.add(new EndOfLineRule("#", comment ));
 		rules.add(new TclCommentRule(comment));
 
 		rules.add(new TclEscapedCharRule(stuff, '\\'));
 
-		rules.add(new SingleLineRule("\"", "\"", string, '\\'));
+		rules.add(new SingleLineRule("\"", "\"", string, '\\')); //$NON-NLS-1$ //$NON-NLS-2$
 		// rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 
 		IPredicateRule[] result = new IPredicateRule[rules.size()];
