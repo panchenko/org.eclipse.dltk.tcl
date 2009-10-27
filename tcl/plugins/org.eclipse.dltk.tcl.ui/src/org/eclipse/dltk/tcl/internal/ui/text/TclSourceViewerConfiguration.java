@@ -52,7 +52,7 @@ public class TclSourceViewerConfiguration extends
 	private TclTextTools fTextTools;
 
 	private TclCodeScanner fCodeScanner;
-//	private AbstractScriptScanner fStringScanner;
+	private AbstractScriptScanner fStringScanner;
 	private AbstractScriptScanner fCommentScanner;
 
 	public TclSourceViewerConfiguration(IColorManager colorManager,
@@ -105,8 +105,8 @@ public class TclSourceViewerConfiguration extends
 		// Creating scanners
 		fCodeScanner = new TclCodeScanner(getColorManager(), fPreferenceStore);
 
-//		fStringScanner = new TclStringScanner(getColorManager(),
-//				fPreferenceStore);
+		fStringScanner = new TclStringScanner(getColorManager(),
+				fPreferenceStore);
 
 		fCommentScanner = createCommentScanner(
 				TclColorConstants.TCL_SINGLE_LINE_COMMENT,
@@ -120,9 +120,9 @@ public class TclSourceViewerConfiguration extends
 		return fTextTools == null;
 	}
 
-//	protected RuleBasedScanner getStringScanner() {
-//		return fStringScanner;
-//	}
+	protected RuleBasedScanner getStringScanner() {
+		return fStringScanner;
+	}
 
 	protected RuleBasedScanner getCommentScanner() {
 		return fCommentScanner;
@@ -139,9 +139,9 @@ public class TclSourceViewerConfiguration extends
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
-//		dr = new DefaultDamagerRepairer(getStringScanner());
-//		reconciler.setDamager(dr, TclPartitions.TCL_STRING);
-//		reconciler.setRepairer(dr, TclPartitions.TCL_STRING);
+		dr = new DefaultDamagerRepairer(getStringScanner());
+		reconciler.setDamager(dr, TclPartitions.TCL_STRING);
+		reconciler.setRepairer(dr, TclPartitions.TCL_STRING);
 
 		dr = new DefaultDamagerRepairer(getCommentScanner());
 		reconciler.setDamager(dr, TclPartitions.TCL_COMMENT);
@@ -170,9 +170,9 @@ public class TclSourceViewerConfiguration extends
 			fCodeScanner.adaptToPreferenceChange(event);
 		}
 
-//		if (fStringScanner.affectsBehavior(event)) {
-//			fStringScanner.adaptToPreferenceChange(event);
-//		}
+		// if (fStringScanner.affectsBehavior(event)) {
+		// fStringScanner.adaptToPreferenceChange(event);
+		// }
 
 		if (fCommentScanner.affectsBehavior(event)) {
 			fCommentScanner.adaptToPreferenceChange(event);
@@ -190,7 +190,7 @@ public class TclSourceViewerConfiguration extends
 	 */
 	public boolean affectsTextPresentation(PropertyChangeEvent event) {
 		return fCodeScanner.affectsBehavior(event)
-//				|| fStringScanner.affectsBehavior(event)
+		// || fStringScanner.affectsBehavior(event)
 				|| fCommentScanner.affectsBehavior(event);
 	}
 
