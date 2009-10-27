@@ -10,7 +10,7 @@
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  * 
  *
- * $Id: PreferencesPackage.java,v 1.6 2009/10/27 07:50:58 asobolev Exp $
+ * $Id: PreferencesPackage.java,v 1.7 2009/10/27 09:33:07 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.activestatedebugger.preferences;
 
@@ -204,7 +204,6 @@ public interface PreferencesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
-	 * @since 2.0
 	 */
 	int CONTAINER_PATTERN_FEATURE_COUNT = PATTERN_FEATURE_COUNT + 1;
 
