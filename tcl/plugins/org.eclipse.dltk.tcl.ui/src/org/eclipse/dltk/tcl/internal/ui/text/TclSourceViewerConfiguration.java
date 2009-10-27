@@ -61,6 +61,7 @@ public class TclSourceViewerConfiguration extends
 		super(colorManager, preferenceStore, editor, partitioning);
 	}
 
+	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return TclPartitions.TCL_PARTITION_TYPES;
 	}
@@ -77,6 +78,7 @@ public class TclSourceViewerConfiguration extends
 		};
 	}
 
+	@Override
 	public IInformationPresenter getHierarchyPresenter(
 			ScriptSourceViewer sourceViewer, boolean doCodeResolve) {
 		// Do not create hierarchy presenter if there's no CU.
@@ -99,6 +101,7 @@ public class TclSourceViewerConfiguration extends
 		return presenter;
 	}
 
+	@Override
 	protected void initializeScanners() {
 		Assert.isTrue(isNewSetup());
 
@@ -128,6 +131,7 @@ public class TclSourceViewerConfiguration extends
 		return fCommentScanner;
 	}
 
+	@Override
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new ScriptPresentationReconciler();
@@ -163,6 +167,7 @@ public class TclSourceViewerConfiguration extends
 	 * @see TclSourceViewerConfiguration#TclSourceViewerConfiguration(IColorManager,
 	 *      IPreferenceStore, ITextEditor, String)
 	 */
+	@Override
 	public void handlePropertyChangeEvent(PropertyChangeEvent event) {
 		Assert.isTrue(isNewSetup());
 
@@ -170,9 +175,9 @@ public class TclSourceViewerConfiguration extends
 			fCodeScanner.adaptToPreferenceChange(event);
 		}
 
-		// if (fStringScanner.affectsBehavior(event)) {
-		// fStringScanner.adaptToPreferenceChange(event);
-		// }
+		if (fStringScanner.affectsBehavior(event)) {
+			fStringScanner.adaptToPreferenceChange(event);
+		}
 
 		if (fCommentScanner.affectsBehavior(event)) {
 			fCommentScanner.adaptToPreferenceChange(event);
@@ -188,12 +193,14 @@ public class TclSourceViewerConfiguration extends
 	 * @return <code>true</code> if event causes a behavioral change
 	 * 
 	 */
+	@Override
 	public boolean affectsTextPresentation(PropertyChangeEvent event) {
 		return fCodeScanner.affectsBehavior(event)
-		// || fStringScanner.affectsBehavior(event)
+				|| fStringScanner.affectsBehavior(event)
 				|| fCommentScanner.affectsBehavior(event);
 	}
 
+	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(
 			ISourceViewer sourceViewer, String contentType) {
 		// return super.getAutoEditStrategies(sourceViewer, contentType);
@@ -202,6 +209,7 @@ public class TclSourceViewerConfiguration extends
 				fPreferenceStore, partitioning) };
 	}
 
+	@Override
 	protected void alterContentAssistant(ContentAssistant assistant) {
 		// IDocument.DEFAULT_CONTENT_TYPE
 		IContentAssistProcessor scriptProcessor = new TclScriptCompletionProcessor(
@@ -222,10 +230,12 @@ public class TclSourceViewerConfiguration extends
 				TclPartitions.TCL_STRING);
 	}
 
+	@Override
 	protected ContentAssistPreference getContentAssistPreference() {
 		return TclContentAssistPreference.getDefault();
 	}
 
+	@Override
 	protected void initializeQuickOutlineContexts(
 			InformationPresenter presenter, IInformationProvider provider) {
 		presenter.setInformationProvider(provider, TclPartitions.TCL_COMMENT);
@@ -234,6 +244,7 @@ public class TclSourceViewerConfiguration extends
 		presenter.setInformationProvider(provider, TclPartitions.TCL_STRING);
 	}
 
+	@Override
 	public IQuickAssistAssistant getQuickAssistAssistant(
 			ISourceViewer sourceViewer) {
 		if (getEditor() != null)
