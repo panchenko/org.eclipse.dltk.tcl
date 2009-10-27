@@ -23,6 +23,9 @@ import org.eclipse.dltk.tcl.internal.core.sources.TclSourcesFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 
+/**
+ * @since 2.0
+ */
 public class LibraryContainerElement extends WorkbenchAdaptable {
 
 	/**

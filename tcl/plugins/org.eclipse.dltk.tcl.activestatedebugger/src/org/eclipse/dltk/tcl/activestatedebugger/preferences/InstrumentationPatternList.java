@@ -176,6 +176,9 @@ public class InstrumentationPatternList {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected static Object convert(Pattern pattern,
 			final SelectionDialogInput treeInput) {
 		if (pattern instanceof ModelElementPattern) {
@@ -201,6 +204,9 @@ public class InstrumentationPatternList {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected static Pattern unconvert(Object object) {
 		if (object instanceof IModelElement) {
 			final ModelElementPattern pattern = PreferencesFactory.eINSTANCE

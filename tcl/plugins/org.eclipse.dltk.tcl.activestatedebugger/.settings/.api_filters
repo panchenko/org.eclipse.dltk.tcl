@@ -1,5 +1,166 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="org.eclipse.dltk.tcl.activestatedebugger" version="2">
+    <resource path="gensrc/org/eclipse/dltk/tcl/activestatedebugger/preferences/PreferencesFactory.java" type="org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesFactory">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="createContainerPattern()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="createPackagePattern()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="createSourcePattern()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="gensrc/org/eclipse/dltk/tcl/activestatedebugger/preferences/PreferencesPackage.java" type="org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="SOURCE_PATTERN__INCLUDE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_TYPE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_PATTERN__TYPE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="PACKAGE_PATTERN_FEATURE_COUNT"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getPackagePattern_PackageName()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_PATTERN_FEATURE_COUNT"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="LIBRARY_PATTERN__TYPE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getContainerPattern()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getSourcePattern()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="SOURCE_PATTERN"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getSourcePattern_SourcePath()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="PACKAGE_PATTERN__PACKAGE_NAME"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="PACKAGE_PATTERN"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="PACKAGE_PATTERN__INCLUDE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="SOURCE_PATTERN_FEATURE_COUNT"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_PATTERN__INCLUDE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getPackagePattern()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_PATTERN"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getContainerPattern_Type()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="getContainerType()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="SOURCE_PATTERN__SOURCE_PATH"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="gensrc/org/eclipse/dltk/tcl/activestatedebugger/preferences/PreferencesPackage.java" type="org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferencesPackage$Literals">
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="SOURCE_PATTERN__SOURCE_PATH"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="SOURCE_PATTERN"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_PATTERN__TYPE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_PATTERN"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="PACKAGE_PATTERN"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="CONTAINER_TYPE"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="PACKAGE_PATTERN__PACKAGE_NAME"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/org/eclipse/dltk/tcl/activestatedebugger/preferences/PreferenceMessages.java" type="org.eclipse.dltk.tcl.activestatedebugger.preferences.PreferenceMessages">
         <filter id="1143996420">
             <message_arguments>
