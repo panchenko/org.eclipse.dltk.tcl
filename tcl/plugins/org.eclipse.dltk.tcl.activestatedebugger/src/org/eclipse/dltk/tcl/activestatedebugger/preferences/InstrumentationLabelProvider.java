@@ -63,6 +63,7 @@ public class InstrumentationLabelProvider extends AppearanceAwareLabelProvider {
 		return null;
 	}
 
+	@Override
 	public String getText(Object element) {
 		String text = getSpecificText(element);
 		if (text != null) {
