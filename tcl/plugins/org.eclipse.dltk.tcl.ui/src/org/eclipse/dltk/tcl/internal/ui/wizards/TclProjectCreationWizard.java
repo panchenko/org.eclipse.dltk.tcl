@@ -14,6 +14,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.dialogs.IProjectTemplate;
@@ -52,6 +53,11 @@ public class TclProjectCreationWizard extends ProjectWizard {
 				fOptions.add(entry);
 			}
 		}
+	}
+
+	@Override
+	public String getScriptNature() {
+		return TclNature.NATURE_ID;
 	}
 
 	@Override
