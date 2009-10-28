@@ -88,7 +88,7 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 
 		@Override
 		protected void initialize() {
-			final IProjectWizardState state = getProjectWizardState();
+			final IProjectWizardState state = getWizardState();
 			final String mode = state.getMode();
 			if (mode == null) {
 				super.initialize();
