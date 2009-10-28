@@ -623,7 +623,7 @@
             name="Tcl browsing"
             icon="icons/eview16/browse_persp.gif"
             class="org.eclipse.dltk.tcl.internal.ui.browsing.TclBrowsingPerspectiveFactory"
-            id="org.eclipse.jdt.ui.XOTclBrowsingPerspective">
+            id="org.eclipse.dltk.tcl.TclBrowsingPerspective">
          <description>
             Tcl browsing
          </description>
