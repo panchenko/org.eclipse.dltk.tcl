@@ -351,7 +351,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 								.getValue());
 						if (resolved == null || resolved.equals(ref.getValue())) {
 							toCheck.add(ref);
-						} else if (resolved != null) {
+						} else {
+							// resolved != null;
 							TclSourceEntry to = TclPackagesFactory.eINSTANCE
 									.createTclSourceEntry();
 							to.setEnd(ref.getEnd());
@@ -573,6 +574,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private void reportPackageProblemCorrection(TclSourceEntry pkg,
 			IProblemReporter reporter, String message, String pkgName,
 			ISourceLineTracker lineTracker) {
+		if (reporter == null) {
+			return;
+		}
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION,
 				new String[] { pkgName }, ProblemSeverities.Warning, pkg
@@ -583,6 +587,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private void reportSourceProblem(TclSourceEntry pkg,
 			IProblemReporter reporter, String message, String pkgName,
 			ISourceLineTracker lineTracker) {
+		if (reporter == null) {
+			return;
+		}
 		reporter.reportProblem(new DefaultProblem(message,
 				TclProblems.UNKNOWN_SOURCE, new String[] { pkgName },
 				ProblemSeverities.Warning, pkg.getStart(), pkg.getEnd(),
@@ -620,7 +627,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				if (tclSourceEntry.getValue().equals(packageName)) {
 					IModelElement element = DLTKCore.create(tclModuleInfo
 							.getHandle());
-					// Check for file existance
+					// Check for file existence
 					if (element != null && element.exists()) {
 						return; // Found provided package
 					}
