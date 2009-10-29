@@ -10,21 +10,17 @@
 package org.eclipse.dltk.tcl.internal.ui.editor;
 
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
-import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.text.TclTextTools;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
-import org.eclipse.dltk.ui.DLTKUILanguageManager;
 import org.eclipse.jface.text.IDocument;
 
 public class TclDocumentSetupParticipant implements IDocumentSetupParticipant {
 
-	public TclDocumentSetupParticipant() {
-	}
-
 	public void setup(IDocument document) {
 		TclTextTools tools = TclUI.getDefault().getTextTools();
-		tools.setupDocumentPartitioner(document,
-				TclPartitions.TCL_PARTITIONING);
+		tools
+				.setupDocumentPartitioner(document,
+						TclPartitions.TCL_PARTITIONING);
 	}
 }
