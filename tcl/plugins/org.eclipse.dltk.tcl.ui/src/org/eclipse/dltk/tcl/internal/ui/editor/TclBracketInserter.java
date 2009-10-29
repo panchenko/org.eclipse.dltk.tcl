@@ -15,7 +15,6 @@ import org.eclipse.dltk.internal.ui.editor.BracketInserter;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
-import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
@@ -39,6 +38,7 @@ public class TclBracketInserter extends BracketInserter {
 				PreferenceConstants.EDITOR_CLOSE_STRINGS);
 	}
 
+	@Override
 	public void verifyKey(VerifyEvent event) {
 		// early pruning to slow down normal typing as little as possible
 		if (!event.doit
@@ -116,9 +116,9 @@ public class TclBracketInserter extends BracketInserter {
 			event.doit = false;
 
 		} catch (BadLocationException e) {
-			DLTKUIPlugin.log(e);
+			TclUI.error(e);
 		} catch (BadPositionCategoryException e) {
-			DLTKUIPlugin.log(e);
+			TclUI.error(e);
 		}
 	}
 
