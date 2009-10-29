@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.internal.core.ImportContainer;
 import org.eclipse.dltk.tcl.core.TclConstants;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.internal.core.packages.TclPackageElement;
@@ -62,7 +61,7 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 		@Override
 		protected void getImportContainerLabel(IModelElement element,
 				long flags, StringBuffer buf) {
-			IImportContainer container = (ImportContainer) element;
+			IImportContainer container = (IImportContainer) element;
 			if (TclConstants.SOURCE_CONTAINER.equals(container
 					.getContainerName())) {
 				buf.append("sourced files");
