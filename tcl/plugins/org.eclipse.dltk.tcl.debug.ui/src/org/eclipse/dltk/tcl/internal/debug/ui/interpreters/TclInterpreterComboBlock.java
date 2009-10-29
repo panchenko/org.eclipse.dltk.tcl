@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.compiler.CharOperation;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
@@ -41,6 +41,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -76,8 +77,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 		@Override
 		public Image getImage(Object element) {
-			if (element instanceof String) {
-				String packageName = (String) element;
+			if (element instanceof Package) {
+				String packageName = ((Package) element).name;
 				IInterpreterInstall install = getInterpreter();
 				if (install == null) {
 					install = ScriptRuntime
@@ -94,30 +95,36 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 								.get(DLTKPluginImages.IMG_OBJS_ERROR);
 					}
 				}
+				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
+			} else if (element instanceof PackageCategory) {
+				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_LIBRARY);
+			} else {
+				return null;
 			}
-
-			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
 		}
 
 		@Override
 		public String getText(Object element) {
-			if (element instanceof String) {
-				final String pkg = (String) element;
-				if (isAutoPackage(pkg)) {
-					return pkg + " [auto]";
-				}
-				return pkg;
+			if (element instanceof Package) {
+				return ((Package) element).name;
+			} else if (element instanceof PackageCategory) {
+				return ((PackageCategory) element).category;
 			}
 			return super.getText(element);
 		}
 
-		/**
-		 * @since 2.0
-		 */
-		protected boolean isAutoPackage(final String pkg) {
-			return false;
-		}
+	}
 
+	private static class PackageComparator extends ViewerComparator {
+
+		@Override
+		public int category(Object element) {
+			if (element instanceof PackageCategory) {
+				final PackageCategory category = (PackageCategory) element;
+				return category.readOnly ? 2 : 1;
+			}
+			return super.category(element);
+		}
 	}
 
 	private static class PackagesContentProvider implements
@@ -129,28 +136,33 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
-		@SuppressWarnings("unchecked")
 		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof Set) {
-				return getElements(parentElement);
+			if (parentElement instanceof PackageCategory) {
+				return ((PackageCategory) parentElement).getPackages();
+			} else {
+				return Util.EMPTY_ARRAY;
 			}
-			return CharOperation.NO_STRINGS;
 		}
 
 		public Object getParent(Object element) {
+			if (element instanceof Package) {
+				return ((Package) element).parent;
+			}
 			return null;
 		}
 
 		public boolean hasChildren(Object element) {
+			if (element instanceof PackageCategory) {
+				return !((PackageCategory) element).packages.isEmpty();
+			}
 			return false;
 		}
 
-		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof Set) {
-				return ((Set) inputElement).toArray();
+			if (inputElement instanceof PackageInput) {
+				return ((PackageInput) inputElement).getCategories();
 			}
-			return CharOperation.NO_STRINGS;
+			return Util.EMPTY_ARRAY;
 		}
 	}
 
@@ -192,7 +204,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 
 		addButton = new Button(buttons, SWT.PUSH);
 		addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		addButton.setText("Add");
+		addButton
+				.setText(TclInterpreterMessages.TclInterpreterComboBlock_buttonAdd);
 		if (editablePackages) {
 			addButton.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -206,7 +219,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		addAllButton = new Button(buttons, SWT.PUSH);
 		addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
 				false));
-		addAllButton.setText("Add all");
+		addAllButton
+				.setText(TclInterpreterMessages.TclInterpreterComboBlock_buttonAddAll);
 		if (editablePackages) {
 			addAllButton.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -218,7 +232,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			addAllButton.setEnabled(false);
 		}
 		remove = new Button(buttons, SWT.PUSH);
-		remove.setText("Remove");
+		remove
+				.setText(TclInterpreterMessages.TclInterpreterComboBlock_buttonRemove);
 		remove.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		if (editablePackages) {
 			remove.addSelectionListener(new SelectionAdapter() {
@@ -232,17 +247,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			remove.setEnabled(false);
 		}
 
-		// setTitle("Packages");
-		// setMessage("Package dependencies list");
-		// this.setDescription("Package dependencies list");
-
 		this.fElements.setContentProvider(new PackagesContentProvider());
-		this.fElements.setLabelProvider(new PackagesLabelProvider() {
-			@Override
-			protected boolean isAutoPackage(String pkg) {
-				return !packages.contains(pkg) && autoPackages.contains(pkg);
-			}
-		});
+		this.fElements.setLabelProvider(new PackagesLabelProvider());
 		if (editablePackages) {
 			this.fElements
 					.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -251,7 +257,7 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 						}
 					});
 		}
-		this.fElements.setComparator(new ViewerComparator());
+		this.fElements.setComparator(new PackageComparator());
 		showPackages();
 
 		this.addPropertyChangeListener(new IPropertyChangeListener() {
@@ -264,14 +270,107 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 		});
 	}
 
-	/**
-	 * 
-	 */
-	@SuppressWarnings("unchecked")
 	private void showPackages() {
 		if (fElements != null) {
-			fElements.setInput(new CombinedSet<String>(this.packages,
-					this.autoPackages));
+			PackageInput input = new PackageInput();
+			input
+					.addCategory(
+							TclInterpreterMessages.TclInterpreterComboBlock_CategoryManual,
+							this.packages, false);
+			input
+					.addCategory(
+							TclInterpreterMessages.TclInterpreterComboBlock_CategoryAutomatic,
+							this.autoPackages, true);
+			fElements.setInput(input);
+			fElements.expandToLevel(2);
+		}
+	}
+
+	private static class PackageInput {
+		private final List<PackageCategory> categories = new ArrayList<PackageCategory>();
+
+		public void addCategory(String category, Set<String> packagesSet,
+				boolean readOnly) {
+			categories
+					.add(new PackageCategory(category, packagesSet, readOnly));
+		}
+
+		public PackageCategory[] getCategories() {
+			return categories.toArray(new PackageCategory[categories.size()]);
+		}
+
+		/**
+		 * @param categoryName
+		 * @return
+		 */
+		public PackageCategory get(String categoryName) {
+			for (PackageCategory category : categories) {
+				if (categoryName.equals(category.category)) {
+					return category;
+				}
+			}
+			throw new IllegalArgumentException(categoryName);
+		}
+	}
+
+	private static class PackageCategory {
+		final String category;
+		final Set<String> packages;
+		final boolean readOnly;
+
+		public PackageCategory(String category, Set<String> packagesSet,
+				boolean readOnly) {
+			this.category = category;
+			this.readOnly = readOnly;
+			this.packages = packagesSet;
+		}
+
+		public Package[] getPackages() {
+			final Package[] result = new Package[packages.size()];
+			int index = 0;
+			for (String packageName : this.packages) {
+				result[index++] = new Package(this, packageName);
+			}
+			return result;
+		}
+
+		@Override
+		public int hashCode() {
+			return category.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof PackageCategory) {
+				PackageCategory other = (PackageCategory) obj;
+				return category.equals(other.category);
+			}
+			return false;
+		}
+
+	}
+
+	private static class Package {
+		final PackageCategory parent;
+		final String name;
+
+		public Package(PackageCategory parent, String name) {
+			this.parent = parent;
+			this.name = name;
+		}
+
+		@Override
+		public int hashCode() {
+			return name.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof Package) {
+				final Package other = (Package) obj;
+				return name.equals(other.name) && parent.equals(other.parent);
+			}
+			return false;
 		}
 	}
 
@@ -283,9 +382,16 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			if (selection instanceof IStructuredSelection) {
 				final IStructuredSelection ss = (IStructuredSelection) selection;
 				for (@SuppressWarnings("unchecked")
-				Iterator<String> iterator = ss.iterator(); iterator.hasNext();) {
-					final String pkg = iterator.next();
-					if (!this.packages.contains(pkg)) {
+				Iterator iterator = ss.iterator(); iterator.hasNext();) {
+					final Object pkg = iterator.next();
+					if (pkg instanceof Package) {
+						if (((Package) pkg).parent.readOnly) {
+							return false;
+						}
+						if (!this.packages.contains(((Package) pkg).name)) {
+							return false;
+						}
+					} else {
 						return false;
 					}
 				}
@@ -302,9 +408,11 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			int updates = 0;
 			for (@SuppressWarnings("unchecked")
 			Iterator<String> iterator = ss.iterator(); iterator.hasNext();) {
-				final String pkg = iterator.next();
-				if (this.packages.remove(pkg)) {
-					++updates;
+				final Object pkg = iterator.next();
+				if (pkg instanceof Package && !((Package) pkg).parent.readOnly) {
+					if (this.packages.remove(((Package) pkg).name)) {
+						++updates;
+					}
 				}
 			}
 			if (updates != 0) {
@@ -314,11 +422,22 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 	}
 
 	private void refreshView() {
+		refreshView(null);
+	}
+
+	private void refreshView(final String selection) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (fElements.getControl().isDisposed())
 					return;
 				fElements.refresh();
+				if (selection != null) {
+					PackageCategory category = ((PackageInput) fElements
+							.getInput())
+							.get(TclInterpreterMessages.TclInterpreterComboBlock_CategoryManual);
+					fElements.setSelection(new StructuredSelection(new Package(
+							category, selection)));
+				}
 			}
 		});
 	}
@@ -339,7 +458,8 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			Collections.sort(names, String.CASE_INSENSITIVE_ORDER);
 			ListDialog dialog = new ListDialog(this.fElements.getControl()
 					.getShell());
-			dialog.setTitle("Add Packages");
+			dialog
+					.setTitle(TclInterpreterMessages.TclInterpreterComboBlock_title);
 			dialog.setContentProvider(new IStructuredContentProvider() {
 				public Object[] getElements(Object inputElement) {
 					return names.toArray();
@@ -360,14 +480,16 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 					String pkg = (String) result[i];
 					this.packages.add(pkg);
 				}
-				refreshView();
+				refreshView((String) (result.length != 0 ? result[0] : null));
 			}
 		} else {
 			MessageBox box = new MessageBox(this.fElements.getControl()
 					.getShell(), SWT.OK | SWT.ICON_WARNING
 					| SWT.APPLICATION_MODAL);
-			box.setText("Packages");
-			box.setMessage("Project interpreter could not be found...");
+			box
+					.setText(TclInterpreterMessages.TclInterpreterComboBlock_errorTitle);
+			box
+					.setMessage(TclInterpreterMessages.TclInterpreterComboBlock_errorMessage);
 			box.open();
 		}
 	}
@@ -391,8 +513,10 @@ public class TclInterpreterComboBlock extends AbstractInterpreterComboBlock {
 			MessageBox box = new MessageBox(this.fElements.getControl()
 					.getShell(), SWT.OK | SWT.ICON_INFORMATION
 					| SWT.APPLICATION_MODAL);
-			box.setText("Packages");
-			box.setText("Project interpreter could not be found...");
+			box
+					.setText(TclInterpreterMessages.TclInterpreterComboBlock_errorTitle);
+			box
+					.setText(TclInterpreterMessages.TclInterpreterComboBlock_errorMessage);
 			box.open();
 		}
 	}

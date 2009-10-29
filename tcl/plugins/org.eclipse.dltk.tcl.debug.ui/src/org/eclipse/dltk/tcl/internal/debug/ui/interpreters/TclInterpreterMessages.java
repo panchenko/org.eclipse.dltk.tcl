@@ -19,6 +19,14 @@ import org.eclipse.osgi.util.NLS;
 public class TclInterpreterMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dltk.tcl.internal.debug.ui.interpreters.tclInterpeterMessages"; //$NON-NLS-1$
 	public static String AddTclInterpreterDialog_0;
+	public static String TclInterpreterComboBlock_buttonAdd;
+	public static String TclInterpreterComboBlock_buttonAddAll;
+	public static String TclInterpreterComboBlock_buttonRemove;
+	public static String TclInterpreterComboBlock_CategoryAutomatic;
+	public static String TclInterpreterComboBlock_CategoryManual;
+	public static String TclInterpreterComboBlock_errorMessage;
+	public static String TclInterpreterComboBlock_errorTitle;
+	public static String TclInterpreterComboBlock_title;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, TclInterpreterMessages.class);
