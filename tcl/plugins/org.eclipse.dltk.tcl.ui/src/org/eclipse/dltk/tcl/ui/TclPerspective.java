@@ -20,6 +20,11 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
 
 public class TclPerspective implements IPerspectiveFactory {
+	/**
+	 * @since 2.0
+	 */
+	public static final String PERSPECTIVE_ID = "org.eclipse.dltk.tcl.ui.TclPerspective"; //$NON-NLS-1$
+
 	// TODO: move to general class like ScriptPerspective
 	public static final String SCRIPT_EXPLORER = "org.eclipse.dltk.ui.ScriptExplorer"; //$NON-NLS-1$
 
