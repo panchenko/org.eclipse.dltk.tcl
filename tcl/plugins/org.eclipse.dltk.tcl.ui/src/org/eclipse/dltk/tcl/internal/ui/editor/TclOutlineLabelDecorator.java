@@ -9,18 +9,21 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.editor;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.ui.viewsupport.ImageImageDescriptor;
+import org.eclipse.dltk.tcl.ast.TclConstants;
+import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.BaseLabelProvider;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
-public class TclOutlineLabelDecorator extends LabelProvider implements
+public class TclOutlineLabelDecorator extends BaseLabelProvider implements
 		ILabelDecorator {
 	public TclOutlineLabelDecorator() {
 	}
@@ -29,29 +32,44 @@ public class TclOutlineLabelDecorator extends LabelProvider implements
 		return text;
 	}
 
-	public Image decorateImage(Image image, Object obj) {
+	private static ImageDescriptor getDecoration(int flags) {
+		if ((flags & Modifiers.AccGlobal) != 0) {
+			return DLTKPluginImages.DESC_OVR_FIELD_GLOBAL;
+		} else if ((flags == TclConstants.TCL_FIELD_TYPE_NAMESPACE)) {
+			return DLTKPluginImages.DESC_OVR_FIELD_NAMESPACE;
+		} else if ((flags & Modifiers.AccUpVar) != 0) {
+			return DLTKPluginImages.DESC_OVR_FIELD_UPVAR;
+		} else if ((flags == TclConstants.TCL_FIELD_TYPE_INDEX)) {
+			return DLTKPluginImages.DESC_OVR_FIELD_INDEX;
+		} else {
+			return null;
+		}
+	}
 
+	public Image decorateImage(Image image, Object obj) {
 		try {
 			if (obj instanceof IMember) {
 				IMember member = (IMember) obj;
-				int flags = member.getFlags();
-
-				ImageDescriptor baseImage = new ImageImageDescriptor(image);
-				Rectangle bounds = image.getBounds();
-
-				ImageDescriptor dsc = new TclOutlineElementImageDescriptor(
-						baseImage, new Point(bounds.width, bounds.height),
-						flags);
-
-				return dsc.createImage();
+				ImageDescriptor decoration = getDecoration(member.getFlags());
+				if (decoration != null) {
+					return registry.get(new DecorationOverlayIcon(image,
+							decoration, IDecoration.TOP_RIGHT));
+				}
 			}
-
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
 		}
-
 		return image;
+	}
+
+	private final ImageDescriptorRegistry registry = new ImageDescriptorRegistry(
+			false);
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		registry.dispose();
 	}
 }
