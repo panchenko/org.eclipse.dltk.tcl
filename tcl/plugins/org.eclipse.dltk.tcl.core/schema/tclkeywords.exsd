@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.dltk.tcl.core">
+<schema targetNamespace="org.eclipse.dltk.tcl.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.dltk.tcl.core" id="tclkeywords" name="tclkeywords"/>
@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="keywords" minOccurs="1" maxOccurs="unbounded"/>
@@ -50,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.dltk.tcl.ITclKeywords"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.dltk.tcl.core.ITclKeywords"/>
                </appInfo>
             </annotation>
          </attribute>
