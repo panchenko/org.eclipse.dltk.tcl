@@ -52,7 +52,7 @@ public class TclModelContentProvider implements IModelContentProvider {
 			}
 		}
 		if (parentElement instanceof IScriptProject) {
-			// Show packages element
+			// Add sources element
 			IScriptProject prj = (IScriptProject) parentElement;
 			try {
 				IProjectFragment[] fragments = prj.getProjectFragments();
@@ -66,22 +66,6 @@ public class TclModelContentProvider implements IModelContentProvider {
 				}
 			} catch (ModelException e) {
 				DLTKCore.error("Error resolving project fragments", e);
-			}
-		}
-		if (parentElement instanceof TclSourcesFragment) {
-			TclSourcesFragment fragment = (TclSourcesFragment) parentElement;
-			children.clear();
-			try {
-				IModelElement[] elements = fragment.getChildren();
-				TclSourcesElement element = (TclSourcesElement) elements[0];
-				IModelElement[] modelElements = element.getChildren();
-				for (int i = 0; i < modelElements.length; i++) {
-					children.add(modelElements[i]);
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
 			}
 		}
 	}
