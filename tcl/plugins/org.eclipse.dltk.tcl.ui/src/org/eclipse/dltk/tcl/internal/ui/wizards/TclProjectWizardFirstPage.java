@@ -103,6 +103,9 @@ final class TclProjectWizardFirstPage extends ProjectWizardFirstPage {
 				if (state.getEnvironment() != null && canChangeEnvironment()) {
 					setEnvironment(state.getEnvironment());
 				}
+				if (state.getExternalLocation() != null && canChangeLocation()) {
+					fLocation.setText(state.getExternalLocation());
+				}
 			}
 			setTooltip(fWorkspaceRadio, state
 					.getToolTipText(IProjectWizardState.MODE_WORKSPACE));
