@@ -36,7 +36,7 @@ public class TclEditorColoringConfigurationBlock extends
 		AbstractScriptEditorColoringConfigurationBlock implements
 		IPreferenceConfigurationBlock {
 
-	private static final String PREVIEW_FILE_NAME = "PreviewFile.txt";
+	private static final String PREVIEW_FILE_NAME = "PreviewFile.txt"; //$NON-NLS-1$
 
 	private static final String[][] fSyntaxColorListModel = new String[][] {
 			{ PreferencesMessages.DLTKEditorPreferencePage_singleLineComment,
@@ -63,10 +63,12 @@ public class TclEditorColoringConfigurationBlock extends
 		super(store);
 	}
 
+	@Override
 	protected String[][] getSyntaxColorListModel() {
 		return fSyntaxColorListModel;
 	}
 
+	@Override
 	protected ProjectionViewer createPreviewViewer(Composite parent,
 			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
 			boolean showAnnotationsOverview, int styles, IPreferenceStore store) {
@@ -74,6 +76,7 @@ public class TclEditorColoringConfigurationBlock extends
 				showAnnotationsOverview, styles, store);
 	}
 
+	@Override
 	protected ScriptSourceViewerConfiguration createSimpleSourceViewerConfiguration(
 			IColorManager colorManager, IPreferenceStore preferenceStore,
 			ITextEditor editor, boolean configureFormatter) {
@@ -82,11 +85,13 @@ public class TclEditorColoringConfigurationBlock extends
 				configureFormatter);
 	}
 
+	@Override
 	protected void setDocumentPartitioning(IDocument document) {
 		TclDocumentSetupParticipant participant = new TclDocumentSetupParticipant();
 		participant.setup(document);
 	}
 
+	@Override
 	protected InputStream getPreviewContentReader() {
 		return getClass().getResourceAsStream(PREVIEW_FILE_NAME);
 	}
@@ -95,6 +100,7 @@ public class TclEditorColoringConfigurationBlock extends
 	 * Override getTextTools() for enabling semantic highlighting in preview
 	 * editor
 	 */
+	@Override
 	protected ScriptTextTools getTextTools() {
 		return TclUI.getDefault().getTextTools();
 	}
