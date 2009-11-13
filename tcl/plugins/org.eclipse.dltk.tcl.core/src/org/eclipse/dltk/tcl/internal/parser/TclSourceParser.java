@@ -30,6 +30,7 @@ import org.eclipse.dltk.tcl.internal.parser.raw.TclCommand;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclParseException;
 import org.eclipse.dltk.tcl.internal.parser.raw.TclScript;
 import org.eclipse.dltk.utils.TextUtils;
+
 /**
  * @deprecated
  */
@@ -100,9 +101,8 @@ public class TclSourceParser extends AbstractSourceParser implements
 							nodes[i].sourceStart(), nodes[i].sourceEnd());
 					nodes[i] = newExpr;
 					st.setExpressions(Arrays.asList(nodes));
-					TclSourceParser.this.parse(expression, nodes[i]
-							.sourceStart()
-							+ 1 - getStartPos(), newExpr);
+					parse(expression, nodes[i].sourceStart() + 1
+							- getStartPos(), newExpr);
 				}
 			}
 		}
@@ -128,8 +128,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 			TclCommand command = (TclCommand) iter.next();
 			// Command handling
 			TclStatement st = TclParseUtil.convertToAST(command, this
-					.getFileName(), offset, TclSourceParser.this.content,
-					TclSourceParser.this.startPos);
+					.getFileName(), offset, this.content, this.startPos);
 			if (st == null) {
 				continue; // could be null on errors in source code
 			}
