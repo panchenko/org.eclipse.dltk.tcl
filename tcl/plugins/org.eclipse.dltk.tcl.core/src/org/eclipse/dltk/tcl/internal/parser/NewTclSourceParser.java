@@ -400,8 +400,8 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			collector = new TclErrorCollector();
 		}
 		newParser.setGlobalOffset(offset);
-		List<TclCommand> module = newParser.parse(new String(content),
-				collector, coreProcessor);
+		List<TclCommand> module = newParser.parse(content, collector,
+				coreProcessor);
 		if (problemReporter != null) {
 			collector.reportAll(problemReporter, tracker);
 		}
