@@ -15,6 +15,7 @@ import org.eclipse.dltk.internal.ui.editor.ScriptSourceViewer;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.editor.TclDocumentSetupParticipant;
 import org.eclipse.dltk.tcl.internal.ui.text.SimpleTclSourceViewerConfiguration;
+import org.eclipse.dltk.tcl.internal.ui.text.TclColorConstants;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.preferences.AbstractScriptEditorColoringConfigurationBlock;
@@ -44,6 +45,8 @@ public class TclEditorColoringConfigurationBlock extends
 					sCommentsCategory },
 			{ PreferencesMessages.DLTKEditorPreferencePage_CommentTaskTags,
 					TclPreferenceConstants.COMMENT_TASK_TAGS, sCommentsCategory },
+			{ PreferencesMessages.DLTKEditorPreferencePage_others,
+					TclColorConstants.TCL_DEFAULT, sCoreCategory },
 			{ PreferencesMessages.DLTKEditorPreferencePage_keywords,
 					TclPreferenceConstants.EDITOR_KEYWORD_COLOR, sCoreCategory },
 
