@@ -1,6 +1,5 @@
 package org.eclipse.dltk.tcl.internal.core.search.mixin;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -31,7 +30,7 @@ public class TclMixinBuildVisitor extends ASTVisitor {
 	protected ISourceModule sourceModule;
 	protected ModuleDeclaration moduleDeclaration;
 	protected IMixinRequestor requestor;
-	protected Stack namespaceNames = new Stack();
+	protected Stack<TypeDeclaration> namespaceNames = new Stack<TypeDeclaration>();
 
 	protected IMixinBuildVisitorExtension[] extensions;
 
@@ -61,9 +60,7 @@ public class TclMixinBuildVisitor extends ASTVisitor {
 
 	public String getNamespacePrefix() {
 		StringBuffer prefix = new StringBuffer();
-		for (Iterator iterator = this.namespaceNames.iterator(); iterator
-				.hasNext();) {
-			TypeDeclaration ns = (TypeDeclaration) iterator.next();
+		for (TypeDeclaration ns : this.namespaceNames) {
 			String name = ns.getName();
 			if (name.endsWith("::")) {
 				name = name.substring(0, name.length() - 2);
@@ -81,9 +78,7 @@ public class TclMixinBuildVisitor extends ASTVisitor {
 
 	public String getRealNamespacePrefix() {
 		StringBuffer prefix = new StringBuffer();
-		for (Iterator iterator = this.namespaceNames.iterator(); iterator
-				.hasNext();) {
-			TypeDeclaration ns = (TypeDeclaration) iterator.next();
+		for (TypeDeclaration ns : this.namespaceNames) {
 			String name = ns.getName();
 			if (name.endsWith("::")) {
 				name = name.substring(0, name.length() - 2);
