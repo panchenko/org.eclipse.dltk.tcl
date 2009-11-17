@@ -5,6 +5,8 @@
    <extension-point id="tclCommandDetector" name="tclCommandDetector" schema="schema/tclCommandDetector.exsd"/>
    <extension-point id="tclkeywords" name="tclkeywords" schema="schema/tclkeywords.exsd"/>
    <extension-point id="tclExtension" name="tclExtension" schema="schema/tclExtension.exsd"/>
+   <extension-point id="tclModelBuilder" name="tclModelBuilder" schema="schema/tclModelBuilder.exsd"/>
+   <extension-point id="tclModelBuilderDetector" name="tclModelBuilderDetector" schema="schema/tclModelBuilderDetector.exsd"/>
    <extension
          id="nature"
          point="org.eclipse.core.resources.natures">
@@ -45,6 +47,12 @@
             class="org.eclipse.dltk.tcl.internal.parser.TclSourceElementParser"
             nature="org.eclipse.dltk.tcl.core.nature"
             priority="0">
+      </parser>
+<!-- NEW STRUCTURE PARSER -->
+      <parser
+            class="org.eclipse.dltk.tcl.internal.structure.TclSourceElementParser2"
+            nature="org.eclipse.dltk.tcl.core.nature"
+            priority="1">
       </parser>
    </extension>
    <extension
@@ -166,6 +174,17 @@
             id="while">
       </processor>
    </extension>
+   <!-- -->
+   <extension point="org.eclipse.dltk.tcl.core.tclModelBuilder">
+      <processor id="proc"      class="org.eclipse.dltk.tcl.internal.structure.builders.TclProcModelBuilder"/>
+      <processor id="set"       class="org.eclipse.dltk.tcl.internal.structure.builders.TclVariableModelBuilder"/>
+      <processor id="global"    class="org.eclipse.dltk.tcl.internal.structure.builders.TclGlobalVariableModelBuilder"/>
+      <processor id="upvar"     class="org.eclipse.dltk.tcl.internal.structure.builders.TclUpvarModelBuilder"/>
+      <processor id="catch"     class="org.eclipse.dltk.tcl.internal.structure.builders.TclCatchModelBuilder"/>
+      <processor id="variable"  class="org.eclipse.dltk.tcl.internal.structure.builders.TclNamespaceVariableModelBuilder"/>
+      <processor id="namespace" class="org.eclipse.dltk.tcl.internal.structure.builders.TclNamespaceModelBuilder"/>
+   </extension>
+   <!-- -->
    <extension
       point="org.eclipse.dltk.core.projectIndexer">
       <enable
