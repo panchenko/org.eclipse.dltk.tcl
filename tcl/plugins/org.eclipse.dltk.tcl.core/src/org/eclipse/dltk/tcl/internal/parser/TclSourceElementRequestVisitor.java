@@ -358,7 +358,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 							.findVariableFromString(literal, pos);
 					if (ref != null) {
 						this.fRequestor.acceptFieldReference(ref.getName()
-								.substring(1).toCharArray(), ref.sourceStart());
+								.substring(1), ref.sourceStart());
 						pos = pos + ref.getName().length();
 					}
 					pos = value.indexOf("$", pos + 1);
@@ -368,7 +368,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				String name = ref.getName();
 				if (name.startsWith("$")) { // This is variable usage.
 					this.fRequestor.acceptFieldReference(ref.getName()
-							.substring(1).toCharArray(), ref.sourceStart());
+							.substring(1), ref.sourceStart());
 				}
 			}
 		}
