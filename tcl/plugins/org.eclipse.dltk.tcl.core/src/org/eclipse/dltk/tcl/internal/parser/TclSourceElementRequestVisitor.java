@@ -320,9 +320,8 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 				int argCount = statement.getCount() - 1;
 				if (name.length() > 0) {
 					if (name.charAt(0) != '$') {
-						this.fRequestor.acceptMethodReference(name
-								.toCharArray(), argCount, commandId
-								.sourceStart(), commandId.sourceEnd());
+						this.fRequestor.acceptMethodReference(name, argCount,
+								commandId.sourceStart(), commandId.sourceEnd());
 					}
 				}
 			}
