@@ -68,3 +68,8 @@ namespace eval ::a::f::q::t {
 ::a::f::q::faf_q
 ::a::f::q::fafq
 ::a::f::q::t::fafqt
+
+
+if { [::a::c::fac] } {
+    puts "::a::c::fac"
+}

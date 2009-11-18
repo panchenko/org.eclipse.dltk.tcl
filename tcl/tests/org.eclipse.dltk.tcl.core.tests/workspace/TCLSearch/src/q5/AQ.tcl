@@ -32,3 +32,8 @@ proc m { } {
 m
 I::k 4
 ::I::k 5
+
+if { [m] } {
+    puts "m"
+}
+

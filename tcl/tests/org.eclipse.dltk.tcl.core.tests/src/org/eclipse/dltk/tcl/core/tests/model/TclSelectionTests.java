@@ -773,4 +773,23 @@ public class TclSelectionTests extends AbstractModelCompletionTests {
 		IField field = cu.getField("x7");
 		assertEquals(field, element);
 	}
+
+	public void testselection041() throws ModelException {
+		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
+				"selection001.tcl");
+
+		String source = cu.getSource();
+		String s = "if { [::a::c::fac]";
+		int start = source.indexOf(s) + 6;
+
+		String sub = source.substring(start, start + 11);
+		assertEquals("::a::c::fac", sub);
+
+		IModelElement[] elements = cu.codeSelect(start, 11);
+		assertNotNull(elements);
+		assertEquals(1, elements.length);
+		IMethod method = cu.getType("a").getType("c").getMethod("fac");
+		assertNotNull(method);
+		assertEquals(method, elements[0]);
+	}
 }

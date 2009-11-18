@@ -68,4 +68,8 @@ namespace eval ::a::f::q::t {
 ::a::f
 #4
 ::b::fb
+#5
+if { [::a::c::fa] } {
+    puts "m"
+}
 

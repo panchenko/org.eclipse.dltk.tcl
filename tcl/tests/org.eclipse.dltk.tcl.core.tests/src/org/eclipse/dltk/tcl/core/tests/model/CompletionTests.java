@@ -235,4 +235,18 @@ public class CompletionTests extends AbstractModelCompletionTests {
 				18, 18 }), requestor.getResults());
 
 	}
+
+	public void testCompletion009() throws ModelException {
+		CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+		ISourceModule cu = this.getSourceModule("Completion", "src",
+				"Completion002.tcl");
+
+		String str = cu.getSource();
+		int cursorLocation = newLineAfter(str, "#5") + 16;
+		cu.codeComplete(cursorLocation, requestor);
+
+		assertEquals(this.makeResult(new String[] { "::a::c::fac()" },
+				new String[] { "::a::c::fac" }, new int[] { 18 }), requestor
+				.getResults());
+	}
 }

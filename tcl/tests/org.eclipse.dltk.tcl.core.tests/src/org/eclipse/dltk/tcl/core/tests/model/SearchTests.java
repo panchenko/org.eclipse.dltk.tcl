@@ -207,7 +207,7 @@ public class SearchTests extends AbstractDLTKSearchTests implements
 
 		search(method, REFERENCES, getSearchScope(TCLSEARCH));
 		assertSearchResults("src/q5/AQ.tcl q5/I\n" + "src/q5/AQ.tcl q5/I2\n"
-				+ "src/q5/AQ.tcl", this.resultCollector);
+				+ "src/q5/AQ.tcl\n" + "src/q5/AQ.tcl", this.resultCollector);
 	}
 
 	public void testTypeReference01() throws Exception {
