@@ -26,9 +26,16 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 		}
 		final String subcmd = TclProcessorUtil.asString(command.getArguments()
 				.get(0));
-		if (!"require".equals(subcmd)) {
+		if ("require".equals(subcmd)) {
+			return processRequire(command, context);
+		} else {
+			// TODO handle other sub commands
 			return false;
 		}
+	}
+
+	private boolean processRequire(TclCommand command,
+			ITclModelBuildContext context) {
 		int index = 1;
 		if (command.getArguments().size() <= index) {
 			return false;
