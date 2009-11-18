@@ -27,23 +27,34 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 		final String subcmd = TclProcessorUtil.asString(command.getArguments()
 				.get(0));
 		if (!"require".equals(subcmd)) {
-			return true;
-		}
-		if (command.getArguments().size() < 2) {
 			return false;
 		}
-		TclArgument packageName = command.getArguments().get(1);
-		ImportInfo importInfo = new ImportInfo();
-		importInfo.sourceStart = packageName.getStart();
-		importInfo.sourceEnd = packageName.getEnd() - 1;
+		int index = 1;
+		if (command.getArguments().size() <= index) {
+			return false;
+		}
+		TclArgument pkg = command.getArguments().get(index);
+		String packageName = TclProcessorUtil.asString(pkg);
+		if ("-exact".equals(packageName)) {
+			++index;
+			if (command.getArguments().size() <= index) {
+				return false;
+			}
+			pkg = command.getArguments().get(index);
+			packageName = TclProcessorUtil.asString(pkg);
+		}
+		final ImportInfo importInfo = new ImportInfo();
+		importInfo.sourceStart = pkg.getStart();
+		importInfo.sourceEnd = pkg.getEnd() - 1;
 		importInfo.containerName = org.eclipse.dltk.tcl.core.TclConstants.REQUIRE_CONTAINER;
-		importInfo.name = TclProcessorUtil.asString(packageName);
-		if (command.getArguments().size() > 2) {
-			importInfo.version = TclProcessorUtil.asString(command
-					.getArguments().get(2));
+		importInfo.name = packageName;
+		if (command.getArguments().size() > index + 1) {
+			final TclArgument version = command.getArguments().get(index + 1);
+			importInfo.version = TclProcessorUtil.asString(version);
+			importInfo.sourceEnd = version.getEnd() - 1;
 		}
 		context.getRequestor().acceptImport(importInfo);
-		return true;
+		return false;
 	}
 
 }
