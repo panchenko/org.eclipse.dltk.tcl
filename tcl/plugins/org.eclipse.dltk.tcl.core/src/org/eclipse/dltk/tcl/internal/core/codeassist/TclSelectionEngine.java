@@ -63,7 +63,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 	protected int actualSelectionEnd;
 
-	protected List selectionElements = new ArrayList();
+	protected List<IModelElement> selectionElements = new ArrayList<IModelElement>();
 
 	protected TclSelectionParser parser = new TclSelectionParser();
 
@@ -735,11 +735,11 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 	public IModelElement findElementFromNode(ASTNode nde) {
 		ModuleDeclaration module = parser.getModule();
 		List statements = module.getStatements();
-		List elements = new ArrayList();
+		List<IModelElement> elements = new ArrayList<IModelElement>();
 		new TclResolver(sourceModule, parser.module, parentResolver)
 				.searchAddElementsTo(statements, nde, sourceModule, elements);
 		if (elements.size() == 1) {
-			return (IModelElement) elements.get(0);
+			return elements.get(0);
 		}
 		return null;
 	}

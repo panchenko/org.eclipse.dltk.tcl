@@ -65,7 +65,7 @@ public class TclResolver {
 	}
 
 	public void searchAddElementsTo(List statements, final ASTNode node,
-			IParent element, List selectionElements) {
+			IParent element, List<IModelElement> selectionElements) {
 		if (statements == null || element == null) {
 			return;
 		}
@@ -121,17 +121,12 @@ public class TclResolver {
 						e = resolver.findElementParent(node, nodeName, element);
 					}
 					if (e != null) {
-						List toRemove = new ArrayList();
-						for (int k = 0; k < selectionElements.size(); ++k) {
-							IModelElement ke = (IModelElement) selectionElements
-									.get(k);
-							String keName = ke.getElementName();
-							if (keName.equals(nodeName)) {
-								toRemove.add(ke);
+						for (Iterator<IModelElement> k = selectionElements
+								.iterator(); k.hasNext();) {
+							final IModelElement ke = k.next();
+							if (nodeName.equals(ke.getElementName())) {
+								k.remove();
 							}
-						}
-						for (int k = 0; k < toRemove.size(); ++k) {
-							selectionElements.remove(toRemove.get(k));
 						}
 						selectionElements.add(e);
 					}
@@ -140,45 +135,41 @@ public class TclResolver {
 			}
 			if (nde.sourceStart() <= node.sourceStart()
 					&& node.sourceEnd() <= nde.sourceEnd()) {
-				if (element instanceof IParent) {
-					if (nde instanceof TypeDeclaration) {
-						TypeDeclaration type = (TypeDeclaration) nde;
-						String typeName = getNodeChildName(type);
-						IModelElement e = findChildrenByName(typeName,
-								(IParent) element);
-						if (e == null && type.getName().startsWith("::")) {
-							try {
-								e = (IModelElement) findTypeFrom(sourceModule
-										.getChildren(), "", type.getName()
-										.replaceAll("::", "\\$"), '$');
-							} catch (ModelException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
+				if (nde instanceof TypeDeclaration) {
+					TypeDeclaration type = (TypeDeclaration) nde;
+					String typeName = getNodeChildName(type);
+					IModelElement e = findChildrenByName(typeName, element);
+					if (e == null && type.getName().startsWith("::")) {
+						try {
+							e = (IModelElement) findTypeFrom(sourceModule
+									.getChildren(), "", type.getName()
+									.replaceAll("::", "\\$"), '$');
+						} catch (ModelException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
-						if (e instanceof IParent) {
-							// was: if (e != null || e instanceof IParent)
-							List stats = ((TypeDeclaration) nde)
-									.getStatements();
-							searchAddElementsTo(stats, node, (IParent) e,
-									selectionElements);
-						}
-					} else if (nde instanceof MethodDeclaration) {
-						searchInMethod(node, element, nde, selectionElements);
-					} /*
-					 * else if (nde instanceof TclStatement) { TclStatement s =
-					 * (TclStatement) nde; Expression commandId = s.getAt(0);
-					 * final IParent e = element; if (commandId != null &&
-					 * commandId instanceof SimpleReference) { String qname =
-					 * ((SimpleReference) commandId) .getName(); } }
-					 */
-					else {
-						final IParent e = element;
-						List statements2 = findExtractBlocks(nde);
-						if (statements2.size() > 0) {
-							searchAddElementsTo(statements2, node, e,
-									selectionElements);
-						}
+					}
+					if (e instanceof IParent) {
+						// was: if (e != null || e instanceof IParent)
+						List stats = ((TypeDeclaration) nde).getStatements();
+						searchAddElementsTo(stats, node, (IParent) e,
+								selectionElements);
+					}
+				} else if (nde instanceof MethodDeclaration) {
+					searchInMethod(node, element, nde, selectionElements);
+				} /*
+				 * else if (nde instanceof TclStatement) { TclStatement s =
+				 * (TclStatement) nde; Expression commandId = s.getAt(0); final
+				 * IParent e = element; if (commandId != null && commandId
+				 * instanceof SimpleReference) { String qname =
+				 * ((SimpleReference) commandId) .getName(); } }
+				 */
+				else {
+					final IParent e = element;
+					List statements2 = findExtractBlocks(nde);
+					if (statements2.size() > 0) {
+						searchAddElementsTo(statements2, node, e,
+								selectionElements);
 					}
 				}
 				return;
