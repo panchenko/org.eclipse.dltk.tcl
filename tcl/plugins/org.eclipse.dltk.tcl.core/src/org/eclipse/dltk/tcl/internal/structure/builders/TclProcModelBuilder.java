@@ -11,18 +11,13 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.structure.builders;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
-import org.eclipse.dltk.compiler.util.Util;
-import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
-import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.Messages;
@@ -32,7 +27,6 @@ import org.eclipse.dltk.tcl.internal.structure.TclTypeResolver;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
-import org.eclipse.emf.common.util.EList;
 
 public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {
 
@@ -74,26 +68,7 @@ public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {
 				: Modifiers.AccPublic;
 		List<Parameter> parameters = parseParameters(command.getArguments()
 				.get(1));
-		if (!parameters.isEmpty()) {
-			mi.parameterNames = new String[parameters.size()];
-			boolean hasDefaults = false;
-			for (Parameter parameter : parameters) {
-				if (parameter.defaultValue != null) {
-					hasDefaults = true;
-					break;
-				}
-			}
-			if (hasDefaults) {
-				mi.parameterInitializers = new String[parameters.size()];
-			}
-			for (int i = 0; i < parameters.size(); ++i) {
-				Parameter parameter = parameters.get(i);
-				mi.parameterNames[i] = parameter.name;
-				if (hasDefaults) {
-					mi.parameterInitializers[i] = parameter.defaultValue;
-				}
-			}
-		}
+		fillParameters(mi, parameters);
 		// TODO if (extendedExitRequired(method)) {
 		// exit = getExitExtended(method);
 		// } else {
@@ -103,57 +78,6 @@ public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {
 		context.addHandler(command, new MethodExit(command.getEnd()));
 		context.addHandler(command, typeHanlder);
 		return true;
-	}
-
-	private static class Parameter {
-		final String name;
-		final String defaultValue;
-
-		public Parameter(String name) {
-			this(name, null);
-		}
-
-		public Parameter(String name, String defaultValue) {
-			this.name = name;
-			this.defaultValue = defaultValue;
-		}
-	}
-
-	private List<Parameter> parseParameters(TclArgument argument) {
-		if (argument instanceof StringArgument) {
-			return Collections.singletonList(new Parameter(
-					((StringArgument) argument).getValue()));
-		} else if (argument instanceof TclArgumentList) {
-			final TclArgumentList list = (TclArgumentList) argument;
-			final List<Parameter> parameters = new ArrayList<Parameter>(list
-					.getArguments().size());
-			for (TclArgument arg : list.getArguments()) {
-				if (arg instanceof StringArgument) {
-					parameters.add(new Parameter(((StringArgument) arg)
-							.getValue()));
-				} else if (arg instanceof TclArgumentList) {
-					final EList<TclArgument> argWithInitializer = ((TclArgumentList) arg)
-							.getArguments();
-					if (argWithInitializer.size() >= 2) {
-						parameters.add(new Parameter(
-								asSymbol(argWithInitializer.get(0)),
-								TclProcessorUtil.asString(argWithInitializer
-										.get(1))));
-					} else if (argWithInitializer.size() == 1) {
-						parameters.add(new Parameter(
-								asSymbol(argWithInitializer.get(0))));
-					} else {
-						parameters.add(new Parameter(Util.EMPTY_STRING));
-					}
-				} else {
-					parameters.add(new Parameter(asSymbol(arg)));
-				}
-			}
-			return parameters;
-		} else {
-			return Collections.singletonList(new Parameter(
-					asSymbol(argument)));
-		}
 	}
 
 }
