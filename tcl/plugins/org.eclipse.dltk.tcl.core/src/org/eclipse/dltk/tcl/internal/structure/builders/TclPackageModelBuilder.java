@@ -81,8 +81,7 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 			packageName += " (" + TclProcessorUtil.asString(version) + ")";
 			end = version.getEnd();
 		}
-		context.getRequestor().acceptPackage(start, end - 1,
-				packageName.toCharArray());
+		context.getRequestor().acceptPackage(start, end - 1, packageName);
 		return false;
 	}
 
@@ -100,8 +99,7 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 			packageName += " (" + TclProcessorUtil.asString(version) + ")";
 			end = version.getEnd();
 		}
-		context.getRequestor().acceptPackage(start, end - 1,
-				(packageName + "*").toCharArray());
+		context.getRequestor().acceptPackage(start, end - 1, packageName + "*");
 		return false;
 	}
 

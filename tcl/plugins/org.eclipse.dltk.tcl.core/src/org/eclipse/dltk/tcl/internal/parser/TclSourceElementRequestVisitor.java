@@ -381,22 +381,20 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		if (pack.getStyle() == TclPackageDeclaration.STYLE_PROVIDE) {
 			if (version != null && version instanceof SimpleReference) {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), (pack.getName() + " ("
-						+ ((SimpleReference) version).getName() + ")")
-						.toCharArray());
+						.getNameEnd(), pack.getName() + " ("
+						+ ((SimpleReference) version).getName() + ")");
 			} else {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), (pack.getName()).toCharArray());
+						.getNameEnd(), pack.getName());
 			}
 		} else if (pack.getStyle() == TclPackageDeclaration.STYLE_IFNEEDED) {
 			if (version != null && version instanceof SimpleReference) {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), (pack.getName() + " ("
-						+ ((SimpleReference) version).getName() + ")*")
-						.toCharArray());
+						.getNameEnd(), pack.getName() + " ("
+						+ ((SimpleReference) version).getName() + ")*");
 			} else {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), (pack.getName() + "*").toCharArray());
+						.getNameEnd(), pack.getName() + "*");
 			}
 		} else if (pack.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
 			ImportInfo importInfo = new ImportInfo();
