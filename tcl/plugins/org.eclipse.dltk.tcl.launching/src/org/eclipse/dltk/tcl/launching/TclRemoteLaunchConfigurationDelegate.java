@@ -12,17 +12,13 @@ import org.eclipse.dltk.tcl.internal.launching.TclRemoteDebuggerRunner;
 public class TclRemoteLaunchConfigurationDelegate extends
 		AbstractRemoteLaunchConfigurationDelegate {
 
-	/*
-	 * @see org.eclipse.dltk.launching.AbstractRemoteLaunchConfigurationDelegate#getDebuggingRunner(org.eclipse.dltk.launching.IInterpreterInstall)
-	 */
+	@Override
 	protected RemoteDebuggingEngineRunner getDebuggingRunner(
 			IInterpreterInstall install) {
 		return new TclRemoteDebuggerRunner(install);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.launching.AbstractScriptLaunchConfigurationDelegate#getLanguageId()
-	 */
+	@Override
 	public String getLanguageId() {
 		return TclNature.NATURE_ID;
 	}
