@@ -42,9 +42,8 @@ public class XOTclSourceElementRequestVisitorExtension implements
 				}
 			}
 
-			original.getRequestor().acceptMethodReference(
-					callName.getName().toCharArray(), len, call.sourceStart(),
-					call.sourceEnd());
+			original.getRequestor().acceptMethodReference(callName.getName(),
+					len, call.sourceStart(), call.sourceEnd());
 			return true;
 
 			// Also lets add type references from here.
@@ -53,9 +52,8 @@ public class XOTclSourceElementRequestVisitorExtension implements
 			SimpleReference callName = call.getCallName();
 			int len = 0;
 
-			original.getRequestor().acceptMethodReference(
-					callName.getName().toCharArray(), len, call.sourceStart(),
-					call.sourceEnd());
+			original.getRequestor().acceptMethodReference(callName.getName(),
+					len, call.sourceStart(), call.sourceEnd());
 
 			return true;
 		}
