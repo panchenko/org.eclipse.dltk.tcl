@@ -40,9 +40,8 @@ public class IncrTclSourceElementRequestVisitorExtension implements
 				}
 			}
 
-			original.getRequestor().acceptMethodReference(
-					callName.getName().toCharArray(), len, call.sourceStart(),
-					call.sourceEnd());
+			original.getRequestor().acceptMethodReference(callName.getName(),
+					len, call.sourceStart(), call.sourceEnd());
 			return true;
 
 			// Also lets add type references from here.
