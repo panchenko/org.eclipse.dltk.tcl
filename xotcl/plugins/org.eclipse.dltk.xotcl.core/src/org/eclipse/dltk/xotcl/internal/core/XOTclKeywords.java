@@ -3,6 +3,7 @@ package org.eclipse.dltk.xotcl.internal.core;
 import org.eclipse.dltk.tcl.core.ITclKeywords;
 import org.eclipse.dltk.tcl.core.TclKeywords;
 
+@SuppressWarnings("nls")
 public class XOTclKeywords implements ITclKeywords {
 	private static String[] XOTclKeywords = { "Class", "instproc", "@", "my",
 			"instvar", "Object", "self", "next" };
