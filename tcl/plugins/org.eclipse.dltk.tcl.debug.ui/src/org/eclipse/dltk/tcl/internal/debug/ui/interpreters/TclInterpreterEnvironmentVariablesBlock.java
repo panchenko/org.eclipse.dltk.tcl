@@ -70,8 +70,7 @@ public class TclInterpreterEnvironmentVariablesBlock extends
 				false);
 
 		private boolean isSafe(EnvironmentVariable env) {
-			final IEnvironment environment = getInterpreterInstall()
-					.getEnvironment();
+			final IEnvironment environment = getEnvironment();
 			if (environment != null) {
 				final IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
 						.getAdapter(IExecutionEnvironment.class);
