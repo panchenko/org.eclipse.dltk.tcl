@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -152,6 +153,7 @@ public class AvailablePackagesBlock {
 				return new Object[0];
 			}
 		});
+		viewer.setComparator(new ViewerComparator());
 		// viewer.setInput(elements);
 	}
 
