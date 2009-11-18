@@ -3,7 +3,6 @@ package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
@@ -11,7 +10,9 @@ import org.eclipse.dltk.tcl.core.packages.TclInterpreterInfo;
 import org.eclipse.dltk.tcl.core.packages.TclPackageInfo;
 import org.eclipse.dltk.tcl.internal.ui.TclImages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -33,19 +34,15 @@ public class AvailablePackagesBlock {
 
 	private static class Node {
 		String value;
-		Image image;
+		Object image;
 	}
 
-	private Image tclImage;
+	private static class Library extends Node {
+
+	}
 
 	public AvailablePackagesBlock(AddTclInterpreterDialog dialog) {
 		this.dialog = dialog;
-	}
-
-	private void initImages() {
-		if (tclImage == null) {
-			tclImage = TclImages.DESC_OBJS_TCL.createImage();
-		}
 	}
 
 	public void createIn(Composite content) {
@@ -78,12 +75,25 @@ public class AvailablePackagesBlock {
 					return DLTKPluginImages
 							.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
 				}
-				initImages();
 				if (element instanceof Node) {
-					return ((Node) element).image;
+					Object image = ((Node) element).image;
+					if (image instanceof Image) {
+						return (Image) image;
+					} else if (image instanceof ImageDescriptor) {
+						return registry.get((ImageDescriptor) image);
+					}
 				}
-				return tclImage;
+				return registry.get(TclImages.DESC_OBJS_TCL);
 			}
+
+			@Override
+			public void dispose() {
+				super.dispose();
+				registry.dispose();
+			}
+
+			final ImageDescriptorRegistry registry = new ImageDescriptorRegistry(
+					false);
 
 		});
 		viewer.setContentProvider(new ITreeContentProvider() {
@@ -132,17 +142,16 @@ public class AvailablePackagesBlock {
 								AvailablePackagesBlock.this.interpreter, null);
 					}
 					List<Node> result = new ArrayList<Node>();
-					initImages();
 					EList<String> sources = info.getSources();
 					for (String source : sources) {
 						Node nde = new Node();
 						nde.value = source;
-						nde.image = tclImage;
+						nde.image = TclImages.DESC_OBJS_TCL;
 						result.add(nde);
 					}
 					EList<String> libs = info.getLibraries();
 					for (String source : libs) {
-						Node nde = new Node();
+						Node nde = new Library();
 						nde.value = source;
 						nde.image = DLTKPluginImages
 								.get(DLTKPluginImages.IMG_OBJS_LIBRARY);
@@ -153,7 +162,15 @@ public class AvailablePackagesBlock {
 				return new Object[0];
 			}
 		});
-		viewer.setComparator(new ViewerComparator());
+		viewer.setComparator(new ViewerComparator() {
+			@Override
+			public int category(Object element) {
+				if (element instanceof Library) {
+					return 1;
+				}
+				return super.category(element);
+			}
+		});
 		// viewer.setInput(elements);
 	}
 
