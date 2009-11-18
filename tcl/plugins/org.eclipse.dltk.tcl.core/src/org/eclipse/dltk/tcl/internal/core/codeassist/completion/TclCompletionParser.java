@@ -363,6 +363,21 @@ public class TclCompletionParser extends TclAssistParser {
 
 		public boolean visit(Expression s) throws Exception {
 			if (s.sourceStart() <= position && s.sourceEnd() >= position) {
+				if (s instanceof TclBlockExpression) {
+					ASTNode inNode = TclParseUtil.getScopeParent(module, s);
+					TclBlockExpression block = (TclBlockExpression) s;
+					List ss = block.parseBlockSimple();
+					if (ss != null) {
+						int slen = ss.size();
+						for (int u = 0; u < slen; ++u) {
+							ASTNode n = (ASTNode) ss.get(u);
+							if (n != null && n.sourceStart() <= position
+									&& n.sourceEnd() >= position) {
+								parseBlockStatements(n, inNode, position);
+							}
+						}
+					}
+				}
 				for (int i = 0; i < extensions.length; i++) {
 					extensions[i].visit(s, TclCompletionParser.this, position);
 				}

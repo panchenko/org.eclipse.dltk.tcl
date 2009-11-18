@@ -17,6 +17,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.tcl.ast.TclStatement;
+import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.extensions.IMatchLocatorExtension;
 import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
@@ -53,6 +54,17 @@ public class TclMatchLocatorParser extends BasicTclMatchLocatorParser {
 			} else if (node instanceof CallExpression) {
 				locator.match((CallExpression) node, TclMatchLocatorParser.this
 						.getNodeSet());
+			} else if (node instanceof TclBlockExpression) {
+				TclBlockExpression block = (TclBlockExpression) node;
+				List ss = block.parseBlockSimple();
+				if (ss != null) {
+					int slen = ss.size();
+					for (int u = 0; u < slen; ++u) {
+						ASTNode n = (ASTNode) ss.get(u);
+						TclMatchLocatorParser.this
+								.processReferences((TclStatement) n);
+					}
+				}
 			}
 			for (int i = 0; i < extensions.length; i++) {
 				extensions[i].visitGeneral(node, locator,

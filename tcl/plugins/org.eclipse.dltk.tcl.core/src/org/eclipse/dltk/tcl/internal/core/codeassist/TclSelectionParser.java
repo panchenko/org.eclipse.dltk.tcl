@@ -264,6 +264,21 @@ public class TclSelectionParser extends TclAssistParser {
 					ASTNode inNode = findInNode(this.module, s);
 					TclSelectionParser.this.processStringLiteral(s, inNode,
 							position, s);
+				} else if (s instanceof TclBlockExpression) {
+					ASTNode inNode = findInNode(this.module, s);
+					TclBlockExpression block = (TclBlockExpression) s;
+					List ss = block.parseBlockSimple();
+					if (ss != null) {
+						int slen = ss.size();
+						for (int u = 0; u < slen; ++u) {
+							ASTNode n = (ASTNode) ss.get(u);
+							if (n != null && n.sourceStart() <= position
+									&& n.sourceEnd() >= position) {
+								parseBlockStatements(n, inNode, position);
+							}
+						}
+					}
+					handleNotInElement(inNode, position);
 				} else if (s instanceof SimpleReference) {
 					SimpleReference ref = (SimpleReference) s;
 					if (ref.getName().startsWith("$")) {
