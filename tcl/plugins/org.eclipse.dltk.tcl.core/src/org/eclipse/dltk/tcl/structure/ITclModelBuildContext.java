@@ -15,6 +15,9 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 
+/**
+ * @since 2.0
+ */
 public interface ITclModelBuildContext {
 
 	public interface ITclModelHandler {

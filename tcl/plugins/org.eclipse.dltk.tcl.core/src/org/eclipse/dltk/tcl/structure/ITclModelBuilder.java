@@ -13,6 +13,9 @@ package org.eclipse.dltk.tcl.structure;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
 
+/**
+ * @since 2.0
+ */
 public interface ITclModelBuilder {
 
 	boolean process(TclCommand command, ITclModelBuildContext context);

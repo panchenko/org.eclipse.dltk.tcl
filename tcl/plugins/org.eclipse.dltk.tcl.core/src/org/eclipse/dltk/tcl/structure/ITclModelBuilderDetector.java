@@ -13,6 +13,9 @@ package org.eclipse.dltk.tcl.structure;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
 
+/**
+ * @since 2.0
+ */
 public interface ITclModelBuilderDetector {
 
 	String detect(String commandName, TclCommand command,
