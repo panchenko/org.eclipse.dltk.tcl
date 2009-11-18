@@ -28,8 +28,11 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 				.get(0));
 		if ("require".equals(subcmd)) {
 			return processRequire(command, context);
+		} else if ("provide".equals(subcmd)) {
+			return proccessProvide(command, context);
+		} else if ("ifneeded".equals(subcmd)) {
+			return processIfNeeded(command, context);
 		} else {
-			// TODO handle other sub commands
 			return false;
 		}
 	}
@@ -61,6 +64,44 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 			importInfo.sourceEnd = version.getEnd() - 1;
 		}
 		context.getRequestor().acceptImport(importInfo);
+		return false;
+	}
+
+	private boolean proccessProvide(TclCommand command,
+			ITclModelBuildContext context) {
+		if (command.getArguments().size() < 2) {
+			return false;
+		}
+		TclArgument pkg = command.getArguments().get(1);
+		int start = pkg.getStart();
+		int end = pkg.getEnd();
+		String packageName = TclProcessorUtil.asString(pkg);
+		if (command.getArguments().size() > 2) {
+			TclArgument version = command.getArguments().get(2);
+			packageName += " (" + TclProcessorUtil.asString(version) + ")";
+			end = version.getEnd();
+		}
+		context.getRequestor().acceptPackage(start, end - 1,
+				packageName.toCharArray());
+		return false;
+	}
+
+	private boolean processIfNeeded(TclCommand command,
+			ITclModelBuildContext context) {
+		if (command.getArguments().size() < 2) {
+			return false;
+		}
+		TclArgument pkg = command.getArguments().get(1);
+		int start = pkg.getStart();
+		int end = pkg.getEnd();
+		String packageName = TclProcessorUtil.asString(pkg);
+		if (command.getArguments().size() > 2) {
+			TclArgument version = command.getArguments().get(2);
+			packageName += " (" + TclProcessorUtil.asString(version) + ")";
+			end = version.getEnd();
+		}
+		context.getRequestor().acceptPackage(start, end - 1,
+				(packageName + "*").toCharArray());
 		return false;
 	}
 
