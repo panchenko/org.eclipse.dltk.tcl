@@ -183,6 +183,8 @@
       <processor id="catch"     class="org.eclipse.dltk.tcl.internal.structure.builders.TclCatchModelBuilder"/>
       <processor id="variable"  class="org.eclipse.dltk.tcl.internal.structure.builders.TclNamespaceVariableModelBuilder"/>
       <processor id="namespace" class="org.eclipse.dltk.tcl.internal.structure.builders.TclNamespaceModelBuilder"/>
+      <processor id="package"   class="org.eclipse.dltk.tcl.internal.structure.builders.TclPackageModelBuilder"/>
+      <processor id="source"    class="org.eclipse.dltk.tcl.internal.structure.builders.TclSourceModelBuilder"/>
    </extension>
    <!-- -->
    <extension
