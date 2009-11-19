@@ -16,15 +16,17 @@ public class TclNamespaceVariableProcessor extends AbstractTclCommandProcessor {
 	public TclNamespaceVariableProcessor() {
 	}
 
-	public ASTNode process(TclStatement statement, ITclParser parser, 
+	public ASTNode process(TclStatement statement, ITclParser parser,
 			ASTNode parent) {
 		int statementsCount = statement.getCount();
 		if (statementsCount < 2) {
-			this.report(parser, Messages.TclProcProcessor_Wrong_Number_of_Arguments, statement, ProblemSeverities.Error);
+			this.report(parser,
+					Messages.TclProcProcessor_Wrong_Number_of_Arguments,
+					statement, ProblemSeverities.Error);
 			return null;
 		}
 		ASTNode ret = null;
-		for (int i = 1; i < statementsCount; i+= 2) {
+		for (int i = 1; i < statementsCount; i += 2) {
 			Expression at = statement.getAt(i);
 			Expression variableName = at;
 			if (variableName == null) {
@@ -33,7 +35,7 @@ public class TclNamespaceVariableProcessor extends AbstractTclCommandProcessor {
 			SimpleReference variable = TclParseUtil.makeVariable(variableName);
 			if (variable != null) {
 				TclNamespaceVariable var = new TclNamespaceVariable(variable,
-						at.sourceStart(), at.sourceEnd());
+						statement.sourceStart(), statement.sourceEnd());
 				if (ret == null) {
 					ret = var;
 				} else {
