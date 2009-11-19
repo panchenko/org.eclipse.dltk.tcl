@@ -35,6 +35,7 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.tcl.core.TclCorePreferences;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPlugin;
+import org.eclipse.dltk.tcl.internal.structure.TclSourceElementParser2;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
 import org.eclipse.dltk.ui.preferences.PreferenceKey;
@@ -211,8 +212,15 @@ public class TclCorePreferencePage extends
 						ResourcesPlugin.getWorkspace().run(
 								new ProjectRefreshOperation(projects), monitor);
 					} catch (CoreException e) {
-						DLTKCore.error(TclPreferencesMessages.TclCorePreferencePage_1, e);
+						DLTKCore.error(
+								TclPreferencesMessages.TclCorePreferencePage_1,
+								e);
 					}
+					/*
+					 * TODO When new parser would be ready remove
+					 * TclSourceElementParser2 references from this class
+					 */
+					TclSourceElementParser2.refreshOptions();
 					return Status.OK_STATUS;
 				}
 			}.schedule(500);
@@ -231,7 +239,9 @@ public class TclCorePreferencePage extends
 				new PreferenceKey(TclPlugin.PLUGIN_ID,
 						TclCorePreferences.CHECK_CONTENT_EXCLUDES),
 				new PreferenceKey(TclPlugin.PLUGIN_ID,
-						DLTKCore.LANGUAGE_FILENAME_ASSOCIATIONS) };
+						DLTKCore.LANGUAGE_FILENAME_ASSOCIATIONS),
+				new PreferenceKey(TclPlugin.PLUGIN_ID,
+						TclSourceElementParser2.class.getName()) };
 
 		/**
 		 * @param context
@@ -253,15 +263,16 @@ public class TclCorePreferencePage extends
 		 */
 		@Override
 		protected void validateValuePresenceFor(PreferenceKey key) {
-			if (TclPlugin.PLUGIN_ID.equals(key.getQualifier())
-					&& DLTKCore.LANGUAGE_FILENAME_ASSOCIATIONS.equals(key
-							.getName())) {
+			if (key.belongsTo(TclPlugin.PLUGIN_ID)
+					&& (DLTKCore.LANGUAGE_FILENAME_ASSOCIATIONS.equals(key
+							.getName()) || TclSourceElementParser2.class
+							.getName().equals(key.getName()))) {
 				return;
 			}
 			super.validateValuePresenceFor(key);
 		}
 
-		private void createCheckbox(Composite block, String label,
+		private Button createCheckbox(Composite block, String label,
 				PreferenceKey key) {
 			final Button checkButton = SWTFactory.createCheckButton(block,
 					label);
@@ -269,6 +280,7 @@ public class TclCorePreferencePage extends
 			data.horizontalIndent = 16;
 			checkButton.setLayoutData(data);
 			bindControl(checkButton, key, null);
+			return checkButton;
 		}
 
 		private final TclCheckContentAdapter excludeAdapter;
@@ -301,6 +313,15 @@ public class TclCorePreferencePage extends
 			createCheckbox(block,
 					TclPreferencesMessages.TclCorePreferencePage_remote,
 					KEYS[3]);
+
+			{
+				Composite c = SWTFactory.createGroup(block, "Debug options", 1,
+						2, GridData.FILL_HORIZONTAL);
+				Button newStructureParser = createCheckbox(c,
+						"Old structure parser", new PreferenceKey(
+								TclPlugin.PLUGIN_ID,
+								TclSourceElementParser2.class.getName()));
+			}
 
 			final Composite patternComposite = SWTFactory.createComposite(
 					block, block.getFont(), 1, 1, GridData.FILL_BOTH);
