@@ -23,7 +23,8 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 	protected int realdepth = 0;
 	Pattern pattern = Pattern.compile("::");
 
-	public void acceptMethodReference(char[] methodName, int argCount,
+	@Override
+	public void acceptMethodReference(String methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
 		// System.out.println("TclSourceIndexerRequestor:Add Method Reference: "
 		// + new String(methodName));

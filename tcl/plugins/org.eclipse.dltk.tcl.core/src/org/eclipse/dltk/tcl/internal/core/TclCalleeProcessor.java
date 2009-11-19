@@ -52,8 +52,8 @@ public class TclCalleeProcessor implements ICalleeProcessor {
 
 	private class CaleeSourceElementRequestor extends
 			SourceElementRequestorAdaptor {
-
-		public void acceptMethodReference(char[] methodName, int argCount,
+		@Override
+		public void acceptMethodReference(String methodName, int argCount,
 				int sourcePosition, int sourceEndPosition) {
 			String name = new String(methodName);
 			int off = 0;
