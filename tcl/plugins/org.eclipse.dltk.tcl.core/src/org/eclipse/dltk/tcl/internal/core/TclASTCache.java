@@ -159,8 +159,8 @@ public class TclASTCache implements IASTCache {
 			TclModule tclModule, OutputStream stream) {
 		TclASTSaver saver;
 		try {
-			saver = new TclASTSaver(tclModule, stream);
-			saver.store(problems);
+			saver = new TclASTSaver();
+			saver.save(tclModule, problems, stream);
 		} catch (IOException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();

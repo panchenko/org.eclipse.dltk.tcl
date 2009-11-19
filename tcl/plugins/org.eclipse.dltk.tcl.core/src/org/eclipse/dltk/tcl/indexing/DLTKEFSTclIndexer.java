@@ -179,8 +179,8 @@ public class DLTKEFSTclIndexer {
 		}
 
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		TclASTSaver saver = new TclASTSaver(module, bout);
-		saver.store(dltkProblems);
+		TclASTSaver saver = new TclASTSaver();
+		saver.save(module, dltkProblems, bout);
 		astIndexBuilder.addEntry(file.getName(), timestamp,
 				TclASTCache.TCL_AST_ATTRIBUTE, new ByteArrayInputStream(bout
 						.toByteArray()));
