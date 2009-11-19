@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.structure.builders;
 
+import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
@@ -26,9 +27,9 @@ public class TclNamespaceVariableModelBuilder extends
 
 	public boolean process(TclCommand command, ITclModelBuildContext context) {
 		for (int i = 0; i < command.getArguments().size(); i += 2) {
-			processField(command, command.getArguments().get(i), context);
+			final TclArgument arg = command.getArguments().get(i);
+			processField(command, arg, asSymbol(arg), 0, context);
 		}
 		return false;
 	}
-
 }
