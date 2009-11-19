@@ -25,35 +25,33 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
-	private TclModule module;
-	private ProblemCollector collector;
 
-	public TclASTSaver(TclModule module, OutputStream stream)
-			throws IOException {
-		super(stream);
-		this.module = module;
-	}
+	private int moduleSize;
 
 	public void writeInt(int value) throws IOException {
-		if (module.getSize() < Byte.MAX_VALUE) {
+		if (moduleSize < Byte.MAX_VALUE) {
 			out.writeByte(value);
-		} else if (module.getSize() < Short.MAX_VALUE) {
+		} else if (moduleSize < Short.MAX_VALUE) {
 			out.writeShort(value);
 		} else {
 			out.writeInt(value);
 		}
 	}
 
-	public void store(ProblemCollector collector) throws IOException {
-		this.collector = collector;
-		storeContent();
-		storeStringIndex();
-		out.close();
+	/**
+	 * @since 2.0
+	 */
+	public void save(TclModule module, ProblemCollector dltkProblems,
+			OutputStream stream) throws IOException {
+		saveModule(module);
+		saveProblems(dltkProblems);
+		saveTo(stream);
+		stream.close();
 	}
 
-	protected void storeContent() throws IOException {
+	private void saveModule(TclModule module) throws IOException {
 		out.writeByte(TAG_MODULE);
-		out.writeInt(module.getSize());
+		out.writeInt(moduleSize = module.getSize());
 		EList<TclCommand> statements = module.getStatements();
 		out.writeInt(statements.size());
 		for (TclCommand tclCommand : statements) {
@@ -75,6 +73,9 @@ public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
 		} else {
 			out.writeBoolean(false);
 		}
+	}
+
+	private void saveProblems(ProblemCollector collector) throws IOException {
 		if (collector != null) {
 			int size = collector.getErrors().size();
 			out.writeInt(size);
@@ -216,4 +217,5 @@ public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
 			writeString(defURI);
 		}
 	}
+
 }
