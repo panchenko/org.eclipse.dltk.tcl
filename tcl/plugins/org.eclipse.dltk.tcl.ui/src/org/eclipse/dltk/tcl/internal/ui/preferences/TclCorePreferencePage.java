@@ -314,7 +314,7 @@ public class TclCorePreferencePage extends
 					TclPreferencesMessages.TclCorePreferencePage_remote,
 					KEYS[3]);
 
-			{
+			if (TclSourceElementParser2.DEBUG) {
 				Composite c = SWTFactory.createGroup(block, "Debug options", 1,
 						2, GridData.FILL_HORIZONTAL);
 				Button newStructureParser = createCheckbox(c,
