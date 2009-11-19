@@ -44,15 +44,9 @@
    <extension
          point="org.eclipse.dltk.core.sourceElementParsers">
       <parser
-            class="org.eclipse.dltk.tcl.internal.parser.TclSourceElementParser"
-            nature="org.eclipse.dltk.tcl.core.nature"
-            priority="0">
-      </parser>
-<!-- NEW STRUCTURE PARSER -->
-      <parser
             class="org.eclipse.dltk.tcl.internal.structure.TclSourceElementParser2"
             nature="org.eclipse.dltk.tcl.core.nature"
-            priority="1">
+            priority="0">
       </parser>
    </extension>
    <extension

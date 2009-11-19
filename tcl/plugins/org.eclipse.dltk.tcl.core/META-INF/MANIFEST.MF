@@ -23,7 +23,6 @@ Export-Package: org.eclipse.dltk.tcl.ast,
  org.eclipse.dltk.tcl.core.packages,
  org.eclipse.dltk.tcl.core.packages.impl,
  org.eclipse.dltk.tcl.core.packages.util,
- org.eclipse.dltk.tcl.structure,
  org.eclipse.dltk.tcl.indexing,
  org.eclipse.dltk.tcl.internal.core,
  org.eclipse.dltk.tcl.internal.core.codeassist,
@@ -36,5 +35,7 @@ Export-Package: org.eclipse.dltk.tcl.ast,
  org.eclipse.dltk.tcl.internal.core.search.mixin.model,
  org.eclipse.dltk.tcl.internal.core.sources,
  org.eclipse.dltk.tcl.internal.parser,
- org.eclipse.dltk.tcl.internal.parser.ext
+ org.eclipse.dltk.tcl.internal.parser.ext,
+ org.eclipse.dltk.tcl.internal.structure;x-internal:=true,
+ org.eclipse.dltk.tcl.structure
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

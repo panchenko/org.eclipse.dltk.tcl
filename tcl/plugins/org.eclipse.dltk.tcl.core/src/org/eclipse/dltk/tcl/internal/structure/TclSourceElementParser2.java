@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.compiler.ISourceElementRequestorExtension;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.ISourceElementParser;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
@@ -35,7 +36,8 @@ import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilderDetector;
 
-public class TclSourceElementParser2 implements ISourceElementParser {
+public class TclSourceElementParser2 extends TclSourceElementParser implements
+		ISourceElementParser {
 
 	private class TclModelBuilderVisitor extends TclVisitor {
 
@@ -76,21 +78,34 @@ public class TclSourceElementParser2 implements ISourceElementParser {
 		}
 	}
 
-	private IProblemReporter reporter;
-	private ISourceElementRequestor requestor;
+	public static boolean USE_NEW = true;
 
-	public boolean useOLD = false;
+	@SuppressWarnings("deprecation")
+	public static void refreshOptions() {
+		USE_NEW = !TclPlugin.getDefault().getPluginPreferences().getBoolean(
+				TclSourceElementParser2.class.getName());
+	}
 
+	static {
+		refreshOptions();
+	}
+
+	private boolean isStructureMode(ISourceElementRequestor requestor) {
+		if (requestor instanceof ISourceElementRequestorExtension) {
+			return ((ISourceElementRequestorExtension) requestor).getMode() == ISourceElementRequestorExtension.MODE_STRUCTURE;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public void parseSourceModule(
 			org.eclipse.dltk.compiler.env.ISourceModule module,
 			ISourceModuleInfo mifo) {
-		if (useOLD) {
-			TclSourceElementParser parser = new TclSourceElementParser();
-			parser.setReporter(reporter);
-			parser.setRequestor(requestor);
-			parser.parseSourceModule(module, mifo);
-		} else {
+		final ISourceElementRequestor requestor = getRequestor();
+		if (USE_NEW && isStructureMode(requestor)) {
 			initDetectors();
+			final IProblemReporter reporter = getProblemReporter();
 			// TODO load from disk cache
 			// TODO load from memory cache
 			TclErrorCollector collector = (reporter != null) ? new TclErrorCollector()
@@ -113,6 +128,8 @@ public class TclSourceElementParser2 implements ISourceElementParser {
 						.createLineTracker(tclModule);
 				collector.reportAll(reporter, tracker);
 			}
+		} else {
+			super.parseSourceModule(module, mifo);
 		}
 	}
 
@@ -143,7 +160,7 @@ public class TclSourceElementParser2 implements ISourceElementParser {
 
 	private static final ITclModelBuilder NULL_BUILDER = new ITclModelBuilder() {
 		public boolean process(TclCommand command, ITclModelBuildContext context) {
-			return false;
+			return true;
 		}
 	};
 
@@ -161,14 +178,6 @@ public class TclSourceElementParser2 implements ISourceElementParser {
 			builders.put(id, builder);
 		}
 		return builder != NULL_BUILDER ? builder : null;
-	}
-
-	public void setReporter(IProblemReporter reporter) {
-		this.reporter = reporter;
-	}
-
-	public void setRequestor(ISourceElementRequestor requestor) {
-		this.requestor = requestor;
 	}
 
 }
