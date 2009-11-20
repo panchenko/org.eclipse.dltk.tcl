@@ -17,10 +17,12 @@ public class TclVariableProcessor extends AbstractTclCommandProcessor {
 	public TclVariableProcessor() {
 	}
 
-	public ASTNode process(TclStatement statement, ITclParser parser, 
+	public ASTNode process(TclStatement statement, ITclParser parser,
 			ASTNode parent) {
 		if (statement.getCount() < 2) {
-			this.report(parser, "Syntax error: at least one argument expected.", statement, ProblemSeverities.Error);
+			this.report(parser,
+					"Syntax error: at least one argument expected.", statement,
+					ProblemSeverities.Error);
 			return null;
 		}
 		Expression variableName = statement.getAt(1);
@@ -33,7 +35,7 @@ public class TclVariableProcessor extends AbstractTclCommandProcessor {
 		SimpleReference variable = TclParseUtil.makeVariable(variableName);
 		if (variable != null) {
 			TclVariableDeclaration var = new TclVariableDeclaration(variable,
-					variableValue, statement.sourceStart(), statement
+					variableValue, variableName.sourceStart(), variableName
 							.sourceEnd());
 			if (TclVisibilityUtils.isPrivate(variable.getName())) {
 				var.setModifier(Modifiers.AccPrivate);

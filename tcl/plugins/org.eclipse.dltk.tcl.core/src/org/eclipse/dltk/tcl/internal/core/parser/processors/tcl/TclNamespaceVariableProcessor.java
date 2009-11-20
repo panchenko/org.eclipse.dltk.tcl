@@ -35,7 +35,7 @@ public class TclNamespaceVariableProcessor extends AbstractTclCommandProcessor {
 			SimpleReference variable = TclParseUtil.makeVariable(variableName);
 			if (variable != null) {
 				TclNamespaceVariable var = new TclNamespaceVariable(variable,
-						statement.sourceStart(), statement.sourceEnd());
+						at.sourceStart(), at.sourceEnd());
 				if (ret == null) {
 					ret = var;
 				} else {
