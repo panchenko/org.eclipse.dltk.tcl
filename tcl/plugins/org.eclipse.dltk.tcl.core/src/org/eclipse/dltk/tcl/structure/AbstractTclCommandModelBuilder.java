@@ -22,6 +22,7 @@ import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.ast.Node;
 import org.eclipse.dltk.tcl.ast.StringArgument;
+import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -134,10 +135,17 @@ public abstract class AbstractTclCommandModelBuilder implements
 
 	protected void processField(TclCommand command, final TclArgument nameArg,
 			ITclModelBuildContext context) {
+		if (!isSymbol(nameArg)) {
+			return;
+		}
 		final String varName = asSymbol(nameArg);
 		final int modifiers = TclVisibilityUtils.isPrivate(varName) ? Modifiers.AccPrivate
 				: Modifiers.AccPublic;
 		processField(command, nameArg, varName, modifiers, context);
+	}
+
+	protected static boolean isSymbol(TclArgument argument) {
+		return !(argument instanceof Substitution);
 	}
 
 	protected static String asSymbol(final TclArgument nameArg) {
