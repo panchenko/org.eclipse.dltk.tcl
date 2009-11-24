@@ -17,12 +17,12 @@ import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.internal.structure.ITclTypeHanlder;
-import org.eclipse.dltk.tcl.internal.structure.TclProcessorUtil;
-import org.eclipse.dltk.tcl.internal.structure.TclTypeResolver;
 import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
+import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
+import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
+import org.eclipse.dltk.tcl.structure.TclTypeResolver;
 import org.eclipse.emf.common.util.EList;
 
 public class TclNamespaceModelBuilder extends AbstractTclCommandModelBuilder {
@@ -87,6 +87,7 @@ public class TclNamespaceModelBuilder extends AbstractTclCommandModelBuilder {
 				}
 				sb.append(value, start, end);
 			}
+			// TODO replace arguments with parsed content
 			context.parse(sb.toString(), offset);
 			context.leave(command);
 			return false;

@@ -22,56 +22,19 @@ import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.ast.Node;
 import org.eclipse.dltk.tcl.ast.StringArgument;
-import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
-import org.eclipse.dltk.tcl.internal.structure.ITclTypeHanlder;
-import org.eclipse.dltk.tcl.internal.structure.TclProcessorUtil;
-import org.eclipse.dltk.tcl.internal.structure.TclTypeResolver;
 import org.eclipse.emf.common.util.EList;
 
 /**
  * @since 2.0
  */
-public abstract class AbstractTclCommandModelBuilder implements
-		ITclModelBuilder {
-
-	/**
-	 * @param argument
-	 * @return
-	 */
-	protected static boolean isLevel(TclArgument argument) {
-		final String value = TclProcessorUtil.asString(argument);
-		if (value.length() == 0) {
-			return false;
-		}
-		if (value.charAt(0) == '#') {
-			return isNumber(value, 1);
-		} else {
-			return isNumber(value, 0);
-		}
-	}
-
-	/**
-	 * @param value
-	 * @param beginIndex
-	 * @return
-	 */
-	protected static boolean isNumber(String value, int beginIndex) {
-		if (beginIndex < value.length()) {
-			for (int i = beginIndex, len = value.length(); i < len; ++i) {
-				if (!Character.isDigit(value.charAt(i))) {
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
-	}
+public abstract class AbstractTclCommandModelBuilder extends
+		TclModelBuilderUtil implements ITclModelBuilder {
 
 	/**
 	 * @param node
@@ -142,15 +105,6 @@ public abstract class AbstractTclCommandModelBuilder implements
 		final int modifiers = TclVisibilityUtils.isPrivate(varName) ? Modifiers.AccPrivate
 				: Modifiers.AccPublic;
 		processField(command, nameArg, varName, modifiers, context);
-	}
-
-	protected static boolean isSymbol(TclArgument argument) {
-		return !(argument instanceof Substitution);
-	}
-
-	protected static String asSymbol(final TclArgument nameArg) {
-		return TclParseUtil.escapeName(TclProcessorUtil.asString(nameArg));
-		// TODO Check TclParseUtil.makeVariable()
 	}
 
 	protected static class Parameter {

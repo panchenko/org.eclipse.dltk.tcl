@@ -14,9 +14,9 @@ package org.eclipse.dltk.tcl.internal.structure.builders;
 import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.internal.structure.TclProcessorUtil;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
+import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
 
 public class TclSourceModelBuilder extends AbstractTclCommandModelBuilder {
 

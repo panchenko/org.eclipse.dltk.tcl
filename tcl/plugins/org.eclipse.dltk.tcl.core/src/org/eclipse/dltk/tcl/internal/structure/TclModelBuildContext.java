@@ -23,7 +23,10 @@ import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
+import org.eclipse.dltk.tcl.structure.ITclAttribute;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
+import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
+import org.eclipse.dltk.tcl.structure.TclTypeResolver;
 
 public class TclModelBuildContext implements ITclModelBuildContext {
 
@@ -131,6 +134,16 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 		List<TclCommand> commands = newParser.parse(source, errorReporter,
 				coreProcessor);
 		fParser.traverse(commands, this);
+	}
+
+	private final List<ITclAttribute> attributes = new ArrayList<ITclAttribute>();
+
+	public void addAttribute(ITclAttribute attribute) {
+		attributes.add(attribute);
+	}
+
+	public void resetAttributes() {
+		attributes.clear();
 	}
 
 }

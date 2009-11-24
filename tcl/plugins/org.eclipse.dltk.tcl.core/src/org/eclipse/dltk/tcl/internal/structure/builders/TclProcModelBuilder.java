@@ -22,11 +22,11 @@ import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.Messages;
-import org.eclipse.dltk.tcl.internal.structure.ITclTypeHanlder;
-import org.eclipse.dltk.tcl.internal.structure.TclProcessorUtil;
-import org.eclipse.dltk.tcl.internal.structure.TclTypeResolver;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
+import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
+import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
+import org.eclipse.dltk.tcl.structure.TclTypeResolver;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
 
 public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {

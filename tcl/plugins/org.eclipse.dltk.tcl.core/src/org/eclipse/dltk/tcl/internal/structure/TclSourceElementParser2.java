@@ -35,6 +35,7 @@ import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilderDetector;
+import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
 
 public class TclSourceElementParser2 extends TclSourceElementParser implements
 		ISourceElementParser {
@@ -54,6 +55,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		public boolean visit(TclCommand command) {
 			final String commandName = TclProcessorUtil.asString(command
 					.getName());
+			context.resetAttributes();
 			for (ITclModelBuilderDetector detector : detectors) {
 				final String builderId = detector.detect(commandName, command,
 						context);
@@ -78,7 +80,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		}
 	}
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static boolean USE_NEW = DEBUG;
 

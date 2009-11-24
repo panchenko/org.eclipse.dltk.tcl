@@ -9,7 +9,7 @@
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  *******************************************************************************/
-package org.eclipse.dltk.tcl.internal.structure;
+package org.eclipse.dltk.tcl.structure;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
@@ -17,6 +17,7 @@ import org.eclipse.dltk.compiler.IElementRequestor.ElementInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
+import org.eclipse.dltk.tcl.internal.structure.TclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
 
 public class TclTypeResolver {
