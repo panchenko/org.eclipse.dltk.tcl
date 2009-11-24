@@ -61,8 +61,9 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 		if (command.getArguments().size() > index + 1) {
 			final TclArgument version = command.getArguments().get(index + 1);
 			importInfo.version = TclProcessorUtil.asString(version);
-			// importInfo.sourceEnd = version.getEnd() - 1;
+			// importInfo.sourceEnd = version.getEnd();
 		}
+		--importInfo.sourceEnd;
 		context.getRequestor().acceptImport(importInfo);
 		return false;
 	}
@@ -81,7 +82,7 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 			packageName += " (" + TclProcessorUtil.asString(version) + ")";
 			// end = version.getEnd();
 		}
-		context.getRequestor().acceptPackage(start, end, packageName);
+		context.getRequestor().acceptPackage(start, end - 1, packageName);
 		return false;
 	}
 
@@ -99,7 +100,7 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 			packageName += " (" + TclProcessorUtil.asString(version) + ")";
 			// end = version.getEnd();
 		}
-		context.getRequestor().acceptPackage(start, end, packageName + "*");
+		context.getRequestor().acceptPackage(start, end - 1, packageName + "*");
 		return false;
 	}
 

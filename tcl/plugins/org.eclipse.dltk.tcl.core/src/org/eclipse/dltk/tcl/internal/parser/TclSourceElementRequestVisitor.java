@@ -386,25 +386,25 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		if (pack.getStyle() == TclPackageDeclaration.STYLE_PROVIDE) {
 			if (version != null && version instanceof SimpleReference) {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), pack.getName() + " ("
+						.getNameEnd() - 1, pack.getName() + " ("
 						+ ((SimpleReference) version).getName() + ")");
 			} else {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), pack.getName());
+						.getNameEnd() - 1, pack.getName());
 			}
 		} else if (pack.getStyle() == TclPackageDeclaration.STYLE_IFNEEDED) {
 			if (version != null && version instanceof SimpleReference) {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), pack.getName() + " ("
+						.getNameEnd() - 1, pack.getName() + " ("
 						+ ((SimpleReference) version).getName() + ")*");
 			} else {
 				this.fRequestor.acceptPackage(pack.getNameStart(), pack
-						.getNameEnd(), pack.getName() + "*");
+						.getNameEnd() - 1, pack.getName() + "*");
 			}
 		} else if (pack.getStyle() == TclPackageDeclaration.STYLE_REQUIRE) {
 			ImportInfo importInfo = new ImportInfo();
 			importInfo.sourceStart = pack.getNameStart();
-			importInfo.sourceEnd = pack.getNameEnd();
+			importInfo.sourceEnd = pack.getNameEnd() - 1;
 			importInfo.containerName = org.eclipse.dltk.tcl.core.TclConstants.REQUIRE_CONTAINER;
 			importInfo.name = pack.getName();
 			importInfo.version = version instanceof SimpleReference ? ((SimpleReference) version)
