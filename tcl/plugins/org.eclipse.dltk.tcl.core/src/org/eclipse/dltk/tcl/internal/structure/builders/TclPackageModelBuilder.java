@@ -97,9 +97,9 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 		if (command.getArguments().size() > 2) {
 			TclArgument version = command.getArguments().get(2);
 			packageName += " (" + TclProcessorUtil.asString(version) + ")";
-			end = version.getEnd();
+			// end = version.getEnd();
 		}
-		context.getRequestor().acceptPackage(start, end - 1, packageName + "*");
+		context.getRequestor().acceptPackage(start, end, packageName + "*");
 		return false;
 	}
 
