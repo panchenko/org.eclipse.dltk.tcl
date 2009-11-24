@@ -285,9 +285,9 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 			this.fNodes.pop();
 			return false;
 		} else if (statement instanceof TclStatement) {
-			this.fNodes.pop();
 			processReferences((TclStatement) statement);
-			return false;
+			// it can contain nested scripts/substitutions
+			return true;
 		} else if (statement instanceof FieldDeclaration) {
 			this.processField(statement);
 			return false;
