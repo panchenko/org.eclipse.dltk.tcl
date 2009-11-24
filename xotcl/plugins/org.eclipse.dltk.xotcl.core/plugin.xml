@@ -16,6 +16,9 @@
    <extension point="org.eclipse.dltk.tcl.core.tclModelBuilderDetector">
       <detector class="org.eclipse.dltk.xotcl.internal.core.parser.structure.XOTclModelDetector"/>
    </extension>
+   <extension point="org.eclipse.dltk.tcl.core.tclModelBuilder">
+      <processor id="#Class#create" class="org.eclipse.dltk.xotcl.internal.core.parser.structure.XOTclClassCreate" />
+   </extension>
    <extension
          name="XOTcl commands"
          point="org.eclipse.dltk.tcl.core.tclCommandProcessor">
