@@ -16,14 +16,17 @@ import org.eclipse.dltk.ui.wizards.NewSourceModulePage;
 
 public class TclFileCreationPage extends NewSourceModulePage {
 
+	@Override
 	protected String getRequiredNature() {
 		return TclNature.NATURE_ID;
 	}
 
+	@Override
 	protected String getPageDescription() {
 		return "This wizard creates a new Tcl file.";
 	}
 
+	@Override
 	protected String getPageTitle() {
 		return "Create new Tcl file";
 	}
@@ -33,6 +36,7 @@ public class TclFileCreationPage extends NewSourceModulePage {
 	/*
 	 * @see NewSourceModulePage#getCodeTemplateArea()
 	 */
+	@Override
 	protected ICodeTemplateArea getTemplateArea() {
 		return codeTemplateArea;
 	}
@@ -40,6 +44,7 @@ public class TclFileCreationPage extends NewSourceModulePage {
 	/*
 	 * @see NewSourceModulePage#getCodeTemplateContextTypes()
 	 */
+	@Override
 	protected String[] getCodeTemplateContextTypeIds() {
 		return new String[] { "org.eclipse.dltk.tcl.text.template.type.tcl" }; //$NON-NLS-1$
 	}
@@ -47,6 +52,7 @@ public class TclFileCreationPage extends NewSourceModulePage {
 	/*
 	 * @see NewSourceModulePage#getDefaultCodeTemplateId()
 	 */
+	@Override
 	protected String getDefaultCodeTemplateId() {
 		return "org.eclipse.dltk.tcl.text.templates.tcl"; //$NON-NLS-1$
 	}
@@ -54,11 +60,9 @@ public class TclFileCreationPage extends NewSourceModulePage {
 	/**
 	 * @return the name of the template used in the previous dialog invocation.
 	 */
+	@Override
 	protected String getLastUsedTemplateName() {
 		return null;
 	}
 
-	protected boolean isLinkingSupported() {
-		return true;
-	}
 }
