@@ -91,7 +91,7 @@ public abstract class AbstractTclCommandModelBuilder implements
 		FieldInfo fi = new FieldInfo();
 		fi.nameSourceStart = nameArg.getStart();
 		fi.nameSourceEnd = nameArg.getEnd() - 1;
-		fi.declarationStart = command.getStart();
+		fi.declarationStart = fi.nameSourceStart;
 		fi.modifiers = modifiers;
 
 		String arrayIndex = null;
