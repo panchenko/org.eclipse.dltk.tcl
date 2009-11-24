@@ -19,6 +19,7 @@ import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.Messages;
 import org.eclipse.dltk.tcl.internal.structure.ITclTypeHanlder;
@@ -64,6 +65,10 @@ public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {
 		mi.nameSourceStart = arg0.getStart();
 		mi.nameSourceEnd = arg0.getEnd() - 1;
 		mi.name = procName;
+		if (mi.name.indexOf("::") != -1) {
+			final String[] parts = TclParseUtil.tclSplit(mi.name);
+			mi.name = parts[parts.length - 1];
+		}
 		mi.modifiers = TclVisibilityUtils.isPrivate(procName) ? Modifiers.AccPrivate
 				: Modifiers.AccPublic;
 		List<Parameter> parameters = parseParameters(command.getArguments()
