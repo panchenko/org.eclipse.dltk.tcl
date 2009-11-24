@@ -35,8 +35,8 @@ public class TclCatchProcessor extends AbstractTclCommandProcessor {
 				TclCatchStatement catchStatement = new TclCatchStatement(
 						(Block) e, variable, statement.sourceStart(), statement
 								.sourceEnd());
-				catchStatement.getStatements().addAll(
-						((Block) e).getStatements());
+				// catchStatement.getStatements().addAll(
+				// ((Block) e).getStatements());
 				addToParent(parent, catchStatement);
 				return catchStatement;
 			} else if (e instanceof TclBlockExpression) {
