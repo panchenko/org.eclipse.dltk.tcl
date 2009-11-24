@@ -33,6 +33,7 @@ public class Collector extends StructureModelCollector implements
 	static class Tag {
 		final int tag;
 		final int offset;
+		String context;
 
 		public Tag(int tag, int offset) {
 			this.tag = tag;
@@ -50,7 +51,7 @@ public class Collector extends StructureModelCollector implements
 
 		@Override
 		public String toString() {
-			return tag + "@" + offset; //$NON-NLS-1$
+			return tag + "@" + offset + (context != null ? "=" + context : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -71,6 +72,20 @@ public class Collector extends StructureModelCollector implements
 			// should not happen
 		}
 		return stream.toByteArray();
+	}
+
+	@Override
+	public boolean enterFieldCheckDuplicates(FieldInfo info) {
+		final boolean result = super.enterFieldCheckDuplicates(info);
+		getLastTag().context = info.name;
+		return result;
+	}
+
+	/**
+	 * @return
+	 */
+	private Tag getLastTag() {
+		return tags.get(tags.size() - 1);
 	}
 
 	@Override

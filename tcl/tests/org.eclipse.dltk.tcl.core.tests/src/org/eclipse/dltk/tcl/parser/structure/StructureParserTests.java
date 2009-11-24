@@ -106,9 +106,13 @@ public class StructureParserTests extends TestCase {
 			int end = i + 1 < tags.size() ? tags.get(i + 1).offset
 					: bytes.length;
 			StringBuilder sb = new StringBuilder();
-			sb.append(describeTag(tag.tag)).append(": ");
-			sb.append(toHexString(tag.offset)).append("..").append(
-					toHexString(end)).append(":");
+			sb.append(describeTag(tag.tag));
+			if (tag.context != null) {
+				sb.append("(").append(tag.context).append(")");
+			}
+			sb.append(":");
+			// sb.append(toHexString(tag.offset)).append("..").append(
+			// toHexString(end)).append(":");
 			for (int j = tag.offset; j < end; ++j) {
 				sb.append(' ');
 				final int b = bytes[j] & 0xFF;
