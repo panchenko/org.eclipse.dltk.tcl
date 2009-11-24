@@ -55,13 +55,13 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 		}
 		final ImportInfo importInfo = new ImportInfo();
 		importInfo.sourceStart = pkg.getStart();
-		importInfo.sourceEnd = pkg.getEnd() - 1;
+		importInfo.sourceEnd = pkg.getEnd();
 		importInfo.containerName = org.eclipse.dltk.tcl.core.TclConstants.REQUIRE_CONTAINER;
 		importInfo.name = packageName;
 		if (command.getArguments().size() > index + 1) {
 			final TclArgument version = command.getArguments().get(index + 1);
 			importInfo.version = TclProcessorUtil.asString(version);
-			importInfo.sourceEnd = version.getEnd() - 1;
+			// importInfo.sourceEnd = version.getEnd() - 1;
 		}
 		context.getRequestor().acceptImport(importInfo);
 		return false;
@@ -79,9 +79,9 @@ public class TclPackageModelBuilder extends AbstractTclCommandModelBuilder {
 		if (command.getArguments().size() > 2) {
 			TclArgument version = command.getArguments().get(2);
 			packageName += " (" + TclProcessorUtil.asString(version) + ")";
-			end = version.getEnd();
+			// end = version.getEnd();
 		}
-		context.getRequestor().acceptPackage(start, end - 1, packageName);
+		context.getRequestor().acceptPackage(start, end, packageName);
 		return false;
 	}
 
