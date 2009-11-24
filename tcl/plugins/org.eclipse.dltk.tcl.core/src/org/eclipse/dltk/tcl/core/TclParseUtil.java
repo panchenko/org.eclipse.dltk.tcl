@@ -67,6 +67,7 @@ public class TclParseUtil {
 	}
 
 	public static String escapeName(String name) {
+		// TODO optimize if there are no special chars
 		name = SimpleTclParser.magicSubstitute(name);
 		StringBuffer res = new StringBuffer();
 		int len = name.length();
