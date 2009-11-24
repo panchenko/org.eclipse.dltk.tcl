@@ -149,7 +149,7 @@ public abstract class AbstractTclCommandModelBuilder implements
 	}
 
 	protected static String asSymbol(final TclArgument nameArg) {
-		return TclProcessorUtil.asString(nameArg);
+		return TclParseUtil.escapeName(TclProcessorUtil.asString(nameArg));
 		// TODO Check TclParseUtil.makeVariable()
 	}
 
