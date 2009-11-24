@@ -13,6 +13,8 @@ package org.eclipse.dltk.tcl.parser.structure;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -28,11 +30,14 @@ import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceElementParser;
+import org.eclipse.dltk.core.caching.IStructureConstants;
 import org.eclipse.dltk.tcl.core.tests.model.Activator;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceElementParser;
 import org.eclipse.dltk.tcl.internal.structure.TclSourceElementParser2;
 import org.eclipse.dltk.tcl.parser.structure.Collector.Tag;
 import org.eclipse.dltk.utils.TextUtils;
+
+import static java.lang.Integer.toHexString;
 
 public class StructureParserTests extends TestCase {
 
@@ -95,14 +100,15 @@ public class StructureParserTests extends TestCase {
 		List<String> lines = new ArrayList<String>();
 		final byte[] bytes = collector.getBytes();
 		final List<Tag> tags = collector.tags;
-		lines.add(tags.toString());
+		// lines.add(tags.toString());
 		for (int i = 0; i < tags.size(); ++i) {
 			Tag tag = tags.get(i);
 			int end = i + 1 < tags.size() ? tags.get(i + 1).offset
 					: bytes.length;
 			StringBuilder sb = new StringBuilder();
-			sb.append(Integer.toHexString(tag.offset)).append("..").append(
-					Integer.toHexString(end)).append(":");
+			sb.append(describeTag(tag.tag)).append(": ");
+			sb.append(toHexString(tag.offset)).append("..").append(
+					toHexString(end)).append(":");
 			for (int j = tag.offset; j < end; ++j) {
 				sb.append(' ');
 				if (bytes[j] < 0x10) {
@@ -115,13 +121,37 @@ public class StructureParserTests extends TestCase {
 		return TextUtils.join(lines, Util.LINE_SEPARATOR);
 	}
 
+	/**
+	 * @param tag
+	 * @return
+	 */
+	private String describeTag(int tag) {
+		for (Field field : IStructureConstants.class.getFields()) {
+			if (Modifier.isPublic(field.getModifiers())
+					&& Modifier.isStatic(field.getModifiers())
+					&& Integer.TYPE.equals(field.getType())) {
+				try {
+					Integer value = (Integer) field.get(null);
+					if (value.intValue() == tag) {
+						return field.getName();
+					}
+				} catch (IllegalArgumentException e) {
+					// ignore
+				} catch (IllegalAccessException e) {
+					// ignore
+				}
+			}
+		}
+		return "#" + Integer.toString(tag); //$NON-NLS-1$
+	}
+
 	@Override
 	protected void runTest() throws Throwable {
 		Input input = new Input(resource);
 		Collector oldStructure = parse(input, new TclSourceElementParser());
 		TclSourceElementParser2.USE_NEW = true;
 		Collector newStructure = parse(input, new TclSourceElementParser2());
-		assertEquals(oldStructure.tags, newStructure.tags);
+		// assertEquals(oldStructure.tags, newStructure.tags);
 		assertEquals(dump(oldStructure), dump(newStructure));
 	}
 
