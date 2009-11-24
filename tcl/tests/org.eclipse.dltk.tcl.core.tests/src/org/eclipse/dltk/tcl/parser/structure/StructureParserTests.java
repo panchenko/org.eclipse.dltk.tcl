@@ -111,10 +111,11 @@ public class StructureParserTests extends TestCase {
 					toHexString(end)).append(":");
 			for (int j = tag.offset; j < end; ++j) {
 				sb.append(' ');
-				if (bytes[j] < 0x10) {
+				final int b = bytes[j] & 0xFF;
+				if (b < 0x10) {
 					sb.append('0');
 				}
-				sb.append(Integer.toHexString(bytes[j]));
+				sb.append(toHexString(b));
 			}
 			lines.add(sb.toString());
 		}
