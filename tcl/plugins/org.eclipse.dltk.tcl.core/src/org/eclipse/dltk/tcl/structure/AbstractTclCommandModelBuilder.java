@@ -200,22 +200,11 @@ public abstract class AbstractTclCommandModelBuilder implements
 			return;
 		}
 		mi.parameterNames = new String[parameters.size()];
-		boolean hasDefaults = false;
-		for (Parameter parameter : parameters) {
-			if (parameter.defaultValue != null) {
-				hasDefaults = true;
-				break;
-			}
-		}
-		if (hasDefaults) {
-			mi.parameterInitializers = new String[parameters.size()];
-		}
+		mi.parameterInitializers = new String[parameters.size()];
 		for (int i = 0; i < parameters.size(); ++i) {
 			Parameter parameter = parameters.get(i);
 			mi.parameterNames[i] = parameter.name;
-			if (hasDefaults) {
-				mi.parameterInitializers[i] = parameter.defaultValue;
-			}
+			mi.parameterInitializers[i] = parameter.defaultValue;
 		}
 	}
 
