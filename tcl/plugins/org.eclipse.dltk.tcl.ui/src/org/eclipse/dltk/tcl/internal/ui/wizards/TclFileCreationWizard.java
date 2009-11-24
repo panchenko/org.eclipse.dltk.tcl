@@ -15,7 +15,7 @@ import org.eclipse.dltk.ui.wizards.NewSourceModulePage;
 import org.eclipse.dltk.ui.wizards.NewSourceModuleWizard;
 
 public class TclFileCreationWizard extends NewSourceModuleWizard {
-	public static final String ID_WIZARD = "org.eclipse.dltk.tcl.internal.ui.wizards.TclFileCreationWizard";
+	public static final String ID_WIZARD = "org.eclipse.dltk.tcl.internal.ui.wizards.TclFileCreationWizard"; //$NON-NLS-1$
 
 	public TclFileCreationWizard() {
 		setDefaultPageImageDescriptor(TclImages.DESC_WIZBAN_FILE_CREATION);
@@ -24,6 +24,7 @@ public class TclFileCreationWizard extends NewSourceModuleWizard {
 		setWindowTitle("Create Tcl File");
 	}
 
+	@Override
 	protected NewSourceModulePage createNewSourceModulePage() {
 		return new TclFileCreationPage();
 	}
