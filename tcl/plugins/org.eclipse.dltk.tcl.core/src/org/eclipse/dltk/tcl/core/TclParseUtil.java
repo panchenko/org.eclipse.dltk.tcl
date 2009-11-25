@@ -43,6 +43,19 @@ public class TclParseUtil {
 		return object != null && object.getClass().equals(TclWord.class);
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	public static String extractBraces(String s) {
+		if (s != null) {
+			final int len = s.length();
+			if (len >= 2 && s.charAt(0) == '{' && s.charAt(len - 1) == '}') {
+				return s.substring(1, len - 1);
+			}
+		}
+		return s;
+	}
+
 	public static String nameFromBlock(String name, char c1, char c2) {
 		int pos = name.indexOf(c1);
 		String nname = name.substring(pos + 1);
