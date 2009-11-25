@@ -19,6 +19,7 @@
    <extension point="org.eclipse.dltk.tcl.core.tclModelBuilder">
       <processor id="#Class#create"  class="org.eclipse.dltk.xotcl.internal.core.parser.structure.XOTclClassCreate" />
       <processor id="#Object#create" class="org.eclipse.dltk.xotcl.internal.core.parser.structure.XOTclObjectCreate" />
+      <processor id="#Object#set" class="org.eclipse.dltk.xotcl.internal.core.parser.structure.XOTclObjectSet" />
    </extension>
    <extension
          name="XOTcl commands"
