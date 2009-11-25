@@ -25,7 +25,6 @@ import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.Messages;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
-import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
 import org.eclipse.dltk.tcl.structure.TclTypeResolver;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
 
@@ -53,7 +52,7 @@ public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {
 			return false;
 		}
 		final TclArgument arg0 = command.getArguments().get(0);
-		String procName = TclProcessorUtil.asString(arg0);
+		String procName = asSymbol(arg0);
 		if (procName == null || procName.length() == 0) {
 			report(context, command.getArguments().get(0),
 					Messages.TclProcProcessor_Empty_Proc_Name,
