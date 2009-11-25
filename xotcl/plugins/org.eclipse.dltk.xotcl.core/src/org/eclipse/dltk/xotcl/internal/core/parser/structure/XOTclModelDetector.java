@@ -14,7 +14,6 @@ package org.eclipse.dltk.xotcl.internal.core.parser.structure;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
-import org.eclipse.dltk.tcl.core.ITclCommandDetector.CommandInfo;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilderDetector;
 import org.eclipse.dltk.tcl.structure.TclModelBuilderUtil;
