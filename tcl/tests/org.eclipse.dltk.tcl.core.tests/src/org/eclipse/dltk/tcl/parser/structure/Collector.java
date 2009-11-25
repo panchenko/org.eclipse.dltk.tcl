@@ -81,6 +81,31 @@ public class Collector extends StructureModelCollector implements
 		return result;
 	}
 
+	@Override
+	public void enterMethod(MethodInfo info) {
+		super.enterMethod(info);
+		getLastTag().context = info.name;
+	}
+
+	@Override
+	public void enterMethodRemoveSame(MethodInfo info) {
+		super.enterMethodRemoveSame(info);
+		getLastTag().context = info.name;
+	}
+
+	@Override
+	public void enterType(TypeInfo info) {
+		super.enterType(info);
+		getLastTag().context = info.name;
+	}
+
+	@Override
+	public boolean enterTypeAppend(String fullName, String delimiter) {
+		final boolean result = super.enterTypeAppend(fullName, delimiter);
+		getLastTag().context = fullName;
+		return result;
+	}
+
 	/**
 	 * @return
 	 */
