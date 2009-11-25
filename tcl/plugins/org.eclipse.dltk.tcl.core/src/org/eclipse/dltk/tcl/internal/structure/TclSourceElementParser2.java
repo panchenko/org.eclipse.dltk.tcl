@@ -11,9 +11,12 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.structure;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.ISourceElementRequestorExtension;
@@ -169,12 +172,15 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		}
 	};
 
+	private static final Set<String> LOGGED_BUILDERS = Collections
+			.synchronizedSet(new HashSet<String>());
+
 	protected ITclModelBuilder getBuilder(String id, boolean logMissingAsError) {
 		ITclModelBuilder builder = builders.get(id);
 		if (builder == null) {
 			builder = ModelBuilderManager.getInstance().getModelBuilder(id);
 			if (builder == null) {
-				if (logMissingAsError) {
+				if (logMissingAsError && LOGGED_BUILDERS.add(id)) {
 					TclPlugin.error("Tcl Model Builder '" + id
 							+ "' is not found");
 				}
