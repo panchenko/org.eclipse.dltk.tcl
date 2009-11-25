@@ -38,7 +38,8 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 		if (procName instanceof SimpleReference) {
 			sName = ((SimpleReference) procName).getName();
 		} else if (procName instanceof TclBlockExpression) {
-			sName = ((TclBlockExpression) procName).getBlock();
+			sName = TclParseUtil.nameFromBlock(((TclBlockExpression) procName)
+					.getBlock(), '{', '}');
 		} else if (procName instanceof TclExecuteExpression) {
 			sName = ((TclExecuteExpression) procName).getExpression();
 		} else if (procName instanceof StringLiteral) {
