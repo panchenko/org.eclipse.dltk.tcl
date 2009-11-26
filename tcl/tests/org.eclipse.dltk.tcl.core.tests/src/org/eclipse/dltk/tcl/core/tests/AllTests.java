@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 import org.eclipse.dltk.tcl.core.tests.launching.TclLaunchingTests;
 import org.eclipse.dltk.tcl.core.tests.model.PACompletionTests;
 import org.eclipse.dltk.tcl.core.tests.model.PASelectionTests;
+import org.eclipse.dltk.tcl.parser.structure.StructureParserTests;
 
 public class AllTests {
 
@@ -29,6 +30,7 @@ public class AllTests {
 		suite.addTest(TclLaunchingTests.suite());
 		suite.addTestSuite(VariableResolverTests.class);
 		suite.addTestSuite(TclContentDescriberTests.class);
+		suite.addTest(StructureParserTests.suite());
 		// $JUnit-END$
 		return suite;
 	}
