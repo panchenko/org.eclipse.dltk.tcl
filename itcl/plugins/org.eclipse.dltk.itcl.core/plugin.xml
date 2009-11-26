@@ -55,4 +55,10 @@
             file-extensions="itcl,itk">
       </file-association>
    </extension>
+   <extension point="org.eclipse.dltk.tcl.core.tclModelBuilderDetector">
+      <detector class="org.eclipse.dltk.itcl.internal.core.parser.structure.IncrTclModelDetector"/>
+   </extension>
+   <extension point="org.eclipse.dltk.tcl.core.tclModelBuilder">
+      <processor id="#itcl#class" class="org.eclipse.dltk.itcl.internal.core.parser.structure.IncrTclClass"/>
+   </extension>
 </plugin>
