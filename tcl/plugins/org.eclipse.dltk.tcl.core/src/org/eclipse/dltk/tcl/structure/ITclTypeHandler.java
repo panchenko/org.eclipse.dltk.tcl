@@ -11,14 +11,13 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.structure;
 
-import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
 
 /**
  * @since 2.0
  */
-public interface ITclModelBuilder {
+public interface ITclTypeHandler extends ITclModelHandler {
 
-	boolean process(TclCommand command, ITclModelBuildContext context)
-			throws TclModelProblem;
+	String getNamespace();
 
 }

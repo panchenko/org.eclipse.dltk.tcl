@@ -11,6 +11,23 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.structure;
 
-public interface ITclAttribute {
+import org.eclipse.dltk.tcl.ast.Node;
+
+/**
+ * @since 2.0
+ */
+@SuppressWarnings("serial")
+public class TclModelProblem extends Exception {
+
+	private final Node location;
+
+	/**
+	 * @param string
+	 * @param command
+	 */
+	public TclModelProblem(String message, Node location) {
+		super(message);
+		this.location = location;
+	}
 
 }

@@ -45,6 +45,8 @@ public interface ITclModelBuildContext {
 
 	void leave(TclCommand command);
 
-	void addAttribute(ITclAttribute attribute);
+	Object getAttribute(String name);
+
+	void setAttribute(String name, Object value);
 
 }

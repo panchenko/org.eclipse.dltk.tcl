@@ -11,10 +11,32 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.structure;
 
-import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
+import org.eclipse.dltk.compiler.IElementRequestor.ElementInfo;
+import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 
-public interface ITclTypeHanlder extends ITclModelHandler {
+/**
+ * @since 2.0
+ */
+public interface ITclTypeResolver {
 
-	String getNamespace();
+	/**
+	 * Resolves member (proc/var) type.
+	 * 
+	 * @param info
+	 * @param end
+	 * @param name
+	 * @return
+	 */
+	ITclTypeHandler resolveMemberType(ElementInfo info, int end, String name);
+
+	/**
+	 * Resolves type.
+	 * 
+	 * @param info
+	 * @param end
+	 * @param name
+	 * @return
+	 */
+	ITclTypeHandler resolveType(TypeInfo info, int end, String name);
 
 }

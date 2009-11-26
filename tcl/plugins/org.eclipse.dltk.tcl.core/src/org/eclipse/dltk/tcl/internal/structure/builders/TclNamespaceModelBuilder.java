@@ -20,9 +20,9 @@ import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
-import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
+import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
+import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
 import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
-import org.eclipse.dltk.tcl.structure.TclTypeResolver;
 import org.eclipse.emf.common.util.EList;
 
 public class TclNamespaceModelBuilder extends AbstractTclCommandModelBuilder {
@@ -53,8 +53,8 @@ public class TclNamespaceModelBuilder extends AbstractTclCommandModelBuilder {
 		ti.name = asSymbol(nameArg);
 		ti.modifiers = Modifiers.AccNameSpace;
 
-		ITclTypeHanlder typeHanlder = context.get(TclTypeResolver.class)
-				.resolveType(ti, command.getEnd(), ti.name + "::dummy");
+		ITclTypeHandler typeHanlder = context.get(ITclTypeResolver.class)
+				.resolveType(ti, command.getEnd(), ti.name);
 		context.addHandler(command, typeHanlder);
 		if (arguments.size() == 3 && arguments.get(2) instanceof Script) {
 			return true;

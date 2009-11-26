@@ -12,6 +12,7 @@
 package org.eclipse.dltk.tcl.internal.structure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +24,13 @@ import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
-import org.eclipse.dltk.tcl.structure.ITclAttribute;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
-import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
-import org.eclipse.dltk.tcl.structure.TclTypeResolver;
+import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
+import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
 
 public class TclModelBuildContext implements ITclModelBuildContext {
 
-	private static class TopLevelNamespace implements ITclTypeHanlder {
+	private static class TopLevelNamespace implements ITclTypeHandler {
 
 		public String getNamespace() {
 			return "::";
@@ -73,11 +73,11 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 		return errorReporter;
 	}
 
-	private Stack<ITclTypeHanlder> exitStack = new Stack<ITclTypeHanlder>();
+	private Stack<ITclTypeHandler> exitStack = new Stack<ITclTypeHandler>();
 
 	public String getEnclosingNamespace() {
 		for (int head = exitStack.size(); --head >= 0;) {
-			ITclTypeHanlder handler = exitStack.get(head);
+			ITclTypeHandler handler = exitStack.get(head);
 			final String namespace = handler.getNamespace();
 			if (namespace != null) {
 				return namespace;
@@ -95,8 +95,8 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 			handlers.put(command, commandHandlers);
 		}
 		commandHandlers.add(handler);
-		if (handler instanceof ITclTypeHanlder) {
-			exitStack.push((ITclTypeHanlder) handler);
+		if (handler instanceof ITclTypeHandler) {
+			exitStack.push((ITclTypeHandler) handler);
 		}
 	}
 
@@ -105,7 +105,7 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 		if (commandHandlers != null) {
 			for (ITclModelHandler handler : commandHandlers) {
 				handler.leave(fRequestor);
-				if (handler instanceof ITclTypeHanlder) {
+				if (handler instanceof ITclTypeHandler) {
 					exitStack.remove(handler);
 				}
 			}
@@ -116,7 +116,7 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 
 	@SuppressWarnings("unchecked")
 	public <E> E get(Class<E> clazz) {
-		if (clazz == TclTypeResolver.class) {
+		if (clazz == ITclTypeResolver.class) {
 			if (typeResolver == null) {
 				typeResolver = new TclTypeResolver(fRequestor, this);
 			}
@@ -136,14 +136,14 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 		fParser.traverse(commands, this);
 	}
 
-	private final List<ITclAttribute> attributes = new ArrayList<ITclAttribute>();
+	private final Map<String, Object> attributes = new HashMap<String, Object>();
 
-	public void addAttribute(ITclAttribute attribute) {
-		attributes.add(attribute);
+	public Object getAttribute(String name) {
+		return attributes.get(name);
 	}
 
-	public void resetAttributes() {
-		attributes.clear();
+	public void setAttribute(String name, Object value) {
+		attributes.put(name, value);
 	}
 
 }

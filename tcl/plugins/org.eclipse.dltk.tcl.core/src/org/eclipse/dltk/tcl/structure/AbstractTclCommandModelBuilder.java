@@ -36,6 +36,12 @@ import org.eclipse.emf.common.util.EList;
 public abstract class AbstractTclCommandModelBuilder extends
 		TclModelBuilderUtil implements ITclModelBuilder {
 
+	protected static abstract class FieldInitializer {
+
+		public abstract void initialize(FieldInfo info);
+
+	}
+
 	/**
 	 * @param node
 	 * @param message
@@ -49,6 +55,12 @@ public abstract class AbstractTclCommandModelBuilder extends
 
 	protected void processField(TclCommand command, TclArgument nameArg,
 			String varName, final int modifiers, ITclModelBuildContext context) {
+		processField(command, nameArg, varName, modifiers, context, null, null);
+	}
+
+	protected void processField(TclCommand command, TclArgument nameArg,
+			String varName, final int modifiers, ITclModelBuildContext context,
+			ITclTypeHandler exit, FieldInitializer initializer) {
 		if (varName == null) {
 			varName = asSymbol(nameArg);
 		}
@@ -64,15 +76,17 @@ public abstract class AbstractTclCommandModelBuilder extends
 			varName = TclParseUtil.extractArrayName(varName);
 		}
 		fi.name = varName;
+		if (initializer != null) {
+			initializer.initialize(fi);
+		}
 		String fullName = TclParseUtil.escapeName(varName);
-		ITclTypeHanlder exit = null;
 		// TODO for (int i = 0; i < extensions.length; i++) {
 		// if ((exit = extensions[i].processField(decl, this)) != null) {
 		// continue;
 		// }
 		// }
 		if (exit == null) {
-			exit = context.get(TclTypeResolver.class).resolveType(fi,
+			exit = context.get(ITclTypeResolver.class).resolveMemberType(fi,
 					command.getEnd(), fullName);
 		}
 

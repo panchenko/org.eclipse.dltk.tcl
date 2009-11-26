@@ -9,7 +9,7 @@
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  *******************************************************************************/
-package org.eclipse.dltk.tcl.structure;
+package org.eclipse.dltk.tcl.internal.structure;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
@@ -17,10 +17,11 @@ import org.eclipse.dltk.compiler.IElementRequestor.ElementInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
-import org.eclipse.dltk.tcl.internal.structure.TclModelBuildContext;
+import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
+import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
 
-public class TclTypeResolver {
+public class TclTypeResolver implements ITclTypeResolver {
 
 	private final ISourceElementRequestor fRequestor;
 	private final TclModelBuildContext fContext;
@@ -32,7 +33,7 @@ public class TclTypeResolver {
 	}
 
 	private static class ExitFromType implements ITclModelHandler,
-			ITclTypeHanlder {
+			ITclTypeHandler {
 		private int level;
 		private int end;
 		private boolean exitFromModule;
@@ -67,7 +68,7 @@ public class TclTypeResolver {
 		}
 	}
 
-	private static String removeLastSegment(String s, String delimeter) {
+	private static String removeLastSegment(String s) {
 		if (s.indexOf("::") == -1) {
 			return Util.EMPTY_STRING;
 		}
@@ -98,9 +99,9 @@ public class TclTypeResolver {
 	 *            name containing a type
 	 * @return ExitFromType object, that should be called to exit
 	 */
-	public ITclTypeHanlder resolveType(ElementInfo decl, int sourceEnd,
+	public ITclTypeHandler resolveMemberType(ElementInfo decl, int sourceEnd,
 			String name) {
-		String type = removeLastSegment(name, "::");
+		String type = removeLastSegment(name);
 		while (type.length() > 2 && type.endsWith("::")) {
 			type = type.substring(0, type.length() - 2);
 		}
@@ -108,7 +109,15 @@ public class TclTypeResolver {
 		if (type.length() == 0) {
 			return new ExitFromType(0, 0, false, null);
 		}
+		return resolveTypeImpl(decl, sourceEnd, type);
+	}
 
+	public ITclTypeHandler resolveType(TypeInfo decl, int sourceEnd, String type) {
+		return resolveTypeImpl(decl, sourceEnd, type);
+	}
+
+	private ITclTypeHandler resolveTypeImpl(ElementInfo decl, int sourceEnd,
+			String type) {
 		if (type.equals("::")) {
 			this.fRequestor.enterModuleRoot();
 			return new ExitFromType(0, sourceEnd, true, "::");

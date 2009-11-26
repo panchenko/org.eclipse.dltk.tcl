@@ -24,8 +24,8 @@ import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
 import org.eclipse.dltk.tcl.internal.core.parser.processors.tcl.Messages;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
-import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
-import org.eclipse.dltk.tcl.structure.TclTypeResolver;
+import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
+import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclModelHandler;
 
 public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {
@@ -76,8 +76,8 @@ public class TclProcModelBuilder extends AbstractTclCommandModelBuilder {
 		// TODO if (extendedExitRequired(method)) {
 		// exit = getExitExtended(method);
 		// } else {
-		final ITclTypeHanlder typeHanlder = context.get(TclTypeResolver.class)
-				.resolveType(mi, command.getEnd(), procName);
+		final ITclTypeHandler typeHanlder = context.get(ITclTypeResolver.class)
+				.resolveMemberType(mi, command.getEnd(), procName);
 		context.getRequestor().enterMethodRemoveSame(mi);
 		context.addHandler(command, new MethodExit(command.getEnd()));
 		context.addHandler(command, typeHanlder);

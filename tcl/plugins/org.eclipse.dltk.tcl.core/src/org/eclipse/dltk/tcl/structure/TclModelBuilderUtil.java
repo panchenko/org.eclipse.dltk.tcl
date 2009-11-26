@@ -15,6 +15,9 @@ import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 
+/**
+ * @since 2.0
+ */
 public class TclModelBuilderUtil {
 
 	/**
