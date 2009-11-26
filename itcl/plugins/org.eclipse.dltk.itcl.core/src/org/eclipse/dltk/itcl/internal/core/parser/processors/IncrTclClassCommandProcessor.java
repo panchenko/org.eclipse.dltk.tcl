@@ -86,7 +86,7 @@ public class IncrTclClassCommandProcessor extends AbstractTclCommandProcessor {
 			addToParent(type, statement);
 			return;
 		}
-		Expression procCode = statement.getAt(3);
+		Expression procCode = statement.getAt(1);
 
 		ExtendedTclMethodDeclaration method = new ExtendedTclMethodDeclaration(
 				statement.sourceStart(), statement.sourceEnd());
