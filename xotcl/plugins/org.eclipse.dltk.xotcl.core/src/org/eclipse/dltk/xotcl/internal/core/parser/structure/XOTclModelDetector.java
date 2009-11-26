@@ -13,7 +13,6 @@ package org.eclipse.dltk.xotcl.internal.core.parser.structure;
 
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilderDetector;
 import org.eclipse.dltk.tcl.structure.TclModelBuilderUtil;
@@ -21,6 +20,17 @@ import org.eclipse.dltk.xotcl.internal.core.XOTclKeywords;
 
 public class XOTclModelDetector extends TclModelBuilderUtil implements
 		ITclModelBuilderDetector {
+
+	private static final String CLASS_PREFIX = "#Class#"; //$NON-NLS-1$
+	private static final String OBJECT_PREFIX = "#Object#"; //$NON-NLS-1$
+	static final String CREATE = "create"; //$NON-NLS-1$
+
+	private static final String CLASS_CREATE = CLASS_PREFIX + CREATE;
+	private static final String CLASS_NEW_INSTANCE = CLASS_PREFIX
+			+ "$newInstance"; //$NON-NLS-1$
+	private static final String CLASS_PROC_CALL = CLASS_PREFIX + "$ProcCall"; //$NON-NLS-1$
+
+	private static final String OBJECT_CREATE = OBJECT_PREFIX + CREATE;
 
 	private static final boolean INTERPRET_CLASS_UNKNOWN_AS_CREATE = true;
 	private static final boolean INTERPRET_OBJECT_UNKNOWN_AS_CREATE = true;
@@ -53,12 +63,12 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 		TclArgument subcmd = command.getArguments().get(0);
 		if (isSymbol(subcmd)) {
 			String value = asSymbol(subcmd);
-			XOTclClassAttribute type = findXOTclType("Class");
-			if (type != null) {
-				context.addAttribute(type);
-			}
+			// XOTclClassAttribute type = findXOTclType("Class");
+			// if (type != null) {
+			// context.addAttribute(type);
+			// }
 			if (contains(value, XOTclKeywords.XOTclCommandClassArgs)) {
-				return "#Class#" + value; //$NON-NLS-1$
+				return CLASS_PREFIX + value;
 			}
 			String info = checkCreateType(context, command, commandName,
 					subcmd, value);
@@ -66,7 +76,7 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 				return info;
 			}
 			if (INTERPRET_CLASS_UNKNOWN_AS_CREATE) {
-				return "#Class#create"; //$NON-NLS-1$
+				return CLASS_CREATE;
 			}
 		}
 		return null;
@@ -80,12 +90,12 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 		TclArgument subcmd = command.getArguments().get(0);
 		if (isSymbol(subcmd)) {
 			String value = asSymbol(subcmd);
-			XOTclClassAttribute type = findXOTclType("Object");
-			if (type != null) {
-				context.addAttribute(type);
-			}
+			// XOTclClassAttribute type = findXOTclType("Object");
+			// if (type != null) {
+			// context.addAttribute(type);
+			// }
 			if (contains(value, XOTclKeywords.XOTclCommandObjectArgs)) {
-				return "#Object#" + value;
+				return OBJECT_PREFIX + value;
 			}
 			String info = checkCreateType(context, command, commandName,
 					subcmd, value);
@@ -94,7 +104,7 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 			}
 			// // Else unknown command or create command.
 			if (INTERPRET_OBJECT_UNKNOWN_AS_CREATE) {
-				return "#Object#create";
+				return OBJECT_CREATE;
 			}
 		}
 		return null;
@@ -105,8 +115,8 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 			String value) {
 		if (value.equals("instproc") || value.equals("proc")
 				|| value.equals("set")) {
-			context.addAttribute(new XOTclClassAttribute(commandName, command
-					.getName()));
+			// context.addAttribute(new XOTclClassAttribute(commandName, command
+			// .getName()));
 			String info = checkCommands(value);
 			if (info != null) {
 				return info;
@@ -117,10 +127,10 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 
 	private String checkCommands(String value) {
 		if (contains(value, XOTclKeywords.XOTclCommandClassArgs)) {
-			return "#Class#" + value;
+			return CLASS_PREFIX + value;
 		}
 		if (contains(value, XOTclKeywords.XOTclCommandObjectArgs)) {
-			return "#Object#" + value;
+			return OBJECT_PREFIX + value;
 		}
 		return null;
 	}
@@ -145,12 +155,15 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 		if (command.getArguments().isEmpty()) {
 			return null;
 		}
-		TclArgument subcmd = command.getArguments().get(0);
-		if (quickTestName(TclParseUtil.tclSplit(commandName))) {
-			XOTclClassAttribute type = findXOTclType(commandName);
-			if (type != null && isSymbol(subcmd)) {
-				context.addAttribute(type);
-				return check(subcmd);
+		final TclArgument subcmd = command.getArguments().get(0);
+		if (isSymbol(subcmd)) {
+			final XOTclNames names = XOTclNames.get(context);
+			if (names != null) {
+				final XOTclType type = names.resolve(commandName);
+				if (type != null) {
+					type.saveTo(context);
+					return check(subcmd);
+				}
 			}
 		}
 
@@ -163,33 +176,15 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 	 */
 	private String check(TclArgument subcmd) {
 		String value = asSymbol(subcmd);
-		if (!"create".equals(value)) {
+		if (!CREATE.equals(value)) {
 			String info = checkCommands(value);
 			if (info != null) {
 				return info;
 			}
 		} else {
-			return "#Class#$newInstance";
+			return CLASS_NEW_INSTANCE;
 		}
-		return "#Class#$ProcCall";
-	}
-
-	/**
-	 * @param string
-	 * @return
-	 */
-	private XOTclClassAttribute findXOTclType(String string) {
-		// TODO implement it
-		return null;
-	}
-
-	/**
-	 * @param parts
-	 * @return
-	 */
-	private boolean quickTestName(String[] parts) {
-		// TODO Auto-generated method stub
-		return true;
+		return CLASS_PROC_CALL;
 	}
 
 	@SuppressWarnings("nls")

@@ -25,9 +25,9 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
-import org.eclipse.dltk.tcl.structure.ITclTypeHanlder;
+import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
+import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
 import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
-import org.eclipse.dltk.tcl.structure.TclTypeResolver;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 
 public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
@@ -41,7 +41,7 @@ public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
 		}
 		TclArgument name = command.getArguments().get(index++);
 		// Skip create command (optional)
-		if (isSymbol(name) && "create".equals(asSymbol(name))) {
+		if (isSymbol(name) && XOTclModelDetector.CREATE.equals(asSymbol(name))) {
 			if (index >= command.getArguments().size()) {
 				report(context, command, "Incorrect XOTcl class declaration",
 						ProblemSeverities.Error);
@@ -98,8 +98,9 @@ public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
 		ti.name = asSymbol(name);
 		ti.superclasses = superclasses.toArray(new String[superclasses.size()]);
 		ti.modifiers = IXOTclModifiers.AccXOTcl;
-		ITclTypeHanlder typeHanlder = context.get(TclTypeResolver.class)
-				.resolveType(ti, command.getEnd(), ti.name + "::dummy");
+		ITclTypeHandler typeHanlder = context.get(ITclTypeResolver.class)
+				.resolveType(ti, command.getEnd(), ti.name);
+		XOTclNames.create(context).addType(typeHanlder);
 		for (TclArgument parameter : fields) {
 			final FieldInfo fi = new FieldInfo();
 			fi.name = TclProcessorUtil.asString(parameter);
