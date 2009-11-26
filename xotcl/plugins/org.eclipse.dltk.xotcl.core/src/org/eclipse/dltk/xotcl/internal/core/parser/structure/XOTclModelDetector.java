@@ -13,10 +13,12 @@ package org.eclipse.dltk.xotcl.internal.core.parser.structure;
 
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.core.ITclCommandDetector.CommandInfo;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilderDetector;
 import org.eclipse.dltk.tcl.structure.TclModelBuilderUtil;
 import org.eclipse.dltk.xotcl.internal.core.XOTclKeywords;
+import org.eclipse.dltk.xotcl.internal.core.parser.XOTclCommandDetector.XOTclGlobalClassParameter;
 
 public class XOTclModelDetector extends TclModelBuilderUtil implements
 		ITclModelBuilderDetector {
@@ -30,7 +32,7 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 	private static final String CLASS_CREATE = CLASS_PREFIX + CREATE;
 	private static final String CLASS_NEW_INSTANCE = CLASS_PREFIX
 			+ "$newInstance"; //$NON-NLS-1$
-	private static final String CLASS_PROC_CALL = CLASS_PREFIX + "$ProcCall"; //$NON-NLS-1$
+	//	private static final String CLASS_PROC_CALL = CLASS_PREFIX + "$ProcCall"; //$NON-NLS-1$
 
 	private static final String OBJECT_CREATE = OBJECT_PREFIX + CREATE;
 
@@ -167,8 +169,20 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 				}
 			}
 		}
+		// externally defined class?
+		if (commandName.length() >= 3) {
+			if (commandName.startsWith("::")) {
+				commandName = commandName.substring(2);
+			}
+			if (commandName.indexOf("::") > 0
+					|| Character.isUpperCase(commandName.charAt(0))) {
+				if (asSymbol(subcmd).equals(CREATE)) {
+					new XOTclType(commandName, null).saveTo(context);
+					return CLASS_NEW_INSTANCE;
+				}
+			}
+		}
 
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -185,7 +199,7 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 		} else {
 			return CLASS_NEW_INSTANCE;
 		}
-		return CLASS_PROC_CALL;
+		return null;
 	}
 
 	@SuppressWarnings("nls")

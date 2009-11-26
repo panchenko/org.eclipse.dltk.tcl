@@ -47,6 +47,19 @@ public class XOTclType {
 		return name;
 	}
 
+	public String getSimpleName() {
+		if (info != null) {
+			return info.getSimpleName();
+		} else {
+			int pos = name.lastIndexOf("::");
+			if (pos >= 0) {
+				return name.substring(pos + 2);
+			} else {
+				return name;
+			}
+		}
+	}
+
 	/**
 	 * @param context
 	 */

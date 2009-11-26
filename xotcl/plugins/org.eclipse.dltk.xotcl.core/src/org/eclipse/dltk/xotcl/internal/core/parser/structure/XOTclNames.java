@@ -61,6 +61,13 @@ public class XOTclNames {
 			return false;
 		}
 
+		/**
+		 * @return
+		 */
+		public String getSimpleName() {
+			return segments[segments.length - 1];
+		}
+
 	}
 
 	private final Map<String, Map<String, XOTclTypeInfo>> names = new HashMap<String, Map<String, XOTclTypeInfo>>();

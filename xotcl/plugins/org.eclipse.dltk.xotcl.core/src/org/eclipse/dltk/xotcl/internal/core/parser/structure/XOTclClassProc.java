@@ -42,7 +42,7 @@ public class XOTclClassProc extends AbstractTclCommandModelBuilder {
 		}
 		TclArgument procName = command.getArguments().get(1);
 		if (!isSymbol(procName)) {
-			throw new TclModelProblem("Wrong proc name");
+			throw new TclModelProblem("Wrong proc name", procName);
 		}
 		TypeInfo ti = new TypeInfo();
 		ti.modifiers = Modifiers.AccNameSpace;
@@ -50,7 +50,7 @@ public class XOTclClassProc extends AbstractTclCommandModelBuilder {
 		ti.nameSourceStart = procName.getStart();
 		ti.nameSourceEnd = procName.getEnd() - 1;
 		ITclTypeHandler resolvedType = context.get(ITclTypeResolver.class)
-				.resolveType(ti, command.getEnd(), type.getName());
+				.resolveType(ti, command.getEnd(), type.getSimpleName());
 		//
 		final MethodInfo mi = new MethodInfo();
 		mi.declarationStart = command.getStart();
