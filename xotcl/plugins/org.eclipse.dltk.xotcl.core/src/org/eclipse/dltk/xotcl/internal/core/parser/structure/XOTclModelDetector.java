@@ -24,6 +24,8 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 	private static final String CLASS_PREFIX = "#Class#"; //$NON-NLS-1$
 	private static final String OBJECT_PREFIX = "#Object#"; //$NON-NLS-1$
 	static final String CREATE = "create"; //$NON-NLS-1$
+	static final String INSTPROC = "instproc"; //$NON-NLS-1$
+	static final String PROC = "proc"; //$NON-NLS-1$
 
 	private static final String CLASS_CREATE = CLASS_PREFIX + CREATE;
 	private static final String CLASS_NEW_INSTANCE = CLASS_PREFIX
@@ -113,8 +115,7 @@ public class XOTclModelDetector extends TclModelBuilderUtil implements
 	private String checkCreateType(ITclModelBuildContext context,
 			TclCommand command, String commandName, TclArgument arg,
 			String value) {
-		if (value.equals("instproc") || value.equals("proc")
-				|| value.equals("set")) {
+		if (value.equals(INSTPROC) || value.equals(PROC) || value.equals("set")) {
 			// context.addAttribute(new XOTclClassAttribute(commandName, command
 			// .getName()));
 			String info = checkCommands(value);

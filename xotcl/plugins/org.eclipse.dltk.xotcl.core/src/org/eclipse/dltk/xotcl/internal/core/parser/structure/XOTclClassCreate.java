@@ -18,16 +18,12 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.compiler.IElementRequestor.FieldInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
-import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.parser.TclParser;
-import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
 import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
-import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 
 public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
@@ -55,7 +51,7 @@ public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
 			return false;
 		}
 		List<String> superclasses = new ArrayList<String>();
-		List<TclArgument> fields = new ArrayList<TclArgument>();
+		List<Parameter> fields = new ArrayList<Parameter>();
 		while (index < command.getArguments().size()) {
 			TclArgument argument = command.getArguments().get(index++);
 			if (isSymbol(argument)) {
@@ -67,26 +63,8 @@ public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
 					}
 				} else if ("-parameter".equals(optionName)) {
 					if (index < command.getArguments().size()) {
-						TclArgument parameters = command.getArguments().get(
-								index++);
-						for (TclArgument a : parse(parameters)) {
-							if (a instanceof StringArgument) {
-								String aa = ((StringArgument) a).getValue();
-								if (aa.startsWith("{") && aa.endsWith("}")
-										|| aa.startsWith("\"")
-										&& aa.endsWith("\'")) {
-									List<TclArgument> parts = parse(a);
-									if (!parts.isEmpty()) {
-										TclArgument first = parts.get(0);
-										if (first instanceof StringArgument) {
-											fields.add(first);
-										}
-									}
-								} else {
-									fields.add(a);
-								}
-							}
-						}
+						parseRawParameters(command.getArguments().get(index++),
+								fields);
 					}
 				}
 			}
@@ -101,9 +79,9 @@ public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
 		ITclTypeHandler typeHanlder = context.get(ITclTypeResolver.class)
 				.resolveType(ti, command.getEnd(), ti.name);
 		XOTclNames.create(context).addType(typeHanlder);
-		for (TclArgument parameter : fields) {
+		for (Parameter parameter : fields) {
 			final FieldInfo fi = new FieldInfo();
-			fi.name = TclProcessorUtil.asString(parameter);
+			fi.name = parameter.getName();
 			fi.nameSourceStart = parameter.getStart();
 			fi.nameSourceEnd = parameter.getEnd() - 1;
 			fi.declarationStart = fi.nameSourceStart;
@@ -113,40 +91,5 @@ public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
 		}
 		typeHanlder.leave(context.getRequestor());
 		return false;
-	}
-
-	private List<TclArgument> parse(TclArgument argument) {
-		int offset = argument.getStart();
-		final String content;
-		if (argument instanceof StringArgument) {
-			final String value = ((StringArgument) argument).getValue();
-			int len = value.length();
-			if (len >= 2) {
-				if (value.charAt(0) == '{' && value.charAt(len - 1) == '}') {
-					content = value.substring(1, len - 1);
-					++offset;
-				} else if (value.charAt(0) == '"'
-						&& value.charAt(len - 1) == '"') {
-					content = value.substring(1, len - 1);
-					++offset;
-				} else {
-					content = value;
-				}
-			} else {
-				content = value;
-			}
-		} else {
-			content = SimpleCodePrinter.getArgumentString(argument, argument
-					.getStart());
-		}
-		TclParser parser = new TclParser();
-		parser.setGlobalOffset(offset);
-		List<TclCommand> commands = parser.parse(content);
-		List<TclArgument> result = new ArrayList<TclArgument>();
-		for (TclCommand c : commands) {
-			result.add(c.getName());
-			result.addAll(c.getArguments());
-		}
-		return result;
 	}
 }
