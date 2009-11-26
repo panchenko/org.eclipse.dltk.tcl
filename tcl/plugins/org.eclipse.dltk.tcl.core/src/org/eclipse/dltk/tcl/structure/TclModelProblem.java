@@ -21,6 +21,11 @@ public class TclModelProblem extends Exception {
 
 	private final Node location;
 
+	public TclModelProblem(String message) {
+		super(message);
+		this.location = null;
+	}
+
 	/**
 	 * @param string
 	 * @param command

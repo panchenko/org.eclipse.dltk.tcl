@@ -28,6 +28,8 @@ import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
+import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -124,50 +126,96 @@ public abstract class AbstractTclCommandModelBuilder extends
 	protected static class Parameter {
 		final String name;
 		final String defaultValue;
+		final int start;
+		final int end;
 
-		public Parameter(String name) {
-			this(name, null);
+		public Parameter(TclArgument argument) {
+			this.name = asSymbol(argument);
+			this.start = argument.getStart();
+			this.end = argument.getEnd();
+			this.defaultValue = null;
 		}
 
-		public Parameter(String name, String defaultValue) {
+		public Parameter(String name, int start, int end) {
 			this.name = name;
+			this.start = start;
+			this.end = end;
+			this.defaultValue = null;
+		}
+
+		public Parameter(String name, int start, int end, String defaultValue) {
+			this.name = name;
+			this.start = start;
+			this.end = end;
 			this.defaultValue = defaultValue;
 		}
+
+		public String getName() {
+			return name;
+		}
+
+		public int getStart() {
+			return start;
+		}
+
+		public int getEnd() {
+			return end;
+		}
+
 	}
 
 	protected List<Parameter> parseParameters(TclArgument argument) {
 		if (argument instanceof StringArgument) {
-			return Collections.singletonList(new Parameter(
-					((StringArgument) argument).getValue()));
+			return Collections.singletonList(new Parameter(argument));
 		} else if (argument instanceof TclArgumentList) {
 			final TclArgumentList list = (TclArgumentList) argument;
 			final List<Parameter> parameters = new ArrayList<Parameter>(list
 					.getArguments().size());
 			for (TclArgument arg : list.getArguments()) {
 				if (arg instanceof StringArgument) {
-					parameters.add(new Parameter(((StringArgument) arg)
-							.getValue()));
+					parameters.add(new Parameter(arg));
 				} else if (arg instanceof TclArgumentList) {
 					final EList<TclArgument> argWithInitializer = ((TclArgumentList) arg)
 							.getArguments();
+					final TclArgument pName = argWithInitializer.get(0);
 					if (argWithInitializer.size() >= 2) {
-						parameters.add(new Parameter(
-								asSymbol(argWithInitializer.get(0)),
-								TclProcessorUtil.asString(argWithInitializer
-										.get(1))));
+						parameters.add(new Parameter(asSymbol(pName), pName
+								.getStart(), pName.getEnd(), TclProcessorUtil
+								.asString(argWithInitializer.get(1))));
 					} else if (argWithInitializer.size() == 1) {
-						parameters.add(new Parameter(
-								asSymbol(argWithInitializer.get(0))));
+						parameters.add(new Parameter(pName));
 					} else {
-						parameters.add(new Parameter(Util.EMPTY_STRING));
+						parameters.add(new Parameter(Util.EMPTY_STRING, arg
+								.getStart(), arg.getEnd()));
 					}
 				} else {
-					parameters.add(new Parameter(asSymbol(arg)));
+					parameters.add(new Parameter(arg));
 				}
 			}
 			return parameters;
 		} else {
-			return Collections.singletonList(new Parameter(asSymbol(argument)));
+			return Collections.singletonList(new Parameter(argument));
+		}
+	}
+
+	protected void parseRawParameters(TclArgument args,
+			List<Parameter> parameters) {
+		for (TclArgument a : toWords(args)) {
+			if (a instanceof StringArgument) {
+				String aa = ((StringArgument) a).getValue();
+				if (aa.startsWith("{") && aa.endsWith("}")
+						|| aa.startsWith("\"") && aa.endsWith("\"")) {
+					List<TclArgument> parts = toWords(a);
+					if (!parts.isEmpty()) {
+						TclArgument first = parts.get(0);
+						if (first instanceof StringArgument) {
+							parameters.add(new Parameter(first));
+						}
+					}
+				} else {
+					parameters.add(new Parameter(a));
+				}
+			}
 		}
 	}
 
@@ -182,6 +230,41 @@ public abstract class AbstractTclCommandModelBuilder extends
 			mi.parameterNames[i] = parameter.name;
 			mi.parameterInitializers[i] = parameter.defaultValue;
 		}
+	}
+
+	private List<TclArgument> toWords(TclArgument argument) {
+		int offset = argument.getStart();
+		final String content;
+		if (argument instanceof StringArgument) {
+			final String value = ((StringArgument) argument).getValue();
+			int len = value.length();
+			if (len >= 2) {
+				if (value.charAt(0) == '{' && value.charAt(len - 1) == '}') {
+					content = value.substring(1, len - 1);
+					++offset;
+				} else if (value.charAt(0) == '"'
+						&& value.charAt(len - 1) == '"') {
+					content = value.substring(1, len - 1);
+					++offset;
+				} else {
+					content = value;
+				}
+			} else {
+				content = value;
+			}
+		} else {
+			content = SimpleCodePrinter.getArgumentString(argument, argument
+					.getStart());
+		}
+		TclParser parser = new TclParser();
+		parser.setGlobalOffset(offset);
+		List<TclCommand> commands = parser.parse(content);
+		List<TclArgument> result = new ArrayList<TclArgument>();
+		for (TclCommand c : commands) {
+			result.add(c.getName());
+			result.addAll(c.getArguments());
+		}
+		return result;
 	}
 
 }
