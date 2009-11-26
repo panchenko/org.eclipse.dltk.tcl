@@ -1,0 +1,2 @@
+itcl::class A {
+}
