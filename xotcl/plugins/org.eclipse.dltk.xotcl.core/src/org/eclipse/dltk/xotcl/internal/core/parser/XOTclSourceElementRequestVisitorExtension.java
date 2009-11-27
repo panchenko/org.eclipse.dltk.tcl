@@ -92,4 +92,8 @@ public class XOTclSourceElementRequestVisitorExtension implements
 			TclSourceElementRequestVisitor tclSourceElementRequestVisitor) {
 		return false;
 	}
+
+	public boolean isConstructor(MethodDeclaration declaration) {
+		return false;
+	}
 }
