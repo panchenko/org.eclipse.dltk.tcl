@@ -371,23 +371,21 @@ public class TclParser implements ITclParserOptions {
 			StringArgument blockCode = (StringArgument) arguments
 					.get(blockArguments[i]);
 			Script script = AstFactory.eINSTANCE.createScript();
-			script.setStart(blockCode.getStart() + globalOffset);
-			script.setEnd(blockCode.getEnd() + globalOffset);
+			script.setStart(blockCode.getStart());
+			script.setEnd(blockCode.getEnd());
 			String wordText = blockCode.getValue();
 			if (wordText.startsWith("{") && wordText.endsWith("}")
 					|| wordText.startsWith("[") && wordText.endsWith("]")
 					|| wordText.startsWith("\"") && wordText.endsWith("\"")) {
-				script.setContentStart(script.getStart() + 1 + globalOffset);
-				script.setContentEnd(script.getEnd() - 1 + globalOffset);
+				script.setContentStart(script.getStart() + 1);
+				script.setContentEnd(script.getEnd() - 1);
 				parseToBlock(script.getCommands(), wordText.substring(1,
-						wordText.length() - 1), blockCode.getStart() + 1
-						- globalOffset);
+						wordText.length() - 1), blockCode.getStart() + 1);
 			} else {
-				script.setContentStart(script.getStart() + globalOffset);
-				script.setContentEnd(script.getEnd() + globalOffset);
+				script.setContentStart(script.getStart());
+				script.setContentEnd(script.getEnd());
 				parseToBlock(script.getCommands(), wordText, blockCode
-						.getStart()
-						- globalOffset);
+						.getStart());
 			}
 			arguments.set(blockArguments[i], script);
 		}
