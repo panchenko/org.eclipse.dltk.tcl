@@ -109,7 +109,8 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 				final IVariable variable = (IVariable) member;
 				final FieldInfo fi = new FieldInfo();
 				fi.name = member.getName();
-				fi.modifiers = variable.getVisibility().getModifiers();
+				fi.modifiers = variable.getVisibility().getModifiers()
+						| IIncrTclModifiers.AccIncrTcl;
 				fi.nameSourceStart = variable.getNameStart();
 				fi.nameSourceEnd = variable.getNameEnd();
 				fi.declarationStart = variable.getStart();
