@@ -260,6 +260,15 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		return flags;
 	}
 
+	private boolean isConstructor(MethodDeclaration s) {
+		for (int i = 0; i < this.extensions.length; i++) {
+			if (this.extensions[i].isConstructor(s)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean endvisit(TypeDeclaration typeDeclaration) throws Exception {
 		ExitFromType exit = this.exitStack.pop();
 		exit.go(fRequestor);
@@ -557,6 +566,7 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 		mi.parameterInitializers = parameterInitializers;
 		mi.name = sName;
 		mi.modifiers = this.getModifiers(method);
+		mi.isConstructor = this.isConstructor(method);
 		mi.nameSourceStart = method.getNameStart();
 		mi.nameSourceEnd = method.getNameEnd() - 1;
 		mi.declarationStart = method.sourceStart();

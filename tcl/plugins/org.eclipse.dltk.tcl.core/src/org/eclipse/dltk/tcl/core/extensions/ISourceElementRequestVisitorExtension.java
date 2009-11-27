@@ -11,6 +11,11 @@ public interface ISourceElementRequestVisitorExtension {
 
 	int getModifiers(Declaration s);
 
+	/**
+	 * @since 2.0
+	 */
+	boolean isConstructor(MethodDeclaration declaration);
+
 	boolean visit(Statement statement, TclSourceElementRequestVisitor original);
 
 	boolean extendedExitRequired(MethodDeclaration method,
