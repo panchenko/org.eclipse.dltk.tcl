@@ -113,8 +113,9 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 				fi.nameSourceStart = variable.getNameStart();
 				fi.nameSourceEnd = variable.getNameEnd();
 				fi.declarationStart = variable.getStart();
-				context.getRequestor().enterFieldCheckDuplicates(fi);
-				context.getRequestor().exitField(variable.getEnd());
+				if (context.getRequestor().enterFieldCheckDuplicates(fi)) {
+					context.getRequestor().exitField(variable.getEnd());
+				}
 			}
 		}
 		resolvedType.leave(context.getRequestor());
