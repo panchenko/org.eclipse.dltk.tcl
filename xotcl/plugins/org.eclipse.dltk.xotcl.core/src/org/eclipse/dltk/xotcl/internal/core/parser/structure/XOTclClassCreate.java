@@ -86,8 +86,9 @@ public class XOTclClassCreate extends AbstractTclCommandModelBuilder {
 			fi.nameSourceEnd = parameter.getEnd() - 1;
 			fi.declarationStart = fi.nameSourceStart;
 			fi.modifiers = Modifiers.AccPrivate;
-			context.getRequestor().enterFieldCheckDuplicates(fi);
-			context.getRequestor().exitField(fi.nameSourceEnd);
+			if (context.getRequestor().enterFieldCheckDuplicates(fi)) {
+				context.getRequestor().exitField(fi.nameSourceEnd);
+			}
 		}
 		typeHanlder.leave(context.getRequestor());
 		return false;
