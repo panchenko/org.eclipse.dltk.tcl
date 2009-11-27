@@ -94,7 +94,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		}
 	}
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static boolean USE_NEW = DEBUG;
 
