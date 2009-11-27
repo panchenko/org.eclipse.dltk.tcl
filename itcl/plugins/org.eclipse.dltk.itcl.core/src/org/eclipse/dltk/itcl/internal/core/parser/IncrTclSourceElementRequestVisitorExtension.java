@@ -11,6 +11,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclBodyDeclaration;
 import org.eclipse.dltk.itcl.internal.core.parser.ast.IncrTclMethodCallStatement;
+import org.eclipse.dltk.tcl.core.ast.ExtendedTclMethodDeclaration;
 import org.eclipse.dltk.tcl.core.extensions.ISourceElementRequestVisitorExtension;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceElementRequestVisitor;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceElementRequestVisitor.ExitFromType;
@@ -87,6 +88,17 @@ public class IncrTclSourceElementRequestVisitorExtension implements
 		// if (method instanceof IncrTclBodyDeclaration) {
 		// return true;
 		// }
+		return false;
+	}
+
+	private static final int MOD_CONSTRUCTOR = IIncrTclModifiers.AccIncrTcl
+			| IIncrTclModifiers.AccConstructor;
+
+	public boolean isConstructor(MethodDeclaration declaration) {
+		if (declaration instanceof ExtendedTclMethodDeclaration
+				&& (declaration.getModifiers() & MOD_CONSTRUCTOR) == MOD_CONSTRUCTOR) {
+			return true;
+		}
 		return false;
 	}
 }
