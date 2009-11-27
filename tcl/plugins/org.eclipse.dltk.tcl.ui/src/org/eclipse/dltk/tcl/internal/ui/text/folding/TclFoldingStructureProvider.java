@@ -12,6 +12,7 @@ package org.eclipse.dltk.tcl.internal.ui.text.folding;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.dltk.ast.ASTNode;
@@ -41,6 +42,9 @@ import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.text.folding.AbstractASTFoldingStructureProvider;
 import org.eclipse.dltk.ui.text.folding.IElementCommentResolver;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
@@ -285,6 +289,115 @@ public class TclFoldingStructureProvider extends
 		}
 
 		return super.initiallyCollapse(s);
+	}
+
+	private enum CommentType {
+		SHEBANG, HEADER
+	}
+
+	private static class CommentRegion extends Region {
+
+		final CommentType commentType;
+
+		public CommentRegion(CommentType commentType, int offset, int length) {
+			super(offset, length);
+			this.commentType = commentType;
+		}
+
+		/**
+		 * @param commentType
+		 * @param region
+		 */
+		public CommentRegion(CommentType commentType, IRegion region) {
+			super(region.getOffset(), region.getLength());
+			this.commentType = commentType;
+		}
+
+	}
+
+	@Override
+	protected void prepareRegions(Document d, List<IRegion> regions) {
+		if (regions.isEmpty()) {
+			return;
+		}
+		IRegion region = regions.get(0);
+		if (region.getOffset() != 0) {
+			return;
+		}
+		try {
+			String content = d.get(region.getOffset(), region.getLength());
+			if (!content.startsWith("#!")) {
+				return;
+			}
+			String line0 = d.get(d.getLineOffset(0), d.getLineLength(0));
+			if (Pattern.compile("/(sh|bash|dash|tcsh)").matcher(line0).find()) {
+				int i = 1;
+				for (;;) {
+					int offset = d.getLineOffset(i);
+					final int length = d.getLineLength(i);
+					String line = d.get(offset, length).trim();
+					if (!line.startsWith("#") && !line.endsWith("\\")) {
+						break;
+					}
+					final String delimiter = d.getLineDelimiter(i);
+					if (delimiter != null) {
+						offset += delimiter.length();
+					}
+					if (offset + length >= region.getLength()) {
+						break;
+					}
+					++i;
+				}
+				final IRegion line = d.getLineInformation(i);
+				IRegion shebang = new CommentRegion(CommentType.SHEBANG, 0,
+						line.getOffset() + line.getLength());
+				int headerOffset = line.getOffset() + d.getLineLength(i);
+				final CommentRegion header = new CommentRegion(
+						CommentType.HEADER, headerOffset, region.getLength()
+								- headerOffset);
+				regions.set(0, shebang);
+				if (isMultilineRegion(d, header)) {
+					regions.add(1, header);
+				}
+			}
+		} catch (BadLocationException e) {
+			// return
+		}
+	}
+
+	@Override
+	protected IRegion alignRegion(IRegion region,
+			FoldingStructureComputationContext ctx) {
+		final IRegion result = super.alignRegion(region, ctx);
+		if (result != region && region instanceof CommentRegion) {
+			return new CommentRegion(((CommentRegion) region).commentType,
+					result);
+		}
+		return result;
+	}
+
+	@Override
+	protected boolean initiallyCollapseComments(IRegion region,
+			FoldingStructureComputationContext ctx) {
+		if (ctx.allowCollapsing()) {
+			if (region instanceof CommentRegion) {
+				if (((CommentRegion) region).commentType == CommentType.SHEBANG) {
+					return false;
+				}
+			}
+			return isHeaderRegion(region, ctx) ? fInitCollapseHeaderComments
+					: fInitCollapseComments;
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean isHeaderRegion(IRegion region,
+			FoldingStructureComputationContext ctx) {
+		if (region instanceof CommentRegion) {
+			return ((CommentRegion) region).commentType == CommentType.HEADER;
+		}
+		return super.isHeaderRegion(region, ctx);
 	}
 
 	protected boolean canFold(String name) {
