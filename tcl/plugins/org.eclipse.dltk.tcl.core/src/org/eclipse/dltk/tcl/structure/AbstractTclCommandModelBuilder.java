@@ -123,7 +123,7 @@ public abstract class AbstractTclCommandModelBuilder extends
 		processField(command, nameArg, varName, modifiers, context);
 	}
 
-	protected static class Parameter {
+	public static class Parameter {
 		final String name;
 		final String defaultValue;
 		final int start;
