@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IMethod;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder.Parameter;
@@ -46,6 +48,15 @@ public class Method extends Member implements IMethod {
 			bodies = new ArrayList<TclArgument>();
 		}
 		bodies.add(body);
+	}
+
+	public int getModifiers() {
+		int modifiers = IIncrTclModifiers.AccIncrTcl
+				| getVisibility().getModifiers() | getKind().getModifiers();
+		if (getKind().isMaskVisibility()) {
+			modifiers &= ~(Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate);
+		}
+		return modifiers;
 	}
 
 }

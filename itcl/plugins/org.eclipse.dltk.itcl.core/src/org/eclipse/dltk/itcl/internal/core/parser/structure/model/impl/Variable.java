@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.itcl.internal.core.parser.structure.model.impl;
 
+import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IVariable;
 
 public class Variable extends Member implements IVariable {
@@ -23,6 +24,10 @@ public class Variable extends Member implements IVariable {
 
 	public void setKind(VariableKind kind) {
 		this.kind = kind;
+	}
+
+	public int getModifiers() {
+		return getVisibility().getModifiers() | IIncrTclModifiers.AccIncrTcl;
 	}
 
 }

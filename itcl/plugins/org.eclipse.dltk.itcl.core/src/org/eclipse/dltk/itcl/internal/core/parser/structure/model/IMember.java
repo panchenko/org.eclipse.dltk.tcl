@@ -59,4 +59,6 @@ public interface IMember {
 
 	void setVisibility(Visibility visibility);
 
+	int getModifiers();
+
 }

@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.compiler.IElementRequestor.FieldInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
@@ -53,7 +52,7 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 		if (!isSymbol(className)) {
 			return false;
 		}
-		final IClass clazz = new ClassImpl();
+		final ClassImpl clazz = new ClassImpl();
 		final TclArgument classBody = command.getArguments().get(1);
 		if (classBody instanceof StringArgument) {
 			String body = ((StringArgument) classBody).getValue();
@@ -72,21 +71,16 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 		ti.nameSourceEnd = className.getEnd() - 1;
 		ti.modifiers = IIncrTclModifiers.AccIncrTcl;
 		ti.superclasses = clazz.getSuperClasses();
-		final String name = asSymbol(className);
 		ITclTypeHandler resolvedType = context.get(ITclTypeResolver.class)
-				.resolveType(ti, command.getEnd(), name);
+				.resolveType(ti, command.getEnd(), asSymbol(className));
+		clazz.setName(resolvedType.getNamespace());
+		IncrTclNames.create(context).addType(clazz);
 		for (IMember member : clazz.getMembers()) {
 			if (member instanceof IMethod) {
 				final IMethod method = (IMethod) member;
 				MethodInfo mi = new MethodInfo();
 				mi.name = member.getName();
-				mi.modifiers = IIncrTclModifiers.AccIncrTcl
-						| member.getVisibility().getModifiers()
-						| method.getKind().getModifiers();
-				if (method.getKind().isMaskVisibility()) {
-					mi.modifiers &= ~(Modifiers.AccPublic
-							| Modifiers.AccProtected | Modifiers.AccPrivate);
-				}
+				mi.modifiers = method.getModifiers();
 				mi.isConstructor = method.getKind() == MethodKind.CONSTRUCTOR;
 				mi.nameSourceStart = member.getNameStart();
 				mi.nameSourceEnd = member.getNameEnd();
@@ -109,8 +103,7 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 				final IVariable variable = (IVariable) member;
 				final FieldInfo fi = new FieldInfo();
 				fi.name = member.getName();
-				fi.modifiers = variable.getVisibility().getModifiers()
-						| IIncrTclModifiers.AccIncrTcl;
+				fi.modifiers = variable.getModifiers();
 				fi.nameSourceStart = variable.getNameStart();
 				fi.nameSourceEnd = variable.getNameEnd();
 				fi.declarationStart = variable.getStart();
@@ -120,7 +113,6 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 			}
 		}
 		resolvedType.leave(context.getRequestor());
-		IncrTclNames.create(context).addType(resolvedType);
 		return false;
 	}
 

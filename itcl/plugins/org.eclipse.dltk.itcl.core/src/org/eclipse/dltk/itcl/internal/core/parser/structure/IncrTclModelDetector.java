@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.itcl.internal.core.parser.structure;
 
+import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IClass;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclModelBuilderDetector;
@@ -19,15 +20,19 @@ import org.eclipse.dltk.tcl.structure.TclModelBuilderUtil;
 public class IncrTclModelDetector extends TclModelBuilderUtil implements
 		ITclModelBuilderDetector {
 
+	@SuppressWarnings("nls")
 	private static final String[] NAMESPACES = new String[] { "::itcl::",
 			"itcl::" };
 
-	private static final String[] COMMANDS = new String[] { "class", "body",
-			"code", "configbody", "delete", "ensemble", "find", "local",
-			"scope" };
+	@SuppressWarnings("nls")
+	private static final String[] COMMANDS = new String[] { "class", "body" };
 
-	private static final String PREFIX = "#itcl#";
-	private static final String ITCL_NEW_INSTANCE = PREFIX + "$newInstance";
+	// ,
+	// "code", "configbody", "delete", "ensemble", "find", "local",
+	// "scope"
+
+	private static final String PREFIX = "#itcl#"; //$NON-NLS-1$
+	private static final String ITCL_NEW_INSTANCE = PREFIX + "$newInstance"; //$NON-NLS-1$
 
 	/**
 	 * Remove iTcl namespaces from the specified command name
@@ -68,9 +73,9 @@ public class IncrTclModelDetector extends TclModelBuilderUtil implements
 			String commandName, ITclModelBuildContext context) {
 		final IncrTclNames names = IncrTclNames.get(context);
 		if (names != null) {
-			final IncrTclType type = names.resolve(commandName);
+			final IClass type = names.resolve(commandName);
 			if (type != null) {
-				type.saveTo(context);
+				IncrTclNames.saveType(context, type);
 				return ITCL_NEW_INSTANCE;
 			}
 		}

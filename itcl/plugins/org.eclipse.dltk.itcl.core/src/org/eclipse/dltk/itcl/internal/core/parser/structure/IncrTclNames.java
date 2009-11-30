@@ -14,9 +14,9 @@ package org.eclipse.dltk.itcl.internal.core.parser.structure;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IClass;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
-import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
 
 public class IncrTclNames {
 
@@ -34,12 +34,14 @@ public class IncrTclNames {
 		}
 		return names;
 	}
-	
+
 	static class IncrTclTypeInfo {
 		final String[] segments;
+		final IClass clazz;
 
-		public IncrTclTypeInfo(String[] segments) {
+		public IncrTclTypeInfo(String[] segments, IClass clazz) {
 			this.segments = segments;
+			this.clazz = clazz;
 		}
 
 		/**
@@ -76,8 +78,8 @@ public class IncrTclNames {
 	 * @param typeInfo
 	 * @param resolvedType
 	 */
-	public void addType(ITclTypeHandler resolvedType) {
-		String namespace = resolvedType.getNamespace();
+	public void addType(IClass clazz) {
+		String namespace = clazz.getName();
 		if (namespace.startsWith("::")) { //$NON-NLS-1$
 			namespace = namespace.substring(2);
 		}
@@ -95,7 +97,7 @@ public class IncrTclNames {
 			names.put(lastName, types);
 		}
 		if (!types.containsKey(namespace)) {
-			types.put(namespace, new IncrTclTypeInfo(segments));
+			types.put(namespace, new IncrTclTypeInfo(segments, clazz));
 		}
 	}
 
@@ -104,7 +106,7 @@ public class IncrTclNames {
 	 * @param nameArgument
 	 * @return
 	 */
-	public IncrTclType resolve(String name) {
+	public IClass resolve(String name) {
 		String[] segments = TclParseUtil.tclSplit(name);
 		if (segments.length == 0) {
 			return null;
@@ -116,11 +118,20 @@ public class IncrTclNames {
 		}
 		for (Map.Entry<String, IncrTclTypeInfo> entry : types.entrySet()) {
 			if (entry.getValue().endsWith(segments)) {
-				return new IncrTclType(entry.getKey(), entry.getValue());
+				return entry.getValue().clazz;
 			}
 		}
 		return null;
 	}
 
+	private static final String TYPE_ATTR = ATTR + ".TYPE"; //$NON-NLS-1$
+
+	/**
+	 * @param context
+	 * @param type
+	 */
+	public static void saveType(ITclModelBuildContext context, IClass clazz) {
+		context.setAttribute(TYPE_ATTR, clazz);
+	}
 
 }

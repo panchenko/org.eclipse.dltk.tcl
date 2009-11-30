@@ -17,6 +17,7 @@ import java.util.Stack;
 
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IClass;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IMember;
+import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IMethod;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IMember.Visibility;
 
 public class ClassImpl implements IClass {
@@ -24,6 +25,7 @@ public class ClassImpl implements IClass {
 	private final List<String> superclasses = new ArrayList<String>();
 	private final List<IMember> members = new ArrayList<IMember>();
 	private final Stack<Visibility> visibilities = new Stack<Visibility>();
+	private String name;
 
 	public void addMember(IMember member) {
 		members.add(member);
@@ -52,6 +54,29 @@ public class ClassImpl implements IClass {
 
 	public List<IMember> getMembers() {
 		return members;
+	}
+
+	public IMethod findMethod(String name) {
+		for (IMember member : members) {
+			if (member instanceof IMethod && name.equals(member.getName())) {
+				return (IMethod) member;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param namespace
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

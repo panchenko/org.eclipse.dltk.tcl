@@ -17,6 +17,8 @@ import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IMember.Visibi
 
 public interface IClass {
 
+	String getName();
+
 	Visibility peekVisibility();
 
 	void pushVisibility(Visibility visibility);
@@ -30,5 +32,7 @@ public interface IClass {
 	String[] getSuperClasses();
 
 	List<IMember> getMembers();
+
+	IMethod findMethod(String name);
 
 }

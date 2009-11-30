@@ -55,4 +55,5 @@ public interface IMethod extends IMember {
 
 	void addBody(TclArgument tclArgument);
 
+
 }
