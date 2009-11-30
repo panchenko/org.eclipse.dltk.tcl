@@ -1,5 +1,5 @@
 itcl::class A {
-	public proc hello {} {
+	public method hello {} {
 		puts "Hello"
 	}
 }
