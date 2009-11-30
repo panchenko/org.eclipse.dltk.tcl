@@ -45,6 +45,10 @@ public interface ITclModelBuildContext {
 
 	void leave(TclCommand command);
 
+	void enterNamespace(ITclTypeHandler namespace);
+
+	void leaveNamespace(ITclTypeHandler namespace);
+
 	Object getAttribute(String name);
 
 	void setAttribute(String name, Object value);

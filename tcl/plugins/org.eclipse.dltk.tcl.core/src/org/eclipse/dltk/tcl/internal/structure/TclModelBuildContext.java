@@ -112,6 +112,16 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 		}
 	}
 
+	public void enterNamespace(ITclTypeHandler typeHandler) {
+		exitStack.push(typeHandler);
+	}
+
+	public void leaveNamespace(ITclTypeHandler namespace) {
+		if (exitStack.remove(namespace)) {
+			namespace.leave(fRequestor);
+		}
+	}
+
 	private TclTypeResolver typeResolver = null;
 
 	@SuppressWarnings("unchecked")
