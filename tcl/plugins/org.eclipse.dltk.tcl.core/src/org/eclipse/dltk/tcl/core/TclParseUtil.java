@@ -131,10 +131,8 @@ public class TclParseUtil {
 	public static TclStatement convertToAST(TclCommand command,
 			char[] filename, int offset, String content, int startPos) {
 		try {
-			List words = command.getWords();
-			List exprs = new ArrayList();
-			for (Iterator iterator = words.iterator(); iterator.hasNext();) {
-				TclWord word = (TclWord) iterator.next();
+			List<ASTNode> exprs = new ArrayList<ASTNode>();
+			for (TclWord word : command.getWords()) {
 				// wordText = SimpleTclParser.magicSubstitute(wordText);
 				Object o = word.getContents().get(0);
 
@@ -211,9 +209,9 @@ public class TclParseUtil {
 		}
 	}
 
-	public static List findLevelsTo(ModuleDeclaration module,
+	public static List<ASTNode> findLevelsTo(ModuleDeclaration module,
 			ASTNode astNodeParent) {
-		List elements = new ArrayList();
+		List<ASTNode> elements = new ArrayList<ASTNode>();
 		if (module != null || astNodeParent instanceof ModuleDeclaration) {
 			if (module == null) {
 				module = (ModuleDeclaration) astNodeParent;
@@ -405,18 +403,17 @@ public class TclParseUtil {
 
 	public static String getElementFQN(ASTNode node, String separator,
 			ModuleDeclaration module) {
-		List nodes = findLevelsTo(module, node);
+		List<ASTNode> nodes = findLevelsTo(module, node);
 		if (!nodes.contains(node)) {
 			nodes.add(node);
 		}
 		return getElementFQN(nodes, separator, module);
 	}
 
-	public static String getElementFQN(List nodes, String separator,
+	public static String getElementFQN(List<ASTNode> nodes, String separator,
 			ModuleDeclaration module) {
 		StringBuffer prefix = new StringBuffer();
-		for (Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-			ASTNode ns = (ASTNode) iterator.next();
+		for (ASTNode ns : nodes) {
 			String name = null;
 			if (ns instanceof ModuleDeclaration) {
 				name = "";
@@ -510,10 +507,11 @@ public class TclParseUtil {
 		return (ASTNode) levels.get(levels.size() - 2);
 	}
 
-	public static List findLevelFromModule(final ModuleDeclaration module,
-			final IMember member, final String memberFQN) {
-		final List levels = new ArrayList();
-		final Set processed = new HashSet();
+	public static List<ASTNode> findLevelFromModule(
+			final ModuleDeclaration module, final IMember member,
+			final String memberFQN) {
+		final List<ASTNode> levels = new ArrayList<ASTNode>();
+		final Set<String> processed = new HashSet<String>();
 
 		ASTVisitor visitor = new ASTVisitor() {
 			public boolean visitGeneral(ASTNode s) throws Exception {
@@ -521,8 +519,7 @@ public class TclParseUtil {
 					Declaration d = (Declaration) s;
 					String key = "::" + getElementFQN(s, "::", module);
 					if (key.equals(memberFQN)) {
-						if (!processed.contains(key)) {
-							processed.add(key);
+						if (processed.add(key)) {
 							levels.add(d);
 						}
 					}
@@ -536,7 +533,6 @@ public class TclParseUtil {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
-			return levels;
 		}
 		return levels;
 	}
