@@ -105,7 +105,7 @@ public class StructureParserTests extends TestCase {
 	protected void runTest() throws Throwable {
 		ParserInput input = new ParserInput(resource);
 		Collector oldStructure = parse(input, new TclSourceElementParser());
-		TclSourceElementParser2.USE_NEW = true;
+		// TclSourceElementParser2.USE_NEW = true;
 		Collector newStructure = parse(input, new TclSourceElementParser2());
 		// assertEquals(oldStructure.tags, newStructure.tags);
 		assertEquals(dump(oldStructure), dump(newStructure));
