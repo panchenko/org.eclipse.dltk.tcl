@@ -9,8 +9,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser.tests;
 
-import org.eclipse.dltk.tcl.core.TclParseUtil;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -23,7 +21,7 @@ public class AllTests {
 		suite.addTest(AllParseTests.suite());
 		suite.addTestSuite(SimpleParserTests.class);
 		suite.addTestSuite(TclIfProcessorTests.class);
-		suite.addTestSuite(TclParseUtil.class);
+		suite.addTestSuite(TclParseUtilTests.class);
 		// $JUnit-END$
 		return suite;
 	}
