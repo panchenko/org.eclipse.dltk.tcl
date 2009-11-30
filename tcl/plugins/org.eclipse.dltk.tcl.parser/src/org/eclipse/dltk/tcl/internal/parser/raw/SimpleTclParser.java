@@ -12,6 +12,7 @@
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
 import java.text.ParseException;
+import java.util.regex.Pattern;
 
 import org.eclipse.dltk.tcl.parser.ITclErrorConstants;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
@@ -49,9 +50,27 @@ public class SimpleTclParser {
 		return true;
 	}
 
+	private static final Pattern MAGIC_SUBSTITUTE = Pattern
+			.compile("\\\\" + "\\r*\\n\\s*"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	public static String magicSubstitute(String src) {
-		String regex = "\\\\\\r*\\n\\s*"; //$NON-NLS-1$
-		return src.replaceAll(regex, " "); //$NON-NLS-1$
+		int i = 0;
+		for (;;) {
+			i = src.indexOf('\\', i);
+			if (i >= 0) {
+				++i;
+				if (i < src.length()) {
+					char c = src.charAt(i);
+					if (c == '\r' || c == '\n') {
+						return MAGIC_SUBSTITUTE.matcher(src).replaceAll(" "); //$NON-NLS-1$
+					}
+					++i;
+					continue;
+				}
+			}
+			break;
+		}
+		return src;
 	}
 
 	public ISubstitution getCVB(ICodeScanner input) throws TclParseException {
