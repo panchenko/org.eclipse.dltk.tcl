@@ -82,25 +82,40 @@ public class TclParseUtil {
 	public static String escapeName(String name) {
 		// TODO optimize if there are no special chars
 		name = SimpleTclParser.magicSubstitute(name);
-		StringBuffer res = new StringBuffer();
+		StringBuilder res = null;
 		int len = name.length();
 		for (int i = 0; i < len; i++) {
-			if (Character.isISOControl(name.charAt(i))) {
+			final char ch = name.charAt(i);
+			if (Character.isISOControl(ch)) {
+				if (res == null) {
+					res = new StringBuilder(name.length() * 2);
+					res.append(name, 0, i);
+				}
 				res.append("\\u");
-				String tmp = Integer.toHexString(name.charAt(i)).toUpperCase();
+				String tmp = Integer.toHexString(ch).toUpperCase();
 				if (tmp.length() == 1) {
 					res.append("0");
 				}
 				res.append(tmp);
 			} else {
-				res.append(name.charAt(i));
+				if (res != null) {
+					res.append(ch);
+				}
 			}
 		}
-		String ans = res.toString();
-		if (ans.trim().length() == 0) {
+		if (res != null) {
+			if (res.length() == 0 || res.charAt(0) == ' '
+					|| res.charAt(res.length() - 1) == ' ') {
+				res.insert(0, '{');
+				res.append('}');
+			}
+			return res.toString();
+		} else if (name.length() == 0 || name.charAt(0) == ' '
+				|| name.charAt(name.length() - 1) == ' ') {
 			return "{" + name + "}";
+		} else {
+			return name;
 		}
-		return ans;
 	}
 
 	public static SimpleReference makeVariable(Expression variableName) {
