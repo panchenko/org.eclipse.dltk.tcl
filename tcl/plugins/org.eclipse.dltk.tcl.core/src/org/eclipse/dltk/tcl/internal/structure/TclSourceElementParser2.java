@@ -96,13 +96,13 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 
 	public static final boolean DEBUG = false;
 
-	public static boolean USE_NEW = DEBUG;
+	public static final boolean USE_NEW = true;
 
-	@SuppressWarnings("deprecation")
+	// @SuppressWarnings("deprecation")
 	public static void refreshOptions() {
-		USE_NEW = DEBUG
-				&& !TclPlugin.getDefault().getPluginPreferences().getBoolean(
-						TclSourceElementParser2.class.getName());
+		// USE_NEW = DEBUG
+		// && !TclPlugin.getDefault().getPluginPreferences().getBoolean(
+		// TclSourceElementParser2.class.getName());
 	}
 
 	static {
