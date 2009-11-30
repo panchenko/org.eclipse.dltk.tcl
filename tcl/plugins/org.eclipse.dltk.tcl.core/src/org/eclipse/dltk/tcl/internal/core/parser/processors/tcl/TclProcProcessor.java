@@ -81,11 +81,11 @@ public class TclProcProcessor extends AbstractTclCommandProcessor {
 		} else {
 			method.setModifier(Modifiers.AccPublic);
 		}
-		Block block = new Block(procCode.sourceStart(), procCode.sourceEnd());
 
 		if (procCode instanceof Block) {
 			method.acceptBody((Block) procCode);
 		} else if (procCode instanceof TclBlockExpression) {
+			Block block = new Block(procCode.sourceStart(), procCode.sourceEnd());
 			String content = ((TclBlockExpression) procCode).getBlock();
 			if (content.startsWith("{") && content.endsWith("}")) {
 				content = content.substring(1, content.length() - 1);
