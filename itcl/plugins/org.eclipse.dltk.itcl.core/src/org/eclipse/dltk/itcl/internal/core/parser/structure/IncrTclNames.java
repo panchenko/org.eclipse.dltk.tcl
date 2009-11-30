@@ -134,4 +134,8 @@ public class IncrTclNames {
 		context.setAttribute(TYPE_ATTR, clazz);
 	}
 
+	public static IClass getType(ITclModelBuildContext context) {
+		return (IClass) context.getAttribute(TYPE_ATTR);
+	}
+
 }

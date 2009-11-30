@@ -61,5 +61,6 @@
    <extension point="org.eclipse.dltk.tcl.core.tclModelBuilder">
       <processor id="#itcl#class" class="org.eclipse.dltk.itcl.internal.core.parser.structure.IncrTclClass"/>
       <processor id="#itcl#body" class="org.eclipse.dltk.itcl.internal.core.parser.structure.IncrTclBody"/>
+      <processor id="#itcl#$newInstance" class="org.eclipse.dltk.itcl.internal.core.parser.structure.IncrTclNewInstance"/>
    </extension>
 </plugin>
