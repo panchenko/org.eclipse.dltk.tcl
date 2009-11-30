@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser.structure;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -24,11 +22,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.compiler.util.Util;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceElementParser;
 import org.eclipse.dltk.core.caching.IStructureConstants;
 import org.eclipse.dltk.tcl.core.tests.model.Activator;
@@ -42,55 +37,10 @@ import static java.lang.Integer.toHexString;
 
 public class StructureParserTests extends TestCase {
 
-	private static class Input implements ISourceModule {
-
-		private final URL resource;
-
-		public Input(URL resource) {
-			this.resource = resource;
-		}
-
-		public char[] getContentsAsCharArray() {
-			try {
-				final InputStream stream = resource.openConnection()
-						.getInputStream();
-				try {
-					return Util.getInputStreamAsCharArray(stream, -1, null);
-				} finally {
-					try {
-						stream.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			} catch (IOException e1) {
-				fail(e1.toString());
-				return null;
-			}
-		}
-
-		public IModelElement getModelElement() {
-			return null;
-		}
-
-		public IPath getScriptFolder() {
-			return Path.EMPTY;
-		}
-
-		public String getSourceContents() {
-			return new String(getContentsAsCharArray());
-		}
-
-		public char[] getFileName() {
-			return resource.getPath().toCharArray();
-		}
-
-	}
-
 	final URL resource;
 
 	public StructureParserTests(URL resource) {
-		super(resource.getPath());
+		super(resource != null ? resource.getPath() : "null"); //$NON-NLS-1$
 		this.resource = resource;
 	}
 
@@ -153,7 +103,7 @@ public class StructureParserTests extends TestCase {
 
 	@Override
 	protected void runTest() throws Throwable {
-		Input input = new Input(resource);
+		ParserInput input = new ParserInput(resource);
 		Collector oldStructure = parse(input, new TclSourceElementParser());
 		TclSourceElementParser2.USE_NEW = true;
 		Collector newStructure = parse(input, new TclSourceElementParser2());
@@ -173,13 +123,12 @@ public class StructureParserTests extends TestCase {
 	}
 
 	public static Test suite() {
-		return createSuite(Activator.getDefault().getBundle(), "/",
-				"itcl-*.tcl");
+		return new StructureParserTests(null).createSuite(Activator
+				.getDefault().getBundle(), "/", "*.tcl");
 	}
 
-	public static Test createSuite(final Bundle bundle, final String path,
-			final String pattern) {
-		TestSuite suite = new TestSuite(StructureParserTests.class.getName());
+	public Test createSuite(Bundle bundle, String path, String pattern) {
+		TestSuite suite = new TestSuite(getClass().getName());
 		@SuppressWarnings("unchecked")
 		Enumeration<URL> e = bundle.findEntries(path, pattern, true);
 		while (e.hasMoreElements()) {
