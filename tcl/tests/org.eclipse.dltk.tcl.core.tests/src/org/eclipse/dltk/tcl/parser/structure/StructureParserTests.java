@@ -36,6 +36,7 @@ import org.eclipse.dltk.tcl.internal.parser.TclSourceElementParser;
 import org.eclipse.dltk.tcl.internal.structure.TclSourceElementParser2;
 import org.eclipse.dltk.tcl.parser.structure.Collector.Tag;
 import org.eclipse.dltk.utils.TextUtils;
+import org.osgi.framework.Bundle;
 
 import static java.lang.Integer.toHexString;
 
@@ -172,10 +173,15 @@ public class StructureParserTests extends TestCase {
 	}
 
 	public static Test suite() {
+		return createSuite(Activator.getDefault().getBundle(), "/",
+				"itcl-*.tcl");
+	}
+
+	public static Test createSuite(final Bundle bundle, final String path,
+			final String pattern) {
 		TestSuite suite = new TestSuite(StructureParserTests.class.getName());
 		@SuppressWarnings("unchecked")
-		Enumeration<URL> e = Activator.getDefault().getBundle().findEntries(
-				"/", "*.tcl", true);
+		Enumeration<URL> e = bundle.findEntries(path, pattern, true);
 		while (e.hasMoreElements()) {
 			suite.addTest(new StructureParserTests(e.nextElement()));
 		}
