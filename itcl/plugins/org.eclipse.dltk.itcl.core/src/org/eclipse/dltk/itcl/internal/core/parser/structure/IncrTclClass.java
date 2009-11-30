@@ -73,6 +73,7 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 		ti.superclasses = clazz.getSuperClasses();
 		ITclTypeHandler resolvedType = context.get(ITclTypeResolver.class)
 				.resolveType(ti, command.getEnd(), asSymbol(className));
+		context.enterNamespace(resolvedType);
 		clazz.setName(resolvedType.getNamespace());
 		IncrTclNames.create(context).addType(clazz);
 		for (IMember member : clazz.getMembers()) {
@@ -112,7 +113,7 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 				}
 			}
 		}
-		resolvedType.leave(context.getRequestor());
+		context.leaveNamespace(resolvedType);
 		return false;
 	}
 
