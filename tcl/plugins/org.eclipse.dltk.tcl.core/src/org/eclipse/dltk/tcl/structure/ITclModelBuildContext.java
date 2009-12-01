@@ -24,15 +24,6 @@ public interface ITclModelBuildContext {
 		void leave(ISourceElementRequestor requestor);
 	}
 
-	CharSequence getSource();
-
-	/**
-	 * @param beginIndex
-	 * @param endIndex
-	 * @return
-	 */
-	String substring(int beginIndex, int endIndex);
-
 	ISourceElementRequestor getRequestor();
 
 	ITclErrorReporter getErrorReporter();

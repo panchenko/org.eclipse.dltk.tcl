@@ -131,7 +131,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 					: null;
 			final String source = module.getSourceContents();
 			final TclModelBuildContext context = new TclModelBuildContext(this,
-					requestor, collector, source);
+					requestor, collector);
 			requestor.enterModule();
 			//
 			final TclParser newParser = new TclParser();

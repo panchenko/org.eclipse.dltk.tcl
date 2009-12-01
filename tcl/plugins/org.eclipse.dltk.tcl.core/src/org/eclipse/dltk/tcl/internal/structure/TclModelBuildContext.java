@@ -44,29 +44,18 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 
 	private final TclSourceElementParser2 fParser;
 	private final ISourceElementRequestor fRequestor;
-	private final String source;
 	private final ITclErrorReporter errorReporter;
 
 	public TclModelBuildContext(TclSourceElementParser2 parser,
-			ISourceElementRequestor requestor, ITclErrorReporter errorReporter,
-			String source) {
+			ISourceElementRequestor requestor, ITclErrorReporter errorReporter) {
 		this.fParser = parser;
 		this.fRequestor = requestor;
 		this.errorReporter = errorReporter;
-		this.source = source;
 		this.exitStack.push(new TopLevelNamespace());
 	}
 
 	public ISourceElementRequestor getRequestor() {
 		return fRequestor;
-	}
-
-	public CharSequence getSource() {
-		return source;
-	}
-
-	public String substring(int beginIndex, int endIndex) {
-		return source.substring(beginIndex, endIndex);
 	}
 
 	public ITclErrorReporter getErrorReporter() {
