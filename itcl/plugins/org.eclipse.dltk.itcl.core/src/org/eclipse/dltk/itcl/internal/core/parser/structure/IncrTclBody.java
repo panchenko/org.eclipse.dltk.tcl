@@ -78,7 +78,9 @@ public class IncrTclBody extends AbstractTclCommandModelBuilder {
 		ti.nameSourceStart = nameArg.getStart();
 		ti.nameSourceEnd = nameArg.getEnd() - 1;
 		ti.modifiers = Modifiers.AccNameSpace;// IIncrTclModifiers.AccIncrTcl;
-		ti.superclasses = clazz.getSuperClasses();
+		if (clazz != null) {
+			ti.superclasses = clazz.getSuperClasses();
+		}
 		ITclTypeHandler resolvedType = context.get(ITclTypeResolver.class)
 				.resolveType(ti, command.getEnd(), className);
 		MethodInfo mi = new MethodInfo();
