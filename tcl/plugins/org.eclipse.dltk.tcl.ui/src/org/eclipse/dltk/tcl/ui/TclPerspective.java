@@ -19,6 +19,8 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
 
+import static org.eclipse.dltk.ui.DLTKUIPlugin.ID_SCRIPT_EXPLORER;
+
 public class TclPerspective implements IPerspectiveFactory {
 	/**
 	 * @since 2.0
@@ -26,7 +28,6 @@ public class TclPerspective implements IPerspectiveFactory {
 	public static final String PERSPECTIVE_ID = "org.eclipse.dltk.tcl.ui.TclPerspective"; //$NON-NLS-1$
 
 	// TODO: move to general class like ScriptPerspective
-	public static final String SCRIPT_EXPLORER = "org.eclipse.dltk.ui.ScriptExplorer"; //$NON-NLS-1$
 
 	public static final String NEW_FOLDER_WIZARD = "org.eclipse.ui.wizards.new.folder"; //$NON-NLS-1$ 
 
@@ -58,7 +59,7 @@ public class TclPerspective implements IPerspectiveFactory {
 		layout.addShowViewShortcut(IPageLayout.ID_TASK_LIST);
 		layout.addShowViewShortcut(IProgressConstants.PROGRESS_VIEW_ID);
 
-		layout.addShowViewShortcut(SCRIPT_EXPLORER);
+		layout.addShowViewShortcut(ID_SCRIPT_EXPLORER);
 	}
 
 	protected void addActionSets(IPageLayout layout) {
@@ -83,7 +84,7 @@ public class TclPerspective implements IPerspectiveFactory {
 		IFolderLayout folder = layout.createFolder(
 				"left", IPageLayout.LEFT, (float) 0.2, editorArea); //$NON-NLS-1$		
 
-		folder.addView(SCRIPT_EXPLORER);
+		folder.addView(ID_SCRIPT_EXPLORER);
 		folder.addView("org.eclipse.dltk.ui.TypeHierarchy"); //$NON-NLS-1$
 		folder.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
