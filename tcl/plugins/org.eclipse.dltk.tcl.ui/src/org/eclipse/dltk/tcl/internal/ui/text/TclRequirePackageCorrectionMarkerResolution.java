@@ -74,6 +74,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 			}
 		}
 
+		@Override
 		public Image getImage(Object element) {
 			if (element instanceof String) {
 				String packageName = (String) element;
@@ -82,7 +83,8 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 							.getPackageInfosAsString(install);
 
 					if (!names.contains(packageName)) {
-						return DLTKPluginImages.DESC_OBJS_ERROR.createImage();
+						return DLTKPluginImages
+								.get(DLTKPluginImages.IMG_OBJS_ERROR);
 					}
 				}
 			}
@@ -90,6 +92,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
 		}
 
+		@Override
 		public String getText(Object element) {
 			if (element instanceof String) {
 				return (String) element;
@@ -118,6 +121,7 @@ final class TclRequirePackageCorrectionMarkerResolution implements
 
 				ListDialog dialog = new ListDialog(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getShell()) {
+					@Override
 					protected int getTableStyle() {
 						return SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
 								| SWT.BORDER;
