@@ -28,12 +28,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.dialogs.TimeTriggeredProgressMonitorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -95,25 +95,25 @@ public class ManPagesLocationsBlock implements SelectionListener,
 		fStore = store;
 	}
 
-	protected IBaseLabelProvider getLabelProvider() {
-		return new LabelProvider() {
+	private static class ManPagesLabelProvider extends LabelProvider {
 
-			public Image getImage(Object element) {
-				if (element instanceof ManPageFolder) {
-					return DLTKPluginImages.DESC_OBJS_LIBRARY.createImage();
-				}
-				return DLTKPluginImages.DESC_OBJS_INFO_OBJ.createImage();
+		@Override
+		public Image getImage(Object element) {
+			if (element instanceof ManPageFolder) {
+				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_LIBRARY);
 			}
+			return DLTKUIPlugin.getImageDescriptorRegistry().get(
+					DLTKPluginImages.DESC_OBJS_INFO_OBJ);
+		}
 
-			public String getText(Object element) {
-				if (element instanceof ManPageFolder) {
-					ManPageFolder folder = (ManPageFolder) element;
-					return folder.getPath();
-				}
-				return super.getText(element);
+		@Override
+		public String getText(Object element) {
+			if (element instanceof ManPageFolder) {
+				ManPageFolder folder = (ManPageFolder) element;
+				return folder.getPath();
 			}
-
-		};
+			return super.getText(element);
+		}
 	}
 
 	private List folders = null;
@@ -185,7 +185,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 		fLocationsContentProvider = new ManLocationsContentProvider();
 		fLocationsViewer.setSorter(new ViewerSorter());
 		fLocationsViewer.setContentProvider(fLocationsContentProvider);
-		fLocationsViewer.setLabelProvider(getLabelProvider());
+		fLocationsViewer.setLabelProvider(new ManPagesLabelProvider());
 		fLocationsViewer.setInput(this);
 		fLocationsViewer.addSelectionChangedListener(this);
 
@@ -303,9 +303,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	 * @see SelectionListener#widgetSelected(SelectionEvent)
 	 */
 	public void widgetSelected(SelectionEvent e) {
 		Object source = e.getSource();
@@ -328,9 +326,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+	 * @see SelectionListener#widgetDefaultSelected(SelectionEvent)
 	 */
 	public void widgetDefaultSelected(SelectionEvent e) {
 	}
@@ -438,9 +434,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 * @see ISelectionChangedListener#selectionChanged(SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
 		updateButtons();
