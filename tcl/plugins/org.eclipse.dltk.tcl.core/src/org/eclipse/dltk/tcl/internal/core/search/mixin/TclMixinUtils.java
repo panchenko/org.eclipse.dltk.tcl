@@ -21,7 +21,7 @@ public class TclMixinUtils {
 			Class mixinClass, IScriptProject project, IProgressMonitor monitor) {
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		long time = System.currentTimeMillis();
-		List elements = new ArrayList();
+		List<IModelElement> elements = new ArrayList<IModelElement>();
 		IMixinElement[] find = TclMixinModel.getInstance().getMixin(project)
 				.find(pattern, monitor);
 		if (find == null) {
@@ -47,7 +47,6 @@ public class TclMixinUtils {
 			}
 		}
 		p.done("Tcl", "Find elements in mixin", 0);
-		return (IModelElement[]) elements.toArray(new IModelElement[elements
-				.size()]);
+		return elements.toArray(new IModelElement[elements.size()]);
 	}
 }
