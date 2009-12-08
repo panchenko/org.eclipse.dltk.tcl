@@ -41,7 +41,12 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 	protected TclPackageFragment(ScriptProject project, String packageName) {
 		super(project);
 		this.packageName = packageName;
-		this.currentPath = PATH.append("@").append(packageName);
+		/*
+		 * package name can contain ':' characters, but they are not allowed in
+		 * path, since ':' is used as device separator.
+		 */
+		this.currentPath = PATH.append("@").append(
+				packageName.replace(':', ';'));
 	}
 
 	public String getElementName() {
