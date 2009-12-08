@@ -472,9 +472,7 @@ public class TclPackagesManager {
 				}
 			}
 		}
-		List<TclPackageInfo> resultList = new ArrayList<TclPackageInfo>();
-		resultList.addAll(result);
-		return resultList;
+		return new ArrayList<TclPackageInfo>(result);
 	}
 
 	private static void processPackage(TclPackageInfo tclPackageInfo,
