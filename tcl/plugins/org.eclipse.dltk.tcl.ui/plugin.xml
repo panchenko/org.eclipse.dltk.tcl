@@ -416,8 +416,27 @@
             commandId="org.eclipse.dltk.tcl.ui.navigate.open.type"
             contextId="org.eclipse.dltk.ui.tclEditorScope"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>       
- </extension>       
- 
+		<key
+			commandId="org.eclipse.dltk.ui.edit.text.script.format"
+			contextId="org.eclipse.dltk.ui.tclEditorScope"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+M2+F"/>
+ </extension>
+
+ <extension point="org.eclipse.ui.menus">
+	<menuContribution locationURI="menu:org.eclipse.dltk.ui.source.menu?after=editGroup">
+		<command commandId="org.eclipse.dltk.ui.edit.text.script.format">             
+			<visibleWhen>
+				<with variable="activeContexts">
+					<iterate operator="or">
+						<equals value="org.eclipse.dltk.ui.tclEditorScope" />
+					</iterate>
+				</with>
+			</visibleWhen>
+		</command>
+	</menuContribution>
+ </extension>
+
  <extension
          point="org.eclipse.ui.decorators">
    <decorator
