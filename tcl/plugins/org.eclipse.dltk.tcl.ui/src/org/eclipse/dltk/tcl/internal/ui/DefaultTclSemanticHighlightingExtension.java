@@ -143,7 +143,7 @@ public class DefaultTclSemanticHighlightingExtension implements
 			if (module == null) {
 				TclParser parser = new TclParser();
 				module = parser.parseModule(code.getSourceContents(), null,
-						DefinitionManager.getInstance().createNewProcessor());
+						DefinitionManager.getInstance().createProcessor());
 			}
 			if (module != null) {
 				TclParserUtils.traverse(module.getStatements(),
