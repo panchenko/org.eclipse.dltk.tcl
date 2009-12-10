@@ -4,12 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.dltk.tcl.definitions.Command;
-import org.eclipse.dltk.tcl.definitions.Namespace;
 import org.eclipse.dltk.tcl.definitions.Scope;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -78,7 +75,7 @@ public class DefinitionManager {
 	}
 
 	public NamespaceScopeProcessor createProcessor() {
-		return new NamespaceScopeProcessor(getCoreProcessor());
+		return new NamespaceScopeProcessor(internalCoreProcessor());
 	}
 
 	public NamespaceScopeProcessor createNewProcessor() {
@@ -92,11 +89,21 @@ public class DefinitionManager {
 
 	private NamespaceScopeProcessor coreProcessor = null;
 
-	public NamespaceScopeProcessor getCoreProcessor() {
+	private NamespaceScopeProcessor internalCoreProcessor() {
 		if (coreProcessor == null) {
 			coreProcessor = createNewProcessor();
 		}
-		return new NamespaceScopeProcessor(coreProcessor);
+		return coreProcessor;
+	}
+
+	/**
+	 * Use {@link #createProcessor()} since now they do the same.
+	 * 
+	 * @return
+	 */
+	@Deprecated
+	public NamespaceScopeProcessor getCoreProcessor() {
+		return createProcessor();
 	}
 
 	public static synchronized DefinitionManager getInstance() {
