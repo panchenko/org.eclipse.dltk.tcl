@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '
@@ -434,13 +433,14 @@ public class TclCommandImpl extends NodeImpl implements TclCommand {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (qualifiedName: ");
+		result.append(" (qualifiedName: "); //$NON-NLS-1$
 		result.append(qualifiedName);
-		result.append(", matched: ");
+		result.append(", matched: "); //$NON-NLS-1$
 		result.append(matched);
 		result.append(')');
-		result.append("\n{"
-				+ SimpleCodePrinter.getCommandString(this, getStart()) + "}");
+		result.append("\n{"); //$NON-NLS-1$
+		result.append(SimpleCodePrinter.getCommandString(this, getStart()));
+		result.append("}"); //$NON-NLS-1$
 		return result.toString();
 	}
 

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: TclModuleImpl.java,v 1.3 2009/10/18 15:25:41 apanchenk Exp $
+ * $Id: TclModuleImpl.java,v 1.4 2009/12/11 10:29:44 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.ast.impl;
 
@@ -284,7 +284,7 @@ public class TclModuleImpl extends EObjectImpl implements TclModule {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (size: ");
+		result.append(" (size: "); //$NON-NLS-1$
 		result.append(size);
 		result.append(')');
 		result.append(SimpleCodePrinter.getCommandsString(getStatements()));
