@@ -226,7 +226,8 @@ public class TclParserUtils implements ITclParserOptions {
 			} else if (nde instanceof TclCommand) {
 				TclCommand command = (TclCommand) nde;
 				if (visitor.visit(command)) {
-					traverse(Collections.singletonList(command.getName()), visitor);
+					traverse(Collections.singletonList(command.getName()),
+							visitor);
 					traverse(command.getArguments(), visitor);
 					visitor.endVisit(command);
 				}
@@ -252,9 +253,7 @@ public class TclParserUtils implements ITclParserOptions {
 				if (visitor.visit(list)) {
 					TclArgument index = list.getIndex();
 					if (index != null) {
-						List<TclArgument> l = new ArrayList<TclArgument>();
-						l.add(index);
-						traverse(l, visitor);
+						traverse(Collections.singletonList(index), visitor);
 					}
 					visitor.endVisit(list);
 				}
