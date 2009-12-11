@@ -12,6 +12,7 @@
 package org.eclipse.dltk.tcl.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -225,9 +226,7 @@ public class TclParserUtils implements ITclParserOptions {
 			} else if (nde instanceof TclCommand) {
 				TclCommand command = (TclCommand) nde;
 				if (visitor.visit(command)) {
-					List<TclArgument> nameList = new ArrayList<TclArgument>();
-					nameList.add(command.getName());
-					traverse(nameList, visitor);
+					traverse(Collections.singletonList(command.getName()), visitor);
 					traverse(command.getArguments(), visitor);
 					visitor.endVisit(command);
 				}
