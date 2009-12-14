@@ -165,11 +165,11 @@ public class ErrorReportingTests extends TestCase {
 		typedCheck(source, errorCodes);
 	}
 
-	// public void test023() throws Exception {
-	// String source = "switch a {#(v {puts lala}}";
-	// List<Integer> errorCodes = new ArrayList<Integer>();
-	// typedCheck(source, errorCodes);
-	// }
+	public void test023() throws Exception {
+		String source = "switch a {#(v {puts lala}}";
+		List<Integer> errorCodes = new ArrayList<Integer>();
+		typedCheck(source, errorCodes);
+	}
 
 	// public void test021() throws Exception {
 	// String source = "proc {{arg def1 def2}} {puts $arg}";
