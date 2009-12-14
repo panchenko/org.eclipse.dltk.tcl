@@ -16,20 +16,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.tcl.ast.AstFactory;
-import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclArgument;
-import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.VariableReference;
+import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
 import org.eclipse.dltk.tcl.parser.TclVisitor;
 import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @since 2.0
@@ -89,6 +88,9 @@ public class TclVariableResolver {
 	 *         encountered
 	 */
 	public String resolve(String value) {
+		if (value.indexOf('$') == -1) {
+			return value;
+		}
 		TclParser parser = new TclParser();
 		TclErrorCollector collector = new TclErrorCollector();
 		List<TclCommand> result = parser.parse(value, collector, null);
@@ -109,22 +111,15 @@ public class TclVariableResolver {
 				return false;
 			}
 		});
-		boolean hasModifications = false;
+		if (variables.isEmpty()) {
+			return value;
+		}
 		for (VariableReference variableReference : variables) {
 			EObject container = variableReference.eContainer();
 			if (container == null) {
 				continue;
 			}
-			String name = variableReference.getName();
-			TclArgument index = variableReference.getIndex();
-			String indexValue = null;
-			if (index instanceof StringArgument) {
-				indexValue = ((StringArgument) index).getValue();
-			} else if (index != null) {
-				indexValue = resolve(SimpleCodePrinter.getArgumentString(index,
-						0, false));
-			}
-			String resultValue = registry.getValue(name, indexValue);
+			String resultValue = resolveVariable(variableReference);
 			// If has unresolved value then return null
 			if (resultValue == null) {
 				return null;
@@ -134,33 +129,34 @@ public class TclVariableResolver {
 			string.setStart(variableReference.getStart());
 			string.setEnd(variableReference.getEnd());
 			// Replace parent with StringArgument
-			if (container instanceof TclCommand) {
-				TclCommand cmd = (TclCommand) container;
-				EList<TclArgument> args = cmd.getArguments();
-				if (args.contains(variableReference)) {
-					args.set(args.indexOf(variableReference), string);
-				} else {
-					cmd.setName(string);
-				}
-				hasModifications = true;
-			} else if (container instanceof TclArgumentList) {
-				TclArgumentList cmd = (TclArgumentList) container;
-				EList<TclArgument> args = cmd.getArguments();
-				args.set(args.indexOf(variableReference), string);
-				hasModifications = true;
-			} else if (container instanceof ComplexString) {
-				ComplexString cmd = (ComplexString) container;
-				EList<TclArgument> args = cmd.getArguments();
-				args.set(args.indexOf(variableReference), string);
-				hasModifications = true;
+			EcoreUtil.replace(variableReference, string);
+		}
+		return SimpleCodePrinter.getCommandsString(result, false).trim();
+	}
+
+	private String resolveVariable(VariableReference variable) {
+		final String indexValue;
+		final TclArgument index = variable.getIndex();
+		if (index != null) {
+			if (index instanceof StringArgument) {
+				indexValue = ((StringArgument) index).getValue();
+			} else {
+				indexValue = resolve(SimpleCodePrinter.getArgumentString(index,
+						0, false));
 			}
+			if (indexValue != null) {
+				final String value = registry
+						.getValue(TclParseUtil.escapeName(variable.getName())
+								+ '(' + TclParseUtil.escapeName(indexValue)
+								+ ')', null);
+				if (value != null) {
+					return value;
+				}
+			}
+		} else {
+			indexValue = null;
 		}
-		if (hasModifications) {
-			String resultString = SimpleCodePrinter.getCommandsString(result,
-					false).trim();
-			return resultString;
-		}
-		return value;
+		return registry.getValue(variable.getName(), indexValue);
 	}
 
 	public static String[] extractVariableNames(String value) {
