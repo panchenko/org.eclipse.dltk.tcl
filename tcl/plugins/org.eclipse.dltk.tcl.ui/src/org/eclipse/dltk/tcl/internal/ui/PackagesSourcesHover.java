@@ -36,123 +36,122 @@ import org.eclipse.swt.widgets.Shell;
 public class PackagesSourcesHover extends AbstractScriptEditorTextHover {
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		String nature = null;
-		IModelElement inputModelElement = EditorUtility
+		final IModelElement inputModelElement = EditorUtility
 				.getEditorInputModelElement(this.getEditor(), false);
-		if (inputModelElement == null)
+		if (inputModelElement == null) {
 			return null;
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
+		}
+		final IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(inputModelElement);
 		if (toolkit == null) {
 			return null;
 		}
-		nature = toolkit.getNatureId();
-		if (nature == null || !TclNature.NATURE_ID.equals(nature)) {
+		if (!TclNature.NATURE_ID.equals(toolkit.getNatureId())) {
 			return null;
 		}
 
 		// This is correct tcl module, so lets locate package at specified
 		// location.
-		ISourceModule sourceModule = (ISourceModule) inputModelElement
+		final ISourceModule sourceModule = (ISourceModule) inputModelElement
 				.getAncestor(IModelElement.SOURCE_MODULE);
-		ModuleDeclaration declaration = SourceParserUtil
+		final TclModuleInfo info = extractPackageSourceInfo(sourceModule);
+		if (info == null) {
+			return null;
+		}
+		final TclModuleInfo moduleInfo = loadModuleInfo(sourceModule);
+		if (moduleInfo == null) {
+			return null;
+		}
+		for (TclSourceEntry entry : info.getSourced()) {
+			if (entry.getStart() <= hoverRegion.getOffset()
+					&& hoverRegion.getOffset() <= entry.getEnd()) {
+				final String hover = describe(entry, moduleInfo
+						.getSourceCorrections(), "Source information:");
+				if (hover != null) {
+					return hover;
+				}
+			}
+		}
+		for (TclSourceEntry entry : info.getRequired()) {
+			if (entry.getStart() <= hoverRegion.getOffset()
+					&& hoverRegion.getOffset() <= entry.getEnd()) {
+				final String hover = describe(entry, moduleInfo
+						.getPackageCorrections(), "Require information:");
+				if (hover != null) {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
+
+	private String describe(TclSourceEntry entry,
+			EList<UserCorrection> corrections, String caption) {
+		StringBuilder buffer = new StringBuilder(256);
+		buffer.append(caption);
+		boolean added = false;
+		for (UserCorrection userCorrection : corrections) {
+			if (userCorrection.getOriginalValue().equals(entry.getValue())) {
+				List<String> userValue = new ArrayList<String>(userCorrection
+						.getUserValue());
+				Collections.sort(userValue);
+				buffer.append("<ul>"); //$NON-NLS-1$
+				for (String value : userValue) {
+					buffer.append("<li>").append(value).append("</li>"); //$NON-NLS-1$ //$NON-NLS-2$
+					added = true;
+				}
+				buffer.append("</ul>"); //$NON-NLS-1$
+			}
+		}
+		if (added) {
+			return buffer.toString();
+		}
+		return null;
+	}
+
+	private TclModuleInfo extractPackageSourceInfo(ISourceModule sourceModule) {
+		final TclModule module = parse(sourceModule);
+		if (module != null) {
+			final PackageSourceCollector collector = new PackageSourceCollector();
+			collector.process(module.getStatements(), sourceModule);
+			return collector.getCurrentModuleInfo();
+		}
+		return null;
+	}
+
+	private TclModule parse(final ISourceModule sourceModule) {
+		final ModuleDeclaration declaration = SourceParserUtil
 				.getModuleDeclaration(sourceModule);
-		TclModule module = null;
 		if (declaration instanceof TclModuleDeclaration) {
-			module = ((TclModuleDeclaration) declaration).getTclModule();
+			return ((TclModuleDeclaration) declaration).getTclModule();
 		} else {
 			TclParser parser = new TclParser();
 			try {
-				module = parser.parseModule(sourceModule.getSource(), null,
-						DefinitionManager.getInstance().getCoreProcessor());
+				return parser.parseModule(sourceModule.getSource(), null,
+						DefinitionManager.getInstance().createProcessor());
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
 				}
+				return null;
 			}
 		}
-		if (module != null) {
-			PackageSourceCollector collector = new PackageSourceCollector();
-			collector.process(module.getStatements(), sourceModule);
-			TclModuleInfo info = collector.getCurrentModuleInfo();
-			EList<TclSourceEntry> sourced = info.getSourced();
-			EList<TclSourceEntry> required = info.getRequired();
-			List<TclModuleInfo> projectModules = TclPackagesManager
-					.getProjectModules(sourceModule.getScriptProject()
-							.getElementName());
-			String handle = sourceModule.getHandleIdentifier();
-			EList<UserCorrection> sourceCorrections = null;
-			EList<UserCorrection> packageCorrections = null;
-			for (TclModuleInfo tclModuleInfo : projectModules) {
-				if (tclModuleInfo.getHandle().equals(handle)) {
-					sourceCorrections = tclModuleInfo.getSourceCorrections();
-					packageCorrections = tclModuleInfo.getPackageCorrections();
-					break;
-				}
-			}
-			if (sourceCorrections != null) {
-				for (TclSourceEntry tclSourceEntry : sourced) {
-					if (tclSourceEntry.getStart() <= hoverRegion.getOffset()
-							&& hoverRegion.getOffset() <= tclSourceEntry
-									.getEnd()) {
-						StringBuffer buffer = new StringBuffer();
-						buffer.append("Source information:");
-						boolean added = false;
-						for (UserCorrection userCorrection : sourceCorrections) {
-							if (userCorrection.getOriginalValue().equals(
-									tclSourceEntry.getValue())) {
-								List<String> userValue = new ArrayList<String>(
-										userCorrection.getUserValue());
-								Collections.sort(userValue);
-								buffer.append("<ul>");
-								for (String value : userValue) {
-									buffer.append("<li>").append(value).append(
-											"</li>");
-									added = true;
-								}
-								buffer.append("</ul>");
-							}
-						}
-						if (added) {
-							return buffer.toString();
-						}
-						return "";
-					}
-				}
-			}
-			if (packageCorrections != null) {
-				for (TclSourceEntry tclSourceEntry : required) {
-					if (tclSourceEntry.getStart() <= hoverRegion.getOffset()
-							&& hoverRegion.getOffset() <= tclSourceEntry
-									.getEnd()) {
-						StringBuffer buffer = new StringBuffer();
-						buffer.append("Require information:");
-						boolean added = false;
-						for (UserCorrection userCorrection : packageCorrections) {
-							if (userCorrection.getOriginalValue().equals(
-									tclSourceEntry.getValue())) {
-								EList<String> userValue = userCorrection
-										.getUserValue();
-								buffer.append("<ul>");
-								for (String value : userValue) {
-									buffer.append("<li>").append(value).append(
-											"</li>");
-									added = true;
-								}
-								buffer.append("</ul>");
-							}
-						}
-						if (added) {
-							return buffer.toString();
-						}
-						return "";
-					}
-				}
-			}
-		}
-		return "";
 	}
 
+	private TclModuleInfo loadModuleInfo(ISourceModule sourceModule) {
+		final List<TclModuleInfo> projectModules = TclPackagesManager
+				.getProjectModules(sourceModule.getScriptProject()
+						.getElementName());
+		final String handle = sourceModule.getHandleIdentifier();
+		for (TclModuleInfo tclModuleInfo : projectModules) {
+			if (tclModuleInfo.getHandle().equals(handle)) {
+				return tclModuleInfo;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		return new AbstractReusableInformationControlCreator() {
 			@Override
