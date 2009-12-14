@@ -72,10 +72,13 @@ public class VariableResolverTests extends TestCase {
 		envValues.put("mytest", "myvalue");
 		variables.put("env", envValues);
 		variables.put("gamma", "mytest");
+		variables.put("env(HOME)", "/home/dltk");
 
 		TclVariableResolver resolver = new TclVariableResolver(
 				new SimpleVariableRegistry(variables));
 		assertEquals("myvalue", resolver.resolve("$env(mytest)"));
 		assertEquals("myvalue", resolver.resolve("$env($gamma)"));
+		assertEquals("/home/dltk", resolver.resolve("$env(HOME)"));
+		assertNull(resolver.resolve("$env($alpha)"));
 	}
 }
