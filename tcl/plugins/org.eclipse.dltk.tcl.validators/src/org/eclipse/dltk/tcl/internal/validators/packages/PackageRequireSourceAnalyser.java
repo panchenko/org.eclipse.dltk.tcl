@@ -524,8 +524,11 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					reportSourceProblemCorrection(
 							source,
 							moduleInfo.reporter,
-							Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
-							source.getValue(), moduleInfo.lineTracker);
+							NLS
+									.bind(
+											Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
+											source.getValue()), source
+									.getValue(), moduleInfo.lineTracker);
 				}
 				// if (!corrections.isEmpty()) {
 				// corrections.clear();
