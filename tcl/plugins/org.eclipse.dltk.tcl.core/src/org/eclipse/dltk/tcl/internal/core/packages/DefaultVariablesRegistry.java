@@ -19,12 +19,13 @@ import org.eclipse.dltk.tcl.internal.core.packages.TclVariableResolver.IVariable
  */
 public class DefaultVariablesRegistry implements IVariableRegistry {
 	private Map<String, VariableValue> variables;
+	private boolean environmentCalculated = false;
 	private Map<String, String> environmentVariablesMap;
 	private EnvironmentVariable[] interpreterVariables;
+	private IInterpreterInstall install;
 
 	public DefaultVariablesRegistry(IScriptProject project) {
 		variables = new HashMap<String, VariableValue>();
-		IInterpreterInstall install = null;
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
 		} catch (CoreException e) {
@@ -33,12 +34,6 @@ public class DefaultVariablesRegistry implements IVariableRegistry {
 		if (install != null) {
 			variables
 					.putAll(TclPackagesManager.getVariablesEMap(install).map());
-			IExecutionEnvironment execEnvironment = install
-					.getExecEnvironment();
-			if (execEnvironment != null) {
-				environmentVariablesMap = execEnvironment
-						.getEnvironmentVariables(true);
-			}
 			interpreterVariables = install.getEnvironmentVariables();
 		}
 		variables.putAll(TclPackagesManager.getVariablesEMap(
@@ -53,6 +48,15 @@ public class DefaultVariablesRegistry implements IVariableRegistry {
 						return variable.getValue();
 					}
 				}
+			}
+			if (!environmentCalculated) {
+				IExecutionEnvironment execEnvironment = install
+						.getExecEnvironment();
+				if (execEnvironment != null) {
+					environmentVariablesMap = execEnvironment
+							.getEnvironmentVariables(true);
+				}
+				environmentCalculated = true;
 			}
 			if (environmentVariablesMap != null) {
 				return environmentVariablesMap.get(index);
