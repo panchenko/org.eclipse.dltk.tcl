@@ -143,6 +143,7 @@ public class TclParserUtils implements ITclParserOptions {
 		try {
 			AstFactory factory = AstFactory.eINSTANCE;
 			SimpleTclParser parser = new SimpleTclParser();
+			parser.setSkipComments(false);
 			TclScript script;
 			try {
 				script = parser.parse(content);

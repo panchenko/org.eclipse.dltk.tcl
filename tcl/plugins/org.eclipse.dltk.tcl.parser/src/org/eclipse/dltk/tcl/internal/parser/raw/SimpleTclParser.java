@@ -32,6 +32,8 @@ public class SimpleTclParser {
 		this.sourceOffset = sourceOffset;
 	}
 
+	private boolean skipComments = true;
+
 	private final int sourceOffset;
 
 	/**
@@ -130,7 +132,7 @@ public class SimpleTclParser {
 				continue;
 			}
 			if (cmd.isEmpty() && wordBuffer.isEmpty()) {
-				if (ch == '#') {
+				if (ch == '#' && skipComments) {
 					input.read();
 					TclTextUtils.runToLineEnd(input);
 					return null;
@@ -262,4 +264,19 @@ public class SimpleTclParser {
 		SimpleTclParser parser = new SimpleTclParser();
 		return parser.parse(content);
 	}
+
+	/**
+	 * @since 2.0
+	 */
+	public boolean isSkipComments() {
+		return skipComments;
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public void setSkipComments(boolean skipComments) {
+		this.skipComments = skipComments;
+	}
+
 }
