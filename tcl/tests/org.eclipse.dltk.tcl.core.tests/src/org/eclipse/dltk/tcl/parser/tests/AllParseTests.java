@@ -38,11 +38,12 @@ public class AllParseTests extends TestCase {
 	private static final String SCRIPTS_ZIP = "scripts/scripts.zip"; //$NON-NLS-1$
 
 	public static TestSuite suite() {
-		final TestSuite suite = new TestSuite();
+		final TestSuite suite = new TestSuite(AllParseTests.class.getName());
 		final URL scripts = Activator.getDefault().getBundle().getEntry(
 				SCRIPTS_ZIP);
 		if (scripts == null) {
 			suite.addTest(new TestCase("error") { //$NON-NLS-1$
+						@Override
 						protected void runTest() throws Throwable {
 							fail(SCRIPTS_ZIP + " is not found"); //$NON-NLS-1$
 						}
@@ -57,6 +58,7 @@ public class AllParseTests extends TestCase {
 					while ((entry = zipInputStream.getNextEntry()) != null) {
 						final InputStream entryStream = new FilterInputStream(
 								zipInputStream) {
+							@Override
 							public void close() throws IOException {
 								// empty
 							}
@@ -76,6 +78,7 @@ public class AllParseTests extends TestCase {
 				}
 			} catch (final IOException e) {
 				suite.addTest(new TestCase("IOException") { //$NON-NLS-1$
+							@Override
 							protected void runTest() throws Throwable {
 								throw e;
 							}
@@ -92,6 +95,7 @@ public class AllParseTests extends TestCase {
 		this.content = content;
 	}
 
+	@Override
 	protected void runTest() throws Throwable {
 		System.out.print("Test " + getName()); //$NON-NLS-1$
 		final ProblemCollector collector = new ProblemCollector();
