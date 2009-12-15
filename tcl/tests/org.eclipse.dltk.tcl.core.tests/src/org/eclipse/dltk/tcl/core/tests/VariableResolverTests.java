@@ -81,4 +81,23 @@ public class VariableResolverTests extends TestCase {
 		assertEquals("/home/dltk", resolver.resolve("$env(HOME)"));
 		assertNull(resolver.resolve("$env($alpha)"));
 	}
+
+	public void testNestedExpressions() {
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("a", "$b");
+		variables.put("b", "YES");
+		TclVariableResolver resolver = new TclVariableResolver(
+				new SimpleVariableRegistry(variables));
+		assertEquals("YES", resolver.resolve("$a"));
+	}
+
+	public void testNestedCycle() {
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("a", "$b");
+		variables.put("b", "$a");
+		TclVariableResolver resolver = new TclVariableResolver(
+				new SimpleVariableRegistry(variables));
+		assertNull(resolver.resolve("$a"));
+	}
+
 }
