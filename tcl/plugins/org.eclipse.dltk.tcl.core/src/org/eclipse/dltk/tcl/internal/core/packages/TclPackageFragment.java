@@ -244,4 +244,12 @@ public class TclPackageFragment extends Openable implements IProjectFragment,
 	public boolean isBinary() {
 		return false;
 	}
+
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	public boolean isReadOnly() {
+		return true;
+	}
 }
