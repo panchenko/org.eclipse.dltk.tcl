@@ -42,7 +42,7 @@ final class TclSourceCorrectionMarkerResolution implements IMarkerResolution,
 	}
 
 	public String getLabel() {
-		return "Add user specified source file location to buildpath";
+		return Messages.TclSourceCorrectionMarkerResolution_specifyFiles;
 	}
 
 	private boolean resolve() {

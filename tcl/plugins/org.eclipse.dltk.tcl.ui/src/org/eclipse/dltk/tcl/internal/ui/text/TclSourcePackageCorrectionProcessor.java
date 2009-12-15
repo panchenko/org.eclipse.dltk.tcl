@@ -95,26 +95,33 @@ public class TclSourcePackageCorrectionProcessor implements
 			}
 		} else if (annotation.getId() == TclProblems.UNKNOWN_REQUIRED_PACKAGE_CORRECTION) {
 			final String pkgName = annotation.getArguments()[0];
-			context.addProposal(new AnnotationResolutionProposal(
-					new TclRequirePackageCorrectionMarkerResolution(pkgName,
-							context.getProject(), context.getModule()),
-					annotation));
-			addGlobalVariableProposals(annotation, context, pkgName);
+			if (addPackageName(context, pkgName)) {
+				context.addProposal(new AnnotationResolutionProposal(
+						new TclRequirePackageCorrectionMarkerResolution(
+								pkgName, context.getProject(), context
+										.getModule()), annotation));
+				addGlobalVariableProposals(annotation, context, pkgName);
+			}
 		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
 			final String fName = annotation.getArguments()[0];
-			context.addProposal(new AnnotationResolutionProposal(
-					new TclSourceCorrectionMarkerResolution(fName, context
-							.getProject(), context.getModule()), annotation));
-			addGlobalVariableProposals(annotation, context, fName);
-		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE) {
-			final String fName = annotation.getArguments()[0];
-			if (TclSourceMarkerResolution.fixAvailable(context.getModule(),
-					fName)) {
+			if (addSourceFile(context, fName)) {
 				context
 						.addProposal(new AnnotationResolutionProposal(
-								new TclSourceMarkerResolution(fName, context
-										.getProject(), context.getModule()),
-								annotation));
+								new TclSourceCorrectionMarkerResolution(fName,
+										context.getProject(), context
+												.getModule()), annotation));
+				addGlobalVariableProposals(annotation, context, fName);
+			}
+		} else if (annotation.getId() == TclProblems.UNKNOWN_SOURCE) {
+			final String fName = annotation.getArguments()[0];
+			if (addSourceFile(context, fName)) {
+				if (TclSourceMarkerResolution.fixAvailable(context.getModule(),
+						fName)) {
+					context.addProposal(new AnnotationResolutionProposal(
+							new TclSourceMarkerResolution(fName, context
+									.getProject(), context.getModule()),
+							annotation));
+				}
 			}
 		}
 	}
@@ -146,13 +153,24 @@ public class TclSourcePackageCorrectionProcessor implements
 
 	private boolean addPackageName(IScriptCorrectionContext context,
 			String pkgName) {
-		Set packages = (Set) context.getAttribute(PACKAGES);
-		if (packages != null) {
-			return packages.add(pkgName);
+		return addAttributeValue(context, PACKAGES, pkgName);
+	}
+
+	private boolean addSourceFile(IScriptCorrectionContext context,
+			String source) {
+		return addAttributeValue(context, SOURCES, source);
+	}
+
+	private boolean addAttributeValue(IScriptCorrectionContext context,
+			final String attribute, String value) {
+		@SuppressWarnings("unchecked")
+		Set<String> values = (Set<String>) context.getAttribute(attribute);
+		if (values != null) {
+			return values.add(value);
 		} else {
-			packages = new HashSet();
-			packages.add(pkgName);
-			context.setAttribute(PACKAGES, packages);
+			values = new HashSet<String>();
+			values.add(value);
+			context.setAttribute(attribute, values);
 			return true;
 		}
 	}

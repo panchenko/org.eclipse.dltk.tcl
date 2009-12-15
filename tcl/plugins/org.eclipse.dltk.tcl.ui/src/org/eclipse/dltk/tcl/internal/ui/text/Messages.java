@@ -18,6 +18,7 @@ public class Messages extends NLS {
 	public static String TclRequirePackageCorrectionMarkerResolution_SpecifyPackagesResolutionLabel;
 	public static String TclRequirePackageCorrectionMarkerResolution_SpecifyPackagesTitle;
 	public static String TclRequirePackageMarkerResolution_addPackageToBuildpath;
+	public static String TclSourceCorrectionMarkerResolution_specifyFiles;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
