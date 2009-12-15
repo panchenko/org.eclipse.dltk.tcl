@@ -423,16 +423,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 	private void cleanCorrections(EList<UserCorrection> corrections,
 			EList<TclSourceEntry> entries) {
-		TOP: for (Iterator<UserCorrection> i = corrections.iterator(); i
-				.hasNext();) {
+		final Set<String> values = new HashSet<String>();
+		for (TclSourceEntry tclSourceEntry : entries) {
+			values.add(tclSourceEntry.getValue());
+		}
+		for (Iterator<UserCorrection> i = corrections.iterator(); i.hasNext();) {
 			final UserCorrection userCorrection = i.next();
-			for (TclSourceEntry tclSourceEntry : entries) {
-				if (tclSourceEntry.getValue().equals(
-						userCorrection.getOriginalValue())) {
-					continue TOP;
-				}
+			if (!values.contains(userCorrection.getOriginalValue())) {
+				i.remove();
 			}
-			i.remove();
 		}
 	}
 
