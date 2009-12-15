@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
@@ -25,6 +24,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -49,7 +49,7 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 
-		List keys = new ArrayList();
+		List<OverlayPreferenceStore.OverlayKey> keys = new ArrayList<OverlayPreferenceStore.OverlayKey>();
 
 		keys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
@@ -67,11 +67,9 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 				OverlayPreferenceStore.INT,
 				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE));
 
-		return (OverlayPreferenceStore.OverlayKey[]) keys
-				.toArray(new OverlayPreferenceStore.OverlayKey[keys
-						.size()]);
+		return keys.toArray(new OverlayPreferenceStore.OverlayKey[keys.size()]);
 	}
-		
+
 	public Control createControl(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -83,7 +81,9 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_autoclose_title);
 		addAutoclosingSection(composite);
 
-		composite = createSubsection(control, null,
+		composite = createSubsection(
+				control,
+				null,
 				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_tabs_title);
 		addTabSection(composite);
 
@@ -98,15 +98,15 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);
 
-		String label = null;
-		
-		label = TclPreferencesMessages.TCLSmartTypingConfigurationBlock_smartPaste_simple;
-		addRadioButton(composite, label,
+		addRadioButton(
+				composite,
+				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_smartPaste_simple,
 				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE,
 				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_SIMPLE);
-		
-		label = TclPreferencesMessages.TCLSmartTypingConfigurationBlock_smartPaste_full;
-		addRadioButton(composite, label,
+
+		addRadioButton(
+				composite,
+				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_smartPaste_full,
 				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE,
 				TclPreferenceConstants.EDITOR_SMART_PASTE_MODE_FULL);
 
@@ -116,10 +116,10 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);
 
-		String label;
-		label = TclPreferencesMessages.TCLSmartTypingConfigurationBlock_typing_smartTab;
-		addCheckBox(composite, label, TclPreferenceConstants.EDITOR_SMART_TAB,
-				0);
+		addCheckBox(
+				composite,
+				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_typing_smartTab,
+				TclPreferenceConstants.EDITOR_SMART_TAB, 0);
 
 		createMessage(composite);
 	}
@@ -129,18 +129,19 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 		layout.numColumns = 1;
 		composite.setLayout(layout);
 
-		String label;
-
-		label = TclPreferencesMessages.TCLSmartTypingConfigurationBlock_closeStrings;
-		addCheckBox(composite, label,
+		addCheckBox(
+				composite,
+				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_closeStrings,
 				TclPreferenceConstants.EDITOR_CLOSE_STRINGS, 0);
 
-		label = TclPreferencesMessages.TCLSmartTypingConfigurationBlock_closeBrackets;
-		addCheckBox(composite, label,
+		addCheckBox(
+				composite,
+				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_closeBrackets,
 				TclPreferenceConstants.EDITOR_CLOSE_BRACKETS, 0);
 
-		label = TclPreferencesMessages.TCLSmartTypingConfigurationBlock_closeBraces;
-		addCheckBox(composite, label,
+		addCheckBox(
+				composite,
+				TclPreferencesMessages.TCLSmartTypingConfigurationBlock_closeBraces,
 				TclPreferenceConstants.EDITOR_CLOSE_BRACES, 0);
 	}
 
@@ -149,22 +150,19 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 		// can open the
 		// current profile automatically.
 		String linkTooltip = PreferencesMessages.SmartTypingConfigurationBlock_tabs_message_tooltip;
-		String text;
+		final String text;
 		String indentMode = TclUI.getDefault().getPreferenceStore().getString(
 				CodeFormatterConstants.FORMATTER_TAB_CHAR);
 		if (CodeFormatterConstants.TAB.equals(indentMode))
-			text = Messages
-					.format(
+			text = NLS
+					.bind(
 							PreferencesMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
-							new String[] { Integer
-									.toString(getTabDisplaySize()) });
+							getTabDisplaySize());
 		else
-			text = Messages
-					.format(
+			text = NLS
+					.bind(
 							PreferencesMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
-							new String[] {
-									Integer.toString(getTabDisplaySize()),
-									getIndentMode() });
+							getTabDisplaySize(), getIndentMode());
 
 		final Link link = new Link(composite, SWT.NONE);
 		link.setText(text);
@@ -173,9 +171,12 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 		gd.widthHint = 300; // don't get wider initially
 		link.setLayoutData(gd);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PreferencesUtil.createPreferenceDialogOn(link.getShell(),
-						"org.eclipse.dltk.tcl.ui.EditorPreferences", null, null); //$NON-NLS-1$
+				PreferencesUtil
+						.createPreferenceDialogOn(
+								link.getShell(),
+								"org.eclipse.dltk.tcl.ui.EditorPreferences", null, null); //$NON-NLS-1$
 			}
 		});
 
