@@ -13,6 +13,7 @@ package org.eclipse.dltk.tcl.internal.validators.packages;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -614,27 +615,16 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			Set<String> names, Set<String> autoNames) {
 		final String packageName = pkg.getValue();
 
-		List<TclModuleInfo> list = new ArrayList<TclModuleInfo>();
 		List<TclModuleInfo> collected = packageCollector.getModules().get(
 				project);
 		if (collected != null) {
-			list.addAll(collected);
+			if (isProvided(packageName, collected)) {
+				return;
+			}
 		}
 		if (providedByRequiredProjects != null) {
-			list.addAll(this.providedByRequiredProjects);
-		}
-
-		for (TclModuleInfo tclModuleInfo : list) {
-			EList<TclSourceEntry> provided = tclModuleInfo.getProvided();
-			for (TclSourceEntry tclSourceEntry : provided) {
-				if (tclSourceEntry.getValue().equals(packageName)) {
-					IModelElement element = DLTKCore.create(tclModuleInfo
-							.getHandle());
-					// Check for file existence
-					if (element != null && element.exists()) {
-						return; // Found provided package
-					}
-				}
+			if (isProvided(packageName, providedByRequiredProjects)) {
+				return;
 			}
 		}
 
@@ -683,6 +673,24 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		// }
 		// }
 		// }
+	}
+
+	private boolean isProvided(String packageName,
+			Collection<TclModuleInfo> infos) {
+		for (TclModuleInfo tclModuleInfo : infos) {
+			EList<TclSourceEntry> provided = tclModuleInfo.getProvided();
+			for (TclSourceEntry tclSourceEntry : provided) {
+				if (tclSourceEntry.getValue().equals(packageName)) {
+					IModelElement element = DLTKCore.create(tclModuleInfo
+							.getHandle());
+					// Check for file existence
+					if (element != null && element.exists()) {
+						return true; // Found provided package
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private boolean isKnownPackage(final String packageName) {
