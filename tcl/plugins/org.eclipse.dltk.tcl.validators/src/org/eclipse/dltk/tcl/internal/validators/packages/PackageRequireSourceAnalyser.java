@@ -441,124 +441,141 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 			return;
 		}
 		IPath folder = moduleLocation.removeLastSegments(1);
+		final EList<UserCorrection> corrections = moduleInfo.moduleInfo
+				.getSourceCorrections();
 		// Convert path to real path.
 		for (TclSourceEntry source : moduleInfo.moduleInfo.getSourced()) {
-			boolean needToAddCorrection = false;
-			boolean isVariable = false;
-			Set<IPath> sourcedPaths = new HashSet<IPath>();
-			EList<UserCorrection> corrections = moduleInfo.moduleInfo
-					.getSourceCorrections();
-			for (UserCorrection userCorrection : corrections) {
+			final String value = source.getValue();
+			final Set<IPath> sourcedPaths = new HashSet<IPath>();
+			for (Iterator<UserCorrection> i = corrections.iterator(); i
+					.hasNext();) {
+				final UserCorrection userCorrection = i.next();
 				if (!userCorrection.isVariable()
-						&& userCorrection.getOriginalValue().equals(
-								source.getValue())) {
+						&& userCorrection.getOriginalValue().equals(value)) {
 					for (String userValue : userCorrection.getUserValue()) {
-						final IPath sourcedPath;
-						if (environment.isLocal()) {
-							sourcedPath = Path.fromOSString(userValue);
-						} else {
-							userValue = userValue.replace('\\', '/');
-							sourcedPath = Path.fromPortableString(userValue);
+						final IPath sourcedPath = toPath(environment, userValue);
+						if (!sourcedPaths.add(sourcedPath)) {
+							i.remove();
 						}
-						sourcedPaths.add(sourcedPath);
 					}
 				}
 			}
+			boolean autoCorrected = false;
 			if (sourcedPaths.isEmpty()) {
-				needToAddCorrection = true;
-				final String resolved = variableResolver.resolve(source
-						.getValue());
-				isVariable = resolved == null
-						|| !resolved.contains(source.getValue());
-				if (resolved != null) {
-					final IPath sourcedPath = resolveSourceValue(folder,
-							resolved, environment);
-					if (sourcedPath != null) {
-						sourcedPaths.add(sourcedPath);
-					}
+				final IPath sourcedPath = resolvePath(environment, folder,
+						value);
+				if (sourcedPath != null) {
+					autoCorrected = true;
+					sourcedPaths.add(sourcedPath);
+				} else {
+					setAutoCorrection(corrections, value, null);
 				}
+			} else {
+				setAutoCorrection(corrections, value, null);
 			}
 			for (IPath sourcedPath : sourcedPaths) {
-				IFileHandle file = environment.getFile(sourcedPath);
-				if (file != null) {
-					if (!file.exists()) {
-						reportSourceProblemCorrection(
-								source,
-								moduleInfo.reporter,
-								NLS
-										.bind(
-												Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFile,
-												file.toOSString()), source
-										.getValue(), moduleInfo.lineTracker);
-					} else {
-						if (file.isDirectory()) {
-							reportSourceProblemCorrection(
-									source,
-									moduleInfo.reporter,
-									Messages.PackageRequireSourceAnalyser_FolderSourcingNotSupported,
-									source.getValue(), moduleInfo.lineTracker);
-						} else
-						// Add user correction if not specified yet.
-						if (needToAddCorrection) {
-							if (!isAutoAddPackages()) {
-								reportSourceProblem(
-										source,
-										moduleInfo.reporter,
-										Messages.PackageRequireSourceAnalyser_SourceNotAddedToBuildpath,
-										source.getValue(),
-										moduleInfo.lineTracker);
-							} else {
-								UserCorrection correction = TclPackagesFactory.eINSTANCE
-										.createUserCorrection();
-								correction.setOriginalValue(source.getValue());
-								correction.getUserValue().add(file.toString());
-								correction.setVariable(isVariable);
-								corrections.add(correction);
-							}
-						}
-					}
+				final IFileHandle file = environment.getFile(sourcedPath);
+				if (!file.exists()) {
+					reportSourceProblemCorrection(
+							source,
+							moduleInfo.reporter,
+							NLS
+									.bind(
+											Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFile,
+											file.toOSString()), value,
+							moduleInfo.lineTracker);
+				} else if (file.isDirectory()) {
+					reportSourceProblemCorrection(
+							source,
+							moduleInfo.reporter,
+							Messages.PackageRequireSourceAnalyser_FolderSourcingNotSupported,
+							value, moduleInfo.lineTracker);
+				} else if (!isAutoAddPackages()) {
+					reportSourceProblem(
+							source,
+							moduleInfo.reporter,
+							Messages.PackageRequireSourceAnalyser_SourceNotAddedToBuildpath,
+							value, moduleInfo.lineTracker);
+				} else if (autoCorrected
+						&& buildType != IBuildParticipantExtension.RECONCILE_BUILD) {
+					setAutoCorrection(corrections, value, file.toString());
 				}
 			}
 			if (sourcedPaths.isEmpty()) {
-				if (!TclPackagesManager.isValidName(source.getValue())) {
+				if (!TclPackagesManager.isValidName(value)) {
 					reportSourceProblemCorrection(
 							source,
 							moduleInfo.reporter,
 							NLS
 									.bind(
 											Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
-											source.getValue()), source
-									.getValue(), moduleInfo.lineTracker);
+											value), value,
+							moduleInfo.lineTracker);
 				}
-				// if (!corrections.isEmpty()) {
-				// corrections.clear();
-				// }
 			}
+		}
+	}
+
+	private static void setAutoCorrection(EList<UserCorrection> corrections,
+			String src, String value) {
+		for (Iterator<UserCorrection> i = corrections.iterator(); i.hasNext();) {
+			final UserCorrection userCorrection = i.next();
+			if (userCorrection.isVariable()) {
+				if (userCorrection.getOriginalValue().equals(src)) {
+					if (value == null) {
+						i.remove();
+					} else if (userCorrection.getUserValue().size() == 1
+							&& userCorrection.getUserValue().get(0).equals(
+									value)) {
+						value = null;
+					}
+				}
+			}
+		}
+		if (value != null) {
+			final UserCorrection correction = TclPackagesFactory.eINSTANCE
+					.createUserCorrection();
+			correction.setVariable(true);
+			correction.setOriginalValue(src);
+			correction.getUserValue().add(value);
+			corrections.add(correction);
+		}
+	}
+
+	private IPath resolvePath(IEnvironment environment, IPath folder,
+			String value) {
+		final String resolved = variableResolver.resolve(value);
+		if (resolved != null) {
+			return resolveSourceValue(folder, resolved, environment);
+		} else {
+			return null;
 		}
 	}
 
 	private IPath resolveSourceValue(IPath folder, String value,
 			IEnvironment environment) {
-		final IPath valuePath;
 		value = value.trim();
-		if (value.startsWith("\"") && value.endsWith("\"")) {
+		if (value.startsWith("\"") && value.endsWith("\"")) { //$NON-NLS-1$ //$NON-NLS-2$
 			value = value.substring(1, value.length() - 1);
 		}
-		if (value.startsWith("'") && value.endsWith("'")) {
+		if (value.startsWith("'") && value.endsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
 			value = value.substring(1, value.length() - 1);
 		}
-		if (environment.isLocal()) {
-			valuePath = Path.fromOSString(value);
-		} else {
-			value = value.replace('\\', '/');
-			valuePath = new Path(value);
-		}
+		final IPath valuePath = toPath(environment, value);
 		if (valuePath.isAbsolute()) {
 			return valuePath;
 		} else if (TclPackagesManager.isValidName(value)) {
 			return folder.append(valuePath);
 		} else {
 			return null;
+		}
+	}
+
+	private static IPath toPath(IEnvironment environment, String path) {
+		if (environment.isLocal()) {
+			return Path.fromOSString(path);
+		} else {
+			return new Path(path.replace('\\', '/'));
 		}
 	}
 
