@@ -12,8 +12,10 @@
 package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.dltk.tcl.ast.AstFactory;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -88,7 +90,11 @@ public class TclVariableResolver {
 	 *         encountered
 	 */
 	public String resolve(String value) {
-		if (value.indexOf('$') == -1) {
+		return resolve(value, new HashSet<String>());
+	}
+
+	private String resolve(String value, Set<String> requests) {
+		if (value == null || value.indexOf('$') == -1) {
 			return value;
 		}
 		TclParser parser = new TclParser();
@@ -119,7 +125,17 @@ public class TclVariableResolver {
 			if (container == null) {
 				continue;
 			}
-			String resultValue = resolveVariable(variableReference);
+			final String request = value.substring(
+					variableReference.getStart(), variableReference.getEnd());
+			final String resultValue;
+			if (!requests.add(request)) {
+				return null;
+			}
+			try {
+				resultValue = resolveVariable(variableReference, requests);
+			} finally {
+				requests.remove(request);
+			}
 			// If has unresolved value then return null
 			if (resultValue == null) {
 				return null;
@@ -134,7 +150,8 @@ public class TclVariableResolver {
 		return SimpleCodePrinter.getCommandsString(result, false).trim();
 	}
 
-	private String resolveVariable(VariableReference variable) {
+	private String resolveVariable(VariableReference variable,
+			Set<String> requests) {
 		final String indexValue;
 		final TclArgument index = variable.getIndex();
 		if (index != null) {
@@ -142,7 +159,7 @@ public class TclVariableResolver {
 				indexValue = ((StringArgument) index).getValue();
 			} else {
 				indexValue = resolve(SimpleCodePrinter.getArgumentString(index,
-						0, false));
+						0, false), requests);
 			}
 			if (indexValue != null) {
 				final String value = registry
@@ -150,13 +167,14 @@ public class TclVariableResolver {
 								+ '(' + TclParseUtil.escapeName(indexValue)
 								+ ')', null);
 				if (value != null) {
-					return value;
+					return resolve(value, requests);
 				}
 			}
 		} else {
 			indexValue = null;
 		}
-		return registry.getValue(variable.getName(), indexValue);
+		return resolve(registry.getValue(variable.getName(), indexValue),
+				requests);
 	}
 
 	public static String[] extractVariableNames(String value) {
