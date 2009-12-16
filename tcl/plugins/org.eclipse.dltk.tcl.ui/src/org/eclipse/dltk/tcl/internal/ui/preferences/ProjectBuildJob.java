@@ -26,19 +26,23 @@ import org.eclipse.osgi.util.NLS;
 public class ProjectBuildJob extends Job {
 
 	private final IProject project;
+	private final int kind;
 
 	public ProjectBuildJob(IProject project) {
-		super(
-				NLS
-						.bind(
-								TclPreferencesMessages.ProjectBuildJob_BuildingJobName,
-								project.getName()));
-		this.project = project;
+		this(project, IncrementalProjectBuilder.FULL_BUILD);
 	}
 
+	public ProjectBuildJob(IProject project, int kind) {
+		super(NLS.bind(TclPreferencesMessages.ProjectBuildJob_BuildingJobName,
+				project.getName()));
+		this.project = project;
+		this.kind = kind;
+	}
+
+	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			project.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+			project.build(kind, monitor);
 			return Status.OK_STATUS;
 		} catch (CoreException e) {
 			return e.getStatus();
