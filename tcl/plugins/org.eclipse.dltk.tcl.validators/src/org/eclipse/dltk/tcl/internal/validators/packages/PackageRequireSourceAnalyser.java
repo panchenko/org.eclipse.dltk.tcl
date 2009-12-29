@@ -14,6 +14,7 @@ package org.eclipse.dltk.tcl.internal.validators.packages;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
+import org.eclipse.dltk.core.builder.IBuildParticipantExtension3;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -69,7 +71,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.osgi.util.NLS;
 
 public class PackageRequireSourceAnalyser implements IBuildParticipant,
-		IBuildParticipantExtension, IBuildParticipantExtension2 {
+		IBuildParticipantExtension, IBuildParticipantExtension2,
+		IBuildParticipantExtension3 {
 
 	private final IScriptProject project;
 	private final IInterpreterInstall install;
@@ -181,40 +184,25 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	private List<TclPackageInfo> knownInfos;
 
 	public void buildExternalModule(IBuildContext context) throws CoreException {
-
-		// Try to restore information from cache
 		ISourceModule module = context.getSourceModule();
 		if (module instanceof TclPackageSourceModule) {
 			/* Do not process modules which are parts of packages */
 			return;
 		}
-		// TclModuleInfo info = collectCachedInfo(module);
-
-		// if (info == null) {
 		TclModule tclModule = TclBuildContext.getStatements(context);
 		List<TclCommand> statements = tclModule.getStatements();
-
-		// packageCollector.getRequireRefs().clear();
 		packageCollector.process(statements, module);
-		// }
-
 		addInfoForModule(context, module, null);
 	}
 
 	public void build(IBuildContext context) throws CoreException {
-
 		ISourceModule module = context.getSourceModule();
-		// TclModuleInfo info = collectCachedInfo(module);
-		// Check cached information first
-		// if (info == null) {
 		TclModule tclModule = TclBuildContext.getStatements(context);
 		List<TclCommand> statements = tclModule.getStatements();
 		if (statements == null) {
 			return;
 		}
-		// packageCollector.getRequireRefs().clear();
 		packageCollector.process(statements, module);
-		// }
 		addInfoForModule(context, module, null);
 	}
 
@@ -732,5 +720,16 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public void clean() {
+		TclPackagesManager.setProjectModules(project.getElementName(),
+				Collections.<TclModuleInfo> emptyList());
+		InterpreterContainerHelper.setInterpreterContainerDependencies(project,
+				Collections.<String> emptySet(), Collections
+						.<String> emptySet());
 	}
 }
