@@ -20,12 +20,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -55,14 +52,7 @@ public class ManPageReader {
 	}
 
 	private static ManPageContainer readXMI(String data) {
-		final ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-						new XMIResourceFactoryImpl());
-		resourceSet.getPackageRegistry().put(ManpagesPackage.eNS_URI,
-				ManpagesPackage.eINSTANCE);
-		final Resource resource = resourceSet.createResource(URI
-				.createURI(ManpagesPackage.eNS_URI));
+		final Resource resource = new XMIResourceImpl();
 		try {
 			resource.load(new URIConverter.ReadableInputStream(data, ENCODING),
 					null);
