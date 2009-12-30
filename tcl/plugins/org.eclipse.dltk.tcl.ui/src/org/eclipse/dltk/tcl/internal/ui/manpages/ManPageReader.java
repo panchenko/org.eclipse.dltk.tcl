@@ -70,7 +70,9 @@ public class ManPageReader {
 			TclUI.error("Error parsing " //$NON-NLS-1$
 					+ TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS, e);
 		}
-		return new ManPageContainer(resource);
+		final ManPageContainer container = new ManPageContainer(resource);
+		container.checkDefault();
+		return container;
 	}
 
 	private static ManPageContainer readXML(String data) {
@@ -97,6 +99,7 @@ public class ManPageReader {
 		final ManPageContainer input = new ManPageContainer();
 		final Documentation documentation = input.createDocumentation();
 		documentation.setName("Tcl Documentation");
+		documentation.setDefault(true);
 
 		NodeList list = config.getChildNodes();
 		int length = list.getLength();
