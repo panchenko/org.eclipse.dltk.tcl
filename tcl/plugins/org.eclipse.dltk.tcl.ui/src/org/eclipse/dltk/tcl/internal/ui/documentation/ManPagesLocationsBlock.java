@@ -24,12 +24,13 @@ import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageWriter;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -74,6 +75,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	private Button fAddButton;
 	private Button fEditButton;
 	private Button fRemoveButton;
+	private Button fDefaultButton;
 
 	private final PreferencePage fPage;
 
@@ -84,7 +86,8 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 		fStore = store;
 	}
 
-	private static class ManPagesLabelProvider extends LabelProvider {
+	private static class ManPagesLabelProvider extends LabelProvider implements
+			IFontProvider {
 
 		public ManPagesLabelProvider() {
 		}
@@ -112,14 +115,16 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 			}
 		}
 
-		@Override
-		public void dispose() {
-			super.dispose();
-			registry.dispose();
+		public Font getFont(Object element) {
+			if (element instanceof Documentation) {
+				final Documentation doc = (Documentation) element;
+				if (doc.isDefault()) {
+					return JFaceResources.getFontRegistry().getBold(
+							JFaceResources.DIALOG_FONT);
+				}
+			}
+			return null;
 		}
-
-		private final ImageDescriptorRegistry registry = new ImageDescriptorRegistry(
-				false);
 	}
 
 	private ManPageContainer documentations = null;
@@ -226,12 +231,33 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				final IStructuredSelection selection = getSelection();
-				if (!selection.isEmpty()) {
+				if (canRemove(selection)) {
 					remove(selection);
 				}
 			}
 		});
+		fDefaultButton = createPushButton(pathButtonComp, "Set Default");
+		fDefaultButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final IStructuredSelection selection = getSelection();
+				if (selection.size() == 1
+						&& selection.getFirstElement() instanceof Documentation) {
+					setDefault((Documentation) selection.getFirstElement());
+				}
+			}
+		});
 		return comp;
+	}
+
+	protected void setDefault(Documentation documentation) {
+		documentation.setDefault(true);
+		for (Documentation doc : documentations.getDocumentations()) {
+			if (doc != documentation && doc.isDefault()) {
+				doc.setDefault(false);
+			}
+		}
+		fLocationsViewer.refresh();
 	}
 
 	/**
@@ -326,6 +352,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 				getShell(), documentations, null);
 		if (dialog.open() == Window.OK) {
 			final Documentation documentation = dialog.getResult();
+			documentations.checkDefault();
 			fLocationsViewer.refresh();
 			fLocationsViewer
 					.setSelection(new StructuredSelection(documentation));
@@ -350,6 +377,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 			}
 		}
 		if (changes) {
+			documentations.checkDefault();
 			fLocationsViewer.refresh();
 		}
 	}
@@ -366,9 +394,25 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	 */
 	private void updateButtons() {
 		final IStructuredSelection selection = getSelection();
-		fEditButton.setEnabled(selection.size() == 1
-				&& selection.getFirstElement() instanceof Documentation);
-		fRemoveButton.setEnabled(!selection.isEmpty());
+		final boolean singleDoc = selection.size() == 1
+				&& selection.getFirstElement() instanceof Documentation;
+		fEditButton.setEnabled(singleDoc);
+		fDefaultButton.setEnabled(singleDoc
+				&& !((Documentation) selection.getFirstElement()).isDefault());
+		fRemoveButton.setEnabled(canRemove(selection));
+	}
+
+	protected boolean canRemove(IStructuredSelection selection) {
+		if (selection.isEmpty()) {
+			return false;
+		}
+		for (Iterator<?> i = selection.iterator(); i.hasNext();) {
+			final Object obj = i.next();
+			if (!(obj instanceof Documentation)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	protected IStructuredSelection getSelection() {

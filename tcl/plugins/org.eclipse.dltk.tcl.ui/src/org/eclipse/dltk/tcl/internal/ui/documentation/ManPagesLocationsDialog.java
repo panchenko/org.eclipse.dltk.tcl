@@ -79,10 +79,16 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 		this.input = documentation;
 		this.isNew = documentation == null;
 		this.documentation = documentation != null ? (Documentation) EcoreUtil
-				.copy(documentation) : ManpagesFactory.eINSTANCE
-				.createDocumentation();
+				.copy(documentation) : newDocumentation();
 		setTitle(isNew ? "Add Documentation Set" : "Edit Documentation Set");
 		setShellStyle(getShellStyle() | SWT.RESIZE);
+	}
+
+	private static Documentation newDocumentation() {
+		final Documentation value = ManpagesFactory.eINSTANCE
+				.createDocumentation();
+		value.setName(""); //$NON-NLS-1$
+		return value;
 	}
 
 	/**

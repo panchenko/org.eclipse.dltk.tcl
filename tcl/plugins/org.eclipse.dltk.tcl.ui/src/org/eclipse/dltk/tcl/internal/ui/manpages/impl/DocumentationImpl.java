@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: DocumentationImpl.java,v 1.1 2009/12/30 11:09:34 apanchenk Exp $
+ * $Id: DocumentationImpl.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.internal.ui.manpages.impl;
 
@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.DocumentationImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.DocumentationImpl#getFolders <em>Folders</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.DocumentationImpl#isDefault <em>Default</em>}</li>
  * </ul>
  * </p>
  *
@@ -67,6 +68,26 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
 	 * @ordered
 	 */
 	protected EList<ManPageFolder> folders;
+
+	/**
+	 * The default value of the '{@link #isDefault() <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DEFAULT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDefault() <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean default_ = DEFAULT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -123,6 +144,27 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isDefault() {
+		return default_;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDefault(boolean newDefault) {
+		boolean oldDefault = default_;
+		default_ = newDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ManpagesPackage.DOCUMENTATION__DEFAULT, oldDefault, default_));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
 	public ManPageFolder findFolder(String path) {
@@ -162,6 +204,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
 				return getName();
 			case ManpagesPackage.DOCUMENTATION__FOLDERS:
 				return getFolders();
+			case ManpagesPackage.DOCUMENTATION__DEFAULT:
+				return isDefault();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -182,6 +226,9 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
 				getFolders().clear();
 				getFolders().addAll((Collection<? extends ManPageFolder>)newValue);
 				return;
+			case ManpagesPackage.DOCUMENTATION__DEFAULT:
+				setDefault((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -200,6 +247,9 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
 			case ManpagesPackage.DOCUMENTATION__FOLDERS:
 				getFolders().clear();
 				return;
+			case ManpagesPackage.DOCUMENTATION__DEFAULT:
+				setDefault(DEFAULT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -216,6 +266,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case ManpagesPackage.DOCUMENTATION__FOLDERS:
 				return folders != null && !folders.isEmpty();
+			case ManpagesPackage.DOCUMENTATION__DEFAULT:
+				return default_ != DEFAULT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -232,6 +284,8 @@ public class DocumentationImpl extends EObjectImpl implements Documentation {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
+		result.append(", default: "); //$NON-NLS-1$
+		result.append(default_);
 		result.append(')');
 		return result.toString();
 	}

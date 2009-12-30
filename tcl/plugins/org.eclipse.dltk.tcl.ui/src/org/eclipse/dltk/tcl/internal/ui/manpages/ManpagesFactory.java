@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesFactory.java,v 1.1 2009/12/30 11:09:33 apanchenk Exp $
+ * $Id: ManpagesFactory.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.internal.ui.manpages;
 
@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EFactory;
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
  * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage
- * @generated
+ * @generated NOT
  * @since 2.0
  */
 public interface ManpagesFactory extends EFactory {

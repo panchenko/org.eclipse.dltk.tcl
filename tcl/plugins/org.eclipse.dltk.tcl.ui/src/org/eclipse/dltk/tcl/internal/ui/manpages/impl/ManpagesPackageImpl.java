@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesPackageImpl.java,v 1.1 2009/12/30 11:09:34 apanchenk Exp $
+ * $Id: ManpagesPackageImpl.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.internal.ui.manpages.impl;
 
@@ -142,6 +142,15 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDocumentation_Default() {
+		return (EAttribute)documentationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getManPageFolder() {
 		return manPageFolderEClass;
 	}
@@ -222,6 +231,7 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 		documentationEClass = createEClass(DOCUMENTATION);
 		createEAttribute(documentationEClass, DOCUMENTATION__NAME);
 		createEReference(documentationEClass, DOCUMENTATION__FOLDERS);
+		createEAttribute(documentationEClass, DOCUMENTATION__DEFAULT);
 
 		manPageFolderEClass = createEClass(MAN_PAGE_FOLDER);
 		createEAttribute(manPageFolderEClass, MAN_PAGE_FOLDER__PATH);
@@ -265,6 +275,7 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 		initEClass(documentationEClass, Documentation.class, "Documentation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getDocumentation_Name(), ecorePackage.getEString(), "name", null, 0, 1, Documentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getDocumentation_Folders(), this.getManPageFolder(), null, "folders", null, 0, -1, Documentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getDocumentation_Default(), ecorePackage.getEBoolean(), "default", null, 0, 1, Documentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		EOperation op = addEOperation(documentationEClass, this.getManPageFolder(), "findFolder", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, ecorePackage.getEString(), "path", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$

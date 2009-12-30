@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesPackage.java,v 1.1 2009/12/30 11:09:33 apanchenk Exp $
+ * $Id: ManpagesPackage.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.internal.ui.manpages;
 
@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesFactory
  * @model kind="package"
- * @generated
+ * @generated NOT
  * @since 2.0
  */
 public interface ManpagesPackage extends EPackage {
@@ -89,13 +89,22 @@ public interface ManpagesPackage extends EPackage {
 	int DOCUMENTATION__FOLDERS = 1;
 
 	/**
+	 * The feature id for the '<em><b>Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENTATION__DEFAULT = 2;
+
+	/**
 	 * The number of structural features of the '<em>Documentation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENTATION_FEATURE_COUNT = 2;
+	int DOCUMENTATION_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl <em>Man Page Folder</em>}' class.
@@ -203,6 +212,17 @@ public interface ManpagesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDocumentation_Folders();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#isDefault <em>Default</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Default</em>'.
+	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#isDefault()
+	 * @see #getDocumentation()
+	 * @generated
+	 */
+	EAttribute getDocumentation_Default();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder <em>Man Page Folder</em>}'.
@@ -317,6 +337,14 @@ public interface ManpagesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DOCUMENTATION__FOLDERS = eINSTANCE.getDocumentation_Folders();
+
+		/**
+		 * The meta object literal for the '<em><b>Default</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DOCUMENTATION__DEFAULT = eINSTANCE.getDocumentation_Default();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl <em>Man Page Folder</em>}' class.

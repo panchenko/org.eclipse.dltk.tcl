@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Documentation.java,v 1.1 2009/12/30 11:09:33 apanchenk Exp $
+ * $Id: Documentation.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
  */
 package org.eclipse.dltk.tcl.internal.ui.manpages;
 
@@ -19,12 +19,13 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#getFolders <em>Folders</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#isDefault <em>Default</em>}</li>
  * </ul>
  * </p>
  *
  * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage#getDocumentation()
  * @model
- * @generated
+ * @generated NOT
  * @since 2.0
  */
 public interface Documentation extends EObject {
@@ -69,6 +70,32 @@ public interface Documentation extends EObject {
 	 * @generated
 	 */
 	EList<ManPageFolder> getFolders();
+
+	/**
+	 * Returns the value of the '<em><b>Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Default</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Default</em>' attribute.
+	 * @see #setDefault(boolean)
+	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage#getDocumentation_Default()
+	 * @model
+	 * @generated
+	 */
+	boolean isDefault();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#isDefault <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Default</em>' attribute.
+	 * @see #isDefault()
+	 * @generated
+	 */
+	void setDefault(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

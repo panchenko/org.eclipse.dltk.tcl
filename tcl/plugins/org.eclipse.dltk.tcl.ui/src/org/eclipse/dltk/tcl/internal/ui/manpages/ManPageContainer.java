@@ -61,4 +61,27 @@ public class ManPageContainer {
 		return resource.getContents().isEmpty();
 	}
 
+	public void checkDefault() {
+		final List<Documentation> documentations = getDocumentations();
+		final List<Documentation> defaults = new ArrayList<Documentation>();
+		for (Documentation doc : documentations) {
+			if (doc.isDefault()) {
+				defaults.add(doc);
+			}
+		}
+		if (defaults.size() == 1) {
+			return;
+		}
+		if (documentations.isEmpty()) {
+			return;
+		}
+		if (defaults.isEmpty()) {
+			documentations.get(0).setDefault(true);
+		} else {
+			for (int i = 1; i < defaults.size(); ++i) {
+				defaults.get(i).setDefault(false);
+			}
+		}
+	}
+
 }
