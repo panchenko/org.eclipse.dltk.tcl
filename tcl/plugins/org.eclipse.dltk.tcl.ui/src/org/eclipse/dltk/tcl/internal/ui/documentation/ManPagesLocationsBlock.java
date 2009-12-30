@@ -70,18 +70,10 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	 */
 	protected static final String DIALOG_SETTINGS_PREFIX = "ManPagesLocationsBlock"; //$NON-NLS-1$
 
-	// protected boolean fInCallback = false;
-
-	// protected File fHome;
-
-	// widgets
 	private TreeViewer fLocationsViewer;
 	private Button fAddButton;
 	private Button fEditButton;
 	private Button fRemoveButton;
-	// protected Button fDefaultButton;
-
-	// private ManLocationsContentProvider fLocationsContentProvider;
 
 	private final PreferencePage fPage;
 
@@ -282,18 +274,6 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	 */
 	public void update() {
 		updateButtons();
-
-		// if (folders != null) {
-		// for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-		// ManPageFolder v = (ManPageFolder) iterator.next();
-		// if (!v.verify()) {
-		// iterator.remove();
-		// }
-		// }
-		// }
-
-		// fLocationsViewer.refresh();
-
 		updatePageStatus(Status.OK_STATUS);
 	}
 
@@ -350,34 +330,6 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 			fLocationsViewer
 					.setSelection(new StructuredSelection(documentation));
 		}
-		// DirectoryDialog dialog = new DirectoryDialog(fLocationsViewer
-		// .getControl().getShell());
-		// dialog.setMessage("Select directory to search into");
-		// String result = dialog.open();
-		// if (result != null) {
-		// final File file = new File(result);
-		// if (this.folders == null)
-		// this.folders = new ArrayList();
-		// if (file.isDirectory()) {
-		// ProgressMonitorDialog dialog2 = new
-		// TimeTriggeredProgressMonitorDialog(
-		// null, 500);
-		// try {
-		// dialog2.run(true, true, new IRunnableWithProgress() {
-		// public void run(IProgressMonitor monitor) {
-		// monitor.beginTask("Searching for man pages", 1);
-		// performSearch(file);
-		// monitor.done();
-		// }
-		// });
-		// } catch (InvocationTargetException e) {
-		// e.printStackTrace();
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		//
-		// }
-		// }
 	}
 
 	protected void edit(Documentation documentation) {
@@ -417,23 +369,6 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 		fEditButton.setEnabled(selection.size() == 1
 				&& selection.getFirstElement() instanceof Documentation);
 		fRemoveButton.setEnabled(!selection.isEmpty());
-
-		// boolean canRemove = true;
-		// if (folders == null)
-		// canRemove = false;
-		// else {
-		// List list = selection.toList();
-		// for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-		// Object o = iterator.next();
-		// if (!folders.contains(o))
-		// canRemove = false;
-		// break;
-		// }
-		// if (selection.isEmpty())
-		// canRemove = false;
-		// }
-		//
-		// fRemoveButton.setEnabled(canRemove);
 	}
 
 	protected IStructuredSelection getSelection() {
