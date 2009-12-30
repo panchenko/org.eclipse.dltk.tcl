@@ -261,6 +261,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 					// ignore
 				}
 				pathViewer.refresh();
+				updateStatus();
 			}
 		}
 	}
@@ -273,6 +274,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 			}
 		}
 		pathViewer.refresh();
+		updateStatus();
 	}
 
 	protected void pathSelectionChanged() {
@@ -317,6 +319,10 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 		if (busyCounter > 0) {
 			return;
 		}
+		updateStatus();
+	}
+
+	private void updateStatus() {
 		updateStatus(validate());
 	}
 
