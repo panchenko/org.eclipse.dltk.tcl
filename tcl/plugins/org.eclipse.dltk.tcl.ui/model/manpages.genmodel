@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.dltk.tcl.ui/src"
+    modelPluginID="org.eclipse.dltk.tcl.ui" modelName="ManPages" nonNLSMarkers="true"
+    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="5.0"
+    copyrightFields="false" language="" interfaceNamePattern="">
+  <foreignModel>manpages.ecore</foreignModel>
+  <genPackages prefix="Manpages" basePackage="org.eclipse.dltk.tcl.internal.ui" disposableProviderFactory="true"
+      ecorePackage="manpages.ecore#/">
+    <genClasses ecoreClass="manpages.ecore#//Documentation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//Documentation/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manpages.ecore#//Documentation/folders"/>
+    </genClasses>
+    <genClasses ecoreClass="manpages.ecore#//ManPageFolder">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//ManPageFolder/path"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manpages.ecore#//ManPageFolder/keywords"/>
+      <genOperations ecoreOperation="manpages.ecore#//ManPageFolder/addPage">
+        <genParameters ecoreParameter="manpages.ecore#//ManPageFolder/addPage/keyword"/>
+        <genParameters ecoreParameter="manpages.ecore#//ManPageFolder/addPage/file"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="manpages.ecore#//StringToStringEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//StringToStringEntry/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//StringToStringEntry/value"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

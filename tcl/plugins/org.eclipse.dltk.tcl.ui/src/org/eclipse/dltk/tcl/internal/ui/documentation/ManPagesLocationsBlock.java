@@ -11,27 +11,23 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.documentation;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.tcl.internal.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageContainer;
+import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageReader;
+import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageWriter;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.dialogs.TimeTriggeredProgressMonitorDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -39,12 +35,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -53,14 +51,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Control used to edit the libraries associated with a Interpreter install
  */
-public class ManPagesLocationsBlock implements SelectionListener,
-		ISelectionChangedListener {
+public class ManPagesLocationsBlock implements ISelectionChangedListener {
 
 	/**
 	 * Attribute name for the last path used to open a file/directory chooser
@@ -73,22 +70,22 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	 */
 	protected static final String DIALOG_SETTINGS_PREFIX = "ManPagesLocationsBlock"; //$NON-NLS-1$
 
-	protected boolean fInCallback = false;
+	// protected boolean fInCallback = false;
 
-	protected File fHome;
+	// protected File fHome;
 
 	// widgets
-	protected TreeViewer fLocationsViewer;
-	private Button fClearButton;
-	private Button fRemoveButton;
+	private TreeViewer fLocationsViewer;
 	private Button fAddButton;
-	protected Button fDefaultButton;
+	private Button fEditButton;
+	private Button fRemoveButton;
+	// protected Button fDefaultButton;
 
-	private ManLocationsContentProvider fLocationsContentProvider;
+	// private ManLocationsContentProvider fLocationsContentProvider;
 
-	private PreferencePage fPage;
+	private final PreferencePage fPage;
 
-	private IPreferenceStore fStore;
+	private final IPreferenceStore fStore;
 
 	public ManPagesLocationsBlock(IPreferenceStore store, PreferencePage page) {
 		fPage = page;
@@ -97,41 +94,55 @@ public class ManPagesLocationsBlock implements SelectionListener,
 
 	private static class ManPagesLabelProvider extends LabelProvider {
 
+		public ManPagesLabelProvider() {
+		}
+
 		@Override
 		public Image getImage(Object element) {
-			if (element instanceof ManPageFolder) {
+			if (element instanceof Documentation) {
+				return DLTKUIPlugin.getImageDescriptorRegistry().get(
+						DLTKPluginImages.DESC_OBJS_JAVADOCTAG);
+			} else if (element instanceof ManPageFolder) {
 				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_LIBRARY);
+			} else {
+				return super.getImage(element);
 			}
-			return DLTKUIPlugin.getImageDescriptorRegistry().get(
-					DLTKPluginImages.DESC_OBJS_INFO_OBJ);
 		}
 
 		@Override
 		public String getText(Object element) {
-			if (element instanceof ManPageFolder) {
-				ManPageFolder folder = (ManPageFolder) element;
-				return folder.getPath();
+			if (element instanceof Documentation) {
+				return ((Documentation) element).getName();
+			} else if (element instanceof ManPageFolder) {
+				return ((ManPageFolder) element).getPath();
+			} else {
+				return super.getText(element);
 			}
-			return super.getText(element);
 		}
+
+		@Override
+		public void dispose() {
+			super.dispose();
+			registry.dispose();
+		}
+
+		private final ImageDescriptorRegistry registry = new ImageDescriptorRegistry(
+				false);
 	}
 
-	private List folders = null;
+	private ManPageContainer documentations = null;
 
-	private class ManLocationsContentProvider implements ITreeContentProvider {
+	private static class ManLocationsContentProvider implements
+			ITreeContentProvider {
+
+		public ManLocationsContentProvider() {
+		}
 
 		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof ManPageFolder) {
-				ManPageFolder folder = (ManPageFolder) parentElement;
-				String[] ch = new String[folder.getPages().size()];
-				int i = 0;
-				for (Iterator iterator = folder.getPages().keySet().iterator(); iterator
-						.hasNext();) {
-					String kw = (String) iterator.next();
-					String file = (String) folder.getPages().get(kw);
-					ch[i++] = kw + " (" + file + ")";
-				}
-				return ch;
+			if (parentElement instanceof Documentation) {
+				final EList<ManPageFolder> folders = ((Documentation) parentElement)
+						.getFolders();
+				return folders.toArray(new ManPageFolder[folders.size()]);
 			}
 			return new Object[0];
 		}
@@ -141,15 +152,19 @@ public class ManPagesLocationsBlock implements SelectionListener,
 		}
 
 		public boolean hasChildren(Object element) {
-			if (element instanceof ManPageFolder)
+			if (element instanceof Documentation)
 				return true;
 			return false;
 		}
 
 		public Object[] getElements(Object inputElement) {
-			if (folders == null)
+			if (inputElement instanceof ManPageContainer) {
+				final List<Documentation> docs = ((ManPageContainer) inputElement)
+						.getDocumentations();
+				return docs.toArray(new Object[docs.size()]);
+			} else {
 				return new Object[0];
-			return folders.toArray(new Object[folders.size()]);
+			}
 		}
 
 		public void dispose() {
@@ -175,18 +190,15 @@ public class ManPagesLocationsBlock implements SelectionListener,
 		topLayout.marginHeight = 0;
 		topLayout.marginWidth = 0;
 		comp.setLayout(topLayout);
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		comp.setLayoutData(gd);
+		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		fLocationsViewer = new TreeViewer(comp);
-		gd = new GridData(GridData.FILL_BOTH);
+		final GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 6;
 		fLocationsViewer.getControl().setLayoutData(gd);
-		fLocationsContentProvider = new ManLocationsContentProvider();
-		fLocationsViewer.setSorter(new ViewerSorter());
-		fLocationsViewer.setContentProvider(fLocationsContentProvider);
+		fLocationsViewer.setContentProvider(new ManLocationsContentProvider());
 		fLocationsViewer.setLabelProvider(new ManPagesLabelProvider());
-		fLocationsViewer.setInput(this);
+		fLocationsViewer.setSorter(new ViewerSorter());
 		fLocationsViewer.addSelectionChangedListener(this);
 
 		Composite pathButtonComp = new Composite(comp, SWT.NONE);
@@ -194,20 +206,39 @@ public class ManPagesLocationsBlock implements SelectionListener,
 		pathButtonLayout.marginHeight = 0;
 		pathButtonLayout.marginWidth = 0;
 		pathButtonComp.setLayout(pathButtonLayout);
-		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING
-				| GridData.HORIZONTAL_ALIGN_FILL);
-		pathButtonComp.setLayoutData(gd);
+		pathButtonComp.setLayoutData(new GridData(
+				GridData.VERTICAL_ALIGN_BEGINNING
+						| GridData.HORIZONTAL_ALIGN_FILL));
 		pathButtonComp.setFont(font);
 
-		fAddButton = createPushButton(pathButtonComp, "Add folder...");
-		fAddButton.addSelectionListener(this);
-
+		fAddButton = createPushButton(pathButtonComp, "Add");
+		fAddButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				add();
+			}
+		});
+		fEditButton = createPushButton(pathButtonComp, "Edit");
+		fEditButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final IStructuredSelection selection = getSelection();
+				if (selection.size() == 1
+						&& selection.getFirstElement() instanceof Documentation) {
+					edit((Documentation) selection.getFirstElement());
+				}
+			}
+		});
 		fRemoveButton = createPushButton(pathButtonComp, "Remove");
-		fRemoveButton.addSelectionListener(this);
-
-		fClearButton = createPushButton(pathButtonComp, "Remove All");
-		fClearButton.addSelectionListener(this);
-
+		fRemoveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final IStructuredSelection selection = getSelection();
+				if (!selection.isEmpty()) {
+					remove(selection);
+				}
+			}
+		});
 		return comp;
 	}
 
@@ -228,7 +259,7 @@ public class ManPagesLocationsBlock implements SelectionListener,
 		return button;
 	}
 
-	protected void setButtonLayoutData(Button button) {
+	static void setButtonLayoutData(Button button) {
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		int widthHint = 80;
 		Point minSize = button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
@@ -252,16 +283,16 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	public void update() {
 		updateButtons();
 
-		if (folders != null) {
-			for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-				ManPageFolder v = (ManPageFolder) iterator.next();
-				if (!v.verify()) {
-					iterator.remove();
-				}
-			}
-		}
+		// if (folders != null) {
+		// for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
+		// ManPageFolder v = (ManPageFolder) iterator.next();
+		// if (!v.verify()) {
+		// iterator.remove();
+		// }
+		// }
+		// }
 
-		fLocationsViewer.refresh();
+		// fLocationsViewer.refresh();
 
 		updatePageStatus(Status.OK_STATUS);
 	}
@@ -286,8 +317,9 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	public void initialize() {
 		String value = fStore
 				.getString(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS);
-		this.folders = ManPageFolderXML.read(value);
-
+		this.documentations = ManPageReader.read(value);
+		fLocationsViewer.setInput(documentations);
+		fLocationsViewer.expandToLevel(2);
 		update();
 	}
 
@@ -295,141 +327,78 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	 * Saves settings
 	 */
 	public void performApply() {
-		String xml = ManPageFolderXML.write(folders);
+		String xml = ManPageWriter.write(documentations);
 		if (xml != null)
 			fStore
 					.setValue(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS,
 							xml);
 	}
 
-	/*
-	 * @see SelectionListener#widgetSelected(SelectionEvent)
-	 */
-	public void widgetSelected(SelectionEvent e) {
-		Object source = e.getSource();
-		if (source == fClearButton) {
-			folders.clear();
-		} else if (source == fRemoveButton) {
-			IStructuredSelection selection = (IStructuredSelection) fLocationsViewer
-					.getSelection();
-			Object[] array = selection.toArray();
-			for (int i = 0; i < array.length; i++) {
-				if (array[i] instanceof ManPageFolder) {
-					folders.remove(array[i]);
-				}
-			}
-		} else if (source == fAddButton) {
-			add();
-		}
-
-		update();
-	}
-
-	/*
-	 * @see SelectionListener#widgetDefaultSelected(SelectionEvent)
-	 */
-	public void widgetDefaultSelected(SelectionEvent e) {
+	private Shell getShell() {
+		return fPage.getShell();
 	}
 
 	/**
 	 * Open the file selection dialog, and add the return locations.
 	 */
 	protected void add() {
-		DirectoryDialog dialog = new DirectoryDialog(fLocationsViewer
-				.getControl().getShell());
-		dialog.setMessage("Select directory to search into");
-		String result = dialog.open();
-		if (result != null) {
-			final File file = new File(result);
-			if (this.folders == null)
-				this.folders = new ArrayList();
-			if (file.isDirectory()) {
-				ProgressMonitorDialog dialog2 = new TimeTriggeredProgressMonitorDialog(
-						null, 500);
-				try {
-					dialog2.run(true, true, new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) {
-							monitor.beginTask("Searching for man pages", 1);
-							performSearch(file);
-							monitor.done();
-						}
-					});
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+		final ManPagesLocationsDialog dialog = new ManPagesLocationsDialog(
+				getShell(), documentations, null);
+		if (dialog.open() == Window.OK) {
+			final Documentation documentation = dialog.getResult();
+			fLocationsViewer.refresh();
+			fLocationsViewer
+					.setSelection(new StructuredSelection(documentation));
+		}
+		// DirectoryDialog dialog = new DirectoryDialog(fLocationsViewer
+		// .getControl().getShell());
+		// dialog.setMessage("Select directory to search into");
+		// String result = dialog.open();
+		// if (result != null) {
+		// final File file = new File(result);
+		// if (this.folders == null)
+		// this.folders = new ArrayList();
+		// if (file.isDirectory()) {
+		// ProgressMonitorDialog dialog2 = new
+		// TimeTriggeredProgressMonitorDialog(
+		// null, 500);
+		// try {
+		// dialog2.run(true, true, new IRunnableWithProgress() {
+		// public void run(IProgressMonitor monitor) {
+		// monitor.beginTask("Searching for man pages", 1);
+		// performSearch(file);
+		// monitor.done();
+		// }
+		// });
+		// } catch (InvocationTargetException e) {
+		// e.printStackTrace();
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		// }
+	}
 
-			}
+	protected void edit(Documentation documentation) {
+		final ManPagesLocationsDialog dialog = new ManPagesLocationsDialog(
+				getShell(), documentations, documentation);
+		if (dialog.open() == Window.OK) {
+			fLocationsViewer.refresh(documentation);
 		}
 	}
 
-	private void performSearch(File dir) {
-		if (!dir.isDirectory())
-			return;
-
-		String name = dir.getName();
-
-		if (name.equals("TkLib") || name.equals("TclLib")
-				|| name.equals("Keywords") || name.equals("UserCmd"))
-			return;
-
-		File[] childs = dir.listFiles(new FileFilter() {
-
-			public boolean accept(File file) {
-				if (file.isDirectory())
-					return true;
-				if (file.getName().startsWith("contents.htm"))
-					return true;
-				return false;
-			}
-
-		});
-		for (int i = 0; i < childs.length; i++) {
-			if (childs[i].isDirectory()) {
-				performSearch(childs[i]);
-			}
-			if (childs[i].getName().startsWith("contents.htm")) {
-				ManPageFolder folder = new ManPageFolder(dir.getAbsolutePath());
-				parseContentsFile(childs[i], folder);
-				if (folder.getPages().size() > 0 && !folders.contains(folder)) {
-					this.folders.add(folder);
-				}
+	protected void remove(IStructuredSelection selection) {
+		boolean changes = false;
+		for (Iterator<?> i = selection.iterator(); i.hasNext();) {
+			final Object obj = i.next();
+			if (obj instanceof EObject) {
+				EcoreUtil.remove(((EObject) obj));
+				changes = true;
 			}
 		}
-	}
-
-	private void parseContentsFile(File c, ManPageFolder folder) {
-		FileReader reader;
-		try {
-			reader = new FileReader(c);
-		} catch (FileNotFoundException e) {
-			return;
-		}
-		StringBuffer buf = new StringBuffer();
-		while (true) {
-			char cbuf[] = new char[1024];
-			try {
-				int read = reader.read(cbuf);
-				if (read >= 0) {
-					buf.append(cbuf, 0, read);
-				} else
-					break;
-			} catch (IOException e) {
-				break;
-			}
-		}
-		String result = buf.toString();
-		Pattern pattern = Pattern.compile(
-				"<a\\s+href=\"([a-zA-Z_0-9]+\\.html?)\"\\s*>(\\w+)</a>",
-				Pattern.CASE_INSENSITIVE);
-		Matcher matcher = pattern.matcher(result);
-		while (matcher.find()) {
-			String file = matcher.group(1);
-			if (file.equalsIgnoreCase("Copyright.htm"))
-				continue;
-			String word = matcher.group(2);
-			folder.addPage(word, file);
+		if (changes) {
+			fLocationsViewer.refresh();
 		}
 	}
 
@@ -444,26 +413,31 @@ public class ManPagesLocationsBlock implements SelectionListener,
 	 * Refresh the enable/disable state for the buttons.
 	 */
 	private void updateButtons() {
-		fClearButton.setEnabled(folders != null && folders.isEmpty());
-		IStructuredSelection selection = (IStructuredSelection) fLocationsViewer
-				.getSelection();
+		final IStructuredSelection selection = getSelection();
+		fEditButton.setEnabled(selection.size() == 1
+				&& selection.getFirstElement() instanceof Documentation);
+		fRemoveButton.setEnabled(!selection.isEmpty());
 
-		boolean canRemove = true;
-		if (folders == null)
-			canRemove = false;
-		else {
-			List list = selection.toList();
-			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				Object o = iterator.next();
-				if (!folders.contains(o))
-					canRemove = false;
-				break;
-			}
-			if (selection.isEmpty())
-				canRemove = false;
-		}
+		// boolean canRemove = true;
+		// if (folders == null)
+		// canRemove = false;
+		// else {
+		// List list = selection.toList();
+		// for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+		// Object o = iterator.next();
+		// if (!folders.contains(o))
+		// canRemove = false;
+		// break;
+		// }
+		// if (selection.isEmpty())
+		// canRemove = false;
+		// }
+		//
+		// fRemoveButton.setEnabled(canRemove);
+	}
 
-		fRemoveButton.setEnabled(canRemove);
+	protected IStructuredSelection getSelection() {
+		return (IStructuredSelection) fLocationsViewer.getSelection();
 	}
 
 }

@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
+import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageReader;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -43,7 +45,7 @@ public class TclManPagesDocumentationProvider implements
 		if (folders != null) {
 			for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
 				ManPageFolder f = (ManPageFolder) iterator.next();
-				Map pages = f.getPages();
+				Map pages = f.getKeywords().map();
 				String ans = (String) pages.get(content);
 				if (ans == null) {
 					// Try to use first word of multiline call
@@ -82,7 +84,8 @@ public class TclManPagesDocumentationProvider implements
 		final String value = prefStore
 				.getString(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS);
 
-		this.folders = ManPageFolderXML.read(value);
+		this.folders = ManPageReader.read(value).getDocumentations().get(0)
+				.getFolders();
 		if (this.folders != null && changeListener == null) {
 			changeListener = new IPropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent event) {
