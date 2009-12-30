@@ -12,26 +12,31 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.tcl.internal.ui.documentation.ManPagesLocationsBlock;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlock;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore.OverlayKey;
+import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
-class ManPagesConfigurationBlock extends AbstractConfigurationBlock {
+class ManPagesConfigurationBlock extends AbstractConfigurationBlock implements
+		IStatusChangeListener, IShellProvider {
 
 	private ManPagesLocationsBlock fBlock;
 
 	public ManPagesConfigurationBlock(OverlayPreferenceStore store,
 			PreferencePage page) {
-		super(store);
+		super(store, page);
 		store.addKeys(createOverlayStoreKeys());
-		fBlock = new ManPagesLocationsBlock(store, page);
+		fBlock = new ManPagesLocationsBlock(store, this);
 	}
 
 	private OverlayKey[] createOverlayStoreKeys() {
@@ -74,6 +79,15 @@ class ManPagesConfigurationBlock extends AbstractConfigurationBlock {
 	public void performOk() {
 		super.performOk();
 		fBlock.performApply();
+	}
+
+	@Override
+	public Shell getShell() {
+		return super.getShell();
+	}
+
+	public void statusChanged(IStatus status) {
+		updateStatus(status);
 	}
 
 }

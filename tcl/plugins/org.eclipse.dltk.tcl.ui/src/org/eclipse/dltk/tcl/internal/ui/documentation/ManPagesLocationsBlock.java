@@ -24,11 +24,12 @@ import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageWriter;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.dialogs.StatusInfo;
+import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -40,6 +41,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Control used to edit the libraries associated with a Interpreter install
@@ -77,11 +80,12 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	private Button fRemoveButton;
 	private Button fDefaultButton;
 
-	private final PreferencePage fPage;
+	private final IStatusChangeListener fPage;
 
 	private final IPreferenceStore fStore;
 
-	public ManPagesLocationsBlock(IPreferenceStore store, PreferencePage page) {
+	public ManPagesLocationsBlock(IPreferenceStore store,
+			IStatusChangeListener page) {
 		fPage = page;
 		fStore = store;
 	}
@@ -237,6 +241,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 			}
 		});
 		fDefaultButton = createPushButton(pathButtonComp, "Set Default");
+		((GridData) fDefaultButton.getLayoutData()).verticalIndent = 16;
 		fDefaultButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -300,7 +305,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	 */
 	public void update() {
 		updateButtons();
-		updatePageStatus(Status.OK_STATUS);
+		updatePageStatus(StatusInfo.OK_STATUS);
 	}
 
 	public void setDefaults() {
@@ -313,11 +318,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	protected void updatePageStatus(IStatus status) {
 		if (fPage == null)
 			return;
-		fPage.setValid(status.isOK());
-		if (!status.isOK())
-			fPage.setErrorMessage(status.getMessage());
-		else
-			fPage.setErrorMessage(null);
+		fPage.statusChanged(status);
 	}
 
 	public void initialize() {
@@ -341,7 +342,12 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	}
 
 	private Shell getShell() {
-		return fPage.getShell();
+		if (fPage instanceof IShellProvider) {
+			return ((IShellProvider) fPage).getShell();
+		} else {
+			return PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getShell();
+		}
 	}
 
 	/**

@@ -10,52 +10,39 @@
 
 package org.eclipse.dltk.tcl.internal.ui.preferences;
 
-
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPreferencePage;
 import org.eclipse.dltk.ui.preferences.IPreferenceConfigurationBlock;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-
 
 /**
- * The page for setting the editor options.
+ * The page for setting the tcl documentation locations.
  */
-public final class ManPagesPreferencePage extends AbstractConfigurationBlockPreferencePage {
-	
-	/*
-	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigureationBlockPreferencePage#getHelpId()
-	 */
+public final class ManPagesPreferencePage extends
+		AbstractConfigurationBlockPreferencePage {
+
+	public ManPagesPreferencePage() {
+		noDefaultAndApplyButton();
+	}
+
+	@Override
 	protected String getHelpId() {
-		//return IScriptHelpContextIds.TCL_EDITOR_PREFERENCE_PAGE;
 		return null;
 	}
 
-	/*
-	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage#setDescription()
-	 */
+	@Override
 	protected void setDescription() {
-		String description= "Man pages access"; 
-		setDescription(description);
+		// setDescription("Man pages access");
 	}
-	
-	/*
-	 * @see org.org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage#setPreferenceStore()
-	 */
+
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(TclUI.getDefault().getPreferenceStore());
 	}
-	
-	
-	protected Label createDescriptionLabel(Composite parent) {
-		return null; // no description for new look.
-	}
 
-	/*
-	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigureationBlockPreferencePage#createConfigurationBlock(org.eclipse.ui.internal.editors.text.OverlayPreferenceStore)
-	 */
-	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
+	@Override
+	protected IPreferenceConfigurationBlock createConfigurationBlock(
+			OverlayPreferenceStore overlayPreferenceStore) {
 		return new ManPagesConfigurationBlock(overlayPreferenceStore, this);
 	}
 }
