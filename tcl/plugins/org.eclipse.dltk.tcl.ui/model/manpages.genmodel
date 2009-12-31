@@ -6,11 +6,16 @@
     importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="5.0"
     copyrightFields="false" language="" interfaceNamePattern="">
   <foreignModel>manpages.ecore</foreignModel>
-  <genPackages prefix="Manpages" basePackage="org.eclipse.dltk.tcl.internal.ui" disposableProviderFactory="true"
+  <genPackages prefix="Manpages" basePackage="org.eclipse.dltk.tcl.ui" disposableProviderFactory="true"
       ecorePackage="manpages.ecore#/">
     <genClasses ecoreClass="manpages.ecore#//Documentation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//Documentation/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference manpages.ecore#//Documentation/folders"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//Documentation/default"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//Documentation/id"/>
+      <genOperations ecoreOperation="manpages.ecore#//Documentation/findFolder">
+        <genParameters ecoreParameter="manpages.ecore#//Documentation/findFolder/path"/>
+      </genOperations>
     </genClasses>
     <genClasses ecoreClass="manpages.ecore#//ManPageFolder">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//ManPageFolder/path"/>
@@ -19,10 +24,14 @@
         <genParameters ecoreParameter="manpages.ecore#//ManPageFolder/addPage/keyword"/>
         <genParameters ecoreParameter="manpages.ecore#//ManPageFolder/addPage/file"/>
       </genOperations>
+      <genOperations ecoreOperation="manpages.ecore#//ManPageFolder/verify"/>
     </genClasses>
     <genClasses ecoreClass="manpages.ecore#//StringToStringEntry">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//StringToStringEntry/key"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//StringToStringEntry/value"/>
+    </genClasses>
+    <genClasses ecoreClass="manpages.ecore#//InterpreterDocumentation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute manpages.ecore#//InterpreterDocumentation/documentationId"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

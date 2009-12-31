@@ -2,15 +2,17 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesSwitch.java,v 1.1 2009/12/30 11:09:35 apanchenk Exp $
+ * $Id: ManpagesSwitch.java,v 1.1 2009/12/31 09:18:24 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages.util;
+package org.eclipse.dltk.tcl.ui.manpages.util;
 
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dltk.tcl.internal.ui.manpages.*;
-
+import org.eclipse.dltk.tcl.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -24,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage
+ * @see org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage
  * @generated
  */
 public class ManpagesSwitch<T> {
@@ -106,6 +108,12 @@ public class ManpagesSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ManpagesPackage.INTERPRETER_DOCUMENTATION: {
+				InterpreterDocumentation interpreterDocumentation = (InterpreterDocumentation)theEObject;
+				T result = caseInterpreterDocumentation(interpreterDocumentation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -152,6 +160,21 @@ public class ManpagesSwitch<T> {
 	 * @generated
 	 */
 	public T caseStringToStringEntry(Map.Entry<String, String> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Interpreter Documentation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Interpreter Documentation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInterpreterDocumentation(InterpreterDocumentation object) {
 		return null;
 	}
 

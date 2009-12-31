@@ -20,11 +20,11 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
-import org.eclipse.dltk.tcl.internal.ui.manpages.Documentation;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageContainer;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFinder;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesFactory;
+import org.eclipse.dltk.tcl.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFinder;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageResource;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesFactory;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
@@ -64,7 +64,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 		ModifyListener {
 
 	private final boolean isNew;
-	private final ManPageContainer documentations;
+	private final ManPageResource documentations;
 	private final Documentation documentation;
 	private final Documentation input;
 
@@ -72,8 +72,8 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 	 * @param shell
 	 * @param documentation
 	 */
-	public ManPagesLocationsDialog(Shell shell,
-			ManPageContainer documentations, Documentation documentation) {
+	public ManPagesLocationsDialog(Shell shell, ManPageResource documentations,
+			Documentation documentation) {
 		super(shell);
 		this.documentations = documentations;
 		this.input = documentation;
@@ -87,6 +87,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 	private static Documentation newDocumentation() {
 		final Documentation value = ManpagesFactory.eINSTANCE
 				.createDocumentation();
+		value.setId(EcoreUtil.generateUUID());
 		value.setName(""); //$NON-NLS-1$
 		return value;
 	}
@@ -309,7 +310,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 	protected void okPressed() {
 		setData(documentation);
 		if (isNew) {
-			documentations.getResource().getContents().add(documentation);
+			documentations.getContents().add(documentation);
 		} else {
 			input.setName(documentation.getName());
 			// TODO smart update

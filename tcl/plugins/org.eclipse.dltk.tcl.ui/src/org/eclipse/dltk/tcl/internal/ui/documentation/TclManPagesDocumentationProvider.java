@@ -21,9 +21,8 @@ import java.util.Map;
 
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageReader;
-import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageLoader;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -81,10 +80,7 @@ public class TclManPagesDocumentationProvider implements
 		final IPreferenceStore prefStore = TclUI.getDefault()
 				.getPreferenceStore();
 
-		final String value = prefStore
-				.getString(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS);
-
-		this.folders = ManPageReader.read(value).getDocumentations().get(0)
+		this.folders = ManPageLoader.load().getDocumentations().get(0)
 				.getFolders();
 		if (this.folders != null && changeListener == null) {
 			changeListener = new IPropertyChangeListener() {

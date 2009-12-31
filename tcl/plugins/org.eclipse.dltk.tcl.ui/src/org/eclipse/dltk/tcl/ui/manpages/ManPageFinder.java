@@ -9,7 +9,7 @@
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
  *******************************************************************************/
-package org.eclipse.dltk.tcl.internal.ui.manpages;
+package org.eclipse.dltk.tcl.ui.manpages;
 
 import java.io.File;
 import java.io.FileFilter;

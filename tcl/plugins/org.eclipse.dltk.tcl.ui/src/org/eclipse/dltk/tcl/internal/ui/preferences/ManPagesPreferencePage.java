@@ -10,39 +10,69 @@
 
 package org.eclipse.dltk.tcl.internal.ui.preferences;
 
-import org.eclipse.dltk.tcl.internal.ui.TclUI;
-import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPreferencePage;
-import org.eclipse.dltk.ui.preferences.IPreferenceConfigurationBlock;
-import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
+import org.eclipse.dltk.tcl.internal.ui.documentation.ManPagesLocationsBlock;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * The page for setting the tcl documentation locations.
  */
-public final class ManPagesPreferencePage extends
-		AbstractConfigurationBlockPreferencePage {
+public final class ManPagesPreferencePage extends PreferencePage implements
+		IWorkbenchPreferencePage {
+
+	protected final ManPagesLocationsBlock fBlock = new ManPagesLocationsBlock(
+			null, false);
 
 	public ManPagesPreferencePage() {
 		noDefaultAndApplyButton();
+		setDescription("Tcl Manual Pages are now specified per interpreter, so this page is deprecated and will be removed");
 	}
 
 	@Override
-	protected String getHelpId() {
-		return null;
+	protected Control createContents(Composite parent) {
+		final Composite composite = new Composite(parent, SWT.NONE);
+		final GridLayout layout = new GridLayout(1, false);
+		layout.marginWidth = layout.marginHeight = 0;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		fBlock.createControl(composite);
+		// final Composite buttons = new Composite(composite, SWT.NONE);
+		// buttons.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+		// final GridLayout buttonLayout = new GridLayout();
+		// buttonLayout.marginHeight = buttonLayout.marginWidth = 0;
+		// buttons.setLayout(buttonLayout);
+		// final Button configure = new Button(buttons, SWT.PUSH);
+		// configure.setText("Configure...");
+		// configure.addSelectionListener(new SelectionAdapter() {
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// final ManPagesConfigurationDialog dialog = new
+		// ManPagesConfigurationDialog(
+		// getShell());
+		// if (dialog.open() == Window.OK) {
+		// fBlock.initialize();
+		// }
+		// }
+		// });
+		// setButtonLayoutData(configure);
+		return composite;
 	}
 
 	@Override
-	protected void setDescription() {
-		// setDescription("Man pages access");
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible) {
+			fBlock.initialize();
+		}
 	}
 
-	@Override
-	protected void setPreferenceStore() {
-		setPreferenceStore(TclUI.getDefault().getPreferenceStore());
-	}
-
-	@Override
-	protected IPreferenceConfigurationBlock createConfigurationBlock(
-			OverlayPreferenceStore overlayPreferenceStore) {
-		return new ManPagesConfigurationBlock(overlayPreferenceStore, this);
+	public void init(IWorkbench workbench) {
+		// empty
 	}
 }

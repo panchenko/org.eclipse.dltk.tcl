@@ -2,9 +2,9 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesPackage.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
+ * $Id: ManpagesPackage.java,v 1.1 2009/12/31 09:18:25 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages;
+package org.eclipse.dltk.tcl.ui.manpages;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -22,9 +22,8 @@ import org.eclipse.emf.ecore.EReference;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesFactory
+ * @see org.eclipse.dltk.tcl.ui.manpages.ManpagesFactory
  * @model kind="package"
- * @generated NOT
  * @since 2.0
  */
 public interface ManpagesPackage extends EPackage {
@@ -58,14 +57,14 @@ public interface ManpagesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	ManpagesPackage eINSTANCE = org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManpagesPackageImpl.init();
+	ManpagesPackage eINSTANCE = org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.DocumentationImpl <em>Documentation</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.DocumentationImpl <em>Documentation</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.DocumentationImpl
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManpagesPackageImpl#getDocumentation()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.DocumentationImpl
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getDocumentation()
 	 * @generated
 	 */
 	int DOCUMENTATION = 0;
@@ -98,20 +97,29 @@ public interface ManpagesPackage extends EPackage {
 	int DOCUMENTATION__DEFAULT = 2;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENTATION__ID = 3;
+
+	/**
 	 * The number of structural features of the '<em>Documentation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENTATION_FEATURE_COUNT = 3;
+	int DOCUMENTATION_FEATURE_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl <em>Man Page Folder</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.ManPageFolderImpl <em>Man Page Folder</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManpagesPackageImpl#getManPageFolder()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManPageFolderImpl
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getManPageFolder()
 	 * @generated
 	 */
 	int MAN_PAGE_FOLDER = 1;
@@ -144,11 +152,11 @@ public interface ManpagesPackage extends EPackage {
 	int MAN_PAGE_FOLDER_FEATURE_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.StringToStringEntryImpl <em>String To String Entry</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.StringToStringEntryImpl <em>String To String Entry</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.StringToStringEntryImpl
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManpagesPackageImpl#getStringToStringEntry()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.StringToStringEntryImpl
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getStringToStringEntry()
 	 * @generated
 	 */
 	int STRING_TO_STRING_ENTRY = 2;
@@ -182,75 +190,115 @@ public interface ManpagesPackage extends EPackage {
 
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation <em>Documentation</em>}'.
+	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.InterpreterDocumentationImpl <em>Interpreter Documentation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.InterpreterDocumentationImpl
+	 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getInterpreterDocumentation()
+	 * @generated
+	 */
+	int INTERPRETER_DOCUMENTATION = 3;
+
+	/**
+	 * The feature id for the '<em><b>Documentation Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERPRETER_DOCUMENTATION__DOCUMENTATION_ID = 0;
+
+	/**
+	 * The number of structural features of the '<em>Interpreter Documentation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERPRETER_DOCUMENTATION_FEATURE_COUNT = 1;
+
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ui.manpages.Documentation <em>Documentation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Documentation</em>'.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.Documentation
+	 * @see org.eclipse.dltk.tcl.ui.manpages.Documentation
 	 * @generated
 	 */
 	EClass getDocumentation();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ui.manpages.Documentation#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#getName()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.Documentation#getName()
 	 * @see #getDocumentation()
 	 * @generated
 	 */
 	EAttribute getDocumentation_Name();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#getFolders <em>Folders</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.dltk.tcl.ui.manpages.Documentation#getFolders <em>Folders</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Folders</em>'.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#getFolders()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.Documentation#getFolders()
 	 * @see #getDocumentation()
 	 * @generated
 	 */
 	EReference getDocumentation_Folders();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#isDefault <em>Default</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ui.manpages.Documentation#isDefault <em>Default</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Default</em>'.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.Documentation#isDefault()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.Documentation#isDefault()
 	 * @see #getDocumentation()
 	 * @generated
 	 */
 	EAttribute getDocumentation_Default();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder <em>Man Page Folder</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ui.manpages.Documentation#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.eclipse.dltk.tcl.ui.manpages.Documentation#getId()
+	 * @see #getDocumentation()
+	 * @generated
+	 */
+	EAttribute getDocumentation_Id();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ui.manpages.ManPageFolder <em>Man Page Folder</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Man Page Folder</em>'.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder
+	 * @see org.eclipse.dltk.tcl.ui.manpages.ManPageFolder
 	 * @generated
 	 */
 	EClass getManPageFolder();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder#getPath <em>Path</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ui.manpages.ManPageFolder#getPath <em>Path</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder#getPath()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.ManPageFolder#getPath()
 	 * @see #getManPageFolder()
 	 * @generated
 	 */
 	EAttribute getManPageFolder_Path();
 
 	/**
-	 * Returns the meta object for the map '{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder#getKeywords <em>Keywords</em>}'.
+	 * Returns the meta object for the map '{@link org.eclipse.dltk.tcl.ui.manpages.ManPageFolder#getKeywords <em>Keywords</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the map '<em>Keywords</em>'.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder#getKeywords()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.ManPageFolder#getKeywords()
 	 * @see #getManPageFolder()
 	 * @generated
 	 */
@@ -291,6 +339,27 @@ public interface ManpagesPackage extends EPackage {
 	EAttribute getStringToStringEntry_Value();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation <em>Interpreter Documentation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Interpreter Documentation</em>'.
+	 * @see org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation
+	 * @generated
+	 */
+	EClass getInterpreterDocumentation();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation#getDocumentationId <em>Documentation Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Documentation Id</em>'.
+	 * @see org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation#getDocumentationId()
+	 * @see #getInterpreterDocumentation()
+	 * @generated
+	 */
+	EAttribute getInterpreterDocumentation_DocumentationId();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -313,11 +382,11 @@ public interface ManpagesPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.DocumentationImpl <em>Documentation</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.DocumentationImpl <em>Documentation</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.DocumentationImpl
-		 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManpagesPackageImpl#getDocumentation()
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.DocumentationImpl
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getDocumentation()
 		 * @generated
 		 */
 		EClass DOCUMENTATION = eINSTANCE.getDocumentation();
@@ -347,11 +416,19 @@ public interface ManpagesPackage extends EPackage {
 		EAttribute DOCUMENTATION__DEFAULT = eINSTANCE.getDocumentation_Default();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl <em>Man Page Folder</em>}' class.
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl
-		 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManpagesPackageImpl#getManPageFolder()
+		 * @generated
+		 */
+		EAttribute DOCUMENTATION__ID = eINSTANCE.getDocumentation_Id();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.ManPageFolderImpl <em>Man Page Folder</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManPageFolderImpl
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getManPageFolder()
 		 * @generated
 		 */
 		EClass MAN_PAGE_FOLDER = eINSTANCE.getManPageFolder();
@@ -373,11 +450,11 @@ public interface ManpagesPackage extends EPackage {
 		EReference MAN_PAGE_FOLDER__KEYWORDS = eINSTANCE.getManPageFolder_Keywords();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.StringToStringEntryImpl <em>String To String Entry</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.StringToStringEntryImpl <em>String To String Entry</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.StringToStringEntryImpl
-		 * @see org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManpagesPackageImpl#getStringToStringEntry()
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.StringToStringEntryImpl
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getStringToStringEntry()
 		 * @generated
 		 */
 		EClass STRING_TO_STRING_ENTRY = eINSTANCE.getStringToStringEntry();
@@ -397,6 +474,24 @@ public interface ManpagesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STRING_TO_STRING_ENTRY__VALUE = eINSTANCE.getStringToStringEntry_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ui.manpages.impl.InterpreterDocumentationImpl <em>Interpreter Documentation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.InterpreterDocumentationImpl
+		 * @see org.eclipse.dltk.tcl.ui.manpages.impl.ManpagesPackageImpl#getInterpreterDocumentation()
+		 * @generated
+		 */
+		EClass INTERPRETER_DOCUMENTATION = eINSTANCE.getInterpreterDocumentation();
+
+		/**
+		 * The meta object literal for the '<em><b>Documentation Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INTERPRETER_DOCUMENTATION__DOCUMENTATION_ID = eINSTANCE.getInterpreterDocumentation_DocumentationId();
 
 	}
 

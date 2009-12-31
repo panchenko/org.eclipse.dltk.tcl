@@ -2,16 +2,17 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesPackageImpl.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
+ * $Id: ManpagesPackageImpl.java,v 1.1 2009/12/31 09:18:23 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages.impl;
+package org.eclipse.dltk.tcl.ui.manpages.impl;
 
 import java.util.Map;
 
-import org.eclipse.dltk.tcl.internal.ui.manpages.Documentation;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesFactory;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage;
+import org.eclipse.dltk.tcl.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesFactory;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -50,6 +51,13 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 	private EClass stringToStringEntryEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass interpreterDocumentationEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -60,7 +68,7 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage#eNS_URI
+	 * @see org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -151,6 +159,15 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDocumentation_Id() {
+		return (EAttribute)documentationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getManPageFolder() {
 		return manPageFolderEClass;
 	}
@@ -205,6 +222,24 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getInterpreterDocumentation() {
+		return interpreterDocumentationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getInterpreterDocumentation_DocumentationId() {
+		return (EAttribute)interpreterDocumentationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ManpagesFactory getManpagesFactory() {
 		return (ManpagesFactory)getEFactoryInstance();
 	}
@@ -232,6 +267,7 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 		createEAttribute(documentationEClass, DOCUMENTATION__NAME);
 		createEReference(documentationEClass, DOCUMENTATION__FOLDERS);
 		createEAttribute(documentationEClass, DOCUMENTATION__DEFAULT);
+		createEAttribute(documentationEClass, DOCUMENTATION__ID);
 
 		manPageFolderEClass = createEClass(MAN_PAGE_FOLDER);
 		createEAttribute(manPageFolderEClass, MAN_PAGE_FOLDER__PATH);
@@ -240,6 +276,9 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 		stringToStringEntryEClass = createEClass(STRING_TO_STRING_ENTRY);
 		createEAttribute(stringToStringEntryEClass, STRING_TO_STRING_ENTRY__KEY);
 		createEAttribute(stringToStringEntryEClass, STRING_TO_STRING_ENTRY__VALUE);
+
+		interpreterDocumentationEClass = createEClass(INTERPRETER_DOCUMENTATION);
+		createEAttribute(interpreterDocumentationEClass, INTERPRETER_DOCUMENTATION__DOCUMENTATION_ID);
 	}
 
 	/**
@@ -276,6 +315,7 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 		initEAttribute(getDocumentation_Name(), ecorePackage.getEString(), "name", null, 0, 1, Documentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(getDocumentation_Folders(), this.getManPageFolder(), null, "folders", null, 0, -1, Documentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getDocumentation_Default(), ecorePackage.getEBoolean(), "default", null, 0, 1, Documentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(getDocumentation_Id(), ecorePackage.getEString(), "id", null, 0, 1, Documentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		EOperation op = addEOperation(documentationEClass, this.getManPageFolder(), "findFolder", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, ecorePackage.getEString(), "path", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
@@ -293,6 +333,9 @@ public class ManpagesPackageImpl extends EPackageImpl implements ManpagesPackage
 		initEClass(stringToStringEntryEClass, Map.Entry.class, "StringToStringEntry", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getStringToStringEntry_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(getStringToStringEntry_Value(), ecorePackage.getEString(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(interpreterDocumentationEClass, InterpreterDocumentation.class, "InterpreterDocumentation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getInterpreterDocumentation_DocumentationId(), ecorePackage.getEString(), "documentationId", null, 0, 1, InterpreterDocumentation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

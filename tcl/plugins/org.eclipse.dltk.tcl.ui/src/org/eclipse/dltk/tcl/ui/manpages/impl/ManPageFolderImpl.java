@@ -2,14 +2,14 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManPageFolderImpl.java,v 1.1 2009/12/30 11:09:34 apanchenk Exp $
+ * $Id: ManPageFolderImpl.java,v 1.1 2009/12/31 09:18:23 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages.impl;
+package org.eclipse.dltk.tcl.ui.manpages.impl;
 
 import java.io.File;
 
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
@@ -28,8 +28,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl#getPath <em>Path</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.ManPageFolderImpl#getKeywords <em>Keywords</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ui.manpages.impl.ManPageFolderImpl#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ui.manpages.impl.ManPageFolderImpl#getKeywords <em>Keywords</em>}</li>
  * </ul>
  * </p>
  *

@@ -2,19 +2,19 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesAdapterFactory.java,v 1.1 2009/12/30 11:09:35 apanchenk Exp $
+ * $Id: ManpagesAdapterFactory.java,v 1.1 2009/12/31 09:18:24 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages.util;
+package org.eclipse.dltk.tcl.ui.manpages.util;
 
 import java.util.Map;
 
-import org.eclipse.dltk.tcl.internal.ui.manpages.*;
-
+import org.eclipse.dltk.tcl.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage
+ * @see org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage
  * @generated
  */
 public class ManpagesAdapterFactory extends AdapterFactoryImpl {
@@ -86,6 +86,10 @@ public class ManpagesAdapterFactory extends AdapterFactoryImpl {
 				return createStringToStringEntryAdapter();
 			}
 			@Override
+			public Adapter caseInterpreterDocumentation(InterpreterDocumentation object) {
+				return createInterpreterDocumentationAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -106,13 +110,13 @@ public class ManpagesAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.internal.ui.manpages.Documentation <em>Documentation</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.ui.manpages.Documentation <em>Documentation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.Documentation
+	 * @see org.eclipse.dltk.tcl.ui.manpages.Documentation
 	 * @generated
 	 */
 	public Adapter createDocumentationAdapter() {
@@ -120,13 +124,13 @@ public class ManpagesAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder <em>Man Page Folder</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.ui.manpages.ManPageFolder <em>Man Page Folder</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder
+	 * @see org.eclipse.dltk.tcl.ui.manpages.ManPageFolder
 	 * @generated
 	 */
 	public Adapter createManPageFolderAdapter() {
@@ -144,6 +148,20 @@ public class ManpagesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStringToStringEntryAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation <em>Interpreter Documentation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation
+	 * @generated
+	 */
+	public Adapter createInterpreterDocumentationAdapter() {
 		return null;
 	}
 

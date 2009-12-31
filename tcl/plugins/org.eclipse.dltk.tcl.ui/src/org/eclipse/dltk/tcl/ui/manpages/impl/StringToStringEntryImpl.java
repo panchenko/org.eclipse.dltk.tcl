@@ -2,11 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: StringToStringEntryImpl.java,v 1.1 2009/12/30 11:09:35 apanchenk Exp $
+ * $Id: StringToStringEntryImpl.java,v 1.1 2009/12/31 09:18:23 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages.impl;
+package org.eclipse.dltk.tcl.ui.manpages.impl;
 
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.StringToStringEntryImpl#getTypedKey <em>Key</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.impl.StringToStringEntryImpl#getTypedValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ui.manpages.impl.StringToStringEntryImpl#getTypedKey <em>Key</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ui.manpages.impl.StringToStringEntryImpl#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *

@@ -11,25 +11,24 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.documentation;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.tcl.internal.ui.manpages.Documentation;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageContainer;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageReader;
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageWriter;
-import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
+import org.eclipse.dltk.tcl.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageLoader;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageResource;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
+import org.eclipse.dltk.ui.util.PixelConverter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -81,13 +80,11 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	private Button fDefaultButton;
 
 	private final IStatusChangeListener fPage;
+	private final boolean fEditable;
 
-	private final IPreferenceStore fStore;
-
-	public ManPagesLocationsBlock(IPreferenceStore store,
-			IStatusChangeListener page) {
+	public ManPagesLocationsBlock(IStatusChangeListener page, boolean editable) {
 		fPage = page;
-		fStore = store;
+		fEditable = editable;
 	}
 
 	private static class ManPagesLabelProvider extends LabelProvider implements
@@ -111,7 +108,12 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 		@Override
 		public String getText(Object element) {
 			if (element instanceof Documentation) {
-				return ((Documentation) element).getName();
+				final Documentation doc = (Documentation) element;
+				String text = doc.getName();
+				if (doc.isDefault()) {
+					text += " [default]";
+				}
+				return text;
 			} else if (element instanceof ManPageFolder) {
 				return ((ManPageFolder) element).getPath();
 			} else {
@@ -131,7 +133,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 		}
 	}
 
-	private ManPageContainer documentations = null;
+	private ManPageResource documentations = null;
 
 	private static class ManLocationsContentProvider implements
 			ITreeContentProvider {
@@ -159,8 +161,8 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 		}
 
 		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof ManPageContainer) {
-				final List<Documentation> docs = ((ManPageContainer) inputElement)
+			if (inputElement instanceof ManPageResource) {
+				final List<Documentation> docs = ((ManPageResource) inputElement)
 						.getDocumentations();
 				return docs.toArray(new Object[docs.size()]);
 			} else {
@@ -183,11 +185,9 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	 *            the parent widget of this control
 	 */
 	public Control createControl(Composite parent) {
-		Font font = parent.getFont();
-
 		Composite comp = new Composite(parent, SWT.NONE);
 		GridLayout topLayout = new GridLayout();
-		topLayout.numColumns = 2;
+		topLayout.numColumns = fEditable ? 2 : 1;
 		topLayout.marginHeight = 0;
 		topLayout.marginWidth = 0;
 		comp.setLayout(topLayout);
@@ -195,13 +195,22 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 
 		fLocationsViewer = new TreeViewer(comp);
 		final GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.heightHint = 6;
+		final PixelConverter pixConv = new PixelConverter(parent);
+		gd.widthHint = pixConv.convertWidthInCharsToPixels(48);
+		gd.heightHint = pixConv.convertHeightInCharsToPixels(8);
 		fLocationsViewer.getControl().setLayoutData(gd);
 		fLocationsViewer.setContentProvider(new ManLocationsContentProvider());
 		fLocationsViewer.setLabelProvider(new ManPagesLabelProvider());
 		fLocationsViewer.setSorter(new ViewerSorter());
 		fLocationsViewer.addSelectionChangedListener(this);
+		if (fEditable) {
+			createButtons(comp);
+		}
+		Dialog.applyDialogFont(comp);
+		return comp;
+	}
 
+	private void createButtons(Composite comp) {
 		Composite pathButtonComp = new Composite(comp, SWT.NONE);
 		GridLayout pathButtonLayout = new GridLayout();
 		pathButtonLayout.marginHeight = 0;
@@ -210,7 +219,6 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 		pathButtonComp.setLayoutData(new GridData(
 				GridData.VERTICAL_ALIGN_BEGINNING
 						| GridData.HORIZONTAL_ALIGN_FILL));
-		pathButtonComp.setFont(font);
 
 		fAddButton = createPushButton(pathButtonComp, "Add");
 		fAddButton.addSelectionListener(new SelectionAdapter() {
@@ -252,7 +260,6 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 				}
 			}
 		});
-		return comp;
 	}
 
 	protected void setDefault(Documentation documentation) {
@@ -308,12 +315,12 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 		updatePageStatus(StatusInfo.OK_STATUS);
 	}
 
-	public void setDefaults() {
-		String res = fStore
-				.getDefaultString(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS);
-		fStore.setValue(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS, res);
-		initialize();
-	}
+	// public void setDefaults() {
+	// String res = fStore
+	// .getDefaultString(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS);
+	// fStore.setValue(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS, res);
+	// initialize();
+	// }
 
 	protected void updatePageStatus(IStatus status) {
 		if (fPage == null)
@@ -322,9 +329,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	}
 
 	public void initialize() {
-		String value = fStore
-				.getString(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS);
-		this.documentations = ManPageReader.read(value);
+		this.documentations = ManPageLoader.load();
 		fLocationsViewer.setInput(documentations);
 		fLocationsViewer.expandToLevel(2);
 		update();
@@ -332,13 +337,11 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 
 	/**
 	 * Saves settings
+	 * 
+	 * @throws IOException
 	 */
-	public void performApply() {
-		String xml = ManPageWriter.write(documentations);
-		if (xml != null)
-			fStore
-					.setValue(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS,
-							xml);
+	public void save() throws IOException {
+		documentations.save(null);
 	}
 
 	private Shell getShell() {
@@ -399,6 +402,8 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 	 * Refresh the enable/disable state for the buttons.
 	 */
 	private void updateButtons() {
+		if (!fEditable)
+			return;
 		final IStructuredSelection selection = getSelection();
 		final boolean singleDoc = selection.size() == 1
 				&& selection.getFirstElement() instanceof Documentation;

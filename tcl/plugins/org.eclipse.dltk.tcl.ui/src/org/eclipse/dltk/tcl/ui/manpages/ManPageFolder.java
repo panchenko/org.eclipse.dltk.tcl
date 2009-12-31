@@ -2,9 +2,9 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManPageFolder.java,v 1.2 2009/12/30 12:03:34 apanchenk Exp $
+ * $Id: ManPageFolder.java,v 1.1 2009/12/31 09:18:25 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages;
+package org.eclipse.dltk.tcl.ui.manpages;
 
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
@@ -17,12 +17,12 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder#getPath <em>Path</em>}</li>
- *   <li>{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder#getKeywords <em>Keywords</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ui.manpages.ManPageFolder#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ui.manpages.ManPageFolder#getKeywords <em>Keywords</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage#getManPageFolder()
+ * @see org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage#getManPageFolder()
  * @model
  * @generated NOT
  * @since 2.0
@@ -38,14 +38,14 @@ public interface ManPageFolder extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Path</em>' attribute.
 	 * @see #setPath(String)
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage#getManPageFolder_Path()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage#getManPageFolder_Path()
 	 * @model
 	 * @generated
 	 */
 	String getPath();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.dltk.tcl.internal.ui.manpages.ManPageFolder#getPath <em>Path</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ui.manpages.ManPageFolder#getPath <em>Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Path</em>' attribute.
@@ -65,7 +65,7 @@ public interface ManPageFolder extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Keywords</em>' map.
-	 * @see org.eclipse.dltk.tcl.internal.ui.manpages.ManpagesPackage#getManPageFolder_Keywords()
+	 * @see org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage#getManPageFolder_Keywords()
 	 * @model mapType="org.eclipse.dltk.tcl.internal.ui.manpages.StringToStringEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
 	 * @generated
 	 */

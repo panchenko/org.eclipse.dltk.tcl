@@ -2,20 +2,21 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ManpagesFactoryImpl.java,v 1.1 2009/12/30 11:09:34 apanchenk Exp $
+ * $Id: ManpagesFactoryImpl.java,v 1.1 2009/12/31 09:18:23 apanchenk Exp $
  */
-package org.eclipse.dltk.tcl.internal.ui.manpages.impl;
+package org.eclipse.dltk.tcl.ui.manpages.impl;
 
 import java.util.Map;
 
-import org.eclipse.dltk.tcl.internal.ui.manpages.*;
-
+import org.eclipse.dltk.tcl.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageFolder;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesFactory;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
@@ -65,6 +66,7 @@ public class ManpagesFactoryImpl extends EFactoryImpl implements ManpagesFactory
 			case ManpagesPackage.DOCUMENTATION: return createDocumentation();
 			case ManpagesPackage.MAN_PAGE_FOLDER: return createManPageFolder();
 			case ManpagesPackage.STRING_TO_STRING_ENTRY: return (EObject)createStringToStringEntry();
+			case ManpagesPackage.INTERPRETER_DOCUMENTATION: return createInterpreterDocumentation();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -98,6 +100,16 @@ public class ManpagesFactoryImpl extends EFactoryImpl implements ManpagesFactory
 	public Map.Entry<String, String> createStringToStringEntry() {
 		StringToStringEntryImpl stringToStringEntry = new StringToStringEntryImpl();
 		return stringToStringEntry;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InterpreterDocumentation createInterpreterDocumentation() {
+		InterpreterDocumentationImpl interpreterDocumentation = new InterpreterDocumentationImpl();
+		return interpreterDocumentation;
 	}
 
 	/**

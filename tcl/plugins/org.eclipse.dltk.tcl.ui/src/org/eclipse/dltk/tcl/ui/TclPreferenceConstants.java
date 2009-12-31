@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.ui;
 
-import org.eclipse.dltk.tcl.internal.ui.manpages.ManPageReader;
 import org.eclipse.dltk.tcl.internal.ui.text.TclColorConstants;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
 import org.eclipse.dltk.ui.PreferenceConstants;
@@ -438,7 +437,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 	public static final String EDITOR_FOLDING_INIT_BLOCKS = "editor_folding_init_blocks"; //$NON-NLS-1$
 
 	public static final String EDITOR_FOLDING_INIT_OTHER = "editor_folding_init_other_blocks"; //$NON-NLS-1$
-	
+
 	public static final String DOC_MAN_PAGES_LOCATIONS = "doc_man_pages_locations";
 
 	public static final String CODEASSIST_FILTER_INTERNAL_API = "tcl_filter_internal_api";
@@ -484,9 +483,6 @@ public class TclPreferenceConstants extends PreferenceConstants {
 				TclPreferenceConstants.EDITOR_VARIABLE_COLOR,
 				new RGB(200, 0, 0));
 
-		store.setDefault(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS,
-				ManPageReader.getDefault());
-
 		store.setDefault(
 				TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD, false);
 		store.setDefault(COMMENT_TASK_TAGS_BOLD, true);
@@ -526,9 +522,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 				"proc,namespace,catch,switch,if,while,for,foreach");
 		store.setDefault(TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST,
 				"variable,global");
-//		store.setDefault(
-//				TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
-//				true);
+		// store.setDefault(
+		// TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
+		// true);
 		store.setDefault(
 				TclPreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS,
 				true);
