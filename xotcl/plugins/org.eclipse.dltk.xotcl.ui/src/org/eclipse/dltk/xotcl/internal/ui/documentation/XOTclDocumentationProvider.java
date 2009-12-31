@@ -17,15 +17,20 @@ import org.eclipse.dltk.tcl.internal.ui.documentation.ScriptDocumentationProvide
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.dltk.xotcl.core.documentation.XOTclDocumentationResolver;
 
-public class XOTclDocumentationProvider extends ScriptDocumentationProvider implements IScriptDocumentationProvider {
-		
-	public Reader getInfo(IMember member, boolean lookIntoParents, boolean lookIntoExternal)  {
+public class XOTclDocumentationProvider extends ScriptDocumentationProvider
+		implements IScriptDocumentationProvider {
+
+	public Reader getInfo(IMember member, boolean lookIntoParents,
+			boolean lookIntoExternal) {
 		String header = XOTclDocumentationResolver.getDocumentationFor(member);
-		// Lets look selected module for documentation for this element.		
-		return new StringReader (convertToHTML (header));
+		if (header.trim().length() == 0) {
+			return null;
+		}
+		// Lets look selected module for documentation for this element.
+		return new StringReader(convertToHTML(header));
 	}
+
 	public Reader getInfo(String content) {
 		return null;
 	}
 }
-
