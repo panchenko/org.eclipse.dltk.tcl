@@ -65,8 +65,7 @@ public class ManPageLoader {
 	}
 
 	private static ManPageResourceImpl readXML(String data) {
-		// Wrapper the stream for efficient parsing
-
+		final ManPageResourceImpl input = new ManPageResourceImpl();
 		// Do the parsing and obtain the top-level node
 		Element config = null;
 		try {
@@ -78,14 +77,13 @@ public class ManPageLoader {
 		} catch (Exception e) {
 			TclUI.error("Error parsing " //$NON-NLS-1$
 					+ TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS, e);
-			return null;
+			return input;
 		}
 		if (!config.getNodeName().equalsIgnoreCase(TOP_ELEMENT)) {
 			TclUI.error(TclPreferenceConstants.DOC_MAN_PAGES_LOCATIONS
 					+ " - bad top level node"); //$NON-NLS-1$
-			return null;
+			return input;
 		}
-		final ManPageResourceImpl input = new ManPageResourceImpl();
 		final Documentation documentation = ManpagesFactory.eINSTANCE
 				.createDocumentation();
 		documentation.setName(ManPagesMessages.ManPageLoader_0);
