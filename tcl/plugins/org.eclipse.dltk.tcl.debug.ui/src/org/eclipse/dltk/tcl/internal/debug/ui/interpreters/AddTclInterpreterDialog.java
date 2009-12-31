@@ -9,6 +9,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.debug.ui.interpreters;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.caching.IContentCache;
@@ -21,6 +26,8 @@ import org.eclipse.dltk.internal.debug.ui.interpreters.AddScriptInterpreterDialo
 import org.eclipse.dltk.internal.debug.ui.interpreters.ExpandableBlock;
 import org.eclipse.dltk.internal.debug.ui.interpreters.IAddInterpreterDialogRequestor;
 import org.eclipse.dltk.internal.debug.ui.interpreters.InterpretersMessages;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.ComboDialogField;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.dltk.launching.EnvironmentVariable;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.IInterpreterInstallType;
@@ -32,12 +39,23 @@ import org.eclipse.dltk.tcl.core.packages.VariableMap;
 import org.eclipse.dltk.tcl.core.packages.VariableValue;
 import org.eclipse.dltk.tcl.internal.launching.StatusWithPackages;
 import org.eclipse.dltk.tcl.internal.ui.GlobalVariableBlock;
+import org.eclipse.dltk.tcl.ui.manpages.Documentation;
+import org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageLoader;
+import org.eclipse.dltk.tcl.ui.manpages.ManPageResource;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesFactory;
+import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
+import org.eclipse.dltk.tcl.ui.manpages.dialogs.ManPagesConfigurationDialog;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
@@ -88,6 +106,60 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		return libraryExpandableNode.getContent();
 	}
 
+	private ComboDialogField documentationField;
+	private ManPageResource documentations;
+
+	@Override
+	protected void createSimpleFields(Composite parent, int numColumns) {
+		super.createSimpleFields(parent, numColumns);
+		documentationField = new ComboDialogField(SWT.BORDER | SWT.READ_ONLY);
+		documentationField.setLabelText("Manual Pages");
+		loadDocumentations();
+		documentationField.doFillIntoGrid(parent, numColumns - 1);
+		final Button configureDocumentation = new Button(parent, SWT.PUSH);
+		configureDocumentation.setText("Configure...");
+		configureDocumentation.setLayoutData(StringButtonDialogField
+				.gridDataForButton(configureDocumentation, 1));
+		configureDocumentation.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				configureDocumentation();
+			}
+		});
+	}
+
+	protected void configureDocumentation() {
+		final ManPagesConfigurationDialog dialog = new ManPagesConfigurationDialog(
+				getShell());
+		if (dialog.open() == Window.OK) {
+			final int index = documentationField.getSelectionIndex();
+			final String docId = index > 0 ? this.documentations
+					.getDocumentations().get(index - 1).getId() : null;
+			loadDocumentations();
+			final Documentation doc = docId != null ? this.documentations
+					.findById(docId) : null;
+			documentationField.selectItem(doc != null ? this.documentations
+					.getDocumentations().indexOf(doc) + 1 : 0);
+		}
+	}
+
+	private void loadDocumentations() {
+		this.documentations = ManPageLoader.load();
+		final List<Documentation> documentations = new ArrayList<Documentation>(
+				this.documentations.getDocumentations());
+		final String[] names = new String[documentations.size() + 1];
+		names[0] = "(default)";
+		Collections.sort(documentations, new Comparator<Documentation>() {
+			public int compare(Documentation o1, Documentation o2) {
+				return o1.getName().compareToIgnoreCase(o2.getName());
+			}
+		});
+		for (int i = 0; i < documentations.size(); ++i) {
+			names[i + 1] = documentations.get(i).getName();
+		}
+		documentationField.setItems(names);
+	}
+
 	@Override
 	protected void createDialogBlocks(final Composite parent, int numColumns) {
 		super.createDialogBlocks(parent, numColumns);
@@ -113,7 +185,6 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 
 	@Override
 	protected void updateValidateInterpreterLocation() {
-		// TODO Auto-generated method stub
 		super.updateValidateInterpreterLocation();
 		IStatus status = getInterpreterLocationStatus();
 		if (status instanceof StatusWithPackages) {
@@ -170,6 +241,14 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 	protected void initializeFields(IInterpreterInstall install) {
 		super.initializeFields(install);
 		if (install != null) {
+			final InterpreterDocumentation documentation = (InterpreterDocumentation) install
+					.findExtension(ManpagesPackage.Literals.INTERPRETER_DOCUMENTATION);
+			final String docId = documentation != null ? documentation
+					.getDocumentationId() : null;
+			final Documentation doc = docId != null ? documentations
+					.findById(docId) : null;
+			documentationField.selectItem(doc != null ? documentations
+					.getDocumentations().indexOf(doc) + 1 : 0);
 			VariableMap variableMap = (VariableMap) install
 					.findExtension(TclPackagesPackage.Literals.VARIABLE_MAP);
 			if (variableMap != null) {
@@ -179,6 +258,7 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 						.<String, VariableValue> emptyEMap());
 			}
 		} else {
+			documentationField.selectItem(0);
 			globals.setValues(ECollections.<String, VariableValue> emptyEMap());
 		}
 
@@ -191,6 +271,19 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 	@Override
 	protected void setFieldValuesToInterpreter(IInterpreterInstall install) {
 		super.setFieldValuesToInterpreter(install);
+		int index = documentationField.getSelectionIndex();
+		if (index == 0) {
+			install.replaceExtension(
+					ManpagesPackage.Literals.INTERPRETER_DOCUMENTATION, null);
+		} else {
+			final Documentation doc = documentations.getDocumentations().get(
+					index - 1);
+			final InterpreterDocumentation idoc = ManpagesFactory.eINSTANCE
+					.createInterpreterDocumentation();
+			idoc.setDocumentationId(doc.getId());
+			install.replaceExtension(
+					ManpagesPackage.Literals.INTERPRETER_DOCUMENTATION, idoc);
+		}
 		final EMap<String, VariableValue> newVars = globals.getValues();
 		final EMap<String, VariableValue> oldVars = TclPackagesManager
 				.getVariablesEMap(install);
