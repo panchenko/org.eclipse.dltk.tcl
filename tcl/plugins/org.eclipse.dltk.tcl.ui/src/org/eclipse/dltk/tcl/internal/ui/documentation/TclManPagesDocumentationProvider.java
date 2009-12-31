@@ -17,6 +17,7 @@ import java.io.Reader;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -43,12 +44,18 @@ public class TclManPagesDocumentationProvider implements
 
 	public Reader getInfo(IMember element, boolean lookIntoParents,
 			boolean lookIntoExternal) {
+		final IProjectFragment fragment = (IProjectFragment) element
+				.getAncestor(IModelElement.PROJECT_FRAGMENT);
+		if (fragment != null && fragment.isBuiltin()) {
+			return DocumentationUtils.getReader(describeKeyword(element
+					.getElementName(), element));
+		}
+
 		return null;
 	}
 
 	public Reader getInfo(String content) {
-		return DocumentationUtils.getReader(describeKeyword(content,
-				null));
+		return DocumentationUtils.getReader(describeKeyword(content, null));
 	}
 
 	private IPropertyChangeListener changeListener = null;
