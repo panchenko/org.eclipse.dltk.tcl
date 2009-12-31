@@ -42,7 +42,6 @@ import org.eclipse.dltk.tcl.internal.ui.GlobalVariableBlock;
 import org.eclipse.dltk.tcl.ui.manpages.Documentation;
 import org.eclipse.dltk.tcl.ui.manpages.InterpreterDocumentation;
 import org.eclipse.dltk.tcl.ui.manpages.ManPageLoader;
-import org.eclipse.dltk.tcl.ui.manpages.ManPageResource;
 import org.eclipse.dltk.tcl.ui.manpages.ManpagesFactory;
 import org.eclipse.dltk.tcl.ui.manpages.ManpagesPackage;
 import org.eclipse.dltk.tcl.ui.manpages.dialogs.ManPagesConfigurationDialog;
@@ -107,7 +106,18 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 	}
 
 	private ComboDialogField documentationField;
-	private ManPageResource documentations;
+	private List<Documentation> documentations;
+
+	private Documentation findById(String docId) {
+		if (docId != null) {
+			for (Documentation documentation : documentations) {
+				if (docId.equals(documentation.getId())) {
+					return documentation;
+				}
+			}
+		}
+		return null;
+	}
 
 	@Override
 	protected void createSimpleFields(Composite parent, int numColumns) {
@@ -133,20 +143,18 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 				getShell());
 		if (dialog.open() == Window.OK) {
 			final int index = documentationField.getSelectionIndex();
-			final String docId = index > 0 ? this.documentations
-					.getDocumentations().get(index - 1).getId() : null;
+			final String docId = index > 0 ? this.documentations.get(index - 1)
+					.getId() : null;
 			loadDocumentations();
-			final Documentation doc = docId != null ? this.documentations
-					.findById(docId) : null;
+			final Documentation doc = findById(docId);
 			documentationField.selectItem(doc != null ? this.documentations
-					.getDocumentations().indexOf(doc) + 1 : 0);
+					.indexOf(doc) + 1 : 0);
 		}
 	}
 
 	private void loadDocumentations() {
-		this.documentations = ManPageLoader.load();
-		final List<Documentation> documentations = new ArrayList<Documentation>(
-				this.documentations.getDocumentations());
+		documentations = new ArrayList<Documentation>(ManPageLoader.load()
+				.getDocumentations());
 		final String[] names = new String[documentations.size() + 1];
 		names[0] = documentations.isEmpty() ? "(not configured)" : "(default)";
 		Collections.sort(documentations, new Comparator<Documentation>() {
@@ -245,10 +253,9 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 					.findExtension(ManpagesPackage.Literals.INTERPRETER_DOCUMENTATION);
 			final String docId = documentation != null ? documentation
 					.getDocumentationId() : null;
-			final Documentation doc = docId != null ? documentations
-					.findById(docId) : null;
+			final Documentation doc = findById(docId);
 			documentationField.selectItem(doc != null ? documentations
-					.getDocumentations().indexOf(doc) + 1 : 0);
+					.indexOf(doc) + 1 : 0);
 			VariableMap variableMap = (VariableMap) install
 					.findExtension(TclPackagesPackage.Literals.VARIABLE_MAP);
 			if (variableMap != null) {
@@ -276,8 +283,7 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 			install.replaceExtension(
 					ManpagesPackage.Literals.INTERPRETER_DOCUMENTATION, null);
 		} else {
-			final Documentation doc = documentations.getDocumentations().get(
-					index - 1);
+			final Documentation doc = documentations.get(index - 1);
 			final InterpreterDocumentation idoc = ManpagesFactory.eINSTANCE
 					.createInterpreterDocumentation();
 			idoc.setDocumentationId(doc.getId());
