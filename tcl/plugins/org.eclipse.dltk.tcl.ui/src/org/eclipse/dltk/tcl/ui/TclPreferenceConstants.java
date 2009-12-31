@@ -422,11 +422,11 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 	public static final String EDITOR_FOLDING_BLOCKS = "editor_folding_blocks"; //$NON-NLS-1$
 
-	public static final int EDITOR_FOLDING_BLOCKS_OFF = 0; //$NON-NLS-1$
+	public static final int EDITOR_FOLDING_BLOCKS_OFF = 0;
 
-	public static final int EDITOR_FOLDING_BLOCKS_INCLUDE = 1; //$NON-NLS-1$
+	public static final int EDITOR_FOLDING_BLOCKS_INCLUDE = 1;
 
-	public static final int EDITOR_FOLDING_BLOCKS_EXCLUDE = 2; //$NON-NLS-1$
+	public static final int EDITOR_FOLDING_BLOCKS_EXCLUDE = 2;
 
 	public static final String EDITOR_FOLDING_INCLUDE_LIST = "editor_folding_include_list"; //$NON-NLS-1$
 
@@ -438,9 +438,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 	public static final String EDITOR_FOLDING_INIT_OTHER = "editor_folding_init_other_blocks"; //$NON-NLS-1$
 
-	public static final String DOC_MAN_PAGES_LOCATIONS = "doc_man_pages_locations";
+	public static final String DOC_MAN_PAGES_LOCATIONS = "doc_man_pages_locations"; //$NON-NLS-1$
 
-	public static final String CODEASSIST_FILTER_INTERNAL_API = "tcl_filter_internal_api";
+	public static final String CODEASSIST_FILTER_INTERNAL_API = "tcl_filter_internal_api"; //$NON-NLS-1$
 
 	public final static String COMMENT_TASK_TAGS = TclColorConstants.TCL_TODO_TAG;
 
@@ -519,9 +519,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 		store.setDefault(TclPreferenceConstants.EDITOR_FOLDING_BLOCKS,
 				TclPreferenceConstants.EDITOR_FOLDING_BLOCKS_EXCLUDE);
 		store.setDefault(TclPreferenceConstants.EDITOR_FOLDING_INCLUDE_LIST,
-				"proc,namespace,catch,switch,if,while,for,foreach");
+				"proc,namespace,catch,switch,if,while,for,foreach"); //$NON-NLS-1$
 		store.setDefault(TclPreferenceConstants.EDITOR_FOLDING_EXCLUDE_LIST,
-				"variable,global");
+				"variable,global"); //$NON-NLS-1$
 		// store.setDefault(
 		// TclPreferenceConstants.EDITOR_FOLDING_COMMENTS_WITH_NEWLINES,
 		// true);
@@ -553,7 +553,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 		store.setDefault(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN, true);
 
 		store.setDefault(
-				PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS, ":$");
+				PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS, ":$"); //$NON-NLS-1$
 
 		store.setDefault(CODEASSIST_FILTER_INTERNAL_API, true);
 	}
