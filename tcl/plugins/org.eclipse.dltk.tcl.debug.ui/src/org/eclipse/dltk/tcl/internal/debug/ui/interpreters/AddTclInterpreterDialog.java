@@ -148,7 +148,7 @@ public class AddTclInterpreterDialog extends AddScriptInterpreterDialog {
 		final List<Documentation> documentations = new ArrayList<Documentation>(
 				this.documentations.getDocumentations());
 		final String[] names = new String[documentations.size() + 1];
-		names[0] = "(default)";
+		names[0] = documentations.isEmpty() ? "(not configured)" : "(default)";
 		Collections.sort(documentations, new Comparator<Documentation>() {
 			public int compare(Documentation o1, Documentation o2) {
 				return o1.getName().compareToIgnoreCase(o2.getName());
