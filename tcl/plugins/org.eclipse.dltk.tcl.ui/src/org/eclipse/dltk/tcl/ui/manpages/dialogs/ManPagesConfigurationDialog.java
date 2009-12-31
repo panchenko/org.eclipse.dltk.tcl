@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.internal.ui.documentation.ManPagesLocationsBlock;
+import org.eclipse.dltk.tcl.internal.ui.documentation.ManPagesMessages;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.StatusDialog;
@@ -38,7 +39,7 @@ public class ManPagesConfigurationDialog extends StatusDialog implements
 
 	public ManPagesConfigurationDialog(Shell shell) {
 		super(shell);
-		setTitle("Tcl Manual Pages");
+		setTitle(ManPagesMessages.ManPagesConfigurationDialog_ConfigureTitle);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		fBlock = new ManPagesLocationsBlock(this, true);
 	}
@@ -61,7 +62,7 @@ public class ManPagesConfigurationDialog extends StatusDialog implements
 		try {
 			fBlock.save();
 		} catch (IOException e) {
-			ErrorDialog.openError(getShell(), "Error saving manual pages", e
+			ErrorDialog.openError(getShell(), ManPagesMessages.ManPagesConfigurationDialog_TitleSaveError, e
 					.getMessage(), new Status(IStatus.ERROR, TclUI.PLUGIN_ID, e
 					.getMessage(), e));
 			return;

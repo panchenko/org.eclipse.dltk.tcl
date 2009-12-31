@@ -111,7 +111,7 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 				final Documentation doc = (Documentation) element;
 				String text = doc.getName();
 				if (doc.isDefault()) {
-					text += " [default]";
+					text += ManPagesMessages.ManPagesLocationsBlock_DefaultSuffix;
 				}
 				return text;
 			} else if (element instanceof ManPageFolder) {
@@ -220,14 +220,16 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 				GridData.VERTICAL_ALIGN_BEGINNING
 						| GridData.HORIZONTAL_ALIGN_FILL));
 
-		fAddButton = createPushButton(pathButtonComp, "Add");
+		fAddButton = createPushButton(pathButtonComp,
+				ManPagesMessages.ManPagesLocationsBlock_AddButton);
 		fAddButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				add();
 			}
 		});
-		fEditButton = createPushButton(pathButtonComp, "Edit");
+		fEditButton = createPushButton(pathButtonComp,
+				ManPagesMessages.ManPagesLocationsBlock_EditButton);
 		fEditButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -238,7 +240,8 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 				}
 			}
 		});
-		fRemoveButton = createPushButton(pathButtonComp, "Remove");
+		fRemoveButton = createPushButton(pathButtonComp,
+				ManPagesMessages.ManPagesLocationsBlock_RemoveButton);
 		fRemoveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -248,7 +251,8 @@ public class ManPagesLocationsBlock implements ISelectionChangedListener {
 				}
 			}
 		});
-		fDefaultButton = createPushButton(pathButtonComp, "Set Default");
+		fDefaultButton = createPushButton(pathButtonComp,
+				ManPagesMessages.ManPagesLocationsBlock_SetDefaultButton);
 		((GridData) fDefaultButton.getLayoutData()).verticalIndent = 16;
 		fDefaultButton.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -18,6 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
+import org.eclipse.dltk.tcl.internal.ui.documentation.ManPagesMessages;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.manpages.impl.ManPageResourceImpl;
 import org.eclipse.emf.ecore.resource.URIConverter;
@@ -87,7 +88,7 @@ public class ManPageLoader {
 		final ManPageResourceImpl input = new ManPageResourceImpl();
 		final Documentation documentation = ManpagesFactory.eINSTANCE
 				.createDocumentation();
-		documentation.setName("Tcl Documentation");
+		documentation.setName(ManPagesMessages.ManPageLoader_0);
 		documentation.setDefault(true);
 		documentation.setId("CONVERTED"); //$NON-NLS-1$
 

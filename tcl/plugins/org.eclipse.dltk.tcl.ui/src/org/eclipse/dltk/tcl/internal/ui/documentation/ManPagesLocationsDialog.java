@@ -65,7 +65,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 
 	private final boolean isNew;
 	private final ManPageResource documentations;
-	private final Documentation documentation;
+	protected final Documentation documentation;
 	private final Documentation input;
 
 	/**
@@ -80,7 +80,8 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 		this.isNew = documentation == null;
 		this.documentation = documentation != null ? (Documentation) EcoreUtil
 				.copy(documentation) : newDocumentation();
-		setTitle(isNew ? "Add Documentation Set" : "Edit Documentation Set");
+		setTitle(isNew ? ManPagesMessages.ManPagesLocationsDialog_AddTtile
+				: ManPagesMessages.ManPagesLocationsDialog_EditTitle);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
@@ -110,14 +111,15 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 		final Composite content = new Composite(dialogArea, SWT.NONE);
 		content.setLayoutData(new GridData(GridData.FILL_BOTH));
 		content.setLayout(new GridLayout(3, false));
-		new Label(content, SWT.NONE).setText("Name");
+		new Label(content, SWT.NONE)
+				.setText(ManPagesMessages.ManPagesLocationsDialog_Name);
 		nameField = new Text(content, SWT.BORDER);
 		final GridData nameGD = new GridData(GridData.FILL_HORIZONTAL);
 		nameGD.horizontalSpan = 2;
 		nameField.setLayoutData(nameGD);
 		nameField.addModifyListener(this);
 		final Label pathLabel = new Label(content, SWT.NONE);
-		pathLabel.setText("Paths");
+		pathLabel.setText(ManPagesMessages.ManPagesLocationsDialog_Paths);
 		pathLabel.setLayoutData(new GridData(
 				GridData.HORIZONTAL_ALIGN_BEGINNING
 						| GridData.VERTICAL_ALIGN_BEGINNING));
@@ -147,7 +149,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 		buttonComp.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 		addButton = new Button(buttonComp, SWT.PUSH);
 		ManPagesLocationsBlock.setButtonLayoutData(addButton);
-		addButton.setText("Add");
+		addButton.setText(ManPagesMessages.ManPagesLocationsDialog_AddButton);
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -156,7 +158,8 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 		});
 		removeButton = new Button(buttonComp, SWT.PUSH);
 		ManPagesLocationsBlock.setButtonLayoutData(removeButton);
-		removeButton.setText("Remove");
+		removeButton
+				.setText(ManPagesMessages.ManPagesLocationsDialog_RemoveButton);
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -246,7 +249,7 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 
 	protected void doAdd() {
 		final DirectoryDialog dialog = new DirectoryDialog(getShell());
-		dialog.setMessage("Select directory to search into");
+		dialog.setMessage(ManPagesMessages.ManPagesLocationsDialog_6);
 		final String result = dialog.open();
 		if (result != null) {
 			final File file = new File(result);
@@ -256,7 +259,9 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 				try {
 					dialog2.run(true, true, new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) {
-							monitor.beginTask("Searching for man pages", 1);
+							monitor.beginTask(
+									ManPagesMessages.ManPagesLocationsDialog_7,
+									1);
 							final ManPageFinder finder = new ManPageFinder();
 							finder.find(documentation, file);
 							monitor.done();
@@ -336,12 +341,12 @@ public class ManPagesLocationsDialog extends StatusDialog implements
 	private IStatus validate() {
 		if (nameField.getText().trim().length() == 0) {
 			return new StatusInfo(IStatus.ERROR,
-					"Enter a name for the documentation set");
+					ManPagesMessages.ManPagesLocationsDialog_ErrorEmptyName);
 		}
 		// TODO validate name uniqueness
 		if (documentation.getFolders().isEmpty()) {
 			return new StatusInfo(IStatus.ERROR,
-					"Specify documentation folders");
+					ManPagesMessages.ManPagesLocationsDialog_ErrorNoFolders);
 		}
 		return StatusInfo.OK_STATUS;
 	}
