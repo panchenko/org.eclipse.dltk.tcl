@@ -1,0 +1,30 @@
+# Comment
+# TODO add task here
+
+namespace eval myNamespace {
+	proc myproc { a { b 20 } } {
+		upvar 1 $a array
+		s = [string length $a]
+		puts $array
+		set t 2.4
+		set s "Alfa"
+		return [expr { s + b }]
+	}
+}
+
+#XOTcl
+package require XOTcl
+@ @File {
+	description {
+		XOTcl documentation example
+	}
+}
+Class baseClass
+baseClass instproc func1 {arg0 arg1} {
+
+}
+  
+Class derivedClass -superclass baseClass
+derivedClass instproc func2 {arg0} {
+	 
+}

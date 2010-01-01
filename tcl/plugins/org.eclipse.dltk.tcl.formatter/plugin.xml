@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.dltk.ui.formatterFactory">
+      <engineContribution
+            natureId="org.eclipse.dltk.tcl.core.nature">
+            <selector class="org.eclipse.dltk.core.PreferenceBasedContributionSelector">
+				<parameter name="qualifier" value="org.eclipse.dltk.tcl.ui"/>
+				<parameter name="key" value="formatterId"/>
+			</selector>
+         <formatterFactory
+               class="org.eclipse.dltk.tcl.formatter.TclFormatterFactory"
+               description="%formatterFactory.description.tcl"
+               id="org.eclipse.dltk.tcl.formatter.TclformatterFactory"
+               name="%formatterFactory.name.tcl"
+               priority="10">
+         </formatterFactory>
+      </engineContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.dltk.tcl.formatter.internal.TclFormatterPreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.dltk.tcl.preferences"
+            class="org.eclipse.dltk.tcl.formatter.preferences.TclFormatterPreferencePage"
+            id="org.eclipse.dltk.tcl.preferences.formatter"
+            name="%TclFormatterPreferencePage.name">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            category="org.eclipse.dltk.tcl.propertyPage"
+            class="org.eclipse.dltk.tcl.formatter.preferences.TclFormatterPreferencePage"
+            id="org.eclipse.dltk.tcl.propertyPage.formatter"
+            name="%TclFormatter.PropertyPage">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.dltk.tcl.core.nature"/>
+				</adapt>
+			</enabledWhen>
+      </page>
+   </extension>
+
+</plugin>
