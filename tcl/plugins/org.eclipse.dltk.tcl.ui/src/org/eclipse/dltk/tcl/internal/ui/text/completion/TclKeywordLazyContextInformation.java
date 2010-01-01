@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -31,16 +32,19 @@ public class TclKeywordLazyContextInformation implements IContextInformation,
 
 	private final ICompletionProposal proposal;
 	private final String target;
+	private final ISourceModule module;
 	private boolean informationComputed = false;
 	private String information;
 
 	/**
+	 * @param iSourceModule
 	 * @param completionProposal
 	 */
 	public TclKeywordLazyContextInformation(ICompletionProposal proposal,
-			String target) {
+			String target, ISourceModule module) {
 		this.proposal = proposal;
 		this.target = removeColons(target);
+		this.module = module;
 	}
 
 	/**
@@ -96,7 +100,8 @@ public class TclKeywordLazyContextInformation implements IContextInformation,
 	private String getInfo() {
 		try {
 			final Reader reader = ScriptDocumentationAccess
-					.getHTMLContentReader(TclNature.NATURE_ID, target);
+					.getKeywordDocumentation(TclNature.NATURE_ID, module,
+							target);
 			if (reader != null) {
 				return HTMLPrinter.read(reader);
 			}

@@ -116,7 +116,7 @@ public class TclCompletionProposalCollector extends
 		}
 		completionProposal
 				.setContextInformation(new TclKeywordLazyContextInformation(
-						completionProposal, prefix));
+						completionProposal, prefix, getSourceModule()));
 		return completionProposal;
 	}
 
