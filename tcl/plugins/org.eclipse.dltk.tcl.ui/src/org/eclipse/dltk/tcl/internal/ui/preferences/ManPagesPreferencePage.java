@@ -43,7 +43,7 @@ public final class ManPagesPreferencePage extends PreferencePage implements
 	@Override
 	protected Control createContents(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
-		final GridLayout layout = new GridLayout(1, false);
+		final GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = layout.marginHeight = 0;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
