@@ -26,6 +26,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class TclFormatterPreferencePage extends AbstractFormatterPreferencePage {
 
+	public static final String PREFERENCE_PAGE_ID = "org.eclipse.dltk.tcl.preferences.formatter"; //$NON-NLS-1$
+
 	private static final PreferenceKey FORMATTER = new PreferenceKey(
 			TclUI.PLUGIN_ID, TclPreferenceConstants.FORMATTER_ID);
 
@@ -72,7 +74,7 @@ public class TclFormatterPreferencePage extends AbstractFormatterPreferencePage 
 
 	@Override
 	protected String getPreferencePageId() {
-		return "org.eclipse.dltk.tcl.preferences.formatter"; //$NON-NLS-1$
+		return PREFERENCE_PAGE_ID;
 	}
 
 	@Override

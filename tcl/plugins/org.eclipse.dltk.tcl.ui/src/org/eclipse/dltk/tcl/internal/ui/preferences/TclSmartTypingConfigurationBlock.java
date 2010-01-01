@@ -173,10 +173,9 @@ class TclSmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PreferencesUtil
-						.createPreferenceDialogOn(
-								link.getShell(),
-								"org.eclipse.dltk.tcl.ui.EditorPreferences", null, null); //$NON-NLS-1$
+				PreferencesUtil.createPreferenceDialogOn(link.getShell(),
+						TclFormatterPreferencePage.PREFERENCE_PAGE_ID, null,
+						null);
 			}
 		});
 
