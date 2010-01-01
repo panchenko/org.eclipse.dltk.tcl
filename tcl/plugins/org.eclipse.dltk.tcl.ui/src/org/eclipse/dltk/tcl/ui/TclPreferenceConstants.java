@@ -557,4 +557,9 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 		store.setDefault(CODEASSIST_FILTER_INTERNAL_API, true);
 	}
+
+	/**
+	 * A preference that controls the selected formatter.
+	 */
+	public static final String FORMATTER_ID = "formatterId"; //$NON-NLS-1$
 }

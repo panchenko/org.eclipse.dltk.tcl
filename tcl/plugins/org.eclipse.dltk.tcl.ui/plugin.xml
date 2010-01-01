@@ -421,6 +421,11 @@
 			contextId="org.eclipse.dltk.ui.tclEditorScope"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M1+M2+F"/>
+      <key
+            sequence="M1+I"
+            contextId="org.eclipse.dltk.ui.tclEditorScope"
+            commandId="org.eclipse.dltk.ui.edit.text.script.indent"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
  </extension>
 
  <extension point="org.eclipse.ui.menus">
@@ -748,5 +753,28 @@
             genModel="/model/manpages.genmodel"
             uri="http://www.eclipse.org/dltk/tcl/manpages">
       </package>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.dltk.tcl.preferences"
+            class="org.eclipse.dltk.tcl.internal.ui.preferences.TclFormatterPreferencePage"
+            id="org.eclipse.dltk.tcl.preferences.formatter"
+            name="%TclFormatterPreferencePage.name">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            category="org.eclipse.dltk.tcl.propertyPage"
+            class="org.eclipse.dltk.tcl.internal.ui.preferences.TclFormatterPreferencePage"
+            id="org.eclipse.dltk.tcl.propertyPage.formatter"
+            name="%TclFormatter.PropertyPage">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.dltk.tcl.core.nature"/>
+				</adapt>
+			</enabledWhen>
+      </page>
    </extension>
 </plugin>
