@@ -24,28 +24,4 @@
             class="org.eclipse.dltk.tcl.formatter.internal.TclFormatterPreferenceInitializer">
       </initializer>
    </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="org.eclipse.dltk.tcl.preferences"
-            class="org.eclipse.dltk.tcl.formatter.preferences.TclFormatterPreferencePage"
-            id="org.eclipse.dltk.tcl.preferences.formatter"
-            name="%TclFormatterPreferencePage.name">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            category="org.eclipse.dltk.tcl.propertyPage"
-            class="org.eclipse.dltk.tcl.formatter.preferences.TclFormatterPreferencePage"
-            id="org.eclipse.dltk.tcl.propertyPage.formatter"
-            name="%TclFormatter.PropertyPage">
-			<enabledWhen>
-				<adapt type="org.eclipse.core.resources.IProject">
-					<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.dltk.tcl.core.nature"/>
-				</adapt>
-			</enabledWhen>
-      </page>
-   </extension>
-
 </plugin>
