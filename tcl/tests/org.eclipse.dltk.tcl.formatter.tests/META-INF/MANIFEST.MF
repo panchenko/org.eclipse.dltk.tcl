@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests Plug-in
+Bundle-SymbolicName: org.eclipse.dltk.tcl.formatter.tests;singleton:=true
+Bundle-Version: 2.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.jface.text,
+ org.eclipse.dltk.core,
+ org.eclipse.dltk.ui,
+ org.eclipse.dltk.formatter,
+ org.eclipse.dltk.formatter.tests,
+ org.eclipse.dltk.tcl.formatter
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
