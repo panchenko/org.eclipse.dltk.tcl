@@ -11,10 +11,16 @@
 package org.eclipse.dltk.tcl.internal.ui.preferences;
 
 import org.eclipse.dltk.tcl.internal.ui.documentation.ManPagesLocationsBlock;
+import org.eclipse.dltk.tcl.internal.ui.documentation.ManPagesMessages;
+import org.eclipse.dltk.tcl.ui.manpages.dialogs.ManPagesConfigurationDialog;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -31,7 +37,7 @@ public final class ManPagesPreferencePage extends PreferencePage implements
 
 	public ManPagesPreferencePage() {
 		noDefaultAndApplyButton();
-		setDescription("Tcl Manual Pages are now specified per interpreter, so this page is deprecated and will be removed");
+		setDescription(ManPagesMessages.ManPagesPreferencePage_0);
 	}
 
 	@Override
@@ -42,25 +48,24 @@ public final class ManPagesPreferencePage extends PreferencePage implements
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		fBlock.createControl(composite);
-		// final Composite buttons = new Composite(composite, SWT.NONE);
-		// buttons.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-		// final GridLayout buttonLayout = new GridLayout();
-		// buttonLayout.marginHeight = buttonLayout.marginWidth = 0;
-		// buttons.setLayout(buttonLayout);
-		// final Button configure = new Button(buttons, SWT.PUSH);
-		// configure.setText("Configure...");
-		// configure.addSelectionListener(new SelectionAdapter() {
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// final ManPagesConfigurationDialog dialog = new
-		// ManPagesConfigurationDialog(
-		// getShell());
-		// if (dialog.open() == Window.OK) {
-		// fBlock.initialize();
-		// }
-		// }
-		// });
-		// setButtonLayoutData(configure);
+		final Composite buttons = new Composite(composite, SWT.NONE);
+		buttons.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+		final GridLayout buttonLayout = new GridLayout();
+		buttonLayout.marginHeight = buttonLayout.marginWidth = 0;
+		buttons.setLayout(buttonLayout);
+		final Button configure = new Button(buttons, SWT.PUSH);
+		configure.setText(ManPagesMessages.ManPagesPreferencePage_1);
+		configure.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final ManPagesConfigurationDialog dialog = new ManPagesConfigurationDialog(
+						getShell());
+				if (dialog.open() == Window.OK) {
+					fBlock.initialize();
+				}
+			}
+		});
+		setButtonLayoutData(configure);
 		return composite;
 	}
 

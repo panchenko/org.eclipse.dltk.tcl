@@ -33,6 +33,8 @@ public class ManPagesMessages extends NLS {
 	public static String ManPagesLocationsDialog_Name;
 	public static String ManPagesLocationsDialog_Paths;
 	public static String ManPagesLocationsDialog_RemoveButton;
+	public static String ManPagesPreferencePage_0;
+	public static String ManPagesPreferencePage_1;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, ManPagesMessages.class);
