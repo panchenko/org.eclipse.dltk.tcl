@@ -74,7 +74,7 @@
       </processor>
    </extension>
    <extension
-         point="org.eclipse.core.runtime.contentTypes">
+         point="org.eclipse.core.contenttype.contentTypes">
       <file-association
             content-type="org.eclipse.dltk.tclContentType"
             file-extensions="xotcl">
