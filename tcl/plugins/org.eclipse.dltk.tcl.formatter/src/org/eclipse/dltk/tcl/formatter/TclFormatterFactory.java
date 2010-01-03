@@ -12,6 +12,7 @@
 package org.eclipse.dltk.tcl.formatter;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dltk.formatter.AbstractScriptFormatterFactory;
@@ -58,6 +59,19 @@ public class TclFormatterFactory extends AbstractScriptFormatterFactory {
 			}
 			result[i] = new PreferenceKey(qualifier, key);
 		}
+		return result;
+	}
+
+	@Override
+	public Map<String, String> changeToIndentingOnly(
+			Map<String, String> preferences) {
+		Map<String, String> result = new HashMap<String, String>(preferences);
+		result.put(TclFormatterConstants.LINES_FILE_AFTER_PACKAGE, String
+				.valueOf(-1));
+		result.put(TclFormatterConstants.LINES_FILE_BETWEEN_PROC, String
+				.valueOf(-1));
+		result.put(TclFormatterConstants.LINES_PRESERVE, String.valueOf(-1));
+		result.put(TclFormatterConstants.WRAP_COMMENTS, String.valueOf(false));
 		return result;
 	}
 
