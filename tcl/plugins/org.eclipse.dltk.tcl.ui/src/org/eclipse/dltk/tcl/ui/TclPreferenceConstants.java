@@ -560,6 +560,7 @@ public class TclPreferenceConstants extends PreferenceConstants {
 
 	/**
 	 * A preference that controls the selected formatter.
+	 * @since 2.0
 	 */
 	public static final String FORMATTER_ID = "formatterId"; //$NON-NLS-1$
 }

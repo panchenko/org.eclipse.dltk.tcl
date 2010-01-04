@@ -39,6 +39,7 @@ public class TclKeywordLazyContextInformation implements IContextInformation,
 	/**
 	 * @param iSourceModule
 	 * @param completionProposal
+	 * @since 2.0
 	 */
 	public TclKeywordLazyContextInformation(ICompletionProposal proposal,
 			String target, ISourceModule module) {
