@@ -13,7 +13,7 @@ package org.eclipse.dltk.tcl.formatter.internal;
 
 import org.eclipse.dltk.formatter.FormatterWriter;
 import org.eclipse.dltk.formatter.IFormatterDocument;
-import org.eclipse.dltk.ui.formatter.IFormatterIndentGenerator;
+import org.eclipse.dltk.formatter.IFormatterIndentGenerator;
 
 public class TclFormatterWriter extends FormatterWriter {
 
