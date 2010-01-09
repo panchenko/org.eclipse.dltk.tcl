@@ -22,9 +22,11 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
@@ -172,6 +174,10 @@ public class InstrumentationSetupTests extends TestCase {
 
 		public URI toURI() {
 			return path.toFile().toURI();
+		}
+
+		public void move(IFileHandle destination) throws CoreException {
+			throw new CoreException(Status.CANCEL_STATUS);
 		}
 
 	}
