@@ -27,6 +27,11 @@ public class TclWizardMessages extends NLS {
 
 	public static String TclBuildpathDetector_AnalysingTask;
 
+	/**
+	 * @since 2.0
+	 */
+	public static String TclFileCreationWizardTitle;
+
 	public static String TclProjectWizardFirstPage_packageDetector;
 	public static String TclProjectWizardFirstPage_packageDetector_checkbox;
 	public static String TclProjectWizardFirstPage_packageDetector_description;

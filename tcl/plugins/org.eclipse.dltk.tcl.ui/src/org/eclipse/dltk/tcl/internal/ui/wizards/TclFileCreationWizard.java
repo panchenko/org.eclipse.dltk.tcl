@@ -21,7 +21,7 @@ public class TclFileCreationWizard extends NewSourceModuleWizard {
 		setDefaultPageImageDescriptor(TclImages.DESC_WIZBAN_FILE_CREATION);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
 		// setWindowTitle(TclWizardMessages.NewFileWizard_title);
-		setWindowTitle("Create Tcl File");
+		setWindowTitle(TclWizardMessages.TclFileCreationWizardTitle);
 	}
 
 	@Override
