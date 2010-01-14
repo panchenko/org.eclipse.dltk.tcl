@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.compiler.SourceElementRequestorAdaptor;
 import org.eclipse.dltk.formatter.AbstractScriptFormatter;
 import org.eclipse.dltk.formatter.FormatterContext;
 import org.eclipse.dltk.formatter.FormatterDocument;
@@ -31,15 +32,14 @@ import org.eclipse.dltk.tcl.formatter.internal.Messages;
 import org.eclipse.dltk.tcl.formatter.internal.TclFormatterPlugin;
 import org.eclipse.dltk.tcl.formatter.internal.TclFormatterWriter;
 import org.eclipse.dltk.tcl.formatter.internal.UnexpectedFormatterException;
-import org.eclipse.dltk.tcl.parser.TclParser;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
-import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
+import org.eclipse.dltk.tcl.internal.structure.TclSourceElementParser2;
 import org.eclipse.dltk.ui.formatter.FormatterException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 
+@SuppressWarnings("restriction")
 public class TclFormatter extends AbstractScriptFormatter {
 	protected static final String[] INDENTING = {
 			TclFormatterConstants.INDENT_SCRIPT,
@@ -90,11 +90,10 @@ public class TclFormatter extends AbstractScriptFormatter {
 		return null;
 	}
 
-	private List<TclCommand> parse(final String input) {
-		final TclParser parser = new TclParser();
-		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
-				.createProcessor();
-		return parser.parse(input, null, processor);
+	protected List<TclCommand> parse(final String input) {
+		TclSourceElementParser2 parser = new TclSourceElementParser2();
+		parser.setRequestor(new SourceElementRequestorAdaptor());
+		return parser.parse(input, 0);
 	}
 
 	private String format(String input, List<TclCommand> commands, int indent)
