@@ -21,7 +21,6 @@ import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.itcl.internal.core.IIncrTclModifiers;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IClass;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IMethod;
-import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclVisibilityUtils;
@@ -93,16 +92,7 @@ public class IncrTclBody extends AbstractTclCommandModelBuilder {
 		parseRawParameters(command.getArguments().get(1), parameters);
 		fillParameters(mi, parameters);
 		context.getRequestor().enterMethodRemoveSame(mi);
-		TclArgument body = command.getArguments().get(2);
-		if (body instanceof StringArgument) {
-			int offset = body.getStart();
-			String source = ((StringArgument) body).getValue();
-			if (source.startsWith("{") && source.endsWith("}")) {
-				++offset;
-				source = source.substring(1, source.length() - 1);
-			}
-			context.parse(source, offset);
-		}
+		context.parse(command.getArguments().get(2));
 		context.getRequestor().exitMethod(command.getEnd());
 		resolvedType.leave(context.getRequestor());
 		return false;

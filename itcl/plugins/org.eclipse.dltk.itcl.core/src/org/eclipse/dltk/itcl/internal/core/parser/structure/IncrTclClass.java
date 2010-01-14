@@ -53,18 +53,10 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 			return false;
 		}
 		final ClassImpl clazz = new ClassImpl();
-		final TclArgument classBody = command.getArguments().get(1);
-		if (classBody instanceof StringArgument) {
-			String body = ((StringArgument) classBody).getValue();
-			int offset = classBody.getStart();
-			if (body.startsWith("{") && body.endsWith("}")) {
-				body = body.substring(1, body.length() - 1);
-				++offset;
-			}
-			TclParser parser = new TclParser();
-			parser.setGlobalOffset(offset);
-			processContent(clazz, parser.parse(body));
-		}
+		// TODO parse without processors
+		final Script classBody = context.parse(command.getArguments().get(1),
+				ITclModelBuildContext.NO_TRAVERSE);
+		processContent(clazz, classBody.getCommands());
 		final TypeInfo ti = new TypeInfo();
 		ti.declarationStart = command.getStart();
 		ti.nameSourceStart = className.getStart();
@@ -89,15 +81,7 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 				fillParameters(mi, method.getParameters());
 				context.getRequestor().enterMethodRemoveSame(mi);
 				for (TclArgument body : method.getBodies()) {
-					if (body instanceof StringArgument) {
-						String source = ((StringArgument) body).getValue();
-						int offset = body.getStart();
-						if (source.startsWith("{") && source.endsWith("}")) {
-							source = source.substring(1, source.length() - 1);
-							++offset;
-						}
-						context.parse(source, offset);
-					}
+					context.parse(body);
 				}
 				context.getRequestor().exitMethod(member.getEnd());
 			} else if (member instanceof IVariable) {
