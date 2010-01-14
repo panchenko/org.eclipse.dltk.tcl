@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser.structure;
 
+import static java.lang.Integer.toHexString;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -29,11 +31,11 @@ import org.eclipse.dltk.core.caching.IStructureConstants;
 import org.eclipse.dltk.tcl.core.tests.model.Activator;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceElementParser;
 import org.eclipse.dltk.tcl.internal.structure.TclSourceElementParser2;
+import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.structure.Collector.Tag;
+import org.eclipse.dltk.tcl.parser.tests.TestUtils;
 import org.eclipse.dltk.utils.TextUtils;
 import org.osgi.framework.Bundle;
-
-import static java.lang.Integer.toHexString;
 
 public class StructureParserTests extends TestCase {
 
@@ -106,7 +108,12 @@ public class StructureParserTests extends TestCase {
 		ParserInput input = new ParserInput(resource);
 		Collector oldStructure = parse(input, new TclSourceElementParser());
 		// TclSourceElementParser2.USE_NEW = true;
-		Collector newStructure = parse(input, new TclSourceElementParser2());
+		Collector newStructure = parse(input, new TclSourceElementParser2() {
+			@Override
+			protected TclParser createParser() {
+				return TestUtils.createParser();
+			}
+		});
 		// assertEquals(oldStructure.tags, newStructure.tags);
 		assertEquals(dump(oldStructure), dump(newStructure));
 	}
