@@ -137,7 +137,9 @@ public class TclASTLoader extends AbstractDataLoader implements
 					.createStringArgument();
 			argument.setStart(readInt());
 			argument.setEnd(readInt() + argument.getStart());
-			argument.setValue(readString());
+			final String value = readString();
+			argument.setValue(value);
+			argument.setRawValue(value);
 			return argument;
 		}
 		case TAG_COMPLEX_STRING_ARGUMENT: {

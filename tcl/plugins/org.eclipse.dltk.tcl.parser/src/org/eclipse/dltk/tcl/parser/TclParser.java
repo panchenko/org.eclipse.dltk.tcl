@@ -25,8 +25,8 @@ import org.eclipse.dltk.tcl.ast.ComplexString;
 import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.Substitution;
-import org.eclipse.dltk.tcl.ast.TclArgumentKind;
 import org.eclipse.dltk.tcl.ast.TclArgument;
+import org.eclipse.dltk.tcl.ast.TclArgumentKind;
 import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCodeModel;
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -460,6 +460,7 @@ public class TclParser implements ITclParserOptions {
 				literal.setStart(offset + qs.getStart() + globalOffset);
 				literal.setEnd(offset + qs.getEnd() + 1 + globalOffset);
 				literal.setValue(wordText);
+				literal.setRawValue(wordText);
 				exp = literal;
 			} else {
 				ComplexString literal = makeComplexString(offset, content,
@@ -475,6 +476,7 @@ public class TclParser implements ITclParserOptions {
 			block.setStart(offset + bs.getStart() + globalOffset);
 			block.setEnd(offset + bs.getEnd() + 1 + globalOffset);
 			block.setValue(wordText);
+			block.setRawValue(wordText);
 			exp = block;
 		} else if (o instanceof CommandSubstitution) {
 			CommandSubstitution bs = (CommandSubstitution) o;
@@ -529,6 +531,7 @@ public class TclParser implements ITclParserOptions {
 			reference.setStart(offset + start + globalOffset);
 			reference.setEnd(offset + end + 1 + globalOffset);
 			reference.setValue(wordText);
+			reference.setRawValue(wordText);
 			exp = reference;
 		}
 		return exp;
@@ -541,33 +544,31 @@ public class TclParser implements ITclParserOptions {
 		literal.setEnd(offset + end + 1 + globalOffset);
 		String value = content.substring(offset + start, offset + end + 1);
 		literal.setKind(TclArgumentKind.SIMPLE);
-		int add = 0;
+		int pos = start;
 		if (value.startsWith("{") && value.endsWith("}")) {
 			literal.setKind(TclArgumentKind.BRACED);
-			add = 1;
-		}
-		if (value.startsWith("\"") && value.endsWith("\"")) {
+			++pos;
+		} else if (value.startsWith("\"") && value.endsWith("\"")) {
 			literal.setKind(TclArgumentKind.QUOTED);
-			add = 1;
+			++pos;
 		}
 		// literal.setValue(value);
-		int pos = start;
 		for (int i = 0; i < contents.size(); i++) {
 			Object oo = contents.get(i);
 			if (oo instanceof String) {
 				String st = (String) oo;
 				StringArgument a = factory.createStringArgument();
 				a.setValue(st);
-				a.setStart(pos + offset + globalOffset + (i != 0 ? add : 0));
+				a.setRawValue(st);
+				a.setStart(pos + offset + globalOffset);
 				pos += st.length();
-				a.setEnd(pos + offset + globalOffset + add
-						+ ((add > 0 && (i == contents.size() - 1)) ? 1 : 0));
+				a.setEnd(pos + offset + globalOffset);
 				literal.getArguments().add(a);
 			} else if (oo instanceof ISubstitution && oo instanceof TclElement) {
 				TclElement bs = (TclElement) oo;
-				pos = bs.getEnd();
+				pos = bs.getEnd() + 1;
 				TclArgument expr = processWordContentAsExpression(offset,
-						content, factory, bs.getStart(), bs.getEnd(), oo);
+						content, factory, bs.getStart(), bs.getEnd(), bs);
 				if (expr != null) {
 					literal.getArguments().add(expr);
 				}

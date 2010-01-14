@@ -240,13 +240,22 @@ public interface AstPackage extends EPackage {
 	int STRING_ARGUMENT__VALUE = TCL_ARGUMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Raw Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_ARGUMENT__RAW_VALUE = TCL_ARGUMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>String Argument</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_ARGUMENT_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 1;
+	int STRING_ARGUMENT_FEATURE_COUNT = TCL_ARGUMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.dltk.tcl.ast.impl.SubstitutionImpl <em>Substitution</em>}' class.
@@ -923,6 +932,17 @@ public interface AstPackage extends EPackage {
 	EAttribute getStringArgument_Value();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.dltk.tcl.ast.StringArgument#getRawValue <em>Raw Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Raw Value</em>'.
+	 * @see org.eclipse.dltk.tcl.ast.StringArgument#getRawValue()
+	 * @see #getStringArgument()
+	 * @generated
+	 */
+	EAttribute getStringArgument_RawValue();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.dltk.tcl.ast.Substitution <em>Substitution</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1482,6 +1502,15 @@ public interface AstPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STRING_ARGUMENT__VALUE = eINSTANCE.getStringArgument_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Raw Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STRING_ARGUMENT__RAW_VALUE = eINSTANCE
+				.getStringArgument_RawValue();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.dltk.tcl.ast.impl.SubstitutionImpl <em>Substitution</em>}' class.

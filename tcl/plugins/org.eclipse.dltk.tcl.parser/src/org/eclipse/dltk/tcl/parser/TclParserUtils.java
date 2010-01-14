@@ -166,8 +166,10 @@ public class TclParserUtils implements ITclParserOptions {
 						StringArgument literal = factory.createStringArgument();
 						literal.setStart(offset + qs.getStart());
 						literal.setEnd(offset + qs.getEnd() + 1);
-						literal.setValue(content.substring(word.getStart(),
-								word.getEnd() + 1));
+						final String value = content.substring(word.getStart(),
+								word.getEnd() + 1);
+						literal.setValue(value);
+						literal.setRawValue(value);
 						exp = literal;
 					} else if (o instanceof BracesSubstitution) {
 						BracesSubstitution bs = (BracesSubstitution) o;
@@ -175,8 +177,10 @@ public class TclParserUtils implements ITclParserOptions {
 						StringArgument block = factory.createStringArgument();
 						block.setStart(offset + bs.getStart());
 						block.setEnd(offset + bs.getEnd() + 1);
-						block.setValue(content.substring(word.getStart(), word
-								.getEnd() + 1));
+						final String value = content.substring(word.getStart(),
+								word.getEnd() + 1);
+						block.setValue(value);
+						block.setRawValue(value);
 						exp = block;
 					} else if (o instanceof CommandSubstitution
 							&& word.getContents().size() == 1) {
@@ -185,8 +189,10 @@ public class TclParserUtils implements ITclParserOptions {
 						StringArgument bl = factory.createStringArgument();
 						bl.setStart(offset + bs.getStart());
 						bl.setEnd(offset + bs.getEnd() + 1);
-						bl.setValue(content.substring(word.getStart(), word
-								.getEnd() + 1));
+						final String value = content.substring(word.getStart(),
+								word.getEnd() + 1);
+						bl.setValue(value);
+						bl.setRawValue(value);
 						if (blockArguments != null) {
 							blockArguments.add(results.size());
 						}
@@ -196,8 +202,10 @@ public class TclParserUtils implements ITclParserOptions {
 								.createStringArgument();
 						reference.setStart(offset + word.getStart());
 						reference.setEnd(offset + word.getEnd() + 1);
-						reference.setValue(content.substring(word.getStart(),
-								word.getEnd() + 1));
+						final String value = content.substring(word.getStart(),
+								word.getEnd() + 1);
+						reference.setValue(value);
+						reference.setRawValue(value);
 						exp = reference;
 					}
 					results.add(exp);

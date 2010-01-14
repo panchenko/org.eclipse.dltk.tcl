@@ -20,6 +20,7 @@ package org.eclipse.dltk.tcl.ast;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.dltk.tcl.ast.StringArgument#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.dltk.tcl.ast.StringArgument#getRawValue <em>Raw Value</em>}</li>
  * </ul>
  * </p>
  *
@@ -53,5 +54,31 @@ public interface StringArgument extends TclArgument {
 	 * @generated
 	 */
 	void setValue(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Raw Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Raw Value</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Raw Value</em>' attribute.
+	 * @see #setRawValue(String)
+	 * @see org.eclipse.dltk.tcl.ast.AstPackage#getStringArgument_RawValue()
+	 * @model transient="true"
+	 * @generated
+	 */
+	String getRawValue();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.dltk.tcl.ast.StringArgument#getRawValue <em>Raw Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Raw Value</em>' attribute.
+	 * @see #getRawValue()
+	 * @generated
+	 */
+	void setRawValue(String value);
 
 } // StringArgument
