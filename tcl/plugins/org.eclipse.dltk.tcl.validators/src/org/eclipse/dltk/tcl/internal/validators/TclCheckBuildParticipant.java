@@ -12,12 +12,8 @@
 
 package org.eclipse.dltk.tcl.internal.validators;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.builder.IBuildContext;
@@ -26,12 +22,7 @@ import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.internal.validators.ChecksExtensionManager.TclCheckInfo;
-import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
-import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
-import org.eclipse.dltk.tcl.parser.TclParser;
-import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
-import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.validators.ITclCheck;
 import org.eclipse.dltk.tcl.validators.TclValidatorsCore;
 import org.eclipse.emf.common.util.EList;
@@ -41,14 +32,12 @@ public class TclCheckBuildParticipant implements IBuildParticipant {
 	public static boolean TESTING_DO_CHECKS = true;
 	public static boolean TESTING_DO_OPERATIONS = true;
 
-	private final NamespaceScopeProcessor processor;
 	private final TclCheckInfo[] checks = ChecksExtensionManager.getInstance()
 			.getChecks();
 	private final CheckPreferenceManager preferences = new CheckPreferenceManager(
 			TclValidatorsCore.getDefault().getPluginPreferences());
 
 	public TclCheckBuildParticipant(IScriptProject project) {
-		processor = DefinitionManager.getInstance().getCoreProcessor();
 	}
 
 	public void build(IBuildContext context) throws CoreException {
