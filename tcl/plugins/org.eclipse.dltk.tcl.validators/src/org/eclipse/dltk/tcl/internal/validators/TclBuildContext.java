@@ -103,7 +103,7 @@ public class TclBuildContext {
 		TclErrorCollector tclCollector = new TclErrorCollector();
 		TclModule module = parser.parseModule(
 				new String(context.getContents()), tclCollector,
-				DefinitionManager.getInstance().getCoreProcessor());
+				DefinitionManager.getInstance().createProcessor());
 		if (!isReported(context)) {
 			tclCollector.reportAll(context.getProblemReporter(), context
 					.getLineTracker());
