@@ -114,8 +114,8 @@ public class UnreachableCodeCheckTest extends TestCase {
 	public void test012() throws Exception {
 		String source = "switch -- $match_type {"
 				+ " \"regexp\" { return [regexp $pattern_data $result_data] }"
-				+ "\"exact\" { return [string equal $result_data $pattern_data] }"
-				+ "\"glob\" { return [string match $result_data $pattern_data] }"
+				+ " \"exact\" { return [string equal $result_data $pattern_data] }"
+				+ " \"glob\" { return [string match $result_data $pattern_data] }"
 				+ "}";
 		List<Integer> errorCodes = new ArrayList<Integer>();
 		typedCheck(source, errorCodes);
@@ -139,7 +139,7 @@ public class UnreachableCodeCheckTest extends TestCase {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2];
 		System.out.println("%%%%%%%%%%%%%%%%Test:" + element.getMethodName());
-		TclParser parser = new TclParser("8.4");
+		TclParser parser = TestUtils.createParser("8.4");
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		ITclCheck check = new UnreachableCodeCheck();

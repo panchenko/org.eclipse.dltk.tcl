@@ -12,6 +12,7 @@ import org.eclipse.dltk.tcl.core.packages.TclModuleInfo;
 import org.eclipse.dltk.tcl.indexing.PackageSourceCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
+import org.eclipse.dltk.tcl.parser.tests.TestUtils;
 
 public class TclSourcePackagesTests extends AbstractModelTests {
 
@@ -32,7 +33,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 	}
 
 	public void testSource001() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("source ../alfa.tcl", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();
@@ -44,7 +45,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 	}
 
 	public void testSource002() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("source \"../alfa.tcl\"", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();
@@ -56,7 +57,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 	}
 
 	public void testSource003() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("source {../alfa.tcl}", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();
@@ -68,7 +69,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 	}
 
 	public void testSource004() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("source $dir/alfa.tcl", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();
@@ -79,7 +80,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 				.getValue());
 	}
 	public void testSource005() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("source [file join $dir alfa.tcl]", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();
@@ -91,7 +92,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 	}
 
 	public void testPackage001() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("package require alfa", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();
@@ -102,7 +103,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 	}
 
 	public void testPackage002() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("package provide alfa", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();
@@ -113,7 +114,7 @@ public class TclSourcePackagesTests extends AbstractModelTests {
 	}
 
 	public void testPackage003() throws Throwable {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		List<TclCommand> decls = parser.parse("package ifneeded alfa", null,
 				DefinitionManager.getInstance().createProcessor());
 		PackageSourceCollector collector = new PackageSourceCollector();

@@ -33,6 +33,7 @@ import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.definitions.DefinitionManager;
 import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
+import org.eclipse.dltk.tcl.parser.tests.TestUtils;
 
 public class CheckMethodExistanceTest extends AbstractModelTests {
 	private static final String CHECK_PROC_EXISTS_NAME = "CheckProcExists";
@@ -67,7 +68,7 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 		TestCase.assertTrue(module.exists());
 		UndefinedProcCheck check = new UndefinedProcCheck();
 
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TclErrorCollector errorCollector = new TclErrorCollector();
 		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
 				.createProcessor();
@@ -89,7 +90,7 @@ public class CheckMethodExistanceTest extends AbstractModelTests {
 		TestCase.assertTrue(module.exists());
 		UndefinedProcCheck check = new UndefinedProcCheck();
 
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TclErrorCollector errorCollector = new TclErrorCollector();
 		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
 				.createProcessor();

@@ -92,7 +92,7 @@ public class CommandRedefinitionCheckTest extends TestCase {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2];
 		System.out.println("%%%%%%%%%%%%%%%%Test:" + element.getMethodName());
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		ITclCheck check = new CommandRedefinitionCheck();
