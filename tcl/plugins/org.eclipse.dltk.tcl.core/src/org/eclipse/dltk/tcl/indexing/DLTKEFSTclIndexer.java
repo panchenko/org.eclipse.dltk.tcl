@@ -243,7 +243,7 @@ public class DLTKEFSTclIndexer {
 		TclParser parser = new TclParser();
 		TclErrorCollector collector = new TclErrorCollector();
 		TclModule module = parser.parseModule(content, collector,
-				DefinitionManager.getInstance().getCoreProcessor());
+				DefinitionManager.getInstance().createProcessor());
 		if (dltkProblems != null) {
 			collector.reportAll(dltkProblems, TextUtils
 					.createLineTracker(content));
