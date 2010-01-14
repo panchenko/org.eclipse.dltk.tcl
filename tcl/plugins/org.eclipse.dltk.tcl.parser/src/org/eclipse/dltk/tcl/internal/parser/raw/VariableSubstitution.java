@@ -152,4 +152,25 @@ public class VariableSubstitution extends TclElement implements ISubstitution {
 	public int getKind() {
 		return kind;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append("["); //$NON-NLS-1$
+		sb.append("$"); //$NON-NLS-1$
+		if (kind == VAR_NAME) {
+			sb.append("{"); //$NON-NLS-1$
+		}
+		sb.append(name);
+		if (kind == VAR_NAME) {
+			sb.append("}"); //$NON-NLS-1$
+		}
+		if (index != null) {
+			sb.append("("); //$NON-NLS-1$
+			sb.append(index);
+			sb.append(")"); //$NON-NLS-1$
+		}
+		sb.append("]"); //$NON-NLS-1$
+		return sb.toString();
+	}
 }

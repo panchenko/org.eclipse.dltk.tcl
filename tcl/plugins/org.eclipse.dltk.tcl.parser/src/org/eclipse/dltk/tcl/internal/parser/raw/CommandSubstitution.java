@@ -45,4 +45,13 @@ public class CommandSubstitution extends TclElement implements ISubstitution {
 		setEnd(input.getPosition() - (input.isEOF() ? 0 : 1));
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append("["); //$NON-NLS-1$
+		sb.append(script);
+		sb.append("]"); //$NON-NLS-1$
+		return sb.toString();
+	}
 }
