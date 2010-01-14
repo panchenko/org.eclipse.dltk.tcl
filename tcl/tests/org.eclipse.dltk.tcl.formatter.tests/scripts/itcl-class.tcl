@@ -46,7 +46,7 @@ set x "A-destructor"
 ==
 itcl::class A {
 	constructor {} {
-		set x "A-constuctor" 
+		set x "A-constuctor"
 	}
 	destructor {
 		set x "A-destructor"
