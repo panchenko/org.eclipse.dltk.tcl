@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.definitions.Command;
