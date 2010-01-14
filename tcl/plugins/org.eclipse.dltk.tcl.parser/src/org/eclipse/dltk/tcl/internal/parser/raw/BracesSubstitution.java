@@ -11,7 +11,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
-public class BracesSubstitution extends TclElement implements ISubstitution {
+public class BracesSubstitution extends TclElement implements ISubstitution,
+		IWordSubstitution {
 
 	public static boolean iAm(ICodeScanner scanner) {
 		int c = scanner.read();
@@ -68,6 +69,15 @@ public class BracesSubstitution extends TclElement implements ISubstitution {
 		} else
 			setEnd(input.getPosition());
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append("{"); //$NON-NLS-1$
+		sb.append(getStart()).append("..").append(getEnd()); //$NON-NLS-1$
+		sb.append("}"); //$NON-NLS-1$
+		return sb.toString();
 	}
 
 }

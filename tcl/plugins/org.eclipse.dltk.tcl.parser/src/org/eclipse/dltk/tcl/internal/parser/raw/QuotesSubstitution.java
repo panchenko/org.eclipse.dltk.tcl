@@ -14,7 +14,8 @@ package org.eclipse.dltk.tcl.internal.parser.raw;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuotesSubstitution extends TclElement implements ISubstitution {
+public class QuotesSubstitution extends TclElement implements ISubstitution,
+		IWordSubstitution {
 
 	private final List<Object> contents = new ArrayList<Object>();
 

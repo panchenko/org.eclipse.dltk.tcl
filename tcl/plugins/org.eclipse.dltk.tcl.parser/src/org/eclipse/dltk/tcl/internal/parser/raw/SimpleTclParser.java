@@ -12,6 +12,7 @@
 package org.eclipse.dltk.tcl.internal.parser.raw;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.tcl.parser.ITclErrorConstants;
@@ -107,6 +108,7 @@ public class SimpleTclParser {
 			if (TclTextUtils.isTrueWhitespace(ch) || eof) {
 				final TclWord word = wordBuffer.buildWord();
 				if (word != null) {
+					validateWord(word);
 					cmd.addWord(word);
 				}
 				if (eof)
@@ -145,6 +147,7 @@ public class SimpleTclParser {
 				if (ch == ']' && nest) {
 					final TclWord word = wordBuffer.buildWord();
 					if (word != null) {
+						validateWord(word);
 						cmd.addWord(word);
 					}
 					break;
@@ -161,6 +164,7 @@ public class SimpleTclParser {
 						word
 								.setEnd(((MagicBackslashSubstitution) s)
 										.getStart() - 1);
+						validateWord(word);
 						cmd.addWord(word);
 					}
 				} else {
@@ -199,6 +203,7 @@ public class SimpleTclParser {
 			if (cmdEnd) {
 				final TclWord word = wordBuffer.buildWord();
 				if (word != null) {
+					validateWord(word);
 					cmd.addWord(word);
 				}
 				break;
@@ -211,6 +216,20 @@ public class SimpleTclParser {
 		} else
 			cmd.setEnd(cmd.getStart());
 		return cmd;
+	}
+
+	private void validateWord(final TclWord word) {
+		final List<Object> contents = word.getContents();
+		if (contents.size() > 1) {
+			final Object first = word.getContents().get(0);
+			if (first instanceof IWordSubstitution) {
+				handleError(new ErrorDescription(
+						first instanceof QuotesSubstitution ? Messages.SimpleTclParser_ExtraCharactersAfterCloseQuote
+								: Messages.SimpleTclParser_ExtraCharactersAfterCloseBrace,
+						((TclElement) first).getEnd() + 1, word.getStart()
+								+ word.length(), ErrorDescription.ERROR));
+			}
+		}
 	}
 
 	public interface IEOFHandler {

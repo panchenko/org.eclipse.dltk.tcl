@@ -18,6 +18,8 @@ public class Messages extends NLS {
 	public static String BracesSubstitution_Error;
 	public static String CommandSubstitution_0;
 	public static String QuotesSubstitution_1;
+	public static String SimpleTclParser_ExtraCharactersAfterCloseBrace;
+	public static String SimpleTclParser_ExtraCharactersAfterCloseQuote;
 	public static String VariableSubstitution_BracesVariableName;
 	public static String VariableSubstitution_VariableIndex;
 	static {
