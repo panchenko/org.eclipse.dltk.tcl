@@ -68,7 +68,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 
 	private Set<ASTNode> processedForContentNodes = new HashSet<ASTNode>();
 	private NamespaceScopeProcessor coreProcessor = DefinitionManager
-			.getInstance().getCoreProcessor();;
+			.getInstance().createProcessor();;
 
 	public ModuleDeclaration parse(char[] fileName, TclModule tclModule,
 			IProblemReporter reporter) {
