@@ -135,7 +135,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 					requestor, collector);
 			requestor.enterModule();
 			//
-			final TclParser newParser = new TclParser();
+			final TclParser newParser = createParser();
 			final NamespaceScopeProcessor coreProcessor = DefinitionManager
 					.getInstance().createProcessor();
 			TclModule tclModule = newParser.parseModule(source, context
@@ -162,7 +162,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 						// empty
 					}
 				});
-		final TclParser newParser = new TclParser();
+		final TclParser newParser = createParser();
 		newParser.setGlobalOffset(offset);
 		final NamespaceScopeProcessor coreProcessor = DefinitionManager
 				.getInstance().createProcessor();
@@ -170,6 +170,10 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 				.getErrorReporter(), coreProcessor);
 		traverse(commands, (TclModelBuildContext) context);
 		return commands;
+	}
+
+	protected TclParser createParser() {
+		return new TclParser();
 	}
 
 	protected void traverse(List<TclCommand> commands,
