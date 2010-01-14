@@ -25,7 +25,6 @@ import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
 import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
 import org.eclipse.dltk.tcl.structure.TclModelProblem;
-import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
 import org.eclipse.dltk.xotcl.core.IXOTclModifiers;
 
 public class XOTclClassProc extends AbstractTclCommandModelBuilder {
@@ -64,7 +63,7 @@ public class XOTclClassProc extends AbstractTclCommandModelBuilder {
 		context.getRequestor().enterMethodRemoveSame(mi);
 		//
 		TclArgument body = command.getArguments().get(3);
-		context.parse(TclProcessorUtil.asString(body), body.getStart());
+		context.parse(body);
 		//
 		context.getRequestor().exitMethod(command.getEnd());
 		resolvedType.leave(context.getRequestor());
