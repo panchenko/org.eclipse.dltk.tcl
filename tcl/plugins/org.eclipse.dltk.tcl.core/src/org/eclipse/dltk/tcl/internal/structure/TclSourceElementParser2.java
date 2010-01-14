@@ -136,7 +136,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 			//
 			final TclParser newParser = new TclParser();
 			final NamespaceScopeProcessor coreProcessor = DefinitionManager
-					.getInstance().getCoreProcessor();
+					.getInstance().createProcessor();
 			TclModule tclModule = newParser.parseModule(source, context
 					.getErrorReporter(), coreProcessor);
 			traverse(tclModule.getStatements(), context);
@@ -156,7 +156,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		final TclParser newParser = new TclParser();
 		newParser.setGlobalOffset(offset);
 		final NamespaceScopeProcessor coreProcessor = DefinitionManager
-				.getInstance().getCoreProcessor();
+				.getInstance().createProcessor();
 		List<TclCommand> commands = newParser.parse(source, context
 				.getErrorReporter(), coreProcessor);
 		traverse(commands, (TclModelBuildContext) context);
