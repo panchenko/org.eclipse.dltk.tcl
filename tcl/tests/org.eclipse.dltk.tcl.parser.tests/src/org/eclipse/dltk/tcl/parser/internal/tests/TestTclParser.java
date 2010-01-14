@@ -44,6 +44,7 @@ public class TestTclParser extends TclParser {
 
 	public static void verifyLiterals(List<TclCommand> commands,
 			final String content, final int offset) {
+		// TODO only if there are no syntax errors
 		TclParserUtils.traverse(commands, new TclVisitor() {
 			@Override
 			public boolean visit(StringArgument arg) {
