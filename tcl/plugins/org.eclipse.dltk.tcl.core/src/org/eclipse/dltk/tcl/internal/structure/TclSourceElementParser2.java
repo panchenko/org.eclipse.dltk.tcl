@@ -29,6 +29,7 @@ import org.eclipse.dltk.tcl.ast.TclModule;
 import org.eclipse.dltk.tcl.core.TclPlugin;
 import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceElementParser;
+import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.parser.TclParserUtils;
@@ -152,7 +153,15 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		}
 	}
 
-	public void parse(ITclModelBuildContext context, String source, int offset) {
+	public List<TclCommand> parse(String source, int offset) {
+		initDetectors();
+		ITclModelBuildContext context = new TclModelBuildContext(this,
+				getRequestor(), new ITclErrorReporter() {
+					public void report(int code, String message,
+							String[] extraMessage, int start, int end, int kind) {
+						// empty
+					}
+				});
 		final TclParser newParser = new TclParser();
 		newParser.setGlobalOffset(offset);
 		final NamespaceScopeProcessor coreProcessor = DefinitionManager
@@ -160,6 +169,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		List<TclCommand> commands = newParser.parse(source, context
 				.getErrorReporter(), coreProcessor);
 		traverse(commands, (TclModelBuildContext) context);
+		return commands;
 	}
 
 	protected void traverse(List<TclCommand> commands,

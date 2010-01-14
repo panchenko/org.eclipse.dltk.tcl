@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.tcl.ast.AstFactory;
+import org.eclipse.dltk.tcl.ast.Script;
+import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclParser;
@@ -27,6 +30,8 @@ import org.eclipse.dltk.tcl.parser.definitions.NamespaceScopeProcessor;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
 import org.eclipse.dltk.tcl.structure.ITclTypeResolver;
+import org.eclipse.dltk.tcl.structure.TclProcessorUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 public class TclModelBuildContext implements ITclModelBuildContext {
 
@@ -125,14 +130,51 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 		}
 	}
 
-	public void parse(String source, int offset) {
+	public List<TclCommand> parse(String source, int offset) {
+		return parse(source, offset, 0);
+	}
+
+	public List<TclCommand> parse(String source, int offset, int options) {
 		final TclParser newParser = new TclParser();
 		newParser.setGlobalOffset(offset);
 		final NamespaceScopeProcessor coreProcessor = DefinitionManager
 				.getInstance().createProcessor();
 		List<TclCommand> commands = newParser.parse(source, errorReporter,
 				coreProcessor);
-		fParser.traverse(commands, this);
+		if ((options & NO_TRAVERSE) == 0) {
+			fParser.traverse(commands, this);
+		}
+		return commands;
+	}
+
+	public Script parse(TclArgument arg) {
+		return parse(arg, 0);
+	}
+
+	public Script parse(TclArgument arg, int options) {
+		if (arg instanceof Script) {
+			final Script script = (Script) arg;
+			if ((options & NO_TRAVERSE) == 0) {
+				fParser.traverse(script.getCommands(), this);
+			}
+			return script;
+		} else {
+			final Script script = AstFactory.eINSTANCE.createScript();
+			script.setStart(arg.getStart());
+			script.setEnd(arg.getEnd());
+			final ITclParserInput input = TclProcessorUtil.asInput(arg);
+			if (input != null) {
+				script.setContentStart(input.getStart());
+				script.setContentEnd(input.getEnd());
+				script.getCommands().addAll(
+						parse(input.getContent(), input.getStart(), options));
+			} else {
+				script.setContentStart(arg.getStart());
+				script.setContentEnd(arg.getEnd());
+			}
+			EcoreUtil.replace(arg, script);
+			return script;
+		}
 	}
 
 	private final Map<String, Object> attributes = new HashMap<String, Object>();

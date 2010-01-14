@@ -11,7 +11,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.structure;
 
+import java.util.List;
+
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.tcl.ast.Script;
+import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 
@@ -20,8 +24,18 @@ import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
  */
 public interface ITclModelBuildContext {
 
+	int NO_TRAVERSE = 1;
+
 	public interface ITclModelHandler {
 		void leave(ISourceElementRequestor requestor);
+	}
+
+	public interface ITclParserInput {
+		String getContent();
+
+		int getStart();
+
+		int getEnd();
 	}
 
 	ISourceElementRequestor getRequestor();
@@ -32,7 +46,11 @@ public interface ITclModelBuildContext {
 
 	<E> E get(Class<E> clazz);
 
-	void parse(String source, int offset);
+	List<TclCommand> parse(String source, int offset);
+
+	Script parse(TclArgument script);
+
+	Script parse(TclArgument script, int options);
 
 	void leave(TclCommand command);
 
