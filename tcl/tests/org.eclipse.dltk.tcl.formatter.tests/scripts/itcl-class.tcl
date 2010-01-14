@@ -1,3 +1,15 @@
+====proc
+itcl::class A {
+proc m2 {} {
+set x "m2"
+}
+}
+==
+itcl::class A {
+	proc m2 {} {
+		set x "m2"
+	}
+}
 ====methods
 itcl::class A {
 method m1 {} {
