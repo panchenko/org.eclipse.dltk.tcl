@@ -25,9 +25,9 @@ import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.emf.common.util.EList;
 
 public class TclParserTests extends TestCase {
-	
+
 	public void testParser001() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "set a 20\n" + "set c 30";
 		List<TclCommand> module = parser.parse(source);
 		TestCase.assertEquals(2, module.size());
@@ -49,9 +49,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("20", ref3.getValue());
 	}
 
-	
 	public void testParser002() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "set a \"wer\"\n" + "set c 30";
 		List<TclCommand> module = parser.parse(source);
 		TestCase.assertNotNull(module);
@@ -74,9 +73,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("\"wer\"", ref3.getValue());
 	}
 
-	
 	public void testParser003() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "set a {wer}\n" + "set c 30";
 		List<TclCommand> module = parser.parse(source);
 		TestCase.assertNotNull(module);
@@ -99,9 +97,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("{wer}", ref3.getValue());
 	}
 
-	
 	public void testParser004() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "set a [wer]\n" + "set c 30";
 		List<TclCommand> module = parser.parse(source);
 		TestCase.assertNotNull(module);
@@ -133,9 +130,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("wer", ((StringArgument) argument).getValue());
 	}
 
-	
 	public void testParser005() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "puts \"alfa[de]be$teta\" $delta";
 		List<TclCommand> module = parser.parse(source);
 		TestCase.assertEquals(1, module.size());
@@ -148,9 +144,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("puts", ref1.getValue());
 	}
 
-	
 	public void testParser006() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "incr i -$length";
 		List<TclCommand> module = parser.parse(source);
 		TestCase.assertEquals(1, module.size());
@@ -163,9 +158,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals("incr", ref1.getValue());
 	}
 
-	
 	public void testSimpleErrors001() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "set a \"This is\nset b 20";
 		TclErrorCollector collector = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, collector, null);
@@ -174,9 +168,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals(1, collector.getCount());
 	}
 
-	
 	public void testSimpleErrors002() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "set a [This is\nset b 20";
 		TclErrorCollector collector = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, collector, null);
@@ -185,9 +178,8 @@ public class TclParserTests extends TestCase {
 		TestCase.assertEquals(1, collector.getCount());
 	}
 
-	
 	public void testSimpleErrors003() throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		String source = "set a {This is\nset b 20";
 		TclErrorCollector collector = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, collector, null);

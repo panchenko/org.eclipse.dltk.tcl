@@ -140,7 +140,7 @@ public class TclConstantsParseTests extends TestCase {
 	}
 
 	private void constantsCheck(String source, int errs) throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TestScopeProcessor manager = new TestScopeProcessor();
 		TclErrorCollector errors = new TclErrorCollector();
 		manager.add(createConstantsCommand());

@@ -100,7 +100,7 @@ public class GroupParseTests extends TestCase {
 	}
 
 	private void typedCheck(String source, int errs, int code) throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TestScopeProcessor manager = new TestScopeProcessor();
 		TclErrorCollector errors = new TclErrorCollector();
 		manager.add(createConstantsCommand());

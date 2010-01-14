@@ -84,7 +84,7 @@ public class ShortSynopsisTests extends TestCase {
 						"platform:///plugin/org.eclipse.dltk.tcl.tcllib/definitions/builtin.xml"));
 		TestCase.assertNotNull(scope);
 		processor.addScope(scope);
-		TclParser parser = new TclParser(version);
+		TclParser parser = TestUtils.createParser(version);
 		TclErrorCollector errors = new TclErrorCollector();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, true);
 		List<TclCommand> module = parser.parse(source, errors, processor);

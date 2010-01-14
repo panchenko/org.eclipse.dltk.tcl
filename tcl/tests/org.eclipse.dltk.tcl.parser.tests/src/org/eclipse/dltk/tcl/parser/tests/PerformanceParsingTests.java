@@ -81,7 +81,7 @@ public class PerformanceParsingTests extends TestCase {
 							|| file.getName().endsWith(".itcl")) {
 						index++;
 						long startTime = System.currentTimeMillis();
-						TclParser parser = new TclParser("8.4");
+						TclParser parser = TestUtils.createParser("8.4");
 						NamespaceScopeProcessor processor = DefinitionManager
 								.getInstance().createProcessor();
 						parser.setOptionValue(

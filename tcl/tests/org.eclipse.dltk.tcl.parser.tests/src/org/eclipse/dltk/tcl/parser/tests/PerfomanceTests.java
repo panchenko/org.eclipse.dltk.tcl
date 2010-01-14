@@ -34,14 +34,14 @@ public class PerfomanceTests extends TestCase {
 		PerformanceMonitor.getDefault().end("LOAD BIG FILE:");
 
 		PerformanceMonitor.getDefault().begin("RAW PARSE BIG FILE:");
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		parser.parse(contents);
 		PerformanceMonitor.getDefault().end("RAW PARSE BIG FILE:");
 
 		// Parsing with processors and matching.
 		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
 				.createProcessor();
-		parser = new TclParser("8.5");
+		parser = TestUtils.createParser("8.5");
 		TclErrorCollector errors = new TclErrorCollector();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, true);
 		PerformanceMonitor.getDefault().begin("PARSE BIG FILE:");

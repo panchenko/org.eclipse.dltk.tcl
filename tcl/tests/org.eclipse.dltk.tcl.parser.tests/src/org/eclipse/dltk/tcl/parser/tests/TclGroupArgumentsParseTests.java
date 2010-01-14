@@ -169,7 +169,7 @@ public class TclGroupArgumentsParseTests extends TestCase {
 
 	private void check(String source, int errs, int code,
 			TestScopeProcessor manager) throws Exception {
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, manager);
 		TestCase.assertEquals(1, module.size());

@@ -191,7 +191,7 @@ public class ErrorReportingTests extends TestCase {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2];
 		System.out.println("%%%%%%%%%%%%%%%%Test:" + element.getMethodName());
-		TclParser parser = new TclParser("8.4");
+		TclParser parser = TestUtils.createParser("8.4");
 		TclErrorCollector errors = new TclErrorCollector();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, true);
 		parser.parse(source, errors, processor);

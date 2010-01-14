@@ -164,7 +164,7 @@ public class VersionsParserTests extends TestCase {
 		processor.addScope(createNamespaceCommand(DefinitionsFactory.eINSTANCE,
 				v1));
 		String source = "namespace eval gamma {}";
-		TclParser parser = new TclParser(v);
+		TclParser parser = TestUtils.createParser(v);
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertNotNull(module);
@@ -180,7 +180,7 @@ public class VersionsParserTests extends TestCase {
 		processor.addScope(createNamespaceCommand(DefinitionsFactory.eINSTANCE,
 				v1));
 		String source = "namespace eval gamma {}";
-		TclParser parser = new TclParser(v);
+		TclParser parser = TestUtils.createParser(v);
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, errors.getCount());
@@ -198,7 +198,7 @@ public class VersionsParserTests extends TestCase {
 		processor.addScope(cmd1);
 		cmd1.setDeprecated("[8.4.5;-)");
 		String source = "namespace eval gamma {}";
-		TclParser parser = new TclParser(v);
+		TclParser parser = TestUtils.createParser(v);
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(0, errors.getCount());
@@ -216,7 +216,7 @@ public class VersionsParserTests extends TestCase {
 		processor.addScope(cmd1);
 		cmd1.setDeprecated("[8.4.5;-)");
 		String source = "namespace eval gamma {}";
-		TclParser parser = new TclParser(v);
+		TclParser parser = TestUtils.createParser(v);
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, errors.getCount());
@@ -232,7 +232,7 @@ public class VersionsParserTests extends TestCase {
 		processor.addScope(createNamespaceCommand(DefinitionsFactory.eINSTANCE,
 				v2));
 		String source = "namespace eval gamma {}";
-		TclParser parser = new TclParser(v);
+		TclParser parser = TestUtils.createParser(v);
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertNotNull(module);

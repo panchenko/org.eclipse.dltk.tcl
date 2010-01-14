@@ -62,7 +62,7 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 				fileLoc));
 		CodeModel model = new CodeModel(contents);
 		List<TclCheckerProblem> list = check(fileLoc);
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		NamespaceScopeProcessor processor = DefinitionManager.getInstance()
 				.createProcessor();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, false);

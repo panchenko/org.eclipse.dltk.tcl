@@ -92,7 +92,7 @@ public class IfCommandTests extends TestCase {
 
 	private void typedCheck(String source, int errs, int code) throws Exception {
 		processor = DefinitionManager.getInstance().createProcessor();
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
 		TestCase.assertEquals(1, module.size());

@@ -233,7 +233,7 @@ public class TclSwitchArgumentsParseTests extends TestCase {
 			TestScopeProcessor manager) throws Exception {
 		System.out.println("TEST:"
 				+ Thread.currentThread().getStackTrace()[3].getMethodName());
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, manager);
 		TestCase.assertEquals(1, module.size());

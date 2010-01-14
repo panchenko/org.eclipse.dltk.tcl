@@ -103,7 +103,7 @@ public class CommandOutOfScopeTests extends TestCase {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		StackTraceElement element = stackTrace[2];
 		System.out.println("%%%%%%%%%%%%%%%%Test:" + element.getMethodName());
-		TclParser parser = new TclParser(version);
+		TclParser parser = TestUtils.createParser(version);
 		TclErrorCollector errors = new TclErrorCollector();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, true);
 		parser.parse(source, errors, processor);

@@ -1147,7 +1147,7 @@ public class SynopsisTests extends TestCase {
 	private void typedCheck(String source, String expected, String version)
 			throws Exception {
 		processor = DefinitionManager.getInstance().createProcessor();
-		TclParser parser = new TclParser(version);
+		TclParser parser = TestUtils.createParser(version);
 		TclErrorCollector errors = new TclErrorCollector();
 		parser.setOptionValue(ITclParserOptions.REPORT_UNKNOWN_AS_ERROR, true);
 		List<TclCommand> module = parser.parse(source, errors, processor);

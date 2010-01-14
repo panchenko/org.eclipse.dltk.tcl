@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
+import org.eclipse.dltk.tcl.parser.TclParser;
+import org.eclipse.dltk.tcl.parser.internal.tests.TestTclParser;
 
 public class TestUtils {
 	public static class CodeModel {
@@ -81,8 +83,8 @@ public class TestUtils {
 		System.out.println("-----------------ERRORS----------------------\n");
 		final CodeModel model = new CodeModel(source);
 		errors.reportAll(new ITclErrorReporter() {
-			public void report(int code, String message, String[] extraMessage, int start,
-					int end, int kind) {
+			public void report(int code, String message, String[] extraMessage,
+					int start, int end, int kind) {
 				System.out.println((kind == ITclErrorReporter.ERROR ? "Error:"
 						: "Warning/Info:")
 						+ code
@@ -106,7 +108,7 @@ public class TestUtils {
 		System.out.println("------------------code-----------------------\n"
 				+ source.replace('\t', ' '));
 		outBlock(startPos, endPos);
-//		System.out.println("=============================================");
+		// System.out.println("=============================================");
 	}
 
 	private static void outBlock(int startPos, int endPos) {
@@ -224,5 +226,13 @@ public class TestUtils {
 			}
 		}
 		openStream.close();
+	}
+
+	public static TclParser createParser() {
+		return new TestTclParser();
+	}
+
+	public static TclParser createParser(String version) {
+		return new TestTclParser(version);
 	}
 }

@@ -104,7 +104,7 @@ public class NamespaceScopeProcessorTests extends TestCase {
 		NamespaceScopeProcessor processor = new NamespaceScopeProcessor();
 		processor.addScope(createNamespaceCommand(factory));
 		processor.addScope(scope);
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TestTclParserErrorReporter reporter = new TestTclParserErrorReporter();
 		List<TclCommand> module = parser.parse(content, reporter, processor);
 		final List<Command> alfaDefinitions = new ArrayList<Command>();
@@ -151,7 +151,7 @@ public class NamespaceScopeProcessorTests extends TestCase {
 				.getCommandDefinition("platform::patterns");
 		TestCase.assertEquals(1, patternsDefs.length);
 		Command pattern = patternsDefs[0];
-		TclParser parser = new TclParser();
+		TclParser parser = TestUtils.createParser();
 		TestTclParserErrorReporter reporter = new TestTclParserErrorReporter();
 		List<TclCommand> module = parser.parse(content, reporter, processor);
 		final List<Command> definitions = new ArrayList<Command>();
