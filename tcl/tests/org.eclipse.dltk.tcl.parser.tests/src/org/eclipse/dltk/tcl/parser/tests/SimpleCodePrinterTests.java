@@ -107,7 +107,7 @@ public class SimpleCodePrinterTests extends TestCase {
 	}
 
 	private void outCheck(String source, String expected) throws Exception {
-		processor = DefinitionManager.getInstance().getCoreProcessor();
+		processor = DefinitionManager.getInstance().createProcessor();
 		TclParser parser = new TclParser("8.4");
 		TclErrorCollector errors = new TclErrorCollector();
 		List<TclCommand> module = parser.parse(source, errors, processor);
