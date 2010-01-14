@@ -129,7 +129,7 @@ public class TclModelBuildContext implements ITclModelBuildContext {
 		final TclParser newParser = new TclParser();
 		newParser.setGlobalOffset(offset);
 		final NamespaceScopeProcessor coreProcessor = DefinitionManager
-				.getInstance().getCoreProcessor();
+				.getInstance().createProcessor();
 		List<TclCommand> commands = newParser.parse(source, errorReporter,
 				coreProcessor);
 		fParser.traverse(commands, this);
