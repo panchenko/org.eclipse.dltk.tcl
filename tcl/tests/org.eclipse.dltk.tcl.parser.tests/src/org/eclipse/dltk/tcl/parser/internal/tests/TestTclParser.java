@@ -15,7 +15,10 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.eclipse.dltk.tcl.ast.Script;
 import org.eclipse.dltk.tcl.ast.StringArgument;
+import org.eclipse.dltk.tcl.ast.TclArgument;
+import org.eclipse.dltk.tcl.ast.TclArgumentList;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclParser;
@@ -46,6 +49,41 @@ public class TestTclParser extends TclParser {
 			final String content, final int offset) {
 		// TODO only if there are no syntax errors
 		TclParserUtils.traverse(commands, new TclVisitor() {
+
+			@Override
+			public boolean visit(Script script) {
+				Assert
+						.assertTrue(script.getContentStart() >= script
+								.getStart());
+				Assert.assertTrue(script.getContentEnd() <= script.getEnd());
+				for (TclCommand command : script.getCommands()) {
+					Assert.assertTrue(command.getStart() >= script.getStart()
+							&& command.getEnd() <= script.getEnd());
+				}
+				return super.visit(script);
+			}
+
+			@Override
+			public boolean visit(TclArgumentList list) {
+				for (TclArgument argument : list.getArguments()) {
+					Assert.assertTrue(argument.getStart() >= list.getStart()
+							&& argument.getEnd() <= list.getEnd());
+				}
+				return super.visit(list);
+			}
+
+			@Override
+			public boolean visit(TclCommand command) {
+				TclArgument name = command.getName();
+				Assert.assertTrue(name.getStart() >= command.getStart()
+						&& name.getEnd() <= command.getEnd());
+				for (TclArgument argument : command.getArguments()) {
+					Assert.assertTrue(argument.getStart() >= command.getStart()
+							&& argument.getEnd() <= command.getEnd());
+				}
+				return super.visit(command);
+			}
+
 			@Override
 			public boolean visit(StringArgument arg) {
 				final String expected = content.substring(arg.getStart()
