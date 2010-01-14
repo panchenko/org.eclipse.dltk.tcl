@@ -90,6 +90,10 @@ public class TclParser implements ITclParserOptions {
 		return parse(source, null, null);
 	}
 
+	public int getGlobalOffset() {
+		return globalOffset;
+	}
+
 	public void setGlobalOffset(int globalOffset) {
 		this.globalOffset = globalOffset;
 	}
