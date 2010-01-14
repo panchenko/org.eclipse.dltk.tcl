@@ -16,6 +16,7 @@ import java.util.Collection;
 import org.eclipse.dltk.tcl.ast.AstPackage;
 import org.eclipse.dltk.tcl.ast.Substitution;
 import org.eclipse.dltk.tcl.ast.TclCommand;
+import org.eclipse.dltk.tcl.parser.printer.SimpleCodePrinter;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -153,6 +154,18 @@ public class SubstitutionImpl extends TclArgumentImpl implements Substitution {
 			return commands != null && !commands.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+	
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append("\n["); //$NON-NLS-1$
+		result.append(SimpleCodePrinter.getCommandsString(commands, false));
+		result.append("]"); //$NON-NLS-1$
+		return result.toString();
 	}
 
 } //SubstitutionImpl
