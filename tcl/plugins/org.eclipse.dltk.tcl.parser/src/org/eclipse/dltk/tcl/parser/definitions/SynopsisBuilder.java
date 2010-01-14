@@ -23,38 +23,38 @@ import org.eclipse.dltk.tcl.parser.Messages;
 import org.eclipse.emf.common.util.EList;
 
 public class SynopsisBuilder {
-	private final static String NULL_SYNOPSIS = "";
-	private final static String NULL_LINE = "...";
-	private final static String NULL_ARG_DEFINITON_SYNOPSIS = "arg";
-	private final static String NULL_TCL_ARGUMENT_SYNOPSIS = "none";
+	private final static String NULL_SYNOPSIS = ""; //$NON-NLS-1$
+	private final static String NULL_LINE = "..."; //$NON-NLS-1$
+	private final static String NULL_ARG_DEFINITON_SYNOPSIS = "arg"; //$NON-NLS-1$
+	private final static String NULL_TCL_ARGUMENT_SYNOPSIS = "none"; //$NON-NLS-1$
 
-	private final static String ENDLESS_BOUNDS_END = " ...";
-	private final static String POSSIBLE_START = "?";
-	private final static String POSSIBLE_END = "?";
-	private final static String SWITCH_START = "[";
-	private final static String SWITCH_END = "]";
-	private final static String SWITCH_SEPARATOR = "|";
-	private final static String COMPLEX_ARGUMENT_START = "{";
-	private final static String COMPLEX_ARGUMENT_END = "}";
+	private final static String ENDLESS_BOUNDS_END = " ..."; //$NON-NLS-1$
+	private final static String POSSIBLE_START = "?"; //$NON-NLS-1$
+	private final static String POSSIBLE_END = "?"; //$NON-NLS-1$
+	private final static String SWITCH_START = "["; //$NON-NLS-1$
+	private final static String SWITCH_END = "]"; //$NON-NLS-1$
+	private final static String SWITCH_SEPARATOR = "|"; //$NON-NLS-1$
+	private final static String COMPLEX_ARGUMENT_START = "{"; //$NON-NLS-1$
+	private final static String COMPLEX_ARGUMENT_END = "}"; //$NON-NLS-1$
 
-	private final static String BOUNDS_START = "(";
-	private final static String BOUNDS_END = ")";
-	private final static String BOUNDS_SEPARATOR = "-";
+	private final static String BOUNDS_START = "("; //$NON-NLS-1$
+	private final static String BOUNDS_END = ")"; //$NON-NLS-1$
+	private final static String BOUNDS_SEPARATOR = "-"; //$NON-NLS-1$
 
-	private final static String DEFINITION_SEPARATOR = " ";
-	private final static String LINE_SEPARATOR = "\n";
-	private final static String HTML_LINE_SEPARATOR = "<br/>";
-	private final static String LIST_SEPARATOR = ",";
+	private final static String DEFINITION_SEPARATOR = " "; //$NON-NLS-1$
+	private final static String LINE_SEPARATOR = "\n"; //$NON-NLS-1$
+	private final static String HTML_LINE_SEPARATOR = "<br/>"; //$NON-NLS-1$
+	private final static String LIST_SEPARATOR = ","; //$NON-NLS-1$
 
-	private final static String HTML_CONST_START = "<b>";
-	private final static String HTML_CONST_END = "</b>";
-	private final static String HTML_ARGUMENT_START = "<i>";
-	private final static String HTML_ARGUMENT_END = "</i>";
+	private final static String HTML_CONST_START = "<b>"; //$NON-NLS-1$
+	private final static String HTML_CONST_END = "</b>"; //$NON-NLS-1$
+	private final static String HTML_ARGUMENT_START = "<i>"; //$NON-NLS-1$
+	private final static String HTML_ARGUMENT_END = "</i>"; //$NON-NLS-1$
 
-	private final static String CONST_START = "";
-	private final static String CONST_END = "";
-	private final static String ARGUMENT_START = "";
-	private final static String ARGUMENT_END = "";
+	private final static String CONST_START = ""; //$NON-NLS-1$
+	private final static String CONST_END = ""; //$NON-NLS-1$
+	private final static String ARGUMENT_START = ""; //$NON-NLS-1$
+	private final static String ARGUMENT_END = ""; //$NON-NLS-1$
 
 	private class SynopsisWord {
 		private String word;
@@ -97,10 +97,6 @@ public class SynopsisBuilder {
 		private String string = null;
 
 		public Synopsis() {
-		}
-
-		public Synopsis(String string) {
-			this.string = string;
 		}
 
 		public void insert(String prefix) {
@@ -325,7 +321,6 @@ public class SynopsisBuilder {
 				leaf.selector = arguments.get(0);
 			return leaf;
 		}
-		StringBuilder prefix = new StringBuilder();
 		Argument argument = arguments.get(pos);
 
 		if (argument instanceof Switch) {
@@ -336,11 +331,11 @@ public class SynopsisBuilder {
 				return synopsis;
 			}
 		}
+		StringBuilder prefix = new StringBuilder();
 		prefix.append(definitionToString(argument, argument.getLowerBound(),
 				argument.getUpperBound()));
 		Synopsis synopsis = processArgumentList(arguments, pos + 1);
-		if (prefix != null)
-			synopsis.insert(prefix.toString());
+		synopsis.insert(prefix.toString());
 		return synopsis;
 	}
 
