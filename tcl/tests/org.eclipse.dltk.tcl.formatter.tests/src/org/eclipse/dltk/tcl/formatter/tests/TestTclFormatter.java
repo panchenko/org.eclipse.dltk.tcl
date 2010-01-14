@@ -12,11 +12,14 @@
 package org.eclipse.dltk.tcl.formatter.tests;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.compiler.util.Util;
+import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.formatter.TclFormatter;
 import org.eclipse.dltk.tcl.formatter.TclFormatterConstants;
+import org.eclipse.dltk.tcl.parser.internal.tests.TestTclParser;
 import org.eclipse.dltk.ui.CodeFormatterConstants;
 
 public class TestTclFormatter extends TclFormatter {
@@ -33,6 +36,13 @@ public class TestTclFormatter extends TclFormatter {
 	@Override
 	protected boolean isValidation() {
 		return false;
+	}
+
+	@Override
+	protected List<TclCommand> parse(String input) {
+		final List<TclCommand> commands = super.parse(input);
+		TestTclParser.verifyLiterals(commands, input, 0);
+		return commands;
 	}
 
 	public static Map<String, Object> createTestingPreferences() {
