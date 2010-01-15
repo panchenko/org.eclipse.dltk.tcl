@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("org.eclipse.dltk.tclformatter.tests"); //$NON-NLS-1$
+		TestSuite suite = new TestSuite("org.eclipse.dltk.tcl.formatter.tests"); //$NON-NLS-1$
 		// $JUnit-BEGIN$
 		suite.addTestSuite(SimpleTests.class);
 		suite.addTest(CodeTest.suite());
