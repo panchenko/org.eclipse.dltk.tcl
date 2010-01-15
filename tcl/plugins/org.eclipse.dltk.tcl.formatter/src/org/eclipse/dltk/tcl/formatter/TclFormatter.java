@@ -59,6 +59,9 @@ public class TclFormatter extends AbstractScriptFormatter {
 
 	@Override
 	public int detectIndentationLevel(IDocument document, int offset) {
+		if (offset == 0) {
+			return 0;
+		}
 		final String input = document.get();
 		List<TclCommand> commands = parse(input);
 		final FormatterIndentDetector detector = new FormatterIndentDetector(
