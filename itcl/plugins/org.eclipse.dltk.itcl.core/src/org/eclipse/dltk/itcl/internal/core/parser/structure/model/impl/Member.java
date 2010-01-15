@@ -12,6 +12,7 @@
 package org.eclipse.dltk.itcl.internal.core.parser.structure.model.impl;
 
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IMember;
+import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IRange;
 import org.eclipse.dltk.tcl.ast.Node;
 
 public abstract class Member implements IMember {
@@ -63,6 +64,11 @@ public abstract class Member implements IMember {
 	public void setRange(Node node) {
 		setStart(node.getStart());
 		setEnd(node.getEnd());
+	}
+
+	public void setRange(IRange range) {
+		setStart(range.getStart());
+		setEnd(range.getEnd());
 	}
 
 	public String getName() {

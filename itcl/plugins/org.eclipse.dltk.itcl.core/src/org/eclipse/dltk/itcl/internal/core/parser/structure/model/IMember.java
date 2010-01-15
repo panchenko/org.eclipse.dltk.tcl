@@ -55,6 +55,8 @@ public interface IMember {
 
 	void setRange(Node node);
 
+	void setRange(IRange range);
+
 	Visibility getVisibility();
 
 	void setVisibility(Visibility visibility);

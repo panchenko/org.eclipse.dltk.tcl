@@ -29,12 +29,9 @@ import org.eclipse.dltk.itcl.internal.core.parser.structure.model.IVariable.Vari
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.impl.ClassImpl;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.impl.Method;
 import org.eclipse.dltk.itcl.internal.core.parser.structure.model.impl.Variable;
-import org.eclipse.dltk.tcl.ast.AstFactory;
 import org.eclipse.dltk.tcl.ast.Script;
-import org.eclipse.dltk.tcl.ast.StringArgument;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclCommand;
-import org.eclipse.dltk.tcl.parser.TclParser;
 import org.eclipse.dltk.tcl.structure.AbstractTclCommandModelBuilder;
 import org.eclipse.dltk.tcl.structure.ITclModelBuildContext;
 import org.eclipse.dltk.tcl.structure.ITclTypeHandler;
@@ -56,7 +53,7 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 		// TODO parse without processors
 		final Script classBody = context.parse(command.getArguments().get(1),
 				ITclModelBuildContext.NO_TRAVERSE);
-		processContent(clazz, classBody.getCommands());
+		processContent(clazz, classBody.getCommands(), context);
 		final TypeInfo ti = new TypeInfo();
 		ti.declarationStart = command.getStart();
 		ti.nameSourceStart = className.getStart();
@@ -101,76 +98,89 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 		return false;
 	}
 
-	private void processContent(IClass clazz, List<TclCommand> bodyCommands) {
+	private void processContent(IClass clazz, List<TclCommand> bodyCommands,
+			ITclModelBuildContext context) {
 		for (TclCommand cmd : bodyCommands) {
-			processContent(clazz, cmd);
+			processContent(clazz, new CommandImpl(cmd), context);
 		}
 	}
 
-	private void processContent(IClass clazz, TclCommand cmd) {
+	private void processContent(IClass clazz, ICommand cmd,
+			ITclModelBuildContext context) {
 		TclArgument cmdName = cmd.getName();
 		if (isSymbol(cmdName)) {
 			Handler handler = handlers.get(asSymbol(cmdName));
 			if (handler != null) {
-				handler.handle(clazz, cmd);
+				handler.handle(clazz, cmd, context);
 			}
 		}
 	}
 
 	private interface Handler {
-		void handle(IClass clazz, TclCommand command);
+		void handle(IClass clazz, ICommand command,
+				ITclModelBuildContext context);
 	}
 
 	private Map<String, Handler> handlers = new HashMap<String, Handler>();
 	{
 		handlers.put("inherit", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
 				handleInherit(clazz, command);
 			}
 		});
 		handlers.put("constructor", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
 				handleConstructor(clazz, command);
 			}
 		});
 		handlers.put("destructor", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
 				handleDestructor(clazz, command);
 			}
 		});
 		handlers.put("method", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
 				handleProc(clazz, command, MethodKind.METHOD);
 			}
 		});
 		handlers.put("proc", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
 				handleProc(clazz, command, MethodKind.PROC);
 			}
 		});
 		handlers.put("variable", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
 				handleVariable(clazz, command, VariableKind.VARIABLE);
 			}
 		});
 		handlers.put("common", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
 				handleVariable(clazz, command, VariableKind.COMMON);
 			}
 		});
 		handlers.put("public", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
-				handleVisibility(clazz, command, Visibility.PUBLIC);
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
+				handleVisibility(clazz, command, context, Visibility.PUBLIC);
 			}
 		});
 		handlers.put("protected", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
-				handleVisibility(clazz, command, Visibility.PROTECTED);
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
+				handleVisibility(clazz, command, context, Visibility.PROTECTED);
 			}
 		});
 		handlers.put("private", new Handler() {
-			public void handle(IClass clazz, TclCommand command) {
-				handleVisibility(clazz, command, Visibility.PRIVATE);
+			public void handle(IClass clazz, ICommand command,
+					ITclModelBuildContext context) {
+				handleVisibility(clazz, command, context, Visibility.PRIVATE);
 			}
 		});
 	}
@@ -179,8 +189,8 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 	 * @param clazz
 	 * @param command
 	 */
-	protected void handleInherit(IClass clazz, TclCommand command) {
-		if (command.getArguments().isEmpty()) {
+	protected void handleInherit(IClass clazz, ICommand command) {
+		if (command.getArgumentCount() == 0) {
 			return;
 		}
 		for (TclArgument argument : command.getArguments()) {
@@ -195,12 +205,12 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 	 * @param command
 	 * @param kind
 	 */
-	protected void handleVariable(IClass clazz, TclCommand command,
+	protected void handleVariable(IClass clazz, ICommand command,
 			VariableKind kind) {
-		if (command.getArguments().isEmpty()) {
+		if (command.getArgumentCount() == 0) {
 			return;
 		}
-		final TclArgument varName = command.getArguments().get(0);
+		final TclArgument varName = command.getArgument(0);
 		if (isSymbol(varName)) {
 			final IVariable variable = new Variable();
 			variable.setRange(command);
@@ -217,11 +227,11 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 	 * @param command
 	 * @param kind
 	 */
-	protected void handleProc(IClass clazz, TclCommand command, MethodKind kind) {
-		if (command.getArguments().isEmpty()) {
+	protected void handleProc(IClass clazz, ICommand command, MethodKind kind) {
+		if (command.getArgumentCount() == 0) {
 			return;
 		}
-		final TclArgument procName = command.getArguments().get(0);
+		final TclArgument procName = command.getArgument(0);
 		if (isSymbol(procName)) {
 			final IMethod method = new Method();
 			method.setRange(command);
@@ -229,12 +239,12 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 			method.setName(asSymbol(procName));
 			method.setKind(kind);
 			method.setVisibility(clazz.peekVisibility());
-			if (command.getArguments().size() >= 2) {
-				parseRawParameters(command.getArguments().get(1), method
+			if (command.getArgumentCount() >= 2) {
+				parseRawParameters(command.getArgument(1), method
 						.getParameters());
 			}
-			if (command.getArguments().size() == 3) {
-				method.addBody(command.getArguments().get(2));
+			if (command.getArgumentCount() == 3) {
+				method.addBody(command.getArgument(2));
 			}
 			clazz.addMember(method);
 		}
@@ -244,8 +254,8 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 	 * @param clazz
 	 * @param command
 	 */
-	protected void handleDestructor(IClass clazz, TclCommand command) {
-		if (command.getArguments().isEmpty()) {
+	protected void handleDestructor(IClass clazz, ICommand command) {
+		if (command.getArgumentCount() == 0) {
 			return;
 		}
 		final IMethod method = new Method();
@@ -254,8 +264,8 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 		method.setName(asSymbol(command.getName()));
 		method.setKind(MethodKind.DESTRUCTOR);
 		method.setVisibility(clazz.peekVisibility());// FIXME check
-		if (command.getArguments().size() == 1) {
-			method.addBody(command.getArguments().get(0));
+		if (command.getArgumentCount() == 1) {
+			method.addBody(command.getArgument(0));
 		}
 		clazz.addMember(method);
 	}
@@ -264,8 +274,8 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 	 * @param clazz
 	 * @param command
 	 */
-	protected void handleConstructor(IClass clazz, TclCommand command) {
-		if (command.getArguments().size() < 2) {
+	protected void handleConstructor(IClass clazz, ICommand command) {
+		if (command.getArgumentCount() < 2) {
 			return;
 		}
 		final IMethod method = new Method();
@@ -274,11 +284,10 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 		method.setName(asSymbol(command.getName()));
 		method.setKind(MethodKind.CONSTRUCTOR);
 		method.setVisibility(clazz.peekVisibility());// FIXME check
-		parseRawParameters(command.getArguments().get(0), method
-				.getParameters());
-		method.addBody(command.getArguments().get(1));
-		if (command.getArguments().size() == 3) {
-			method.addBody(command.getArguments().get(2));
+		parseRawParameters(command.getArgument(0), method.getParameters());
+		method.addBody(command.getArgument(1));
+		if (command.getArgumentCount() == 3) {
+			method.addBody(command.getArgument(2));
 		}
 		clazz.addMember(method);
 	}
@@ -288,47 +297,17 @@ public class IncrTclClass extends AbstractTclCommandModelBuilder {
 	 * @param command
 	 * @param visibility
 	 */
-	protected void handleVisibility(IClass clazz, TclCommand command,
-			Visibility visibility) {
-		if (command.getArguments().isEmpty()) {
+	protected void handleVisibility(IClass clazz, ICommand command,
+			ITclModelBuildContext context, Visibility visibility) {
+		if (command.getArgumentCount() == 0) {
 			return;
 		}
 		clazz.pushVisibility(visibility);
-		if (command.getArguments().size() == 1) {
-			TclArgument bodyArg = command.getArguments().get(0);
-			if (bodyArg instanceof StringArgument) {
-				String body = ((StringArgument) bodyArg).getValue();
-				int offset = bodyArg.getStart();
-				if (body.startsWith("{") && body.endsWith("}")) {
-					body = body.substring(1, body.length() - 1);
-					++offset;
-				}
-				TclParser parser = new TclParser();
-				parser.setGlobalOffset(offset);
-				processContent(clazz, parser.parse(body));
-			} else if (bodyArg instanceof Script) {
-				processContent(clazz, ((Script) bodyArg).getCommands());
-			}
+		if (command.getArgumentCount() == 1) {
+			TclArgument bodyArg = command.getArgument(0);
+			processContent(clazz, context.parse(bodyArg).getCommands(), context);
 		} else {
-			final TclCommand nested = AstFactory.eINSTANCE.createTclCommand();
-			boolean wantName = true;
-			TclArgument[] arguments = command.getArguments().toArray(
-					new TclArgument[command.getArguments().size()]);
-			command.getArguments().clear();
-			for (TclArgument argument : arguments) {
-				if (wantName) {
-					nested.setName(argument);
-					wantName = false;
-					nested.setStart(argument.getStart());
-				} else {
-					nested.getArguments().add(argument);
-				}
-				nested.setEnd(argument.getEnd());
-			}
-			Script script = AstFactory.eINSTANCE.createScript();
-			script.getCommands().add(nested);
-			command.getArguments().add(script);
-			processContent(clazz, nested);
+			processContent(clazz, new PrefixedCommandImpl(command), context);
 		}
 		clazz.popVisibility();
 	}
