@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.ArgumentMatch;
 import org.eclipse.dltk.tcl.ast.AstFactory;
@@ -384,12 +385,14 @@ public class TclParser implements ITclParserOptions {
 				script.setContentStart(script.getStart() + 1);
 				script.setContentEnd(script.getEnd() - 1);
 				parseToBlock(script.getCommands(), wordText.substring(1,
-						wordText.length() - 1), blockCode.getStart() + 1);
+						wordText.length() - 1), script.getContentStart()
+						- globalOffset);
 			} else {
 				script.setContentStart(script.getStart());
 				script.setContentEnd(script.getEnd());
 				parseToBlock(script.getCommands(), wordText, blockCode
-						.getStart());
+						.getStart()
+						- globalOffset);
 			}
 			arguments.set(blockArguments[i], script);
 		}
@@ -436,6 +439,9 @@ public class TclParser implements ITclParserOptions {
 			tclCommand.setEnd(command.getEnd() + offset + 1 + globalOffset);
 			return tclCommand;
 		} catch (StringIndexOutOfBoundsException bounds) {
+			if (DLTKCore.DEBUG) {
+				bounds.printStackTrace();
+			}
 			if (reporter != null) {
 				reporter.report(ITclErrorReporter.UNKNOWN, bounds.getMessage(),
 						null, 0, 0, ITclErrorReporter.ERROR);
