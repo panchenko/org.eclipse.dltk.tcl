@@ -17,8 +17,7 @@ import junit.framework.TestSuite;
 public class AllTestsRunner {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.dltk.tcl.parser.tests");
+		TestSuite suite = new TestSuite("org.eclipse.dltk.tcl.parser.tests");
 		// $JUnit-BEGIN$
 		suite.addTestSuite(NotNegativeTypeParseTests.class);
 		suite.addTestSuite(TclParserTests.class);
