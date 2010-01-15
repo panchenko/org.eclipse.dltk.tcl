@@ -20,8 +20,7 @@ import org.eclipse.dltk.tcl.parser.structure.StructureParserTests;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.dltk.tcl.core.tests"); //$NON-NLS-1$
+		TestSuite suite = new TestSuite("org.eclipse.dltk.tcl.core.tests"); //$NON-NLS-1$
 		// $JUnit-BEGIN$
 		suite.addTest(org.eclipse.dltk.tcl.core.tests.model.AllTests.suite());
 		suite.addTest(org.eclipse.dltk.tcl.parser.tests.AllTests.suite());
