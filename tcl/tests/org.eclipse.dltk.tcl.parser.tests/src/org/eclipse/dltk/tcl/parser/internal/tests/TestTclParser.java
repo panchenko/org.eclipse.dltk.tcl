@@ -45,19 +45,23 @@ public class TestTclParser extends TclParser {
 		return commands;
 	}
 
+	protected static void verify(boolean value) {
+		if (!value) {
+			Assert.fail();
+		}
+	}
+
 	public static void verifyLiterals(List<TclCommand> commands,
 			final String content, final int offset) {
-		// TODO only if there are no syntax errors
+		// TODO only if there were no syntax errors
 		TclParserUtils.traverse(commands, new TclVisitor() {
 
 			@Override
 			public boolean visit(Script script) {
-				Assert
-						.assertTrue(script.getContentStart() >= script
-								.getStart());
-				Assert.assertTrue(script.getContentEnd() <= script.getEnd());
+				verify(script.getContentStart() >= script.getStart());
+				verify(script.getContentEnd() <= script.getEnd());
 				for (TclCommand command : script.getCommands()) {
-					Assert.assertTrue(command.getStart() >= script.getStart()
+					verify(command.getStart() >= script.getStart()
 							&& command.getEnd() <= script.getEnd());
 				}
 				return super.visit(script);
@@ -66,7 +70,7 @@ public class TestTclParser extends TclParser {
 			@Override
 			public boolean visit(TclArgumentList list) {
 				for (TclArgument argument : list.getArguments()) {
-					Assert.assertTrue(argument.getStart() >= list.getStart()
+					verify(argument.getStart() >= list.getStart()
 							&& argument.getEnd() <= list.getEnd());
 				}
 				return super.visit(list);
@@ -75,10 +79,10 @@ public class TestTclParser extends TclParser {
 			@Override
 			public boolean visit(TclCommand command) {
 				TclArgument name = command.getName();
-				Assert.assertTrue(name.getStart() >= command.getStart()
+				verify(name.getStart() >= command.getStart()
 						&& name.getEnd() <= command.getEnd());
 				for (TclArgument argument : command.getArguments()) {
-					Assert.assertTrue(argument.getStart() >= command.getStart()
+					verify(argument.getStart() >= command.getStart()
 							&& argument.getEnd() <= command.getEnd());
 				}
 				return super.visit(command);
