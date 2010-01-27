@@ -16,21 +16,16 @@ import java.util.List;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.expressions.StringLiteral;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
 import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
-import org.eclipse.dltk.tcl.core.TclNature;
 
 public class OldTclParserUtils {
 	public static final Object AST = "ast";
@@ -487,17 +482,4 @@ public class OldTclParserUtils {
 				.size()]);
 	}
 
-	/**
-	 * @deprecated This method not support persistent caching.
-	 * @param astCache
-	 * @param content
-	 * @param problemReporter
-	 * @param filename
-	 * @return
-	 */
-	public static ModuleDeclaration parseModule(ISourceModuleInfo astCache,
-			char[] content, IProblemReporter problemReporter, char[] filename) {
-		return SourceParserUtil.getModuleDeclaration(filename, content,
-				TclNature.NATURE_ID, problemReporter, astCache, 0);
-	}
 }
