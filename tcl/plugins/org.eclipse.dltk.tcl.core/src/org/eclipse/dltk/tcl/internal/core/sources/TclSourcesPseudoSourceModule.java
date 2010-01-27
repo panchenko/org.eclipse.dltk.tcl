@@ -127,7 +127,7 @@ public class TclSourcesPseudoSourceModule extends AbstractSourceModule {
 			throws ModelException {
 	}
 
-	public char[] getFileName() {
-		return getElementName().toCharArray();
+	public String getFileName() {
+		return getElementName();
 	}
 }
