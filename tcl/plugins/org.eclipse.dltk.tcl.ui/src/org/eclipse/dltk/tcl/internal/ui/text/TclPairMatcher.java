@@ -62,6 +62,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 			this.newHashcode = newHashcode;
 		}
 
+		@Override
 		public void run() {
 			try {
 				if (DEBUG) {
@@ -129,9 +130,10 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		if (md == null) {
 			return new PairBlock[0];
 		}
-		final List result = new ArrayList();
+		final List<PairBlock> result = new ArrayList<PairBlock>();
 		try {
 			md.traverse(new ASTVisitor() {
+				@Override
 				public boolean visitGeneral(ASTNode be) throws Exception {
 					if (be instanceof StringLiteral) {
 						result.add(new PairBlock(be.sourceStart(), be
@@ -168,7 +170,7 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 			}
 		}
 
-		return (PairBlock[]) result.toArray(new PairBlock[result.size()]);
+		return result.toArray(new PairBlock[result.size()]);
 	}
 
 	/**
