@@ -60,8 +60,8 @@ class ParserInput implements ISourceModule {
 		return new String(getContentsAsCharArray());
 	}
 
-	public char[] getFileName() {
-		return resource.getPath().toCharArray();
+	public String getFileName() {
+		return resource.getPath();
 	}
 
 }
