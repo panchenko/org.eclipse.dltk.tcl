@@ -33,6 +33,7 @@ public class PASelectionTests extends AbstractModelCompletionTests {
 
 	public void tearDownSuite() throws Exception {
 		super.tearDownSuite();
+		deleteProject(PROJECT_NAME);
 	}
 
 	public static Test suite() {
