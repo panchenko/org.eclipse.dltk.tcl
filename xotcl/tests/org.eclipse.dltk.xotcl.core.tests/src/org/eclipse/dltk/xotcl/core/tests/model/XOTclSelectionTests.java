@@ -38,6 +38,14 @@ public class XOTclSelectionTests extends AbstractModelCompletionTests {
 		}
 	}
 
+	public void tearDownSuite() throws Exception {
+		if (PROJECT != null) {
+			deleteProject(PROJECT.getProject().getName());
+			PROJECT = null;
+		}
+		super.tearDownSuite();
+	}
+
 	public static Test suite() {
 		return new Suite(XOTclSelectionTests.class);
 	}
@@ -1038,7 +1046,7 @@ public class XOTclSelectionTests extends AbstractModelCompletionTests {
 		IType type = cu.getType("n1").getType("C0");
 		assertEquals(type, element);
 	}
-	
+
 	public void REM_testSelection066() throws ModelException {
 		ISourceModule cu = getSourceModule(SELECTION_PROJECT, "src",
 				"selection006.tcl");
