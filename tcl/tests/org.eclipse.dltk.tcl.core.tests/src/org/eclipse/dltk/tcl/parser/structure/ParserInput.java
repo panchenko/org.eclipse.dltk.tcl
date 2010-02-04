@@ -52,10 +52,6 @@ class ParserInput implements ISourceModule {
 		return null;
 	}
 
-	public IPath getScriptFolder() {
-		return Path.EMPTY;
-	}
-
 	public String getSourceContents() {
 		return new String(getContentsAsCharArray());
 	}
