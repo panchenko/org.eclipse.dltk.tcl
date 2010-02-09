@@ -10,17 +10,24 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.tcl.core.ITclSourceParser;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
-import org.eclipse.dltk.tcl.internal.parser.NewTclSourceParser;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceParserFactory;
+import org.eclipse.dltk.utils.TextUtils;
 
 public class XOTclParserUtilTests extends TestCase {
 
 	public void testParseUtil001() throws Throwable {
-		String content = "namespace eval c  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval b {\n"
-				+ "		proc ::c::d { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval b {",
+				"		proc ::c::d { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d");
 		assertEquals(1, nodes.length);
@@ -34,9 +41,15 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil002() throws Throwable {
-		String content = "namespace eval c  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval b {\n"
-				+ "		proc ::c::d { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval b {",
+				"		proc ::c::d { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d");
 		assertEquals(1, nodes.length);
@@ -50,10 +63,17 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil003() throws Throwable {
-		String content = "namespace eval c  {\n" + "	namespace eval d {\n"
-				+ "	}\n" + "}\n" + "namespace eval a {\n"
-				+ "	namespace eval b {\n" + "		proc ::c::d::q { } {\n"
-				+ "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c  {",
+				"	namespace eval d {",
+				"	}",
+				"}",
+				"namespace eval a {",
+				"	namespace eval b {",
+				"		proc ::c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d::q");
 		assertEquals(1, nodes.length);
@@ -67,10 +87,17 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil004() throws Throwable {
-		String content = "namespace eval c  {\n" + "	namespace eval d {\n"
-				+ "	}\n" + "}\n" + "namespace eval a {\n"
-				+ "	namespace eval b {\n" + "		proc ::c::d::q { } {\n"
-				+ "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c  {",
+				"	namespace eval d {",
+				"	}",
+				"}",
+				"namespace eval a {",
+				"	namespace eval b {",
+				"		proc ::c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d::q");
 		assertEquals(1, nodes.length);
@@ -84,10 +111,19 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil005() throws Throwable {
-		String content = "namespace eval c  {\n" + "	namespace eval d {\n"
-				+ "	}\n" + "}\n" + "namespace eval a {\n"
-				+ "	namespace eval c {\n" + "	}\n" + "	namespace eval b {\n"
-				+ "		proc ::c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c  {",
+				"	namespace eval d {",
+				"	}",
+				"}",
+				"namespace eval a {",
+				"	namespace eval c {",
+				"	}",
+				"	namespace eval b {",
+				"		proc ::c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d::q");
 		assertEquals(1, nodes.length);
@@ -101,11 +137,21 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil006() throws Throwable {
-		String content = "namespace eval c  {\n" + "	namespace eval d {\n"
-				+ "	}\n" + "}\n" + "namespace eval a {\n"
-				+ "	namespace eval c {\n" + "		namespace eval d {\n" + "		}\n"
-				+ "	}\n" + "	namespace eval b {\n" + "		proc ::c::d::q { } {\n"
-				+ "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c  {",
+				"	namespace eval d {",
+				"	}",
+				"}",
+				"namespace eval a {",
+				"	namespace eval c {",
+				"		namespace eval d {",
+				"		}",
+				"	}",
+				"	namespace eval b {",
+				"		proc ::c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d::q");
 		assertEquals(1, nodes.length);
@@ -119,9 +165,15 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil007() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval b {\n"
-				+ "		proc ::c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c::d  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval b {",
+				"		proc ::c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d::q");
 		assertEquals(1, nodes.length);
@@ -135,10 +187,17 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil008() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval b {\n"
-				+ "		namespace eval c::d {\n" + "		}\n"
-				+ "		proc c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c::d  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval b {",
+				"		namespace eval c::d {",
+				"		}",
+				"		proc c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "c::d::q");
 		assertEquals(1, nodes.length);
@@ -152,10 +211,19 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil009() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval c::d {\n" + "	}\n"
-				+ "	namespace eval b {\n" + "		namespace eval c::d {\n"
-				+ "		}\n" + "		proc c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c::d  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval c::d {",
+				"	}",
+				"	namespace eval b {",
+				"		namespace eval c::d {",
+				"		}",
+				"		proc c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "c::d::q");
 		assertEquals(1, nodes.length);
@@ -169,12 +237,23 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil010() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval c {\n"
-				+ "		namespace eval d {\n" + "		}\n" + "	}"
-				+ "	namespace eval c::d {\n" + "	}\n" + "	namespace eval b {\n"
-				+ "		namespace eval c::d {\n" + "		}\n"
-				+ "		proc c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c::d  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval c {",
+				"		namespace eval d {",
+				"		}",
+				"	}",
+				"	namespace eval c::d {",
+				"	}",
+				"	namespace eval b {",
+				"		namespace eval c::d {",
+				"		}",
+				"		proc c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "c::d::q");
 		assertEquals(1, nodes.length);
@@ -188,12 +267,22 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil011() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval c {\n"
-				+ "		namespace eval d {\n" + "		}\n" + "	}"
-				+ "	namespace eval c::d {\n" + "	}\n" + "	namespace eval b {\n"
-				+ "		namespace eval c::d {\n" + "		}\n"
-				+ "		proc ::c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c::d  {" + "}",
+				"namespace eval a {",
+				"	namespace eval c {",
+				"		namespace eval d {",
+				"		}",
+				"	}",
+				"	namespace eval c::d {",
+				"	}",
+				"	namespace eval b {",
+				"		namespace eval c::d {",
+				"		}",
+				"		proc ::c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d::q");
 		assertEquals(1, nodes.length);
@@ -210,22 +299,23 @@ public class XOTclParserUtilTests extends TestCase {
 	 * @throws Throwable
 	 */
 	public void testParseUtil012() throws Throwable {
-		String content = 
-			"namespace eval c::d  {\n" + "}\n"
-		  + "namespace eval a {\n" + 
-		    "	namespace eval c {\n"
-		+   "		namespace eval d {\n"
-		+   "		}\n" 
-		+   "	}\n"
-		+   "	namespace eval c::d {\n" 
-		+   "	}\n" 
-		+   "	namespace eval b {\n"
-		+   "		namespace eval c::d {\n" 
-		+   "		}\n"
-		+   "		proc ::a::c::d::q { } {\n"
-		+   "		}\n"
-		+   "	}\n"
-		+   "}\n";
+		String[] content = {
+				"namespace eval c::d  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval c {",
+				"		namespace eval d {",
+				"		}",
+				"	}",
+				"	namespace eval c::d {",
+				"	}",
+				"	namespace eval b {",
+				"		namespace eval c::d {",
+				"		}",
+				"		proc ::a::c::d::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::a::c::d::q");
 		assertEquals(1, nodes.length);
@@ -239,12 +329,22 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil013() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "}\n"
-				+ "namespace eval a {\n" + "	namespace eval c {\n"
-				+ "		namespace eval d {\n" + "		}\n" + "	}"
-				+ "	namespace eval c::d {\n" + "	}\n" + "	namespace eval b {\n"
-				+ "		namespace eval c::d {\n" + "		}\n"
-				+ "		proc ::a::b::c::d::q { } {\n" + "		}\n" + "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c::d  {",
+				"}",
+				"namespace eval a {",
+				"	namespace eval c {",
+				"		namespace eval d {",
+				"		}",
+				"	}",
+				"	namespace eval c::d {",
+				"	}",
+				"	namespace eval b {",
+				"		namespace eval c::d {",
+				"		}",
+				"		proc ::a::b::c::d::q { } {",
+				"		}",
+				"	}" + "}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::a::b::c::d::q");
 		assertEquals(1, nodes.length);
@@ -258,11 +358,18 @@ public class XOTclParserUtilTests extends TestCase {
 	}
 
 	public void testParseUtil014() throws Throwable {
-		String content = "namespace eval c::d  {\n" + "	namespace eval a {\n"
-				+ "		namespace eval gamma::delta {\n" + "		}\n" + "	}\n"
-				+ "}\n" + "namespace eval a {\n"
-				+ "		proc ::c::d::a::gamma::delta::q { } {\n" + "		}\n"
-				+ "	}\n" + "}\n";
+		String[] content = {
+				"namespace eval c::d  {",
+				"	namespace eval a {",
+				"		namespace eval gamma::delta {",
+				"		}",
+				"	}",
+				"}",
+				"namespace eval a {",
+				"		proc ::c::d::a::gamma::delta::q { } {",
+				"		}",
+				"	}",
+				"}" };
 		ModuleDeclaration module = this.parser(content);
 		ASTNode nodes[] = findNodeByName(module, "::c::d::a::gamma::delta::q");
 		assertEquals(1, nodes.length);
@@ -296,13 +403,16 @@ public class XOTclParserUtilTests extends TestCase {
 		return (ASTNode[]) results.toArray(new ASTNode[results.size()]);
 	}
 
-	private ModuleDeclaration parser(String content) {
-		ITclSourceParser parser = (ITclSourceParser) (new TclSourceParserFactory())
+	private ModuleDeclaration parser(String[] content) {
+		ITclSourceParser parser = new TclSourceParserFactory()
 				.createSourceParser();
-		;
-		ModuleDeclaration module = parser.parse("file".toCharArray(), content
-				.toCharArray(), null);
+		ModuleDeclaration module = parser.parse(new ModuleSource(join(content)),
+				null);
 		assertNotNull(module);
 		return module;
+	}
+
+	public static String join(String[] content) {
+		return TextUtils.join(content, '\n') + '\n';
 	}
 }

@@ -10,8 +10,8 @@ class TestTclParser extends NewTclSourceParser {
 		setUseDetectors(false);
 	}
 
-	public char[] getFileName() {
-		return "myfile.tcl".toCharArray();
+	public String getFileName() {
+		return "myfile.tcl";
 	}
 
 	public IProblemReporter getProblemReporter() {
