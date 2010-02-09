@@ -14,6 +14,7 @@ import java.util.List;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.tcl.ast.TclArgument;
 import org.eclipse.dltk.tcl.ast.TclConstants;
@@ -23,7 +24,7 @@ import org.eclipse.dltk.utils.CorePrinter;
 
 public class TclBlockExpression extends Expression {
 	private String fBlockContent;
-	private char[] fileName = null;
+	private String fileName = null;
 	private TclArgument processedArgument;
 
 	public TclBlockExpression(int start, int end, String content) {
@@ -62,7 +63,7 @@ public class TclBlockExpression extends Expression {
 		return this.fBlockContent;
 	}
 
-	public void setFilename(char[] fileName) {
+	public void setFilename(String fileName) {
 		this.fileName = fileName;
 	}
 
@@ -82,8 +83,8 @@ public class TclBlockExpression extends Expression {
 				.getSourceParser(TclNature.NATURE_ID);
 		parser.setProcessorsState(useProcessors);
 		parser.setOffset(this.sourceStart() + 1);
-		ModuleDeclaration module = parser.parse(this.fileName, content
-				.toCharArray(), null);
+		ModuleDeclaration module = parser.parse(new ModuleSource(this.fileName,
+				content), null);
 		return module.getStatements();
 	}
 }

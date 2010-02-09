@@ -32,7 +32,7 @@ import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.RelevanceConstants;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.CompletionContext;
@@ -47,6 +47,7 @@ import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
@@ -86,7 +87,7 @@ import org.eclipse.emf.common.util.EList;
 public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	protected TclCompletionParser parser;
-	protected org.eclipse.dltk.core.ISourceModule sourceModule;
+	protected ISourceModule sourceModule;
 	protected final static boolean TRACE_COMPLETION_TIME = false;
 	private ICompletionExtension[] extensions;
 	private TclBuildPathPackageCollector packageCollector;
@@ -97,11 +98,10 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		this.parser = new TclCompletionParser(this.extensions);
 	}
 
-	public void complete(ISourceModule sourceModule, int completionPosition,
+	public void complete(IModuleSource sourceModule, int completionPosition,
 			int pos) {
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
-		this.sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceModule
-				.getModelElement();
+		this.sourceModule = (ISourceModule) sourceModule.getModelElement();
 		if (VERBOSE) {
 			System.out.print("COMPLETION IN "); //$NON-NLS-1$
 			System.out.print(sourceModule.getFileName());
@@ -1556,7 +1556,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		return this.requestor;
 	}
 
-	public org.eclipse.dltk.core.ISourceModule getSourceModule() {
+	public ISourceModule getSourceModule() {
 		return this.sourceModule;
 	}
 

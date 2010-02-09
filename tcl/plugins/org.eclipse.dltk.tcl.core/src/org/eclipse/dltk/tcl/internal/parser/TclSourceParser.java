@@ -10,6 +10,7 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParserExtension;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
@@ -39,7 +40,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 	private IProblemReporter problemReporter;
 	protected ISourceLineTracker codeModel;
 	protected String content;
-	private char[] fileName;
+	private String fileName;
 	private int startPos = 0;
 	boolean useProcessors = true;
 	private int flags;
@@ -47,13 +48,13 @@ public class TclSourceParser extends AbstractSourceParser implements
 
 	private ModuleDeclaration moduleDeclaration;
 
-	public ModuleDeclaration parse(char[] fileName, char[] source,
+	public ModuleDeclaration parse(IModuleSource input,
 			IProblemReporter reporter) {
 		initDetectors();
 		this.problemReporter = reporter;
-		this.content = new String(source);
+		this.content = input.getSourceContents();
 		this.codeModel = TextUtils.createLineTracker(this.content);
-		this.fileName = fileName;
+		this.fileName = input.getFileName();
 
 		this.moduleDeclaration = new ModuleDeclaration(this.content.length());
 
@@ -232,7 +233,7 @@ public class TclSourceParser extends AbstractSourceParser implements
 		return this.problemReporter;
 	}
 
-	public char[] getFileName() {
+	public String getFileName() {
 		return this.fileName;
 	}
 

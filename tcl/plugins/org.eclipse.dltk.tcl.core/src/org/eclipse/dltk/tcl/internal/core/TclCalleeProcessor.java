@@ -79,7 +79,7 @@ public class TclCalleeProcessor implements ICalleeProcessor {
 				ISourceElementParser parser = DLTKLanguageManager
 						.getSourceElementParser(TclNature.NATURE_ID);
 				parser.setRequestor(requestor);
-				parser.parseSourceModule(new MethodSourceCode(method), null);
+				parser.parseSourceModule(new MethodSourceCode(method));
 			} else {
 				// TODO: Report error here.
 			}

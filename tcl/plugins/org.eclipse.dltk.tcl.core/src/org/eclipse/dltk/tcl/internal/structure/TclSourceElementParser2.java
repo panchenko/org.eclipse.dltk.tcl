@@ -20,9 +20,9 @@ import java.util.Set;
 
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.ISourceElementRequestorExtension;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.ISourceElementParser;
-import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.ast.TclModule;
@@ -119,9 +119,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 	}
 
 	@Override
-	public void parseSourceModule(
-			org.eclipse.dltk.compiler.env.ISourceModule module,
-			ISourceModuleInfo mifo) {
+	public void parseSourceModule(IModuleSource module) {
 		final ISourceElementRequestor requestor = getRequestor();
 		if (USE_NEW && isStructureMode(requestor)) {
 			initDetectors();
@@ -149,7 +147,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 				collector.reportAll(reporter, tracker);
 			}
 		} else {
-			super.parseSourceModule(module, mifo);
+			super.parseSourceModule(module);
 		}
 	}
 

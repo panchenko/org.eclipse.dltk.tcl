@@ -12,6 +12,6 @@ public interface ITclParser {
 
 	IProblemReporter getProblemReporter();
 
-	char[] getFileName();
+	String getFileName();
 	int getStartPos();
 }

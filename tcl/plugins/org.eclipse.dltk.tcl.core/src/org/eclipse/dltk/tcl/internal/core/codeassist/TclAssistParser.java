@@ -17,7 +17,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.codeassist.IAssistParser;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.tcl.core.ITclKeywords;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -83,9 +83,8 @@ public abstract class TclAssistParser implements IAssistParser {
 		this.module = unit;
 	}
 
-	public ModuleDeclaration parse(ISourceModule sourceUnit) {
-		module = this.parser.parse(sourceUnit.getFileName().toCharArray(),
-				sourceUnit.getContentsAsCharArray(), null);
+	public ModuleDeclaration parse(IModuleSource sourceUnit) {
+		module = (ModuleDeclaration) this.parser.parse(sourceUnit, null);
 		module.rebuild();
 
 		TclASTUtil.extendStatements(module, sourceUnit.getSourceContents());

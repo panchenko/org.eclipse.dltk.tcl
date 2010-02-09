@@ -27,7 +27,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
@@ -39,7 +39,6 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.internal.codeassist.select.SelectionNodeFound;
 import org.eclipse.dltk.tcl.ast.ITclStatementLookLike;
 import org.eclipse.dltk.tcl.ast.TclStatement;
-import org.eclipse.dltk.tcl.ast.expressions.TclExecuteExpression;
 import org.eclipse.dltk.tcl.core.TclLanguageToolkit;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.extensions.ISelectionExtension;
@@ -81,7 +80,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				.getSelectionExtensions();
 	}
 
-	public IModelElement[] select(ISourceModule sourceUnit,
+	public IModelElement[] select(IModuleSource sourceUnit,
 			int selectionSourceStart, int selectionSourceEnd) {
 		sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit
 				.getModelElement();

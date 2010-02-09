@@ -18,6 +18,7 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParserExtension;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
@@ -58,7 +59,7 @@ import org.eclipse.emf.common.util.EList;
 public class NewTclSourceParser extends AbstractSourceParser implements
 		ITclParser, ISourceParser, ISourceParserExtension, ITclSourceParser {
 	private IProblemReporter problemReporter;
-	private char[] fileName;
+	private String fileName;
 	boolean useProcessors = true;
 	private boolean useDetectors = true;
 
@@ -70,7 +71,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 	private NamespaceScopeProcessor coreProcessor = DefinitionManager
 			.getInstance().createProcessor();;
 
-	public ModuleDeclaration parse(char[] fileName, TclModule tclModule,
+	public ModuleDeclaration parse(String fileName, TclModule tclModule,
 			IProblemReporter reporter) {
 		processedForContentNodes.clear();
 		initDetectors();
@@ -367,7 +368,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 		return this.problemReporter;
 	}
 
-	public char[] getFileName() {
+	public String getFileName() {
 		return this.fileName;
 	}
 
@@ -410,7 +411,7 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 				.length());
 	}
 
-	public ModuleDeclaration parse(final char[] fileName, char[] source,
+	public ModuleDeclaration parse(IModuleSource input,
 			final IProblemReporter reporter) {
 		PerformanceNode node = RuntimePerformanceMonitor.begin();
 		processedForContentNodes.clear();
@@ -421,16 +422,17 @@ public class NewTclSourceParser extends AbstractSourceParser implements
 			collector = new TclErrorCollector();
 		}
 		newParser.setGlobalOffset(globalOffset);
-		TclModule module = newParser.parseModule(new String(source), collector,
+		String content = input.getSourceContents();
+		TclModule module = newParser.parseModule(content, collector,
 				coreProcessor);
 		// TODO: Add error passing to reporter here.
-		ModuleDeclaration result = parse(fileName, module, reporter);
+		ModuleDeclaration result = parse(input.getFileName(), module, reporter);
 		if (collector != null) {
 			collector.reportAll(reporter, tracker);
 		}
 
-		node.done(TclNature.NATURE_ID, "new tcl source parser:time",
-				source.length);
+		node.done(TclNature.NATURE_ID, "new tcl source parser:time", content
+				.length());
 		return result;
 	}
 

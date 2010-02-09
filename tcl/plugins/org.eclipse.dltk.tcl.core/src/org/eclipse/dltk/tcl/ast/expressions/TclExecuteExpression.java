@@ -16,6 +16,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.tcl.ast.TclConstants;
 import org.eclipse.dltk.tcl.core.ITclSourceParser;
@@ -23,6 +24,7 @@ import org.eclipse.dltk.tcl.core.TclNature;
 
 public class TclExecuteExpression extends Expression {
 	private String fExecuteContent;
+
 	public TclExecuteExpression(int start, int end, String content) {
 		this.setStart(start);
 		this.setEnd(end);
@@ -67,15 +69,16 @@ public class TclExecuteExpression extends Expression {
 			return new ArrayList();
 		}
 
-		ITclSourceParser parser = null;
-		parser = (ITclSourceParser) DLTKLanguageManager.getSourceParser(TclNature.NATURE_ID);
+		ITclSourceParser parser = (ITclSourceParser) DLTKLanguageManager
+				.getSourceParser(TclNature.NATURE_ID);
 		parser.setOffset(startFrom);
-		ModuleDeclaration module = parser.parse(null, content.toCharArray(), null);
+		ModuleDeclaration module = parser
+				.parse(new ModuleSource(content), null);
 		return module.getStatements();
 	}
 
 	public String toString() {
 		return this.fExecuteContent;
 	}
-	
+
 }

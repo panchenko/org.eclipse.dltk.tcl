@@ -144,7 +144,7 @@ public class TclParseUtil {
 	}
 
 	public static TclStatement convertToAST(TclCommand command,
-			char[] filename, int offset, String content, int startPos) {
+			String filename, int offset, String content, int startPos) {
 		try {
 			List<ASTNode> exprs = new ArrayList<ASTNode>();
 			for (TclWord word : command.getWords()) {

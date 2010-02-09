@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.IASTCache;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.core.DLTKCore;
@@ -131,7 +131,7 @@ public class TclASTCache implements IASTCache {
 	}
 
 	public void storeModule(ISourceModule module,
-			ModuleDeclaration moduleDeclaration, ProblemCollector problems) {
+			IModuleDeclaration moduleDeclaration, ProblemCollector problems) {
 		IFileHandle handle = EnvironmentPathUtils.getFile(module, false);
 		if (handle == null) {
 			return;
