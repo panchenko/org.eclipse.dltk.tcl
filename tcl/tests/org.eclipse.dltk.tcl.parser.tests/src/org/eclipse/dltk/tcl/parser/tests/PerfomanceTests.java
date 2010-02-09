@@ -17,6 +17,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.dltk.ast.parser.ISourceParser;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.tcl.ast.TclCommand;
 import org.eclipse.dltk.tcl.internal.parser.TclSourceParserFactory;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
@@ -50,7 +51,7 @@ public class PerfomanceTests extends TestCase {
 
 		PerformanceMonitor.getDefault().begin("OLD PARSE BIG FILE:");
 		ISourceParser p = (new TclSourceParserFactory()).createSourceParser();
-		p.parse(null, contents.toCharArray(), null);
+		p.parse(new ModuleSource(contents), null);
 		PerformanceMonitor.getDefault().end("OLD PARSE BIG FILE:");
 		// if (errors.getCount() > 0) {
 		// TestUtils.outErrors(contents, errors);
