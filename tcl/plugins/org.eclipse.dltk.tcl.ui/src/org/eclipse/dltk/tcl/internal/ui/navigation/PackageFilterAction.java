@@ -21,13 +21,13 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.dltk.compiler.env.ISourceMethod;
-import org.eclipse.dltk.compiler.env.ISourceType;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IPackageDeclaration;
 import org.eclipse.dltk.core.IParent;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.filters.IFilterElementNameProvider;
 import org.eclipse.dltk.tcl.core.TclNature;
@@ -46,7 +46,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 
-
 class PackageFilterAction extends Action {
 	StructuredViewer fViewer;
 	SimplePackagesContentProvider provider;
@@ -54,11 +53,13 @@ class PackageFilterAction extends Action {
 	private PackageFilter fFilter;
 	private IPreferenceStore fStore;
 	String preferenceKey;
+
 	private class SimplePackagesContentProvider implements ITreeContentProvider {
 		private Object[] NO_ELEMENT = new Object[0];
 		protected Map elements = new HashMap();
 
-		public SimplePackagesContentProvider() {}
+		public SimplePackagesContentProvider() {
+		}
 
 		public synchronized Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof IWorkspaceRoot) {
@@ -85,11 +86,15 @@ class PackageFilterAction extends Action {
 			return getChildren(inputElement);
 		}
 
-		public void dispose() {}
+		public void dispose() {
+		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
 	}
-	private class SimplePackageLabelProvider extends ScriptUILabelProvider implements IBaseLabelProvider {
+
+	private class SimplePackageLabelProvider extends ScriptUILabelProvider
+			implements IBaseLabelProvider {
 		public Image getImage(Object element) {
 			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
 		}
@@ -112,21 +117,25 @@ class PackageFilterAction extends Action {
 		String matchName = null;
 		if (element instanceof IModelElement) {
 			if (viewer instanceof IFilterElementNameProvider) {
-				matchName = ((IFilterElementNameProvider) viewer).getElementName((IModelElement) element);
+				matchName = ((IFilterElementNameProvider) viewer)
+						.getElementName((IModelElement) element);
 			} else {
 				matchName = ((IModelElement) element).getElementName();
 			}
 		} else if (element instanceof IAdaptable) {
 			IAdaptable adaptable = (IAdaptable) element;
-			IModelElement modelElement = (IModelElement) adaptable.getAdapter(IModelElement.class);
+			IModelElement modelElement = (IModelElement) adaptable
+					.getAdapter(IModelElement.class);
 			if (modelElement != null)
 				if (viewer instanceof IFilterElementNameProvider) {
-					matchName = ((IFilterElementNameProvider) viewer).getElementName(modelElement);
+					matchName = ((IFilterElementNameProvider) viewer)
+							.getElementName(modelElement);
 				} else {
 					matchName = modelElement.getElementName();
 				}
 			else {
-				IResource resource = (IResource) adaptable.getAdapter(IResource.class);
+				IResource resource = (IResource) adaptable
+						.getAdapter(IResource.class);
 				if (resource != null)
 					matchName = resource.getName();
 			}
@@ -167,7 +176,7 @@ class PackageFilterAction extends Action {
 			modelElements = (List) adaptable.getAdapter(List.class);
 		}
 		List result = new ArrayList();
-		synchronized (modelElements) {			
+		synchronized (modelElements) {
 			for (Iterator iter = modelElements.iterator(); iter.hasNext();) {
 				IModelElement e = (IModelElement) iter.next();
 				IPackageDeclaration p = getPackageDeclaration(e);
@@ -175,13 +184,16 @@ class PackageFilterAction extends Action {
 					result.add(p);
 			}
 		}
-		
-		return (IPackageDeclaration[]) result.toArray(new IPackageDeclaration[result.size()]);
+
+		return (IPackageDeclaration[]) result
+				.toArray(new IPackageDeclaration[result.size()]);
 	}
+
 	private class PackageFilter extends ViewerFilter {
 		List elements = new ArrayList();
 
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element) {
 			IPackageDeclaration decl[] = getPackageDeclaration(element);
 			if (decl == null)
 				return false;
@@ -235,12 +247,12 @@ class PackageFilterAction extends Action {
 	}
 
 	private void addElements(final IModelElement element) {
-		if (element instanceof ISourceType || element instanceof ISourceMethod)
+		if (element instanceof IType || element instanceof IMethod)
 			return;
 		if (element instanceof IPackageDeclaration) {
 			String str = getElementName(fViewer, element);
 			if (!provider.elements.containsKey(str))
-					provider.elements.put(str, element);
+				provider.elements.put(str, element);
 			return;
 		}
 		if (element instanceof IParent) {
@@ -263,11 +275,13 @@ class PackageFilterAction extends Action {
 		BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
 			public void run() {
 				provider.elements.clear();
-				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+						.getProjects();
 				for (int i = 0; i < projects.length; ++i) {
 					try {
 						if (projects[i].hasNature(TclNature.NATURE_ID)) {
-							IScriptProject project = DLTKCore.create(projects[i]);
+							IScriptProject project = DLTKCore
+									.create(projects[i]);
 							if (project != null) {
 								addElements(project);
 							}
@@ -278,20 +292,21 @@ class PackageFilterAction extends Action {
 				}
 			}
 		});
-		CheckedTreeSelectionDialog dlg = new CheckedTreeSelectionDialog(null, labelProvider, provider);
+		CheckedTreeSelectionDialog dlg = new CheckedTreeSelectionDialog(null,
+				labelProvider, provider);
 		dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
 		dlg.setTitle("Select packages");
 		dlg.setMessage("Select packages to be shown in view");
 		if (dlg.open() == CheckedTreeSelectionDialog.OK) {
 			// save preference
-			Object res[] = dlg.getResult(); 
+			Object res[] = dlg.getResult();
 			StringBuffer buf = new StringBuffer();
 			for (int i = 0; i < res.length; i++) {
 				if (res[i] instanceof String) {
-					String elemName = (String)res[i];
+					String elemName = (String) res[i];
 					if (elemName != null) {
 						buf.append(elemName);
-						buf.append("#,#"); 
+						buf.append("#,#");
 					}
 				}
 			}
