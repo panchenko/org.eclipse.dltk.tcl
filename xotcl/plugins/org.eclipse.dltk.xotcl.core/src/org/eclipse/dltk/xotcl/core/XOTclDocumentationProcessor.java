@@ -7,7 +7,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.compiler.CharOperation;
+import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
@@ -44,8 +44,7 @@ public class XOTclDocumentationProcessor extends AbstractTclCommandProcessor
 					List<TclCommand> commands = parse.getCommands();
 					for (int j = 0; j < commands.size(); j++) {
 						TclStatement st2 = TclParseUtil.convertToAST(commands
-								.get(j), CharOperation.NO_CHAR, 0, expression,
-								0);
+								.get(j), Util.EMPTY_STRING, 0, expression, 0);
 						newExpr.addStatement(st2);
 					}
 				} catch (TclParseException e) {
