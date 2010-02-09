@@ -18,6 +18,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.StringLiteral;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.statements.Block;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.tcl.ast.expressions.TclBlockExpression;
@@ -125,8 +126,8 @@ public final class TclPairMatcher implements ICharacterPairMatcher {
 		 */
 		final ISourceParser pp = DLTKLanguageManager
 				.getSourceParser(TclNature.NATURE_ID);
-		final ModuleDeclaration md = pp.parse(null, contents.toCharArray(),
-				null);
+		final ModuleDeclaration md = (ModuleDeclaration) pp.parse(
+				new ModuleSource(contents), null);
 		if (md == null) {
 			return new PairBlock[0];
 		}
