@@ -14,6 +14,7 @@ import junit.framework.Test;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
@@ -22,41 +23,42 @@ import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.tests.TclTestsPlugin;
 import org.eclipse.dltk.utils.CorePrinter;
 
-
-public class TclASTBuildTests extends AbstractModelTests
-{
+public class TclASTBuildTests extends AbstractModelTests {
 	public TclASTBuildTests(String name) {
-		super( TclTestsPlugin.PLUGIN_NAME, name);
+		super(TclTestsPlugin.PLUGIN_NAME, name);
 	}
-	
+
 	public static Test suite() {
-		return new Suite( TclASTBuildTests.class);
+		return new Suite(TclASTBuildTests.class);
 	}
-	
+
 	public void setUpSuite() throws Exception {
-		super.setUpSuite();		
+		super.setUpSuite();
 	}
+
 	public void tearDownSuite() throws Exception {
 		super.tearDownSuite();
 	}
-	
+
 	public void testBuildExtendedAST001() throws Exception {
 		String prj = "prj1";
-		IScriptProject project = setUpScriptProject( prj );
-		
-		ISourceModule module = this.getSourceModule( prj, "src", new Path("module0.tcl") );
-		
+		IScriptProject project = setUpScriptProject(prj);
+
+		ISourceModule module = this.getSourceModule(prj, "src", new Path(
+				"module0.tcl"));
+
 		String source = module.getSource();
-		
-		ISourceParser parser = DLTKLanguageManager.getSourceParser(TclNature.NATURE_ID);
-		ModuleDeclaration decl = parser.parse(null, source.toCharArray(), null);
+
+		ISourceParser parser = DLTKLanguageManager
+				.getSourceParser(TclNature.NATURE_ID);
+		ModuleDeclaration decl = (ModuleDeclaration) parser.parse(
+				new ModuleSource(source), null);
 		CorePrinter printer = new CorePrinter(System.out, true);
 		decl.printNode(printer);
-		
-		//TypeDeclaration[] types = decl.getTypes();
+
+		// TypeDeclaration[] types = decl.getTypes();
 		decl.printNode(printer);
-		
-		
-		deleteProject( prj );
+
+		deleteProject(prj);
 	}
 }
