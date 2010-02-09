@@ -15,13 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.IModelElement;
 
-class ParserInput implements ISourceModule {
+class ParserInput implements IModuleSource {
 
 	private final URL resource;
 

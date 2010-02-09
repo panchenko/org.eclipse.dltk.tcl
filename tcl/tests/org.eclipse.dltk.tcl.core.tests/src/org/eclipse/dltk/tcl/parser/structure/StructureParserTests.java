@@ -24,7 +24,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.ISourceElementParser;
 import org.eclipse.dltk.core.caching.IStructureConstants;
@@ -122,10 +122,10 @@ public class StructureParserTests extends TestCase {
 	 * @param input
 	 * @param parser
 	 */
-	private Collector parse(ISourceModule input, ISourceElementParser parser) {
+	private Collector parse(IModuleSource input, ISourceElementParser parser) {
 		Collector collector = new Collector();
 		parser.setRequestor(collector);
-		parser.parseSourceModule(input, null);
+		parser.parseSourceModule(input);
 		return collector;
 	}
 

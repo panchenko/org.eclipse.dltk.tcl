@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.dltk.ast.parser.ISourceParser;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKLanguageManager;
@@ -40,8 +41,8 @@ public abstract class AbstractTclParserTests extends TestCase {
 	protected ProblemCollector parse(final String resourceName)
 			throws IOException {
 		final ProblemCollector collector = new ProblemCollector();
-		getParser().parse(resourceName.toCharArray(),
-				readResource(resourceName), collector);
+		getParser().parse(new ModuleSource(readResource(resourceName)),
+				collector);
 		return collector;
 	}
 

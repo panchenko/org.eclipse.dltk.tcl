@@ -20,6 +20,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.DLTKLanguageManager;
@@ -102,7 +103,8 @@ public class AllParseTests extends TestCase {
 		final ISourceParser parser = DLTKLanguageManager
 				.getSourceParser(TclNature.NATURE_ID);
 		long s1 = System.currentTimeMillis();
-		ModuleDeclaration module1 = parser.parse(null, content, collector);
+		ModuleDeclaration module1 = (ModuleDeclaration) parser.parse(
+				new ModuleSource(content), collector);
 		long e1 = System.currentTimeMillis();
 		// if (collector.hasErrors()) {
 		// fail(collector.getErrors().toString());

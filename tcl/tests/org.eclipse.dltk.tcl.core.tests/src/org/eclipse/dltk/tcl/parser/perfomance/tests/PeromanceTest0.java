@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParserConstants;
+import org.eclipse.dltk.compiler.env.ModuleSource;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
@@ -141,10 +142,9 @@ public class PeromanceTest0 extends TestCase {
 				String content = getContents(scriptsZip.getInputStream(entry));
 				parser.setRequirestor(requestor);
 
-				ModuleDeclaration moduleDeclaration = SourceParserUtil
-						.getModuleDeclaration("", content.toCharArray(),
-								TclNature.NATURE_ID, null, null,
-								ISourceParserConstants.DEFAULT);
+				ModuleDeclaration moduleDeclaration = (ModuleDeclaration) SourceParserUtil
+						.parse(new ModuleSource(content), TclNature.NATURE_ID,
+								null);
 
 				TclMixinBuildVisitor visitor = new TclMixinBuildVisitor(
 						moduleDeclaration, null, false, requestor);
