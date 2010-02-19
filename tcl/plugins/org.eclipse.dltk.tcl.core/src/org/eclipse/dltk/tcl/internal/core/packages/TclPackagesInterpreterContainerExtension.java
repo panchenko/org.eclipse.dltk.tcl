@@ -30,8 +30,6 @@ import org.eclipse.emf.common.util.EList;
 public class TclPackagesInterpreterContainerExtension implements
 		IInterpreterContainerExtension {
 
-	private static final IAccessRule[] EMPTY_RULES = new IAccessRule[0];
-
 	public TclPackagesInterpreterContainerExtension() {
 	}
 
@@ -142,7 +140,7 @@ public class TclPackagesInterpreterContainerExtension implements
 					if (!inInterpreter) {
 						// Check for interpreter container libraries.
 						buildpathEntries.add(DLTKCore.newLibraryEntry(
-								entryPath, EMPTY_RULES, attributes,
+								entryPath, IAccessRule.EMPTY_RULES, attributes,
 								BuildpathEntry.INCLUDE_ALL, (IPath[]) excluded
 										.toArray(new IPath[excluded.size()]),
 								false, true));
@@ -159,6 +157,6 @@ public class TclPackagesInterpreterContainerExtension implements
 	public void preProcessEntries(IScriptProject project,
 			List<IBuildpathEntry> entries) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
