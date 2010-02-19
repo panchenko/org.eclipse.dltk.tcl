@@ -2,7 +2,6 @@ package org.eclipse.dltk.tcl.internal.core.packages;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,75 +37,62 @@ public class TclPackagesInterpreterContainerExtension implements
 		if (TclCorePreferences.USE_PACKAGE_CONCEPT) {
 			return;
 		}
-		IPath[] locations = null;
-		IInterpreterInstall install = null;
+		final IInterpreterInstall install;
 		try {
 			install = ScriptRuntime.getInterpreterInstall(project);
-			List locs = new ArrayList();
-			for (Iterator iterator = buildpathEntries.iterator(); iterator
-					.hasNext();) {
-				IBuildpathEntry entry = (IBuildpathEntry) iterator.next();
-				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
-						&& entry.isExternal()) {
-					locs.add(entry.getPath());
-				}
-				locations = (IPath[]) locs.toArray(new IPath[locs.size()]);
-			}
 		} catch (CoreException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
+			return;
 		}
-		if (install != null) {
-			Set<String> set = new HashSet<String>();
-			InterpreterContainerHelper.getInterpreterContainerDependencies(
-					project, set, set);
-
-			List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
-					install, set, true);
-			if (infos.size() == 0) {
-				return;
+		final List<IPath> externals = new ArrayList<IPath>();
+		for (IBuildpathEntry entry : buildpathEntries) {
+			if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
+					&& entry.isExternal()) {
+				externals.add(entry.getPath());
 			}
-			IEnvironment env = EnvironmentManager.getEnvironment(project);
-			if (env == null) {
-				return;
+		}
+		final Set<String> packageNames = new HashSet<String>();
+		InterpreterContainerHelper.getInterpreterContainerDependencies(project,
+				packageNames, packageNames);
+
+		final List<TclPackageInfo> infos = TclPackagesManager.getPackageInfos(
+				install, packageNames, true);
+		if (infos.isEmpty()) {
+			return;
+		}
+		IEnvironment env = EnvironmentManager.getEnvironment(project);
+		if (env == null) {
+			return;
+		}
+		Set<IPath> allPaths = new HashSet<IPath>();
+		for (TclPackageInfo info : infos) {
+			EList<String> sources = info.getSources();
+			for (String path : sources) {
+				IPath rpath = new Path(path).removeLastSegments(1);
+				IPath fullPath = EnvironmentPathUtils.getFullPath(env, rpath);
+				allPaths.add(fullPath);
 			}
-			Set<IPath> allPaths = new HashSet<IPath>();
-			for (TclPackageInfo info : infos) {
-				EList<String> sources = info.getSources();
-				for (String path : sources) {
-					IPath rpath = new Path(path).removeLastSegments(1);
-					IPath fullPath = EnvironmentPathUtils.getFullPath(env,
-							rpath);
-					allPaths.add(fullPath);
-				}
-			}
+		}
 
-			Set rawEntries = new HashSet(allPaths.size());
-			for (Iterator iterator = allPaths.iterator(); iterator.hasNext();) {
-				IPath entryPath = (IPath) iterator.next();
-
-				if (!entryPath.isEmpty()) {
-					// TODO Check this
-					// resolve symlink
-					// {
-					// IFileHandle f = env.getFile(entryPath);
-					// if (f == null)
-					// continue;
-					// entryPath = new Path(f.getCanonicalPath());
-					// }
-					if (rawEntries.contains(entryPath))
-						continue;
-
-					/*
-					 * if (!entryPath.isAbsolute()) Assert.isTrue(false, "Path
-					 * for IBuildpathEntry must be absolute"); //$NON-NLS-1$
-					 */
-					IBuildpathAttribute[] attributes = new IBuildpathAttribute[0];
-					ArrayList excluded = new ArrayList(); // paths to exclude
-					for (Iterator iterator2 = allPaths.iterator(); iterator2
-							.hasNext();) {
-						IPath otherPath = (IPath) iterator2.next();
+		Set<IPath> rawEntries = new HashSet<IPath>(allPaths.size());
+		for (IPath entryPath : allPaths) {
+			if (!entryPath.isEmpty()) {
+				// TODO Check this
+				// resolve symlink
+				// {
+				// IFileHandle f = env.getFile(entryPath);
+				// if (f == null)
+				// continue;
+				// entryPath = new Path(f.getCanonicalPath());
+				// }
+				if (rawEntries.contains(entryPath))
+					continue;
+				if (!isPrefixOf(externals, entryPath)) {
+					// paths to exclude
+					ArrayList<IPath> excluded = new ArrayList<IPath>();
+					for (IPath otherPath : allPaths) {
 						if (otherPath.isEmpty())
 							continue;
 						// TODO Check this
@@ -127,28 +113,33 @@ public class TclPackagesInterpreterContainerExtension implements
 							}
 						}
 					}
-					boolean inInterpreter = false;
-					if (locations != null) {
-						for (int i = 0; i < locations.length; i++) {
-							IPath path = locations[i];
-							if (path.isPrefixOf(entryPath)) {
-								inInterpreter = true;
-								break;
-							}
-						}
-					}
-					if (!inInterpreter) {
-						// Check for interpreter container libraries.
-						buildpathEntries.add(DLTKCore.newLibraryEntry(
-								entryPath, IAccessRule.EMPTY_RULES, attributes,
-								BuildpathEntry.INCLUDE_ALL, (IPath[]) excluded
-										.toArray(new IPath[excluded.size()]),
-								false, true));
-						rawEntries.add(entryPath);
-					}
+					// Check for interpreter container libraries.
+					buildpathEntries.add(DLTKCore.newLibraryEntry(entryPath,
+							IAccessRule.EMPTY_RULES,
+							new IBuildpathAttribute[0],
+							BuildpathEntry.INCLUDE_ALL, excluded
+									.toArray(new IPath[excluded.size()]),
+							false, true));
+					rawEntries.add(entryPath);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Tests if the entryPath is contained in the specified list of paths.
+	 * 
+	 * @param paths
+	 * @param entryPath
+	 * @return
+	 */
+	private static boolean isPrefixOf(final List<IPath> paths, IPath entryPath) {
+		for (IPath path : paths) {
+			if (path.isPrefixOf(entryPath)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
