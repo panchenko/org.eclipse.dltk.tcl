@@ -12,12 +12,12 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IAccessRule;
 import org.eclipse.dltk.core.IBuildpathAttribute;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IInterpreterContainerExtension;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
+import org.eclipse.dltk.launching.IInterpreterContainerExtension;
 import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.launching.InterpreterContainerHelper;
 import org.eclipse.dltk.launching.ScriptRuntime;
@@ -142,12 +142,4 @@ public class TclPackagesInterpreterContainerExtension implements
 		return false;
 	}
 
-	/**
-	 * @since 2.0
-	 */
-	public void preProcessEntries(IScriptProject project,
-			List<IBuildpathEntry> entries) {
-		// TODO Auto-generated method stub
-
-	}
 }

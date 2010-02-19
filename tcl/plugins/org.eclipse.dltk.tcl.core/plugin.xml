@@ -197,7 +197,7 @@
       </mixin>
    </extension>
    <extension
-         point="org.eclipse.dltk.core.interpreterContainerExtension">
+         point="org.eclipse.dltk.launching.interpreterContainerExtension">
       <interpreterContainerExtension
             class="org.eclipse.dltk.tcl.internal.core.packages.TclPackagesInterpreterContainerExtension"
             nature="org.eclipse.dltk.tcl.core.nature"
