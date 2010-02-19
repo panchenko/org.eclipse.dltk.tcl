@@ -82,12 +82,11 @@ public class TclPackagesManager {
 			boolean fetchIfRequired) {
 		initialize();
 		TclInterpreterInfo interpreterInfo = getTclInterpreter(install);
-		List<TclPackageInfo> collection = null;
+		List<TclPackageInfo> collection;
 		synchronized (TclPackagesManager.class) {
 			collection = Collections
-					.unmodifiableList(new ArrayList<TclPackageInfo>(
-							getPackagesForInterpreter(packageNames,
-									fetchIfRequired, interpreterInfo, install)));
+					.unmodifiableList(getPackagesForInterpreter(packageNames,
+							fetchIfRequired, interpreterInfo, install));
 		}
 		return collection;
 	}
