@@ -711,8 +711,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 	}
 
 	@SuppressWarnings("unchecked")
-	public DependencyResponse getDependencies(int buildType, Set localElements,
-			Set externalElements, Set oldExternalFolders, Set externalFolders) {
+	public DependencyResponse getDependencies(int buildType,
+			Set<ISourceModule> localElements,
+			Set<ISourceModule> externalElements, Set oldExternalFolders,
+			Set externalFolders) {
 		if (buildType == IBuildParticipantExtension.FULL_BUILD
 				|| !oldExternalFolders.equals(externalFolders)) {
 			return null;
