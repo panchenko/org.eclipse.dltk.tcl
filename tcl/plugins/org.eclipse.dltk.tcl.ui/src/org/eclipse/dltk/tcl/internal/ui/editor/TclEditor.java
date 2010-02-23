@@ -27,16 +27,13 @@ import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewerExtension;
-import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 public class TclEditor extends ScriptEditor {
 	public static final String EDITOR_ID = "org.eclipse.dltk.tcl.ui.editor.TclEditor"; //$NON-NLS-1$
@@ -48,8 +45,6 @@ public class TclEditor extends ScriptEditor {
 	private BracketInserter fBracketInserter = new TclBracketInserter(this);
 
 	private IFoldingStructureProvider foldingProvider;
-
-	private TclPairMatcher bracketMatcher;
 
 	protected void initializeEditor() {
 		super.initializeEditor();
@@ -138,80 +133,9 @@ public class TclEditor extends ScriptEditor {
 		return "org.eclipse.dltk.callhierarchy.view"; //$NON-NLS-1$
 	}
 
-	/**
-	 * Jumps to the matching bracket.
-	 */
-	public void gotoMatchingBracket() {
-		ISourceViewer sourceViewer = getSourceViewer();
-		IDocument document = sourceViewer.getDocument();
-		if (document == null)
-			return;
-
-		IRegion selection = getSignedSelection(sourceViewer);
-
-		int selectionLength = Math.abs(selection.getLength());
-		if (selectionLength > 1) {
-			setStatusLineErrorMessage(ActionMessages.TclEditor_NoBracketSelected);
-			sourceViewer.getTextWidget().getDisplay().beep();
-			return;
-		}
-
-		// #26314
-		int sourceCaretOffset = selection.getOffset() + selection.getLength();
-		if (isSurroundedByBrackets(document, sourceCaretOffset))
-			sourceCaretOffset -= selection.getLength();
-
-		IRegion region = bracketMatcher.match(document, sourceCaretOffset);
-		if (region == null) {
-			setStatusLineErrorMessage(ActionMessages.TclEditor_NoMatchongBracket);
-			sourceViewer.getTextWidget().getDisplay().beep();
-			return;
-		}
-
-		int offset = region.getOffset();
-		int length = region.getLength();
-
-		if (length < 1)
-			return;
-
-		int anchor = bracketMatcher.getAnchor();
-		// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
-		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset + 1
-				: offset + length;
-
-		boolean visible = false;
-		if (sourceViewer instanceof ITextViewerExtension5) {
-			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
-			visible = (extension.modelOffset2WidgetOffset(targetOffset) > -1);
-		} else {
-			IRegion visibleRegion = sourceViewer.getVisibleRegion();
-			// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
-			visible = (targetOffset >= visibleRegion.getOffset() && targetOffset <= visibleRegion
-					.getOffset()
-					+ visibleRegion.getLength());
-		}
-
-		if (!visible) {
-			setStatusLineErrorMessage(ActionMessages.TclEditor_MatchingBracketOutsideSelectedElement);
-			sourceViewer.getTextWidget().getDisplay().beep();
-			return;
-		}
-
-		if (selection.getLength() < 0)
-			targetOffset -= selection.getLength();
-
-		sourceViewer.setSelectedRange(targetOffset, selection.getLength());
-		sourceViewer.revealRange(targetOffset, selection.getLength());
-	}
-
-	protected void configureSourceViewerDecorationSupport(
-			SourceViewerDecorationSupport support) {
-		bracketMatcher = new TclPairMatcher();
-		support.setCharacterPairMatcher(bracketMatcher);
-		support.setMatchingCharacterPainterPreferenceKeys(MATCHING_BRACKETS,
-				MATCHING_BRACKETS_COLOR);
-
-		super.configureSourceViewerDecorationSupport(support);
+	@Override
+	protected ICharacterPairMatcher createBracketMatcher() {
+		return new TclPairMatcher();
 	}
 
 	/*
