@@ -37,7 +37,7 @@ public class NullIndexer extends AbstractIndexer {
 	}
 
 	@Override
-	public void addMethodReference(char[] methodName, int argCount) {
+	public void addMethodReference(String methodName, int argCount) {
 	}
 
 	@Override

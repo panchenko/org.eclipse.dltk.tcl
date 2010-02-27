@@ -26,13 +26,9 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 	@Override
 	public void acceptMethodReference(String methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
-		// System.out.println("TclSourceIndexerRequestor:Add Method Reference: "
-		// + new String(methodName));
-		String mName = new String(methodName);
-		String[] ns = pattern.split(mName, 0);
+		String[] ns = pattern.split(methodName, 0);
 		if (ns.length > 0) {
-			this.indexer.addMethodReference(ns[ns.length - 1].toCharArray(),
-					argCount);
+			this.indexer.addMethodReference(ns[ns.length - 1], argCount);
 		}
 		for (int i = 0; i < ns.length - 1; ++i) {
 			if (ns[i].length() > 0) {
