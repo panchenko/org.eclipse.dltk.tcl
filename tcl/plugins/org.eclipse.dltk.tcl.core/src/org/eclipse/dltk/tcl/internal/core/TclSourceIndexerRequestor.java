@@ -108,12 +108,6 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 		enterMethod(info);
 	}
 
-	public boolean enterMethodWithParentType(MethodInfo info,
-			String parentName, String delimiter) {
-		enterMethod(info);
-		return false;
-	}
-
 	public void popTypeName() {
 		if (depth > 0) {
 			String name = realEnclosingTypeNames[realdepth - 1];
