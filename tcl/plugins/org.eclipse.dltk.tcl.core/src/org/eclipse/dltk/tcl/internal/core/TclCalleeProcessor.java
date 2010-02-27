@@ -55,7 +55,6 @@ public class TclCalleeProcessor implements ICalleeProcessor {
 		@Override
 		public void acceptMethodReference(String methodName, int argCount,
 				int sourcePosition, int sourceEndPosition) {
-			String name = new String(methodName);
 			int off = 0;
 			try {
 				off = method.getSourceRange().getOffset();
@@ -65,8 +64,8 @@ public class TclCalleeProcessor implements ICalleeProcessor {
 				}
 			}
 			SimpleReference ref = new SimpleReference(off + sourcePosition, off
-					+ sourceEndPosition, name);
-			IMethod[] methods = findMethods(name, argCount, off
+					+ sourceEndPosition, methodName);
+			IMethod[] methods = findMethods(methodName, argCount, off
 					+ sourcePosition);
 			fSearchResults.put(ref, methods);
 		}
