@@ -125,13 +125,7 @@ public class Collector extends StructureModelCollector implements
 	}
 
 	@Override
-	public void acceptTypeReference(char[] typeName, int sourcePosition) {
-		// ignore
-	}
-
-	@Override
-	public void acceptTypeReference(char[][] typeName, int sourceStart,
-			int sourceEnd) {
+	public void acceptTypeReference(String typeName, int sourcePosition) {
 		// ignore
 	}
 
