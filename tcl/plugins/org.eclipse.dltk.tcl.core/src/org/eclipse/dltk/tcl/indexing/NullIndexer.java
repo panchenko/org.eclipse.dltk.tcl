@@ -32,7 +32,7 @@ public class NullIndexer extends AbstractIndexer {
 
 	@Override
 	public void addMethodDeclaration(int modifiers, char[] packageName,
-			char[][] enclosingTypeNames, String methodName,
+			String[] enclosingTypeNames, String methodName,
 			String[] parameterNames, String[] exceptionTypes) {
 	}
 

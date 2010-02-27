@@ -84,12 +84,12 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 
 	private List enclosingTypeNamesAsList() {
 		List cEnclosingNames = new ArrayList();
-		char[][] enclosingTypeNames2 = enclosingTypeNames();
+		String[] enclosingTypeNames2 = enclosingTypeNames();
 		if (enclosingTypeNames2 == null) {
 			return cEnclosingNames;
 		}
 		for (int i = 0; i < enclosingTypeNames2.length; i++) {
-			cEnclosingNames.add(new String(enclosingTypeNames2[i]));
+			cEnclosingNames.add(enclosingTypeNames2[i]);
 		}
 		;
 		return cEnclosingNames;
@@ -119,7 +119,7 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 		String type = new String(typeName);
 		String[] split = TclParseUtil.tclSplit(type);
 		for (int i = 0; i < split.length; i++) {
-			super.pushTypeName(split[i].toCharArray());
+			super.pushTypeName(split[i]);
 		}
 		if (realdepth == realEnclosingTypeNames.length)
 			System.arraycopy(realEnclosingTypeNames, 0,
