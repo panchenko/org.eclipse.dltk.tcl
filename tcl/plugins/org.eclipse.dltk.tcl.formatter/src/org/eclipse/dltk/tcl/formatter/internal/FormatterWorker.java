@@ -73,7 +73,7 @@ public class FormatterWorker extends TclVisitor {
 	}
 
 	private static List<String> splitLines(String text) {
-		char[] input = new String(text).toCharArray();
+		char[] input = text.toCharArray();
 		List<String> lines = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < input.length; i++) {
