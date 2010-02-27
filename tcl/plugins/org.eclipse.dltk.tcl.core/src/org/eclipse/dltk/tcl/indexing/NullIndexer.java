@@ -31,7 +31,7 @@ public class NullIndexer extends AbstractIndexer {
 	}
 
 	@Override
-	public void addMethodDeclaration(int modifiers, char[] packageName,
+	public void addMethodDeclaration(int modifiers, String packageName,
 			String[] enclosingTypeNames, String methodName,
 			String[] parameterNames, String[] exceptionTypes) {
 	}
@@ -45,7 +45,7 @@ public class NullIndexer extends AbstractIndexer {
 	}
 
 	@Override
-	public void addTypeDeclaration(int modifiers, char[] packageName,
+	public void addTypeDeclaration(int modifiers, String packageName,
 			String name, char[][] enclosingTypeNames, String[] superclasss) {
 	}
 
