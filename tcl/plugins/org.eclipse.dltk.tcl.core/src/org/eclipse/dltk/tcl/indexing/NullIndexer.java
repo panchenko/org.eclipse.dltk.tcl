@@ -1,6 +1,5 @@
 package org.eclipse.dltk.tcl.indexing;
 
-import org.eclipse.dltk.core.search.SearchDocument;
 import org.eclipse.dltk.core.search.indexing.AbstractIndexer;
 
 public class NullIndexer extends AbstractIndexer {
@@ -20,15 +19,11 @@ public class NullIndexer extends AbstractIndexer {
 	}
 
 	@Override
-	public void addFieldDeclaration(char[] fieldName) {
+	public void addFieldDeclaration(String fieldName, String typeName) {
 	}
 
 	@Override
-	public void addFieldDeclaration(char[] typeName, char[] fieldName) {
-	}
-
-	@Override
-	public void addFieldReference(char[] fieldName) {
+	public void addFieldReference(String fieldName) {
 	}
 
 	@Override
@@ -46,7 +41,7 @@ public class NullIndexer extends AbstractIndexer {
 	}
 
 	@Override
-	public void addNameReference(char[] name) {
+	public void addNameReference(String name) {
 	}
 
 	@Override
@@ -55,6 +50,6 @@ public class NullIndexer extends AbstractIndexer {
 	}
 
 	@Override
-	public void addTypeReference(char[] typeName) {
+	public void addTypeReference(String typeName) {
 	}
 }

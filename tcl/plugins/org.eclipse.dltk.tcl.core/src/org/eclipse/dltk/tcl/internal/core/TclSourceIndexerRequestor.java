@@ -38,7 +38,7 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 			if (ns[i].length() > 0) {
 				// System.out.println("TCLReferenceIndexing: Added namespace
 				// reference:" + ns[i]);
-				this.indexer.addTypeReference(ns[i].toCharArray());
+				this.indexer.addTypeReference(ns[i]);
 			}
 		}
 	}
