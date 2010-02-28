@@ -46,7 +46,7 @@ public class NullIndexer extends AbstractIndexer {
 
 	@Override
 	public void addTypeDeclaration(int modifiers, String packageName,
-			String name, char[][] enclosingTypeNames, String[] superclasss) {
+			String name, String[] enclosingTypeNames, String[] superclasss) {
 	}
 
 	@Override

@@ -65,16 +65,16 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 		return true;
 	}
 
-	private char[][] eclosingTypeNamesFrom(List enclosingNames, String[] split,
+	private String[] eclosingTypeNamesFrom(List enclosingNames, String[] split,
 			int i) {
-		char[][] result = new char[enclosingNames.size() + i][];
+		String[] result = new String[enclosingNames.size() + i];
 		int index = 0;
 		for (Iterator iterator = enclosingNames.iterator(); iterator.hasNext();) {
 			String name = (String) iterator.next();
-			result[index++] = name.toCharArray();
+			result[index++] = name;
 		}
 		for (int j = 0; j < i; j++) {
-			result[index++] = split[j].toCharArray();
+			result[index++] = split[j];
 		}
 		if (result.length > 0) {
 			return result;
