@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.validators;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.core.ISourceModuleInfoCache;
 import org.eclipse.dltk.core.SourceParserUtil;
@@ -65,7 +65,7 @@ public class TclBuildContext {
 				.getSourceModuleInfoCache();
 		ISourceModuleInfo info = infoCache.get(context.getSourceModule());
 		ProblemCollector collector = new ProblemCollector();
-		ModuleDeclaration cache = SourceParserUtil.getModuleFromCache(info, 0,
+		IModuleDeclaration cache = SourceParserUtil.getModuleFromCache(info,
 				collector);
 		if (cache instanceof TclModuleDeclaration) {
 			TclModuleDeclaration decl = (TclModuleDeclaration) cache;
