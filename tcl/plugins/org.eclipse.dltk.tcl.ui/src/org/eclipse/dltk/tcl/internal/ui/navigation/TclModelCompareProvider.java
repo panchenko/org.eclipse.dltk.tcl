@@ -5,9 +5,9 @@ import org.eclipse.dltk.ui.IModelCompareCategories;
 import org.eclipse.dltk.ui.IModelCompareProvider;
 
 public class TclModelCompareProvider implements IModelCompareProvider {
-	public CompareResult category(Object parentElement) {
+	public Integer category(Object parentElement) {
 		if (parentElement instanceof TclSourcesFragment) {
-			return new CompareResult(IModelCompareCategories.CONTAINER);
+			return IModelCompareCategories.CONTAINER;
 		}
 		return null;
 	}
