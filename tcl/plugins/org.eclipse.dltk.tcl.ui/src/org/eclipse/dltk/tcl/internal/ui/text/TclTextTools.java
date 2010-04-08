@@ -29,8 +29,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class TclTextTools extends ScriptTextTools {
 
-	private IPartitionTokenScanner fPartitionScanner;
-
 	private SimpleClassDLTKExtensionManager extensions = new SimpleClassDLTKExtensionManager(
 			TclUI.PLUGIN_ID + ".tclSemanticHighlighting"); //$NON-NLS-1$
 
@@ -40,7 +38,6 @@ public class TclTextTools extends ScriptTextTools {
 	public TclTextTools(boolean autoDisposeOnDisplayDispose) {
 		super(TclPartitions.TCL_PARTITIONING, LEGAL_CONTENT_TYPES,
 				autoDisposeOnDisplayDispose);
-		fPartitionScanner = new TclPartitionScanner();
 	}
 
 	public ScriptSourceViewerConfiguration createSourceViewerConfiguraton(
@@ -58,7 +55,7 @@ public class TclTextTools extends ScriptTextTools {
 	}
 
 	public IPartitionTokenScanner getPartitionScanner() {
-		return fPartitionScanner;
+		return new TclPartitionScanner();
 	}
 
 	private ISemanticHighlightingExtension[] getExtensions() {
