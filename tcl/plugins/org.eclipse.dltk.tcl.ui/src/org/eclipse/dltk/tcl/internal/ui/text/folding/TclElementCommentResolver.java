@@ -23,6 +23,7 @@ public class TclElementCommentResolver extends DefaultElementCommentResolver {
 		super(module, contents);
 	}
 
+	@Override
 	protected int getSourceRangeEnd(Document d, IModelElement el)
 			throws ModelException {
 		return d.getLength();
