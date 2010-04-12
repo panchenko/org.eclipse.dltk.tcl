@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.core.search;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
@@ -18,9 +17,6 @@ import org.eclipse.dltk.core.IParent;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.internal.core.BuiltinSourceModule;
 import org.eclipse.dltk.internal.core.ExternalSourceModule;
@@ -34,9 +30,7 @@ import org.eclipse.dltk.tcl.internal.core.TclExtensionManager;
 public class TclMatchLocator extends MatchLocator {
 	IMatchLocatorExtension[] extensions = null;
 
-	public TclMatchLocator(SearchPattern pattern, SearchRequestor requestor,
-			IDLTKSearchScope scope, IProgressMonitor progressMonitor) {
-		super(pattern, requestor, scope, progressMonitor);
+	public TclMatchLocator() {
 		extensions = TclExtensionManager.getDefault()
 				.getMatchLocatorExtensions();
 	}

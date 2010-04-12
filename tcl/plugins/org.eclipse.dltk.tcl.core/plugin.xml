@@ -67,11 +67,15 @@
    </extension>
    <extension
          point="org.eclipse.dltk.core.search">
-      <seachFactory
+      <searchFactory
             class="org.eclipse.dltk.tcl.internal.core.TclSearchFactory"
             nature="org.eclipse.dltk.tcl.core.nature"
             priority="0">
-      </seachFactory>
+      </searchFactory>
+      <matchLocator
+            class="org.eclipse.dltk.tcl.internal.core.search.TclMatchLocator"
+            nature="org.eclipse.dltk.tcl.core.nature">
+      </matchLocator>
    </extension>
    <extension
          point="org.eclipse.dltk.core.callHierarchy">
