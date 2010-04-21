@@ -30,6 +30,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.codeassist.AssistParser;
 import org.eclipse.dltk.codeassist.IAssistParser;
+import org.eclipse.dltk.codeassist.ICompletionNameProvider;
 import org.eclipse.dltk.codeassist.RelevanceConstants;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
@@ -1299,7 +1300,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 			token = token2;
 		}
-		String to = new String(token);
+		final String to = new String(token);
 		if (token != null && token.length >= 3 && token[0] == ':') {
 			// && token[1] == ':'
 			provideDots = true;
@@ -1362,7 +1363,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 		// this.findTypes(token, true, types);
-		this.findFields(token, false, fields, provideDollar ? "$" : "");
+		this.findFields(token, false, fields, new FieldNameProvider(to,
+				provideDollar ? "$" : ""));
 	}
 
 	protected void findASTVariables(ASTNode node, String prefix, char[] token,
@@ -1538,9 +1540,21 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		return OldTclParserUtils.processMethodName(method, tok);
 	}
 
-	protected String processFieldName(IField method, String tok) {
-		return OldTclParserUtils.processFieldName(method, tok);
-	}
+	public static final ICompletionNameProvider<IField> FIELD_NAME_PROVIDER = new ICompletionNameProvider<IField>() {
+
+		public String getCompletion(IField t) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String getName(IField t) {
+			return t.getElementName();
+		}
+	};
+
+	// protected String processFieldName(IField method, String tok) {
+	// return OldTclParserUtils.processFieldName(method, tok);
+	// }
 
 	protected String processTypeName(IType method, String tok) {
 		String name = OldTclParserUtils.processTypeName(method, tok);
