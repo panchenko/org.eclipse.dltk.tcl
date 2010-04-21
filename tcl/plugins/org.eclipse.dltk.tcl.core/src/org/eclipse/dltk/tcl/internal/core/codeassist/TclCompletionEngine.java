@@ -482,7 +482,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	protected void processCompletionOnFunctions(ASTNode astNodeParent,
 			char[] token, boolean canCompleteEmptyToken) {
-		if (!this.requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
+		if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF)) {
 			List methodNames = new ArrayList();
 			Set set = new HashSet();
 			this.findLocalFunctions(token, canCompleteEmptyToken,
@@ -768,7 +768,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	protected void findMethods(char[] token, boolean canCompleteEmptyToken,
 			List methods) {
 		this.findMethods(token, canCompleteEmptyToken, methods,
-				CompletionProposal.METHOD_DECLARATION);
+				CompletionProposal.METHOD_REF);
 	}
 
 	public void removeSameFrom(final Set methodNames, final Set elements,
