@@ -116,7 +116,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 		boolean contextAccepted = false;
 		try {
-			this.fileName = sourceModule.getFileName();
+			// this.fileName = sourceModule.getFileName();
 			this.actualCompletionPosition = completionPosition;
 			this.offset = pos;
 			ModuleDeclaration parsedUnit = this.parser.parse(sourceModule);
