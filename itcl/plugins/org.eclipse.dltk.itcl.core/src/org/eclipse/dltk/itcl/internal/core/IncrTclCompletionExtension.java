@@ -14,11 +14,14 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.codeassist.CompletionNameProviders;
+import org.eclipse.dltk.codeassist.ICompletionNameProvider;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.Flags;
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
@@ -36,6 +39,7 @@ import org.eclipse.dltk.itcl.internal.core.search.mixin.model.IncrTclProc;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.extensions.ICompletionExtension;
+import org.eclipse.dltk.tcl.internal.core.codeassist.FieldNameProvider;
 import org.eclipse.dltk.tcl.internal.core.codeassist.ITclCompletionProposalTypes;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclCompletionEngine;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclResolver;
@@ -205,8 +209,10 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		Set classes = new HashSet();
 
 		findIncrTclClassInstancesIn(parent, classes, engine);
-		engine.removeSameFrom(methodNames, classes, new String(token));
-		engine.findFields(token, true, engine.toList(classes), "");
+		final String tok = new String(token);
+		engine.removeSameFrom(methodNames, classes, tok);
+		engine.findFields(token, true, engine.toList(classes),
+				new FieldNameProvider(tok));
 		methodNames.addAll(classes);
 		// Also use not fully qualified names
 		// String elementFQN = TclParseUtil.getElementFQN(parent, "::",
@@ -288,7 +294,8 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		elements.addAll(methodNames);
 		findClassesInstanceFromMixin(elements, to + "*", engine);
 		engine.removeSameFrom(methodNames, elements, to);
-		engine.findFields(token, true, engine.toList(elements), "");
+		engine.findFields(token, true, engine.toList(elements),
+				new FieldNameProvider(to_));
 		methodNames.addAll(elements);
 	}
 
@@ -299,8 +306,8 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			IncrTclInstanceVariable ivar = (IncrTclInstanceVariable) var;
 			TypeDeclaration declaringType = ivar.getDeclaringType();
 			keyPrefix = TclParseUtil.getElementFQN(declaringType,
-					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getAssistParser()
-							.getModule());
+					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine
+							.getAssistParser().getModule());
 			if (keyPrefix.startsWith(IMixinRequestor.MIXIN_NAME_SEPARATOR)) {
 				keyPrefix = keyPrefix.substring(1);
 			}
@@ -538,8 +545,8 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		}
 		if ("$this".equals(name)) {
 			if (compl.argumentIndex() == 1) {
-				ASTNode inNode = TclParseUtil.getScopeParent(engine.getAssistParser()
-						.getModule(), st);
+				ASTNode inNode = TclParseUtil.getScopeParent(engine
+						.getAssistParser().getModule(), st);
 				findClassMethods(token, inNode, engine, false);
 			}
 		}
@@ -566,7 +573,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			TypeDeclaration type = (TypeDeclaration) method.getDeclaringType();
 			List list = type.getStatements();
 			List fields = new ArrayList();
-			List fieldNames = new ArrayList();
+			// List fieldNames = new ArrayList();
 			TclResolver resolver = new TclResolver(engine.getSourceModule(),
 					engine.getAssistParser().getModule());
 			for (int i = 0; i < list.size(); i++) {
@@ -581,17 +588,27 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 									.isIgnored(
 											ITclCompletionProposalTypes.FILTER_INTERNAL_API)) {
 						fields.add(element);
-						if (provideDollar) {
-							fieldNames.add("$" + element.getElementName());
-						} else {
-							fieldNames.add(element.getElementName());
-						}
+						// if (provideDollar) {
+						// fieldNames.add("$" + element.getElementName());
+						// } else {
+						// fieldNames.add(element.getElementName());
+						// }
 					}
 				}
 			}
 			if (fields.size() > 0) {
 				engine.findFields(token, canHandleEmpty, fields,
-						CompletionProposal.FIELD_REF, fieldNames);
+						provideDollar ? new ICompletionNameProvider<IField>() {
+
+							public String getName(IField field) {
+								return "$" + field.getElementName();
+							}
+
+							public String getCompletion(IField field) {
+								return getCompletion(field);
+							}
+
+						} : CompletionNameProviders.<IField> defaultProvider());
 			}
 		}
 	}
