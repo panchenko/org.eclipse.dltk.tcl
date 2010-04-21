@@ -26,6 +26,7 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.tcl.ast.TclStatement;
 import org.eclipse.dltk.tcl.core.TclParseUtil;
 import org.eclipse.dltk.tcl.core.extensions.ICompletionExtension;
+import org.eclipse.dltk.tcl.internal.core.codeassist.FieldNameProvider;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclCompletionEngine;
 import org.eclipse.dltk.tcl.internal.core.codeassist.TclResolver;
 import org.eclipse.dltk.tcl.internal.core.codeassist.completion.CompletionOnKeywordArgumentOrFunctionArgument;
@@ -161,8 +162,10 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 		Set classes = new HashSet();
 
 		findXOTclClassInstancesIn(parent, classes, engine);
-		engine.removeSameFrom(methodNames, classes, new String(token));
-		engine.findFields(token, true, engine.toList(classes), "");
+		final String tok = new String(token);
+		engine.removeSameFrom(methodNames, classes, tok);
+		engine.findFields(token, true, engine.toList(classes),
+				new FieldNameProvider(tok));
 		methodNames.addAll(classes);
 		// Also use not fully qualified names
 		// String elementFQN = TclParseUtil.getElementFQN(parent, "::",
@@ -244,7 +247,8 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 		elements.addAll(methodNames);
 		findClassesInstanceFromMixin(elements, to + "*", engine);
 		engine.removeSameFrom(methodNames, elements, to);
-		engine.findFields(token, true, engine.toList(elements), "");
+		engine.findFields(token, true, engine.toList(elements),
+				new FieldNameProvider(to_));
 		methodNames.addAll(elements);
 	}
 
@@ -255,8 +259,8 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 			XOTclInstanceVariable ivar = (XOTclInstanceVariable) var;
 			TypeDeclaration declaringType = ivar.getDeclaringType();
 			keyPrefix = TclParseUtil.getElementFQN(declaringType,
-					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getAssistParser()
-							.getModule());
+					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine
+							.getAssistParser().getModule());
 			if (keyPrefix.startsWith(IMixinRequestor.MIXIN_NAME_SEPARATOR)) {
 				keyPrefix = keyPrefix.substring(1);
 			}
@@ -449,9 +453,10 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 
 		// Lets find instance with specified name.
 		FieldDeclaration var = XOTclParseUtil
-				.findXOTclInstanceVariableDeclarationFrom(engine.getAssistParser()
-						.getModule(), TclParseUtil.getScopeParent(engine
-						.getAssistParser().getModule(), st), name);
+				.findXOTclInstanceVariableDeclarationFrom(engine
+						.getAssistParser().getModule(), TclParseUtil
+						.getScopeParent(engine.getAssistParser().getModule(),
+								st), name);
 		if (var == null) {
 			var = searchFieldFromMixin(name, engine);
 		}
