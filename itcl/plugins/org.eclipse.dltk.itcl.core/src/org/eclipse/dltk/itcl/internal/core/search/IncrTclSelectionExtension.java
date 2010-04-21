@@ -66,22 +66,22 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 		if (node.getCount() == 0) {
 			return;
 		}
-		ASTNode parent = TclParseUtil.getPrevParent(engine.getParser()
+		ASTNode parent = TclParseUtil.getPrevParent(engine.getAssistParser()
 				.getModule(), node);
 		String prefix = TclParseUtil.getElementFQN(parent,
-				IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getParser()
+				IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getAssistParser()
 						.getModule());
 		Expression commandExpr = node.getAt(0);
 		String command = TclParseUtil.getNameFromNode(commandExpr);
 
 		if ("$this".equals(command)) {
 			ASTNode scopeParent = TclParseUtil.getScopeParent(engine
-					.getParser().getModule(), node);
+					.getAssistParser().getModule(), node);
 			if (scopeParent instanceof IncrTclMethodDeclaration) {
 				IncrTclMethodDeclaration method = (IncrTclMethodDeclaration) scopeParent;
 				ASTNode type = method.getDeclaringType();
 				TclResolver resolver = new TclResolver((ISourceModule) engine
-						.getSourceModule(), engine.getParser().getModule());
+						.getSourceModule(), engine.getAssistParser().getModule());
 				IModelElement typeElement = resolver.findModelElementFrom(type);
 				if (commandExpr.sourceStart() <= engine
 						.getActualSelectionStart()
@@ -263,7 +263,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 						String typeMixin = TclParseUtil.getElementFQN(
 								declaringType,
 								IMixinRequestor.MIXIN_NAME_SEPARATOR, engine
-										.getParser().getModule())
+										.getAssistParser().getModule())
 								+ IMixinRequestor.MIXIN_NAME_SEPARATOR;
 
 						engine.findMethodMixin(typeMixin
@@ -271,7 +271,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 								callName.getName());
 						// Check super.
 						ASTNode nde = TclParseUtil.getPrevParent(engine
-								.getParser().getModule(), declaringType);
+								.getAssistParser().getModule(), declaringType);
 						List supersToHandle = new ArrayList();
 						engine
 								.fillSuperClassesTo(declaringType,
@@ -283,7 +283,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 							supersToHandle.remove(0);
 							TypeDeclaration sType = TclParseUtil
 									.findXOTclTypeDeclarationFrom(engine
-											.getParser().getModule(), nde,
+											.getAssistParser().getModule(), nde,
 											superClassName);
 							if (sType != null) {
 								prev = sType;
@@ -299,7 +299,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 								String sTypeMixin = TclParseUtil.getElementFQN(
 										sType,
 										IMixinRequestor.MIXIN_NAME_SEPARATOR,
-										engine.getParser().getModule())
+										engine.getAssistParser().getModule())
 										+ IMixinRequestor.MIXIN_NAME_SEPARATOR;
 
 								findIncrTclMethodMixin(sTypeMixin
@@ -311,7 +311,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 								String sTypeMixin = "";
 								if (prev != null) {
 									ASTNode prevParent = TclParseUtil
-											.getPrevParent(engine.getParser()
+											.getPrevParent(engine.getAssistParser()
 													.getModule(), prev);
 									if (prevParent instanceof ModuleDeclaration) {
 										sTypeMixin = engine
@@ -322,7 +322,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 												.getElementFQN(
 														prevParent,
 														IMixinRequestor.MIXIN_NAME_SEPARATOR,
-														engine.getParser()
+														engine.getAssistParser()
 																.getModule())
 												+ IMixinRequestor.MIXIN_NAME_SEPARATOR
 												+ engine
@@ -484,7 +484,7 @@ public class IncrTclSelectionExtension implements ISelectionExtension {
 						.getAncestor(IModelElement.SOURCE_MODULE);
 
 				TclResolver resolver = new TclResolver(module, engine
-						.getParser().getModule());
+						.getAssistParser().getModule());
 				IModelElement parentElement = resolver
 						.findModelElementFrom(type);
 				if (parentElement != null && parentElement instanceof IParent) {

@@ -145,7 +145,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 	private void findClassMethods(char[] token, ASTNode astNodeParent,
 			TclCompletionEngine engine, boolean addTop) {
 		TclResolver resolver = new TclResolver(engine.getSourceModule(), engine
-				.getParser().getModule());
+				.getAssistParser().getModule());
 		List methods = new ArrayList();
 		List methodNames = new ArrayList();
 		String prefix = "";
@@ -184,7 +184,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 
 	private void findLocalIncrTclClasses(char[] token, Set methodNames,
 			ASTNode astNodeParent, TclCompletionEngine engine) {
-		ASTNode parent = TclParseUtil.getScopeParent(engine.getParser()
+		ASTNode parent = TclParseUtil.getScopeParent(engine.getAssistParser()
 				.getModule(), astNodeParent);
 		// We need to process all xotcl classes.
 
@@ -198,7 +198,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 
 	private void findLocalIncrTclClassInstances(char[] token, Set methodNames,
 			ASTNode astNodeParent, TclCompletionEngine engine) {
-		ASTNode parent = TclParseUtil.getScopeParent(engine.getParser()
+		ASTNode parent = TclParseUtil.getScopeParent(engine.getAssistParser()
 				.getModule(), astNodeParent);
 		// We need to process all xotcl classes.
 
@@ -218,10 +218,10 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		// List statements = TclASTUtil.getStatements(parent);
 		final List result = new ArrayList();
 		final TclResolver resolver = new TclResolver(engine.getSourceModule(),
-				engine.getParser().getModule(), null);
+				engine.getAssistParser().getModule(), null);
 
 		try {
-			engine.getParser().getModule().traverse(new ASTVisitor() {
+			engine.getAssistParser().getModule().traverse(new ASTVisitor() {
 				// for (Iterator iterator = statements.iterator();
 				// iterator.hasNext();) {
 				// ASTNode nde = (ASTNode) iterator.next();
@@ -230,7 +230,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 							&& type.sourceStart() < engine
 									.getActualCompletionPosition()) {
 						// we need to find model element for selected type.
-						resolver.searchAddElementsTo(engine.getParser()
+						resolver.searchAddElementsTo(engine.getAssistParser()
 								.getModule().getStatements(), type, engine
 								.getSourceModule(), result);
 					}
@@ -250,7 +250,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		// List statements = TclASTUtil.getStatements(parent);
 		final List result = new ArrayList();
 		final TclResolver resolver = new TclResolver(engine.getSourceModule(),
-				engine.getParser().getModule(), null);
+				engine.getAssistParser().getModule(), null);
 
 		try {
 			parent.traverse(new ASTVisitor() {
@@ -258,7 +258,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 					if (st instanceof IncrTclInstanceVariable
 					/* || st instanceof XOTclExInstanceVariable */) {
 						// we need to find model element for selected type.
-						resolver.searchAddElementsTo(engine.getParser()
+						resolver.searchAddElementsTo(engine.getAssistParser()
 								.getModule().getStatements(), st, engine
 								.getSourceModule(), result);
 					}
@@ -299,7 +299,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			IncrTclInstanceVariable ivar = (IncrTclInstanceVariable) var;
 			TypeDeclaration declaringType = ivar.getDeclaringType();
 			keyPrefix = TclParseUtil.getElementFQN(declaringType,
-					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getParser()
+					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getAssistParser()
 							.getModule());
 			if (keyPrefix.startsWith(IMixinRequestor.MIXIN_NAME_SEPARATOR)) {
 				keyPrefix = keyPrefix.substring(1);
@@ -526,9 +526,9 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 
 		// Lets find instance with specified name.
 		FieldDeclaration var = IncrTclParseUtil
-				.findInstanceVariableDeclarationFrom(engine.getParser()
+				.findInstanceVariableDeclarationFrom(engine.getAssistParser()
 						.getModule(), TclParseUtil.getScopeParent(engine
-						.getParser().getModule(), st), name);
+						.getAssistParser().getModule(), st), name);
 		if (var == null) {
 			var = searchFieldFromMixin(name, engine);
 		}
@@ -538,7 +538,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 		}
 		if ("$this".equals(name)) {
 			if (compl.argumentIndex() == 1) {
-				ASTNode inNode = TclParseUtil.getScopeParent(engine.getParser()
+				ASTNode inNode = TclParseUtil.getScopeParent(engine.getAssistParser()
 						.getModule(), st);
 				findClassMethods(token, inNode, engine, false);
 			}
@@ -568,7 +568,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			List fields = new ArrayList();
 			List fieldNames = new ArrayList();
 			TclResolver resolver = new TclResolver(engine.getSourceModule(),
-					engine.getParser().getModule());
+					engine.getAssistParser().getModule());
 			for (int i = 0; i < list.size(); i++) {
 				ASTNode nde = (ASTNode) list.get(i);
 				if (nde instanceof FieldDeclaration) {
