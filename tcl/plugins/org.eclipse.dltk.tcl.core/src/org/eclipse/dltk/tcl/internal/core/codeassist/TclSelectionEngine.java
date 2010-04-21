@@ -25,6 +25,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Block;
+import org.eclipse.dltk.codeassist.AssistParser;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
@@ -64,7 +65,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 	protected List<IModelElement> selectionElements = new ArrayList<IModelElement>();
 
-	protected TclSelectionParser parser = new TclSelectionParser();
+	protected AssistParser parser = new AssistParser(new TclSelectionParser());
 
 	protected org.eclipse.dltk.core.ISourceModule sourceModule;
 
@@ -122,7 +123,8 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 			if (parsedUnit != null) {
 				try {
-					parseBlockStatements(parsedUnit, this.actualSelectionStart);
+					parser.parseBlockStatements(parsedUnit,
+							this.actualSelectionStart);
 					if (DEBUG) {
 						System.out.println("COMPLETION - AST :"); //$NON-NLS-1$
 						System.out.println(parsedUnit.toString());
@@ -159,7 +161,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 
 	protected ASTNode parseBlockStatements(TypeDeclaration type,
 			ModuleDeclaration unit, int position) {
-		ASTNode result = super.parseBlockStatements(type, unit, position);
+		ASTNode result = parser.parseBlockStatements(type, unit, position);
 		if (result != null) {
 			return result;
 		}
@@ -168,7 +170,8 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 					.getStatement();
 			ASTNode inNode = TclParseUtil.getScopeParent(parser.getModule(),
 					type);
-			this.getParser().parseBlockStatements(statement, inNode, position);
+			this.getAssistParser().parseBlockStatements(statement, inNode,
+					position);
 			SelectionOnNode nde = new SelectionOnNode(type);
 			nde.setPosition(position);
 			throw new SelectionNodeFound(nde);
@@ -210,7 +213,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				}
 				// Search in imported namespaces
 				String currentNamespace = TclParseUtil.getElementFQN(
-						astNodeParent, "::", getParser().getModule());
+						astNodeParent, "::", getAssistParser().getModule());
 				Set processed = new HashSet();
 				selectNamespaceImport(name, currentNamespace, processed);
 				if (!currentNamespace.equals("")) {
@@ -726,7 +729,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 	public void addElementFromASTNode(ASTNode nde) {
 		ModuleDeclaration module = parser.getModule();
 		List statements = module.getStatements();
-		new TclResolver(sourceModule, parser.module, parentResolver)
+		new TclResolver(sourceModule, parser.getModule(), parentResolver)
 				.searchAddElementsTo(statements, nde, sourceModule,
 						this.selectionElements);
 	}
@@ -735,7 +738,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		ModuleDeclaration module = parser.getModule();
 		List statements = module.getStatements();
 		List<IModelElement> elements = new ArrayList<IModelElement>();
-		new TclResolver(sourceModule, parser.module, parentResolver)
+		new TclResolver(sourceModule, parser.getModule(), parentResolver)
 				.searchAddElementsTo(statements, nde, sourceModule, elements);
 		if (elements.size() == 1) {
 			return elements.get(0);
@@ -862,7 +865,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		return true;
 	}
 
-	public IAssistParser getParser() {
+	public IAssistParser getAssistParser() {
 		return parser;
 	}
 

@@ -28,6 +28,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.codeassist.AssistParser;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.RelevanceConstants;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
@@ -86,7 +87,7 @@ import org.eclipse.emf.common.util.EList;
 
 public class TclCompletionEngine extends ScriptCompletionEngine {
 
-	protected TclCompletionParser parser;
+	protected AssistParser parser;
 	protected ISourceModule sourceModule;
 	protected final static boolean TRACE_COMPLETION_TIME = false;
 	private ICompletionExtension[] extensions;
@@ -95,7 +96,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 	public TclCompletionEngine() {
 		this.extensions = TclExtensionManager.getDefault()
 				.getCompletionExtensions();
-		this.parser = new TclCompletionParser(this.extensions);
+		this.parser = new AssistParser(new TclCompletionParser(this.extensions));
 	}
 
 	public void complete(IModuleSource sourceModule, int completionPosition,
@@ -138,7 +139,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				try {
 
 					this.source = sourceModule.getContentsAsCharArray();
-					this.parseBlockStatements(parsedUnit,
+					parser.parseBlockStatements(parsedUnit,
 							this.actualCompletionPosition);
 					if (VERBOSE) {
 						System.out.println("COMPLETION - AST :"); //$NON-NLS-1$
@@ -504,7 +505,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 
 	private void processImports(char[] token, Set set, ASTNode astNodeParent) {
 		String currentNamespace = TclParseUtil.getElementFQN(astNodeParent,
-				"::", getParser().getModule());
+				"::", getAssistParser().getModule());
 		if (token == null) {
 			return;
 		}
@@ -628,7 +629,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		// filterAllPrivate(methodNames, methods, this.parser.getModule());
 		// findTypes(token, true, toList(types));
 		if (asImport) {
-			filterInternalAPI(methods, getParser().getModule());
+			filterInternalAPI(methods, getAssistParser().getModule());
 			methods = filterSubNamespaces(methods, namespace);
 		}
 		List list = this.toList(methods);
@@ -907,8 +908,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		List nodeMethodNames = new ArrayList();
 		List otherMethods = new ArrayList();
 		List otherMethodNames = new ArrayList();
-		TclResolver resolver = new TclResolver(this.sourceModule,
-				this.parser.module);
+		TclResolver resolver = new TclResolver(this.sourceModule, this.parser
+				.getModule());
 		if (methods.size() > 0) {
 			for (int i = 0; i < methods.size(); i++) {
 				MethodDeclaration method = (MethodDeclaration) methods.get(i);
@@ -1453,8 +1454,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 						public boolean visit(Statement s) throws Exception {
 							if (s instanceof FieldDeclaration) {
 								String name = TclParseUtil.getElementFQN(s,
-										"::",
-										TclCompletionEngine.this.parser.module);
+										"::", TclCompletionEngine.this.parser
+												.getModule());
 								ASTNode pp = TclParseUtil.getScopeParent(parser
 										.getModule(), s);
 								boolean isTcl = true;
@@ -1522,7 +1523,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		return str;
 	}
 
-	public IAssistParser getParser() {
+	public IAssistParser getAssistParser() {
 		return this.parser;
 	}
 
