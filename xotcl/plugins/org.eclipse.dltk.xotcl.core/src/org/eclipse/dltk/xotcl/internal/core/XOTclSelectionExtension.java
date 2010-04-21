@@ -63,10 +63,10 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 		if (node.getCount() == 0) {
 			return;
 		}
-		ASTNode parent = TclParseUtil.getPrevParent(engine.getParser()
+		ASTNode parent = TclParseUtil.getPrevParent(engine.getAssistParser()
 				.getModule(), node);
 		String prefix = TclParseUtil.getElementFQN(parent,
-				IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getParser()
+				IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getAssistParser()
 						.getModule());
 		Expression commandExpr = node.getAt(0);
 		String command = TclParseUtil.getNameFromNode(commandExpr);
@@ -178,11 +178,11 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 	private void processSelectXOTclMethod(XOTclProcCallStatement node,
 			int position, TclSelectionEngine engine) {
 		SimpleReference typeName = node.getInstNameRef();
-		List levels = TclParseUtil.findLevelsTo(engine.getParser().getModule(),
+		List levels = TclParseUtil.findLevelsTo(engine.getAssistParser().getModule(),
 				node);
 		ASTNode nParent = (ASTNode) levels.get(levels.size() - 2);
 		TypeDeclaration type = TclParseUtil.findXOTclTypeDeclarationFrom(engine
-				.getParser().getModule(), nParent, typeName.getName());
+				.getAssistParser().getModule(), nParent, typeName.getName());
 		if (type instanceof TypeDeclaration) {
 			IModelElement parent = engine.findElementFromNode(type);
 			if (parent != null && parent instanceof IParent) {
@@ -250,7 +250,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 						String typeMixin = TclParseUtil.getElementFQN(
 								declaringType,
 								IMixinRequestor.MIXIN_NAME_SEPARATOR, engine
-										.getParser().getModule())
+										.getAssistParser().getModule())
 								+ IMixinRequestor.MIXIN_NAME_SEPARATOR;
 
 						engine.findMethodMixin(typeMixin
@@ -258,7 +258,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 								callName.getName());
 						// Check super.
 						ASTNode nde = TclParseUtil.getPrevParent(engine
-								.getParser().getModule(), declaringType);
+								.getAssistParser().getModule(), declaringType);
 						List supersToHandle = new ArrayList();
 						engine
 								.fillSuperClassesTo(declaringType,
@@ -270,7 +270,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 							supersToHandle.remove(0);
 							TypeDeclaration sType = TclParseUtil
 									.findXOTclTypeDeclarationFrom(engine
-											.getParser().getModule(), nde,
+											.getAssistParser().getModule(), nde,
 											superClassName);
 							if (sType != null) {
 								prev = sType;
@@ -286,7 +286,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 								String sTypeMixin = TclParseUtil.getElementFQN(
 										sType,
 										IMixinRequestor.MIXIN_NAME_SEPARATOR,
-										engine.getParser().getModule())
+										engine.getAssistParser().getModule())
 										+ IMixinRequestor.MIXIN_NAME_SEPARATOR;
 
 								findXOTclMethodMixin(sTypeMixin
@@ -298,7 +298,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 								String sTypeMixin = "";
 								if (prev != null) {
 									ASTNode prevParent = TclParseUtil
-											.getPrevParent(engine.getParser()
+											.getPrevParent(engine.getAssistParser()
 													.getModule(), prev);
 									if (prevParent instanceof ModuleDeclaration) {
 										sTypeMixin = engine
@@ -309,7 +309,7 @@ public class XOTclSelectionExtension implements ISelectionExtension {
 												.getElementFQN(
 														prevParent,
 														IMixinRequestor.MIXIN_NAME_SEPARATOR,
-														engine.getParser()
+														engine.getAssistParser()
 																.getModule())
 												+ IMixinRequestor.MIXIN_NAME_SEPARATOR
 												+ engine

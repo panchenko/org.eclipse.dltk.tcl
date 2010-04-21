@@ -140,7 +140,7 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 
 	private void findLocalXOTclClasses(char[] token, Set methodNames,
 			ASTNode astNodeParent, TclCompletionEngine engine) {
-		ASTNode parent = TclParseUtil.getScopeParent(engine.getParser()
+		ASTNode parent = TclParseUtil.getScopeParent(engine.getAssistParser()
 				.getModule(), astNodeParent);
 		// We need to process all xotcl classes.
 
@@ -154,7 +154,7 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 
 	private void findLocalXOTclClassInstances(char[] token, Set methodNames,
 			ASTNode astNodeParent, TclCompletionEngine engine) {
-		ASTNode parent = TclParseUtil.getScopeParent(engine.getParser()
+		ASTNode parent = TclParseUtil.getScopeParent(engine.getAssistParser()
 				.getModule(), astNodeParent);
 		// We need to process all xotcl classes.
 
@@ -174,10 +174,10 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 		// List statements = TclASTUtil.getStatements(parent);
 		final List result = new ArrayList();
 		final TclResolver resolver = new TclResolver(engine.getSourceModule(),
-				engine.getParser().getModule(), null);
+				engine.getAssistParser().getModule(), null);
 
 		try {
-			engine.getParser().getModule().traverse(new ASTVisitor() {
+			engine.getAssistParser().getModule().traverse(new ASTVisitor() {
 				// for (Iterator iterator = statements.iterator();
 				// iterator.hasNext();) {
 				// ASTNode nde = (ASTNode) iterator.next();
@@ -186,7 +186,7 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 							&& type.sourceStart() < engine
 									.getActualCompletionPosition()) {
 						// we need to find model element for selected type.
-						resolver.searchAddElementsTo(engine.getParser()
+						resolver.searchAddElementsTo(engine.getAssistParser()
 								.getModule().getStatements(), type, engine
 								.getSourceModule(), result);
 					}
@@ -206,7 +206,7 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 		// List statements = TclASTUtil.getStatements(parent);
 		final List result = new ArrayList();
 		final TclResolver resolver = new TclResolver(engine.getSourceModule(),
-				engine.getParser().getModule(), null);
+				engine.getAssistParser().getModule(), null);
 
 		try {
 			parent.traverse(new ASTVisitor() {
@@ -214,7 +214,7 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 					if (st instanceof XOTclInstanceVariable
 							|| st instanceof XOTclExInstanceVariable) {
 						// we need to find model element for selected type.
-						resolver.searchAddElementsTo(engine.getParser()
+						resolver.searchAddElementsTo(engine.getAssistParser()
 								.getModule().getStatements(), st, engine
 								.getSourceModule(), result);
 					}
@@ -255,7 +255,7 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 			XOTclInstanceVariable ivar = (XOTclInstanceVariable) var;
 			TypeDeclaration declaringType = ivar.getDeclaringType();
 			keyPrefix = TclParseUtil.getElementFQN(declaringType,
-					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getParser()
+					IMixinRequestor.MIXIN_NAME_SEPARATOR, engine.getAssistParser()
 							.getModule());
 			if (keyPrefix.startsWith(IMixinRequestor.MIXIN_NAME_SEPARATOR)) {
 				keyPrefix = keyPrefix.substring(1);
@@ -449,9 +449,9 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 
 		// Lets find instance with specified name.
 		FieldDeclaration var = XOTclParseUtil
-				.findXOTclInstanceVariableDeclarationFrom(engine.getParser()
+				.findXOTclInstanceVariableDeclarationFrom(engine.getAssistParser()
 						.getModule(), TclParseUtil.getScopeParent(engine
-						.getParser().getModule(), st), name);
+						.getAssistParser().getModule(), st), name);
 		if (var == null) {
 			var = searchFieldFromMixin(name, engine);
 		}
