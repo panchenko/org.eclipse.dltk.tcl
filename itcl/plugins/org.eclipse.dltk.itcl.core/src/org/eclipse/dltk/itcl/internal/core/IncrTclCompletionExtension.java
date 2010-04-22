@@ -133,8 +133,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			// Add $this
 			ASTNode node = key.getInParent();
 			if (node instanceof IncrTclMethodDeclaration) {
-				engine.findKeywords(token,
-						new char[][] { "$this".toCharArray() }, true);
+				engine.findKeywords(token, new String[] { "$this" }, true);
 				findVariables(key.getToken(), true, true, engine, node);
 			}
 		}
@@ -448,11 +447,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 			}
 		}
 		String kw[] = (String[]) k.toArray(new String[k.size()]);
-		char[][] choices = new char[kw.length][];
-		for (int i = 0; i < kw.length; ++i) {
-			choices[i] = kw[i].toCharArray();
-		}
-		engine.findKeywords(cs, choices, true);
+		engine.findKeywords(cs, kw, true);
 	}
 
 	private void findMethodsShortName(char[] cs, Set methods, Set allMethods,
@@ -566,8 +561,7 @@ public class IncrTclCompletionExtension implements ICompletionExtension {
 	private void findVariables(char[] token, boolean canHandleEmpty,
 			boolean provideDollar, TclCompletionEngine engine, ASTNode inNode) {
 		if (inNode instanceof IncrTclMethodDeclaration) {
-			engine.findKeywords(token, new char[][] { "$this".toCharArray() },
-					false);
+			engine.findKeywords(token, new String[] { "$this" }, false);
 			// Process all class public fields.
 			IncrTclMethodDeclaration method = (IncrTclMethodDeclaration) inNode;
 			TypeDeclaration type = (TypeDeclaration) method.getDeclaringType();
