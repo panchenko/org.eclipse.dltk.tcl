@@ -413,7 +413,8 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			int relevance = computeBaseRelevance();
 
 			relevance += computeRelevanceForInterestingProposal();
-			relevance += computeRelevanceForCaseMatching(keyword, choice.toCharArray());
+			relevance += computeRelevanceForCaseMatching(keyword, choice
+					.toCharArray());
 			relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no
 			this.noProposal = false;
 			if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
@@ -1141,9 +1142,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			// Process variable setters.
 			statements = method.getStatements();
 			this.checkVariableStatements(beforePosition, choices, statements);
-			char[][] cc = new char[choices.size()][];
+			String[] cc = new String[choices.size()];
 			for (int i = 0; i < choices.size(); ++i) {
-				cc[i] = ((String) choices.get(i)).toCharArray();
+				cc[i] = (String) choices.get(i);
 				gChoices.add(choices.get(i));
 			}
 			this.findLocalVariables(token, cc, canCompleteEmptyToken,
@@ -1191,9 +1192,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			}
 
 		}
-		char[][] cc = new char[choices.size()][];
+		String[] cc = new String[choices.size()];
 		for (int i = 0; i < choices.size(); ++i) {
-			cc[i] = ((String) choices.get(i)).toCharArray();
+			cc[i] = (String) choices.get(i);
 			gChoices.add(choices.get(i));
 		}
 		this.findLocalVariables(token, cc, canCompleteEmptyToken, true);
@@ -1427,9 +1428,9 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 		List choices = new ArrayList();
 		// Process variable setters.
 		this.checkVariableStatements(beforePosition, choices, statements);
-		char[][] cc = new char[choices.size()][];
+		String[] cc = new String[choices.size()];
 		for (int i = 0; i < choices.size(); ++i) {
-			cc[i] = ((String) choices.get(i)).toCharArray();
+			cc[i] = (String) choices.get(i);
 			gChoices.add(choices.get(i));
 		}
 		this
