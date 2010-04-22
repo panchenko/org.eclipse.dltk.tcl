@@ -370,11 +370,7 @@ public class XOTclCompletionExtension implements ICompletionExtension {
 			}
 		}
 		String kw[] = (String[]) k.toArray(new String[k.size()]);
-		char[][] choices = new char[kw.length][];
-		for (int i = 0; i < kw.length; ++i) {
-			choices[i] = kw[i].toCharArray();
-		}
-		engine.findKeywords(cs, choices, true);
+		engine.findKeywords(cs, kw, true);
 	}
 
 	private void findMethodsShortName(char[] cs, Set methods, Set allMethods,
