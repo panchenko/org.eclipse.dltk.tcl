@@ -409,11 +409,11 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			int sourceStart) {
 		final char[] keyword = prefix.toCharArray();
 		for (final String kw : keywords) {
-			final char[] choice = kw.toCharArray();
+			final String choice = kw;
 			int relevance = computeBaseRelevance();
 
 			relevance += computeRelevanceForInterestingProposal();
-			relevance += computeRelevanceForCaseMatching(keyword, choice);
+			relevance += computeRelevanceForCaseMatching(keyword, choice.toCharArray());
 			relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no
 			this.noProposal = false;
 			if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
