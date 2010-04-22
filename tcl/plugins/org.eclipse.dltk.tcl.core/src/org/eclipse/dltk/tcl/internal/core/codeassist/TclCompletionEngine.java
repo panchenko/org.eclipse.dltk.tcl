@@ -346,11 +346,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 				String kw[] = k.toArray(new String[k.size()]);
-				char[][] choices = new char[kw.length][];
-				for (int i = 0; i < kw.length; ++i) {
-					choices[i] = kw[i].toCharArray();
-				}
-				this.findKeywords(token, choices, true);
+				this.findKeywords(token, kw, true);
 				if (methodNames != null) {
 					methodNames.addAll(k);
 				}
@@ -413,8 +409,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 			int relevance = computeBaseRelevance();
 
 			relevance += computeRelevanceForInterestingProposal();
-			relevance += computeRelevanceForCaseMatching(keyword, choice
-					.toCharArray());
+			relevance += computeRelevanceForCaseMatching(keyword, choice);
 			relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no
 			this.noProposal = false;
 			if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
