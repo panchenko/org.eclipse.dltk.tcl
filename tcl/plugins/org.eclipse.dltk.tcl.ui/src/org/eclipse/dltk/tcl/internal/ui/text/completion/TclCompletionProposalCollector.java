@@ -45,12 +45,12 @@ public class TclCompletionProposalCollector extends
 		if (true) {
 			return false; // FIXME something is missing below
 		}
-		String name = new String(proposal.getName());
-		String completion = new String(proposal.getCompletion());
+		String name = proposal.getName();
+		String completion = proposal.getCompletion();
 		// Filter duplicates, by name and model element.
 		CompletionProposal[] proposals = getRawCompletionProposals();
 		for (int i = 0; i < proposals.length; i++) {
-			String pName = new String(proposals[i].getName());
+			String pName = proposals[i].getName();
 			proposal.getCompletion();
 			if (name.equals(pName)) {
 				if (proposal.getModelElement() != null
