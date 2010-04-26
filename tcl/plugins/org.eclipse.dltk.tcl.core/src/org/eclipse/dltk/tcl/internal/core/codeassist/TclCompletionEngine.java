@@ -31,7 +31,6 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.codeassist.AssistParser;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ICompletionNameProvider;
-import org.eclipse.dltk.codeassist.RelevanceConstants;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.codeassist.complete.CompletionNodeFound;
 import org.eclipse.dltk.compiler.env.IModuleSource;
@@ -428,15 +427,6 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 		}
-	}
-
-	// Relevance
-	private int computeBaseRelevance() {
-		return RelevanceConstants.R_DEFAULT;
-	}
-
-	private int computeRelevanceForInterestingProposal() {
-		return RelevanceConstants.R_INTERESTING;
 	}
 
 	private void selectKeywords(String[] possibleKeywords, String prefix,
