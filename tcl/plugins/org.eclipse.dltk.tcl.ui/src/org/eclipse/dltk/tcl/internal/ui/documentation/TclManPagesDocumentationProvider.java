@@ -86,9 +86,14 @@ public class TclManPagesDocumentationProvider implements
 		if (context != null) {
 			final IScriptProject project = context.getScriptProject();
 			if (project != null) {
+				IInterpreterInstall install;
 				try {
-					final IInterpreterInstall install = ScriptRuntime
-							.getInterpreterInstall(project);
+					install = ScriptRuntime.getInterpreterInstall(project);
+				} catch (CoreException e) {
+					TclUI.error(e);
+					install = null;
+				}
+				if (install != null) {
 					final InterpreterDocumentation iDoc = (InterpreterDocumentation) install
 							.findExtension(ManpagesPackage.Literals.INTERPRETER_DOCUMENTATION);
 					if (iDoc != null) {
@@ -98,8 +103,6 @@ public class TclManPagesDocumentationProvider implements
 							return doc;
 						}
 					}
-				} catch (CoreException e) {
-					TclUI.error(e);
 				}
 			}
 		}
