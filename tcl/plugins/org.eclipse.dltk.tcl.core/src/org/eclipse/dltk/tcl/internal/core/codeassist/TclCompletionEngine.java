@@ -420,7 +420,7 @@ public class TclCompletionEngine extends ScriptCompletionEngine {
 				proposal.setReplaceRange(sourceStart - this.offset,
 						this.endPosition - this.offset);
 				proposal.setRelevance(relevance);
-				proposal.extraInfo = prefix;
+				proposal.setExtraInfo(prefix);
 				this.requestor.accept(proposal);
 				if (DEBUG) {
 					this.printDebug(proposal);
