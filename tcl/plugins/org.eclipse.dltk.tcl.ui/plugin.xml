@@ -521,6 +521,12 @@
    </partition>
 		</scriptCompletionProposalComputer>
 	</extension> 
+	<extension point="org.eclipse.dltk.ui.completion">
+	<proposalLabelProvider
+       class="org.eclipse.dltk.tcl.internal.ui.text.completion.TclCompletionProposalLabelProvider"
+       nature="org.eclipse.dltk.tcl.core.nature">
+	</proposalLabelProvider>
+	</extension>
   <extension
         point="org.eclipse.dltk.ui.scriptDocumentationProviders">
      <provider

@@ -12,11 +12,10 @@ package org.eclipse.dltk.tcl.internal.ui.text.completion;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
-import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.swt.graphics.Image;
 
 public class TclCompletionProposalCollector extends
@@ -31,11 +30,6 @@ public class TclCompletionProposalCollector extends
 
 	public TclCompletionProposalCollector(ISourceModule module) {
 		super(module);
-	}
-
-	// Label provider
-	protected CompletionProposalLabelProvider createLabelProvider() {
-		return new TclCompletionProposalLabelProvider();
 	}
 
 	protected boolean isFiltered(CompletionProposal proposal) {
@@ -63,14 +57,12 @@ public class TclCompletionProposalCollector extends
 		return false;
 	}
 
-	// Invocation context
-	protected ScriptContentAssistInvocationContext createScriptContentAssistInvocationContext(
-			ISourceModule sourceModule) {
-		return new ScriptContentAssistInvocationContext(sourceModule) {
-			protected CompletionProposalLabelProvider createLabelProvider() {
-				return new TclCompletionProposalLabelProvider();
-			}
-		};
+	/**
+	 * @return
+	 */
+	private CompletionProposal[] getRawCompletionProposals() {
+		// TODO Auto-generated method stub
+		return new CompletionProposal[0];
 	}
 
 	// Specific proposals creation. May be use factory?
@@ -118,6 +110,11 @@ public class TclCompletionProposalCollector extends
 				.setContextInformation(new TclKeywordLazyContextInformation(
 						completionProposal, prefix, getSourceModule()));
 		return completionProposal;
+	}
+
+	@Override
+	protected String getNatureId() {
+		return TclNature.NATURE_ID;
 	}
 
 	// protected IScriptCompletionProposal createKeywordProposal(

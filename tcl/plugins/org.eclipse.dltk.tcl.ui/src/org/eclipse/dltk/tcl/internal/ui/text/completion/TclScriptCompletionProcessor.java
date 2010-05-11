@@ -4,14 +4,11 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
-*******************************************************************************/
+ *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.text.completion;
 
 import org.eclipse.dltk.tcl.core.TclNature;
-import org.eclipse.dltk.tcl.internal.ui.TclUI;
-import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProcessor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.ui.IEditorPart;
 
@@ -25,24 +22,9 @@ public class TclScriptCompletionProcessor extends ScriptCompletionProcessor {
 		super(editor, assistant, partition);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ui.text.completion.ScriptCompletionProcessor#getNatureId()
-	 */
+	@Override
 	protected String getNatureId() {
 		return TclNature.NATURE_ID;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ui.text.completion.ScriptCompletionProcessor#getProposalLabelProvider()
-	 */
-	protected CompletionProposalLabelProvider getProposalLabelProvider() {
-		return new TclCompletionProposalLabelProvider();
-	}
-
-	/*
-	 * @see org.eclipse.dltk.ui.text.completion.ContentAssistProcessor#getPreferenceStore()
-	 */
-	protected IPreferenceStore getPreferenceStore() {
-		return TclUI.getDefault().getPreferenceStore();
-	}
 }
