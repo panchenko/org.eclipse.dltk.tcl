@@ -109,8 +109,8 @@ public class TclCompletionProposalCollector extends
 		final ScriptCompletionProposal completionProposal = (ScriptCompletionProposal) super
 				.createKeywordProposal(proposal);
 		final String prefix;
-		if (proposal.extraInfo instanceof String) {
-			prefix = (String) proposal.extraInfo;
+		if (proposal.getExtraInfo() instanceof String) {
+			prefix = (String) proposal.getExtraInfo();
 		} else {
 			prefix = completionProposal.getReplacementString();
 		}
