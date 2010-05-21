@@ -1,45 +1,13 @@
 package org.eclipse.dltk.tcl.internal.ui.actions;
 
-import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.search.ui.NewSearchUI;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.dltk.ui.actions.ScriptOpenSearchPageAction;
 
-public class OpenTclSearchPageAction implements IWorkbenchWindowActionDelegate {
+public class OpenTclSearchPageAction extends ScriptOpenSearchPageAction {
 
 	private static final String TCL_SEARCH_PAGE_ID = "org.eclipse.dltk.ui.TclSearchPage";
 
-	private IWorkbenchWindow window;
-
-	public OpenTclSearchPageAction() {
-	}
-
-	public void init(IWorkbenchWindow window) {
-		this.window = window;
-	}
-
-	public void run(IAction action) {
-		if (window == null || window.getActivePage() == null) {
-			beep();
-			return;
-		}
-
-		NewSearchUI.openSearchDialog(window, TCL_SEARCH_PAGE_ID);
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
-
-	public void dispose() {
-		window = null;
-	}
-
-	protected void beep() {
-		Shell shell = DLTKUIPlugin.getActiveWorkbenchShell();
-		if (shell != null && shell.getDisplay() != null)
-			shell.getDisplay().beep();
+	@Override
+	protected String getSearchPageId() {
+		return TCL_SEARCH_PAGE_ID;
 	}
 }
