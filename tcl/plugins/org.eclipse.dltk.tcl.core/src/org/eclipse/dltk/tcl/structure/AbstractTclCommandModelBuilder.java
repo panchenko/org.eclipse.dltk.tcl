@@ -181,7 +181,7 @@ public abstract class AbstractTclCommandModelBuilder extends
 					if (argWithInitializer.size() >= 2) {
 						parameters.add(new Parameter(asSymbol(pName), pName
 								.getStart(), pName.getEnd(), TclProcessorUtil
-								.asString(argWithInitializer.get(1))));
+								.asString(argWithInitializer.get(1), false)));
 					} else if (argWithInitializer.size() == 1) {
 						parameters.add(new Parameter(pName));
 					} else {

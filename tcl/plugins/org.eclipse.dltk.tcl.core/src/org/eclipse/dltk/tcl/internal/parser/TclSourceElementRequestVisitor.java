@@ -532,12 +532,10 @@ public class TclSourceElementRequestVisitor extends SourceElementRequestVisitor 
 									.getName();
 						} else if (e instanceof TclBlockExpression) {
 							String name = ((TclBlockExpression) e).getBlock();
-							parameterInitializers[a] = TclParseUtil
-									.nameFromBlock(name, '{', '}');
+							parameterInitializers[a] = name;
 						} else if (e instanceof StringLiteral) {
 							String name = ((StringLiteral) e).getValue();
-							parameterInitializers[a] = TclParseUtil
-									.nameFromBlock(name, '"', '"');
+							parameterInitializers[a] = name;
 						} else if (e instanceof TclExecuteExpression) {
 							String name = ((TclExecuteExpression) e)
 									.getExpression();

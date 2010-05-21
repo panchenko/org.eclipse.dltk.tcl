@@ -21,20 +21,26 @@ import org.eclipse.dltk.tcl.structure.ITclModelBuildContext.ITclParserInput;
  */
 public class TclProcessorUtil {
 
+	public static String asString(TclArgument arg) {
+		return asString(arg, true);
+	}
+
 	/**
 	 * @param arg
 	 * @return
 	 */
-	public static String asString(TclArgument arg) {
+	public static String asString(TclArgument arg, boolean unquote) {
 		if (arg instanceof StringArgument) {
 			final String value = ((StringArgument) arg).getValue();
-			int len = value.length();
-			if (len >= 2) {
-				if (value.charAt(0) == '{' && value.charAt(len - 1) == '}') {
-					return value.substring(1, len - 1);
-				} else if (value.charAt(0) == '"'
-						&& value.charAt(len - 1) == '"') {
-					return value.substring(1, len - 1);
+			if (unquote) {
+				int len = value.length();
+				if (len >= 2) {
+					if (value.charAt(0) == '{' && value.charAt(len - 1) == '}') {
+						return value.substring(1, len - 1);
+					} else if (value.charAt(0) == '"'
+							&& value.charAt(len - 1) == '"') {
+						return value.substring(1, len - 1);
+					}
 				}
 			}
 			return value;
