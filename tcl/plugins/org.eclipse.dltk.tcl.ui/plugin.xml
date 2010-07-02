@@ -416,16 +416,6 @@
             commandId="org.eclipse.dltk.tcl.ui.navigate.open.type"
             contextId="org.eclipse.dltk.ui.tclEditorScope"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>       
-		<key
-			commandId="org.eclipse.dltk.ui.edit.text.script.format"
-			contextId="org.eclipse.dltk.ui.tclEditorScope"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M1+M2+F"/>
-      <key
-            sequence="M1+I"
-            contextId="org.eclipse.dltk.ui.tclEditorScope"
-            commandId="org.eclipse.dltk.ui.edit.text.script.indent"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
  </extension>
 
  <extension point="org.eclipse.ui.menus">
