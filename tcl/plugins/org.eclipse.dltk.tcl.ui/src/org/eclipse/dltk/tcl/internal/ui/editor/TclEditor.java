@@ -11,7 +11,6 @@ package org.eclipse.dltk.tcl.internal.ui.editor;
 
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
-import org.eclipse.dltk.internal.ui.actions.FoldingActionGroup;
 import org.eclipse.dltk.internal.ui.editor.BracketInserter;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.internal.ui.editor.ScriptOutlinePage;
@@ -21,7 +20,6 @@ import org.eclipse.dltk.tcl.internal.ui.text.TclPairMatcher;
 import org.eclipse.dltk.tcl.internal.ui.text.folding.TclFoldingStructureProvider;
 import org.eclipse.dltk.tcl.ui.TclPreferenceConstants;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
-import org.eclipse.dltk.ui.actions.GenerateActionGroup;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -32,8 +30,6 @@ import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
 public class TclEditor extends ScriptEditor {
 	public static final String EDITOR_ID = "org.eclipse.dltk.tcl.ui.editor.TclEditor"; //$NON-NLS-1$
@@ -62,14 +58,6 @@ public class TclEditor extends ScriptEditor {
 		if (sourceViewer instanceof ITextViewerExtension)
 			((ITextViewerExtension) sourceViewer)
 					.prependVerifyKeyListener(fBracketInserter);
-	}
-
-	protected void createActions() {
-		super.createActions();
-		ActionGroup generateActions = new GenerateActionGroup(this,
-				ITextEditorActionConstants.GROUP_EDIT);
-		fActionGroups.addGroup(generateActions);
-		fContextMenuGroup.addGroup(generateActions);
 	}
 
 	final static String[] properties = new String[] {
@@ -110,11 +98,6 @@ public class TclEditor extends ScriptEditor {
 		}
 
 		return foldingProvider;
-	}
-
-	protected FoldingActionGroup createFoldingActionGroup() {
-		return new FoldingActionGroup(this, getViewer(), TclUI.getDefault()
-				.getPreferenceStore());
 	}
 
 	public String getEditorId() {
