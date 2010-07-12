@@ -22,10 +22,12 @@ import org.eclipse.dltk.tcl.core.TclNature;
 public class TclLaunchConfigurationDelegate extends
 		AbstractScriptLaunchConfigurationDelegate {
 
+	@Override
 	public String getLanguageId() {
 		return TclNature.NATURE_ID;
 	}
 
+	@Override
 	protected InterpreterConfig createInterpreterConfig(
 			ILaunchConfiguration configuration, ILaunch launch)
 			throws CoreException {
