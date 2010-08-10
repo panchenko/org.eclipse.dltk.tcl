@@ -81,8 +81,8 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				.getSelectionExtensions();
 	}
 
-	public void select(IModuleSource sourceUnit, int selectionSourceStart,
-			int selectionSourceEnd) {
+	public IModelElement[] select(IModuleSource sourceUnit,
+			int selectionSourceStart, int selectionSourceEnd) {
 		sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit
 				.getModelElement();
 		String content = sourceUnit.getSourceContents();
@@ -99,7 +99,7 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		if (!checkSelection(content, selectionSourceStart, selectionSourceEnd)) {
-			return;
+			return new IModelElement[0];
 		}
 
 		if (DEBUG) {
@@ -154,7 +154,9 @@ public class TclSelectionEngine extends ScriptSelectionEngine {
 				e.printStackTrace(System.out);
 			}
 		}
-		reportModelElements(selectionElements);
+
+		return (IModelElement[]) selectionElements
+				.toArray(new IModelElement[selectionElements.size()]);
 	}
 
 	protected ASTNode parseBlockStatements(TypeDeclaration type,
