@@ -253,9 +253,8 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 	/**
 	 * Determines type of last opening block. For example, for such line <code>
 	 * proc () {
-	 * </code>
-	 * function will return new BraceBlockType. And for <code>proc(){}</code>
-	 * function will return null
+	 * </code> function will return new BraceBlockType. And for
+	 * <code>proc(){}</code> function will return null
 	 * 
 	 * @param d
 	 *            document containing the line
@@ -412,11 +411,11 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 				} else {
 					// if our line is inside brackets, get line with opening
 					// bracket
-					block = getLastOpenBlockType(d, d
-							.getLineOffset(lastCodeLine));
+					block = getLastOpenBlockType(d,
+							d.getLineOffset(lastCodeLine));
 					if (block != null) {
-						int peer = scanner.findOpeningPeer(d
-								.getLineOffset(lastCodeLine),
+						int peer = scanner.findOpeningPeer(
+								d.getLineOffset(lastCodeLine),
 								block.openingPeer, block.closingPeer);
 						if (peer != TclDocumentScanner.NOT_FOUND) {
 							lastCodeLine = d.getLineOfOffset(peer);
@@ -897,8 +896,8 @@ public class TclAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 						newIndentBuf.append(b.indent);
 					}
 					String newIndent = newIndentBuf.toString();
-					temp.replace(temp.getLineOffset(line), currentIndent
-							.length(), newIndent);
+					temp.replace(temp.getLineOffset(line),
+							currentIndent.length(), newIndent);
 					offset = temp.getLineOffset(line) + newIndent.length();
 				}
 
