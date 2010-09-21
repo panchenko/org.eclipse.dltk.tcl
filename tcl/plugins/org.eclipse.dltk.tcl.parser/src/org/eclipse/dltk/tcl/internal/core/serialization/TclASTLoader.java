@@ -3,8 +3,7 @@ package org.eclipse.dltk.tcl.internal.core.serialization;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
-import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
@@ -122,10 +121,8 @@ public class TclASTLoader extends AbstractDataLoader implements
 		} else if (warning) {
 			sev = ProblemSeverities.Warning;
 		}
-		DefaultProblemFactory fact = new DefaultProblemFactory();
-		IProblem problem = fact.createProblem(null, id, args,
-				new String[] { message }, sev, start, end, lineNumber, 0);
-		collector.reportProblem(problem);
+		collector.reportProblem(new DefaultProblem(null, message, id, args,
+				sev, start, end, lineNumber));
 	}
 
 	public TclArgument readArgument() throws IOException {
