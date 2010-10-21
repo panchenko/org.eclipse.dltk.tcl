@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.core.search;
 
-import org.eclipse.dltk.core.ISearchPatternProcessor;
+import org.eclipse.dltk.core.search.SearchPatternProcessor;
 
-public class TclSearchPatternProcessor implements ISearchPatternProcessor {
+public class TclSearchPatternProcessor extends SearchPatternProcessor {
 
 	public char[] extractDeclaringTypeQualification(String patternString) {
 		int pos1 = patternString.lastIndexOf("::");
@@ -50,18 +50,20 @@ public class TclSearchPatternProcessor implements ISearchPatternProcessor {
 	}
 
 	public String getDelimiterReplacementString() {
-		return "::";
+		return SEPARATOR;
 	}
 
-	public String extractTypeChars(String patternString) {
-		return getLastTclNameElement(patternString);
-	}
+	private static final String SEPARATOR = "::";
 
-	public char[] extractTypeQualification(String patternString) {
-		int pos1 = patternString.lastIndexOf("::");
-		if (pos1 != -1) {
-			return patternString.substring(0, pos1).toCharArray();
+	@Override
+	public ITypePattern parseType(String patternString) {
+		int pos = patternString.lastIndexOf(SEPARATOR);
+		if (pos != -1) {
+			return new TypePatten(patternString.substring(0, pos).replace(
+					SEPARATOR, TYPE_SEPARATOR_STR), patternString.substring(pos
+					+ SEPARATOR.length()));
+		} else {
+			return new TypePatten(null, patternString);
 		}
-		return null;
 	}
 }

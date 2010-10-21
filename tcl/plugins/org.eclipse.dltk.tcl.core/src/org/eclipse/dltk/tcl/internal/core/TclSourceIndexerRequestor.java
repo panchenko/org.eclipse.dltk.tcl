@@ -10,7 +10,7 @@
 package org.eclipse.dltk.tcl.internal.core;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -44,34 +44,35 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 			String name = fullName.substring(2);
 			String[] split = TclParseUtil.tclSplit(name);
 
-			List cEnclodingNames = new ArrayList();
 			for (int i = 0; i < split.length; i++) {
-				this.indexer.addTypeDeclaration(Modifiers.AccNameSpace,
-						this.pkgName, split[i], eclosingTypeNamesFrom(
-								cEnclodingNames, split, i), null);
+				this.indexer.addTypeDeclaration(
+						Modifiers.AccNameSpace,
+						namespace(),
+						split[i],
+						eclosingTypeNamesFrom(Collections.<String> emptyList(),
+								split, i), null);
 			}
 			this.pushTypeName(name.toCharArray());
 		} else {
 
-			List cEnclodingNames = enclosingTypeNamesAsList();
+			List<String> cEnclodingNames = enclosingTypeNamesAsList();
 			String[] split = TclParseUtil.tclSplit(fullName);
 			for (int i = 0; i < split.length; i++) {
 				this.indexer.addTypeDeclaration(Modifiers.AccNameSpace,
-						this.pkgName, split[i], eclosingTypeNamesFrom(
-								cEnclodingNames, split, i), null);
+						namespace(), split[i],
+						eclosingTypeNamesFrom(cEnclodingNames, split, i), null);
 			}
 			this.pushTypeName(fullName.toCharArray());
 		}
 		return true;
 	}
 
-	private String[] eclosingTypeNamesFrom(List enclosingNames, String[] split,
-			int i) {
+	private String[] eclosingTypeNamesFrom(List<String> enclosingNames,
+			String[] split, int i) {
 		String[] result = new String[enclosingNames.size() + i];
 		int index = 0;
-		for (Iterator iterator = enclosingNames.iterator(); iterator.hasNext();) {
-			String name = (String) iterator.next();
-			result[index++] = name;
+		for (; index < enclosingNames.size(); ++index) {
+			result[index] = enclosingNames.get(index);
 		}
 		for (int j = 0; j < i; j++) {
 			result[index++] = split[j];
@@ -82,8 +83,8 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 		return null;
 	}
 
-	private List enclosingTypeNamesAsList() {
-		List cEnclosingNames = new ArrayList();
+	private List<String> enclosingTypeNamesAsList() {
+		List<String> cEnclosingNames = new ArrayList<String>();
 		String[] enclosingTypeNames2 = enclosingTypeNames();
 		if (enclosingTypeNames2 == null) {
 			return cEnclosingNames;
@@ -91,7 +92,6 @@ public class TclSourceIndexerRequestor extends SourceIndexerRequestor {
 		for (int i = 0; i < enclosingTypeNames2.length; i++) {
 			cEnclosingNames.add(enclosingTypeNames2[i]);
 		}
-		;
 		return cEnclosingNames;
 	}
 
