@@ -22,6 +22,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.core.tests.model.AbstractDLTKSearchTests;
+import org.eclipse.dltk.core.tests.util.StringList;
 
 public class SearchTests extends AbstractDLTKSearchTests implements
 		IDLTKSearchConstants {
@@ -62,7 +63,12 @@ public class SearchTests extends AbstractDLTKSearchTests implements
 		up();
 		IType type = getSourceModule(TCLSEARCH, "src", "p/X.tcl").getType("X");
 		search(type, DECLARATIONS, getSearchScope(TCLSEARCH));
-		assertSearchResults("src/p/X.tcl p/X", resultCollector);
+		StringList expected = new StringList();
+		expected.add("src/X.tcl X");
+		expected.add("src/p/X.tcl p/X");
+		expected.add("src/p2/X.tcl p2/X");
+		expected.add("src/p3/X.tcl p3/X");
+		assertSearchResults(expected.toString().trim(), resultCollector);
 	}
 
 	public void testNamespaceDeclaration02() throws Exception {
