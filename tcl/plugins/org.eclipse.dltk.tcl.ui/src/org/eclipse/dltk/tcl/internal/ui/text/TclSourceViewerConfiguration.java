@@ -236,15 +236,6 @@ public class TclSourceViewerConfiguration extends
 	}
 
 	@Override
-	protected void initializeQuickOutlineContexts(
-			InformationPresenter presenter, IInformationProvider provider) {
-		presenter.setInformationProvider(provider, TclPartitions.TCL_COMMENT);
-		presenter
-				.setInformationProvider(provider, TclPartitions.TCL_INNER_CODE);
-		presenter.setInformationProvider(provider, TclPartitions.TCL_STRING);
-	}
-
-	@Override
 	public IQuickAssistAssistant getQuickAssistAssistant(
 			ISourceViewer sourceViewer) {
 		if (getEditor() != null)
