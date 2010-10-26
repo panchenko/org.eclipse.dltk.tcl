@@ -73,10 +73,6 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 			}
 		}
 
-		protected char getTypeDelimiter() {
-			return '$';
-		}
-
 		public void getScriptFolderLabel(IProjectFragment pack, long flags,
 				StringBuffer buf) {
 			if (pack instanceof TclPackageFragment
@@ -126,8 +122,8 @@ public class TclUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 					if (dot - start > fgPkgNameLength - 1) {
 						buf.append(fgPkgNamePrefix);
 						if (fgPkgNameChars > 0)
-							buf.append(name.substring(start, Math.min(start
-									+ fgPkgNameChars, dot)));
+							buf.append(name.substring(start,
+									Math.min(start + fgPkgNameChars, dot)));
 						buf.append(fgPkgNamePostfix);
 					} else
 						buf.append(name.substring(start, dot + 1));
