@@ -43,8 +43,8 @@ import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension3;
-import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
+import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
@@ -116,15 +116,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		if (!project.exists()) {
 			// thrown exception is caught in the PackageRequireCheckerFactory
 			throw new IllegalStateException(NLS.bind(
-					Messages.TclCheckBuilder_interpreterNotFound, project
-							.getElementName()));
+					Messages.TclCheckBuilder_interpreterNotFound,
+					project.getElementName()));
 		}
 		install = ScriptRuntime.getInterpreterInstall(project);
 		if (install == null) {
 			// thrown exception is caught in the PackageRequireCheckerFactory
 			throw new IllegalStateException(NLS.bind(
-					Messages.TclCheckBuilder_interpreterNotFound, project
-							.getElementName()));
+					Messages.TclCheckBuilder_interpreterNotFound,
+					project.getElementName()));
 		}
 		knownInfos = TclPackagesManager.getPackageInfos(install);
 		variableResolver = new TclVariableResolver(
@@ -397,14 +397,15 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 
 			// Do delta refresh
 			try {
-				ModelManager.getModelManager().getDeltaProcessor()
+				ModelManager
+						.getModelManager()
+						.getDeltaProcessor()
 						.checkExternalChanges(new IModelElement[] { project },
 								new NullProgressMonitor());
 			} catch (ModelException e) {
-				DLTKCore
-						.error(
-								Messages.PackageRequireSourceAnalyser_ModelUpdateFailure,
-								e);
+				DLTKCore.error(
+						Messages.PackageRequireSourceAnalyser_ModelUpdateFailure,
+						e);
 			}
 		}
 	}
@@ -467,10 +468,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					reportSourceProblemCorrection(
 							source,
 							moduleInfo.reporter,
-							NLS
-									.bind(
-											Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFile,
-											file.toOSString()), value,
+							NLS.bind(
+									Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFile,
+									file.toOSString()), value,
 							moduleInfo.lineTracker);
 				} else if (file.isDirectory()) {
 					reportSourceProblemCorrection(
@@ -494,11 +494,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					reportSourceProblemCorrection(
 							source,
 							moduleInfo.reporter,
-							NLS
-									.bind(
-											Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
-											value), value,
-							moduleInfo.lineTracker);
+							NLS.bind(
+									Messages.PackageRequireSourceAnalyser_CouldNotLocateSourcedFileCorrectionRequired,
+									value), value, moduleInfo.lineTracker);
 				}
 			}
 		}
@@ -513,8 +511,8 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 					if (value == null) {
 						i.remove();
 					} else if (userCorrection.getUserValue().size() == 1
-							&& userCorrection.getUserValue().get(0).equals(
-									value)) {
+							&& userCorrection.getUserValue().get(0)
+									.equals(value)) {
 						value = null;
 					}
 				}
@@ -637,10 +635,9 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 				reportPackageProblemCorrection(
 						pkg,
 						reporter,
-						NLS
-								.bind(
-										Messages.PackageRequireSourceAnalyser_CouldNotDetectPackageCorrectionRequired,
-										packageName), packageName, lineTracker);
+						NLS.bind(
+								Messages.PackageRequireSourceAnalyser_CouldNotDetectPackageCorrectionRequired,
+								packageName), packageName, lineTracker);
 				return;
 			} else {
 				reportPackageProblem(pkg, reporter, NLS.bind(
@@ -710,11 +707,10 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		return autoAddPackages;
 	}
 
-	@SuppressWarnings("unchecked")
 	public DependencyResponse getDependencies(int buildType,
 			Set<ISourceModule> localElements,
-			Set<ISourceModule> externalElements, Set oldExternalFolders,
-			Set externalFolders) {
+			Set<ISourceModule> externalElements, Set<IPath> oldExternalFolders,
+			Set<IPath> externalFolders) {
 		if (buildType == IBuildParticipantExtension.FULL_BUILD
 				|| !oldExternalFolders.equals(externalFolders)) {
 			return null;
@@ -731,7 +727,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		TclPackagesManager.setProjectModules(project.getElementName(),
 				Collections.<TclModuleInfo> emptyList());
 		InterpreterContainerHelper.setInterpreterContainerDependencies(project,
-				Collections.<String> emptySet(), Collections
-						.<String> emptySet());
+				Collections.<String> emptySet(),
+				Collections.<String> emptySet());
 	}
 }
