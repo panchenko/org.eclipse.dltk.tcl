@@ -199,7 +199,7 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 		new ProjectOperations(bot).create(PROJECT_NAME);
 
 		helper.assertTclProject(PROJECT_NAME);
-		IScriptProject tclProject = DLTKCore.create(helper
+		IScriptProject tclProject = DLTKCore.create(DltkTestsHelper
 				.getProject(PROJECT_NAME));
 
 		try {
@@ -221,7 +221,7 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 
 		new ProjectOperations(bot).closeProject(PROJECT_NAME);
 
-		IProject project = helper.getProject(PROJECT_NAME);
+		IProject project = DltkTestsHelper.getProject(PROJECT_NAME);
 		assertTrue(ErrorMessages.Project_errClose, !project.isOpen());
 	}
 
@@ -235,7 +235,7 @@ public class ProjectTests extends SWTBotEclipseTestCase {
 
 		new ProjectOperations(bot).openProject(PROJECT_NAME);
 
-		IProject project = helper.getProject(PROJECT_NAME);
+		IProject project = DltkTestsHelper.getProject(PROJECT_NAME);
 		assertTrue(ErrorMessages.Project_errOpen, project.isOpen());
 	}
 
