@@ -38,12 +38,13 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptProjectUtil;
+import org.eclipse.dltk.core.builder.IBuildChange;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension2;
 import org.eclipse.dltk.core.builder.IBuildParticipantExtension3;
-import org.eclipse.dltk.core.builder.IScriptBuilder.DependencyResponse;
+import org.eclipse.dltk.core.builder.IBuildState;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -707,17 +708,7 @@ public class PackageRequireSourceAnalyser implements IBuildParticipant,
 		return autoAddPackages;
 	}
 
-	public DependencyResponse getDependencies(int buildType,
-			Set<ISourceModule> localElements,
-			Set<ISourceModule> externalElements, Set<IPath> oldExternalFolders,
-			Set<IPath> externalFolders) {
-		if (buildType == IBuildParticipantExtension.FULL_BUILD
-				|| !oldExternalFolders.equals(externalFolders)) {
-			return null;
-			// TODO return DependencyResponse.FULL_EXTERNAL_BUILD;
-		} else {
-			return null;
-		}
+	public void prepare(IBuildChange buildChange, IBuildState buildState) {
 	}
 
 	/**
