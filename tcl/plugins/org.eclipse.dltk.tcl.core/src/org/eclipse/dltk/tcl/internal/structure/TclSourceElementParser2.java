@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
-import org.eclipse.dltk.compiler.ISourceElementRequestorExtension;
+import org.eclipse.dltk.compiler.SourceElementRequestorKind;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.ISourceElementParser;
@@ -110,18 +110,10 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		refreshOptions();
 	}
 
-	private boolean isStructureMode(ISourceElementRequestor requestor) {
-		if (requestor instanceof ISourceElementRequestorExtension) {
-			return ((ISourceElementRequestorExtension) requestor).getMode() == ISourceElementRequestorExtension.MODE_STRUCTURE;
-		} else {
-			return false;
-		}
-	}
-
 	@Override
 	public void parseSourceModule(IModuleSource module) {
 		final ISourceElementRequestor requestor = getRequestor();
-		if (USE_NEW && isStructureMode(requestor)) {
+		if (USE_NEW && SourceElementRequestorKind.STRUCTURE.matches(requestor)) {
 			initDetectors();
 			final IProblemReporter reporter = getProblemReporter();
 			// TODO load from disk cache
@@ -136,8 +128,8 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 			final TclParser newParser = createParser();
 			final NamespaceScopeProcessor coreProcessor = DefinitionManager
 					.getInstance().createProcessor();
-			TclModule tclModule = newParser.parseModule(source, context
-					.getErrorReporter(), coreProcessor);
+			TclModule tclModule = newParser.parseModule(source,
+					context.getErrorReporter(), coreProcessor);
 			traverse(tclModule.getStatements(), context);
 			//
 			requestor.exitModule(source.length());
@@ -164,8 +156,8 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		newParser.setGlobalOffset(offset);
 		final NamespaceScopeProcessor coreProcessor = DefinitionManager
 				.getInstance().createProcessor();
-		List<TclCommand> commands = newParser.parse(source, context
-				.getErrorReporter(), coreProcessor);
+		List<TclCommand> commands = newParser.parse(source,
+				context.getErrorReporter(), coreProcessor);
 		traverse(commands, (TclModelBuildContext) context);
 		return commands;
 	}
