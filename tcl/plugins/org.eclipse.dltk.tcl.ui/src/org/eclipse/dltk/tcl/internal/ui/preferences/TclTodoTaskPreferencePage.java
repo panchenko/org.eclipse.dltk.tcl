@@ -14,7 +14,6 @@ package org.eclipse.dltk.tcl.internal.ui.preferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.core.TclPlugin;
-import org.eclipse.dltk.ui.PreferencesAdapter;
 import org.eclipse.dltk.ui.preferences.AbstractConfigurationBlockPropertyAndPreferencePage;
 import org.eclipse.dltk.ui.preferences.AbstractOptionsBlock;
 import org.eclipse.dltk.ui.preferences.TodoTaskOptionsBlock;
@@ -48,8 +47,7 @@ public class TclTodoTaskPreferencePage extends
 	}
 
 	protected void setPreferenceStore() {
-		setPreferenceStore(new PreferencesAdapter(TclPlugin.getDefault()
-				.getPluginPreferences()));
+		// empty
 	}
 
 	protected String getPreferencePageId() {
