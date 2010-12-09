@@ -216,11 +216,6 @@ public class TclCorePreferencePage extends
 								TclPreferencesMessages.TclCorePreferencePage_1,
 								e);
 					}
-					/*
-					 * TODO When new parser would be ready remove
-					 * TclSourceElementParser2 references from this class
-					 */
-					TclSourceElementParser2.refreshOptions();
 					return Status.OK_STATUS;
 				}
 			}.schedule(500);
@@ -291,8 +286,8 @@ public class TclCorePreferencePage extends
 
 		@Override
 		protected Control createOptionsBlock(Composite parent) {
-			Composite block = SWTFactory.createComposite(parent, parent
-					.getFont(), 1, 1, GridData.FILL_BOTH);
+			Composite block = SWTFactory.createComposite(parent,
+					parent.getFont(), 1, 1, GridData.FILL_BOTH);
 			SWTFactory
 					.createLabel(
 							block,
@@ -313,15 +308,6 @@ public class TclCorePreferencePage extends
 			createCheckbox(block,
 					TclPreferencesMessages.TclCorePreferencePage_remote,
 					KEYS[3]);
-
-			if (TclSourceElementParser2.DEBUG) {
-				Composite c = SWTFactory.createGroup(block, "Debug options", 1,
-						2, GridData.FILL_HORIZONTAL);
-				Button newStructureParser = createCheckbox(c,
-						"Old structure parser", new PreferenceKey(
-								TclPlugin.PLUGIN_ID,
-								TclSourceElementParser2.class.getName()));
-			}
 
 			final Composite patternComposite = SWTFactory.createComposite(
 					block, block.getFont(), 1, 1, GridData.FILL_BOTH);
