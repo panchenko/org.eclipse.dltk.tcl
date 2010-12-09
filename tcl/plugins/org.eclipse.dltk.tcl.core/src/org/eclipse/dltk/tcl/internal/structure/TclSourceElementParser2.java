@@ -95,20 +95,7 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		}
 	}
 
-	public static final boolean DEBUG = false;
-
 	public static final boolean USE_NEW = true;
-
-	// @SuppressWarnings("deprecation")
-	public static void refreshOptions() {
-		// USE_NEW = DEBUG
-		// && !TclPlugin.getDefault().getPluginPreferences().getBoolean(
-		// TclSourceElementParser2.class.getName());
-	}
-
-	static {
-		refreshOptions();
-	}
 
 	@Override
 	public void parseSourceModule(IModuleSource module) {
