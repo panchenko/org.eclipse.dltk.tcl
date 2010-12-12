@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.launching;bundle-version="3.0.0",
  org.eclipse.dltk.console;bundle-version="3.0.0",
  org.eclipse.dltk.tcl.debug;bundle-version="1.0.0",
- org.eclipse.dltk.debug;bundle-version="1.0.0"
+ org.eclipse.dltk.debug;bundle-version="3.0.0"
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.dltk.tcl.console,
  org.eclipse.dltk.tcl.internal.launching,
