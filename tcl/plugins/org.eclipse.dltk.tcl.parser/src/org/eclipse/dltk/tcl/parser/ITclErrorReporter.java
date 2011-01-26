@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+
 public interface ITclErrorReporter extends ITclErrorConstants {
-	void report(int code, String message, String[] extraMessage, int start, int end, int kind);
+	void report(int code, String message, String[] extraMessage, int start, int end, ProblemSeverity kind);
 }

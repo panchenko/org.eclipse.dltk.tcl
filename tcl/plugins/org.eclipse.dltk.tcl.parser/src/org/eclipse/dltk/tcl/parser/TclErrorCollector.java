@@ -16,14 +16,14 @@ import java.util.Set;
 
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 
 public class TclErrorCollector implements ITclErrorReporter {
 	private Set<TclError> errors = new HashSet<TclError>();
 
 	public void report(int code, String message, String[] extraMessage,
-			int start, int end, int kind) {
+			int start, int end, ProblemSeverity kind) {
 		boolean insertNewError = true;
 		TclError errorToReplace = null;
 		for (TclError error : errors) {
@@ -87,14 +87,13 @@ public class TclErrorCollector implements ITclErrorReporter {
 			final ISourceLineTracker tracker) {
 		reportAll(new ITclErrorReporter() {
 			public void report(int code, String message, String[] extraMessage,
-					int start, int end, int kind) {
+					int start, int end, ProblemSeverity kind) {
 				reporter
 						.reportProblem(new DefaultProblem(
 								message,
 								code,
 								extraMessage,
-								kind == ITclErrorReporter.ERROR ? ProblemSeverities.Error
-										: ProblemSeverities.Warning, start,
+								kind, start,
 								end, tracker.getLineNumberOfOffset(start)));
 			}
 		});

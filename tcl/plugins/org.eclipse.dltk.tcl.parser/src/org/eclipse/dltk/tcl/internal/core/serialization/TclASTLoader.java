@@ -5,8 +5,10 @@ import java.io.InputStream;
 
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifier;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
 import org.eclipse.dltk.core.caching.AbstractDataLoader;
@@ -101,12 +103,11 @@ public class TclASTLoader extends AbstractDataLoader implements
 		if (tag != TAG_PROBLEM && tag != TAG_PROBLEM_ID_AS_STRING) {
 			return;
 		}
-		int id = 0;
-		String sId = null;
+		IProblemIdentifier id;
 		if (tag == TAG_PROBLEM) {
-			id = in.readInt();
+			id = DefaultProblemIdentifier.decode(in.readInt());
 		} else {
-			sId = readString();
+			id = DefaultProblemIdentifier.decode(readString());
 		}
 		String message = readString();
 		int start = readInt();
@@ -122,20 +123,14 @@ public class TclASTLoader extends AbstractDataLoader implements
 		boolean error = in.readBoolean();
 		boolean warning = in.readBoolean();
 		int lineNumber = readInt();
-		int sev = 0;
+		ProblemSeverity sev = ProblemSeverity.INFO;
 		if (error) {
 			sev = ProblemSeverities.Error;
 		} else if (warning) {
 			sev = ProblemSeverities.Warning;
 		}
-		if (tag == TAG_PROBLEM) {
-			collector.reportProblem(new DefaultProblem(message, id, args, sev,
-					start, end, lineNumber));
-		} else {
-			collector.reportProblem(new DefaultProblem(message,
-					DefaultProblemIdentifier.decode(sId), args, sev,
-					start, end, lineNumber));
-		}
+		collector.reportProblem(new DefaultProblem(message, id, args, sev,
+				start, end, lineNumber));
 	}
 
 	public TclArgument readArgument() throws IOException {

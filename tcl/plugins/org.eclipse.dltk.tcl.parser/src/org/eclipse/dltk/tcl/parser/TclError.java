@@ -11,16 +11,18 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+
 public class TclError {
 	private int code;
 	private String message;
 	private int start;
 	private int end;
-	private int errorKind;
+	private ProblemSeverity errorKind;
 	private String[] extraArguments;
 
 	public TclError(int code, String message, String[] extraArguments,
-			int start, int end, int kind) {
+			int start, int end, ProblemSeverity kind) {
 		this.code = code;
 		this.message = message;
 		this.extraArguments = extraArguments;
@@ -95,11 +97,11 @@ public class TclError {
 		this.end = end;
 	}
 
-	public int getErrorKind() {
+	public ProblemSeverity getErrorKind() {
 		return errorKind;
 	}
 
-	public void setErrorKind(int errorKind) {
+	public void setErrorKind(ProblemSeverity errorKind) {
 		this.errorKind = errorKind;
 	}
 

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.parser;
 
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+
 public interface ITclErrorConstants {
 	public static final int DEFAULT = 0;
 	public static final int UNKNOWN = 2;
@@ -29,7 +31,6 @@ public interface ITclErrorConstants {
 	public static final int DEPRECATED_COMMAND = 14;
 	public static final int COMMAND_OUT_OF_SCOPE = 15;
 
-	public static final int ERROR = 0;
-	public static final int WARNING = 1;
-	public static final int INFO = 2;
+	public static final ProblemSeverity ERROR = ProblemSeverity.ERROR;
+	public static final ProblemSeverity WARNING = ProblemSeverity.WARNING;
 }
