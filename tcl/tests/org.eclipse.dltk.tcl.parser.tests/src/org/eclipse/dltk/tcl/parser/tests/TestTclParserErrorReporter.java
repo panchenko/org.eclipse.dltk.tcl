@@ -15,6 +15,7 @@ package org.eclipse.dltk.tcl.parser.tests;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 
 public class TestTclParserErrorReporter implements ITclErrorReporter {
@@ -24,7 +25,7 @@ public class TestTclParserErrorReporter implements ITclErrorReporter {
 	public TestTclParserErrorReporter() {
 	}
 
-	public void report(int code, String value, String[] extraMessage, int start, int end, int kind) {
+	public void report(int code, String value, String[] extraMessage, int start, int end, ProblemSeverity kind) {
 		Integer key = new Integer(code);
 		Integer old = errors.get(key);
 		if (old == null) {

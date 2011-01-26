@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -32,8 +33,8 @@ import org.eclipse.dltk.tcl.internal.tclchecker.Checker4OutputProcessor;
 import org.eclipse.dltk.tcl.internal.tclchecker.ITclCheckerReporter;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclChecker;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils;
-import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
 import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerConfigUtils.ValidatorInstanceResponse;
+import org.eclipse.dltk.tcl.internal.tclchecker.TclCheckerProblem;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.ITclParserOptions;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
@@ -73,7 +74,7 @@ public class TclCheckerDLTKErrorComparisonTests extends TestCase {
 		System.out.println("-----------------source----------------------\n");
 		col.reportAll(new ITclErrorReporter() {
 			public void report(int code, String message, String[] extraMessage,
-					int start, int end, int kind) {
+					int start, int end, ProblemSeverity kind) {
 				System.out.println((kind == ITclErrorReporter.ERROR ? "Error:"
 						: "Warning/Info:")
 						+ code

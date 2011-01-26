@@ -25,6 +25,7 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.tcl.parser.ITclErrorReporter;
 import org.eclipse.dltk.tcl.parser.TclErrorCollector;
 import org.eclipse.dltk.tcl.parser.TclParser;
@@ -84,7 +85,7 @@ public class TestUtils {
 		final CodeModel model = new CodeModel(source);
 		errors.reportAll(new ITclErrorReporter() {
 			public void report(int code, String message, String[] extraMessage,
-					int start, int end, int kind) {
+					int start, int end, ProblemSeverity kind) {
 				System.out.println((kind == ITclErrorReporter.ERROR ? "Error:"
 						: "Warning/Info:")
 						+ code
