@@ -16,9 +16,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.IElementRequestor.FieldInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
+import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.tcl.ast.Node;
 import org.eclipse.dltk.tcl.ast.StringArgument;
@@ -50,7 +51,7 @@ public abstract class AbstractTclCommandModelBuilder extends
 	 * @param severity
 	 */
 	protected void report(ITclModelBuildContext context, Node node,
-			String message, int severity) {
+			String message, ProblemSeverity severity) {
 		// TODO Auto-generated method stub
 
 	}

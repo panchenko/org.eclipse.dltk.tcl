@@ -5,6 +5,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 
 public abstract class AbstractTclCommandProcessor implements
 		ITclCommandProcessor {
@@ -16,13 +17,13 @@ public abstract class AbstractTclCommandProcessor implements
 	}
 
 	public void report(ITclParser parser, String message, ASTNode node,
-			int severity) {
+			ProblemSeverity severity) {
 		this.report(parser, message, node.sourceStart(), node.sourceEnd(),
 				severity);
 	}
 
 	public void report(ITclParser parser, String message, int start, int end,
-			int severity) {
+			ProblemSeverity severity) {
 		IProblemReporter problemReporter = parser.getProblemReporter();
 		if (problemReporter == null) {
 			return;

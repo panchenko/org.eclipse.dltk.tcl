@@ -22,6 +22,7 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestorKind;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.dltk.compiler.problem.ProblemSeverity;
 import org.eclipse.dltk.core.ISourceElementParser;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.tcl.ast.TclCommand;
@@ -135,7 +136,8 @@ public class TclSourceElementParser2 extends TclSourceElementParser implements
 		ITclModelBuildContext context = new TclModelBuildContext(this,
 				getRequestor(), new ITclErrorReporter() {
 					public void report(int code, String message,
-							String[] extraMessage, int start, int end, int kind) {
+							String[] extraMessage, int start, int end,
+							ProblemSeverity kind) {
 						// empty
 					}
 				});
