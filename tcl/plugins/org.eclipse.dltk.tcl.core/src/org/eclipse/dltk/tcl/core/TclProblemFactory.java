@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2011 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,13 +12,13 @@
 package org.eclipse.dltk.tcl.core;
 
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifierFactory;
 
-public enum TclProblems implements IProblemIdentifier {
+public class TclProblemFactory implements IProblemIdentifierFactory {
 
-	UNKNOWN_REQUIRED_PACKAGE, UNKNOWN_REQUIRED_PACKAGE_CORRECTION, UNKNOWN_SOURCE, UNKNOWN_SOURCE_CORRECTION;
-
-	public String contributor() {
-		return TclPlugin.PLUGIN_ID;
+	public IProblemIdentifier valueOf(String localName)
+			throws IllegalArgumentException {
+		return TclProblems.valueOf(localName);
 	}
 
 }

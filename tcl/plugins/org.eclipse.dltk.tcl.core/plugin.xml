@@ -244,4 +244,11 @@
             id="org.eclipse.dltk.tcl.core.PACKAGES">
       </buildpathContainerInitializer>
    </extension-->
+   <extension
+         point="org.eclipse.dltk.core.problemFactory">
+         <problemIdentifierFactory
+               class="org.eclipse.dltk.tcl.core.TclProblemFactory"
+               namespace="org.eclipse.dltk.tcl.core.TclProblems">
+         </problemIdentifierFactory>
+   </extension>
 </plugin>
