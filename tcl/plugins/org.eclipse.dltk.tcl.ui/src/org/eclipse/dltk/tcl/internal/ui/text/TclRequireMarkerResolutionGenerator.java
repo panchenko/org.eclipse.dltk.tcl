@@ -8,9 +8,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifier;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.CorrectionEngine;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.tcl.core.TclPackagesManager;
@@ -25,7 +26,7 @@ public class TclRequireMarkerResolutionGenerator implements
 
 	public IMarkerResolution[] getResolutions(IMarker marker) {
 		if (TclSourcePackageCorrectionProcessor.isFixable(marker)) {
-			int idValue = marker.getAttribute(IScriptModelMarker.ID, 0);
+			IProblemIdentifier idValue = DefaultProblemIdentifier.getProblemId(marker);
 			if (idValue == TclProblems.UNKNOWN_REQUIRED_PACKAGE) {
 				String pkgName = CorrectionEngine.getProblemArguments(marker)[0];
 				if (pkgName != null) {
@@ -34,7 +35,7 @@ public class TclRequireMarkerResolutionGenerator implements
 					return new IMarkerResolution[] { new TclRequirePackageMarkerResolution(
 							pkgName, scriptProject) };
 				}
-			} else if (marker.getAttribute(IScriptModelMarker.ID, 0) == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
+			} else if (idValue == TclProblems.UNKNOWN_SOURCE_CORRECTION) {
 				String pkgName = CorrectionEngine.getProblemArguments(marker)[0];
 				if (pkgName != null) {
 					IProject project = marker.getResource().getProject();
