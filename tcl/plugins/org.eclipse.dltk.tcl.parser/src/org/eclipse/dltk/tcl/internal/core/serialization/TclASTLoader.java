@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifier;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
@@ -97,10 +98,16 @@ public class TclASTLoader extends AbstractDataLoader implements
 
 	private void loadProblem(IProblemReporter collector) throws IOException {
 		int tag = in.readByte();// TAG_PROBLEM);
-		if (tag != TAG_PROBLEM) {
+		if (tag != TAG_PROBLEM && tag != TAG_PROBLEM_ID_AS_STRING) {
 			return;
 		}
-		int id = in.readInt();
+		int id = 0;
+		String sId = null;
+		if (tag == TAG_PROBLEM) {
+			id = in.readInt();
+		} else {
+			sId = readString();
+		}
 		String message = readString();
 		int start = readInt();
 		int end = readInt() + start;
@@ -121,8 +128,14 @@ public class TclASTLoader extends AbstractDataLoader implements
 		} else if (warning) {
 			sev = ProblemSeverities.Warning;
 		}
-		collector.reportProblem(new DefaultProblem(null, message, id, args,
-				sev, start, end, lineNumber));
+		if (tag == TAG_PROBLEM) {
+			collector.reportProblem(new DefaultProblem(message, id, args, sev,
+					start, end, lineNumber));
+		} else {
+			collector.reportProblem(new DefaultProblem(message,
+					DefaultProblemIdentifier.decode(sId), args, sev,
+					start, end, lineNumber));
+		}
 	}
 
 	public TclArgument readArgument() throws IOException {

@@ -10,4 +10,5 @@ public interface ITclASTConstants {
 	public static final int TAG_VARIABLE_ARGUMENT = 6;
 	public static final int TAG_ARGUMENT_LIST_ARGUMENT = 7;
 	public static final int TAG_PROBLEM = 8;
+	public static final int TAG_PROBLEM_ID_AS_STRING = 9;
 }

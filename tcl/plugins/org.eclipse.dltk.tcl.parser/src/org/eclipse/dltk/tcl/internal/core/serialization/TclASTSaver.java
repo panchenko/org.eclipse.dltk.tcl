@@ -3,6 +3,7 @@ package org.eclipse.dltk.tcl.internal.core.serialization;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.eclipse.dltk.compiler.problem.DefaultProblemIdentifier;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
@@ -102,8 +103,8 @@ public class TclASTSaver extends AbstractDataSaver implements ITclASTConstants {
 	}
 
 	private void saveProblem(IProblem problem) throws IOException {
-		out.writeByte(TAG_PROBLEM);
-		out.writeInt(problem.getID());
+		out.writeByte(TAG_PROBLEM_ID_AS_STRING);
+		writeString(DefaultProblemIdentifier.encode(problem.getID()));
 		writeString(problem.getMessage());
 		writeInt(problem.getSourceStart());
 		writeInt(problem.getSourceEnd() - problem.getSourceStart());
