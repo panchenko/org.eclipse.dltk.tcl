@@ -27,12 +27,15 @@ public class XOTclSemanticHighlightingExtension implements
 			TclStatement st = (TclStatement) node;
 			if (st.getAt(0) instanceof SimpleReference
 					&& ((SimpleReference) st.getAt(0)).getName().equals("@")) { //$NON-NLS-1$
-				requestor.addPosition(st.sourceStart(), st.sourceEnd(),
-						HL_EOL_COMMENT);
+				requestor
+						.addPosition(
+								st.sourceStart(),
+								st.sourceEnd(),
+								TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR);
 			}
 		} else if (node instanceof XOTclDocumentationNode) {
 			requestor.addPosition(node.sourceStart(), node.sourceEnd(),
-					HL_EOL_COMMENT);
+					TclPreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR);
 		}
 	}
 
