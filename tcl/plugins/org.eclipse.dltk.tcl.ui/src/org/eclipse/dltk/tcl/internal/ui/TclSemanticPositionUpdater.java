@@ -1,5 +1,9 @@
 package org.eclipse.dltk.tcl.internal.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -7,44 +11,31 @@ import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.ui.semantilhighlighting.ISemanticHighlightingExtension;
 import org.eclipse.dltk.ui.editor.highlighting.ASTSemanticHighlighter;
-import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlightingRequestor;
+import org.eclipse.dltk.ui.editor.highlighting.SemanticHighlighting;
 
 public class TclSemanticPositionUpdater extends ASTSemanticHighlighter {
 
 	private final ISemanticHighlightingExtension[] extensions;
-	private final ISemanticHighlightingRequestor[] requestors;
-
-	private static class SemanticPositionRequestorExtension implements
-			ISemanticHighlightingRequestor {
-
-		private final ISemanticHighlightingRequestor requestor;
-		private final int offset;
-
-		/**
-		 * @param requestor
-		 * @param offset
-		 */
-		public SemanticPositionRequestorExtension(
-				ISemanticHighlightingRequestor requestor, int offset) {
-			this.offset = offset;
-			this.requestor = requestor;
-		}
-
-		public void addPosition(int start, int end, int highlightingIndex) {
-			requestor.addPosition(start, end, highlightingIndex + offset);
-		}
-
-	}
 
 	public TclSemanticPositionUpdater(
 			ISemanticHighlightingExtension[] extensions) {
 		this.extensions = extensions;
-		this.requestors = new ISemanticHighlightingRequestor[extensions.length];
-		int offset = 0;
-		for (int i = 0; i < extensions.length; ++i) {
-			requestors[i] = new SemanticPositionRequestorExtension(this, offset);
-			offset += extensions[i].getHighlightings().length;
+	}
+
+	public SemanticHighlighting[] getSemanticHighlightings() {
+		List<SemanticHighlighting> highlightings = new ArrayList<SemanticHighlighting>();
+		for (int i = 0; i < extensions.length; i++) {
+			SemanticHighlighting[] hl = extensions[i].getHighlightings();
+			if (hl != null) {
+				highlightings.addAll(Arrays.asList(hl));
+			}
 		}
+		SemanticHighlighting[] ret = new SemanticHighlighting[highlightings
+				.size()];
+		for (int i = 0; i < highlightings.size(); i++)
+			ret[i] = highlightings.get(i);
+
+		return ret;
 	}
 
 	protected String getNature() {
@@ -59,7 +50,8 @@ public class TclSemanticPositionUpdater extends ASTSemanticHighlighter {
 
 				public boolean visitGeneral(ASTNode node) throws Exception {
 					for (int i = 0; i < extensions.length; i++) {
-						extensions[i].processNode(node, requestors[i]);
+						extensions[i].processNode(node,
+								TclSemanticPositionUpdater.this);
 					}
 					return true;
 				}
@@ -68,7 +60,8 @@ public class TclSemanticPositionUpdater extends ASTSemanticHighlighter {
 			for (int i = 0; i < extensions.length; ++i) {
 				if (extensions[i] instanceof DefaultTclSemanticHighlightingExtension) {
 					DefaultTclSemanticHighlightingExtension hl = (DefaultTclSemanticHighlightingExtension) extensions[i];
-					hl.doOtherHighlighting(code, requestors[i]);
+					hl.doOtherHighlighting(code,
+							TclSemanticPositionUpdater.this);
 				}
 			}
 			return true;

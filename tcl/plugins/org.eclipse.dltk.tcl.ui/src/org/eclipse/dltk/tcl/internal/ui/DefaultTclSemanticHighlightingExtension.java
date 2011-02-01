@@ -56,12 +56,12 @@ public class DefaultTclSemanticHighlightingExtension implements
 					null,
 					PreferencesMessages.DLTKEditorPreferencePage_variables) };
 
-	private static final int HL_PROCEDURES = 0;
-	private static final int HL_ARGUMENTS = 1;
-	private static final int HL_CLASSES = 2;
-	private static final int HL_BASE_CLASSES = 3;
-	private static final int HL_STRINGS = 4;
-	private static final int HL_VARIABLES = 5;
+	private static final String HL_PROCEDURES = TclPreferenceConstants.EDITOR_PROCEDURES_COLOR;
+	private static final String HL_ARGUMENTS = TclPreferenceConstants.EDITOR_ARGUMENTS_COLOR;
+	private static final String HL_CLASSES = TclPreferenceConstants.EDITOR_CLASSES_COLOR;
+	private static final String HL_BASE_CLASSES = TclPreferenceConstants.EDITOR_BASE_CLASS_COLOR;
+	private static final String HL_STRINGS = TclPreferenceConstants.EDITOR_STRING_COLOR;
+	private static final String HL_VARIABLES = TclPreferenceConstants.EDITOR_VARIABLE_COLOR;
 
 	public DefaultTclSemanticHighlightingExtension() {
 	}
@@ -199,8 +199,8 @@ public class DefaultTclSemanticHighlightingExtension implements
 
 							@Override
 							public boolean visit(VariableReference list) {
-								semanticHighlightingRequestor.addPosition(list
-										.getStart(), list.getEnd(),
+								semanticHighlightingRequestor.addPosition(
+										list.getStart(), list.getEnd(),
 										HL_VARIABLES);
 								return super.visit(list);
 							}

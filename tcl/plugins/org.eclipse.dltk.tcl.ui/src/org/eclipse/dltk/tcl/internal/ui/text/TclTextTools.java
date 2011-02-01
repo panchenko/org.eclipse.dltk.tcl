@@ -9,16 +9,13 @@
  *******************************************************************************/
 package org.eclipse.dltk.tcl.internal.ui.text;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.dltk.core.SimpleClassDLTKExtensionManager;
+import org.eclipse.dltk.tcl.core.TclNature;
 import org.eclipse.dltk.tcl.internal.ui.TclSemanticPositionUpdater;
 import org.eclipse.dltk.tcl.internal.ui.TclUI;
 import org.eclipse.dltk.tcl.ui.semantilhighlighting.ISemanticHighlightingExtension;
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
-import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlighter;
+import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlightingUpdater;
 import org.eclipse.dltk.ui.editor.highlighting.SemanticHighlighting;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
@@ -69,23 +66,12 @@ public class TclTextTools extends ScriptTextTools {
 	}
 
 	public SemanticHighlighting[] getSemanticHighlightings() {
-		List highlightings = new ArrayList();
-		ISemanticHighlightingExtension[] exts = getExtensions();
-		for (int i = 0; i < exts.length; i++) {
-			SemanticHighlighting[] hl = exts[i].getHighlightings();
-			if (hl != null) {
-				highlightings.addAll(Arrays.asList(hl));
-			}
-		}
-		SemanticHighlighting[] ret = new SemanticHighlighting[highlightings
-				.size()];
-		for (int i = 0; i < highlightings.size(); i++)
-			ret[i] = (SemanticHighlighting) highlightings.get(i);
-
-		return ret;
+		return getSemanticPositionUpdater(TclNature.NATURE_ID)
+				.getSemanticHighlightings();
 	}
 
-	public ISemanticHighlighter getSemanticPositionUpdater() {
+	public ISemanticHighlightingUpdater getSemanticPositionUpdater(
+			String natureId) {
 		return new TclSemanticPositionUpdater(getExtensions());
 	}
 
