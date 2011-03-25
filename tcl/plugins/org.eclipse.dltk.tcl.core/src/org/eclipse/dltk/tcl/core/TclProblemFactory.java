@@ -21,4 +21,8 @@ public class TclProblemFactory implements IProblemIdentifierFactory {
 		return TclProblems.valueOf(localName);
 	}
 
+	public IProblemIdentifier[] values() {
+		return TclProblems.values();
+	}
+
 }
