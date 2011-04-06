@@ -69,7 +69,7 @@ public class TclEditor extends ScriptEditor {
 		return properties;
 	}
 
-	protected IPreferenceStore getScriptPreferenceStore() {
+	public IPreferenceStore getScriptPreferenceStore() {
 		return TclUI.getDefault().getPreferenceStore();
 	}
 
