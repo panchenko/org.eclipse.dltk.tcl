@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.dltk.xotcl.testing.xounit;singleton:=true
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 4.0.0.qualifier
 Bundle-Activator: org.eclipse.dltk.xotcl.testing.internal.xounit.Activator
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.tcl.testing,
- org.eclipse.dltk.core;bundle-version="3.0.0",
+ org.eclipse.dltk.core;bundle-version="4.0.0",
  org.eclipse.dltk.testing,
- org.eclipse.dltk.launching;bundle-version="3.0.0",
+ org.eclipse.dltk.launching;bundle-version="4.0.0",
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.dltk.tcl.core,

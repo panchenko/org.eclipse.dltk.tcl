@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dltk.itcl.sdk"
       label="%featureName"
-      version="3.0.0.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
@@ -14,12 +14,24 @@
       %license
    </license>
 
-    <includes
-         id="org.eclipse.dltk.itcl"
-         version="0.0.0"/>
+   <plugin
+         id="org.eclipse.dltk.itcl.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
-   <includes
+   <plugin
+         id="org.eclipse.dltk.itcl.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.dltk.itcl.source"
-         version="0.0.0"/>
-
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 </feature>

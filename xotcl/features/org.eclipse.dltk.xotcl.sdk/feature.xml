@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dltk.xotcl.sdk"
       label="%featureName"
-      version="3.0.0.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
@@ -14,12 +14,32 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.dltk.xotcl"
-         version="0.0.0"/>
+  <plugin
+         id="org.eclipse.dltk.xotcl.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
-   <includes
+   <plugin
+         id="org.eclipse.dltk.xotcl.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.dltk.xotcl.testing.xounit.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.dltk.xotcl.source"
-         version="0.0.0"/>
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
