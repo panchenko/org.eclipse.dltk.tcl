@@ -21,6 +21,6 @@
 		<module>plugins/org.eclipse.dltk.xotcl.core</module>
 		<module>plugins/org.eclipse.dltk.xotcl.testing.xounit</module>
 		<module>plugins/org.eclipse.dltk.xotcl.ui</module>
-		<module>update.site</module>
+		<!-- <module>update.site</module> -->
 	</modules>
 </project>

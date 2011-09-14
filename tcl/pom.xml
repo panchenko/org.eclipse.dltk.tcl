@@ -33,6 +33,6 @@
 		<module>plugins/org.eclipse.dltk.tcl.testing.tcltest</module>
 		<module>plugins/org.eclipse.dltk.tcl.ui</module>
 		<module>plugins/org.eclipse.dltk.tcl.validators</module>
-		<module>update.site</module>
+		<!-- <module>update.site</module> -->
 	</modules>
 </project>
