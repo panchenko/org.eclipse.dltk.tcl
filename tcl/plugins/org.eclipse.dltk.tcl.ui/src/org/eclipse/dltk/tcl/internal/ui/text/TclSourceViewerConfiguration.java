@@ -19,7 +19,6 @@ import org.eclipse.dltk.tcl.internal.ui.text.completion.TclScriptCompletionProce
 import org.eclipse.dltk.tcl.ui.text.TclPartitions;
 import org.eclipse.dltk.ui.text.AbstractScriptScanner;
 import org.eclipse.dltk.ui.text.IColorManager;
-import org.eclipse.dltk.ui.text.ScriptCorrectionAssistant;
 import org.eclipse.dltk.ui.text.ScriptPresentationReconciler;
 import org.eclipse.dltk.ui.text.ScriptSourceViewerConfiguration;
 import org.eclipse.dltk.ui.text.completion.ContentAssistPreference;
@@ -37,7 +36,6 @@ import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
-import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -235,12 +233,4 @@ public class TclSourceViewerConfiguration extends
 		return TclContentAssistPreference.getDefault();
 	}
 
-	@Override
-	public IQuickAssistAssistant getQuickAssistAssistant(
-			ISourceViewer sourceViewer) {
-		if (getEditor() != null)
-			return new ScriptCorrectionAssistant(getEditor(), fPreferenceStore,
-					getColorManager());
-		return null;
-	}
 }
