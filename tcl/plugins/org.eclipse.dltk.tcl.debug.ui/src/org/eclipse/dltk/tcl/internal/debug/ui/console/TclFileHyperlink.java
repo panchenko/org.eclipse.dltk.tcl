@@ -131,15 +131,6 @@ public class TclFileHyperlink implements IHyperlink {
 		}
 	}
 
-	public IEditorInput getEditorInput(Object item) {
-		try {
-			return EditorUtility.getEditorInput(item);
-		} catch (CoreException e) {
-			DLTKDebugUIPlugin.log(e);
-			return null;
-		}
-	}
-
 	protected Object getSourceModule(String fileName) throws CoreException {
 		if (fConsole instanceof org.eclipse.debug.ui.console.IConsole) {
 			final IProcess process = ((org.eclipse.debug.ui.console.IConsole) fConsole)
