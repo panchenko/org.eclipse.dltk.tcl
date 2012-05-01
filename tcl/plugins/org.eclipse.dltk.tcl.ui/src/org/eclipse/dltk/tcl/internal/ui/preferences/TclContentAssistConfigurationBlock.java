@@ -17,7 +17,7 @@ public class TclContentAssistConfigurationBlock extends
 		super(mainPreferencePage, store);
 	}
 
-	protected void getOverlayKeys(ArrayList overlayKeys) {
+	protected void getOverlayKeys(ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys) {
 		super.getOverlayKeys(overlayKeys);
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
