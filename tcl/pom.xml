@@ -21,7 +21,6 @@
 		<module>plugins/org.eclipse.dltk.tcl</module>
 		<module>plugins/org.eclipse.dltk.tcl.activestatedebugger</module>
 		<module>plugins/org.eclipse.dltk.tcl.core</module>
-		<module>plugins/org.eclipse.dltk.tcl.core.indexer</module>
 		<module>plugins/org.eclipse.dltk.tcl.debug</module>
 		<module>plugins/org.eclipse.dltk.tcl.debug.ui</module>
 		<module>plugins/org.eclipse.dltk.tcl.formatter</module>
@@ -33,6 +32,7 @@
 		<module>plugins/org.eclipse.dltk.tcl.testing.tcltest</module>
 		<module>plugins/org.eclipse.dltk.tcl.ui</module>
 		<module>plugins/org.eclipse.dltk.tcl.validators</module>
+		<module>tests</module>
 		<!-- <module>update.site</module> -->
 	</modules>
 </project>

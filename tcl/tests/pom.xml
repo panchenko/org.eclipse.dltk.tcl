@@ -14,6 +14,7 @@
 	<version>4.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
+		<module>org.eclipse.dltk.tcl.parser.tests</module>
 		<module>org.eclipse.dltk.tcl.core.tests</module>
 		<module>org.eclipse.dltk.tcl.formatter.tests</module>
 	</modules>

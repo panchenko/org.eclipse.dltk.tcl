@@ -9,7 +9,7 @@
     <relativePath>../..</relativePath>
   </parent>
   <groupId>org.eclipse.dltk.tcl</groupId>
-  <artifactId>org.eclipse.dltk.tcl.core.tests</artifactId>
+  <artifactId>org.eclipse.dltk.tcl.parser.tests</artifactId>
   <version>4.0.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <build>

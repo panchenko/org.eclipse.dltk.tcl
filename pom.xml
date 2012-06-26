@@ -18,5 +18,6 @@
 		<module>tcl</module>
 		<module>itcl</module>
 		<module>xotcl</module>
+		<module>tcl/plugins/org.eclipse.dltk.tcl.core.indexer</module>
 	</modules>
 </project>
